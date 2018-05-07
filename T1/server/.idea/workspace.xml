@@ -9,6 +9,7 @@
       <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/common/gen_serverw.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/common/gen_serverw.erl" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/net/behaviour_example.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/net/behaviour_example.erl" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/net/binary_lib.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/net/binary_lib.erl" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/net/netmsg.hrl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/net/netmsg.hrl" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/net/tcp_codec.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/net/tcp_codec.erl" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/net/tcp_handler.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/net/tcp_handler.erl" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/game/src/game.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/game/src/game.erl" afterDir="false" />
@@ -27,7 +28,16 @@
         <entry file="file://$PROJECT_DIR$/app/deps/pubs/src/net/tcp_handler.erl">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="349">
-              <caret line="77" column="25" lean-forward="true" selection-start-line="77" selection-start-column="25" selection-end-line="77" selection-end-column="25" />
+              <caret line="77" column="23" lean-forward="true" selection-start-line="77" selection-start-column="23" selection-end-line="77" selection-end-column="23" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="tcp_listener.erl" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/deps/pubs/src/net/tcp_listener.erl">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="390">
+              <caret line="15" column="9" selection-start-line="15" selection-start-column="9" selection-end-line="15" selection-end-column="9" />
             </state>
           </provider>
         </entry>
@@ -35,8 +45,8 @@
       <file leaf-file-name="ranch_tcp.erl" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/deps/ranch/src/ranch_tcp.erl">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="557">
-              <caret line="193" selection-start-line="193" selection-end-line="193" />
+            <state relative-caret-position="453">
+              <caret line="189" column="65" lean-forward="true" selection-start-line="189" selection-start-column="65" selection-end-line="189" selection-end-column="65" />
             </state>
           </provider>
         </entry>
@@ -50,25 +60,8 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="ranch.erl" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/deps/ranch/src/ranch.erl">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-3900" />
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="ranch_server.erl" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/deps/ranch/src/ranch_server.erl">
-          <provider selected="true" editor-type-id="text-editor" />
-        </entry>
-      </file>
-      <file leaf-file-name="ranch_ssl.erl" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/deps/ranch/src/ranch_ssl.erl">
-          <provider selected="true" editor-type-id="text-editor" />
-        </entry>
-      </file>
-      <file leaf-file-name="ranch_protocol.erl" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/deps/ranch/src/ranch_protocol.erl">
           <provider selected="true" editor-type-id="text-editor" />
         </entry>
       </file>
@@ -90,11 +83,29 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="binary_lib.erl" pinned="false" current-in-tab="true">
+      <file leaf-file-name="binary_lib.erl" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/deps/pubs/src/net/binary_lib.erl">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="702">
-              <caret line="27" column="4" selection-start-line="27" selection-start-column="4" selection-end-line="27" selection-end-column="4" />
+            <state relative-caret-position="650">
+              <caret line="25" column="26" selection-start-line="25" selection-start-column="26" selection-end-line="25" selection-end-column="26" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="game.erl" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/app/game/src/game.erl">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="583">
+              <caret line="72" column="77" selection-start-line="72" selection-start-column="77" selection-end-line="72" selection-end-column="77" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="tcp_codec.erl" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/deps/pubs/src/net/tcp_codec.erl">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="26">
+              <caret line="41" column="6" lean-forward="true" selection-start-line="41" selection-start-column="6" selection-end-line="41" selection-end-column="6" />
             </state>
           </provider>
         </entry>
@@ -194,7 +205,6 @@
         <option value="$PROJECT_DIR$/app/deps/pubs/include/netconf.hrl" />
         <option value="$PROJECT_DIR$/app/deps/pubs/src/net/netmsg.erl" />
         <option value="$PROJECT_DIR$/app/deps/pubs/src/net/behaviour_example.erl" />
-        <option value="$PROJECT_DIR$/app/game/src/game.erl" />
         <option value="$PROJECT_DIR$/app/dbs/src/worker/dbs_worker.erl" />
         <option value="$PROJECT_DIR$/app/dbs/src/svr/sentinel_server.erl" />
         <option value="$PROJECT_DIR$/app/deps/pubs/src/common/gen_serverw.erl" />
@@ -202,6 +212,7 @@
         <option value="$PROJECT_DIR$/app/deps/pubs/src/net/tcp_handler.erl" />
         <option value="$PROJECT_DIR$/app/deps/pubs/src/net/tcp_client.erl" />
         <option value="$PROJECT_DIR$/app/deps/pubs/src/net/binary_lib.erl" />
+        <option value="$PROJECT_DIR$/app/game/src/game.erl" />
       </list>
     </option>
   </component>
@@ -812,12 +823,12 @@
       <workItem from="1525353089618" duration="5284000" />
       <workItem from="1525662994918" duration="2597000" />
       <workItem from="1525672809455" duration="14622000" />
-      <workItem from="1525691286801" duration="3643000" />
+      <workItem from="1525691286801" duration="5474000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="56992000" />
+    <option name="totallyTimeSpent" value="58823000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -1008,13 +1019,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/game/src/game.erl">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="557">
-          <caret line="72" column="87" selection-start-line="72" selection-start-column="87" selection-end-line="72" selection-end-column="87" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/game/ebin/ranch_conns_sup.beam">
       <provider selected="true" editor-type-id="text-editor" />
       <provider editor-type-id="BEAM" />
@@ -1113,20 +1117,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/deps/pubs/src/net/tcp_codec.erl">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="26">
-          <caret line="41" column="6" lean-forward="true" selection-start-line="41" selection-start-column="6" selection-end-line="41" selection-end-column="6" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/deps/pubs/src/net/tcp_listener.erl">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="442">
-          <caret line="17" column="20" lean-forward="true" selection-start-line="17" selection-start-column="20" selection-end-line="17" selection-end-column="20" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/deps/ranch/src/ranch.erl">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-3900" />
@@ -1148,20 +1138,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/deps/ranch/src/ranch_tcp.erl">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="557">
-          <caret line="193" selection-start-line="193" selection-end-line="193" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/deps/pubs/src/net/tcp_handler.erl">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="349">
-          <caret line="77" column="25" lean-forward="true" selection-start-line="77" selection-start-column="25" selection-end-line="77" selection-end-column="25" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/deps/pubs/src/net/tcp_client.erl">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="494">
@@ -1178,8 +1154,43 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/app/deps/pubs/src/net/binary_lib.erl">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="702">
-          <caret line="27" column="4" selection-start-line="27" selection-start-column="4" selection-end-line="27" selection-end-column="4" />
+        <state relative-caret-position="650">
+          <caret line="25" column="26" selection-start-line="25" selection-start-column="26" selection-end-line="25" selection-end-column="26" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/deps/pubs/src/net/tcp_codec.erl">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="26">
+          <caret line="41" column="6" lean-forward="true" selection-start-line="41" selection-start-column="6" selection-end-line="41" selection-end-column="6" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/deps/pubs/src/net/tcp_handler.erl">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="349">
+          <caret line="77" column="23" lean-forward="true" selection-start-line="77" selection-start-column="23" selection-end-line="77" selection-end-column="23" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/deps/ranch/src/ranch_tcp.erl">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="453">
+          <caret line="189" column="65" lean-forward="true" selection-start-line="189" selection-start-column="65" selection-end-line="189" selection-end-column="65" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/deps/pubs/src/net/tcp_listener.erl">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="390">
+          <caret line="15" column="9" selection-start-line="15" selection-start-column="9" selection-end-line="15" selection-end-column="9" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/game/src/game.erl">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="583">
+          <caret line="72" column="77" selection-start-line="72" selection-start-column="77" selection-end-line="72" selection-end-column="77" />
         </state>
       </provider>
     </entry>

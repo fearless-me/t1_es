@@ -2,7 +2,7 @@
 -ifndef(netmsg).
 -define(netmsg,1).
 
--define(ProtoVersion,612).
+-define(ProtoVersion,619).
 
 %% 
 %% //gs在用GameServerInfo
