@@ -1,0 +1,28 @@
+{  
+   [
+
+		"../deps/dynamic_compile/*",
+		"../deps/econfig/*",
+		"../deps/fastlog/*",
+		"../deps/fly/*",
+		"../deps/ranch/*",
+		"../deps/pubs/*",
+		"../deps/pubs/*/*",
+		"../deps/pubs/*/*/*",
+		"../deps/pubs/*/*/*/*",
+		"src/*",
+		"src/*/*",
+		"src/*/*/*",
+		"src/*/*/*/*"
+   ], 
+   [
+		debug_info,
+		{d,'GAME_SERVER',1},
+		%%{d,'RELEASE',1},
+		{i,"include"},
+		{i,"../deps/pubs/include"},
+		{i,"../deps/pubs/src/net"},		
+		{i,"../deps/mysql-otp/include"},
+		{outdir,"./ebin"}
+	]
+}. 

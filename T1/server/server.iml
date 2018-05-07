@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module type="ERLANG_MODULE" version="4">
+  <component name="FacetManager">
+    <facet type="erlang" name="Erlang">
+      <configuration />
+    </facet>
+  </component>
+  <component name="NewModuleRootManager" inherit-compiler-output="true">
+    <exclude-output />
+    <content url="file://$MODULE_DIR$">
+      <sourceFolder url="file://$MODULE_DIR$/app" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/app/center/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/app/center/include" type="erlang-include" />
+      <sourceFolder url="file://$MODULE_DIR$/app/dbs/include" type="erlang-include" />
+      <sourceFolder url="file://$MODULE_DIR$/app/dbs/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/app/deps/cache/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/app/deps/dynamic_compile/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/app/deps/econfig/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/app/deps/econfig/test" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/app/deps/eep/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/app/deps/fastlog/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/app/deps/fly/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/app/deps/mysql-otp/include" type="erlang-include" />
+      <sourceFolder url="file://$MODULE_DIR$/app/deps/mysql-otp/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/app/deps/mysql-otp/test" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/app/deps/mysql-otp-poolboy/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/app/deps/poolboy/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/app/deps/poolboy/test" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/app/deps/pubs/include" type="erlang-include" />
+      <sourceFolder url="file://$MODULE_DIR$/app/deps/pubs/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/app/deps/pubs/src/resource/pack" type="erlang-include" />
+      <sourceFolder url="file://$MODULE_DIR$/app/deps/ranch/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/app/deps/ranch/test" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/app/game/include" type="erlang-include" />
+      <sourceFolder url="file://$MODULE_DIR$/app/game/src" isTestSource="false" />
+      <excludeFolder url="file://$MODULE_DIR$/app/center/data" />
+      <excludeFolder url="file://$MODULE_DIR$/app/center/scripts" />
+      <excludeFolder url="file://$MODULE_DIR$/app/dbs/data" />
+      <excludeFolder url="file://$MODULE_DIR$/app/dbs/scripts" />
+      <excludeFolder url="file://$MODULE_DIR$/app/game/data" />
+      <excludeFolder url="file://$MODULE_DIR$/app/game/scripts" />
+      <excludeFolder url="file://$MODULE_DIR$/deps_1" />
+      <excludeFolder url="file://$MODULE_DIR$/repo_priv" />
+    </content>
+    <orderEntry type="jdk" jdkName="Erlang 18" jdkType="Erlang SDK" />
+    <orderEntry type="sourceFolder" forTests="false" />
+  </component>
+</module>

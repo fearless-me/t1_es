@@ -1,0 +1,23 @@
+{  
+   [
+
+		"../deps/*",
+		"../deps/*/*",
+		"../deps/*/*/*",
+		"../deps/*/*/*/*",
+		"src/*",
+		"src/*/*",
+		"src/*/*/*",
+		"src/*/*/*/*"
+   ], 
+   [
+		debug_info,
+		{d,'DB_SERVER',1},
+		%%{d,'RELEASE',1},
+		{i,"include"},
+		{i,"../deps/pubs/include"},
+		{i,"../deps/pubs/src/net"},
+		{i,"../deps/mysql-otp/include"},
+		{outdir,"./ebin"}
+	]
+}. 
