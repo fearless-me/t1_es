@@ -1,0 +1,13 @@
+{application,econfig,
+             [{description,"simple Erlang config handler using INI files"},
+              {vsn,"0.7.3"},
+              {registered,[econfig_sup]},
+              {applications,[kernel,stdlib]},
+              {mod,{econfig_app,[]}},
+              {maintainers,["Benoit Chesneau"]},
+              {licenses,["Apache License 2"]},
+              {links,[{"Github","https://github.com/benoitc/econfig"}]},
+              {requirements,[{}]},
+              {modules,[econfig,econfig_app,econfig_file_writer,
+                        econfig_server,econfig_sup,econfig_util,
+                        econfig_watcher,econfig_watcher_sup]}]}.

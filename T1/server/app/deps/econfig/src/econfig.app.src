@@ -1,0 +1,17 @@
+%% -*- tab-width: 4;erlang-indent-level: 4;indent-tabs-mode: nil -*-
+%% ex: ft=erlang ts=4 sw=4 et
+
+{application, econfig,
+ [
+  {description, "simple Erlang config handler using INI files"},
+  {vsn, "0.7.3"},
+  {registered, [econfig_sup]},
+  {applications, [kernel,
+                  stdlib]},
+  {mod, { econfig_app, []}},
+  {maintainers, ["Benoit Chesneau"]},
+  {licenses, ["Apache License 2"]},
+  {links, [{"Github", "https://github.com/benoitc/econfig"}]},
+
+  {requirements, [{}]}
+ ]}.

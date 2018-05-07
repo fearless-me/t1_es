@@ -1,0 +1,12 @@
+{application, pubs,
+ [
+  {description, ""},
+  {vsn, "1"},
+  {registered, []},
+  {applications, [
+                  kernel,
+                  stdlib
+                 ]},
+  {mod, { pubs_app, []}},
+  {env, []}
+ ]}.

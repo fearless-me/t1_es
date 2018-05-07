@@ -1,0 +1,14 @@
+﻿  regex.c
+  _Misc.cpp
+f:\es\tools\netprotor\_misc.cpp(213): warning C4477: “sscanf”: 格式字符串“%d”需要类型“int *”的参数，但可变参数 1 拥有了类型“__int64 *”
+  f:\es\tools\netprotor\_misc.cpp(213): note: 请考虑在格式字符串中使用“%lld”
+  f:\es\tools\netprotor\_misc.cpp(213): note: 请考虑在格式字符串中使用“%I64d”
+  StringUtil.cpp
+  Parser.cpp
+  main.cpp
+  Helper.cpp
+  GenLuaDescTable.cpp
+  Gen2Erlang.cpp
+  正在生成代码...
+  NetProtor.vcxproj -> F:\es\tools\NetProtor\Debug\NetProtor.exe
+  NetProtor.vcxproj -> F:\es\tools\NetProtor\Debug\NetProtor.pdb (Full PDB)

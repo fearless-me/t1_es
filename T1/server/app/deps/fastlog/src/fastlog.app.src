@@ -1,0 +1,12 @@
+{application, fastlog,
+ [
+  {description, ""},
+  {vsn, "1"},
+  {registered, []},
+  {applications, [
+                  kernel,
+                  stdlib
+                 ]},
+  {mod, { fastlog_app, []}},
+  {env, []}
+ ]}.
