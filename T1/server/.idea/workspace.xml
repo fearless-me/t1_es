@@ -4,15 +4,6 @@
     <list default="true" readonly="true" id="354d5196-8a2e-476f-8af6-71424480c5e1" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/dbs/data/data.bin" beforeDir="false" afterPath="$PROJECT_DIR$/app/dbs/data/data.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/dbs/src/svr/sentinel_server.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/dbs/src/svr/sentinel_server.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/dbs/src/worker/dbs_worker.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/dbs/src/worker/dbs_worker.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/common/gen_serverw.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/common/gen_serverw.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/net/behaviour_example.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/net/behaviour_example.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/net/binary_lib.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/net/binary_lib.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/net/netmsg.hrl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/net/netmsg.hrl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/net/tcp_codec.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/net/tcp_codec.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/net/tcp_handler.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/net/tcp_handler.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/game.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/game/src/game.erl" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -28,7 +19,7 @@
         <entry file="file://$PROJECT_DIR$/app/deps/pubs/src/net/tcp_handler.erl">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="349">
-              <caret line="77" column="23" lean-forward="true" selection-start-line="77" selection-start-column="23" selection-end-line="77" selection-end-column="23" />
+              <caret line="77" column="23" selection-start-line="77" selection-start-column="23" selection-end-line="77" selection-end-column="23" />
             </state>
           </provider>
         </entry>
@@ -46,7 +37,7 @@
         <entry file="file://$PROJECT_DIR$/app/deps/ranch/src/ranch_tcp.erl">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="453">
-              <caret line="189" column="65" lean-forward="true" selection-start-line="189" selection-start-column="65" selection-end-line="189" selection-end-column="65" />
+              <caret line="189" column="26" selection-start-line="189" selection-start-column="26" selection-end-line="189" selection-end-column="26" />
             </state>
           </provider>
         </entry>
@@ -78,7 +69,7 @@
         <entry file="file://$PROJECT_DIR$/app/deps/pubs/src/resource/pack/pack_data.erl">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="26">
-              <caret line="28" column="39" lean-forward="true" selection-start-line="28" selection-start-column="39" selection-end-line="28" selection-end-column="39" />
+              <caret line="28" column="39" selection-start-line="28" selection-start-column="39" selection-end-line="28" selection-end-column="39" />
             </state>
           </provider>
         </entry>
@@ -95,7 +86,7 @@
       <file leaf-file-name="game.erl" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app/game/src/game.erl">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="583">
+            <state relative-caret-position="427">
               <caret line="72" column="77" selection-start-line="72" selection-start-column="77" selection-end-line="72" selection-end-column="77" />
             </state>
           </provider>
@@ -105,7 +96,7 @@
         <entry file="file://$PROJECT_DIR$/app/deps/pubs/src/net/tcp_codec.erl">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="26">
-              <caret line="41" column="6" lean-forward="true" selection-start-line="41" selection-start-column="6" selection-end-line="41" selection-end-column="6" />
+              <caret line="41" column="6" selection-start-line="41" selection-start-column="6" selection-end-line="41" selection-end-column="6" />
             </state>
           </provider>
         </entry>
@@ -823,12 +814,12 @@
       <workItem from="1525353089618" duration="5284000" />
       <workItem from="1525662994918" duration="2597000" />
       <workItem from="1525672809455" duration="14622000" />
-      <workItem from="1525691286801" duration="5474000" />
+      <workItem from="1525691286801" duration="6137000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="58823000" />
+    <option name="totallyTimeSpent" value="59486000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -1148,7 +1139,7 @@
     <entry file="file://$PROJECT_DIR$/app/deps/pubs/src/resource/pack/pack_data.erl">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="26">
-          <caret line="28" column="39" lean-forward="true" selection-start-line="28" selection-start-column="39" selection-end-line="28" selection-end-column="39" />
+          <caret line="28" column="39" selection-start-line="28" selection-start-column="39" selection-end-line="28" selection-end-column="39" />
         </state>
       </provider>
     </entry>
@@ -1162,21 +1153,21 @@
     <entry file="file://$PROJECT_DIR$/app/deps/pubs/src/net/tcp_codec.erl">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="26">
-          <caret line="41" column="6" lean-forward="true" selection-start-line="41" selection-start-column="6" selection-end-line="41" selection-end-column="6" />
+          <caret line="41" column="6" selection-start-line="41" selection-start-column="6" selection-end-line="41" selection-end-column="6" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/deps/pubs/src/net/tcp_handler.erl">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="349">
-          <caret line="77" column="23" lean-forward="true" selection-start-line="77" selection-start-column="23" selection-end-line="77" selection-end-column="23" />
+          <caret line="77" column="23" selection-start-line="77" selection-start-column="23" selection-end-line="77" selection-end-column="23" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/deps/ranch/src/ranch_tcp.erl">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="453">
-          <caret line="189" column="65" lean-forward="true" selection-start-line="189" selection-start-column="65" selection-end-line="189" selection-end-column="65" />
+          <caret line="189" column="26" selection-start-line="189" selection-start-column="26" selection-end-line="189" selection-end-column="26" />
         </state>
       </provider>
     </entry>
@@ -1189,7 +1180,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/app/game/src/game.erl">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="583">
+        <state relative-caret-position="427">
           <caret line="72" column="77" selection-start-line="72" selection-start-column="77" selection-end-line="72" selection-end-column="77" />
         </state>
       </provider>
