@@ -50,10 +50,11 @@ mod_init({Ref, Socket, ranch_tcp, Opts}) ->
     %% Perform any required state initialization here.
     Handler = misc:get_value(handler, Opts, false),
     SockOpts = misc:get_value(sock_opts, Opts, [{active, once}]),
+    NetConf = misc:get_value(netConf, Opts, #net_conf{max_msg_bytes = 16 * 1024}),
     ok = ranch:accept_ack(Ref),
     ok = ranch_tcp:setopts(Socket, SockOpts),
     ok = Handler:on_init(Socket),
-    ok = tcp_codec:init(#net_conf{max_msg_bytes = 16 * 1024}),
+    ok = tcp_codec:init(NetConf),
     erlang:process_flag(trap_exit, true),
     gen_server:enter_loop(?MODULE, [], #state{
         socket = Socket,handler = Handler

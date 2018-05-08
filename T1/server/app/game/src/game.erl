@@ -70,12 +70,20 @@ start(_StartType, _StartArgs) ->
             {"test network",
                 fun() ->
                     tcp_listener:start_listener(
-                        test_tcp, 10, [{port, 25555}, {max_connections, 1000}], behaviour_example)
+                        test_tcp,
+                        10,
+                        [{port, 25555}, {max_connections, 1000}],
+                        behaviour_example
+                    )
                 end},
             {"test network2",
                 fun() ->
                     tcp_listener:start_listener(
-                        test_tcp2, 10, [{port, 15555}, {max_connections, 1000}], behaviour_example)
+                        test_tcp2,
+                        10,
+                        [{port, 15555}, {max_connections, 1000}],
+                        behaviour_example
+                    )
                 end}
         ]
     ),
