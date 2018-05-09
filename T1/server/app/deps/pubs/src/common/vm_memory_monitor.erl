@@ -17,6 +17,7 @@
 -export([init/1, handle_call/3, handle_cast/2, handle_info/2,
          terminate/2, code_change/3]).
 
+-export([log_ps_info/0]).
 -export([get_total_memory/0, get_vm_limit/0,
          get_check_interval/0, set_check_interval/1,
          get_vm_memory_high_watermark/0, set_vm_memory_high_watermark/1,
@@ -29,7 +30,7 @@
 -define(SERVER, ?MODULE).
 -define(DEFAULT_MEMORY_CHECK_INTERVAL, 1000).
 -define(ONE_MB, 1048576).
--define(TickInterval, 20 * 60 * 1000).
+-define(TICK_LOG, 20 * 60 * 1000).
 
 %% For an unknown OS, we assume that we have 1GB of memory. It'll be
 %% wrong. Scale by vm_memory_high_watermark in configuration to get a
@@ -114,7 +115,7 @@ init([MemFraction, AlarmFuns]) ->
                      timer      = TRef,
                      alarmed    = false,
                      alarm_funs = AlarmFuns },
-    timer:send_interval(?TickInterval, tick),
+    timer:send_interval(?TICK_LOG, tick),
     {ok, set_mem_limits(State, MemFraction)}.
 
 handle_call(get_vm_memory_high_watermark, _From,
@@ -143,7 +144,7 @@ handle_cast(_Request, State) ->
 handle_info(update, State) ->
     {noreply, internal_update(State)};
 handle_info(tick, State) ->
-    logPsInfo(),
+    log_ps_info(),
     Self = self(),
     erlang:spawn(fun() -> garbage_collect(Self) end),
     {noreply, State};
@@ -424,7 +425,7 @@ mem2str(Mem) ->
         Mem >= 0 -> io_lib:format("~.1fB",[Mem/1.0])
     end.
 
-logPsInfo() ->
+log_ps_info() ->
     PS_Count = erlang:system_info(process_count),
     RQ = erlang:statistics(run_queue),
     ProcessUsed = erlang:memory(processes_used),
@@ -464,8 +465,8 @@ logPsInfo() ->
             end
         end,
     PPList = lists:foldl(Fun,[],ProcessesProplist),
-    Str1 = logSortByMQueue(PPList),
-    Str2 = logSortByMem(PPList),
+    Str1 = log_sort_mqueue(PPList),
+    Str2 = log_sort_memory(PPList),
     ?INFO("~n~nProcess: total ~p(RQ:~p) using:~s(~s allocated) nodes:~p~n"
     "Memory: Sys ~s, Atom ~s/~s, Bin ~s, Code ~s, Ets ~s~n"
     "SortByMQueue:~n"
@@ -479,36 +480,24 @@ logPsInfo() ->
 %% 	?LOG_OUT("Pid:~p RegName:~p KeyList:~p",[PsPid,RegisterName,PDKeyList]),
     ok.
 
-logSortByMQueue(PPList) ->
+log_sort_mqueue(PPList) ->
     List = lists:reverse(lists:keysort(4,PPList)),
     List2 = lists:reverse(lists:sublist(List, 15)),
-    Fun =
-        fun({Pid,RegName,Red,MQL,Mem,{M,F,A}},{N,AccIn}) ->
-            case N =< 0 of
-                true ->
-                    {break,{N,AccIn}};
-                _ ->
-                    {N - 1,io_lib:format("~-9w~-20ts~-30ts~-15w~-15w~-17ts{~p,~p,~p}~n",
-                        [N,Pid,RegName,Red,MQL,mem2str(Mem),M,F,A]) ++ AccIn}
-            end
-        end,
-    {_,Str} = misc:mapAccList(List2, {15,[]}, Fun),
+    {_, Str} = lists:foldl(
+        fun({Pid,RegName,Red,MQL,Mem,{M,F,A}}, {N, AccIn}) ->
+            {N-1, io_lib:format("~-9w~-20ts~-30ts~-15w~-15w~-17ts{~p,~p,~p}~n",
+                [N, Pid,RegName,Red,MQL,mem2str(Mem),M,F,A]) ++ AccIn}
+        end, {15,""}, List2),
     Str.
 
-logSortByMem(PPList) ->
+log_sort_memory(PPList) ->
     List = lists:reverse(lists:keysort(5,PPList)),
     List2 = lists:reverse(lists:sublist(List, 15)),
-    Fun =
-        fun({Pid,RegName,Red,MQL,Mem,{M,F,A}},{N,AccIn}) ->
-            case N =< 0 of
-                true ->
-                    {break,{N,AccIn}};
-                _ ->
-                    {N - 1,io_lib:format("~-9w~-20ts~-30ts~-15w~-15w~-17ts{~p,~p,~p}~n",
-                        [N,Pid,RegName,Red,MQL,mem2str(Mem),M,F,A]) ++ AccIn}
-            end
-        end,
-    {_,Str} = misc:mapAccList(List2, {15,[]}, Fun),
+    {_, Str} = lists:foldl(
+        fun({Pid,RegName,Red,MQL,Mem,{M,F,A}}, {N, AccIn}) ->
+            {N-1, io_lib:format("~-9w~-20ts~-30ts~-15w~-15w~-17ts{~p,~p,~p}~n",
+                [N, Pid,RegName,Red,MQL,mem2str(Mem),M,F,A]) ++ AccIn}
+        end, {15,""}, List2),
     Str.
 
 process_info_items(P) ->
