@@ -17,5 +17,6 @@ connect(Port)->
 	{_Bytes2, IoList2} = tcp_codec:encode(Msg2),
 	tcp_codec:decode(fun(X)-> io:format("~p~n",[X]) end,Socket, iolist_to_binary(IoList2 ++ IoList1)),
 %%	?DEBUG("~p bytes,iolist:~p",[Bytes, IoList]),
+
 	ranch_tcp:send(Socket, IoList2 ++ IoList2 ++ IoList2 ++ IoList2 ++ IoList2 ++ IoList2 ++ IoList1),
 	ok.

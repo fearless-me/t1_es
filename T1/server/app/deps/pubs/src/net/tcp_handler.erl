@@ -71,11 +71,8 @@ do_handle_info({tcp, Socket, Data},
     State=#state{socket=Socket, handler = Handler}
 ) ->
     ranch_tcp:setopts(Socket, [{active, once}]),
-    try
-        Handler:on_data(Socket,Data),
-        {noreply, State}
-    catch
-        _:_ ->
+    try Handler:on_data(Socket,Data), {noreply, State}
+    catch _:_ ->
             ranch_tcp:shutdown(Socket, read),
             ?WARN("~p stop,shutdown socket ~p",[self(), Socket]),
             {stop, shutdown, State}
