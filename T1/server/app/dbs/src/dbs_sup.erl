@@ -1,7 +1,7 @@
 -module(dbs_sup).
 
 -behaviour(supervisor).
-
+-include("logger.hrl").
 %% API
 -export([start/0]).
 -export([start_link/0]).

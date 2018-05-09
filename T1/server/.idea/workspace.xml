@@ -22,20 +22,20 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="dbs.erl" pinned="false" current-in-tab="true">
+      <file leaf-file-name="dbs.erl" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/dbs/src/dbs.erl">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="583">
-              <caret line="33" column="6" selection-start-line="33" selection-start-column="6" selection-end-line="33" selection-end-column="6" />
+            <state relative-caret-position="193">
+              <caret line="12" selection-start-line="12" selection-end-line="12" selection-end-column="23" />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="dbs_sup.erl" pinned="false" current-in-tab="false">
+      <file leaf-file-name="dbs_sup.erl" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app/dbs/src/dbs_sup.erl">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="130">
-              <caret line="5" column="16" selection-start-line="5" selection-start-column="16" selection-end-line="5" selection-end-column="16" />
+            <state relative-caret-position="78">
+              <caret line="3" column="23" selection-start-line="3" selection-start-column="23" selection-end-line="3" selection-end-column="23" />
             </state>
           </provider>
         </entry>
@@ -142,8 +142,8 @@
         <option value="$PROJECT_DIR$/app/deps/pubs/src/net/tcp_client.erl" />
         <option value="$PROJECT_DIR$/app/deps/pubs/src/net/tcp_handler.erl" />
         <option value="$PROJECT_DIR$/app/deps/pubs/src/common/vm_memory_monitor.erl" />
-        <option value="$PROJECT_DIR$/app/dbs/src/dbs_sup.erl" />
         <option value="$PROJECT_DIR$/app/dbs/src/dbs.erl" />
+        <option value="$PROJECT_DIR$/app/dbs/src/dbs_sup.erl" />
       </list>
     </option>
   </component>
@@ -675,12 +675,12 @@
       <workItem from="1525748062996" duration="1450000" />
       <workItem from="1525760930766" duration="3989000" />
       <workItem from="1525777728034" duration="1295000" />
-      <workItem from="1525849130820" duration="6009000" />
+      <workItem from="1525849130820" duration="6026000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="74301000" />
+    <option name="totallyTimeSpent" value="74318000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -1029,17 +1029,17 @@
       <provider selected="true" editor-type-id="text-editor" />
       <provider editor-type-id="BEAM" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/dbs/src/dbs_sup.erl">
+    <entry file="file://$PROJECT_DIR$/app/dbs/src/dbs.erl">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="130">
-          <caret line="5" column="16" selection-start-line="5" selection-start-column="16" selection-end-line="5" selection-end-column="16" />
+        <state relative-caret-position="193">
+          <caret line="12" selection-start-line="12" selection-end-line="12" selection-end-column="23" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/dbs/src/dbs.erl">
+    <entry file="file://$PROJECT_DIR$/app/dbs/src/dbs_sup.erl">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="583">
-          <caret line="33" column="6" selection-start-line="33" selection-start-column="6" selection-end-line="33" selection-end-column="6" />
+        <state relative-caret-position="78">
+          <caret line="3" column="23" selection-start-line="3" selection-start-column="23" selection-end-line="3" selection-end-column="23" />
         </state>
       </provider>
     </entry>
