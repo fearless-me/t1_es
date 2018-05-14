@@ -21,7 +21,7 @@ do not include code changes.
 * Add many transport options typespecs and documentation
 * Don't silently drop the accept rate when running out of fds
 * Prevent a race condition when stopping listeners
-* Improve reporting for common errors, for example eaddrinuse
+* Improve reporting for lib errors, for example eaddrinuse
 * Fix double removal of connections bug
 ** The number of active connections should now be exact
 * Fix stuck acceptor bug when controlling_socket returned errors

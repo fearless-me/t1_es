@@ -9,6 +9,9 @@
 -author("mawenhong").
 
 
+-define(ETSRC,{read_concurrency,true}).
+-define(ETSWC,{write_concurrency,true}).
+
 -record(kv,{k, v}).
 -define(ServerState, serverStateEts_).
 

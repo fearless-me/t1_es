@@ -92,7 +92,7 @@ unit: all
 	@./rebar3 skip_deps=true eunit
 
 ##
-## execute common test and terminate node
+## execute lib test and terminate node
 test: _build/test.beam
 	@mkdir -p /tmp/test/${APP} ;\
 	erl ${EFLAGS} -pa _build/ -pa test/ -run test run test/${TEST}.config

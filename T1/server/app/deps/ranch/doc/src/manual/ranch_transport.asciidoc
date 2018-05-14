@@ -112,7 +112,7 @@ While it is possible to use the timeout value `infinity`,
 this is highly discouraged as this could cause your process
 to get stuck waiting for data that will never come. This may
 happen when a socket becomes half-open due to a crash of the
-remote endpoint. Wi-Fi going down is another common culprit
+remote endpoint. Wi-Fi going down is another lib culprit
 of this issue.
 
 === send(CSocket, Packet) -> ok | {error, atom()}
