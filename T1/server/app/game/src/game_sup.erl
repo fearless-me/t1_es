@@ -41,6 +41,7 @@ start() ->
     wrapper({"monitor/gc/vms",  ?Wrap(start_gc_vm(SupPid, 0.5))}),
     wrapper({"test network 15555",  ?Wrap(start_listener_15555(SupPid))}),
     wrapper({"test network 25555",  ?Wrap(start_listener_25555(SupPid))}),
+    wrapper({"start map root supervisor",  ?Wrap(start_map_root_supervisor(SupPid))}),
     wrapper({"start auto compile and load",  ?Wrap(start_auto_reload(SupPid))}),
 
     sentinel_server:status(),
@@ -105,3 +106,7 @@ start_listener_15555(_SupPid) ->
 start_auto_reload(_SupPid) ->
     ok = fly:start().
 
+
+start_map_root_supervisor(SupPid)->
+    {ok, _} = ?CHILD(SupPid, map_root_supervisor, supervisor),
+    ok.

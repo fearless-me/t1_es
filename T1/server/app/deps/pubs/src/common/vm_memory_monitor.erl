@@ -456,9 +456,12 @@ log_ps_info() ->
                 Red = proplists:get_value(reductions,L),
                 MQL = proplists:get_value(message_queue_len,L),
                 Mem = proplists:get_value(memory,L),
-                CF = proplists:get_value(current_function,L),
-
-                [{Pid,RegName,Red,MQL,Mem,CF} | AccIn]
+                Heap = proplists:get_value(heap_size,L),
+                Stack = proplists:get_value(stack_size,L),
+                TotalHeap = proplists:get_value(total_heap_size,L),
+                CF = proplists:get_value(current_stacktrace,L),
+     
+                [{Pid,RegName,Red,MQL,Mem,TotalHeap, Heap, Stack, cf_parse(CF, "")} | AccIn]
             catch
                 _ : _ ->
                     AccIn
@@ -470,9 +473,9 @@ log_ps_info() ->
     ?INFO("~n~nProcess: total ~p(RQ:~p) using:~s(~s allocated) nodes:~p~n"
     "Memory: Sys ~s, Atom ~s/~s, Bin ~s, Code ~s, Ets ~s~n"
     "SortByMQueue:~n"
-    "Row      Pid                 RegName                       Reductions     MQueue(*)      Memory      	    CurrentFunction~n~ts"
+    "Row      Pid                 RegName                       Reductions     MQueue(*)      Memory           TotalHeap        Heap             Stack            current_stacktrace~n~ts"
     "SortByMem:~n"
-    "Row      Pid                 RegName                       Reductions     MQueue         Memory(*)         CurrentFunction~n~ts",
+    "Row      Pid                 RegName                       Reductions     MQueue         Memory(*)        TotalHeap        Heap             Stack            current_stacktrace~n~ts",
         [PS_Count,RQ,mem2str(ProcessUsed),mem2str(ProcessTotal),nodes(),SystemMem,AtomUsedMem,AtomMem,BinMem,CodeMem,EtsMem,Str1,Str2]),
 
     %% 	[{PsPid,RegisterName,_,_,_,PD,_}|_] = List,
@@ -480,23 +483,27 @@ log_ps_info() ->
 %% 	?LOG_OUT("Pid:~p RegName:~p KeyList:~p",[PsPid,RegisterName,PDKeyList]),
     ok.
 
+cf_parse([], Acc) ->
+    Acc;
+cf_parse([{_M,F,Arti,[{_,File},{_, Line} | _]} | Left], Acc) ->
+    NewAcc = io_lib:format("~ts:~p ~p/~p|",
+        [filename:basename(File), Line, F, Arti]) ++ Acc,
+    cf_parse(Left, NewAcc).
+
 log_sort_mqueue(PPList) ->
     List = lists:reverse(lists:keysort(4,PPList)),
-    List2 = lists:reverse(lists:sublist(List, 15)),
-    {_, Str} = lists:foldl(
-        fun({Pid,RegName,Red,MQL,Mem,{M,F,A}}, {N, AccIn}) ->
-            {N-1, io_lib:format("~-9w~-20ts~-30ts~-15w~-15w~-17ts{~p,~p,~p}~n",
-                [N, Pid,RegName,Red,MQL,mem2str(Mem),M,F,A]) ++ AccIn}
-        end, {15,""}, List2),
-    Str.
+    log_sort_format(List).
 
 log_sort_memory(PPList) ->
     List = lists:reverse(lists:keysort(5,PPList)),
+    log_sort_format(List).
+
+log_sort_format(List)->
     List2 = lists:reverse(lists:sublist(List, 15)),
     {_, Str} = lists:foldl(
-        fun({Pid,RegName,Red,MQL,Mem,{M,F,A}}, {N, AccIn}) ->
-            {N-1, io_lib:format("~-9w~-20ts~-30ts~-15w~-15w~-17ts{~p,~p,~p}~n",
-                [N, Pid,RegName,Red,MQL,mem2str(Mem),M,F,A]) ++ AccIn}
+        fun({Pid,RegName,Red,MQL,Mem,TotalHeap, Heap, Stack, ST}, {N, AccIn}) ->
+            {N-1, io_lib:format("~-9w~-20ts~-30ts~-15w~-15w~-17ts~-17ts~-17ts~-17ts~ts~n",
+                [N, Pid,RegName,Red,MQL,mem2str(Mem),mem2str(TotalHeap),mem2str(Heap),mem2str(Stack),ST]) ++ AccIn}
         end, {15,""}, List2),
     Str.
 
@@ -510,5 +517,5 @@ process_info_items(P) ->
             heap_size,
             stack_size,
             total_heap_size,
-            current_function
+            current_stacktrace
         ]).

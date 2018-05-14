@@ -21,20 +21,62 @@
 -export([stacktrace/0, stacktraceE/0]).
 -export([milli_seconds/0, seconds/0]).
 -export([parse_information_unit/1]).
+-export([create_process_name/2]).
+-export([to_atom/1]).
 
 %%%-------------------------------------------------------------------
 atom_to_binary(A) ->
     list_to_binary(atom_to_list(A)).
 
-ceil(N) ->
-    T = trunc(N),
-    case N == T of
-        true  -> T;
-        false -> 1 + T
+create_process_name(Prefix, List) ->
+    to_atom(lists:concat(lists:flatten([Prefix] ++ lists:map(fun(T) -> ['_', T] end, List)))).
+
+
+%% @doc convert other type to atom
+to_atom(Msg) when is_atom(Msg) ->
+    Msg;
+to_atom(Msg) when is_binary(Msg) ->
+    list_to_atom2(binary_to_list(Msg));
+to_atom(Msg) when is_list(Msg) ->
+    list_to_atom2(Msg);
+to_atom(_) ->
+    throw(other_value).  %%list_to_atom("").
+
+list_to_atom2(List) when is_list(List) ->
+    case catch(list_to_existing_atom(List)) of
+        {'EXIT', _} -> erlang:list_to_atom(List);
+        Atom when is_atom(Atom) -> Atom
     end.
--spec floor(Number) -> integer() when Number::number().
-floor(Number) ->
-    erlang:trunc(Number).
+
+-spec ceil(X) -> integer() when X::number().
+ceil(X) ->
+    T = trunc(X),
+    if
+        X - T == 0 ->
+            T;
+        true ->
+            if
+                X > 0 ->
+                    T + 1;
+                true ->
+                    T
+            end
+    end.
+
+-spec floor(X) -> integer() when X::number().
+floor(X) ->
+    T = trunc(X),
+    if
+        X - T == 0 ->
+            T;
+        true ->
+            if
+                X > 0 ->
+                    T;
+                true ->
+                    T-1
+            end
+    end.
 
 -spec clamp(X,Min,Max) -> Min | X | Max when X::number(),Min::number(),Max::number().
 clamp(X,Min,Max) when Min =< Max andalso X < Min ->
