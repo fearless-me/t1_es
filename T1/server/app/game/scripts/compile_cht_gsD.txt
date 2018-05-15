@@ -1,153 +1,180 @@
 
 *********************************************************
 *********************************************************
-*  2018-05-10 17:47:59 gsD cht 89 files 8 workers	*
+*  2018-05-14 21:06:45 gsD cht 100 files 8 workers	*
 *********************************************************
 *********************************************************
 
-[2018-05-10 17:47:59] compiled[3.3%] tcp_client.erl true 
-[2018-05-10 17:47:59] compiled[5.6%] reverse_protocol.erl true 
-[2018-05-10 17:47:59] reverse_protocol.erl:5: Warning: behaviour ranch_protocol undefined
+[2018-05-14 21:06:46] compiled[2.0%] crash_protocol.erl true 
+[2018-05-14 21:06:46] compiled[1.0%] sentinel_server.erl true 
+[2018-05-14 21:06:46] sentinel_server.erl:12: Warning: behaviour gen_serverw undefined
 
-[2018-05-10 17:47:59] compiled[6.7%] ranch_sup.erl true 
-[2018-05-10 17:47:59] compiled[1.1%] shutdown_SUITE.erl true 
-[2018-05-10 17:47:59] compiled[2.2%] econfig_watcher.erl true 
-[2018-05-10 17:47:59] compiled[4.4%] mod_map.erl true 
-[2018-05-10 17:47:59] mod_map.erl:12: Warning: behaviour gen_serverw undefined
+[2018-05-14 21:06:46] compiled[3.0%] mod_map_mgr_supervisor.erl true 
+[2018-05-14 21:06:46] mod_map_mgr_supervisor.erl:40: Warning: function start_child/1 is unused
 
-[2018-05-10 17:47:59] compiled[7.8%] pack_byte.erl true 
-[2018-05-10 17:47:59] compiled[8.9%] pack_data.erl true 
-[2018-05-10 17:47:59] compiled[10.1%] tcp_echo_sup.erl true 
-[2018-05-10 17:47:59] compiled[11.2%] tcp_behaviour.erl true 
-[2018-05-10 17:47:59] compiled[12.3%] pubs_sup.erl true 
-[2018-05-10 17:47:59] compiled[13.4%] econfig_util.erl true 
-[2018-05-10 17:47:59] compiled[14.6%] pubs_app.erl true 
-[2018-05-10 17:47:59] compiled[15.7%] tcp_echo_app.erl true 
-[2018-05-10 17:47:59] compiled[16.8%] game_sup.erl true 
-[2018-05-10 17:47:59] compiled[17.9%] misc.erl true 
-[2018-05-10 17:47:59] compiled[19.1%] econfig_sup.erl true 
-[2018-05-10 17:47:59] compiled[20.2%] ranch_ssl.erl true 
-[2018-05-10 17:47:59] ranch_ssl.erl:16: Warning: behaviour ranch_transport undefined
+[2018-05-14 21:06:46] compiled[4.0%] ranch_acceptor.erl true 
+[2018-05-14 21:06:46] compiled[5.0%] pack_data.erl true 
+[2018-05-14 21:06:46] compiled[6.0%] netmsg.erl true 
+[2018-05-14 21:06:46] compiled[8.0%] gen_server2.erl true 
+[2018-05-14 21:06:46] compiled[7.0%] eep.erl true 
+[2018-05-14 21:06:46] compiled[9.0%] pubs_sup.erl true 
+[2018-05-14 21:06:46] compiled[10.0%] map_root_supervisor.erl true 
+[2018-05-14 21:06:46] compiled[11.0%] econfig_watcher_sup.erl true 
+[2018-05-14 21:06:46] compiled[12.0%] pubs_app.erl true 
+[2018-05-14 21:06:46] compiled[13.0%] check_tcp_options.erl true 
+[2018-05-14 21:06:46] check_tcp_options.erl:2: Warning: behaviour ranch_protocol undefined
 
-[2018-05-10 17:47:59] compiled[21.3%] mysql_pool_test.erl true 
-[2018-05-10 17:47:59] compiled[22.4%] game.erl true 
-[2018-05-10 17:47:59] compiled[23.5%] lqueue.erl true 
-[2018-05-10 17:47:59] compiled[24.7%] mysql_pool.erl true 
-[2018-05-10 17:47:59] compiled[25.8%] echo_protocol.erl true 
-[2018-05-10 17:47:59] echo_protocol.erl:4: Warning: behaviour ranch_protocol undefined
+[2018-05-14 21:06:46] compiled[14.0%] econfig_watcher.erl true 
+[2018-05-14 21:06:46] compiled[15.0%] mysql_pool_test.erl true 
+[2018-05-14 21:06:46] compiled[16.0%] ranch.erl true 
+[2018-05-14 21:06:46] compiled[17.0%] binary_lib.erl true 
+[2018-05-14 21:06:46] compiled[18.0%] mod_map_mgr.erl true 
+[2018-05-14 21:06:46] mod_map_mgr.erl:12: Warning: behaviour gen_serverw undefined
+[2018-05-14 21:06:46] mod_map_mgr.erl:49: Warning: variable 'From' is unused
+[2018-05-14 21:06:46] mod_map_mgr.erl:52: Warning: variable 'From' is unused
 
-[2018-05-10 17:47:59] compiled[26.9%] sendfile_SUITE.erl true 
-[2018-05-10 17:47:59] compiled[28.0%] netmsg.erl true 
-[2018-05-10 17:47:59] compiled[29.2%] ranch_server.erl true 
-[2018-05-10 17:47:59] compiled[30.3%] ranch_protocol.erl true 
-[2018-05-10 17:47:59] compiled[31.4%] mysql_interface.erl true 
-[2018-05-10 17:47:59] compiled[32.5%] gen_serverw.erl true 
-[2018-05-10 17:47:59] compiled[33.7%] ranch_listener_sup.erl true 
-[2018-05-10 17:47:59] compiled[34.8%] remove_conn_and_wait_protocol.erl true 
-[2018-05-10 17:47:59] remove_conn_and_wait_protocol.erl:2: Warning: behaviour ranch_protocol undefined
+[2018-05-14 21:06:46] compiled[19.0%] econfig_util.erl true 
+[2018-05-14 21:06:46] compiled[20.0%] tcp_reverse_sup.erl true 
+[2018-05-14 21:06:46] compiled[21.0%] mysql_pool.erl true 
+[2018-05-14 21:06:46] compiled[22.0%] active_echo_protocol.erl true 
+[2018-05-14 21:06:46] active_echo_protocol.erl:2: Warning: behaviour ranch_protocol undefined
 
-[2018-05-10 17:47:59] compiled[35.9%] mnesia_utils.erl true 
-[2018-05-10 17:47:59] compiled[37.0%] ranch_ct_hook.erl true 
-[2018-05-10 17:47:59] compiled[38.2%] binary_lib.erl true 
-[2018-05-10 17:47:59] compiled[39.3%] sentinel_server.erl true 
-[2018-05-10 17:47:59] sentinel_server.erl:12: Warning: behaviour gen_serverw undefined
+[2018-05-14 21:06:46] compiled[23.0%] file_ex.erl true 
+[2018-05-14 21:06:46] compiled[24.0%] tcp_reverse_app.erl true 
+[2018-05-14 21:06:46] compiled[25.0%] econfig_sup.erl true 
+[2018-05-14 21:06:46] compiled[26.0%] mysql_interface.erl true 
+[2018-05-14 21:06:46] compiled[27.0%] common_error_logger_h.erl true 
+[2018-05-14 21:06:46] compiled[28.0%] behaviour_example.erl true 
+[2018-05-14 21:06:46] behaviour_example.erl:22: Warning: behaviour tcp_behaviour undefined
 
-[2018-05-10 17:47:59] compiled[40.4%] mnesia_starter.erl true 
-[2018-05-10 17:47:59] compiled[41.5%] fly_worker.erl true 
-[2018-05-10 17:47:59] compiled[42.6%] econfig_server.erl true 
-[2018-05-10 17:47:59] compiled[43.8%] map_root_supervisor.erl true 
-[2018-05-10 17:47:59] compiled[44.9%] mnesia_dynamic.erl true 
-[2018-05-10 17:48:00] compiled[46.0%] notify_and_wait_protocol.erl true 
-[2018-05-10 17:48:00] notify_and_wait_protocol.erl:2: Warning: behaviour ranch_protocol undefined
+[2018-05-14 21:06:46] compiled[29.0%] mnesia_utils.erl true 
+[2018-05-14 21:06:46] compiled[30.0%] log_test.erl true 
+[2018-05-14 21:06:46] compiled[31.0%] loggerS.erl true 
+[2018-05-14 21:06:46] compiled[32.0%] mnesia_starter.erl true 
+[2018-05-14 21:06:46] compiled[33.0%] econfig_server.erl true 
+[2018-05-14 21:06:46] compiled[34.0%] mod_map_creator.erl true 
+[2018-05-14 21:06:46] mod_map_creator.erl:12: Warning: behaviour gen_serverw undefined
+[2018-05-14 21:06:46] mod_map_creator.erl:49: Warning: variable 'MapID' is unused
+[2018-05-14 21:06:46] mod_map_creator.erl:52: Warning: variable 'MapID' is unused
+[2018-05-14 21:06:46] mod_map_creator.erl:55: Warning: variable 'MapID' is unused
+[2018-05-14 21:06:46] mod_map_creator.erl:58: Warning: variable 'PlayerID' is unused
+[2018-05-14 21:06:46] mod_map_creator.erl:100: Warning: variable 'MapID' is unused
 
-[2018-05-10 17:48:00] compiled[47.1%] ranch_conns_sup.erl true 
-[2018-05-10 17:48:00] compiled[48.3%] fly.erl true 
-[2018-05-10 17:48:00] compiled[49.4%] econfig_file_writer.erl true 
-[2018-05-10 17:48:00] compiled[50.5%] tcp_listener.erl true 
-[2018-05-10 17:48:00] compiled[51.6%] ranch_app.erl true 
-[2018-05-10 17:48:00] compiled[52.8%] fastlog_sup.erl true 
-[2018-05-10 17:48:00] compiled[53.9%] behaviour_example.erl true 
-[2018-05-10 17:48:00] behaviour_example.erl:22: Warning: behaviour tcp_behaviour undefined
+[2018-05-14 21:06:46] compiled[35.0%] mnesia_dynamic.erl true 
+[2018-05-14 21:06:46] compiled[36.0%] econfig_file_writer.erl true 
+[2018-05-14 21:06:46] compiled[37.0%] tcp_listener.erl true 
+[2018-05-14 21:06:46] compiled[38.0%] reverse_protocol.erl true 
+[2018-05-14 21:06:46] reverse_protocol.erl:5: Warning: behaviour ranch_protocol undefined
 
-[2018-05-10 17:48:00] compiled[55.0%] econfig_app.erl true 
-[2018-05-10 17:48:00] compiled[56.1%] fastlog_app.erl true 
-[2018-05-10 17:48:00] compiled[57.3%] echo_protocol.erl true 
-[2018-05-10 17:48:00] echo_protocol.erl:2: Warning: behaviour ranch_protocol undefined
+[2018-05-14 21:06:46] compiled[39.0%] econfig_app.erl true 
+[2018-05-14 21:06:46] compiled[40.0%] tcp_echo_sup.erl true 
+[2018-05-14 21:06:46] compiled[41.0%] vm_memory_monitor.erl true 
+[2018-05-14 21:06:46] compiled[42.0%] tcp_echo_app.erl true 
+[2018-05-14 21:06:46] compiled[43.0%] common_error_logger.erl true 
+[2018-05-14 21:06:46] common_error_logger.erl:13: Warning: behaviour gen_server2 undefined
 
-[2018-05-10 17:48:00] compiled[58.4%] ranch_acceptors_sup.erl true 
-[2018-05-10 17:48:00] compiled[59.5%] log_test.erl true 
-[2018-05-10 17:48:00] compiled[60.6%] crash_protocol.erl true 
-[2018-05-10 17:48:00] compiled[61.7%] loggerS.erl true 
-[2018-05-10 17:48:00] compiled[62.9%] ranch_acceptor.erl true 
-[2018-05-10 17:48:00] compiled[64.0%] gen_server2.erl true 
-[2018-05-10 17:48:00] compiled[65.1%] econfig.erl true 
-[2018-05-10 17:48:00] compiled[66.2%] tcp_handler.erl true 
-[2018-05-10 17:48:00] tcp_handler.erl:12: Warning: behaviour ranch_protocol undefined
+[2018-05-14 21:06:46] compiled[44.0%] acceptor_SUITE.erl true 
+[2018-05-14 21:06:46] compiled[45.0%] mod_map.erl true 
+[2018-05-14 21:06:46] mod_map.erl:12: Warning: behaviour gen_serverw undefined
+[2018-05-14 21:06:46] mod_map.erl:34: Warning: function status_/1 is unused
+[2018-05-14 21:06:46] mod_map.erl:74: Warning: this clause cannot match because a previous clause at line 71 always matches
 
-[2018-05-10 17:48:00] compiled[67.4%] ranch.erl true 
-[2018-05-10 17:48:00] compiled[68.5%] check_tcp_options.erl true 
-[2018-05-10 17:48:00] check_tcp_options.erl:2: Warning: behaviour ranch_protocol undefined
+[2018-05-14 21:06:46] compiled[46.0%] econfig.erl true 
+[2018-05-14 21:06:46] compiled[47.0%] task.erl true 
+[2018-05-14 21:06:46] compiled[48.0%] lib_player.erl true 
+[2018-05-14 21:06:46] compiled[49.0%] color.erl true 
+[2018-05-14 21:06:46] compiled[50.0%] ps_mgr.erl true 
+[2018-05-14 21:06:46] compiled[51.0%] ranch_transport.erl true 
+[2018-05-14 21:06:46] compiled[52.0%] dynamic_compile.erl true 
+[2018-05-14 21:06:46] compiled[53.0%] tcp_handler.erl true 
+[2018-05-14 21:06:46] tcp_handler.erl:12: Warning: behaviour ranch_protocol undefined
 
-[2018-05-10 17:48:00] compiled[69.6%] dynamic_compile.erl true 
-[2018-05-10 17:48:00] compiled[70.7%] tcp_reverse_sup.erl true 
-[2018-05-10 17:48:00] compiled[71.9%] mod_map_supervisor.erl true 
-[2018-05-10 17:48:00] compiled[73.0%] tcp_reverse_app.erl true 
-[2018-05-10 17:48:00] compiled[74.1%] tcp_codec.erl true 
-[2018-05-10 17:48:00] compiled[75.2%] mod_map_mgr_supervisor.erl true 
-[2018-05-10 17:48:00] mod_map_mgr_supervisor.erl:40: Warning: function start_child/1 is unused
+[2018-05-14 21:06:46] compiled[54.0%] echo_protocol.erl true 
+[2018-05-14 21:06:46] echo_protocol.erl:4: Warning: behaviour ranch_protocol undefined
 
-[2018-05-10 17:48:00] compiled[76.4%] vm_memory_monitor.erl true 
-[2018-05-10 17:48:00] compiled[77.5%] fastlog.erl true 
-[2018-05-10 17:48:00] fastlog.erl:12: Warning: behaviour gen_server2 undefined
+[2018-05-14 21:06:46] compiled[55.0%] priority_queue.erl true 
+[2018-05-14 21:06:46] compiled[56.0%] background_gc.erl true 
+[2018-05-14 21:06:46] background_gc.erl:13: Warning: behaviour gen_server2 undefined
 
-[2018-05-10 17:48:00] compiled[78.6%] active_echo_protocol.erl true 
-[2018-05-10 17:48:00] active_echo_protocol.erl:2: Warning: behaviour ranch_protocol undefined
+[2018-05-14 21:06:46] compiled[57.0%] tcp_codec.erl true 
+[2018-05-14 21:06:46] compiled[58.0%] lib_map_view.erl true 
+[2018-05-14 21:06:46] compiled[59.0%] lib_map_player.erl true 
+[2018-05-14 21:06:46] lib_map_player.erl:15: Warning: function init/0 is unused
 
-[2018-05-10 17:48:00] compiled[79.7%] eep_app.erl true 
-[2018-05-10 17:48:00] compiled[80.8%] file_ex.erl true 
-[2018-05-10 17:48:00] compiled[82.0%] task.erl true 
-[2018-05-10 17:48:00] compiled[83.1%] common_error_logger_h.erl true 
-[2018-05-10 17:48:00] compiled[84.2%] mod_map_mgr.erl true 
-[2018-05-10 17:48:00] mod_map_mgr.erl:12: Warning: behaviour gen_serverw undefined
+[2018-05-14 21:06:46] compiled[60.0%] tcp_client.erl true 
+[2018-05-14 21:06:46] compiled[61.0%] lib_map_pet.erl true 
+[2018-05-14 21:06:46] compiled[62.0%] pg_local.erl true 
+[2018-05-14 21:06:46] compiled[63.0%] ranch_tcp.erl true 
+[2018-05-14 21:06:46] ranch_tcp.erl:16: Warning: behaviour ranch_transport undefined
 
-[2018-05-10 17:48:00] compiled[85.3%] ps_mgr.erl true 
-[2018-05-10 17:48:00] compiled[86.5%] priority_queue.erl true 
-[2018-05-10 17:48:00] compiled[87.6%] mod_map_creator.erl true 
-[2018-05-10 17:48:00] mod_map_creator.erl:12: Warning: behaviour gen_serverw undefined
-[2018-05-10 17:48:00] mod_map_creator.erl:56: Warning: function load_all_map/0 is unused
-[2018-05-10 17:48:00] mod_map_creator.erl:59: Warning: function load_one_map/1 is unused
-[2018-05-10 17:48:00] mod_map_creator.erl:59: Warning: variable 'MapID' is unused
-[2018-05-10 17:48:00] mod_map_creator.erl:62: Warning: variable 'MapID' is unused
-[2018-05-10 17:48:00] mod_map_creator.erl:68: Warning: variable 'MapID' is unused
-[2018-05-10 17:48:00] mod_map_creator.erl:75: Warning: variable 'MapID' is unused
+[2018-05-14 21:06:47] compiled[64.0%] tcp_behaviour.erl true 
+[2018-05-14 21:06:47] compiled[65.0%] fly_worker.erl true 
+[2018-05-14 21:06:47] compiled[66.0%] mod_transmit.erl true 
+[2018-05-14 21:06:47] mod_transmit.erl:12: Warning: behaviour gen_serverw undefined
+[2018-05-14 21:06:47] mod_transmit.erl:28: Warning: variable 'Data' is unused
 
-[2018-05-10 17:48:00] compiled[88.7%] common_error_logger.erl true 
-[2018-05-10 17:48:00] common_error_logger.erl:13: Warning: behaviour gen_server2 undefined
+[2018-05-14 21:06:47] compiled[67.0%] pack_byte.erl true 
+[2018-05-14 21:06:47] compiled[68.0%] ranch_sup.erl true 
+[2018-05-14 21:06:47] compiled[69.0%] fly.erl true 
+[2018-05-14 21:06:47] compiled[70.0%] trap_exit_protocol.erl true 
+[2018-05-14 21:06:47] trap_exit_protocol.erl:2: Warning: behaviour ranch_protocol undefined
 
-[2018-05-10 17:48:00] compiled[89.8%] pg_local.erl true 
-[2018-05-10 17:48:00] compiled[91.0%] color.erl true 
-[2018-05-10 17:48:00] compiled[92.1%] background_gc.erl true 
-[2018-05-10 17:48:00] background_gc.erl:13: Warning: behaviour gen_server2 undefined
+[2018-05-14 21:06:47] compiled[71.0%] mod_player_supervisor.erl true 
+[2018-05-14 21:06:47] compiled[72.0%] fastlog_sup.erl true 
+[2018-05-14 21:06:47] compiled[73.0%] lib_map_obj.erl true 
+[2018-05-14 21:06:47] compiled[74.0%] lib_map_npc.erl true 
+[2018-05-14 21:06:47] compiled[75.0%] fastlog_app.erl true 
+[2018-05-14 21:06:47] compiled[76.0%] misc.erl true 
+[2018-05-14 21:06:47] compiled[77.0%] lib_map_monster.erl true 
+[2018-05-14 21:06:47] compiled[78.0%] supervisor_separate.erl true 
+[2018-05-14 21:06:47] supervisor_separate.erl:3: Warning: behaviour ranch_protocol undefined
 
-[2018-05-10 17:48:00] compiled[93.2%] acceptor_SUITE.erl true 
-[2018-05-10 17:48:00] compiled[94.3%] trap_exit_protocol.erl true 
-[2018-05-10 17:48:00] trap_exit_protocol.erl:2: Warning: behaviour ranch_protocol undefined
+[2018-05-14 21:06:47] compiled[79.0%] lib_map.erl true 
+[2018-05-14 21:06:47] lib_map.erl:47: Warning: variable 'Conf' is unused
+[2018-05-14 21:06:47] lib_map.erl:49: Warning: variable 'Conf' is unused
+[2018-05-14 21:06:47] lib_map.erl:52: Warning: variable 'Params' is unused
+[2018-05-14 21:06:47] lib_map.erl:56: Warning: variable 'Params' is unused
+[2018-05-14 21:06:47] lib_map.erl:60: Warning: variable 'Params' is unused
 
-[2018-05-10 17:48:00] compiled[95.5%] ranch_transport.erl true 
-[2018-05-10 17:48:00] compiled[96.6%] eep.erl true 
-[2018-05-10 17:48:00] compiled[97.7%] econfig_watcher_sup.erl true 
-[2018-05-10 17:48:00] compiled[98.8%] supervisor_separate.erl true 
-[2018-05-10 17:48:00] supervisor_separate.erl:3: Warning: behaviour ranch_protocol undefined
+[2018-05-14 21:06:47] compiled[80.0%] lqueue.erl true 
+[2018-05-14 21:06:47] compiled[81.0%] shutdown_SUITE.erl true 
+[2018-05-14 21:06:47] compiled[82.0%] game_sup.erl true 
+[2018-05-14 21:06:47] compiled[83.0%] gen_serverw.erl true 
+[2018-05-14 21:06:47] compiled[84.0%] mod_player.erl true 
+[2018-05-14 21:06:47] mod_player.erl:12: Warning: behaviour gen_serverw undefined
 
-[2018-05-10 17:48:00] compiled[100.0%] ranch_tcp.erl true 
-[2018-05-10 17:48:00] ranch_tcp.erl:16: Warning: behaviour ranch_transport undefined
+[2018-05-14 21:06:47] compiled[85.0%] game.erl true 
+[2018-05-14 21:06:47] compiled[86.0%] mod_map_supervisor.erl true 
+[2018-05-14 21:06:47] compiled[87.0%] ranch_ssl.erl true 
+[2018-05-14 21:06:47] ranch_ssl.erl:16: Warning: behaviour ranch_transport undefined
 
+[2018-05-14 21:06:47] compiled[88.0%] sendfile_SUITE.erl true 
+[2018-05-14 21:06:47] compiled[89.0%] ranch_server.erl true 
+[2018-05-14 21:06:47] compiled[90.0%] fastlog.erl true 
+[2018-05-14 21:06:47] fastlog.erl:12: Warning: behaviour gen_server2 undefined
+
+[2018-05-14 21:06:47] compiled[91.0%] remove_conn_and_wait_protocol.erl true 
+[2018-05-14 21:06:47] remove_conn_and_wait_protocol.erl:2: Warning: behaviour ranch_protocol undefined
+
+[2018-05-14 21:06:47] compiled[92.0%] eep_app.erl true 
+[2018-05-14 21:06:47] compiled[93.0%] ranch_protocol.erl true 
+[2018-05-14 21:06:47] compiled[94.0%] ranch_ct_hook.erl true 
+[2018-05-14 21:06:47] compiled[95.0%] ranch_listener_sup.erl true 
+[2018-05-14 21:06:47] compiled[96.0%] notify_and_wait_protocol.erl true 
+[2018-05-14 21:06:47] notify_and_wait_protocol.erl:2: Warning: behaviour ranch_protocol undefined
+
+[2018-05-14 21:06:47] compiled[97.0%] echo_protocol.erl true 
+[2018-05-14 21:06:47] echo_protocol.erl:2: Warning: behaviour ranch_protocol undefined
+
+[2018-05-14 21:06:47] compiled[98.0%] ranch_conns_sup.erl true 
+[2018-05-14 21:06:47] compiled[99.0%] ranch_app.erl true 
+[2018-05-14 21:06:47] compiled[100.0%] ranch_acceptors_sup.erl true 
 
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 
 
-@@@compile [cht,gsD] success@@@ at 2018-05-10 17:48:00 1.397 seconds 
+@@@compile [cht,gsD] success@@@ at 2018-05-14 21:06:47 2.197 seconds 
 
 
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^

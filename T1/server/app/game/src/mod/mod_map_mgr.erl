@@ -12,7 +12,6 @@
 -behaviour(gen_serverw).
 -include("common.hrl").
 -include("logger.hrl").
--include("move.hrl").
 -include("map.hrl").
 
 -export([player_join_map/2]).
@@ -70,7 +69,7 @@ do_handle_cast(Request, State) ->
     {noreply, State}.
 
 %%--------------------------------------------------------------------
-player_join_map_1({MapID, PlayerPid, PlayerID, Pos}) ->
+player_join_map_1({MapID, _PlayerPid, PlayerID, Pos}) ->
     MS = ets:fun2ms(
         fun(T) when
             T#map_line.limits > T#map_line.in + T#map_line.ready
@@ -92,7 +91,7 @@ player_join_map_1({MapID, PlayerPid, PlayerID, Pos}) ->
 %%--------------------------------------------------------------------
 player_exit_map_1(PlayerID) ->
     CurPid = undefined,
-    mod_map:player_leave(CurPid, PlayerID).
+    mod_map:player_exit(CurPid, PlayerID).
 
 %%--------------------------------------------------------------------
 create_new_line() ->

@@ -21,6 +21,7 @@
 -export([pos_to_vis_tile/4]).
 -export([sync_remove_from_vis_tile/2]).
 
+
 -define(VIS_KEY, map_vis_key__).
 
 init_vis_tile(Width, Height, ViewDist) ->
@@ -103,11 +104,11 @@ remove_from_vis_tile(Obj, VisTileIndex) ->
     ok.
 
 %% 把角色信息广播到九宫格中
-sync_big_vis_tile_to_player(Unit, VisTile, Msg) ->
+sync_big_vis_tile_to_player(Unit, VisTileList, Msg) ->
     lists:foreach(
         fun(VisTile) ->
             _ = [ Role ! Msg || Role <- VisTile#visTile.player, is_visible(Unit, Role)]
-        end, VisTile),
+        end, VisTileList),
     ok.
 
 

@@ -13,16 +13,25 @@
 -include("logger.hrl").
 -include("map.hrl").
 
--export([is_full/0]).
--export([player_will_join/2, player_leave/2]).
+-export([player_will_join/2]).
+-export([player_exit/2, player_join/2]).
 
 %% API
 -export([start_link/2]).
 -export([mod_init/1, do_handle_call/3, do_handle_info/2, do_handle_cast/2]).
 
-is_full() -> false.
-player_will_join(_MapPid, _ID) -> ok.
-player_leave(_MapPid, _ID) -> ok.
+
+player_will_join(MapPid, PlayerID) ->
+    gen_server:call(MapPid, {will_join, PlayerID}).
+
+player_exit(MapPid, PlayerID) ->
+    gen_server:call(MapPid, {exit, PlayerID}).
+
+player_join(MapPid, PlayerID) ->
+    gen_server:call(MapPid, {join, PlayerID}).
+
+
+status_(MapPid) -> ps_mgr:send(MapPid, status).
 
 
 %%%===================================================================
@@ -42,14 +51,28 @@ mod_init({MapID, MapLine}) ->
     {ok, #map_state{map_id = MapID}}.
 
 %%--------------------------------------------------------------------
-do_handle_call({init}, From, State) ->
-    Ret = init(State),
-    {reply, Ret, State};
+do_handle_call({init}, _From, State) ->
+    NewState = lib_map:init(State),
+    {reply, ok, NewState};
+do_handle_call({will_join, Params}, _From, State) ->
+    {Ret, NewState} = lib_map:player_will_join(State, Params),
+    {reply, Ret, NewState};
+do_handle_call({join, Params}, _From, State) ->
+    {Ret, NewState} = lib_map:player_join(State, Params),
+    {reply, Ret, NewState};
+do_handle_call({exit, Params}, _From, State) ->
+    {Ret, NewState} = lib_map:player_exit(State, Params),
+    {reply, Ret, NewState};
 do_handle_call(Request, From, State) ->
     ?ERROR("undeal call ~w from ~w", [Request, From]),
     {reply, ok, State}.
 
 %%--------------------------------------------------------------------
+do_handle_info(status, State) ->
+    catch show_status(),
+    {noreply, State};
+do_handle_info(tick, State) ->
+    {noreply, lib_map:tick(State)};
 do_handle_info(Info, State) ->
     ?ERROR("undeal info ~w", [Info]),
     {noreply, State}.
@@ -59,20 +82,10 @@ do_handle_cast(Request, State) ->
     ?ERROR("undeal cast ~w", [Request]),
     {noreply, State}.
 
-
-init(#map_state{
-    map_id = MapID
-} = State
-)->
-    Conf = mod_map_creator:map_conf(MapID),
-    ok = init_vis_tile(Conf),
-    ok = init_npc(Conf),
-    ok = init_monster(Conf),
+show_status() ->
     ok.
 
-init_vis_tile(Conf) -> ok.
-init_npc(Conf) -> ok.
-init_monster(Conf) -> ok.
+
 
 
 

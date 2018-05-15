@@ -1,1 +1,14 @@
 /T1/.svn
+/T1/server/_gsdata_/*.log
+/T1/server/_gsdata_/*._gs
+/T1/server/_gsdata_/_saved_/app/dbs/data/log/*.log
+/T1/server/_gsdata_
+/T1/server/deps_1
+/T1/server/_gsdata_/_saved_/app/dbs/data/log/*.err
+/T1/server/app/dbs/ebin/*.beam
+*.log
+*.beam
+elog
+log
+/T1/server/app/game/data/elog
+/T1/server/app/game/data/log

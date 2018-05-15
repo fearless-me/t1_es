@@ -35,7 +35,8 @@
 -record(visTile,{
     player = [],
     monster = [],
-    npc = []
+    npc = [],
+    pet = []
 }).
 
 -record(map_state,{
@@ -43,15 +44,16 @@
     player = undefined,
     monster = undefined,
     npc = undefined,
-    respawn = undefined,
-    vis_tile = undefined,
+    pet = undefined,
+    ready = [],
+    respawn = [],
     hook_mod = undefined
 }).
 
 -record(map_line,{
-    map_id,
-    line_id,
-    pid,
+    map_id = 0,
+    line_id = 0,
+    pid = undefined,
     limits = 32,
     in = 0,
     ready = 0,
