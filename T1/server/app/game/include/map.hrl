@@ -45,7 +45,6 @@
     monster = undefined,
     npc = undefined,
     pet = undefined,
-    ready = [],
     respawn = [],
     hook_mod = undefined
 }).
@@ -56,12 +55,26 @@
     pid = undefined,
     limits = 32,
     in = 0,
-    ready = 0,
     dead_line = 0
 }).
 
 -define(MAP_LINES, map_line_ets__).
 
 
+%%
+-record(change_map_req,{
+    player_id = 0,
+    player_pid = undefined,
+    map_id = 0,
+    pos = undefined,
+    map_pid = undefind
+}).
+
+-record(change_map_ack,{
+    map_id = 0,
+    pos = undefined,
+    map_pid = undefind,
+    error = 0
+}).
 
 -endif. %% MAP_HRL

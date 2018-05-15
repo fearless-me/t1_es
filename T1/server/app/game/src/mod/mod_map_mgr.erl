@@ -20,8 +20,8 @@
 -export([start_link/1]).
 -export([mod_init/1, do_handle_call/3, do_handle_info/2, do_handle_cast/2]).
 
-player_join_map(MgrPid, Params) ->
-    gen_server:call(MgrPid, {join_map, Params}).
+player_join_map(MgrPid, Req) ->
+    gen_server:call(MgrPid, {join_map, Req}).
 
 player_exit_map(MgrPid, Params) ->
     gen_server:call(MgrPid, {exit_map, Params}).
@@ -46,8 +46,8 @@ mod_init(MapID) ->
     {ok, #{}}.
 
 %%--------------------------------------------------------------------
-do_handle_call({join_map, Params}, From, State) ->
-    Ret = player_join_map_1(Params),
+do_handle_call({join_map, Req}, From, State) ->
+    Ret = player_join_map_1(Req),
     {reply, Ret, State};
 do_handle_call({exit_map, PlayerID}, From, State) ->
     Ret = player_exit_map_1(PlayerID),
@@ -69,10 +69,12 @@ do_handle_cast(Request, State) ->
     {noreply, State}.
 
 %%--------------------------------------------------------------------
-player_join_map_1({MapID, _PlayerPid, PlayerID, Pos}) ->
+player_join_map_1(#change_map_req{
+    player_id = PlayerID, map_id = MapID, pos = Pos
+}) ->
     MS = ets:fun2ms(
         fun(T) when
-            T#map_line.limits > T#map_line.in + T#map_line.ready
+            T#map_line.limits > T#map_line.in
             -> T
         end),
     SelectLine =
@@ -83,10 +85,10 @@ player_join_map_1({MapID, _PlayerPid, PlayerID, Pos}) ->
                 create_new_line()
         end,
 
-    #map_line{pid = MapPid} = SelectLine,
-    mod_map:player_will_join(MapPid, PlayerID),
-    ets:update_counter(?MAP_LINES, MapID, {#map_line.ready, 1}),
-    {MapPid, Pos}.
+    #map_line{pid = MapPid, map_id = MapID} = SelectLine,
+    mod_map:player_join(MapPid, PlayerID),
+    ets:update_counter(?MAP_LINES, MapID, {#map_line.in, 1}),
+    #change_map_ack{map_id = MapID, map_pid = MapPid, pos = Pos}.
 
 %%--------------------------------------------------------------------
 player_exit_map_1(PlayerID) ->

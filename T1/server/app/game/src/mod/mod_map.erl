@@ -13,16 +13,14 @@
 -include("logger.hrl").
 -include("map.hrl").
 
--export([player_will_join/2]).
+
+-export([status_/1]).
 -export([player_exit/2, player_join/2]).
 
 %% API
 -export([start_link/2]).
 -export([mod_init/1, do_handle_call/3, do_handle_info/2, do_handle_cast/2]).
 
-
-player_will_join(MapPid, PlayerID) ->
-    gen_server:call(MapPid, {will_join, PlayerID}).
 
 player_exit(MapPid, PlayerID) ->
     gen_server:call(MapPid, {exit, PlayerID}).
@@ -54,9 +52,6 @@ mod_init({MapID, MapLine}) ->
 do_handle_call({init}, _From, State) ->
     NewState = lib_map:init(State),
     {reply, ok, NewState};
-do_handle_call({will_join, Params}, _From, State) ->
-    {Ret, NewState} = lib_map:player_will_join(State, Params),
-    {reply, Ret, NewState};
 do_handle_call({join, Params}, _From, State) ->
     {Ret, NewState} = lib_map:player_join(State, Params),
     {reply, Ret, NewState};

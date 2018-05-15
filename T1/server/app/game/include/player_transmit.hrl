@@ -13,7 +13,14 @@
 
 -record(player_transmit, {
     player_id = 0,
-    lock_pid = 0
+    player_pid = undefined,
+    lock_pid = undefined,
+    map_id = 0,
+    map_pid = undefined,
+    old_map_id = 0,
+    old_map_pid = undefined,
+    pos = undefined
+
 }).
 -define(PLAYER_TRANSMIT_ETS, player_transmit_ets__).
 

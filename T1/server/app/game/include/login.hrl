@@ -4,13 +4,24 @@
 %%% @doc
 %%%
 %%% @end
-%%% Created : 14. 五月 2018 14:12
+%%% Created : 15. 五月 2018 20:24
 %%%-------------------------------------------------------------------
--module(lib_map_player).
 -author("mawenhong").
 
-%% API
--export([]).
+-ifndef(LOGIN_HRL).
+-define(LOGIN_HRL, true).
 
-init() ->
-    ok.
+-record(login_req,{
+    account_id = 0,
+    account_name = "",
+    player_pid = 0
+}).
+
+-record(login_ack,{
+   account_id = 0,
+   error = 0
+}).
+
+
+
+-endif.

@@ -33,6 +33,7 @@
       <sourceFolder url="file://$MODULE_DIR$/app/deps/ranch/test" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/app/game/include" type="erlang-include" />
       <sourceFolder url="file://$MODULE_DIR$/app/game/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/app/deps/pubs/src/net" type="erlang-include" />
       <excludeFolder url="file://$MODULE_DIR$/app/center/data" />
       <excludeFolder url="file://$MODULE_DIR$/app/center/scripts" />
       <excludeFolder url="file://$MODULE_DIR$/app/dbs/data" />

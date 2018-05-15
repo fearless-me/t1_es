@@ -11,10 +11,11 @@
 
 -behaviour(gen_serverw).
 -include("logger.hrl").
+-include("map.hrl").
 
 %% API
--export([take_over_player_online/0]).
--export([player_change_map/1]).
+-export([take_over_player_online/2]).
+-export([player_change_map/3]).
 -export([map_conf/1]).
 -export([broadcast_all/0, broadcast_map/1]).
 
@@ -22,42 +23,44 @@
 -export([start_link/0]).
 -export([mod_init/1, do_handle_call/3, do_handle_info/2, do_handle_cast/2]).
 
-
-
-take_over_player_online() ->
-    Mgr = map_mgr(1),
-    case mod_map_mgr:player_join_map(Mgr, 0) of
-        {_MapPid, _Pos} = Msg -> ps_mgr:send(0, Msg);
-         _ -> kick_to_born_map(0)
+%%%-------------------------------------------------------------------
+take_over_player_online(MapID, Req) ->
+    Mgr = map_mgr(MapID),
+    case mod_map_mgr:player_join_map(Mgr, Req) of
+        #change_map_ack{} = Ack -> Ack;
+         _ -> kick_to_born_map(Req)
     end,
     ok.
 
-player_change_map({PlayerID,CurMap,TarMap})->
+%%%-------------------------------------------------------------------
+player_change_map(PlayerID,CurMap,Req)->
     CurMgr = map_mgr(CurMap),
-    TarMgr = map_mgr(TarMap),
+    TarMgr = map_mgr(Req#change_map_req.map_id),
     mod_map_mgr:player_exit_map(CurMgr, PlayerID),
-    case mod_map_mgr:player_join_map(TarMgr, PlayerID) of
-        {_MapPid, _Pos} = Msg -> ps_mgr:send(0, Msg);
-        _ -> kick_to_born_map(0)
-    end,
+    case mod_map_mgr:player_join_map(TarMgr, Req) of
+        #change_map_ack{} = Ack -> Ack;
+        _ -> kick_to_born_map(Req)
+    end.
+
+%%%-------------------------------------------------------------------
+kick_to_born_map(Req) ->
     ok.
 
+%%%-------------------------------------------------------------------
 broadcast_all() ->
-
     ok.
 
+%%%-------------------------------------------------------------------
 broadcast_map(MapID) ->
     ok.
 
+%%%-------------------------------------------------------------------
 map_mgr(MapID) ->
     ok.
 
+%%%-------------------------------------------------------------------
 map_conf(MapID) ->
     ok.
-
-kick_to_born_map(PlayerID) ->
-    ok.
-
 
 %%%===================================================================
 %%% public functions
@@ -71,7 +74,7 @@ start_link() ->
 mod_init(_Args) ->
     erlang:process_flag(trap_exit, true),
     erlang:process_flag(priority, high),
-
+    
     load_all_map(),
 
     {ok, {}}.
@@ -100,6 +103,8 @@ load_all_map() ->
 load_one_map(MapID) ->
     ok.
 
+
+born_map_id() -> 1.
 
 
 

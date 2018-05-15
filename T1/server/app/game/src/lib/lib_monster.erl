@@ -4,9 +4,9 @@
 %%% @doc
 %%%
 %%% @end
-%%% Created : 14. 五月 2018 14:12
+%%% Created : 14. 五月 2018 14:10
 %%%-------------------------------------------------------------------
--module(lib_map_npc).
+-module(lib_monster).
 -author("mawenhong").
 
 %% API

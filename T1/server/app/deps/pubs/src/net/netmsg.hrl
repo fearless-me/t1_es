@@ -14,6 +14,17 @@
 	identity
 }).
 
+%% 
+-define(GS2U_GoNewMap,46304).
+-record(pk_GS2U_GoNewMap,{
+	%% Int32
+	tarMapID,
+	%% Single
+	fX,
+	%% Single
+	fY
+}).
+
 -record(pk_GameServerInfo,{
 	%% Int16
 	lineid,
@@ -65,19 +76,14 @@
 }).
 
 %% 
-%% // funcell 回复web消息
--define(LS2Web_CryptoAck,1690).
--record(pk_LS2Web_CryptoAck,{
-	%% String 加密消息体
-	bodyJsonStr
-}).
-
-%% 
-%% // funcell 回复web消息
--define(LS2Web_NormalAck,1056).
--record(pk_LS2Web_NormalAck,{
-	%% String 未加密消息体
-	bodyJsonStr
+-define(U2GS_ChangeMap,4914).
+-record(pk_U2GS_ChangeMap,{
+	%% Int32
+	newMapID,
+	%% Single
+	fX,
+	%% Single
+	fY
 }).
 
 %% 
@@ -119,22 +125,6 @@
 %% //请求线路列表
 -define(U2LS_RequestGSLine,39508).
 -record(pk_U2LS_RequestGSLine,{
-}).
-
-%% 
-%% // funcell web消息
--define(Web2LS_Crypto,1767).
--record(pk_Web2LS_Crypto,{
-	%% String 加密消息体
-	bodyJsonStr
-}).
-
-%% 
-%% // funcell web消息
--define(Web2LS_Normal,889).
--record(pk_Web2LS_Normal,{
-	%% String 未加密消息体
-	bodyJsonStr
 }).
 
 -endif. %%NetmsgRecords

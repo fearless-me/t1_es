@@ -34,15 +34,16 @@ init([]) ->
 start() ->
     {ok, SupPid} = game_sup:start_link(),
 
-    wrapper({"logger", stdio, ?Wrap(start_logs(SupPid))}),
-    wrapper({"error Logger",  ?Wrap(start_errlog(SupPid))}),
-    wrapper({"sentinel",  ?Wrap(start_sentinel(SupPid))}),
-    wrapper({"config init",  ?Wrap(start_conf(SupPid))}),
-    wrapper({"monitor/gc/vms",  ?Wrap(start_gc_vm(SupPid, 0.5))}),
-    wrapper({"test network 15555",  ?Wrap(start_listener_15555(SupPid))}),
-    wrapper({"test network 25555",  ?Wrap(start_listener_25555(SupPid))}),
-    wrapper({"start map root supervisor",  ?Wrap(start_map_root_supervisor(SupPid))}),
-    wrapper({"start auto compile and load",  ?Wrap(start_auto_reload(SupPid))}),
+    wrapper({"logger", stdio,               ?Wrap(start_logs(SupPid))}),
+    wrapper({"error Logger",                ?Wrap(start_errlog(SupPid))}),
+    wrapper({"sentinel",                    ?Wrap(start_sentinel(SupPid))}),
+    wrapper({"config init",                 ?Wrap(start_conf(SupPid))}),
+    wrapper({"monitor/gc/vms",              ?Wrap(start_gc_vm(SupPid, 0.5))}),
+    wrapper({"test network 15555",          ?Wrap(start_listener_15555(SupPid))}),
+    wrapper({"test network 25555",          ?Wrap(start_listener_25555(SupPid))}),
+    wrapper({"start map root supervisor",   ?Wrap(start_map_root_supervisor(SupPid))}),
+    wrapper({"start login window",          ?Wrap(start_login(SupPid))}),
+    wrapper({"start auto compile and load", ?Wrap(start_auto_reload(SupPid))}),
 
     sentinel_server:status(),
     sentinel_server:ready(true),
@@ -100,11 +101,15 @@ start_listener_15555(_SupPid) ->
         test_tcp_15555,
         10,
         [{port, 15555}, {max_connections, 1000}],
-        behaviour_example
+        mod_player
     ).
 
 start_auto_reload(_SupPid) ->
     ok = fly:start().
+
+start_login(SupPid) ->
+    {ok, _} = ?CHILD(SupPid, mod_login, worker),
+    ok.
 
 
 start_map_root_supervisor(SupPid)->

@@ -24,6 +24,7 @@
 
 -record(obj, {
     code = 0,
+    id = 0,
     type = ?OBJ_ERR :: obj_type(),
     map_id = 0,
     line_id = 0,
@@ -31,13 +32,6 @@
     map_pid = undefined,
     pos = undefined :: vector3() ,
     com = undefined 
-}).
-
--record(obj_player, {
-    player_id = 0,
-    player_pid = undefined,
-    attr = [],
-    buff_list = []
 }).
 
 -record(obj_monster, {

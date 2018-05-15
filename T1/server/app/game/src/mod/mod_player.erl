@@ -3,47 +3,87 @@
 %%% @copyright (C) 2018, <COMPANY>
 %%% @doc
 %%%
+%%% tcp connect -> on_init
+%%% receive data -> on_data
+%%% tcp close/ tcp error -> on_close
+%%% tcp_handler:active_stop ->  on_close
+%%%
+%%% gen_server:handle_info -> on_info_msg
+%%% gen_server:handle_call -> on_call_msg
+%%% gen_server:handle_cast -> on_info_cast
+%%% 
 %%% @end
 %%% Created : 11. 五月 2018 14:27
 %%%-------------------------------------------------------------------
 -module(mod_player).
 -author("mawenhong").
+-behaviour(tcp_behaviour).
 
--behaviour(gen_serverw).
 -include("logger.hrl").
--include("player.hrl").
+-include("netconf.hrl").
+-include("player_status.hrl").
+
+-define(SocketKey,socketRef___).
+
 
 %% API
--export([start_link/0]).
--export([mod_init/1, do_handle_call/3, do_handle_info/2, do_handle_cast/2]).
+-export([stop/1, direct_stop/0, send/1,direct_send/1]).
+-export([on_init/1, on_data/2, on_close/2]).
+-export([on_info_msg/1, on_call_msg/2, on_cast_msg/1, on_net_msg/1]).
+-export([socket/1, socket/0]).
+%%%-------------------------------------------------------------------
+stop(Reason)->
+    tcp_handler:active_stop(Reason).
 
-%%%===================================================================
-%%% public functions
-%%%===================================================================
-start_link() ->
-    gen_serverw:start_link(?MODULE, [], []).
+direct_stop()->
+    erlang:exit(self(), normal).
+%%%-------------------------------------------------------------------
+send(IoList) when is_list(IoList)->
+    tcp_handler:send_net_msg(IoList);
+send(Msg) ->
+    {_Bytes1, IoList} = tcp_codec:encode(Msg),
+    tcp_handler:send_net_msg(IoList),
+    ok.
 
-%%%===================================================================
-%%% Internal functions
-%%%===================================================================	
-mod_init(_Args) ->
-    %% erlang:process_flag(trap_exit, true),
-    %% erlang:process_flag(priority, high),
+direct_send(IoList)->
+    tcp_handler:direct_send_net_msg(socket(), IoList).
 
-    {ok, #{}}.
+%%%-------------------------------------------------------------------
+on_init(Socket) ->
+    {Ip, Port} = misc:peername(Socket),
+    socket(Socket),
+    lib_player:set_player_status(?PS_INIT),
+    ?DEBUG("client connected: ~p ~ts:~p", [Socket, Ip, Port]),
+    ok.
 
-%%--------------------------------------------------------------------	
-do_handle_call(Request, From, State) ->
-    ?ERROR("undeal call ~w from ~w", [Request, From]),
-    {reply, ok, State}.
+on_data(Socket, Data)->
+%%    ?DEBUG("~p,recieve:~p",[Socket, Data]),
+%%    direct_send([Data]),
+    tcp_codec:decode(fun mod_player:on_net_msg/1, Socket, Data),
+    ok.
 
-%%--------------------------------------------------------------------
-do_handle_info(Info, State) ->
-    ?ERROR("undeal info ~w", [Info]),
-    {noreply, State}.
+on_close(Socket, Reason) ->
+    ?DEBUG("~p close,reason:~p",[Socket, Reason]),
+    ok.
+%%%-------------------------------------------------------------------
+on_info_msg(Info) ->
+    ?DEBUG("info:~p",[Info]),
+    ok.
 
-%%--------------------------------------------------------------------
-do_handle_cast(Request, State) ->
-    ?ERROR("undeal cast ~w", [Request]),
-    {noreply, State}.
+on_call_msg(Request, From)->
+    ?DEBUG("call ~p from ~p",[Request, From]),
+    true.
 
+on_cast_msg(Request) ->
+    ?DEBUG("cast:~p",[Request]),
+    ok.
+
+
+on_net_msg({Cmd, Msg})->
+    ?DEBUG("net msg ~p:~p",[Cmd, Msg]),
+    lib_route:route(Msg),
+    ok.
+
+%%%-------------------------------------------------------------------
+socket(Socket) -> put(?SocketKey, Socket).
+socket()-> get(?SocketKey).

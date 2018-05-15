@@ -56,6 +56,18 @@ decode(?GS2U_ChangeLineResponse,Bin0) ->
 		},
 	Bin2 };
 
+%GENERATED from file:LS2User.h => GS2U_GoNewMap
+decode(?GS2U_GoNewMap,Bin0) ->
+	{ V_tarMapID, Bin1 } = read_int( Bin0 ),
+	{ V_fX, Bin2 } = read_float( Bin1 ),
+	{ V_fY, Bin3 } = read_float( Bin2 ),
+	{ #pk_GS2U_GoNewMap {
+		tarMapID = V_tarMapID,
+		fX = V_fX,
+		fY = V_fY
+		},
+	Bin3 };
+
 %GENERATED from file:LS2User.h => LS2U_GameLineServerList
 decode(?LS2U_GameLineServerList,Bin0) ->
 	{ V_gameServers, Bin1 } = read_array(Bin0, fun(X) -> decode_GameServerInfo( X ) end),
@@ -86,21 +98,17 @@ decode(?LS2U_LoginResult,Bin0) ->
 		},
 	Bin4 };
 
-%GENERATED from file:LS2User.h => LS2Web_CryptoAck
-decode(?LS2Web_CryptoAck,Bin0) ->
-	{ V_bodyJsonStr, Bin1 } = read_string( Bin0 ),
-	{ #pk_LS2Web_CryptoAck {
-		bodyJsonStr = V_bodyJsonStr
+%GENERATED from file:LS2User.h => U2GS_ChangeMap
+decode(?U2GS_ChangeMap,Bin0) ->
+	{ V_newMapID, Bin1 } = read_int( Bin0 ),
+	{ V_fX, Bin2 } = read_float( Bin1 ),
+	{ V_fY, Bin3 } = read_float( Bin2 ),
+	{ #pk_U2GS_ChangeMap {
+		newMapID = V_newMapID,
+		fX = V_fX,
+		fY = V_fY
 		},
-	Bin1 };
-
-%GENERATED from file:LS2User.h => LS2Web_NormalAck
-decode(?LS2Web_NormalAck,Bin0) ->
-	{ V_bodyJsonStr, Bin1 } = read_string( Bin0 ),
-	{ #pk_LS2Web_NormalAck {
-		bodyJsonStr = V_bodyJsonStr
-		},
-	Bin1 };
+	Bin3 };
 
 %GENERATED from file:LS2User.h => U2LS_Login_Normal
 decode(?U2LS_Login_Normal,Bin0) ->
@@ -141,23 +149,7 @@ decode(?U2LS_RequestGSLine,Bin0) ->
 	{ #pk_U2LS_RequestGSLine {
 
 		},
-	Bin0 };
-
-%GENERATED from file:LS2User.h => Web2LS_Crypto
-decode(?Web2LS_Crypto,Bin0) ->
-	{ V_bodyJsonStr, Bin1 } = read_string( Bin0 ),
-	{ #pk_Web2LS_Crypto {
-		bodyJsonStr = V_bodyJsonStr
-		},
-	Bin1 };
-
-%GENERATED from file:LS2User.h => Web2LS_Normal
-decode(?Web2LS_Normal,Bin0) ->
-	{ V_bodyJsonStr, Bin1 } = read_string( Bin0 ),
-	{ #pk_Web2LS_Normal {
-		bodyJsonStr = V_bodyJsonStr
-		},
-	Bin1 }.
+	Bin0 }.
 
 %GENERATED from file:LS2User.h => GameServerInfo
 -spec decode_GameServerInfo(Bin0) -> { #pk_GameServerInfo{},LeftBin }
@@ -185,6 +177,18 @@ encode(#pk_GS2U_ChangeLineResponse{} = P) ->
 		<<?GS2U_ChangeLineResponse:?U16>>,
 		Bin_gameServers,
 		Bin_identity
+	];
+
+%GENERATED from file:LS2User.h => GS2U_GoNewMap
+encode(#pk_GS2U_GoNewMap{} = P) ->
+	Bin_tarMapID = write_int( P#pk_GS2U_GoNewMap.tarMapID ),
+	Bin_fX = write_float( P#pk_GS2U_GoNewMap.fX ),
+	Bin_fY = write_float( P#pk_GS2U_GoNewMap.fY ),
+	[
+		<<?GS2U_GoNewMap:?U16>>,
+		Bin_tarMapID,
+		Bin_fX,
+		Bin_fY
 	];
 
 %GENERATED from file:LS2User.h => LS2U_GameLineServerList
@@ -217,20 +221,16 @@ encode(#pk_LS2U_LoginResult{} = P) ->
 		Bin_msg
 	];
 
-%GENERATED from file:LS2User.h => LS2Web_CryptoAck
-encode(#pk_LS2Web_CryptoAck{} = P) ->
-	Bin_bodyJsonStr = write_string( P#pk_LS2Web_CryptoAck.bodyJsonStr ),
+%GENERATED from file:LS2User.h => U2GS_ChangeMap
+encode(#pk_U2GS_ChangeMap{} = P) ->
+	Bin_newMapID = write_int( P#pk_U2GS_ChangeMap.newMapID ),
+	Bin_fX = write_float( P#pk_U2GS_ChangeMap.fX ),
+	Bin_fY = write_float( P#pk_U2GS_ChangeMap.fY ),
 	[
-		<<?LS2Web_CryptoAck:?U16>>,
-		Bin_bodyJsonStr
-	];
-
-%GENERATED from file:LS2User.h => LS2Web_NormalAck
-encode(#pk_LS2Web_NormalAck{} = P) ->
-	Bin_bodyJsonStr = write_string( P#pk_LS2Web_NormalAck.bodyJsonStr ),
-	[
-		<<?LS2Web_NormalAck:?U16>>,
-		Bin_bodyJsonStr
+		<<?U2GS_ChangeMap:?U16>>,
+		Bin_newMapID,
+		Bin_fX,
+		Bin_fY
 	];
 
 %GENERATED from file:LS2User.h => U2LS_Login_Normal
@@ -274,22 +274,6 @@ encode(#pk_U2LS_RequestGSLine{}) ->
 
 	];
 
-%GENERATED from file:LS2User.h => Web2LS_Crypto
-encode(#pk_Web2LS_Crypto{} = P) ->
-	Bin_bodyJsonStr = write_string( P#pk_Web2LS_Crypto.bodyJsonStr ),
-	[
-		<<?Web2LS_Crypto:?U16>>,
-		Bin_bodyJsonStr
-	];
-
-%GENERATED from file:LS2User.h => Web2LS_Normal
-encode(#pk_Web2LS_Normal{} = P) ->
-	Bin_bodyJsonStr = write_string( P#pk_Web2LS_Normal.bodyJsonStr ),
-	[
-		<<?Web2LS_Normal:?U16>>,
-		Bin_bodyJsonStr
-	];
-
 encode(_) -> noMatch.
 
 %GENERATED from file:LS2User.h => GameServerInfo
@@ -308,14 +292,12 @@ encode_GameServerInfo( #pk_GameServerInfo{} = P ) ->
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 name(?GS2U_ChangeLineResponse) -> "GS2U_ChangeLineResponse";
+name(?GS2U_GoNewMap) -> "GS2U_GoNewMap";
 name(?LS2U_GameLineServerList) -> "LS2U_GameLineServerList";
 name(?LS2U_LoginQue) -> "LS2U_LoginQue";
 name(?LS2U_LoginResult) -> "LS2U_LoginResult";
-name(?LS2Web_CryptoAck) -> "LS2Web_CryptoAck";
-name(?LS2Web_NormalAck) -> "LS2Web_NormalAck";
+name(?U2GS_ChangeMap) -> "U2GS_ChangeMap";
 name(?U2LS_Login_Normal) -> "U2LS_Login_Normal";
 name(?U2LS_RequestGSLine) -> "U2LS_RequestGSLine";
-name(?Web2LS_Crypto) -> "Web2LS_Crypto";
-name(?Web2LS_Normal) -> "Web2LS_Normal";
 name(MsgID) -> "ErrorNetMsg_" ++ erlang:integer_to_list(MsgID).
 
