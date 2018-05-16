@@ -18,7 +18,7 @@
 -export([player_exit/2, player_join/2]).
 
 %% API
--export([start_link/2]).
+-export([start_link/1]).
 -export([mod_init/1, do_handle_call/3, do_handle_info/2, do_handle_cast/2]).
 
 
@@ -28,25 +28,25 @@ player_exit(MapPid, PlayerID) ->
 player_join(MapPid, PlayerID) ->
     gen_server:call(MapPid, {join, PlayerID}).
 
-
 status_(MapPid) -> ps_mgr:send(MapPid, status).
 
 
 %%%===================================================================
 %%% public functions
 %%%===================================================================
-start_link(MapID, MapLine) ->
-    gen_serverw:start_link(?MODULE, [{MapID, MapLine}], []).
+start_link(Params) ->
+    gen_serverw:start_link(?MODULE, Params, []).
 
 %%%===================================================================
 %%% Internal functions
 %%%===================================================================	
-mod_init({MapID, MapLine}) ->
-    %% erlang:process_flag(trap_exit, true),
+mod_init([MapID, MapLine]) ->
+     erlang:process_flag(trap_exit, true),
     %% erlang:process_flag(priority, high),
     ProcessName = misc:create_process_name(mod_map, [MapID,MapLine]),
     erlang:register(ProcessName, self()),
-    {ok, #map_state{map_id = MapID}}.
+    ?INFO("map ~p:~p started",[ProcessName, self()]),
+    {ok, lib_map:init(#map_state{map_id = MapID})}.
 
 %%--------------------------------------------------------------------
 do_handle_call({init}, _From, State) ->

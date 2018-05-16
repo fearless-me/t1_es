@@ -159,8 +159,8 @@ sync_big_vis_tile_to_player(Unit, VisTileList, Msg) ->
 %%%-------------------------------------------------------------------
 %% vector3 
 pos_to_vis_tile(Pos, VisTileWidth, ViewDist) ->
-    IndexX = trunc(Pos#vector3.x div ?TILE_SCALE / ViewDist + 1),
-    IndexZ = trunc(Pos#vector3.z div ?TILE_SCALE / ViewDist + 1),
+    IndexX = trunc(Pos#vector3.x / ?TILE_SCALE / ViewDist + 1),
+    IndexZ = trunc(Pos#vector3.z / ?TILE_SCALE / ViewDist + 1),
 
     (IndexZ * VisTileWidth + IndexX).
 

@@ -12,14 +12,20 @@
 -define(LOGIN_HRL, true).
 
 -record(login_req,{
-    account_id = 0,
-    account_name = "",
+    plat_account_name = "",
+    access_token = "",
     player_pid = 0
 }).
 
 -record(login_ack,{
-   account_id = 0,
-   error = 0
+   error = 0,
+    account_info = undefined
+}).
+
+
+-record(account_info,{
+    account_id = 0,
+    account_name = ""
 }).
 
 

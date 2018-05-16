@@ -58,8 +58,6 @@
     dead_line = 0
 }).
 
--define(MAP_LINES, map_line_ets__).
-
 
 %%
 -record(change_map_req,{
@@ -67,11 +65,13 @@
     player_pid = undefined,
     map_id = 0,
     pos = undefined,
-    map_pid = undefind
+    map_pid = undefind,
+    obj = undefined
 }).
 
 -record(change_map_ack,{
     map_id = 0,
+    line_id = 0,
     pos = undefined,
     map_pid = undefind,
     error = 0

@@ -66,6 +66,10 @@ on_close(Socket, Reason) ->
     ?DEBUG("~p close,reason:~p",[Socket, Reason]),
     ok.
 %%%-------------------------------------------------------------------
+on_info_msg({login_ack, Msg}) ->
+    ?DEBUG("login_ack:~p",[Msg]),
+    lib_player:login_ack(Msg),
+    ok;
 on_info_msg(Info) ->
     ?DEBUG("info:~p",[Info]),
     ok.

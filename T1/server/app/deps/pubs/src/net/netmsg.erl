@@ -7,33 +7,27 @@
 -include("type.hrl").
 -import(binary_lib, [
 	read_int64/1,
-	read_int64/1,
+	read_int32/1,
 	read_int16/1,
-	read_int16/1,
-	read_int/1,
-	read_bool/1,
 	read_int8/1,
 	read_uint64/1,
+	read_uint32/1,
 	read_uint16/1,
-	read_uint16/1,
-	read_uint/1,
 	read_uint8/1,
+	read_bool/1,
 	read_float/1,
 	read_double/1,
 	read_string/1,
 	read_array/2,
 	write_int64/1,
-	write_int64/1,
+	write_int32/1,
 	write_int16/1,
-	write_int16/1,
-	write_int/1,
-	write_bool/1,
 	write_int8/1,
 	write_uint64/1,
+	write_uint32/1,
 	write_uint16/1,
-	write_uint16/1,
-	write_uint/1,
 	write_uint8/1,
+	write_bool/1,
 	write_float/1,
 	write_double/1,
 	write_string/1,
@@ -58,7 +52,7 @@ decode(?GS2U_ChangeLineResponse,Bin0) ->
 
 %GENERATED from file:LS2User.h => GS2U_GoNewMap
 decode(?GS2U_GoNewMap,Bin0) ->
-	{ V_tarMapID, Bin1 } = read_int( Bin0 ),
+	{ V_tarMapID, Bin1 } = read_int32( Bin0 ),
 	{ V_fX, Bin2 } = read_float( Bin1 ),
 	{ V_fY, Bin3 } = read_float( Bin2 ),
 	{ #pk_GS2U_GoNewMap {
@@ -100,7 +94,7 @@ decode(?LS2U_LoginResult,Bin0) ->
 
 %GENERATED from file:LS2User.h => U2GS_ChangeMap
 decode(?U2GS_ChangeMap,Bin0) ->
-	{ V_newMapID, Bin1 } = read_int( Bin0 ),
+	{ V_newMapID, Bin1 } = read_int32( Bin0 ),
 	{ V_fX, Bin2 } = read_float( Bin1 ),
 	{ V_fY, Bin3 } = read_float( Bin2 ),
 	{ #pk_U2GS_ChangeMap {
@@ -122,10 +116,10 @@ decode(?U2LS_Login_Normal,Bin0) ->
 	{ V_idfa, Bin8 } = read_string( Bin7 ),
 	{ V_mac, Bin9 } = read_string( Bin8 ),
 	{ V_extParam, Bin10 } = read_string( Bin9 ),
-	{ V_versionRes, Bin11 } = read_int( Bin10 ),
-	{ V_versionExe, Bin12 } = read_int( Bin11 ),
-	{ V_versionGame, Bin13 } = read_int( Bin12 ),
-	{ V_versionPro, Bin14 } = read_int( Bin13 ),
+	{ V_versionRes, Bin11 } = read_int32( Bin10 ),
+	{ V_versionExe, Bin12 } = read_int32( Bin11 ),
+	{ V_versionGame, Bin13 } = read_int32( Bin12 ),
+	{ V_versionPro, Bin14 } = read_int32( Bin13 ),
 	{ #pk_U2LS_Login_Normal {
 		platformAccount = V_platformAccount,
 		platformName = V_platformName,
@@ -181,7 +175,7 @@ encode(#pk_GS2U_ChangeLineResponse{} = P) ->
 
 %GENERATED from file:LS2User.h => GS2U_GoNewMap
 encode(#pk_GS2U_GoNewMap{} = P) ->
-	Bin_tarMapID = write_int( P#pk_GS2U_GoNewMap.tarMapID ),
+	Bin_tarMapID = write_int32( P#pk_GS2U_GoNewMap.tarMapID ),
 	Bin_fX = write_float( P#pk_GS2U_GoNewMap.fX ),
 	Bin_fY = write_float( P#pk_GS2U_GoNewMap.fY ),
 	[
@@ -223,7 +217,7 @@ encode(#pk_LS2U_LoginResult{} = P) ->
 
 %GENERATED from file:LS2User.h => U2GS_ChangeMap
 encode(#pk_U2GS_ChangeMap{} = P) ->
-	Bin_newMapID = write_int( P#pk_U2GS_ChangeMap.newMapID ),
+	Bin_newMapID = write_int32( P#pk_U2GS_ChangeMap.newMapID ),
 	Bin_fX = write_float( P#pk_U2GS_ChangeMap.fX ),
 	Bin_fY = write_float( P#pk_U2GS_ChangeMap.fY ),
 	[
@@ -245,10 +239,10 @@ encode(#pk_U2LS_Login_Normal{} = P) ->
 	Bin_idfa = write_string( P#pk_U2LS_Login_Normal.idfa ),
 	Bin_mac = write_string( P#pk_U2LS_Login_Normal.mac ),
 	Bin_extParam = write_string( P#pk_U2LS_Login_Normal.extParam ),
-	Bin_versionRes = write_int( P#pk_U2LS_Login_Normal.versionRes ),
-	Bin_versionExe = write_int( P#pk_U2LS_Login_Normal.versionExe ),
-	Bin_versionGame = write_int( P#pk_U2LS_Login_Normal.versionGame ),
-	Bin_versionPro = write_int( P#pk_U2LS_Login_Normal.versionPro ),
+	Bin_versionRes = write_int32( P#pk_U2LS_Login_Normal.versionRes ),
+	Bin_versionExe = write_int32( P#pk_U2LS_Login_Normal.versionExe ),
+	Bin_versionGame = write_int32( P#pk_U2LS_Login_Normal.versionGame ),
+	Bin_versionPro = write_int32( P#pk_U2LS_Login_Normal.versionPro ),
 	[
 		<<?U2LS_Login_Normal:?U16>>,
 		Bin_platformAccount,

@@ -11,8 +11,8 @@ static const char* ReadMsgFunName[] =
 	"read_uint8",					//EFDT_uint8,
 	"read_int16",					//EFDT_int16,
 	"read_uint16",					//EFDT_uint16,
-	"read_int",						//EFDT_int32,
-	"read_uint",						//EFDT_uint32,
+	"read_int32",						//EFDT_int32,
+	"read_uint32",						//EFDT_uint32,
 	"read_int64",					//EFDT_int64,
 	"read_uint64",					//EFDT_uint64,
 	"read_float",					//EFDT_float,
@@ -30,8 +30,8 @@ static const char* WriteMsgFunName[] =
 	"write_uint8",					//EFDT_uint8,
 	"write_int16",					//EFDT_int16,
 	"write_uint16",				//EFDT_uint16,
-	"write_int",						//EFDT_int32,
-	"write_uint",					//EFDT_uint32,
+	"write_int32",						//EFDT_int32,
+	"write_uint32",					//EFDT_uint32,
 	"write_int64",					//EFDT_int64,
 	"write_uint64",				//EFDT_uint64,
 	"write_float",					//EFDT_float,
@@ -138,33 +138,27 @@ void CGen2Erlang::make(const std::string& outFilePath,const std::vector<SourceGe
 			"-include(\"type.hrl\").\n"\
 			"-import(binary_lib, [\n"\
 			"\tread_int64/1,\n"\
-			"\tread_int64/1,\n"\
+			"\tread_int32/1,\n"\
 			"\tread_int16/1,\n"\
-			"\tread_int16/1,\n"\
-			"\tread_int/1,\n"\
-			"\tread_bool/1,\n"\
 			"\tread_int8/1,\n"\
 			"\tread_uint64/1,\n"\
+			"\tread_uint32/1,\n"\
 			"\tread_uint16/1,\n"\
-			"\tread_uint16/1,\n"\
-			"\tread_uint/1,\n"\
 			"\tread_uint8/1,\n"\
+			"\tread_bool/1,\n"\
 			"\tread_float/1,\n"\
 			"\tread_double/1,\n"\
 			"\tread_string/1,\n"\
 			"\tread_array/2,\n"\
 			"\twrite_int64/1,\n"\
-			"\twrite_int64/1,\n"\
+			"\twrite_int32/1,\n"\
 			"\twrite_int16/1,\n"\
-			"\twrite_int16/1,\n"\
-			"\twrite_int/1,\n"\
-			"\twrite_bool/1,\n"\
 			"\twrite_int8/1,\n"\
 			"\twrite_uint64/1,\n"\
+			"\twrite_uint32/1,\n"\
 			"\twrite_uint16/1,\n"\
-			"\twrite_uint16/1,\n"\
-			"\twrite_uint/1,\n"\
 			"\twrite_uint8/1,\n"\
+			"\twrite_bool/1,\n"\
 			"\twrite_float/1,\n"\
 			"\twrite_double/1,\n"\
 			"\twrite_string/1,\n"\

@@ -13,6 +13,7 @@
 -behaviour(supervisor).
 
 %% API
+-export([start_child/1]).
 -export([start_link/0]).
 
 %% Supervisor callbacks
@@ -37,8 +38,8 @@
 start_link() ->
     supervisor:start_link({local, ?MODULE}, ?MODULE, []).
 
-start_child(CreateMapArg) ->
-    supervisor:start_child(?MODULE, [CreateMapArg]).
+start_child(MapID) ->
+    supervisor:start_child(?MODULE, [MapID]).
 
 %%%===================================================================
 %%% Supervisor callbacks

@@ -21,6 +21,7 @@
 -export([stacktrace/0, stacktraceE/0]).
 -export([milli_seconds/0, seconds/0]).
 -export([parse_information_unit/1]).
+-export([register_process/3]).
 -export([create_process_name/2]).
 -export([to_atom/1]).
 
@@ -30,6 +31,10 @@ atom_to_binary(A) ->
 
 create_process_name(Prefix, List) ->
     to_atom(lists:concat(lists:flatten([Prefix] ++ lists:map(fun(T) -> ['_', T] end, List)))).
+
+register_process(Pid, Prefix, List) ->
+    ProcessName = misc:create_process_name(Prefix, List),
+    erlang:register(ProcessName, Pid).
 
 
 %% @doc convert other type to atom

@@ -8,6 +8,7 @@
 %%%-------------------------------------------------------------------
 -author("mawenhong").
 
+-include_lib("stdlib/include/ms_transform.hrl").
 
 -define(ETSRC,{read_concurrency,true}).
 -define(ETSWC,{write_concurrency,true}).

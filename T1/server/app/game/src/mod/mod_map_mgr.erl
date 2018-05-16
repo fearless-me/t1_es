@@ -13,6 +13,8 @@
 -include("common.hrl").
 -include("logger.hrl").
 -include("map.hrl").
+-define(MAP_LINES, map_line_ets__).
+
 
 -export([player_join_map/2]).
 -export([player_exit_map/2]).
@@ -32,25 +34,26 @@ player_exit_map(MgrPid, Params) ->
 start_link(MapID) ->
     gen_serverw:start_link(?MODULE, [MapID], []).
 
+-record(state, {ets, map_id = 0}).
+
 %%%===================================================================
 %%% Internal functions
 %%%===================================================================	
-mod_init(MapID) ->
+mod_init([MapID]) ->
     %% erlang:process_flag(trap_exit, true),
     %% erlang:process_flag(priority, high),
     ProcessName = misc:create_process_name(mod_map_mgr, [MapID]),
     erlang:register(ProcessName, self()),
-    ets:new(?MAP_LINES,
-        [named_table, {keypos, #map_line.map_id}, ?ETSRC]),
-
-    {ok, #{}}.
+    Ets = ets:new(?MAP_LINES, [{keypos, #map_line.line_id}, ?ETSRC]),
+    ?INFO("mapMgr ~p started, line ets:~p,mapID:~p", [ProcessName, Ets, MapID]),
+    {ok, #state{ets = Ets, map_id = MapID}}.
 
 %%--------------------------------------------------------------------
-do_handle_call({join_map, Req}, From, State) ->
-    Ret = player_join_map_1(Req),
+do_handle_call({join_map, Req}, _From, State) ->
+    Ret = player_join_map_1(State, Req),
     {reply, Ret, State};
-do_handle_call({exit_map, PlayerID}, From, State) ->
-    Ret = player_exit_map_1(PlayerID),
+do_handle_call({exit_map, PlayerID}, _From, State) ->
+    Ret = player_exit_map_1(State, PlayerID),
     {reply, Ret, State};
 do_handle_call(Request, From, State) ->
     ?ERROR("undeal call ~w from ~w", [Request, From]),
@@ -69,33 +72,54 @@ do_handle_cast(Request, State) ->
     {noreply, State}.
 
 %%--------------------------------------------------------------------
-player_join_map_1(#change_map_req{
-    player_id = PlayerID, map_id = MapID, pos = Pos
-}) ->
+player_join_map_1(
+    S, #change_map_req{
+        player_id = PlayerID,
+        map_id = MapID,
+        pos = Pos,
+        obj = Obj
+    }) ->
     MS = ets:fun2ms(
-        fun(T) when
-            T#map_line.limits > T#map_line.in
+        fun(T) when T#map_line.limits > T#map_line.in
             -> T
         end),
-    SelectLine =
-        case ets:select(?MAP_LINES, MS, 1) of
-            {[Line | _], _Continue} ->
-                Line;
+    Line =
+        case ets:select(S#state.ets, MS, 1) of
+            {[Line1 | _], _Continue} ->
+                Line1;
             _ ->
-                create_new_line()
+                create_new_line(S, S#state.map_id, next_line_id())
         end,
 
-    #map_line{pid = MapPid, map_id = MapID} = SelectLine,
-    mod_map:player_join(MapPid, PlayerID),
-    ets:update_counter(?MAP_LINES, MapID, {#map_line.in, 1}),
-    #change_map_ack{map_id = MapID, map_pid = MapPid, pos = Pos}.
+    #map_line{pid = MapPid, map_id = MapID, line_id = LineID} = Line,
+    mod_map:player_join(MapPid, Obj),
+    ets:update_counter(S#state.ets, LineID, {#map_line.in, 1}),
+    #change_map_ack{map_id = MapID, line_id = LineID,  map_pid = MapPid, pos = Pos}.
 
 %%--------------------------------------------------------------------
-player_exit_map_1(PlayerID) ->
-    CurPid = undefined,
-    mod_map:player_exit(CurPid, PlayerID).
-
-%%--------------------------------------------------------------------
-create_new_line() ->
+player_exit_map_1(_S, PlayerID) ->
+%%    CurPid = undefined,
+%%    mod_map:player_exit(CurPid, PlayerID).
     ok.
 
+%%--------------------------------------------------------------------
+create_new_line(S, MapID, LineID) ->
+    ?WARN("ets:~p,~p,~p",[S#state.ets, MapID, LineID]),
+    {ok, Pid} = mod_map_supervisor:start_child([MapID, LineID]),
+    Line = #map_line{
+        map_id = MapID,
+        line_id = LineID,
+        pid = Pid
+    },
+    ets:insert(S#state.ets, Line),
+    Line.
+
+
+next_line_id() ->
+    LineID =
+        case get('LINE_ID') of
+            undefined -> 1;
+            V -> V + 1
+        end,
+    put('LINE_ID', LineID),
+    LineID.

@@ -5,7 +5,6 @@
 /T1/server/_gsdata_
 /T1/server/deps_1
 /T1/server/_gsdata_/_saved_/app/dbs/data/log/*.err
-/T1/server/app/dbs/ebin/*.beam
 *.log
 *.beam
 elog

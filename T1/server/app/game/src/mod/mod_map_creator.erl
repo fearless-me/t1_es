@@ -12,6 +12,13 @@
 -behaviour(gen_serverw).
 -include("logger.hrl").
 -include("map.hrl").
+-include("common.hrl").
+
+-record(map_mgr_r, {
+    map_id = 0,
+    mgr = undefined
+}).
+-define(MAP_MGR_ETS, map_mgr_ets__).
 
 %% API
 -export([take_over_player_online/2]).
@@ -28,14 +35,16 @@ take_over_player_online(MapID, Req) ->
     Mgr = map_mgr(MapID),
     case mod_map_mgr:player_join_map(Mgr, Req) of
         #change_map_ack{} = Ack -> Ack;
-         _ -> kick_to_born_map(Req)
+        _ -> kick_to_born_map(Req)
     end,
     ok.
 
 %%%-------------------------------------------------------------------
-player_change_map(PlayerID,CurMap,Req)->
+player_change_map(PlayerID, CurMap, Req) ->
     CurMgr = map_mgr(CurMap),
     TarMgr = map_mgr(Req#change_map_req.map_id),
+    ?DEBUG("player ~p, changeMap ~p:~p -> ~p:~p",
+        [PlayerID, CurMap, CurMgr, Req#change_map_req.map_id, TarMgr]),
     mod_map_mgr:player_exit_map(CurMgr, PlayerID),
     case mod_map_mgr:player_join_map(TarMgr, Req) of
         #change_map_ack{} = Ack -> Ack;
@@ -56,7 +65,10 @@ broadcast_map(MapID) ->
 
 %%%-------------------------------------------------------------------
 map_mgr(MapID) ->
-    ok.
+    case ets:lookup(?MAP_MGR_ETS, MapID) of
+        [#map_mgr_r{mgr = Mgr} | _ ] -> Mgr;
+        _ -> undefined
+    end.
 
 %%%-------------------------------------------------------------------
 map_conf(MapID) ->
@@ -74,9 +86,12 @@ start_link() ->
 mod_init(_Args) ->
     erlang:process_flag(trap_exit, true),
     erlang:process_flag(priority, high),
-    
+
+    ets:new(?MAP_MGR_ETS, [protected, named_table, {keypos, #map_mgr_r.map_id}, ?ETSRC]),
+
     load_all_map(),
 
+    ?INFO("map_creator started"),
     {ok, {}}.
 
 %%--------------------------------------------------------------------	
@@ -96,11 +111,18 @@ do_handle_cast(Request, State) ->
 
 %%--------------------------------------------------------------------
 load_all_map() ->
-    L = lists:seq(1,10),
-    _ = [ load_one_map(MapID) || MapID <- L],
+    L = lists:seq(1, 10),
+    _ = [load_one_map(MapID) || MapID <- L],
     ok.
 
 load_one_map(MapID) ->
+    {ok, Pid} = mod_map_mgr_supervisor:start_child(MapID),
+    ets:insert(
+        ?MAP_MGR_ETS,
+        #map_mgr_r{
+            map_id = MapID,
+            mgr = Pid
+        }),
     ok.
 
 

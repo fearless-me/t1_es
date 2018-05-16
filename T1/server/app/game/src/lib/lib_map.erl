@@ -12,6 +12,7 @@
 -include("logger.hrl").
 -include("map.hrl").
 -include("obj.hrl").
+-include("common.hrl").
 
 %% API
 -export([init/1]).
@@ -43,10 +44,10 @@ init(S) ->
 %%%-------------------------------------------------------------------
 init_1(State) ->
     State#map_state{
-        npc = ets:new(?MAP_NPC_ETS, [protect, {keypos, #obj.code}, {read_concurrency, true}]),
-        pet = ets:new(?MAP_PET_ETS, [protect, {keypos, #obj.code}, {read_concurrency, true}]),
-        player = ets:new(?MAP_USR_ETS, [protect, {keypos, #obj.code}, {read_concurrency, true}]),
-        monster = ets:new(?MAP_MON_ETS, [protect, {keypos, #obj.code}, {read_concurrency, true}])
+        npc     = ets:new(?MAP_NPC_ETS, [protected, {keypos, #obj.code}, ?ETSRC]),
+        pet     = ets:new(?MAP_PET_ETS, [protected, {keypos, #obj.code}, ?ETSRC]),
+        player  = ets:new(?MAP_USR_ETS, [protected, {keypos, #obj.code}, ?ETSRC]),
+        monster = ets:new(?MAP_MON_ETS, [protected, {keypos, #obj.code}, ?ETSRC])
     }.
 
 init_2(State) ->
