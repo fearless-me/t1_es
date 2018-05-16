@@ -227,11 +227,18 @@ void CGen2Erlang::makeRecord(FILE* fp, const std::vector<SourceGenInfo>& vctSGI,
 				char* p = (char*)fname.data();
 				if (p && p[0] >= 'A' && p[0] <= 'Z')
 					p[0] += 'a' - 'A';
-
+				const char* defaulVal = defautValue(field.type, field.kind);
+				std:string defaulValFor = "";
+				if (defaulVal != NULL) {
+					defaulValFor = " = ";
+					defaulValFor += defaulVal;
+				}
 				if (i == size - 1)
-					sprintf_s(Buffer, "\n\t%s\t%s", makeErlangComment(field.comment, field.typeName).c_str(), fname.c_str());
+					sprintf_s(Buffer, "\n\t%s\t%s%s", 
+						makeErlangComment(field.comment, field.typeName).c_str(), fname.c_str(), defaulValFor.c_str());
 				else
-					sprintf_s(Buffer, "\n\t%s\t%s,", makeErlangComment(field.comment, field.typeName).c_str(), fname.c_str());
+					sprintf_s(Buffer, "\n\t%s\t%s%s,", 
+						makeErlangComment(field.comment, field.typeName).c_str(), fname.c_str(), defaulValFor.c_str());
 
 				Record += Buffer;
 			}

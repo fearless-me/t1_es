@@ -19,6 +19,7 @@ SOURCE_DIR += ../deps/pubs
 INCLUDE_DIR = -I ./include
 INCLUDE_DIR += -I ../deps/pubs/include
 INCLUDE_DIR += -I ../deps/pubs/src/net
+INCLUDE_DIR += -I ../deps/pubs/src/config
 INCLUDE_DIR += -I ../deps/pubs/src/resource/pack
 INCLUDE_DIR += -I ../deps/mysql-otp/include
 

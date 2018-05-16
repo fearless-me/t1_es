@@ -21,7 +21,8 @@
 		%%{d,'RELEASE',1},
 		{i,"include"},
 		{i,"../deps/pubs/include"},
-		{i,"../deps/pubs/src/net"},		
+		{i,"../deps/pubs/src/net"},
+		{i,"../deps/pubs/src/config"},		
 		{i,"../deps/mysql-otp/include"},
 		{outdir,"./ebin"}
 	]

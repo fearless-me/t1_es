@@ -69,7 +69,7 @@ init_vis_tile_1(X) when X < 0 ->
 init_vis_tile_1(X) when X =:= 0 ->
     ok;
 init_vis_tile_1(X) ->
-    set_vis_tile(X, #visTile{}),
+    set_vis_tile(X, #visTile{index = X}),
     init_vis_tile_1(X - 1).
 
 %%%-------------------------------------------------------------------

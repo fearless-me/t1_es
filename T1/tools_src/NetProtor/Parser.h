@@ -247,6 +247,24 @@ enum EFieldType
 	EFDT_custom,
 };
 
+static inline const char*  defautValue(FieldContainerType Type, FieldKind Kind) {
+	if (Type == FCT_Array) {
+		return "[]";
+	} else {
+		switch (Kind)
+		{
+		case FC_Boolean: return "false";
+		case FC_Integer: return "0";
+		case FC_Single:  return "0.0";
+		case FC_Double:  return "0.0";
+		case FC_String:  return "\"\"";
+		case FC_Custom:  return NULL;
+		default:
+			return NULL;
+		}
+	}
+}
+
 struct Field
 {
 	FieldContainerType type;
@@ -259,6 +277,7 @@ struct Field
 	EFieldType fdtype;
 	Field() : type( FCT_Scalar ), msgType( MT_None ), kind( FC_Unknown ), fdtype( EFDT_unknown ) {
 	}
+
 	Field( Field&& o ) {
 		typeName = std::move( o.typeName );
 		originalTypeName = std::move( o.originalTypeName );
