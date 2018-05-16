@@ -33,6 +33,7 @@
 
 
 -record(visTile,{
+    index = 0,
     player = [],
     monster = [],
     npc = [],

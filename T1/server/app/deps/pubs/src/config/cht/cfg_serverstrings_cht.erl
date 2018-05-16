@@ -1,0 +1,4263 @@
+%% coding: latin-1
+%%: 实现
+-module(cfg_serverstrings_cht).
+-compile(export_all).
+-include("cfg_serverstrings.hrl").
+-include("logger.hrl").
+
+getRow(accountWelfareMailTxt)->
+    #serverstringsCfg {
+    id = 62,
+    stringID = accountWelfareMailTxt,
+    chs = "帐号福利"
+    };
+getRow(activeMail_GainItem)->
+    #serverstringsCfg {
+    id = 85,
+    stringID = activeMail_GainItem,
+    chs = "激活码领取获得道具"
+    };
+getRow(activityannouncement_strings_1)->
+    #serverstringsCfg {
+    id = 477,
+    stringID = activityannouncement_strings_1,
+    chs = "【极地求生】活动即将在15分钟后开启，请冒险者们做好准备！"
+    };
+getRow(activityannouncement_strings_10)->
+    #serverstringsCfg {
+    id = 492,
+    stringID = activityannouncement_strings_10,
+    chs = "【世界守护】活动将在15分钟后开启，请世界守护者[54ff90]【{0}】[-]做好抵御全服玩家进攻的准备！"
+    };
+getRow(activityannouncement_strings_11)->
+    #serverstringsCfg {
+    id = 493,
+    stringID = activityannouncement_strings_11,
+    chs = "【世界守护】活动将在10分钟后开启，请世界守护者[54ff90]【{0}】[-]做好抵御全服玩家进攻的准备！"
+    };
+getRow(activityannouncement_strings_12)->
+    #serverstringsCfg {
+    id = 494,
+    stringID = activityannouncement_strings_12,
+    chs = "【世界守护】活动将在5分钟后开启，请世界守护者[54ff90]【{0}】[-]做好抵御全服玩家进攻的准备！"
+    };
+getRow(activityannouncement_strings_2)->
+    #serverstringsCfg {
+    id = 478,
+    stringID = activityannouncement_strings_2,
+    chs = "【极地求生】活动即将在10分钟后开启，请冒险者们做好准备！"
+    };
+getRow(activityannouncement_strings_3)->
+    #serverstringsCfg {
+    id = 479,
+    stringID = activityannouncement_strings_3,
+    chs = "【极地求生】活动即将在5分钟后开启，请冒险者们做好准备！"
+    };
+getRow(activityannouncement_strings_4)->
+    #serverstringsCfg {
+    id = 480,
+    stringID = activityannouncement_strings_4,
+    chs = "【家族雪人】活动即将在15分钟后开启，请各家族成员做好准备！"
+    };
+getRow(activityannouncement_strings_5)->
+    #serverstringsCfg {
+    id = 481,
+    stringID = activityannouncement_strings_5,
+    chs = "【家族雪人】活动即将在10分钟后开启，请各家族成员做好准备！"
+    };
+getRow(activityannouncement_strings_6)->
+    #serverstringsCfg {
+    id = 482,
+    stringID = activityannouncement_strings_6,
+    chs = "【家族雪人】活动即将在5分钟后开启，请各家族成员做好准备！"
+    };
+getRow(activityannouncement_strings_7)->
+    #serverstringsCfg {
+    id = 483,
+    stringID = activityannouncement_strings_7,
+    chs = "【家族战场】活动即将在15分钟后开启报名，请各家族管理积极参与报名！"
+    };
+getRow(activityannouncement_strings_8)->
+    #serverstringsCfg {
+    id = 484,
+    stringID = activityannouncement_strings_8,
+    chs = "【家族战场】活动即将在10分钟后开启报名，请各家族管理积极参与报名！"
+    };
+getRow(activityannouncement_strings_9)->
+    #serverstringsCfg {
+    id = 485,
+    stringID = activityannouncement_strings_9,
+    chs = "【家族战场】活动即将在5分钟后开启报名，请各家族管理积极参与报名！"
+    };
+getRow(alive_debuff)->
+    #serverstringsCfg {
+    id = 464,
+    stringID = alive_debuff,
+    chs = "恐怖迷雾即将来袭‧‧‧‧‧‧"
+    };
+getRow(alive_doublekill)->
+    #serverstringsCfg {
+    id = 462,
+    stringID = alive_doublekill,
+    chs = "{0}進行了二连杀！"
+    };
+getRow(alive_firstroyale)->
+    #serverstringsCfg {
+    id = 520,
+    stringID = alive_firstroyale,
+    chs = "恭喜玩家[519b20]{0}[-]在极地求生活动中拔得头筹，率先获得了[db543b]第一名[-]！"
+    };
+getRow(alive_fristblood)->
+    #serverstringsCfg {
+    id = 461,
+    stringID = alive_fristblood,
+    chs = "{0}進行了首杀！"
+    };
+getRow(alive_killbybuff)->
+    #serverstringsCfg {
+    id = 496,
+    stringID = alive_killbybuff,
+    chs = "恐怖迷雾"
+    };
+getRow(alive_killmonster_1)->
+    #serverstringsCfg {
+    id = 456,
+    stringID = alive_killmonster_1,
+    chs = "我不行了…你们要守护好宝物…"
+    };
+getRow(alive_killmonster_2)->
+    #serverstringsCfg {
+    id = 457,
+    stringID = alive_killmonster_2,
+    chs = "剩下的伙伴们要好好守住才行"
+    };
+getRow(alive_killmonster_3)->
+    #serverstringsCfg {
+    id = 458,
+    stringID = alive_killmonster_3,
+    chs = "就剩一个了…守护好宝物啊…"
+    };
+getRow(alive_killmonster_4)->
+    #serverstringsCfg {
+    id = 459,
+    stringID = alive_killmonster_4,
+    chs = "可恶…秘宝要被这些人给抢走了！"
+    };
+getRow(alive_refreash_red)->
+    #serverstringsCfg {
+    id = 426,
+    stringID = alive_refreash_red,
+    chs = "红色装备传说冰封寳剑现身！"
+    };
+getRow(alive_reward_content)->
+    #serverstringsCfg {
+    id = 428,
+    stringID = alive_reward_content,
+    chs = "恭喜您在极地求生活动中获得了[fb543b]第{0}名[-]的成绩，以下为您的排名奖励，请再接再厉！"
+    };
+getRow(alive_reward_title)->
+    #serverstringsCfg {
+    id = 427,
+    stringID = alive_reward_title,
+    chs = "极地求生排名奖励"
+    };
+getRow(alive_triplekill)->
+    #serverstringsCfg {
+    id = 463,
+    stringID = alive_triplekill,
+    chs = "{0}進行了三连杀！"
+    };
+getRow(allplayerquestion_mail_1)->
+    #serverstringsCfg {
+    id = 405,
+    stringID = allplayerquestion_mail_1,
+    chs = "全民答题排名奖励"
+    };
+getRow(allplayerquestion_mail_2)->
+    #serverstringsCfg {
+    id = 406,
+    stringID = allplayerquestion_mail_2,
+    chs = "恭喜您在全民答题活动中获得了[fb543b]第{0}名[-]的成绩，以下为您的排名奖励，请再接再厉！"
+    };
+getRow(allplayerquestion_serverstrings_1)->
+    #serverstringsCfg {
+    id = 400,
+    stringID = allplayerquestion_serverstrings_1,
+    chs = "【全名答题】活动即将在15分钟之后开启，快积极参与吧！"
+    };
+getRow(allplayerquestion_serverstrings_2)->
+    #serverstringsCfg {
+    id = 401,
+    stringID = allplayerquestion_serverstrings_2,
+    chs = "【全名答题】活动即将在10分钟之后开启，快积极参与吧！"
+    };
+getRow(allplayerquestion_serverstrings_3)->
+    #serverstringsCfg {
+    id = 402,
+    stringID = allplayerquestion_serverstrings_3,
+    chs = "【全名答题】活动即将在5分钟之后开启，快积极参与吧！"
+    };
+getRow(allplayerquestion_serverstrings_4)->
+    #serverstringsCfg {
+    id = 403,
+    stringID = allplayerquestion_serverstrings_4,
+    chs = "【全名答题】活动已开启，快积极参与吧O(∩_∩)O~~"
+    };
+getRow(allplayerquestion_serverstrings_5)->
+    #serverstringsCfg {
+    id = 404,
+    stringID = allplayerquestion_serverstrings_5,
+    chs = "活动已结束，积分排名奖励将通过邮件发放"
+    };
+getRow(answerPlayFirstAndLucky)->
+    #serverstringsCfg {
+    id = 108,
+    stringID = answerPlayFirstAndLucky,
+    chs = "本轮幸运答题，抢答王是[54ff90]【{0}】[-],幸运玩家是[54ff90][{1}、{2}、{3}、{4}、{5}、{6}、{7}、{8}、{9}、{10}][-]"
+    };
+getRow(answerPlayLuckyPlayers)->
+    #serverstringsCfg {
+    id = 109,
+    stringID = answerPlayLuckyPlayers,
+    chs = "本轮幸运玩家是[54ff90][{0}、{1}、{2}、{3}、{4}、{5}、{6}、{7}、{8}、{9}][-]"
+    };
+getRow(answerPlayStart)->
+    #serverstringsCfg {
+    id = 107,
+    stringID = answerPlayStart,
+    chs = "幸运选择题开始啦，可在“活动”中参加。快来吧。"
+    };
+getRow(answerPlayWaitStart)->
+    #serverstringsCfg {
+    id = 106,
+    stringID = answerPlayWaitStart,
+    chs = "叮咚咚咚，5分钟之后，幸运选择题将要开始咯哟~"
+    };
+getRow(answerReswardFirstContent)->
+    #serverstringsCfg {
+    id = 113,
+    stringID = answerReswardFirstContent,
+    chs = "恭喜你在本轮幸运选择题中成为抢答王"
+    };
+getRow(answerReswardFirstNull)->
+    #serverstringsCfg {
+    id = 111,
+    stringID = answerReswardFirstNull,
+    chs = "本轮没有玩家全部答对，抢答王为空，请再接再厉。"
+    };
+getRow(answerReswardFirstTitle)->
+    #serverstringsCfg {
+    id = 112,
+    stringID = answerReswardFirstTitle,
+    chs = "抢答王奖励"
+    };
+getRow(answerRewardResultAll)->
+    #serverstringsCfg {
+    id = 110,
+    stringID = answerRewardResultAll,
+    chs = "你在本轮“幸运选择题”中获得经验{0}，金币{1}"
+    };
+getRow(archer)->
+    #serverstringsCfg {
+    id = 345,
+    stringID = archer,
+    chs = "弓箭手"
+    };
+getRow(arena_DapaoRefresh)->
+    #serverstringsCfg {
+    id = 217,
+    stringID = arena_DapaoRefresh,
+    chs = "灭神大炮击中了{0},{1}秒后灭神大炮可再次使用！"
+    };
+getRow(arena_Ladder1v1_10)->
+    #serverstringsCfg {
+    id = 101,
+    stringID = arena_Ladder1v1_10,
+    chs = "[54ff90]{0}[-] 在竞技场中 无人可挡，达到[ff0000] {1} [-]连胜！"
+    };
+getRow(arena_Ladder1v1_11)->
+    #serverstringsCfg {
+    id = 102,
+    stringID = arena_Ladder1v1_11,
+    chs = "[54ff90]{0}[-] 在竞技场中 万夫莫敌，达到[ff0000] {1} [-]连胜！还有谁能阻止他！！还有谁！！！"
+    };
+getRow(arena_Ladder1v1_5)->
+    #serverstringsCfg {
+    id = 100,
+    stringID = arena_Ladder1v1_5,
+    chs = "[54ff90]{0}[-] 在竞技场中 崭露头角，达到[ff0000] {1} [-]连胜"
+    };
+getRow(arena_Ladder1v1_King_Content)->
+    #serverstringsCfg {
+    id = 311,
+    stringID = arena_Ladder1v1_King_Content,
+    chs = "勇敢的冒险者：<br>    您膜拜了一位高位选手，特此献上膜拜奖励，相信有朝一日您也能够问鼎名人堂！！<br>           ——竞技场指挥官：阿卡杜因·狮心"
+    };
+getRow(arena_Ladder1v1_King_Title)->
+    #serverstringsCfg {
+    id = 310,
+    stringID = arena_Ladder1v1_King_Title,
+    chs = "竞技场膜拜奖励"
+    };
+getRow(arena_Ladder1v1_RankReward)->
+    #serverstringsCfg {
+    id = 103,
+    stringID = arena_Ladder1v1_RankReward,
+    chs = "废弃"
+    };
+getRow(arena_Ladder1v1_WeekReward_Content)->
+    #serverstringsCfg {
+    id = 105,
+    stringID = arena_Ladder1v1_WeekReward_Content,
+    chs = "伟大的冒险者：<br>    恭喜您今日竞技场排名 [54ff90]{0}[-] ，特此献上今日排名奖励，请再接再厉！！<br>           ——竞技场指挥官：阿卡杜因·狮心"
+    };
+getRow(arena_Ladder1v1_WeekReward_Title)->
+    #serverstringsCfg {
+    id = 104,
+    stringID = arena_Ladder1v1_WeekReward_Title,
+    chs = "竞技场每日奖励"
+    };
+getRow(arena_Lose_MailContent)->
+    #serverstringsCfg {
+    id = 204,
+    stringID = arena_Lose_MailContent,
+    chs = "本次血腥角斗你战败了！！请查收{0}奖励，今日还可获得{1}次奖励！"
+    };
+getRow(arena_Lose_MailTitle)->
+    #serverstringsCfg {
+    id = 203,
+    stringID = arena_Lose_MailTitle,
+    chs = "血腥角斗安慰奖励"
+    };
+getRow(arena_MonsterRefresh)->
+    #serverstringsCfg {
+    id = 215,
+    stringID = arena_MonsterRefresh,
+    chs = "注意！注意！角斗场中出现凶残怪物！！"
+    };
+getRow(arena_ObjectRefresh)->
+    #serverstringsCfg {
+    id = 216,
+    stringID = arena_ObjectRefresh,
+    chs = "惊现海盗王宝藏！拾取后可获得神秘效果"
+    };
+getRow(arena_WeekMailContent)->
+    #serverstringsCfg {
+    id = 206,
+    stringID = arena_WeekMailContent,
+    chs = "本周血腥角斗你获得{0}名！请查收{1}奖励，铁血铸就威名！"
+    };
+getRow(arena_WeekMailTitle)->
+    #serverstringsCfg {
+    id = 205,
+    stringID = arena_WeekMailTitle,
+    chs = "血腥角斗排名奖励"
+    };
+getRow(arena_Win_MailContent)->
+    #serverstringsCfg {
+    id = 202,
+    stringID = arena_Win_MailContent,
+    chs = "本次血腥角斗你获得胜利！请查收{0}奖励，今日还可获得{1}次奖励！"
+    };
+getRow(arena_Win_MailTitle)->
+    #serverstringsCfg {
+    id = 201,
+    stringID = arena_Win_MailTitle,
+    chs = "血腥角斗胜利奖励"
+    };
+getRow(battle_war_Begin)->
+    #serverstringsCfg {
+    id = 197,
+    stringID = battle_war_Begin,
+    chs = "跨服战场开始！请各位积极参与，祝诸君武运隆昌！"
+    };
+getRow(battle_war_Error)->
+    #serverstringsCfg {
+    id = 196,
+    stringID = battle_war_Error,
+    chs = "进入失败，无法连接跨服服务器！请联系客服"
+    };
+getRow(battle_war_KillMessage)->
+    #serverstringsCfg {
+    id = 195,
+    stringID = battle_war_KillMessage,
+    chs = "[00ffff][{0}][-]连续击败[00ffff]{1}[-]人！连续击败，谁能阻止！！！！"
+    };
+getRow(battle_war_MailContent)->
+    #serverstringsCfg {
+    id = 193,
+    stringID = battle_war_MailContent,
+    chs = "您今日在跨服战场中获得[54ff90]{0}[-]战功获得[54ff90][{1}][-]奖励!请查收"
+    };
+getRow(battle_war_MailTitle)->
+    #serverstringsCfg {
+    id = 192,
+    stringID = battle_war_MailTitle,
+    chs = "今日战场奖励"
+    };
+getRow(battle_war_WeekMailContent)->
+    #serverstringsCfg {
+    id = 194,
+    stringID = battle_war_WeekMailContent,
+    chs = "你在战场排行榜排名中获得第[54ff90]{0}[-]名，获得[54ff90][{1}][-]奖励!请查收"
+    };
+getRow(battle_war_WeekMailTitle)->
+    #serverstringsCfg {
+    id = 200,
+    stringID = battle_war_WeekMailTitle,
+    chs = "战场排名奖励"
+    };
+getRow(bossBattleActivity_MailContent)->
+    #serverstringsCfg {
+    id = 4,
+    stringID = bossBattleActivity_MailContent,
+    chs = "恭喜您在【首领入侵】活动中，被上天眷顾，成为幸运儿，获得这一枚【ipad兑换币】。凑齐25个，可在【菜单】-【资源兑换】-【特殊的】，兑换绑定【ipad】道具物品"
+    };
+getRow(bossBattleActivity_MailTitle)->
+    #serverstringsCfg {
+    id = 3,
+    stringID = bossBattleActivity_MailTitle,
+    chs = "福从天降"
+    };
+getRow(bossBattleActivity_NoticeJoin)->
+    #serverstringsCfg {
+    id = 1,
+    stringID = bossBattleActivity_NoticeJoin,
+    chs = "每日20:00至20:30，参与【首领入侵】将有机率获得ipad兑换币，收集即可联系官方客服换取活动奖励"
+    };
+getRow(bossBattleActivity_Reward)->
+    #serverstringsCfg {
+    id = 2,
+    stringID = bossBattleActivity_Reward,
+    chs = "福从天降，恭喜 {0} 在【首领入侵】活动中获得ipad币一枚"
+    };
+getRow(bravo)->
+    #serverstringsCfg {
+    id = 342,
+    stringID = bravo,
+    chs = "刺客"
+    };
+getRow(bribery_money)->
+    #serverstringsCfg {
+    id = 242,
+    stringID = bribery_money,
+    chs = "土豪[54ff90]{0}[-]开始发放红包啦！大家赶紧抢啊，手快有手慢就木有啦！"
+    };
+getRow(bribery_money_MallContent_all)->
+    #serverstringsCfg {
+    id = 230,
+    stringID = bribery_money_MallContent_all,
+    chs = "您发放单个金额为[54ff90]{1}[-]钻石，数量为[54ff90]{0}[-]个的红包在[54ff90]{2}[-]秒内被抢光啦！"
+    };
+getRow(bribery_money_MallContent_back)->
+    #serverstringsCfg {
+    id = 232,
+    stringID = bribery_money_MallContent_back,
+    chs = "您发放总金额为[54ff90]{1}[-]钻石，数量为[54ff90]{0}[-]个的红包，还剩[54ff90]{2}[-]个没有被领取，现将剩余钻石返还给您了,请注意查收"
+    };
+getRow(bribery_money_MallContent_get)->
+    #serverstringsCfg {
+    id = 228,
+    stringID = bribery_money_MallContent_get,
+    chs = "恭喜你！抢到了[54ff90]{0}[-]发放的红包，获得[54ff90]{1}[-]绑定钻石!请注意查收"
+    };
+getRow(bribery_money_MallTitle_all)->
+    #serverstringsCfg {
+    id = 229,
+    stringID = bribery_money_MallTitle_all,
+    chs = "红包详情"
+    };
+getRow(bribery_money_MallTitle_back)->
+    #serverstringsCfg {
+    id = 231,
+    stringID = bribery_money_MallTitle_back,
+    chs = "红包返还"
+    };
+getRow(bribery_money_MallTitle_get)->
+    #serverstringsCfg {
+    id = 227,
+    stringID = bribery_money_MallTitle_get,
+    chs = "获得红包"
+    };
+getRow(broadcase_self_content)->
+    #serverstringsCfg {
+    id = 209,
+    stringID = broadcase_self_content,
+    chs = "{0}第{1}名{2}上线了！"
+    };
+getRow(bulletin_arena_1)->
+    #serverstringsCfg {
+    id = 513,
+    stringID = bulletin_arena_1,
+    chs = "玩家[519b20]{0}[-]在竞技场中成功击败了排名第[db543b]【1】[-]的[519b20]{1}[-],成为新的竞技场[db543b]国王[-]!"
+    };
+getRow(bulletin_arena_2)->
+    #serverstringsCfg {
+    id = 514,
+    stringID = bulletin_arena_2,
+    chs = "玩家[519b20]{0}[-]在竞技场中成功击败了排名第[db543b]【2】[-]的[519b20]{1}[-],成为新的竞技场[db543b]亲王[-]!"
+    };
+getRow(bulletin_arena_3)->
+    #serverstringsCfg {
+    id = 515,
+    stringID = bulletin_arena_3,
+    chs = "玩家[519b20]{0}[-]在竞技场中成功击败了排名第[db543b]【3】[-]的[519b20]{1}[-],成为新的竞技场[db543b]公爵[-]!"
+    };
+getRow(bulletin_arena_4)->
+    #serverstringsCfg {
+    id = 516,
+    stringID = bulletin_arena_4,
+    chs = "玩家[519b20]{0}[-]在竞技场中成功击败了排名第[db543b]【4】[-]的[519b20]{1}[-],成为新的竞技场[db543b]伯爵[-]!"
+    };
+getRow(bulletin_arena_5)->
+    #serverstringsCfg {
+    id = 517,
+    stringID = bulletin_arena_5,
+    chs = "玩家[519b20]{0}[-]在竞技场中成功击败了排名第[db543b]【5】[-]的[519b20]{1}[-],成为新的竞技场[db543b]侯爵[-]!"
+    };
+getRow(bulletin_getpet)->
+    #serverstringsCfg {
+    id = 512,
+    stringID = bulletin_getpet,
+    chs = "恭喜玩家[519b20]{0}[-]获得珍稀紫色骑宠[ff15df][{1}][-]!"
+    };
+getRow(bulletin_jinbishi)->
+    #serverstringsCfg {
+    id = 518,
+    stringID = bulletin_jinbishi,
+    chs = "恭喜勇士[519b20]{0}[-]成功击败女神禁闭室第[db543b]【{1}】[-]层首领！完成首杀！"
+    };
+getRow(career_transfer_email_1)->
+    #serverstringsCfg {
+    id = 371,
+    stringID = career_transfer_email_1,
+    chs = "技能成长返还"
+    };
+getRow(career_transfer_email_2)->
+    #serverstringsCfg {
+    id = 372,
+    stringID = career_transfer_email_2,
+    chs = "转职后，原职业的技能消耗的金币全部返还。消耗的技能点已重置"
+    };
+getRow(career_transfer_success)->
+    #serverstringsCfg {
+    id = 348,
+    stringID = career_transfer_success,
+    chs = "大陆勇士[ffe9ad]{0}[-]已转职为[ffc038]{1}[-],愿女神赐福"
+    };
+getRow(carrer_warrior)->
+    #serverstringsCfg {
+    id = 330,
+    stringID = carrer_warrior,
+    chs = "战士"
+    };
+getRow(changeGuildNameSuccess)->
+    #serverstringsCfg {
+    id = 124,
+    stringID = changeGuildNameSuccess,
+    chs = "家族公告：您所在的家族名已由【{0}】改为【{1}】"
+    };
+getRow(changeLine_Tips)->
+    #serverstringsCfg {
+    id = 519,
+    stringID = changeLine_Tips,
+    chs = "该频道人数过少，即将在{0}分钟后销毁，请手动更换至其他频道。"
+    };
+getRow(characters_countdown1)->
+    #serverstringsCfg {
+    id = 357,
+    stringID = characters_countdown1,
+    chs = "<1>"
+    };
+getRow(characters_countdown10)->
+    #serverstringsCfg {
+    id = 529,
+    stringID = characters_countdown10,
+    chs = "<10>"
+    };
+getRow(characters_countdown2)->
+    #serverstringsCfg {
+    id = 356,
+    stringID = characters_countdown2,
+    chs = "<2>"
+    };
+getRow(characters_countdown3)->
+    #serverstringsCfg {
+    id = 355,
+    stringID = characters_countdown3,
+    chs = "<3>"
+    };
+getRow(characters_countdown4)->
+    #serverstringsCfg {
+    id = 354,
+    stringID = characters_countdown4,
+    chs = "<4>"
+    };
+getRow(characters_countdown5)->
+    #serverstringsCfg {
+    id = 353,
+    stringID = characters_countdown5,
+    chs = "<5>"
+    };
+getRow(characters_countdown6)->
+    #serverstringsCfg {
+    id = 525,
+    stringID = characters_countdown6,
+    chs = "<6>"
+    };
+getRow(characters_countdown7)->
+    #serverstringsCfg {
+    id = 526,
+    stringID = characters_countdown7,
+    chs = "<7>"
+    };
+getRow(characters_countdown8)->
+    #serverstringsCfg {
+    id = 527,
+    stringID = characters_countdown8,
+    chs = "<8>"
+    };
+getRow(characters_countdown9)->
+    #serverstringsCfg {
+    id = 528,
+    stringID = characters_countdown9,
+    chs = "<9>"
+    };
+getRow(characters_countdownstart)->
+    #serverstringsCfg {
+    id = 358,
+    stringID = characters_countdownstart,
+    chs = "战斗开始！"
+    };
+getRow(characters_enterexpfb)->
+    #serverstringsCfg {
+    id = 359,
+    stringID = characters_enterexpfb,
+    chs = "你现在进入了经验升降梯！！"
+    };
+getRow(characters_entershouhu)->
+    #serverstringsCfg {
+    id = 360,
+    stringID = characters_entershouhu,
+    chs = "请保护守护目标不被打破"
+    };
+getRow(characters_godess1)->
+    #serverstringsCfg {
+    id = 373,
+    stringID = characters_godess1,
+    chs = "警告：拳王来袭"
+    };
+getRow(characters_godess10)->
+    #serverstringsCfg {
+    id = 382,
+    stringID = characters_godess10,
+    chs = "警告：精灵机械师"
+    };
+getRow(characters_godess11)->
+    #serverstringsCfg {
+    id = 383,
+    stringID = characters_godess11,
+    chs = "警告：盖亚"
+    };
+getRow(characters_godess12)->
+    #serverstringsCfg {
+    id = 384,
+    stringID = characters_godess12,
+    chs = "警告：精灵原力"
+    };
+getRow(characters_godess13)->
+    #serverstringsCfg {
+    id = 385,
+    stringID = characters_godess13,
+    chs = "警告：熔火核心"
+    };
+getRow(characters_godess14)->
+    #serverstringsCfg {
+    id = 386,
+    stringID = characters_godess14,
+    chs = "警告：蜃语"
+    };
+getRow(characters_godess15)->
+    #serverstringsCfg {
+    id = 387,
+    stringID = characters_godess15,
+    chs = "警告：阿尔赛德"
+    };
+getRow(characters_godess16)->
+    #serverstringsCfg {
+    id = 388,
+    stringID = characters_godess16,
+    chs = "警告：祝福女神"
+    };
+getRow(characters_godess17)->
+    #serverstringsCfg {
+    id = 389,
+    stringID = characters_godess17,
+    chs = "警告：暗夜女神"
+    };
+getRow(characters_godess18)->
+    #serverstringsCfg {
+    id = 390,
+    stringID = characters_godess18,
+    chs = "警告：战争女神"
+    };
+getRow(characters_godess19)->
+    #serverstringsCfg {
+    id = 391,
+    stringID = characters_godess19,
+    chs = "警告：智慧女神"
+    };
+getRow(characters_godess2)->
+    #serverstringsCfg {
+    id = 374,
+    stringID = characters_godess2,
+    chs = "警告：牛酱来袭"
+    };
+getRow(characters_godess20)->
+    #serverstringsCfg {
+    id = 395,
+    stringID = characters_godess20,
+    chs = "勇士，女神的安全交给你了"
+    };
+getRow(characters_godess21)->
+    #serverstringsCfg {
+    id = 396,
+    stringID = characters_godess21,
+    chs = "勇士，女神的安全交给你了"
+    };
+getRow(characters_godess22)->
+    #serverstringsCfg {
+    id = 397,
+    stringID = characters_godess22,
+    chs = "勇士，女神的安全交给你了"
+    };
+getRow(characters_godess23)->
+    #serverstringsCfg {
+    id = 398,
+    stringID = characters_godess23,
+    chs = "勇士，女神的安全交给你了"
+    };
+getRow(characters_godess24)->
+    #serverstringsCfg {
+    id = 399,
+    stringID = characters_godess24,
+    chs = "勇士，女神的安全交给你了"
+    };
+getRow(characters_godess3)->
+    #serverstringsCfg {
+    id = 375,
+    stringID = characters_godess3,
+    chs = "警告：巨岩酱来袭"
+    };
+getRow(characters_godess4)->
+    #serverstringsCfg {
+    id = 376,
+    stringID = characters_godess4,
+    chs = "警告：拍拍来袭"
+    };
+getRow(characters_godess5)->
+    #serverstringsCfg {
+    id = 377,
+    stringID = characters_godess5,
+    chs = "警告：杜莎来袭"
+    };
+getRow(characters_godess6)->
+    #serverstringsCfg {
+    id = 378,
+    stringID = characters_godess6,
+    chs = "警告：伊丽莎白来袭"
+    };
+getRow(characters_godess7)->
+    #serverstringsCfg {
+    id = 379,
+    stringID = characters_godess7,
+    chs = "警告：星辰之力"
+    };
+getRow(characters_godess8)->
+    #serverstringsCfg {
+    id = 380,
+    stringID = characters_godess8,
+    chs = "警告：爱の光"
+    };
+getRow(characters_godess9)->
+    #serverstringsCfg {
+    id = 381,
+    stringID = characters_godess9,
+    chs = "警告：魔族公主"
+    };
+getRow(characters_startcountdown)->
+    #serverstringsCfg {
+    id = 361,
+    stringID = characters_startcountdown,
+    chs = "开始倒计时"
+    };
+getRow(charmRankContent)->
+    #serverstringsCfg {
+    id = 410,
+    stringID = charmRankContent,
+    chs = "恭喜你在昨日的魅力榜结算中活动第[ff6a00]{0}[-]名，以下为您的排名奖励，请再接再厉！"
+    };
+getRow(charmRankTitle)->
+    #serverstringsCfg {
+    id = 409,
+    stringID = charmRankTitle,
+    chs = "魅力榜排名奖励"
+    };
+getRow(cityMonster_NetBoss)->
+    #serverstringsCfg {
+    id = 84,
+    stringID = cityMonster_NetBoss,
+    chs = "废弃"
+    };
+getRow(cityMonster_NextMonster)->
+    #serverstringsCfg {
+    id = 83,
+    stringID = cityMonster_NextMonster,
+    chs = "废弃{0}"
+    };
+getRow(cityMonsterAcEnd)->
+    #serverstringsCfg {
+    id = 82,
+    stringID = cityMonsterAcEnd,
+    chs = "废弃"
+    };
+getRow(cityMonsterAcEndItem)->
+    #serverstringsCfg {
+    id = 81,
+    stringID = cityMonsterAcEndItem,
+    chs = "废弃"
+    };
+getRow(cityMonsterAcStart)->
+    #serverstringsCfg {
+    id = 80,
+    stringID = cityMonsterAcStart,
+    chs = "废弃"
+    };
+getRow(cityMonsterAcWaitStart)->
+    #serverstringsCfg {
+    id = 79,
+    stringID = cityMonsterAcWaitStart,
+    chs = "废弃"
+    };
+getRow(cnText4BossTopOneNotice)->
+    #serverstringsCfg {
+    id = 30,
+    stringID = cnText4BossTopOneNotice,
+    chs = "[ff0000]{0}[-]在首领入侵战斗中获得单人伤害排名第[ff0000]1[-]名！欢呼吧！庆祝吧！"
+    };
+getRow(cnText4BossTopOneNotice_guild)->
+    #serverstringsCfg {
+    id = 439,
+    stringID = cnText4BossTopOneNotice_guild,
+    chs = "家族[ff0000]{0}[-]在首领入侵战斗中获得家族伤害排名第[ff0000]1[-]名！欢呼吧！庆祝吧！"
+    };
+getRow(cnTextGuildCopyAwardContent)->
+    #serverstringsCfg {
+    id = 53,
+    stringID = cnTextGuildCopyAwardContent,
+    chs = "因为您的家族在家族挑战副本中协力击败了家族副本首领\"{0}\"，特此奉上此物，以此鼓励！！"
+    };
+getRow(cnTextGuildCopyAwardTitle)->
+    #serverstringsCfg {
+    id = 52,
+    stringID = cnTextGuildCopyAwardTitle,
+    chs = "家族副本奖励"
+    };
+getRow(cnTextGuildCopyBegin)->
+    #serverstringsCfg {
+    id = 55,
+    stringID = cnTextGuildCopyBegin,
+    chs = "家族长开启了家族副本挑战，成员可通过家族界面进入挑战！每击败一个首领家族成员都将会获得大量奖励！"
+    };
+getRow(cnTextGuildCopyBossDefeat)->
+    #serverstringsCfg {
+    id = 54,
+    stringID = cnTextGuildCopyBossDefeat,
+    chs = "家族副本首领\"{0}\"被勇士们击败，家族成员都将会获得一份奖赏"
+    };
+getRow(cnTextGuildCopyEnd)->
+    #serverstringsCfg {
+    id = 56,
+    stringID = cnTextGuildCopyEnd,
+    chs = "家族挑战副本活动结束！！"
+    };
+getRow(cnTextGuildCopyNoticeContent)->
+    #serverstringsCfg {
+    id = 140,
+    stringID = cnTextGuildCopyNoticeContent,
+    chs = "您距离上次领奖还不足3天，不能获得家族奖励"
+    };
+getRow(cnTextKingBattleAllAttackWin)->
+    #serverstringsCfg {
+    id = 37,
+    stringID = cnTextKingBattleAllAttackWin,
+    chs = "[54ff90]【{0}】[-]带领全服小伙伴击败了[54ff90]【{1}】[-]的镜像成为新的世界守护！"
+    };
+getRow(cnTextKingBattleAllDefendWin)->
+    #serverstringsCfg {
+    id = 38,
+    stringID = cnTextKingBattleAllDefendWin,
+    chs = "[54ff90]【{0}】[-]击败了[ff0000]{1}[-]人,守住了荣耀！威武！"
+    };
+getRow(cnTextKingBattleAllMailContent)->
+    #serverstringsCfg {
+    id = 32,
+    stringID = cnTextKingBattleAllMailContent,
+    chs = "您成为世界守护者！防守自己的镜像不被进攻玩家击败即可获得胜利，一人战天下敢否？活动时间{0}，请一定准时参加，铁血和荣耀铸就不朽威名！"
+    };
+getRow(cnTextKingBattleAllMailContent2)->
+    #serverstringsCfg {
+    id = 31,
+    stringID = cnTextKingBattleAllMailContent2,
+    chs = "世界守护活动开启了！您获得首次守护资格，防守自己的镜像不被进攻玩家击败即可获得胜利，请一定准时参加，铁血和荣耀铸就不朽威名！"
+    };
+getRow(cnTextKingBattleAllMailContentEnd)->
+    #serverstringsCfg {
+    id = 36,
+    stringID = cnTextKingBattleAllMailContentEnd,
+    chs = "感谢您在世界守护中做出重大贡献,请提升实力以后再战！"
+    };
+getRow(cnTextKingBattleAllMailTitle)->
+    #serverstringsCfg {
+    id = 33,
+    stringID = cnTextKingBattleAllMailTitle,
+    chs = "守护资格认定"
+    };
+getRow(cnTextKingBattleAllMailTitle2)->
+    #serverstringsCfg {
+    id = 34,
+    stringID = cnTextKingBattleAllMailTitle2,
+    chs = "首次守护资格认定"
+    };
+getRow(cnTextKingBattleAllMailTitleEnd)->
+    #serverstringsCfg {
+    id = 35,
+    stringID = cnTextKingBattleAllMailTitleEnd,
+    chs = "世界守护礼包"
+    };
+getRow(cnTextKingBattleAllMonsterNamePostfix)->
+    #serverstringsCfg {
+    id = 43,
+    stringID = cnTextKingBattleAllMonsterNamePostfix,
+    chs = "{0} 的镜像"
+    };
+getRow(cnTextKingBattleAllStart)->
+    #serverstringsCfg {
+    id = 41,
+    stringID = cnTextKingBattleAllStart,
+    chs = "世界守护活动将在{0}分钟后开启，请世界守护者[54ff90]【{1}】[-]做好抵御全服玩家进攻的准备！"
+    };
+getRow(cnTextKingBattleAllStarting)->
+    #serverstringsCfg {
+    id = 40,
+    stringID = cnTextKingBattleAllStarting,
+    chs = "世界守护活动正式开启，请[54ff90]【{0}】[-]世界守护者速速进入活动地图抵御全服玩家进攻！也请进攻玩家积极进入地图参与进攻！"
+    };
+getRow(cnTextKingBattleAllStatueNamePostfix)->
+    #serverstringsCfg {
+    id = 42,
+    stringID = cnTextKingBattleAllStatueNamePostfix,
+    chs = "{0} 的至尊像"
+    };
+getRow(cnTextLuckyCoinMail)->
+    #serverstringsCfg {
+    id = 46,
+    stringID = cnTextLuckyCoinMail,
+    chs = "恭喜您中奖啦！您获得\"{0}\"道具请查收！"
+    };
+getRow(cnTextLuckyCoinNotice)->
+    #serverstringsCfg {
+    id = 44,
+    stringID = cnTextLuckyCoinNotice,
+    chs = "{0}赠送给\"{1}\"的幸运币抽中了\"{2}\"!大家赶紧去沾沾好运吧！"
+    };
+getRow(cnTextLuckyCoinSystem)->
+    #serverstringsCfg {
+    id = 47,
+    stringID = cnTextLuckyCoinSystem,
+    chs = "系统"
+    };
+getRow(cnTextLuckyCoinUnname)->
+    #serverstringsCfg {
+    id = 45,
+    stringID = cnTextLuckyCoinUnname,
+    chs = "神秘礼物"
+    };
+getRow(cnTextWildBossRefresh)->
+    #serverstringsCfg {
+    id = 67,
+    stringID = cnTextWildBossRefresh,
+    chs = "野外首领\"{0}\"携带着大量财富出现在\"{1}\"处，勇士们快去剿灭吧"
+    };
+getRow(companionMail_RewardContent)->
+    #serverstringsCfg {
+    id = 92,
+    stringID = companionMail_RewardContent,
+    chs = "废弃"
+    };
+getRow(companionMail_RewardTitle)->
+    #serverstringsCfg {
+    id = 91,
+    stringID = companionMail_RewardTitle,
+    chs = "废弃"
+    };
+getRow(darkness_begintips)->
+    #serverstringsCfg {
+    id = 186,
+    stringID = darkness_begintips,
+    chs = "[54ff90]{0}[-] 已经出现在[ff0000]深红熔渊[-],大家快去找寻宝物吧~"
+    };
+getRow(darkness_bemonster)->
+    #serverstringsCfg {
+    id = 188,
+    stringID = darkness_bemonster,
+    chs = "[54ff90]深红恶魔[-] 已经降临到 [ff0000]深红熔渊[-]"
+    };
+getRow(darkness_bosstips)->
+    #serverstringsCfg {
+    id = 185,
+    stringID = darkness_bosstips,
+    chs = "[54ff90]十分钟后[-], [54ff90]{0}[-] 将携带 [54ff90]{1}[-] 将出现在深红熔渊, [54ff90]{2}[-][ff0000] 不会攻击玩家,受到伤害1点血,满血{3}[-]"
+    };
+getRow(darkness_choicepowertips)->
+    #serverstringsCfg {
+    id = 184,
+    stringID = darkness_choicepowertips,
+    chs = "你需要[54ff90]选择势力[-]后,才能前往深红熔渊"
+    };
+getRow(darkness_choicepowertitle)->
+    #serverstringsCfg {
+    id = 183,
+    stringID = darkness_choicepowertitle,
+    chs = "深红熔渊战阶奖励"
+    };
+getRow(darkness_endmonster)->
+    #serverstringsCfg {
+    id = 189,
+    stringID = darkness_endmonster,
+    chs = "深红恶魔已被消灭，一段时间内不会再次降临"
+    };
+getRow(darkness_endtips)->
+    #serverstringsCfg {
+    id = 187,
+    stringID = darkness_endtips,
+    chs = "[54ff90]{0}[-] 击败了 {1},获得 [54ff90]{2}[-]"
+    };
+getRow(darkness_mail)->
+    #serverstringsCfg {
+    id = 182,
+    stringID = darkness_mail,
+    chs = "所在势力：[54ff90]{0}[-]<br>势力战阶排名：[54ff90]{1}[-]<br>深红战阶：[54ff90]{2}[-]<br>"
+    };
+getRow(darkness_powername1)->
+    #serverstringsCfg {
+    id = 180,
+    stringID = darkness_powername1,
+    chs = "正义联盟"
+    };
+getRow(darkness_powername2)->
+    #serverstringsCfg {
+    id = 181,
+    stringID = darkness_powername2,
+    chs = "邪恶部落"
+    };
+getRow(darknesscoinfive)->
+    #serverstringsCfg {
+    id = 165,
+    stringID = darknesscoinfive,
+    chs = "[54ff90]{0}[-] 在深红熔渊收获巨额财富，须知财不露白，留心你的背后！！"
+    };
+getRow(darknesscointen)->
+    #serverstringsCfg {
+    id = 166,
+    stringID = darknesscointen,
+    chs = "[54ff90]{0}[-] 在深红熔渊豪取十万深红硬币！！"
+    };
+getRow(darknesskillfive)->
+    #serverstringsCfg {
+    id = 160,
+    stringID = darknesskillfive,
+    chs = "牛刀小试！ [54ff90]{0}[-] 在深红熔渊连续击败5人！！"
+    };
+getRow(darknesskillforty)->
+    #serverstringsCfg {
+    id = 164,
+    stringID = darknesskillforty,
+    chs = "无法无天！ [54ff90]{0}[-] 在深红熔渊连续击败40人！！大家快跑吧！！！"
+    };
+getRow(darknesskillten)->
+    #serverstringsCfg {
+    id = 161,
+    stringID = darknesskillten,
+    chs = "十步一人！ [54ff90]{0}[-] 在深红熔渊连续击败10人，达成十连斩！！"
+    };
+getRow(darknesskillthirty)->
+    #serverstringsCfg {
+    id = 163,
+    stringID = darknesskillthirty,
+    chs = "无人能挡！ [54ff90]{0}[-] 在深红熔渊连续击败30人！！求求谁来消灭了这个大魔王！！！"
+    };
+getRow(darknesskilltwenty)->
+    #serverstringsCfg {
+    id = 162,
+    stringID = darknesskilltwenty,
+    chs = "流血百里！ [54ff90]{0}[-] 在深红熔渊连续击败20人！！快来终结他！！"
+    };
+getRow(darknessreadyend)->
+    #serverstringsCfg {
+    id = 143,
+    stringID = darknessreadyend,
+    chs = "深红熔渊将于10分钟后关闭，请各位勇士注意时间"
+    };
+getRow(darknessreadystart)->
+    #serverstringsCfg {
+    id = 142,
+    stringID = darknessreadystart,
+    chs = "深红熔渊将于10分钟后开启，请各位勇士做好准备"
+    };
+getRow(date_link_mail)->
+    #serverstringsCfg {
+    id = 299,
+    stringID = date_link_mail,
+    chs = "队友： [54ff90]{0}[-]<br>积分： [54ff90]{1}[-]<br>友好度奖励： [54ff90]{2}[-]<br>亲密度奖励： [54ff90]{3}[-]<br>更多奖励请查收附件~<br>"
+    };
+getRow(date_link_mailtittle)->
+    #serverstringsCfg {
+    id = 298,
+    stringID = date_link_mailtittle,
+    chs = "约会地下城奖励"
+    };
+getRow(designated_tradingContent)->
+    #serverstringsCfg {
+    id = 199,
+    stringID = designated_tradingContent,
+    chs = "[00ffff][{0}][-]指定交易您[54ff90][{1}][-]，请前往交易行接收。"
+    };
+getRow(designated_tradingTitle)->
+    #serverstringsCfg {
+    id = 198,
+    stringID = designated_tradingTitle,
+    chs = "指定交易"
+    };
+getRow(dieBroadcast)->
+    #serverstringsCfg {
+    id = 150,
+    stringID = dieBroadcast,
+    chs = "<t=0>,,[54ff90]{0}[-]审判了邪恶至极的</t><t=0>,,[54ff90]{1}[-]。大家赶紧膜拜一下！</t>"
+    };
+getRow(equipstronger_worldtext_inten)->
+    #serverstringsCfg {
+    id = 369,
+    stringID = equipstronger_worldtext_inten,
+    chs = "恭喜[54ff90]{0}[-]将全身装备精炼至[ff0000]+{1}[-]！"
+    };
+getRow(equipstronger_worldtext_star)->
+    #serverstringsCfg {
+    id = 370,
+    stringID = equipstronger_worldtext_star,
+    chs = "恭喜[54ff90]{0}[-]将全身装备升星至[ff0000]{1}[-]！"
+    };
+getRow(equipUpstar)->
+    #serverstringsCfg {
+    id = 135,
+    stringID = equipUpstar,
+    chs = "勇士<t=100>{0},{1},{2}</t>将全套装备冲星至【{3}】,创造新的传奇。"
+    };
+getRow(escort_Team_Start)->
+    #serverstringsCfg {
+    id = 116,
+    stringID = escort_Team_Start,
+    chs = "【{0}】开启了多人护送，劫掠护送马车可获得大量金钱！"
+    };
+getRow(escortActivity_Start)->
+    #serverstringsCfg {
+    id = 125,
+    stringID = escortActivity_Start,
+    chs = "荒野护送和荒野劫掠已经开启，请持有护送证和劫掠证的玩家积极参与！海量金币等你拿！"
+    };
+getRow(escortMonsterName)->
+    #serverstringsCfg {
+    id = 139,
+    stringID = escortMonsterName,
+    chs = "怪物劫掠"
+    };
+getRow(fashionSuit)->
+    #serverstringsCfg {
+    id = 422,
+    stringID = fashionSuit,
+    chs = "恭喜玩家{0}成功收集齐了{1}套装，还等什么，快去收集吧！"
+    };
+getRow(feastbossrefresh)->
+    #serverstringsCfg {
+    id = 146,
+    stringID = feastbossrefresh,
+    chs = "节日活动首领怪物[ff0000]【{0}】[-]在【<t=4>,{1},[{2},{3}]</t>】刷新了，请大家迅速前往击败！击败首领的小队将可获得大量奖励！"
+    };
+getRow(feastbossrereward)->
+    #serverstringsCfg {
+    id = 147,
+    stringID = feastbossrereward,
+    chs = "[54ff90]【{0}】[-]率领小队击败了节日活动首领怪物[ff0000]【{1}】[-]获得了击败奖励！[54ff90]{2} {3} {4}[-]参与击败获得了幸运奖励，可喜可贺！"
+    };
+getRow(fighter)->
+    #serverstringsCfg {
+    id = 332,
+    stringID = fighter,
+    chs = "斗士"
+    };
+getRow(footman)->
+    #serverstringsCfg {
+    id = 333,
+    stringID = footman,
+    chs = "步兵"
+    };
+getRow(forbidden_Text)->
+    #serverstringsCfg {
+    id = 119,
+    stringID = forbidden_Text,
+    chs = "剩余{0}时{1}分{2}秒"
+    };
+getRow(getCareer_Bravo)->
+    #serverstringsCfg {
+    id = 97,
+    stringID = getCareer_Bravo,
+    chs = "废弃"
+    };
+getRow(getCareer_Knight)->
+    #serverstringsCfg {
+    id = 95,
+    stringID = getCareer_Knight,
+    chs = "废弃"
+    };
+getRow(getCareer_Magician)->
+    #serverstringsCfg {
+    id = 96,
+    stringID = getCareer_Magician,
+    chs = "废弃"
+    };
+getRow(getCareer_Mechanic)->
+    #serverstringsCfg {
+    id = 99,
+    stringID = getCareer_Mechanic,
+    chs = "废弃"
+    };
+getRow(getCareer_SoulReaper)->
+    #serverstringsCfg {
+    id = 98,
+    stringID = getCareer_SoulReaper,
+    chs = "废弃"
+    };
+getRow(getEquipDrop_Notice)->
+    #serverstringsCfg {
+    id = 51,
+    stringID = getEquipDrop_Notice,
+    chs = "[54ff90]{0}[-]人品爆发,爆出了极品装备{1},可喜可贺！"
+    };
+getRow(getEquipDrop_System_Notice)->
+    #serverstringsCfg {
+    id = 50,
+    stringID = getEquipDrop_System_Notice,
+    chs = "<t=0>,,[54ff90]{0}[-]人品爆发,爆出了极品装备</t><t=5>{1},{2},{3}</t><t=0>,,,可喜可贺！</t>"
+    };
+getRow(getFashionNotice_female)->
+    #serverstringsCfg {
+    id = 297,
+    stringID = getFashionNotice_female,
+    chs = "美美的 <t=100>{0},{1},{2}</t> 获得了一件靓丽时装 [54ff90]{3}[-]"
+    };
+getRow(getFashionNotice_male)->
+    #serverstringsCfg {
+    id = 296,
+    stringID = getFashionNotice_male,
+    chs = "帅帅的 <t=100>{0},{1},{2}</t> 获得了一件炫酷时装 [54ff90]{3}[-]"
+    };
+getRow(getGemComposition_Notice)->
+    #serverstringsCfg {
+    id = 48,
+    stringID = getGemComposition_Notice,
+    chs = "[54ff90]{0}[-]合成出了[ff0000]{1}级纹章[-],可喜可贺！"
+    };
+getRow(getSuitRefineLevel_Notice)->
+    #serverstringsCfg {
+    id = 49,
+    stringID = getSuitRefineLevel_Notice,
+    chs = "[54ff90]{0}[-]将全套装备精炼至[ff0000]{1}级[-],即将踏上新的旅程！"
+    };
+getRow(giveExtGem_MailContent)->
+    #serverstringsCfg {
+    id = 16,
+    stringID = giveExtGem_MailContent,
+    chs = "因纹章系统升级，现补偿您以下道具请注意查收"
+    };
+getRow(giveExtGem_MailTitle)->
+    #serverstringsCfg {
+    id = 15,
+    stringID = giveExtGem_MailTitle,
+    chs = "纹章系统升级补偿"
+    };
+getRow(giveGem_MailContent)->
+    #serverstringsCfg {
+    id = 18,
+    stringID = giveGem_MailContent,
+    chs = "因纹章系统升级，现根据您纹章属性返还纹章请注意查收"
+    };
+getRow(giveGem_MailTitle)->
+    #serverstringsCfg {
+    id = 17,
+    stringID = giveGem_MailTitle,
+    chs = "纹章系统升级返还"
+    };
+getRow(giveGiftContent)->
+    #serverstringsCfg {
+    id = 408,
+    stringID = giveGiftContent,
+    chs = "玩家{0}向你赠送了{1}朵{2}，为你增加了{3}点魅力值。"
+    };
+getRow(giveGiftString1)->
+    #serverstringsCfg {
+    id = 413,
+    stringID = giveGiftString1,
+    chs = "初次见你，一见钟情！"
+    };
+getRow(giveGiftString2)->
+    #serverstringsCfg {
+    id = 414,
+    stringID = giveGiftString2,
+    chs = "坚定的爱，稳固的情！"
+    };
+getRow(giveGiftString3)->
+    #serverstringsCfg {
+    id = 415,
+    stringID = giveGiftString3,
+    chs = "天长地久，我心依旧！"
+    };
+getRow(giveGiftString4)->
+    #serverstringsCfg {
+    id = 416,
+    stringID = giveGiftString4,
+    chs = "一载爱意，便是想你365天！"
+    };
+getRow(giveGiftString5)->
+    #serverstringsCfg {
+    id = 417,
+    stringID = giveGiftString5,
+    chs = "我爱你！我爱你！我爱你！"
+    };
+getRow(giveGiftString6)->
+    #serverstringsCfg {
+    id = 418,
+    stringID = giveGiftString6,
+    chs = "山盟海誓，至死方休~爱你一生一世！"
+    };
+getRow(giveGiftTitle)->
+    #serverstringsCfg {
+    id = 407,
+    stringID = giveGiftTitle,
+    chs = "神秘的礼物"
+    };
+getRow(giveGiftVIP)->
+    #serverstringsCfg {
+    id = 419,
+    stringID = giveGiftVIP,
+    chs = "玩家{0}向玩家{1}赠送了{2}朵{3}，并留下祝福：“{4}”，真是羡慕！"
+    };
+getRow(giveGoods_MailContent)->
+    #serverstringsCfg {
+    id = 6,
+    stringID = giveGoods_MailContent,
+    chs = "服务器维护充值活动奖励补发"
+    };
+getRow(giveGoods_MailTitle)->
+    #serverstringsCfg {
+    id = 5,
+    stringID = giveGoods_MailTitle,
+    chs = "充值奖励补发"
+    };
+getRow(godSworn)->
+    #serverstringsCfg {
+    id = 337,
+    stringID = godSworn,
+    chs = "修士"
+    };
+getRow(group_buy_content)->
+    #serverstringsCfg {
+    id = 498,
+    stringID = group_buy_content,
+    chs = "由于您购买得团购活动得商品，最终得折扣和您购买时的价格有所差异，故将多余的{0}钻石返还"
+    };
+getRow(group_buy_title)->
+    #serverstringsCfg {
+    id = 497,
+    stringID = group_buy_title,
+    chs = "【团购活动钻石返还】"
+    };
+getRow(gs2MinuteStop)->
+    #serverstringsCfg {
+    id = 171,
+    stringID = gs2MinuteStop,
+    chs = "服务器即将停机维护，请及时下线，倒计时{0}秒！"
+    };
+getRow(guardian)->
+    #serverstringsCfg {
+    id = 331,
+    stringID = guardian,
+    chs = "守卫"
+    };
+getRow(guild_godbless_sr_content)->
+    #serverstringsCfg {
+    id = 352,
+    stringID = guild_godbless_sr_content,
+    chs = "祈福成功"
+    };
+getRow(guild_godbless_sr_title)->
+    #serverstringsCfg {
+    id = 351,
+    stringID = guild_godbless_sr_title,
+    chs = "女神祈福"
+    };
+getRow(guild_league_1)->
+    #serverstringsCfg {
+    id = 530,
+    stringID = guild_league_1,
+    chs = "【家族精英联赛-初赛】活动即将在15分钟后开启，请竞价成功家族的精英以上成员，做好准备！"
+    };
+getRow(guild_league_2)->
+    #serverstringsCfg {
+    id = 531,
+    stringID = guild_league_2,
+    chs = "【家族精英联赛-初赛】活动即将在10分钟后开启，请竞价成功家族的精英以上成员，做好准备！"
+    };
+getRow(guild_league_3)->
+    #serverstringsCfg {
+    id = 532,
+    stringID = guild_league_3,
+    chs = "【家族精英联赛-初赛】活动即将在5分钟后开启，请竞价成功家族的精英以上成员，做好准备！"
+    };
+getRow(guild_league_4)->
+    #serverstringsCfg {
+    id = 533,
+    stringID = guild_league_4,
+    chs = "【家族精英联赛-初赛】活动已结束，决赛将在5分钟后开启，请晋级家族做好准备！"
+    };
+getRow(guild_league_5)->
+    #serverstringsCfg {
+    id = 534,
+    stringID = guild_league_5,
+    chs = "【家族精英联赛-决赛】活动已开启，请晋级家族成员积极参与！"
+    };
+getRow(guild_league_6)->
+    #serverstringsCfg {
+    id = 535,
+    stringID = guild_league_6,
+    chs = "【家族精英联赛】活动已结束，奖励将通过邮件发放，请注意查收~"
+    };
+getRow(guild_LvUpstrings)->
+    #serverstringsCfg {
+    id = 394,
+    stringID = guild_LvUpstrings,
+    chs = "家族等级提升到{0}级，感谢每一位家族成员的努力奉献！"
+    };
+getRow(guild_request_notice)->
+    #serverstringsCfg {
+    id = 78,
+    stringID = guild_request_notice,
+    chs = "废弃{0}{1}"
+    };
+getRow(guild_snowman_award)->
+    #serverstringsCfg {
+    id = 326,
+    stringID = guild_snowman_award,
+    chs = "本期家族堆雪人活动已经完美结束，这是给予您的奖励。"
+    };
+getRow(guild_snowman_begin)->
+    #serverstringsCfg {
+    id = 322,
+    stringID = guild_snowman_begin,
+    chs = "万众瞩目的堆雪人活动马上就要开始了，请大家在{0}分钟内收集材料堆积雪人"
+    };
+getRow(guild_snowman_end)->
+    #serverstringsCfg {
+    id = 323,
+    stringID = guild_snowman_end,
+    chs = "堆雪人活动马上结束了，请在{0}分钟内赶紧用完自己身上的材料，活动结束后玩家身上的材料将会清除"
+    };
+getRow(guild_snowman_headline)->
+    #serverstringsCfg {
+    id = 327,
+    stringID = guild_snowman_headline,
+    chs = "家族雪人奖励"
+    };
+getRow(guildBattle_ApplyStart)->
+    #serverstringsCfg {
+    id = 300,
+    stringID = guildBattle_ApplyStart,
+    chs = "家族战场报名开启，请各位家族长报名参加。"
+    };
+getRow(guildBattle_BattleEnd)->
+    #serverstringsCfg {
+    id = 77,
+    stringID = guildBattle_BattleEnd,
+    chs = "家族战场活动结束！"
+    };
+getRow(guildBattle_BattleIng)->
+    #serverstringsCfg {
+    id = 76,
+    stringID = guildBattle_BattleIng,
+    chs = "家族战场火爆进行中，今日谁主沉浮，让我们拭目以待！！"
+    };
+getRow(guildBattle_BattleStart)->
+    #serverstringsCfg {
+    id = 301,
+    stringID = guildBattle_BattleStart,
+    chs = "家族战场正式开始，请各位家族勇士踊跃参加。"
+    };
+getRow(guildBattle_EnemyOccupy)->
+    #serverstringsCfg {
+    id = 324,
+    stringID = guildBattle_EnemyOccupy,
+    chs = "敌方阵营的 [54ff90]{0}[-] 占领了 [54ff90]{1}点[-]，勇士们快去抢夺！"
+    };
+getRow(guildBattle_FailReward)->
+    #serverstringsCfg {
+    id = 74,
+    stringID = guildBattle_FailReward,
+    chs = "废弃"
+    };
+getRow(guildBattle_MailFail)->
+    #serverstringsCfg {
+    id = 425,
+    stringID = guildBattle_MailFail,
+    chs = "很遗憾您所在家族在此次家族战中失败了，以下是您的奖励！再接再厉哦！"
+    };
+getRow(guildBattle_MailTitle)->
+    #serverstringsCfg {
+    id = 423,
+    stringID = guildBattle_MailTitle,
+    chs = "家族战奖励"
+    };
+getRow(guildBattle_MailWin)->
+    #serverstringsCfg {
+    id = 424,
+    stringID = guildBattle_MailWin,
+    chs = "恭喜您所在家族在此次家族战中获胜，请查收您的获胜奖励！"
+    };
+getRow(guildBattle_NoticeBattleStart)->
+    #serverstringsCfg {
+    id = 75,
+    stringID = guildBattle_NoticeBattleStart,
+    chs = "废弃"
+    };
+getRow(guildBattle_WeOccupy)->
+    #serverstringsCfg {
+    id = 325,
+    stringID = guildBattle_WeOccupy,
+    chs = "我方阵营的 [54ff90]{0}[-] 占领了 [54ff90]{1}点[-]，勇士们速速守护！"
+    };
+getRow(guildBattle_WinNotice)->
+    #serverstringsCfg {
+    id = 71,
+    stringID = guildBattle_WinNotice,
+    chs = "[54ff90]{0}[-] 势不可挡击败了他的竞争对手 [54ff90]{1}[-] ，成功获得了本次家族战场的胜利！！"
+    };
+getRow(guildBattle_WinReward)->
+    #serverstringsCfg {
+    id = 73,
+    stringID = guildBattle_WinReward,
+    chs = "废弃"
+    };
+getRow(guildBattle_WinSpecialReward)->
+    #serverstringsCfg {
+    id = 72,
+    stringID = guildBattle_WinSpecialReward,
+    chs = "废弃"
+    };
+getRow(guildboss_killstrings)->
+    #serverstringsCfg {
+    id = 473,
+    stringID = guildboss_killstrings,
+    chs = "恭喜【{0}】家族成员团结一心，完成了对家族首领【{1}】的最快击杀！"
+    };
+getRow(guildDonation_get)->
+    #serverstringsCfg {
+    id = 472,
+    stringID = guildDonation_get,
+    chs = "我需要[00FF00]{0}[-]个<t=2>{1},{2},{3}</t>，家族各位大佬帮帮忙吧。<t=12>{4},{5},{6}</t>"
+    };
+getRow(guildDonation_reward_content)->
+    #serverstringsCfg {
+    id = 471,
+    stringID = guildDonation_reward_content,
+    chs = "家族成员[fb543b]【{0}】[-]向你赠送了{1}个【{2}】，请注意查收！"
+    };
+getRow(guildDonation_reward_title)->
+    #serverstringsCfg {
+    id = 470,
+    stringID = guildDonation_reward_title,
+    chs = "家族的捐赠"
+    };
+getRow(guildGrabAname)->
+    #serverstringsCfg {
+    id = 233,
+    stringID = guildGrabAname,
+    chs = "猎鹰"
+    };
+getRow(guildGrabbegintips)->
+    #serverstringsCfg {
+    id = 236,
+    stringID = guildGrabbegintips,
+    chs = "家族玩法[54ff90]列王纷争[-]已经开始,开始战斗吧！"
+    };
+getRow(guildGrabBname)->
+    #serverstringsCfg {
+    id = 234,
+    stringID = guildGrabBname,
+    chs = "苍狼"
+    };
+getRow(guildGrabboomgettips)->
+    #serverstringsCfg {
+    id = 240,
+    stringID = guildGrabboomgettips,
+    chs = "[54ff90]{0}[-]获得炸弹，大家小心"
+    };
+getRow(guildGrabboomkilltips)->
+    #serverstringsCfg {
+    id = 239,
+    stringID = guildGrabboomkilltips,
+    chs = "[54ff90]{0}[-]死亡时引爆炸弹，炸伤[ff0000]{1} {2} {3}[-]"
+    };
+getRow(guildGrabCname)->
+    #serverstringsCfg {
+    id = 235,
+    stringID = guildGrabCname,
+    chs = "巨熊"
+    };
+getRow(guildGrabdescribe)->
+    #serverstringsCfg {
+    id = 238,
+    stringID = guildGrabdescribe,
+    chs = "[54ff90]{0}[-]家族占领[54ff90]{1}[-]"
+    };
+getRow(guildGrabendtips)->
+    #serverstringsCfg {
+    id = 237,
+    stringID = guildGrabendtips,
+    chs = "列王纷争活动结束,各地图归属已确定,参战奖励已通过邮箱发放,占领归属奖励请在[54ff90]列王纷争[-]界面领取"
+    };
+getRow(guildhome_killtipsin)->
+    #serverstringsCfg {
+    id = 208,
+    stringID = guildhome_killtipsin,
+    chs = "[54ff90]{0}[-]完成了[探]击败目标，但是可惜只是[00ffff]幻象[-]。"
+    };
+getRow(guildhome_killtipsout)->
+    #serverstringsCfg {
+    id = 207,
+    stringID = guildhome_killtipsout,
+    chs = "{0}家族的[00ffff]{1}[-]击败了{2}，定睛一看原来是[00ffff]幻象[-]。"
+    };
+getRow(guildInitNotice)->
+    #serverstringsCfg {
+    id = 93,
+    stringID = guildInitNotice,
+    chs = "家族长很懒，什么也没留下！"
+    };
+getRow(guildLevelUp)->
+    #serverstringsCfg {
+    id = 90,
+    stringID = guildLevelUp,
+    chs = "家族等级提升为 {0} 级！"
+    };
+getRow(guildMail_DeleteGuild_BD)->
+    #serverstringsCfg {
+    id = 70,
+    stringID = guildMail_DeleteGuild_BD,
+    chs = "因为您的家族长期无人活跃, 已被系统解散！"
+    };
+getRow(guildMail_DeleteGuild_ZD)->
+    #serverstringsCfg {
+    id = 69,
+    stringID = guildMail_DeleteGuild_ZD,
+    chs = "您所在的{0}家族已经被家族长{1}解散！"
+    };
+getRow(guildMail_Title)->
+    #serverstringsCfg {
+    id = 68,
+    stringID = guildMail_Title,
+    chs = "家族通知"
+    };
+getRow(guildmessage)->
+    #serverstringsCfg {
+    id = 172,
+    stringID = guildmessage,
+    chs = "[54ff90]{0}[-]为全家族成员购买了[54ff90]{1}[-]福利，请大家速速前往领取！"
+    };
+getRow(guildSkillReturnContent1)->
+    #serverstringsCfg {
+    id = 174,
+    stringID = guildSkillReturnContent1,
+    chs = "因退出家族造成家族技能清零，现返还{0}学习家族技能花费的金币"
+    };
+getRow(guildSkillReturnContent2)->
+    #serverstringsCfg {
+    id = 175,
+    stringID = guildSkillReturnContent2,
+    chs = "因退出家族造成家族技能清零，现返还{0}学习家族技能花费的绑定金币"
+    };
+getRow(guildSkillReturnContent3)->
+    #serverstringsCfg {
+    id = 176,
+    stringID = guildSkillReturnContent3,
+    chs = "因退出家族造成家族技能清零，现返还{0}学习家族技能花费的钻石"
+    };
+getRow(guildSkillReturnContent4)->
+    #serverstringsCfg {
+    id = 177,
+    stringID = guildSkillReturnContent4,
+    chs = "因退出家族造成家族技能清零，现返还{0}学习家族技能花费的声望"
+    };
+getRow(guildSkillReturnContent5)->
+    #serverstringsCfg {
+    id = 178,
+    stringID = guildSkillReturnContent5,
+    chs = "因退出家族造成家族技能清零，现返还{0}学习家族技能花费的荣誉"
+    };
+getRow(guildSkillReturnContent6)->
+    #serverstringsCfg {
+    id = 179,
+    stringID = guildSkillReturnContent6,
+    chs = "因退出家族造成家族技能清零，现返还{0}学习家族技能花费的绑定钻石"
+    };
+getRow(guildSkillReturnTitle)->
+    #serverstringsCfg {
+    id = 173,
+    stringID = guildSkillReturnTitle,
+    chs = "家族技能返还"
+    };
+getRow(guildWarCollectMonester)->
+    #serverstringsCfg {
+    id = 155,
+    stringID = guildWarCollectMonester,
+    chs = "神武大炮"
+    };
+getRow(guildWarKillPlayer30)->
+    #serverstringsCfg {
+    id = 158,
+    stringID = guildWarKillPlayer30,
+    chs = "[54ff90]{0}[-]在【家族精英联赛】中，已经[ff0000]{1}[-]连败，快来人终结他！"
+    };
+getRow(guildWarMailContent)->
+    #serverstringsCfg {
+    id = 153,
+    stringID = guildWarMailContent,
+    chs = "您所在家族获得【家族精英联赛】参赛资格<br>家族[54ff90]精英[-]以上职位可参战<br><br>参与即可获得丰厚奖励<br>"
+    };
+getRow(guildWarMailgiftContent)->
+    #serverstringsCfg {
+    id = 154,
+    stringID = guildWarMailgiftContent,
+    chs = "这是您的奖励，请及时领取附件。"
+    };
+getRow(guildWarMailTitle)->
+    #serverstringsCfg {
+    id = 152,
+    stringID = guildWarMailTitle,
+    chs = "家族精英联赛"
+    };
+getRow(guildWarOtherGuildCY)->
+    #serverstringsCfg {
+    id = 167,
+    stringID = guildWarOtherGuildCY,
+    chs = "{0}家族，在家族精英联赛资格竞价中出价更高，请家族长可重新竞价"
+    };
+getRow(guildWarPrepareStart)->
+    #serverstringsCfg {
+    id = 156,
+    stringID = guildWarPrepareStart,
+    chs = "家族精英联赛[54ff90]初赛[-]五分钟后正式开始"
+    };
+getRow(guildWarPrepareStartFinal)->
+    #serverstringsCfg {
+    id = 157,
+    stringID = guildWarPrepareStartFinal,
+    chs = "家族精英联赛[54ff90]决赛[-]五分钟后正式开始"
+    };
+getRow(guildWarStartDaPao)->
+    #serverstringsCfg {
+    id = 159,
+    stringID = guildWarStartDaPao,
+    chs = "[54ff90]{0}[-]启动神武大炮，击败[ff0000]{1}[-]"
+    };
+getRow(hDBattle_GatherItem)->
+    #serverstringsCfg {
+    id = 115,
+    stringID = hDBattle_GatherItem,
+    chs = "采集小目标完成，获得额外荣誉奖励:{0}"
+    };
+getRow(hDBattle_KillPlayer)->
+    #serverstringsCfg {
+    id = 114,
+    stringID = hDBattle_KillPlayer,
+    chs = "击败小目标完成，获得额外荣誉奖励:{0}"
+    };
+getRow(head_Report_eamil_1)->
+    #serverstringsCfg {
+    id = 499,
+    stringID = head_Report_eamil_1,
+    chs = "【系统警告】"
+    };
+getRow(head_Report_eamil_2)->
+    #serverstringsCfg {
+    id = 500,
+    stringID = head_Report_eamil_2,
+    chs = "尊敬的冒险者：<br>    由于我们收到了多名玩家对您身份证的举报请求，故暂将您的身份证自定义头像替换为系统头像，并处罚{0}小时内禁止替换自定义头像。<br>          对您造成的不便，请见谅。"
+    };
+getRow(home_costreturn_mail)->
+    #serverstringsCfg {
+    id = 524,
+    stringID = home_costreturn_mail,
+    chs = "在新版本中我们移除了【家园】升级的金币消耗。\n根据您目前家园等级，将返还之前升级所消耗的金币，返还数额与等级关系如下：\n1级家园  无消耗\n2级家园  100万金币\n3级家园  300万金币\n4级家园  600万金币\n5级家园 1100万金币"
+    };
+getRow(home_costreturn_title)->
+    #serverstringsCfg {
+    id = 523,
+    stringID = home_costreturn_title,
+    chs = "【家园】升级消耗返还"
+    };
+getRow(home_gift_mail)->
+    #serverstringsCfg {
+    id = 511,
+    stringID = home_gift_mail,
+    chs = "你的伴侣[ffdf40]{0}[-] 给你赠送了家具，请查收。"
+    };
+getRow(home_gift_title)->
+    #serverstringsCfg {
+    id = 510,
+    stringID = home_gift_title,
+    chs = "家具赠礼"
+    };
+getRow(home_harvest_mail)->
+    #serverstringsCfg {
+    id = 508,
+    stringID = home_harvest_mail,
+    chs = "你的伴侣[009B4C]{0}[-] 帮你把家园中成熟的[009B4C]{1}[-]都收取啦，请查收。"
+    };
+getRow(home_harvest_mail2)->
+    #serverstringsCfg {
+    id = 522,
+    stringID = home_harvest_mail2,
+    chs = "你的好友[009B4C]{0}[-] 悄悄地顺走了一些熟透了的[009B4C]{1}[-]，赶紧去收菜吧！"
+    };
+getRow(home_harvest_title)->
+    #serverstringsCfg {
+    id = 507,
+    stringID = home_harvest_title,
+    chs = "收菜啦~"
+    };
+getRow(home_harvest_title2)->
+    #serverstringsCfg {
+    id = 521,
+    stringID = home_harvest_title2,
+    chs = "菜被偷走啦~"
+    };
+getRow(honorLevelReturnGoldMailContent)->
+    #serverstringsCfg {
+    id = 21,
+    stringID = honorLevelReturnGoldMailContent,
+    chs = "因荣誉等级调整，现将您之前的消耗返还给您，您升级到：{0}级，共返还绑定金币：{1}"
+    };
+getRow(honorLevelReturnHonorMailContent)->
+    #serverstringsCfg {
+    id = 20,
+    stringID = honorLevelReturnHonorMailContent,
+    chs = "因荣誉等级调整，现将您之前的消耗返还给您，您升级到：{0}级，共返还荣誉值：{1}"
+    };
+getRow(honorLevelReturnMailTitle)->
+    #serverstringsCfg {
+    id = 19,
+    stringID = honorLevelReturnMailTitle,
+    chs = "荣誉等级调整返还消耗"
+    };
+getRow(impeach_Lose_MailContent)->
+    #serverstringsCfg {
+    id = 219,
+    stringID = impeach_Lose_MailContent,
+    chs = "弹劾成功,新家族长:[54ff90]{0}[-]<br>弹劾响应:[54ff90]{1},{2},{3}[-]"
+    };
+getRow(impeach_Lose_MailTitle)->
+    #serverstringsCfg {
+    id = 218,
+    stringID = impeach_Lose_MailTitle,
+    chs = "弹劾通知"
+    };
+getRow(kingbattle_basereward_1)->
+    #serverstringsCfg {
+    id = 503,
+    stringID = kingbattle_basereward_1,
+    chs = "世界守护参与奖励"
+    };
+getRow(kingbattle_basereward_2)->
+    #serverstringsCfg {
+    id = 504,
+    stringID = kingbattle_basereward_2,
+    chs = "感谢你参与世界守护活动，以下是您的参与奖励！"
+    };
+getRow(kingBattle_BUFF_bug)->
+    #serverstringsCfg {
+    id = 314,
+    stringID = kingBattle_BUFF_bug,
+    chs = "剩余激活层数：{0}/{1}"
+    };
+getRow(kingBattle_BUFF_see)->
+    #serverstringsCfg {
+    id = 313,
+    stringID = kingBattle_BUFF_see,
+    chs = "下一级提高攻击力{0}点，生命上限{1}点。"
+    };
+getRow(kingBattleDefenderAwardContext)->
+    #serverstringsCfg {
+    id = 309,
+    stringID = kingBattleDefenderAwardContext,
+    chs = "恭喜您成为新的世界守护，希望你能维护世界的和平。"
+    };
+getRow(kingBattleDefenderAwardFailContext)->
+    #serverstringsCfg {
+    id = 307,
+    stringID = kingBattleDefenderAwardFailContext,
+    chs = "很惋惜您守护失败，感谢您的努力，以下是您获得的奖励！"
+    };
+getRow(kingBattleDefenderAwardFailTitle)->
+    #serverstringsCfg {
+    id = 306,
+    stringID = kingBattleDefenderAwardFailTitle,
+    chs = "世界守护活动奖励"
+    };
+getRow(kingBattleDefenderAwardWinContext)->
+    #serverstringsCfg {
+    id = 305,
+    stringID = kingBattleDefenderAwardWinContext,
+    chs = "恭喜您守护成功，以下是您获得的奖励！"
+    };
+getRow(kingBattleDefenderAwardWinTitle)->
+    #serverstringsCfg {
+    id = 304,
+    stringID = kingBattleDefenderAwardWinTitle,
+    chs = "世界守护活动奖励"
+    };
+getRow(kingBattleNewDefenderAwardTitle)->
+    #serverstringsCfg {
+    id = 308,
+    stringID = kingBattleNewDefenderAwardTitle,
+    chs = "世界守护活动奖励"
+    };
+getRow(kingBattleNotStart)->
+    #serverstringsCfg {
+    id = 39,
+    stringID = kingBattleNotStart,
+    chs = "活动已经关闭！期待下次开启！"
+    };
+getRow(kingBattleRankAwardContext)->
+    #serverstringsCfg {
+    id = 303,
+    stringID = kingBattleRankAwardContext,
+    chs = "恭喜您在活动中获得[fb543b]第{0}名[-]，以下是您获得的奖励！"
+    };
+getRow(kingBattleRankAwardTitle)->
+    #serverstringsCfg {
+    id = 302,
+    stringID = kingBattleRankAwardTitle,
+    chs = "世界守护活动奖励"
+    };
+getRow(kvBroadcast)->
+    #serverstringsCfg {
+    id = 149,
+    stringID = kvBroadcast,
+    chs = "邪恶至极的<t=100>{0},{1},{2}</t>在【<t=4>,{3},[{4},{5}]</t>】上线了，谁敢去审判！   "
+    };
+getRow(ladder1v1_better_score_context)->
+    #serverstringsCfg {
+    id = 265,
+    stringID = ladder1v1_better_score_context,
+    chs = "尊敬的冒险者：<br>    恭喜您刷新了竞技场排名，历史最高排名达到 [54ff90]{0}[-] <br>    根据您本次排名上升幅度，特此献上奖励，愿战争女神的荣光庇佑您！！<br>           ——竞技场指挥官：阿卡杜因·狮心"
+    };
+getRow(ladder1v1_better_score_title)->
+    #serverstringsCfg {
+    id = 266,
+    stringID = ladder1v1_better_score_title,
+    chs = "竞技场最高排名奖励"
+    };
+getRow(loginProticalVersionMatch)->
+    #serverstringsCfg {
+    id = 117,
+    stringID = loginProticalVersionMatch,
+    chs = "协议版本号不匹配，有功能将会有异常，请升级客户端\n服务器:{0}-客户端:{1}"
+    };
+getRow(loginResultDbErr_Text)->
+    #serverstringsCfg {
+    id = 122,
+    stringID = loginResultDbErr_Text,
+    chs = "游戏库失败"
+    };
+getRow(loginResultDeviceDenied_Text)->
+    #serverstringsCfg {
+    id = 121,
+    stringID = loginResultDeviceDenied_Text,
+    chs = "登录被游戏拒绝"
+    };
+getRow(loginResultSearchFail_Text)->
+    #serverstringsCfg {
+    id = 123,
+    stringID = loginResultSearchFail_Text,
+    chs = "游戏库验证失败"
+    };
+getRow(loginResultSearchFailInFuncell_Text)->
+    #serverstringsCfg {
+    id = 120,
+    stringID = loginResultSearchFailInFuncell_Text,
+    chs = "平台验证失败"
+    };
+getRow(loginResultServerMaintain_Text)->
+    #serverstringsCfg {
+    id = 138,
+    stringID = loginResultServerMaintain_Text,
+    chs = "服务器维护中，请稍后再试"
+    };
+getRow(loseGoods_MailContent)->
+    #serverstringsCfg {
+    id = 89,
+    stringID = loseGoods_MailContent,
+    chs = "亲爱的冒险者：<br>  由于您的背包空间不足，现将遗失物品通过邮件补发！！请注意查收哦~<br>           ——《空间管理委员会》"
+    };
+getRow(loseGoods_MailTitle)->
+    #serverstringsCfg {
+    id = 88,
+    stringID = loseGoods_MailTitle,
+    chs = "遗失物品补发"
+    };
+getRow(lottery_award_notice_orange)->
+    #serverstringsCfg {
+    id = 267,
+    stringID = lottery_award_notice_orange,
+    chs = "[54ff90]{0}[-]抽取宝藏时，获得稀有物品[FFA500]{1}*{2}[-]"
+    };
+getRow(lottery_award_notice_purple)->
+    #serverstringsCfg {
+    id = 268,
+    stringID = lottery_award_notice_purple,
+    chs = "[54ff90]{0}[-]抽取宝藏时，获得稀有物品[C71585]{1}*{2}[-],运气爆棚"
+    };
+getRow(lotteryForTowerBroadcast)->
+    #serverstringsCfg {
+    id = 226,
+    stringID = lotteryForTowerBroadcast,
+    chs = "[54ff90]【{0}】[-]探索魔塔获得[54ff90]{1}[-]*{2},可喜可贺！"
+    };
+getRow(lotterysuccessitembrocast)->
+    #serverstringsCfg {
+    id = 136,
+    stringID = lotterysuccessitembrocast,
+    chs = "命中注定！[54ff90]【{0}】[-]占卜到了[ff0000]【{1}】*{2}[-]奖励，可喜可贺！"
+    };
+getRow(lsBattleFiledRankAwardContext)->
+    #serverstringsCfg {
+    id = 288,
+    stringID = lsBattleFiledRankAwardContext,
+    chs = "获得以下奖励"
+    };
+getRow(lsBattleFiledRankAwardTitle)->
+    #serverstringsCfg {
+    id = 287,
+    stringID = lsBattleFiledRankAwardTitle,
+    chs = "乱世为王活动奖励"
+    };
+getRow(magician)->
+    #serverstringsCfg {
+    id = 336,
+    stringID = magician,
+    chs = "法师"
+    };
+getRow(mail_content_reward)->
+    #serverstringsCfg {
+    id = 441,
+    stringID = mail_content_reward,
+    chs = "恭喜您在极地求生活动中获得了[fb543b]第{0}名[-]的成绩，以下为您的排名奖励，请再接再厉！"
+    };
+getRow(mail_guildboss_1)->
+    #serverstringsCfg {
+    id = 442,
+    stringID = mail_guildboss_1,
+    chs = "家族首领参与奖"
+    };
+getRow(mail_guildboss_10)->
+    #serverstringsCfg {
+    id = 451,
+    stringID = mail_guildboss_10,
+    chs = "【家族首领】活动已开启，各家族成员可通过家族界面前往挑战！"
+    };
+getRow(mail_guildboss_11)->
+    #serverstringsCfg {
+    id = 452,
+    stringID = mail_guildboss_11,
+    chs = "【家族首领】活动已结束，个人相关奖励将通过邮件发送，请注意查收哦~"
+    };
+getRow(mail_guildboss_12)->
+    #serverstringsCfg {
+    id = 453,
+    stringID = mail_guildboss_12,
+    chs = "{0}购买了一层{1}效果，全体成员攻击力得到大幅提升！"
+    };
+getRow(mail_guildboss_13)->
+    #serverstringsCfg {
+    id = 454,
+    stringID = mail_guildboss_13,
+    chs = "家族首领[{0}]已激活，大家赶紧前往挑战吧！"
+    };
+getRow(mail_guildboss_14)->
+    #serverstringsCfg {
+    id = 455,
+    stringID = mail_guildboss_14,
+    chs = "击杀{0}首领后解锁。"
+    };
+getRow(mail_guildboss_2)->
+    #serverstringsCfg {
+    id = 443,
+    stringID = mail_guildboss_2,
+    chs = "恭喜您在家族首领活动中获得了伤害排名第[ff0000]{0}[-]名的成绩，以下为您的排名参与奖励，请再接再厉！"
+    };
+getRow(mail_guildboss_3)->
+    #serverstringsCfg {
+    id = 444,
+    stringID = mail_guildboss_3,
+    chs = "家族首领击杀奖"
+    };
+getRow(mail_guildboss_4)->
+    #serverstringsCfg {
+    id = 445,
+    stringID = mail_guildboss_4,
+    chs = "恭喜您的家族成功击杀了{0}，以下为您的个人击杀奖励，请再接再厉！"
+    };
+getRow(mail_guildboss_5)->
+    #serverstringsCfg {
+    id = 446,
+    stringID = mail_guildboss_5,
+    chs = "家族首领首杀奖"
+    };
+getRow(mail_guildboss_6)->
+    #serverstringsCfg {
+    id = 447,
+    stringID = mail_guildboss_6,
+    chs = "恭喜您的家族首次挑战{0}成功，以下为您的个人首杀奖励，请再接再厉！"
+    };
+getRow(mail_guildboss_7)->
+    #serverstringsCfg {
+    id = 448,
+    stringID = mail_guildboss_7,
+    chs = "【家族首领】活动即将在15分钟后开启，请各家族成员做好准备！"
+    };
+getRow(mail_guildboss_8)->
+    #serverstringsCfg {
+    id = 449,
+    stringID = mail_guildboss_8,
+    chs = "【家族首领】活动即将在10分钟后开启，请各家族成员做好准备！"
+    };
+getRow(mail_guildboss_9)->
+    #serverstringsCfg {
+    id = 450,
+    stringID = mail_guildboss_9,
+    chs = "【家族首领】活动即将在5分钟后开启，请各家族成员做好准备！"
+    };
+getRow(mail_title_reward)->
+    #serverstringsCfg {
+    id = 440,
+    stringID = mail_title_reward,
+    chs = "极地求生排名奖励"
+    };
+getRow(mailcontent_bossaward_normal)->
+    #serverstringsCfg {
+    id = 432,
+    stringID = mailcontent_bossaward_normal,
+    chs = "恭喜冒险者参与了首领入侵活动，为了保卫蓝色大陆，下一次也请加油战斗哦~"
+    };
+getRow(mailcontent_bossaward_sp)->
+    #serverstringsCfg {
+    id = 433,
+    stringID = mailcontent_bossaward_sp,
+    chs = "诶诶诶！这是首领入侵活动中唯一一份单人幸运奖励吗！？您的运气真让人羡慕呢！"
+    };
+getRow(mailcontent_bossaward1)->
+    #serverstringsCfg {
+    id = 429,
+    stringID = mailcontent_bossaward1,
+    chs = "恭喜冒险者成功击退世界首领，特此奉上丰富奖励！"
+    };
+getRow(mailcontent_bossaward2)->
+    #serverstringsCfg {
+    id = 430,
+    stringID = mailcontent_bossaward2,
+    chs = "恭喜冒险者成功击退世界首领，特此奉上丰富奖励！"
+    };
+getRow(mailcontent_bossaward3)->
+    #serverstringsCfg {
+    id = 431,
+    stringID = mailcontent_bossaward3,
+    chs = "恭喜冒险者成功击退世界首领，特此奉上丰富奖励！"
+    };
+getRow(mailcontent_bossguildaward1)->
+    #serverstringsCfg {
+    id = 434,
+    stringID = mailcontent_bossguildaward1,
+    chs = "恭喜冒险者在首领入侵活动中获得家族排行榜[fb543b]第{0}名[-]，特此奉上丰富奖励！"
+    };
+getRow(mailcontent_bossguildaward2)->
+    #serverstringsCfg {
+    id = 435,
+    stringID = mailcontent_bossguildaward2,
+    chs = "恭喜冒险者在首领入侵活动中获得家族排行榜[fb543b]第{0}名[-]，特此奉上丰富奖励！"
+    };
+getRow(mailcontent_bossguildaward3)->
+    #serverstringsCfg {
+    id = 436,
+    stringID = mailcontent_bossguildaward3,
+    chs = "恭喜冒险者在首领入侵活动中获得家族排行榜[fb543b]第{0}名[-]，特此奉上丰富奖励！"
+    };
+getRow(mailcontent_bossguildawardnormal)->
+    #serverstringsCfg {
+    id = 437,
+    stringID = mailcontent_bossguildawardnormal,
+    chs = "冒险者您的家族参与了首领入侵活动，为了保卫蓝色大陆，需要大家一起加油呢~"
+    };
+getRow(mailcontent_bossguildawardsp)->
+    #serverstringsCfg {
+    id = 438,
+    stringID = mailcontent_bossguildawardsp,
+    chs = "真是幸运的家族呢！这可是首领入侵活动中唯一一份家族幸运奖励吗！你们的运气真让人羡慕！"
+    };
+getRow(maintain)->
+    #serverstringsCfg {
+    id = 118,
+    stringID = maintain,
+    chs = "停机维护中"
+    };
+getRow(mall_give_mail_Content)->
+    #serverstringsCfg {
+    id = 329,
+    stringID = mall_give_mail_Content,
+    chs = "您收到了一份礼物——{0}"
+    };
+getRow(mall_give_mail_title)->
+    #serverstringsCfg {
+    id = 328,
+    stringID = mall_give_mail_title,
+    chs = "商城赠送"
+    };
+getRow(mapsafetips)->
+    #serverstringsCfg {
+    id = 420,
+    stringID = mapsafetips,
+    chs = "当前处于安全区，不会受到攻击"
+    };
+getRow(mapsafewarn)->
+    #serverstringsCfg {
+    id = 421,
+    stringID = mapsafewarn,
+    chs = "当前处于非安全区，可能会受到攻击，请小心"
+    };
+getRow(marriage_B_FContentA)->
+    #serverstringsCfg {
+    id = 262,
+    stringID = marriage_B_FContentA,
+    chs = "旧婚姻相关，屏蔽"
+    };
+getRow(marriage_B_FContentB)->
+    #serverstringsCfg {
+    id = 264,
+    stringID = marriage_B_FContentB,
+    chs = "旧婚姻相关，屏蔽"
+    };
+getRow(marriage_B_FTitleA)->
+    #serverstringsCfg {
+    id = 261,
+    stringID = marriage_B_FTitleA,
+    chs = "旧婚姻相关，屏蔽"
+    };
+getRow(marriage_B_FTitleB)->
+    #serverstringsCfg {
+    id = 263,
+    stringID = marriage_B_FTitleB,
+    chs = "旧婚姻相关，屏蔽"
+    };
+getRow(marriage_Boradcast)->
+    #serverstringsCfg {
+    id = 315,
+    stringID = marriage_Boradcast,
+    chs = "[54ff90]{0}[-] 使用 [ff0000]{1}[-] 向 [54ff90]{2}[-] 求婚成功，成为本服第 [ff0000]{3}[-] 对新人，大家快来祝贺他们吧！！"
+    };
+getRow(marriage_C_Content)->
+    #serverstringsCfg {
+    id = 250,
+    stringID = marriage_C_Content,
+    chs = "旧婚姻相关，屏蔽"
+    };
+getRow(marriage_C_EndMContent)->
+    #serverstringsCfg {
+    id = 252,
+    stringID = marriage_C_EndMContent,
+    chs = "旧婚姻相关，屏蔽"
+    };
+getRow(marriage_C_EndMTitle)->
+    #serverstringsCfg {
+    id = 251,
+    stringID = marriage_C_EndMTitle,
+    chs = "旧婚姻相关，屏蔽"
+    };
+getRow(marriage_C_EndUContent)->
+    #serverstringsCfg {
+    id = 254,
+    stringID = marriage_C_EndUContent,
+    chs = "旧婚姻相关，屏蔽"
+    };
+getRow(marriage_C_EndUTitle)->
+    #serverstringsCfg {
+    id = 253,
+    stringID = marriage_C_EndUTitle,
+    chs = "旧婚姻相关，屏蔽"
+    };
+getRow(marriage_C_PayContent)->
+    #serverstringsCfg {
+    id = 248,
+    stringID = marriage_C_PayContent,
+    chs = "旧婚姻相关，屏蔽"
+    };
+getRow(marriage_C_PayTitle)->
+    #serverstringsCfg {
+    id = 247,
+    stringID = marriage_C_PayTitle,
+    chs = "旧婚姻相关，屏蔽"
+    };
+getRow(marriage_C_SysContent)->
+    #serverstringsCfg {
+    id = 246,
+    stringID = marriage_C_SysContent,
+    chs = "旧婚姻相关，屏蔽"
+    };
+getRow(marriage_C_SysPayContent)->
+    #serverstringsCfg {
+    id = 244,
+    stringID = marriage_C_SysPayContent,
+    chs = "旧婚姻相关，屏蔽"
+    };
+getRow(marriage_C_SysPayTitle)->
+    #serverstringsCfg {
+    id = 243,
+    stringID = marriage_C_SysPayTitle,
+    chs = "旧婚姻相关，屏蔽"
+    };
+getRow(marriage_C_SysTitle)->
+    #serverstringsCfg {
+    id = 245,
+    stringID = marriage_C_SysTitle,
+    chs = "旧婚姻相关，屏蔽"
+    };
+getRow(marriage_C_Title)->
+    #serverstringsCfg {
+    id = 249,
+    stringID = marriage_C_Title,
+    chs = "旧婚姻相关，屏蔽"
+    };
+getRow(marriage_candy)->
+    #serverstringsCfg {
+    id = 259,
+    stringID = marriage_candy,
+    chs = "旧婚姻相关，屏蔽{0}{1}"
+    };
+getRow(marriage_ContentBreak)->
+    #serverstringsCfg {
+    id = 321,
+    stringID = marriage_ContentBreak,
+    chs = "勇敢的冒险者：<br>    您与 [54ff90]{0}[-] 离婚成功，成功解除双方伴侣关系。再回首，往事如风~<br>           ——《蓝色大陆民生部》"
+    };
+getRow(marriage_ContentBuild)->
+    #serverstringsCfg {
+    id = 319,
+    stringID = marriage_ContentBuild,
+    chs = "幸福的冒险者：<br>    您与 [54ff90]{0}[-] 结婚成功，成为本服第 [54ff90]{1}[-] 对伴侣，可喜可贺！祝福你们共携白首~<br>           ——《蓝色大陆民生部》"
+    };
+getRow(marriage_ContentBuildFaild)->
+    #serverstringsCfg {
+    id = 317,
+    stringID = marriage_ContentBuildFaild,
+    chs = "无畏的冒险者：<br>    您的求婚请求被 [54ff90]{0}[-] 残忍拒绝并颁发给你一张 好人卡！<br>    天涯何处无芳草，何必单恋一枝花。生命不息，求婚不止！！<br>           ——《蓝色大陆民生部》"
+    };
+getRow(marriage_flower)->
+    #serverstringsCfg {
+    id = 260,
+    stringID = marriage_flower,
+    chs = "旧婚姻相关，屏蔽{0}"
+    };
+getRow(marriage_free)->
+    #serverstringsCfg {
+    id = 258,
+    stringID = marriage_free,
+    chs = "旧婚姻相关，屏蔽"
+    };
+getRow(marriage_free_title)->
+    #serverstringsCfg {
+    id = 257,
+    stringID = marriage_free_title,
+    chs = "旧婚姻相关，屏蔽"
+    };
+getRow(marriage_M_Marry)->
+    #serverstringsCfg {
+    id = 255,
+    stringID = marriage_M_Marry,
+    chs = "旧婚姻相关，屏蔽{0}{1}"
+    };
+getRow(marriage_TitleBreak)->
+    #serverstringsCfg {
+    id = 320,
+    stringID = marriage_TitleBreak,
+    chs = "离婚通知"
+    };
+getRow(marriage_TitleBuild)->
+    #serverstringsCfg {
+    id = 318,
+    stringID = marriage_TitleBuild,
+    chs = "结婚通知"
+    };
+getRow(marriage_TitleBuildFaild)->
+    #serverstringsCfg {
+    id = 316,
+    stringID = marriage_TitleBuildFaild,
+    chs = "拒婚通知"
+    };
+getRow(marriage_WS_Invite)->
+    #serverstringsCfg {
+    id = 256,
+    stringID = marriage_WS_Invite,
+    chs = "旧婚姻相关，屏蔽{0}{1}"
+    };
+getRow(mercenary)->
+    #serverstringsCfg {
+    id = 335,
+    stringID = mercenary,
+    chs = "佣兵"
+    };
+getRow(monk)->
+    #serverstringsCfg {
+    id = 341,
+    stringID = monk,
+    chs = "僧侣"
+    };
+getRow(monsterBoss_dead)->
+    #serverstringsCfg {
+    id = 460,
+    stringID = monsterBoss_dead,
+    chs = "{0}的{1}倒下了，还有七八十亿个站起来，兽人永不为奴！"
+    };
+getRow(monsterElite_announcement)->
+    #serverstringsCfg {
+    id = 509,
+    stringID = monsterElite_announcement,
+    chs = "恭喜冒险者[00FF00]{0}[-]击杀了[00FF00]{1}[-]，获得丰富奖励！"
+    };
+getRow(newguildIntoGuildWar)->
+    #serverstringsCfg {
+    id = 151,
+    stringID = newguildIntoGuildWar,
+    chs = "[ff0000]{0}[-]家族竞价更高，你的竞价家族资金已返还，可重新竞价。"
+    };
+getRow(newplayer_Worldlevel_MailContent)->
+    #serverstringsCfg {
+    id = 221,
+    stringID = newplayer_Worldlevel_MailContent,
+    chs = "为帮助您快速成长，我们特意赠送您新人辅助礼包！<br>祝你游戏愉快！"
+    };
+getRow(newplayer_Worldlevel_MailTitle)->
+    #serverstringsCfg {
+    id = 220,
+    stringID = newplayer_Worldlevel_MailTitle,
+    chs = "新人辅助礼包"
+    };
+getRow(noGSList_Text)->
+    #serverstringsCfg {
+    id = 148,
+    stringID = noGSList_Text,
+    chs = "服务器异常，请稍后再试"
+    };
+getRow(oneking_bossborn)->
+    #serverstringsCfg {
+    id = 283,
+    stringID = oneking_bossborn,
+    chs = "恶魔已经降临，快去击败吧。"
+    };
+getRow(oneking_bossdead)->
+    #serverstringsCfg {
+    id = 284,
+    stringID = oneking_bossdead,
+    chs = "勇士{0}击败{1}，获得100点积分。"
+    };
+getRow(oneking_rankfirst)->
+    #serverstringsCfg {
+    id = 285,
+    stringID = oneking_rankfirst,
+    chs = "恭喜{0}在战场中获得第一，吊炸天了啊~~"
+    };
+getRow(oneking_revenge)->
+    #serverstringsCfg {
+    id = 286,
+    stringID = oneking_revenge,
+    chs = "厉害，您击败了你的仇人！"
+    };
+getRow(oneking_serialkill_10)->
+    #serverstringsCfg {
+    id = 280,
+    stringID = oneking_serialkill_10,
+    chs = "{0}连败10人，一剑断山河。"
+    };
+getRow(oneking_serialkill_20)->
+    #serverstringsCfg {
+    id = 281,
+    stringID = oneking_serialkill_20,
+    chs = "{0}在活动地图中连败20人，无人能挡。"
+    };
+getRow(oneking_serialkill_5)->
+    #serverstringsCfg {
+    id = 279,
+    stringID = oneking_serialkill_5,
+    chs = "{0}连败5人，锐不可当。"
+    };
+getRow(oneking_serialkill_50)->
+    #serverstringsCfg {
+    id = 282,
+    stringID = oneking_serialkill_50,
+    chs = "{0}在活动地图中连败50人，一界天骄，请收下我的膝盖。"
+    };
+getRow(oneking_totalkill_10)->
+    #serverstringsCfg {
+    id = 275,
+    stringID = oneking_totalkill_10,
+    chs = "{0}累计击败10人，小露身手。"
+    };
+getRow(oneking_totalkill_100)->
+    #serverstringsCfg {
+    id = 278,
+    stringID = oneking_totalkill_100,
+    chs = "{0}在活动地图中累计击败100人，一将功成万骨枯。"
+    };
+getRow(oneking_totalkill_20)->
+    #serverstringsCfg {
+    id = 276,
+    stringID = oneking_totalkill_20,
+    chs = "{0}累计击败20人，剑指天山。"
+    };
+getRow(oneking_totalkill_50)->
+    #serverstringsCfg {
+    id = 277,
+    stringID = oneking_totalkill_50,
+    chs = "{0}在活动地图中累计击败50人，横扫千军。"
+    };
+getRow(opACChargeMailContent)->
+    #serverstringsCfg {
+    id = 129,
+    stringID = opACChargeMailContent,
+    chs = "充值达到【{0}】钻石的活动奖励"
+    };
+getRow(opACChargeMailTitle)->
+    #serverstringsCfg {
+    id = 128,
+    stringID = opACChargeMailTitle,
+    chs = "【{0}】充值活动奖励"
+    };
+getRow(opActCollectRefresh)->
+    #serverstringsCfg {
+    id = 137,
+    stringID = opActCollectRefresh,
+    chs = "<t=0>,,[54ff90]{0}[-]在【</t><t=4>,{1},[{2},{3}]</t><t=0>,,】刷新了！请速度前去抢夺，手快有手慢就木有啦！</t>"
+    };
+getRow(opACUseMailContent)->
+    #serverstringsCfg {
+    id = 127,
+    stringID = opACUseMailContent,
+    chs = "钻石消费达到【{0}】的活动奖励"
+    };
+getRow(opACUseMailTitle)->
+    #serverstringsCfg {
+    id = 126,
+    stringID = opACUseMailTitle,
+    chs = "【{0}】钻石消费活动奖励"
+    };
+getRow(orderRebateMailContent)->
+    #serverstringsCfg {
+    id = 191,
+    stringID = orderRebateMailContent,
+    chs = "订单赠送,请查收<br>订单号：{0}"
+    };
+getRow(orderRebateMailTitle)->
+    #serverstringsCfg {
+    id = 190,
+    stringID = orderRebateMailTitle,
+    chs = "订单赠送"
+    };
+getRow(pet_recycle_email)->
+    #serverstringsCfg {
+    id = 393,
+    stringID = pet_recycle_email,
+    chs = "骑宠{0}已返还了成长消耗。{1}已还原到出生状态。请查收返还的骑宠成长道具。"
+    };
+getRow(pet_recycle_email_title)->
+    #serverstringsCfg {
+    id = 392,
+    stringID = pet_recycle_email_title,
+    chs = "骑宠成长返还"
+    };
+getRow(petpvpcontent)->
+    #serverstringsCfg {
+    id = 170,
+    stringID = petpvpcontent,
+    chs = "[00ffff]{0}[-]成功掠夺占领[00ffff]{1}[-]"
+    };
+getRow(petpvpmailcontent)->
+    #serverstringsCfg {
+    id = 145,
+    stringID = petpvpmailcontent,
+    chs = "您的领地: {0}_等级{1}<br>结算时间: {2}<br>请及时收取附件： {3}"
+    };
+getRow(petpvpmailtitle)->
+    #serverstringsCfg {
+    id = 144,
+    stringID = petpvpmailtitle,
+    chs = "骑宠领地争夺"
+    };
+getRow(petTerritory_plunder_content)->
+    #serverstringsCfg {
+    id = 350,
+    stringID = petTerritory_plunder_content,
+    chs = "您成功掠夺了一个富裕的骑宠领地，获得了大量奖励！"
+    };
+getRow(petTerritory_plunder_title)->
+    #serverstringsCfg {
+    id = 349,
+    stringID = petTerritory_plunder_title,
+    chs = "骑宠领地掠夺"
+    };
+getRow(playerExitGuild)->
+    #serverstringsCfg {
+    id = 87,
+    stringID = playerExitGuild,
+    chs = "{0}退出家族"
+    };
+getRow(playerJoinGuild)->
+    #serverstringsCfg {
+    id = 86,
+    stringID = playerJoinGuild,
+    chs = "{0}加入家族"
+    };
+getRow(priest)->
+    #serverstringsCfg {
+    id = 339,
+    stringID = priest,
+    chs = "牧师"
+    };
+getRow(race_announcement1)->
+    #serverstringsCfg {
+    id = 465,
+    stringID = race_announcement1,
+    chs = "【骑宠竞速】活动即将在15分钟后开启，报名时间为3分钟，请冒险者们做好准备！"
+    };
+getRow(race_announcement2)->
+    #serverstringsCfg {
+    id = 466,
+    stringID = race_announcement2,
+    chs = "【骑宠竞速】活动即将在10分钟后开启，报名时间为3分钟，请冒险者们做好准备！"
+    };
+getRow(race_announcement3)->
+    #serverstringsCfg {
+    id = 467,
+    stringID = race_announcement3,
+    chs = "【骑宠竞速】活动即将在5分钟后开启，报名时间为3分钟，请冒险者们做好准备！"
+    };
+getRow(race_worldtips_2)->
+    #serverstringsCfg {
+    id = 468,
+    stringID = race_worldtips_2,
+    chs = "骑宠竞速活动已开启报名，报名时间为3分钟，请冒险者们火速报名参加！"
+    };
+getRow(race_worldtips_3)->
+    #serverstringsCfg {
+    id = 469,
+    stringID = race_worldtips_3,
+    chs = "骑宠竞速活动已结束！活动奖励将通过邮件发送！"
+    };
+getRow(raceRewardAContent)->
+    #serverstringsCfg {
+    id = 293,
+    stringID = raceRewardAContent,
+    chs = "恭喜你在骑宠竞速活动获得{0}名，获得大量的奖励。"
+    };
+getRow(raceRewardATitle)->
+    #serverstringsCfg {
+    id = 292,
+    stringID = raceRewardATitle,
+    chs = "骑宠竞速名次奖励"
+    };
+getRow(raceRewardBContent)->
+    #serverstringsCfg {
+    id = 295,
+    stringID = raceRewardBContent,
+    chs = "你在骑宠竞速中未获得名次，特此送上福利奖励，请再接再厉！"
+    };
+getRow(raceRewardBTitle)->
+    #serverstringsCfg {
+    id = 294,
+    stringID = raceRewardBTitle,
+    chs = "骑宠竞速福利奖励"
+    };
+getRow(rank_name1)->
+    #serverstringsCfg {
+    id = 213,
+    stringID = rank_name1,
+    chs = "等级排行榜"
+    };
+getRow(rank_name2)->
+    #serverstringsCfg {
+    id = 212,
+    stringID = rank_name2,
+    chs = "财富排行榜"
+    };
+getRow(rank_name4)->
+    #serverstringsCfg {
+    id = 211,
+    stringID = rank_name4,
+    chs = "战斗力排行榜"
+    };
+getRow(rank_name5)->
+    #serverstringsCfg {
+    id = 214,
+    stringID = rank_name5,
+    chs = "宠物排行榜"
+    };
+getRow(rank_name9)->
+    #serverstringsCfg {
+    id = 210,
+    stringID = rank_name9,
+    chs = "至尊王者排行榜"
+    };
+getRow(rechargeCheckCode)->
+    #serverstringsCfg {
+    id = 64,
+    stringID = rechargeCheckCode,
+    chs = "充值状态验证：失败【{0}】，订单号{1}"
+    };
+getRow(rechargeCheckFailCode)->
+    #serverstringsCfg {
+    id = 63,
+    stringID = rechargeCheckFailCode,
+    chs = "充值验证操作失败，订单号{0}"
+    };
+getRow(rechargeDealCode)->
+    #serverstringsCfg {
+    id = 65,
+    stringID = rechargeDealCode,
+    chs = "充值处理：失败【{0}】，订单号{1}"
+    };
+getRow(rechargeFailMailContent)->
+    #serverstringsCfg {
+    id = 290,
+    stringID = rechargeFailMailContent,
+    chs = "非常抱歉你的充值订单出现了异常!<br>充值订单号：{0}<br>充值钻石：{1}<br>"
+    };
+getRow(rechargeFailMailTitle)->
+    #serverstringsCfg {
+    id = 289,
+    stringID = rechargeFailMailTitle,
+    chs = "充值失败"
+    };
+getRow(rechargeMailContent)->
+    #serverstringsCfg {
+    id = 58,
+    stringID = rechargeMailContent,
+    chs = "感谢您的充值!<br>充值订单号：{0}<br>充值钻石：{1}<br>"
+    };
+getRow(rechargeMailTitle)->
+    #serverstringsCfg {
+    id = 57,
+    stringID = rechargeMailTitle,
+    chs = "充值成功"
+    };
+getRow(rechargeNotDealCode)->
+    #serverstringsCfg {
+    id = 66,
+    stringID = rechargeNotDealCode,
+    chs = "充值处理：拥有者不符，拒绝操作【{0}】，订单号{1}"
+    };
+getRow(rechargeRebateDoubleMailContent)->
+    #serverstringsCfg {
+    id = 61,
+    stringID = rechargeRebateDoubleMailContent,
+    chs = "每档金额首次充值双倍奖励。<br>您首次充值{0}钻石档，非绑定钻石已直接添加到角色非绑定钻石中，现请查收额外赠送部分！"
+    };
+getRow(rechargeRebateDoubleMailContentbufa20150826)->
+    #serverstringsCfg {
+    id = 141,
+    stringID = rechargeRebateDoubleMailContentbufa20150826,
+    chs = "每档金额首次充值双倍奖励(20150826补发)。<br>您首次充值{0}元档，非绑定钻石已直接添加到角色非绑定钻石中，现请查收额外赠送部分！"
+    };
+getRow(rechargeRebateDoubleMailTitle)->
+    #serverstringsCfg {
+    id = 60,
+    stringID = rechargeRebateDoubleMailTitle,
+    chs = "每档单笔首充奖励"
+    };
+getRow(rechargeRebateMailTitle)->
+    #serverstringsCfg {
+    id = 59,
+    stringID = rechargeRebateMailTitle,
+    chs = "返利的绑定钻石"
+    };
+getRow(redEnvelope_Announcement_1)->
+    #serverstringsCfg {
+    id = 291,
+    stringID = redEnvelope_Announcement_1,
+    chs = "{0}给大家派送红包福利啦~快来抢呀~"
+    };
+getRow(refine_MailContent)->
+    #serverstringsCfg {
+    id = 10,
+    stringID = refine_MailContent,
+    chs = "亲爱的玩家，为了改善游戏的体验，我们在最新的版本调整了装备精练系统，现返还之前您已消耗的装备精炼石。您可以再次精练自己的装备。"
+    };
+getRow(refine_MailTitle)->
+    #serverstringsCfg {
+    id = 9,
+    stringID = refine_MailTitle,
+    chs = "精炼石返还"
+    };
+getRow(returnItem_MailContent)->
+    #serverstringsCfg {
+    id = 12,
+    stringID = returnItem_MailContent,
+    chs = "亲爱的玩家，您申请恢复的游戏道具现已通过邮件返还，请查收附件。"
+    };
+getRow(returnItem_MailTitle)->
+    #serverstringsCfg {
+    id = 11,
+    stringID = returnItem_MailTitle,
+    chs = "道具恢复"
+    };
+getRow(returnRole_MailContent)->
+    #serverstringsCfg {
+    id = 14,
+    stringID = returnRole_MailContent,
+    chs = "亲爱的玩家，您的游戏角色{0}, {1}级, {2}职业, 现已恢复。"
+    };
+getRow(returnRole_MailTitle)->
+    #serverstringsCfg {
+    id = 13,
+    stringID = returnRole_MailTitle,
+    chs = "角色恢复"
+    };
+getRow(ride_income_1)->
+    #serverstringsCfg {
+    id = 505,
+    stringID = ride_income_1,
+    chs = "游乐设施收入"
+    };
+getRow(ride_income_2)->
+    #serverstringsCfg {
+    id = 506,
+    stringID = ride_income_2,
+    chs = "有小伙伴乘坐你的游乐设施啦，以下是您获得的收入！"
+    };
+getRow(rogue)->
+    #serverstringsCfg {
+    id = 344,
+    stringID = rogue,
+    chs = "流氓"
+    };
+getRow(rune_boardcast)->
+    #serverstringsCfg {
+    id = 241,
+    stringID = rune_boardcast,
+    chs = "女神庇佑![54ff90]{0}[-]获得强力符文[ffff00]{1}[-],可喜可贺!"
+    };
+getRow(scout)->
+    #serverstringsCfg {
+    id = 347,
+    stringID = scout,
+    chs = "侦察兵"
+    };
+getRow(sixWarMailContentbase)->
+    #serverstringsCfg {
+    id = 223,
+    stringID = sixWarMailContentbase,
+    chs = "你的积分为[54ff90]{0}[-]<br>这是您的参与奖励<br>积分达到{1}可获得更高一档奖励，下次加油"
+    };
+getRow(sixWarMailContenteveryday)->
+    #serverstringsCfg {
+    id = 225,
+    stringID = sixWarMailContenteveryday,
+    chs = "你的家族占领[54ff90]{0}[-]领地<br>这是您的每日奖励,请收下<br>[54ff90]占领奖励按照您的家族职位和等级发放"
+    };
+getRow(sixWarMailContentgift)->
+    #serverstringsCfg {
+    id = 224,
+    stringID = sixWarMailContentgift,
+    chs = "你的积分为[54ff90]{0}[-]<br>这是您的战斗奖励。"
+    };
+getRow(sixWarMailTitle)->
+    #serverstringsCfg {
+    id = 222,
+    stringID = sixWarMailTitle,
+    chs = "列王纷争奖励"
+    };
+getRow(square_dancing_string_1)->
+    #serverstringsCfg {
+    id = 362,
+    stringID = square_dancing_string_1,
+    chs = "【限时广场舞】活动即将在15分钟后开启，B酱在阿克勒港口等你哟O(∩_∩)O~~"
+    };
+getRow(square_dancing_string_2)->
+    #serverstringsCfg {
+    id = 363,
+    stringID = square_dancing_string_2,
+    chs = "【限时广场舞】活动即将在10分钟后开启，B酱在阿克勒港口等你哟O(∩_∩)O~~"
+    };
+getRow(square_dancing_string_3)->
+    #serverstringsCfg {
+    id = 364,
+    stringID = square_dancing_string_3,
+    chs = "【限时广场舞】活动即将在5分钟后开启，B酱在阿克勒港口等你哟O(∩_∩)O~~"
+    };
+getRow(square_dancing_string_4)->
+    #serverstringsCfg {
+    id = 365,
+    stringID = square_dancing_string_4,
+    chs = "【限时广场舞】活动已开启，快来阿克勒港口找B酱参与吧O(∩_∩)O~~"
+    };
+getRow(square_dancing_string_5)->
+    #serverstringsCfg {
+    id = 366,
+    stringID = square_dancing_string_5,
+    chs = "下一支舞蹈你准备好了么({0}S)…"
+    };
+getRow(square_dancing_string_6)->
+    #serverstringsCfg {
+    id = 367,
+    stringID = square_dancing_string_6,
+    chs = "你已离开活动区域…"
+    };
+getRow(square_dancing_string_7)->
+    #serverstringsCfg {
+    id = 368,
+    stringID = square_dancing_string_7,
+    chs = "是否前往阿克勒港口活动地图？"
+    };
+getRow(supplicationContent)->
+    #serverstringsCfg {
+    id = 412,
+    stringID = supplicationContent,
+    chs = "家族成员{0}向你赠送了一个{1}，请注意查收！"
+    };
+getRow(supplicationTitle)->
+    #serverstringsCfg {
+    id = 411,
+    stringID = supplicationTitle,
+    chs = "家族祈愿"
+    };
+getRow(swordsmen)->
+    #serverstringsCfg {
+    id = 334,
+    stringID = swordsmen,
+    chs = "剑士"
+    };
+getRow(tendingGoods_MailContent)->
+    #serverstringsCfg {
+    id = 8,
+    stringID = tendingGoods_MailContent,
+    chs = "你的益达，服务器维护补偿"
+    };
+getRow(tendingGoods_MailTitle)->
+    #serverstringsCfg {
+    id = 7,
+    stringID = tendingGoods_MailTitle,
+    chs = "维护补偿"
+    };
+getRow(thief)->
+    #serverstringsCfg {
+    id = 346,
+    stringID = thief,
+    chs = "盗贼"
+    };
+getRow(tradeMail_BackItem)->
+    #serverstringsCfg {
+    id = 24,
+    stringID = tradeMail_BackItem,
+    chs = "对方拒绝购买"
+    };
+getRow(tradeMail_BackYouItem)->
+    #serverstringsCfg {
+    id = 28,
+    stringID = tradeMail_BackYouItem,
+    chs = "交易行退回你的物品"
+    };
+getRow(tradeMail_BuyItem)->
+    #serverstringsCfg {
+    id = 25,
+    stringID = tradeMail_BuyItem,
+    chs = "购买道具成功"
+    };
+getRow(tradeMail_Content)->
+    #serverstringsCfg {
+    id = 23,
+    stringID = tradeMail_Content,
+    chs = "交易行系统邮件内容"
+    };
+getRow(tradeMail_DownItem)->
+    #serverstringsCfg {
+    id = 27,
+    stringID = tradeMail_DownItem,
+    chs = "你下架了物品"
+    };
+getRow(tradeMail_SellItem)->
+    #serverstringsCfg {
+    id = 26,
+    stringID = tradeMail_SellItem,
+    chs = "你成功卖出了物品, 出售价格{0}, 扣除税费{1}"
+    };
+getRow(tradeMail_Title)->
+    #serverstringsCfg {
+    id = 22,
+    stringID = tradeMail_Title,
+    chs = "交易行"
+    };
+getRow(tradeMail_UnKnowPlayer)->
+    #serverstringsCfg {
+    id = 29,
+    stringID = tradeMail_UnKnowPlayer,
+    chs = "未知玩家"
+    };
+getRow(traveler)->
+    #serverstringsCfg {
+    id = 343,
+    stringID = traveler,
+    chs = "旅者"
+    };
+getRow(turnPlateNotice)->
+    #serverstringsCfg {
+    id = 495,
+    stringID = turnPlateNotice,
+    chs = "恭喜【{0}】玩家在[00FF00]幸运大转盘[-]活动中得到了稀有物品：{1}"
+    };
+getRow(useItemCallCarrierNotify)->
+    #serverstringsCfg {
+    id = 134,
+    stringID = useItemCallCarrierNotify,
+    chs = "<t=0>,,[54ff90]【{0}】[-]在【</t><t=4>,{1},[{2},{3}]</t><t=0>,,】对[54ff90]【{4}】[-]使用了【{5}】！请大家前去祝福！</t>"
+    };
+getRow(useItemCallMonsterNotify)->
+    #serverstringsCfg {
+    id = 133,
+    stringID = useItemCallMonsterNotify,
+    chs = "<t=0>,,[54ff90]【{0}】[-]召唤出了强大的[ff0000]【{1}】魔王[-]，请大家速速前往【</t><t=4>,{2},[{3},{4}]</t><t=0>,,】争夺，击败魔王的小队可以获得大量奖励！</t>"
+    };
+getRow(vip_buy_content)->
+    #serverstringsCfg {
+    id = 502,
+    stringID = vip_buy_content,
+    chs = "恭喜您成功激活{0}，以下物品为您获得的道具奖励"
+    };
+getRow(vip_buy_title)->
+    #serverstringsCfg {
+    id = 501,
+    stringID = vip_buy_title,
+    chs = "【荣誉殿堂】"
+    };
+getRow(vipCardRewardContent)->
+    #serverstringsCfg {
+    id = 491,
+    stringID = vipCardRewardContent,
+    chs = "伟大的星月商会勋章成员：<br>     上线福利发发发，特此献上今日上线奖励，希望您能心情愉快！！<br>           ——星月商会"
+    };
+getRow(vipCardRewardTitle)->
+    #serverstringsCfg {
+    id = 490,
+    stringID = vipCardRewardTitle,
+    chs = "【星月商会勋章奖励】"
+    };
+getRow(vipReputationTimesTips)->
+    #serverstringsCfg {
+    id = 94,
+    stringID = vipReputationTimesTips,
+    chs = "爵位福利:本次开启的副本不计入每日次数限制"
+    };
+getRow(warlock)->
+    #serverstringsCfg {
+    id = 340,
+    stringID = warlock,
+    chs = "术士"
+    };
+getRow(warriorMailContent1)->
+    #serverstringsCfg {
+    id = 130,
+    stringID = warriorMailContent1,
+    chs = "尊敬的冒险者：<br>    本周你的女神禁闭室排名第 [54ff90]{0}[-] 名，发放 [54ff90]{1}[-] ，以示奖励！！"
+    };
+getRow(warriorMailContent2)->
+    #serverstringsCfg {
+    id = 131,
+    stringID = warriorMailContent2,
+    chs = "勇敢的冒险者：<br>    本周你的女神禁闭室排名50名以外，请继续努力！发放 [54ff90]{0}[-] ，特此鼓励！！"
+    };
+getRow(warriorMailTitle)->
+    #serverstringsCfg {
+    id = 132,
+    stringID = warriorMailTitle,
+    chs = "女神禁闭室周奖励"
+    };
+getRow(wildboss_is_dead)->
+    #serverstringsCfg {
+    id = 269,
+    stringID = wildboss_is_dead,
+    chs = "恭喜玩家{0}的队伍击败了{1}，恭喜玩家{2}获得了幸运奖励！"
+    };
+getRow(wildboss_is_dead1)->
+    #serverstringsCfg {
+    id = 270,
+    stringID = wildboss_is_dead1,
+    chs = "恭喜玩家{0}的队伍击败了{1}！"
+    };
+getRow(wildboss_reward_lucky_content)->
+    #serverstringsCfg {
+    id = 274,
+    stringID = wildboss_reward_lucky_content,
+    chs = "你参与了野外首领的争夺，成为了唯一的幸运儿，获得了{0}！"
+    };
+getRow(wildboss_reward_lucky_title)->
+    #serverstringsCfg {
+    id = 273,
+    stringID = wildboss_reward_lucky_title,
+    chs = "野外首领幸运奖励"
+    };
+getRow(wildboss_reward_normal_content)->
+    #serverstringsCfg {
+    id = 272,
+    stringID = wildboss_reward_normal_content,
+    chs = "你参与了野外首领的争夺，获得了{0}！"
+    };
+getRow(wildboss_reward_normal_title)->
+    #serverstringsCfg {
+    id = 271,
+    stringID = wildboss_reward_normal_title,
+    chs = "野外首领协作奖励"
+    };
+getRow(wizard)->
+    #serverstringsCfg {
+    id = 338,
+    stringID = wizard,
+    chs = "巫师"
+    };
+getRow(worldBoss_announcement1)->
+    #serverstringsCfg {
+    id = 474,
+    stringID = worldBoss_announcement1,
+    chs = "【首领入侵】活动将在15分钟后开启，请冒险者们做好挑战！"
+    };
+getRow(worldBoss_announcement2)->
+    #serverstringsCfg {
+    id = 475,
+    stringID = worldBoss_announcement2,
+    chs = "【首领入侵】活动将在10分钟后开启，请冒险者们做好挑战！"
+    };
+getRow(worldBoss_announcement3)->
+    #serverstringsCfg {
+    id = 476,
+    stringID = worldBoss_announcement3,
+    chs = "【首领入侵】活动将在5分钟后开启，请冒险者们做好挑战！"
+    };
+getRow(worldBossRankAwardMailContent)->
+    #serverstringsCfg {
+    id = 169,
+    stringID = worldBossRankAwardMailContent,
+    chs = "恭喜冒险者参与了首领入侵活动，获得了丰富的奖励！"
+    };
+getRow(worldBossRankAwardTitle)->
+    #serverstringsCfg {
+    id = 168,
+    stringID = worldBossRankAwardTitle,
+    chs = "首领入侵活动奖励"
+    };
+getRow(worldsGuard_family_no)->
+    #serverstringsCfg {
+    id = 312,
+    stringID = worldsGuard_family_no,
+    chs = "[54ff90][-]守护者还没有家族！[-]"
+    };
+getRow(_)->[].
+
+getKeyList()->[
+    {accountWelfareMailTxt},
+    {activeMail_GainItem},
+    {activityannouncement_strings_1},
+    {activityannouncement_strings_10},
+    {activityannouncement_strings_11},
+    {activityannouncement_strings_12},
+    {activityannouncement_strings_2},
+    {activityannouncement_strings_3},
+    {activityannouncement_strings_4},
+    {activityannouncement_strings_5},
+    {activityannouncement_strings_6},
+    {activityannouncement_strings_7},
+    {activityannouncement_strings_8},
+    {activityannouncement_strings_9},
+    {alive_debuff},
+    {alive_doublekill},
+    {alive_firstroyale},
+    {alive_fristblood},
+    {alive_killbybuff},
+    {alive_killmonster_1},
+    {alive_killmonster_2},
+    {alive_killmonster_3},
+    {alive_killmonster_4},
+    {alive_refreash_red},
+    {alive_reward_content},
+    {alive_reward_title},
+    {alive_triplekill},
+    {allplayerquestion_mail_1},
+    {allplayerquestion_mail_2},
+    {allplayerquestion_serverstrings_1},
+    {allplayerquestion_serverstrings_2},
+    {allplayerquestion_serverstrings_3},
+    {allplayerquestion_serverstrings_4},
+    {allplayerquestion_serverstrings_5},
+    {answerPlayFirstAndLucky},
+    {answerPlayLuckyPlayers},
+    {answerPlayStart},
+    {answerPlayWaitStart},
+    {answerReswardFirstContent},
+    {answerReswardFirstNull},
+    {answerReswardFirstTitle},
+    {answerRewardResultAll},
+    {archer},
+    {arena_DapaoRefresh},
+    {arena_Ladder1v1_10},
+    {arena_Ladder1v1_11},
+    {arena_Ladder1v1_5},
+    {arena_Ladder1v1_King_Content},
+    {arena_Ladder1v1_King_Title},
+    {arena_Ladder1v1_RankReward},
+    {arena_Ladder1v1_WeekReward_Content},
+    {arena_Ladder1v1_WeekReward_Title},
+    {arena_Lose_MailContent},
+    {arena_Lose_MailTitle},
+    {arena_MonsterRefresh},
+    {arena_ObjectRefresh},
+    {arena_WeekMailContent},
+    {arena_WeekMailTitle},
+    {arena_Win_MailContent},
+    {arena_Win_MailTitle},
+    {battle_war_Begin},
+    {battle_war_Error},
+    {battle_war_KillMessage},
+    {battle_war_MailContent},
+    {battle_war_MailTitle},
+    {battle_war_WeekMailContent},
+    {battle_war_WeekMailTitle},
+    {bossBattleActivity_MailContent},
+    {bossBattleActivity_MailTitle},
+    {bossBattleActivity_NoticeJoin},
+    {bossBattleActivity_Reward},
+    {bravo},
+    {bribery_money},
+    {bribery_money_MallContent_all},
+    {bribery_money_MallContent_back},
+    {bribery_money_MallContent_get},
+    {bribery_money_MallTitle_all},
+    {bribery_money_MallTitle_back},
+    {bribery_money_MallTitle_get},
+    {broadcase_self_content},
+    {bulletin_arena_1},
+    {bulletin_arena_2},
+    {bulletin_arena_3},
+    {bulletin_arena_4},
+    {bulletin_arena_5},
+    {bulletin_getpet},
+    {bulletin_jinbishi},
+    {career_transfer_email_1},
+    {career_transfer_email_2},
+    {career_transfer_success},
+    {carrer_warrior},
+    {changeGuildNameSuccess},
+    {changeLine_Tips},
+    {characters_countdown1},
+    {characters_countdown10},
+    {characters_countdown2},
+    {characters_countdown3},
+    {characters_countdown4},
+    {characters_countdown5},
+    {characters_countdown6},
+    {characters_countdown7},
+    {characters_countdown8},
+    {characters_countdown9},
+    {characters_countdownstart},
+    {characters_enterexpfb},
+    {characters_entershouhu},
+    {characters_godess1},
+    {characters_godess10},
+    {characters_godess11},
+    {characters_godess12},
+    {characters_godess13},
+    {characters_godess14},
+    {characters_godess15},
+    {characters_godess16},
+    {characters_godess17},
+    {characters_godess18},
+    {characters_godess19},
+    {characters_godess2},
+    {characters_godess20},
+    {characters_godess21},
+    {characters_godess22},
+    {characters_godess23},
+    {characters_godess24},
+    {characters_godess3},
+    {characters_godess4},
+    {characters_godess5},
+    {characters_godess6},
+    {characters_godess7},
+    {characters_godess8},
+    {characters_godess9},
+    {characters_startcountdown},
+    {charmRankContent},
+    {charmRankTitle},
+    {cityMonster_NetBoss},
+    {cityMonster_NextMonster},
+    {cityMonsterAcEnd},
+    {cityMonsterAcEndItem},
+    {cityMonsterAcStart},
+    {cityMonsterAcWaitStart},
+    {cnText4BossTopOneNotice},
+    {cnText4BossTopOneNotice_guild},
+    {cnTextGuildCopyAwardContent},
+    {cnTextGuildCopyAwardTitle},
+    {cnTextGuildCopyBegin},
+    {cnTextGuildCopyBossDefeat},
+    {cnTextGuildCopyEnd},
+    {cnTextGuildCopyNoticeContent},
+    {cnTextKingBattleAllAttackWin},
+    {cnTextKingBattleAllDefendWin},
+    {cnTextKingBattleAllMailContent},
+    {cnTextKingBattleAllMailContent2},
+    {cnTextKingBattleAllMailContentEnd},
+    {cnTextKingBattleAllMailTitle},
+    {cnTextKingBattleAllMailTitle2},
+    {cnTextKingBattleAllMailTitleEnd},
+    {cnTextKingBattleAllMonsterNamePostfix},
+    {cnTextKingBattleAllStart},
+    {cnTextKingBattleAllStarting},
+    {cnTextKingBattleAllStatueNamePostfix},
+    {cnTextLuckyCoinMail},
+    {cnTextLuckyCoinNotice},
+    {cnTextLuckyCoinSystem},
+    {cnTextLuckyCoinUnname},
+    {cnTextWildBossRefresh},
+    {companionMail_RewardContent},
+    {companionMail_RewardTitle},
+    {darkness_begintips},
+    {darkness_bemonster},
+    {darkness_bosstips},
+    {darkness_choicepowertips},
+    {darkness_choicepowertitle},
+    {darkness_endmonster},
+    {darkness_endtips},
+    {darkness_mail},
+    {darkness_powername1},
+    {darkness_powername2},
+    {darknesscoinfive},
+    {darknesscointen},
+    {darknesskillfive},
+    {darknesskillforty},
+    {darknesskillten},
+    {darknesskillthirty},
+    {darknesskilltwenty},
+    {darknessreadyend},
+    {darknessreadystart},
+    {date_link_mail},
+    {date_link_mailtittle},
+    {designated_tradingContent},
+    {designated_tradingTitle},
+    {dieBroadcast},
+    {equipstronger_worldtext_inten},
+    {equipstronger_worldtext_star},
+    {equipUpstar},
+    {escort_Team_Start},
+    {escortActivity_Start},
+    {escortMonsterName},
+    {fashionSuit},
+    {feastbossrefresh},
+    {feastbossrereward},
+    {fighter},
+    {footman},
+    {forbidden_Text},
+    {getCareer_Bravo},
+    {getCareer_Knight},
+    {getCareer_Magician},
+    {getCareer_Mechanic},
+    {getCareer_SoulReaper},
+    {getEquipDrop_Notice},
+    {getEquipDrop_System_Notice},
+    {getFashionNotice_female},
+    {getFashionNotice_male},
+    {getGemComposition_Notice},
+    {getSuitRefineLevel_Notice},
+    {giveExtGem_MailContent},
+    {giveExtGem_MailTitle},
+    {giveGem_MailContent},
+    {giveGem_MailTitle},
+    {giveGiftContent},
+    {giveGiftString1},
+    {giveGiftString2},
+    {giveGiftString3},
+    {giveGiftString4},
+    {giveGiftString5},
+    {giveGiftString6},
+    {giveGiftTitle},
+    {giveGiftVIP},
+    {giveGoods_MailContent},
+    {giveGoods_MailTitle},
+    {godSworn},
+    {group_buy_content},
+    {group_buy_title},
+    {gs2MinuteStop},
+    {guardian},
+    {guild_godbless_sr_content},
+    {guild_godbless_sr_title},
+    {guild_league_1},
+    {guild_league_2},
+    {guild_league_3},
+    {guild_league_4},
+    {guild_league_5},
+    {guild_league_6},
+    {guild_LvUpstrings},
+    {guild_request_notice},
+    {guild_snowman_award},
+    {guild_snowman_begin},
+    {guild_snowman_end},
+    {guild_snowman_headline},
+    {guildBattle_ApplyStart},
+    {guildBattle_BattleEnd},
+    {guildBattle_BattleIng},
+    {guildBattle_BattleStart},
+    {guildBattle_EnemyOccupy},
+    {guildBattle_FailReward},
+    {guildBattle_MailFail},
+    {guildBattle_MailTitle},
+    {guildBattle_MailWin},
+    {guildBattle_NoticeBattleStart},
+    {guildBattle_WeOccupy},
+    {guildBattle_WinNotice},
+    {guildBattle_WinReward},
+    {guildBattle_WinSpecialReward},
+    {guildboss_killstrings},
+    {guildDonation_get},
+    {guildDonation_reward_content},
+    {guildDonation_reward_title},
+    {guildGrabAname},
+    {guildGrabbegintips},
+    {guildGrabBname},
+    {guildGrabboomgettips},
+    {guildGrabboomkilltips},
+    {guildGrabCname},
+    {guildGrabdescribe},
+    {guildGrabendtips},
+    {guildhome_killtipsin},
+    {guildhome_killtipsout},
+    {guildInitNotice},
+    {guildLevelUp},
+    {guildMail_DeleteGuild_BD},
+    {guildMail_DeleteGuild_ZD},
+    {guildMail_Title},
+    {guildmessage},
+    {guildSkillReturnContent1},
+    {guildSkillReturnContent2},
+    {guildSkillReturnContent3},
+    {guildSkillReturnContent4},
+    {guildSkillReturnContent5},
+    {guildSkillReturnContent6},
+    {guildSkillReturnTitle},
+    {guildWarCollectMonester},
+    {guildWarKillPlayer30},
+    {guildWarMailContent},
+    {guildWarMailgiftContent},
+    {guildWarMailTitle},
+    {guildWarOtherGuildCY},
+    {guildWarPrepareStart},
+    {guildWarPrepareStartFinal},
+    {guildWarStartDaPao},
+    {hDBattle_GatherItem},
+    {hDBattle_KillPlayer},
+    {head_Report_eamil_1},
+    {head_Report_eamil_2},
+    {home_costreturn_mail},
+    {home_costreturn_title},
+    {home_gift_mail},
+    {home_gift_title},
+    {home_harvest_mail},
+    {home_harvest_mail2},
+    {home_harvest_title},
+    {home_harvest_title2},
+    {honorLevelReturnGoldMailContent},
+    {honorLevelReturnHonorMailContent},
+    {honorLevelReturnMailTitle},
+    {impeach_Lose_MailContent},
+    {impeach_Lose_MailTitle},
+    {kingbattle_basereward_1},
+    {kingbattle_basereward_2},
+    {kingBattle_BUFF_bug},
+    {kingBattle_BUFF_see},
+    {kingBattleDefenderAwardContext},
+    {kingBattleDefenderAwardFailContext},
+    {kingBattleDefenderAwardFailTitle},
+    {kingBattleDefenderAwardWinContext},
+    {kingBattleDefenderAwardWinTitle},
+    {kingBattleNewDefenderAwardTitle},
+    {kingBattleNotStart},
+    {kingBattleRankAwardContext},
+    {kingBattleRankAwardTitle},
+    {kvBroadcast},
+    {ladder1v1_better_score_context},
+    {ladder1v1_better_score_title},
+    {loginProticalVersionMatch},
+    {loginResultDbErr_Text},
+    {loginResultDeviceDenied_Text},
+    {loginResultSearchFail_Text},
+    {loginResultSearchFailInFuncell_Text},
+    {loginResultServerMaintain_Text},
+    {loseGoods_MailContent},
+    {loseGoods_MailTitle},
+    {lottery_award_notice_orange},
+    {lottery_award_notice_purple},
+    {lotteryForTowerBroadcast},
+    {lotterysuccessitembrocast},
+    {lsBattleFiledRankAwardContext},
+    {lsBattleFiledRankAwardTitle},
+    {magician},
+    {mail_content_reward},
+    {mail_guildboss_1},
+    {mail_guildboss_10},
+    {mail_guildboss_11},
+    {mail_guildboss_12},
+    {mail_guildboss_13},
+    {mail_guildboss_14},
+    {mail_guildboss_2},
+    {mail_guildboss_3},
+    {mail_guildboss_4},
+    {mail_guildboss_5},
+    {mail_guildboss_6},
+    {mail_guildboss_7},
+    {mail_guildboss_8},
+    {mail_guildboss_9},
+    {mail_title_reward},
+    {mailcontent_bossaward_normal},
+    {mailcontent_bossaward_sp},
+    {mailcontent_bossaward1},
+    {mailcontent_bossaward2},
+    {mailcontent_bossaward3},
+    {mailcontent_bossguildaward1},
+    {mailcontent_bossguildaward2},
+    {mailcontent_bossguildaward3},
+    {mailcontent_bossguildawardnormal},
+    {mailcontent_bossguildawardsp},
+    {maintain},
+    {mall_give_mail_Content},
+    {mall_give_mail_title},
+    {mapsafetips},
+    {mapsafewarn},
+    {marriage_B_FContentA},
+    {marriage_B_FContentB},
+    {marriage_B_FTitleA},
+    {marriage_B_FTitleB},
+    {marriage_Boradcast},
+    {marriage_C_Content},
+    {marriage_C_EndMContent},
+    {marriage_C_EndMTitle},
+    {marriage_C_EndUContent},
+    {marriage_C_EndUTitle},
+    {marriage_C_PayContent},
+    {marriage_C_PayTitle},
+    {marriage_C_SysContent},
+    {marriage_C_SysPayContent},
+    {marriage_C_SysPayTitle},
+    {marriage_C_SysTitle},
+    {marriage_C_Title},
+    {marriage_candy},
+    {marriage_ContentBreak},
+    {marriage_ContentBuild},
+    {marriage_ContentBuildFaild},
+    {marriage_flower},
+    {marriage_free},
+    {marriage_free_title},
+    {marriage_M_Marry},
+    {marriage_TitleBreak},
+    {marriage_TitleBuild},
+    {marriage_TitleBuildFaild},
+    {marriage_WS_Invite},
+    {mercenary},
+    {monk},
+    {monsterBoss_dead},
+    {monsterElite_announcement},
+    {newguildIntoGuildWar},
+    {newplayer_Worldlevel_MailContent},
+    {newplayer_Worldlevel_MailTitle},
+    {noGSList_Text},
+    {oneking_bossborn},
+    {oneking_bossdead},
+    {oneking_rankfirst},
+    {oneking_revenge},
+    {oneking_serialkill_10},
+    {oneking_serialkill_20},
+    {oneking_serialkill_5},
+    {oneking_serialkill_50},
+    {oneking_totalkill_10},
+    {oneking_totalkill_100},
+    {oneking_totalkill_20},
+    {oneking_totalkill_50},
+    {opACChargeMailContent},
+    {opACChargeMailTitle},
+    {opActCollectRefresh},
+    {opACUseMailContent},
+    {opACUseMailTitle},
+    {orderRebateMailContent},
+    {orderRebateMailTitle},
+    {pet_recycle_email},
+    {pet_recycle_email_title},
+    {petpvpcontent},
+    {petpvpmailcontent},
+    {petpvpmailtitle},
+    {petTerritory_plunder_content},
+    {petTerritory_plunder_title},
+    {playerExitGuild},
+    {playerJoinGuild},
+    {priest},
+    {race_announcement1},
+    {race_announcement2},
+    {race_announcement3},
+    {race_worldtips_2},
+    {race_worldtips_3},
+    {raceRewardAContent},
+    {raceRewardATitle},
+    {raceRewardBContent},
+    {raceRewardBTitle},
+    {rank_name1},
+    {rank_name2},
+    {rank_name4},
+    {rank_name5},
+    {rank_name9},
+    {rechargeCheckCode},
+    {rechargeCheckFailCode},
+    {rechargeDealCode},
+    {rechargeFailMailContent},
+    {rechargeFailMailTitle},
+    {rechargeMailContent},
+    {rechargeMailTitle},
+    {rechargeNotDealCode},
+    {rechargeRebateDoubleMailContent},
+    {rechargeRebateDoubleMailContentbufa20150826},
+    {rechargeRebateDoubleMailTitle},
+    {rechargeRebateMailTitle},
+    {redEnvelope_Announcement_1},
+    {refine_MailContent},
+    {refine_MailTitle},
+    {returnItem_MailContent},
+    {returnItem_MailTitle},
+    {returnRole_MailContent},
+    {returnRole_MailTitle},
+    {ride_income_1},
+    {ride_income_2},
+    {rogue},
+    {rune_boardcast},
+    {scout},
+    {sixWarMailContentbase},
+    {sixWarMailContenteveryday},
+    {sixWarMailContentgift},
+    {sixWarMailTitle},
+    {square_dancing_string_1},
+    {square_dancing_string_2},
+    {square_dancing_string_3},
+    {square_dancing_string_4},
+    {square_dancing_string_5},
+    {square_dancing_string_6},
+    {square_dancing_string_7},
+    {supplicationContent},
+    {supplicationTitle},
+    {swordsmen},
+    {tendingGoods_MailContent},
+    {tendingGoods_MailTitle},
+    {thief},
+    {tradeMail_BackItem},
+    {tradeMail_BackYouItem},
+    {tradeMail_BuyItem},
+    {tradeMail_Content},
+    {tradeMail_DownItem},
+    {tradeMail_SellItem},
+    {tradeMail_Title},
+    {tradeMail_UnKnowPlayer},
+    {traveler},
+    {turnPlateNotice},
+    {useItemCallCarrierNotify},
+    {useItemCallMonsterNotify},
+    {vip_buy_content},
+    {vip_buy_title},
+    {vipCardRewardContent},
+    {vipCardRewardTitle},
+    {vipReputationTimesTips},
+    {warlock},
+    {warriorMailContent1},
+    {warriorMailContent2},
+    {warriorMailTitle},
+    {wildboss_is_dead},
+    {wildboss_is_dead1},
+    {wildboss_reward_lucky_content},
+    {wildboss_reward_lucky_title},
+    {wildboss_reward_normal_content},
+    {wildboss_reward_normal_title},
+    {wizard},
+    {worldBoss_announcement1},
+    {worldBoss_announcement2},
+    {worldBoss_announcement3},
+    {worldBossRankAwardMailContent},
+    {worldBossRankAwardTitle},
+    {worldsGuard_family_no}
+    ].
+
+get1KeyList()->[
+    accountWelfareMailTxt,
+    activeMail_GainItem,
+    activityannouncement_strings_1,
+    activityannouncement_strings_10,
+    activityannouncement_strings_11,
+    activityannouncement_strings_12,
+    activityannouncement_strings_2,
+    activityannouncement_strings_3,
+    activityannouncement_strings_4,
+    activityannouncement_strings_5,
+    activityannouncement_strings_6,
+    activityannouncement_strings_7,
+    activityannouncement_strings_8,
+    activityannouncement_strings_9,
+    alive_debuff,
+    alive_doublekill,
+    alive_firstroyale,
+    alive_fristblood,
+    alive_killbybuff,
+    alive_killmonster_1,
+    alive_killmonster_2,
+    alive_killmonster_3,
+    alive_killmonster_4,
+    alive_refreash_red,
+    alive_reward_content,
+    alive_reward_title,
+    alive_triplekill,
+    allplayerquestion_mail_1,
+    allplayerquestion_mail_2,
+    allplayerquestion_serverstrings_1,
+    allplayerquestion_serverstrings_2,
+    allplayerquestion_serverstrings_3,
+    allplayerquestion_serverstrings_4,
+    allplayerquestion_serverstrings_5,
+    answerPlayFirstAndLucky,
+    answerPlayLuckyPlayers,
+    answerPlayStart,
+    answerPlayWaitStart,
+    answerReswardFirstContent,
+    answerReswardFirstNull,
+    answerReswardFirstTitle,
+    answerRewardResultAll,
+    archer,
+    arena_DapaoRefresh,
+    arena_Ladder1v1_10,
+    arena_Ladder1v1_11,
+    arena_Ladder1v1_5,
+    arena_Ladder1v1_King_Content,
+    arena_Ladder1v1_King_Title,
+    arena_Ladder1v1_RankReward,
+    arena_Ladder1v1_WeekReward_Content,
+    arena_Ladder1v1_WeekReward_Title,
+    arena_Lose_MailContent,
+    arena_Lose_MailTitle,
+    arena_MonsterRefresh,
+    arena_ObjectRefresh,
+    arena_WeekMailContent,
+    arena_WeekMailTitle,
+    arena_Win_MailContent,
+    arena_Win_MailTitle,
+    battle_war_Begin,
+    battle_war_Error,
+    battle_war_KillMessage,
+    battle_war_MailContent,
+    battle_war_MailTitle,
+    battle_war_WeekMailContent,
+    battle_war_WeekMailTitle,
+    bossBattleActivity_MailContent,
+    bossBattleActivity_MailTitle,
+    bossBattleActivity_NoticeJoin,
+    bossBattleActivity_Reward,
+    bravo,
+    bribery_money,
+    bribery_money_MallContent_all,
+    bribery_money_MallContent_back,
+    bribery_money_MallContent_get,
+    bribery_money_MallTitle_all,
+    bribery_money_MallTitle_back,
+    bribery_money_MallTitle_get,
+    broadcase_self_content,
+    bulletin_arena_1,
+    bulletin_arena_2,
+    bulletin_arena_3,
+    bulletin_arena_4,
+    bulletin_arena_5,
+    bulletin_getpet,
+    bulletin_jinbishi,
+    career_transfer_email_1,
+    career_transfer_email_2,
+    career_transfer_success,
+    carrer_warrior,
+    changeGuildNameSuccess,
+    changeLine_Tips,
+    characters_countdown1,
+    characters_countdown10,
+    characters_countdown2,
+    characters_countdown3,
+    characters_countdown4,
+    characters_countdown5,
+    characters_countdown6,
+    characters_countdown7,
+    characters_countdown8,
+    characters_countdown9,
+    characters_countdownstart,
+    characters_enterexpfb,
+    characters_entershouhu,
+    characters_godess1,
+    characters_godess10,
+    characters_godess11,
+    characters_godess12,
+    characters_godess13,
+    characters_godess14,
+    characters_godess15,
+    characters_godess16,
+    characters_godess17,
+    characters_godess18,
+    characters_godess19,
+    characters_godess2,
+    characters_godess20,
+    characters_godess21,
+    characters_godess22,
+    characters_godess23,
+    characters_godess24,
+    characters_godess3,
+    characters_godess4,
+    characters_godess5,
+    characters_godess6,
+    characters_godess7,
+    characters_godess8,
+    characters_godess9,
+    characters_startcountdown,
+    charmRankContent,
+    charmRankTitle,
+    cityMonster_NetBoss,
+    cityMonster_NextMonster,
+    cityMonsterAcEnd,
+    cityMonsterAcEndItem,
+    cityMonsterAcStart,
+    cityMonsterAcWaitStart,
+    cnText4BossTopOneNotice,
+    cnText4BossTopOneNotice_guild,
+    cnTextGuildCopyAwardContent,
+    cnTextGuildCopyAwardTitle,
+    cnTextGuildCopyBegin,
+    cnTextGuildCopyBossDefeat,
+    cnTextGuildCopyEnd,
+    cnTextGuildCopyNoticeContent,
+    cnTextKingBattleAllAttackWin,
+    cnTextKingBattleAllDefendWin,
+    cnTextKingBattleAllMailContent,
+    cnTextKingBattleAllMailContent2,
+    cnTextKingBattleAllMailContentEnd,
+    cnTextKingBattleAllMailTitle,
+    cnTextKingBattleAllMailTitle2,
+    cnTextKingBattleAllMailTitleEnd,
+    cnTextKingBattleAllMonsterNamePostfix,
+    cnTextKingBattleAllStart,
+    cnTextKingBattleAllStarting,
+    cnTextKingBattleAllStatueNamePostfix,
+    cnTextLuckyCoinMail,
+    cnTextLuckyCoinNotice,
+    cnTextLuckyCoinSystem,
+    cnTextLuckyCoinUnname,
+    cnTextWildBossRefresh,
+    companionMail_RewardContent,
+    companionMail_RewardTitle,
+    darkness_begintips,
+    darkness_bemonster,
+    darkness_bosstips,
+    darkness_choicepowertips,
+    darkness_choicepowertitle,
+    darkness_endmonster,
+    darkness_endtips,
+    darkness_mail,
+    darkness_powername1,
+    darkness_powername2,
+    darknesscoinfive,
+    darknesscointen,
+    darknesskillfive,
+    darknesskillforty,
+    darknesskillten,
+    darknesskillthirty,
+    darknesskilltwenty,
+    darknessreadyend,
+    darknessreadystart,
+    date_link_mail,
+    date_link_mailtittle,
+    designated_tradingContent,
+    designated_tradingTitle,
+    dieBroadcast,
+    equipstronger_worldtext_inten,
+    equipstronger_worldtext_star,
+    equipUpstar,
+    escort_Team_Start,
+    escortActivity_Start,
+    escortMonsterName,
+    fashionSuit,
+    feastbossrefresh,
+    feastbossrereward,
+    fighter,
+    footman,
+    forbidden_Text,
+    getCareer_Bravo,
+    getCareer_Knight,
+    getCareer_Magician,
+    getCareer_Mechanic,
+    getCareer_SoulReaper,
+    getEquipDrop_Notice,
+    getEquipDrop_System_Notice,
+    getFashionNotice_female,
+    getFashionNotice_male,
+    getGemComposition_Notice,
+    getSuitRefineLevel_Notice,
+    giveExtGem_MailContent,
+    giveExtGem_MailTitle,
+    giveGem_MailContent,
+    giveGem_MailTitle,
+    giveGiftContent,
+    giveGiftString1,
+    giveGiftString2,
+    giveGiftString3,
+    giveGiftString4,
+    giveGiftString5,
+    giveGiftString6,
+    giveGiftTitle,
+    giveGiftVIP,
+    giveGoods_MailContent,
+    giveGoods_MailTitle,
+    godSworn,
+    group_buy_content,
+    group_buy_title,
+    gs2MinuteStop,
+    guardian,
+    guild_godbless_sr_content,
+    guild_godbless_sr_title,
+    guild_league_1,
+    guild_league_2,
+    guild_league_3,
+    guild_league_4,
+    guild_league_5,
+    guild_league_6,
+    guild_LvUpstrings,
+    guild_request_notice,
+    guild_snowman_award,
+    guild_snowman_begin,
+    guild_snowman_end,
+    guild_snowman_headline,
+    guildBattle_ApplyStart,
+    guildBattle_BattleEnd,
+    guildBattle_BattleIng,
+    guildBattle_BattleStart,
+    guildBattle_EnemyOccupy,
+    guildBattle_FailReward,
+    guildBattle_MailFail,
+    guildBattle_MailTitle,
+    guildBattle_MailWin,
+    guildBattle_NoticeBattleStart,
+    guildBattle_WeOccupy,
+    guildBattle_WinNotice,
+    guildBattle_WinReward,
+    guildBattle_WinSpecialReward,
+    guildboss_killstrings,
+    guildDonation_get,
+    guildDonation_reward_content,
+    guildDonation_reward_title,
+    guildGrabAname,
+    guildGrabbegintips,
+    guildGrabBname,
+    guildGrabboomgettips,
+    guildGrabboomkilltips,
+    guildGrabCname,
+    guildGrabdescribe,
+    guildGrabendtips,
+    guildhome_killtipsin,
+    guildhome_killtipsout,
+    guildInitNotice,
+    guildLevelUp,
+    guildMail_DeleteGuild_BD,
+    guildMail_DeleteGuild_ZD,
+    guildMail_Title,
+    guildmessage,
+    guildSkillReturnContent1,
+    guildSkillReturnContent2,
+    guildSkillReturnContent3,
+    guildSkillReturnContent4,
+    guildSkillReturnContent5,
+    guildSkillReturnContent6,
+    guildSkillReturnTitle,
+    guildWarCollectMonester,
+    guildWarKillPlayer30,
+    guildWarMailContent,
+    guildWarMailgiftContent,
+    guildWarMailTitle,
+    guildWarOtherGuildCY,
+    guildWarPrepareStart,
+    guildWarPrepareStartFinal,
+    guildWarStartDaPao,
+    hDBattle_GatherItem,
+    hDBattle_KillPlayer,
+    head_Report_eamil_1,
+    head_Report_eamil_2,
+    home_costreturn_mail,
+    home_costreturn_title,
+    home_gift_mail,
+    home_gift_title,
+    home_harvest_mail,
+    home_harvest_mail2,
+    home_harvest_title,
+    home_harvest_title2,
+    honorLevelReturnGoldMailContent,
+    honorLevelReturnHonorMailContent,
+    honorLevelReturnMailTitle,
+    impeach_Lose_MailContent,
+    impeach_Lose_MailTitle,
+    kingbattle_basereward_1,
+    kingbattle_basereward_2,
+    kingBattle_BUFF_bug,
+    kingBattle_BUFF_see,
+    kingBattleDefenderAwardContext,
+    kingBattleDefenderAwardFailContext,
+    kingBattleDefenderAwardFailTitle,
+    kingBattleDefenderAwardWinContext,
+    kingBattleDefenderAwardWinTitle,
+    kingBattleNewDefenderAwardTitle,
+    kingBattleNotStart,
+    kingBattleRankAwardContext,
+    kingBattleRankAwardTitle,
+    kvBroadcast,
+    ladder1v1_better_score_context,
+    ladder1v1_better_score_title,
+    loginProticalVersionMatch,
+    loginResultDbErr_Text,
+    loginResultDeviceDenied_Text,
+    loginResultSearchFail_Text,
+    loginResultSearchFailInFuncell_Text,
+    loginResultServerMaintain_Text,
+    loseGoods_MailContent,
+    loseGoods_MailTitle,
+    lottery_award_notice_orange,
+    lottery_award_notice_purple,
+    lotteryForTowerBroadcast,
+    lotterysuccessitembrocast,
+    lsBattleFiledRankAwardContext,
+    lsBattleFiledRankAwardTitle,
+    magician,
+    mail_content_reward,
+    mail_guildboss_1,
+    mail_guildboss_10,
+    mail_guildboss_11,
+    mail_guildboss_12,
+    mail_guildboss_13,
+    mail_guildboss_14,
+    mail_guildboss_2,
+    mail_guildboss_3,
+    mail_guildboss_4,
+    mail_guildboss_5,
+    mail_guildboss_6,
+    mail_guildboss_7,
+    mail_guildboss_8,
+    mail_guildboss_9,
+    mail_title_reward,
+    mailcontent_bossaward_normal,
+    mailcontent_bossaward_sp,
+    mailcontent_bossaward1,
+    mailcontent_bossaward2,
+    mailcontent_bossaward3,
+    mailcontent_bossguildaward1,
+    mailcontent_bossguildaward2,
+    mailcontent_bossguildaward3,
+    mailcontent_bossguildawardnormal,
+    mailcontent_bossguildawardsp,
+    maintain,
+    mall_give_mail_Content,
+    mall_give_mail_title,
+    mapsafetips,
+    mapsafewarn,
+    marriage_B_FContentA,
+    marriage_B_FContentB,
+    marriage_B_FTitleA,
+    marriage_B_FTitleB,
+    marriage_Boradcast,
+    marriage_C_Content,
+    marriage_C_EndMContent,
+    marriage_C_EndMTitle,
+    marriage_C_EndUContent,
+    marriage_C_EndUTitle,
+    marriage_C_PayContent,
+    marriage_C_PayTitle,
+    marriage_C_SysContent,
+    marriage_C_SysPayContent,
+    marriage_C_SysPayTitle,
+    marriage_C_SysTitle,
+    marriage_C_Title,
+    marriage_candy,
+    marriage_ContentBreak,
+    marriage_ContentBuild,
+    marriage_ContentBuildFaild,
+    marriage_flower,
+    marriage_free,
+    marriage_free_title,
+    marriage_M_Marry,
+    marriage_TitleBreak,
+    marriage_TitleBuild,
+    marriage_TitleBuildFaild,
+    marriage_WS_Invite,
+    mercenary,
+    monk,
+    monsterBoss_dead,
+    monsterElite_announcement,
+    newguildIntoGuildWar,
+    newplayer_Worldlevel_MailContent,
+    newplayer_Worldlevel_MailTitle,
+    noGSList_Text,
+    oneking_bossborn,
+    oneking_bossdead,
+    oneking_rankfirst,
+    oneking_revenge,
+    oneking_serialkill_10,
+    oneking_serialkill_20,
+    oneking_serialkill_5,
+    oneking_serialkill_50,
+    oneking_totalkill_10,
+    oneking_totalkill_100,
+    oneking_totalkill_20,
+    oneking_totalkill_50,
+    opACChargeMailContent,
+    opACChargeMailTitle,
+    opActCollectRefresh,
+    opACUseMailContent,
+    opACUseMailTitle,
+    orderRebateMailContent,
+    orderRebateMailTitle,
+    pet_recycle_email,
+    pet_recycle_email_title,
+    petpvpcontent,
+    petpvpmailcontent,
+    petpvpmailtitle,
+    petTerritory_plunder_content,
+    petTerritory_plunder_title,
+    playerExitGuild,
+    playerJoinGuild,
+    priest,
+    race_announcement1,
+    race_announcement2,
+    race_announcement3,
+    race_worldtips_2,
+    race_worldtips_3,
+    raceRewardAContent,
+    raceRewardATitle,
+    raceRewardBContent,
+    raceRewardBTitle,
+    rank_name1,
+    rank_name2,
+    rank_name4,
+    rank_name5,
+    rank_name9,
+    rechargeCheckCode,
+    rechargeCheckFailCode,
+    rechargeDealCode,
+    rechargeFailMailContent,
+    rechargeFailMailTitle,
+    rechargeMailContent,
+    rechargeMailTitle,
+    rechargeNotDealCode,
+    rechargeRebateDoubleMailContent,
+    rechargeRebateDoubleMailContentbufa20150826,
+    rechargeRebateDoubleMailTitle,
+    rechargeRebateMailTitle,
+    redEnvelope_Announcement_1,
+    refine_MailContent,
+    refine_MailTitle,
+    returnItem_MailContent,
+    returnItem_MailTitle,
+    returnRole_MailContent,
+    returnRole_MailTitle,
+    ride_income_1,
+    ride_income_2,
+    rogue,
+    rune_boardcast,
+    scout,
+    sixWarMailContentbase,
+    sixWarMailContenteveryday,
+    sixWarMailContentgift,
+    sixWarMailTitle,
+    square_dancing_string_1,
+    square_dancing_string_2,
+    square_dancing_string_3,
+    square_dancing_string_4,
+    square_dancing_string_5,
+    square_dancing_string_6,
+    square_dancing_string_7,
+    supplicationContent,
+    supplicationTitle,
+    swordsmen,
+    tendingGoods_MailContent,
+    tendingGoods_MailTitle,
+    thief,
+    tradeMail_BackItem,
+    tradeMail_BackYouItem,
+    tradeMail_BuyItem,
+    tradeMail_Content,
+    tradeMail_DownItem,
+    tradeMail_SellItem,
+    tradeMail_Title,
+    tradeMail_UnKnowPlayer,
+    traveler,
+    turnPlateNotice,
+    useItemCallCarrierNotify,
+    useItemCallMonsterNotify,
+    vip_buy_content,
+    vip_buy_title,
+    vipCardRewardContent,
+    vipCardRewardTitle,
+    vipReputationTimesTips,
+    warlock,
+    warriorMailContent1,
+    warriorMailContent2,
+    warriorMailTitle,
+    wildboss_is_dead,
+    wildboss_is_dead1,
+    wildboss_reward_lucky_content,
+    wildboss_reward_lucky_title,
+    wildboss_reward_normal_content,
+    wildboss_reward_normal_title,
+    wizard,
+    worldBoss_announcement1,
+    worldBoss_announcement2,
+    worldBoss_announcement3,
+    worldBossRankAwardMailContent,
+    worldBossRankAwardTitle,
+    worldsGuard_family_no
+    ].
+

@@ -140,10 +140,11 @@ decode(?U2LS_Login_Normal,Bin0) ->
 
 %GENERATED from file:LS2User.h => U2LS_RequestGSLine
 decode(?U2LS_RequestGSLine,Bin0) ->
+	{ V_lineID, Bin1 } = read_int32( Bin0 ),
 	{ #pk_U2LS_RequestGSLine {
-
+		lineID = V_lineID
 		},
-	Bin0 }.
+	Bin1 }.
 
 %GENERATED from file:LS2User.h => GameServerInfo
 -spec decode_GameServerInfo(Bin0) -> { #pk_GameServerInfo{},LeftBin }
@@ -262,10 +263,11 @@ encode(#pk_U2LS_Login_Normal{} = P) ->
 	];
 
 %GENERATED from file:LS2User.h => U2LS_RequestGSLine
-encode(#pk_U2LS_RequestGSLine{}) ->
+encode(#pk_U2LS_RequestGSLine{} = P) ->
+	Bin_lineID = write_int32( P#pk_U2LS_RequestGSLine.lineID ),
 	[
-		<<?U2LS_RequestGSLine:?U16>>
-
+		<<?U2LS_RequestGSLine:?U16>>,
+		Bin_lineID
 	];
 
 encode(_) -> noMatch.

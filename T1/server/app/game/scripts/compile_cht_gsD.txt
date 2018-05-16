@@ -1,177 +1,495 @@
 
 *********************************************************
 *********************************************************
-*  2018-05-16 15:28:51 gsD cht 105 files 7 workers	*
+*  2018-05-16 19:47:15 gsD cht 417 files 8 workers	*
 *********************************************************
 *********************************************************
 
-[2018-05-16 15:28:52] compiled[2.8%] tcp_reverse_app.erl true 
-[2018-05-16 15:28:52] compiled[5.7%] active_echo_protocol.erl true 
-[2018-05-16 15:28:51] active_echo_protocol.erl:2: Warning: behaviour ranch_protocol undefined
+[2018-05-16 19:47:16] compiled[0.4%] game_sup.erl true 
+[2018-05-16 19:47:16] compiled[0.7%] cfg_turn_plate_box_cht.erl true 
+[2018-05-16 19:47:16] compiled[1.1%] cfg_rechargeFirst_cht.erl true 
+[2018-05-16 19:47:16] compiled[1.6%] echo_protocol.erl true 
+[2018-05-16 19:47:16] echo_protocol.erl:2: Warning: behaviour ranch_protocol undefined
 
-[2018-05-16 15:28:52] compiled[0.9%] binary_lib.erl true 
-[2018-05-16 15:28:52] compiled[1.9%] pack_data.erl true 
-[2018-05-16 15:28:52] compiled[3.8%] mod_map.erl true 
-[2018-05-16 15:28:51] mod_map.erl:12: Warning: behaviour gen_serverw undefined
+[2018-05-16 19:47:16] compiled[0.2%] pack_data.erl true 
+[2018-05-16 19:47:16] compiled[0.9%] cfg_dailyActive_cht.erl true 
+[2018-05-16 19:47:16] compiled[1.4%] cfg_mapshadow_cht.erl true 
+[2018-05-16 19:47:16] compiled[1.9%] cfg_guildboss_touchreward_cht.erl true 
+[2018-05-16 19:47:16] compiled[2.3%] pubs_sup.erl true 
+[2018-05-16 19:47:16] compiled[2.1%] crash_protocol.erl true 
+[2018-05-16 19:47:16] compiled[2.6%] game.erl true 
+[2018-05-16 19:47:16] compiled[2.8%] pubs_app.erl true 
+[2018-05-16 19:47:16] compiled[3.1%] cfg_rechargeFirstAD_cht.erl true 
+[2018-05-16 19:47:16] compiled[3.3%] cfg_guildbless_schedule_cht.erl true 
+[2018-05-16 19:47:16] compiled[3.5%] cfg_cost_cht.erl true 
+[2018-05-16 19:47:16] compiled[3.8%] check_tcp_options.erl true 
+[2018-05-16 19:47:16] check_tcp_options.erl:2: Warning: behaviour ranch_protocol undefined
 
-[2018-05-16 15:28:52] compiled[6.6%] econfig_sup.erl true 
-[2018-05-16 15:28:52] compiled[4.7%] common_error_logger_h.erl true 
-[2018-05-16 15:28:52] compiled[7.6%] pubs_sup.erl true 
-[2018-05-16 15:28:52] compiled[8.5%] pubs_app.erl true 
-[2018-05-16 15:28:52] compiled[11.4%] mysql_pool.erl true 
-[2018-05-16 15:28:52] compiled[12.3%] tcp_echo_sup.erl true 
-[2018-05-16 15:28:52] compiled[13.3%] behaviour_example.erl true 
-[2018-05-16 15:28:52] behaviour_example.erl:22: Warning: behaviour tcp_behaviour undefined
+[2018-05-16 19:47:16] compiled[4.0%] mysql_pool_test.erl true 
+[2018-05-16 19:47:16] compiled[4.3%] cfg_trigger_cht.erl true 
+[2018-05-16 19:47:16] compiled[4.5%] mysql_pool.erl true 
+[2018-05-16 19:47:16] compiled[4.7%] cfg_guildbless_cht.erl true 
+[2018-05-16 19:47:16] compiled[5.0%] cfg_rechargeActivitie_cht.erl true 
+[2018-05-16 19:47:16] compiled[5.2%] cfg_treasure_map_cht.erl true 
+[2018-05-16 19:47:16] compiled[5.5%] active_echo_protocol.erl true 
+[2018-05-16 19:47:16] active_echo_protocol.erl:2: Warning: behaviour ranch_protocol undefined
 
-[2018-05-16 15:28:52] compiled[14.2%] tcp_echo_app.erl true 
-[2018-05-16 15:28:52] compiled[15.2%] log_test.erl true 
-[2018-05-16 15:28:52] compiled[16.1%] mysql_interface.erl true 
-[2018-05-16 15:28:52] compiled[17.1%] common_error_logger.erl true 
-[2018-05-16 15:28:52] common_error_logger.erl:13: Warning: behaviour gen_server2 undefined
+[2018-05-16 19:47:16] compiled[5.7%] cfg_rechargeAccumulation_cht.erl true 
+[2018-05-16 19:47:16] compiled[5.9%] cfg_treasure_event_cht.erl true 
+[2018-05-16 19:47:16] compiled[6.2%] mysql_interface.erl true 
+[2018-05-16 19:47:16] compiled[6.4%] sentinel_server.erl true 
+[2018-05-16 19:47:16] sentinel_server.erl:12: Warning: behaviour gen_serverw undefined
 
-[2018-05-16 15:28:52] compiled[18.0%] loggerS.erl true 
-[2018-05-16 15:28:52] compiled[19.0%] mod_login.erl true 
-[2018-05-16 15:28:52] mod_login.erl:12: Warning: behaviour gen_serverw undefined
+[2018-05-16 19:47:16] compiled[6.7%] map_root_supervisor.erl true 
+[2018-05-16 19:47:16] compiled[6.9%] cfg_treasuremap_cht.erl true 
+[2018-05-16 19:47:16] compiled[7.1%] mnesia_utils.erl true 
+[2018-05-16 19:47:16] compiled[7.4%] cfg_rank_cht.erl true 
+[2018-05-16 19:47:16] compiled[7.6%] cfg_race_waypoint_cht.erl true 
+[2018-05-16 19:47:16] compiled[7.9%] mnesia_starter.erl true 
+[2018-05-16 19:47:16] compiled[8.1%] cfg_guide_cht.erl true 
+[2018-05-16 19:47:16] compiled[8.3%] mnesia_dynamic.erl true 
+[2018-05-16 19:47:16] compiled[8.6%] cfg_race_item_cht.erl true 
+[2018-05-16 19:47:16] compiled[8.8%] tcp_listener.erl true 
+[2018-05-16 19:47:17] compiled[9.1%] cfg_race_chaosmode_cht.erl true 
+[2018-05-16 19:47:17] compiled[9.3%] cfg_question_cht.erl true 
+[2018-05-16 19:47:17] compiled[9.5%] acceptor_SUITE.erl true 
+[2018-05-16 19:47:17] compiled[9.8%] tcp_handler.erl true 
+[2018-05-16 19:47:17] tcp_handler.erl:12: Warning: behaviour ranch_protocol undefined
 
-[2018-05-16 15:28:52] compiled[20.0%] econfig_server.erl true 
-[2018-05-16 15:28:52] compiled[20.9%] mnesia_utils.erl true 
-[2018-05-16 15:28:52] compiled[21.9%] echo_protocol.erl true 
-[2018-05-16 15:28:52] echo_protocol.erl:4: Warning: behaviour ranch_protocol undefined
+[2018-05-16 19:47:17] compiled[10.0%] cfg_price_cht.erl true 
+[2018-05-16 19:47:17] compiled[10.3%] ranch_transport.erl true 
+[2018-05-16 19:47:17] compiled[10.5%] cfg_prestige_Reward_cht.erl true 
+[2018-05-16 19:47:17] compiled[10.7%] tcp_codec.erl true 
+[2018-05-16 19:47:17] compiled[11.0%] tcp_client.erl true 
+[2018-05-16 19:47:17] compiled[11.2%] ranch_tcp.erl true 
+[2018-05-16 19:47:17] ranch_tcp.erl:16: Warning: behaviour ranch_transport undefined
 
-[2018-05-16 15:28:52] compiled[22.8%] color.erl true 
-[2018-05-16 15:28:52] compiled[23.8%] econfig_file_writer.erl true 
-[2018-05-16 15:28:52] compiled[24.7%] mnesia_starter.erl true 
-[2018-05-16 15:28:52] compiled[25.7%] econfig_app.erl true 
-[2018-05-16 15:28:52] compiled[26.6%] acceptor_SUITE.erl true 
-[2018-05-16 15:28:52] compiled[27.6%] mod_dbs.erl true 
-[2018-05-16 15:28:52] mod_dbs.erl:12: Warning: behaviour gen_serverw undefined
+[2018-05-16 19:47:17] compiled[11.5%] tcp_behaviour.erl true 
+[2018-05-16 19:47:17] compiled[11.7%] cfg_guideAction_cht.erl true 
+[2018-05-16 19:47:17] compiled[11.9%] ranch_sup.erl true 
+[2018-05-16 19:47:17] compiled[12.2%] cfg_group_buy_score_cht.erl true 
+[2018-05-16 19:47:17] compiled[12.4%] netmsg.erl true 
+[2018-05-16 19:47:17] compiled[12.7%] cfg_group_buy_des_cht.erl true 
+[2018-05-16 19:47:17] compiled[12.9%] ranch_ssl.erl true 
+[2018-05-16 19:47:17] ranch_ssl.erl:16: Warning: behaviour ranch_transport undefined
 
-[2018-05-16 15:28:52] compiled[28.5%] mnesia_dynamic.erl true 
-[2018-05-16 15:28:52] compiled[29.5%] vm_memory_monitor.erl true 
-[2018-05-16 15:28:52] compiled[30.4%] tcp_listener.erl true 
-[2018-05-16 15:28:52] compiled[31.4%] ranch_transport.erl true 
-[2018-05-16 15:28:52] compiled[32.3%] code_gen.erl true 
-[2018-05-16 15:28:52] compiled[33.3%] fly_worker.erl true 
-[2018-05-16 15:28:52] compiled[34.2%] econfig.erl true 
-[2018-05-16 15:28:52] compiled[35.2%] task.erl true 
-[2018-05-16 15:28:52] compiled[36.1%] lib_route.erl true 
-[2018-05-16 15:28:52] compiled[37.1%] fly.erl true 
-[2018-05-16 15:28:52] compiled[38.0%] fastlog_sup.erl true 
-[2018-05-16 15:28:52] compiled[39.0%] ranch_tcp.erl true 
-[2018-05-16 15:28:52] ranch_tcp.erl:16: Warning: behaviour ranch_transport undefined
+[2018-05-16 19:47:17] compiled[13.1%] binary_lib.erl true 
+[2018-05-16 19:47:17] compiled[13.6%] ranch_server.erl true 
+[2018-05-16 19:47:17] compiled[13.4%] cfg_group_buy_cht.erl true 
+[2018-05-16 19:47:17] compiled[13.9%] ranch_protocol.erl true 
+[2018-05-16 19:47:17] compiled[14.1%] cfg_copymapScheduleSettle_cht.erl true 
+[2018-05-16 19:47:17] compiled[14.3%] cfg_gorgeous_cht.erl true 
+[2018-05-16 19:47:17] compiled[14.6%] ranch_listener_sup.erl true 
+[2018-05-16 19:47:17] compiled[14.8%] behaviour_example.erl true 
+[2018-05-16 19:47:17] behaviour_example.erl:22: Warning: behaviour tcp_behaviour undefined
 
-[2018-05-16 15:28:52] compiled[40.0%] ps_mgr.erl true 
-[2018-05-16 15:28:52] compiled[40.9%] dynamic_compile.erl true 
-[2018-05-16 15:28:52] compiled[41.9%] fastlog_app.erl true 
-[2018-05-16 15:28:52] compiled[42.8%] background_gc.erl true 
-[2018-05-16 15:28:52] background_gc.erl:13: Warning: behaviour gen_server2 undefined
+[2018-05-16 19:47:17] compiled[15.1%] cfg_goldDragon_cht.erl true 
+[2018-05-16 19:47:17] compiled[15.3%] log_test.erl true 
+[2018-05-16 19:47:17] compiled[15.5%] cfg_transform_cht.erl true 
+[2018-05-16 19:47:17] compiled[15.8%] ranch_conns_sup.erl true 
+[2018-05-16 19:47:17] compiled[16.0%] loggerS.erl true 
+[2018-05-16 19:47:17] compiled[16.3%] ranch_app.erl true 
+[2018-05-16 19:47:17] compiled[16.5%] cfg_transformspell_cht.erl true 
+[2018-05-16 19:47:17] compiled[16.7%] ranch_acceptors_sup.erl true 
+[2018-05-16 19:47:17] compiled[17.0%] cfg_goddess_cht.erl true 
+[2018-05-16 19:47:17] compiled[17.2%] cfg_top_award_cht.erl true 
+[2018-05-16 19:47:17] compiled[17.5%] ranch_acceptor.erl true 
+[2018-05-16 19:47:17] compiled[17.7%] cfg_goblin_cht.erl true 
+[2018-05-16 19:47:17] compiled[17.9%] ranch.erl true 
+[2018-05-16 19:47:17] compiled[18.2%] vm_memory_monitor.erl true 
+[2018-05-16 19:47:17] compiled[18.4%] tcp_reverse_sup.erl true 
+[2018-05-16 19:47:17] compiled[18.7%] tcp_reverse_app.erl true 
+[2018-05-16 19:47:17] compiled[18.9%] task.erl true 
+[2018-05-16 19:47:17] compiled[19.1%] reverse_protocol.erl true 
+[2018-05-16 19:47:17] reverse_protocol.erl:5: Warning: behaviour ranch_protocol undefined
 
-[2018-05-16 15:28:52] compiled[43.8%] ranch_sup.erl true 
-[2018-05-16 15:28:52] compiled[44.7%] test_login.erl true 
-[2018-05-16 15:28:52] compiled[45.7%] priority_queue.erl true 
-[2018-05-16 15:28:52] compiled[46.6%] test_change_map.erl true 
-[2018-05-16 15:28:52] compiled[47.6%] lib_player.erl true 
-[2018-05-16 15:28:52] lib_player.erl:53: Warning: variable 'Ack' is unused
+[2018-05-16 19:47:17] compiled[19.4%] ps_mgr.erl true 
+[2018-05-16 19:47:17] compiled[19.6%] tcp_echo_sup.erl true 
+[2018-05-16 19:47:18] compiled[19.9%] cfg_titlesystem_cht.erl true 
+[2018-05-16 19:47:18] compiled[20.1%] tcp_echo_app.erl true 
+[2018-05-16 19:47:18] compiled[20.3%] priority_queue.erl true 
+[2018-05-16 19:47:18] compiled[20.6%] cfg_tierBonus_cht.erl true 
+[2018-05-16 19:47:18] compiled[20.8%] pg_local.erl true 
+[2018-05-16 19:47:18] compiled[21.1%] echo_protocol.erl true 
+[2018-05-16 19:47:18] echo_protocol.erl:4: Warning: behaviour ranch_protocol undefined
 
-[2018-05-16 15:28:52] compiled[48.5%] lib_pet.erl true 
-[2018-05-16 15:28:52] compiled[49.5%] tcp_handler.erl true 
-[2018-05-16 15:28:52] tcp_handler.erl:12: Warning: behaviour ranch_protocol undefined
+[2018-05-16 19:47:18] compiled[21.3%] cfg_thirty_day_login_gift_cht.erl true 
+[2018-05-16 19:47:18] compiled[21.5%] cfg_task_other_cht.erl true 
+[2018-05-16 19:47:18] compiled[21.8%] pack_byte.erl true 
+[2018-05-16 19:47:18] compiled[22.0%] cfg_mapsetting_cht.erl true 
+[2018-05-16 19:47:18] compiled[22.3%] cfg_mapConvey_cht.erl true 
+[2018-05-16 19:47:18] compiled[22.5%] misc.erl true 
+[2018-05-16 19:47:18] compiled[22.7%] fly_worker.erl true 
+[2018-05-16 19:47:18] compiled[23.0%] fly.erl true 
+[2018-05-16 19:47:18] compiled[23.2%] lqueue.erl true 
+[2018-05-16 19:47:18] compiled[23.5%] fastlog_sup.erl true 
+[2018-05-16 19:47:18] compiled[23.7%] fastlog_app.erl true 
+[2018-05-16 19:47:18] compiled[23.9%] getCfg.erl true 
+[2018-05-16 19:47:18] compiled[24.2%] cfg_mall_cht.erl true 
+[2018-05-16 19:47:18] compiled[24.4%] gen_serverw.erl true 
+[2018-05-16 19:47:18] compiled[24.7%] cfg_globalsetup_cht.erl true 
+[2018-05-16 19:47:18] cfg_globalsetup_cht.erl:2934: Warning: this expression will fail with a 'badarith' exception
 
-[2018-05-16 15:28:52] compiled[50.4%] trap_exit_protocol.erl true 
-[2018-05-16 15:28:52] trap_exit_protocol.erl:2: Warning: behaviour ranch_protocol undefined
+[2018-05-16 19:47:18] compiled[24.9%] cfg_mainmenu_FunctionOpen_cht.erl true 
+[2018-05-16 19:47:18] compiled[25.1%] cfg_gem_level_cht.erl true 
+[2018-05-16 19:47:18] compiled[25.4%] fastlog.erl true 
+[2018-05-16 19:47:18] fastlog.erl:12: Warning: behaviour gen_server2 undefined
 
-[2018-05-16 15:28:52] compiled[51.4%] pg_local.erl true 
-[2018-05-16 15:28:52] compiled[52.3%] lib_obj.erl true 
-[2018-05-16 15:28:52] compiled[53.3%] ranch_ssl.erl true 
-[2018-05-16 15:28:52] ranch_ssl.erl:16: Warning: behaviour ranch_transport undefined
+[2018-05-16 19:47:18] compiled[25.6%] cfg_gemproperty_cht.erl true 
+[2018-05-16 19:47:18] compiled[25.8%] eep_app.erl true 
+[2018-05-16 19:47:18] compiled[26.1%] cfg_mainMenu_cht.erl true 
+[2018-05-16 19:47:18] compiled[26.3%] cfg_gembox_info_cht.erl true 
+[2018-05-16 19:47:18] compiled[26.6%] cfg_lottery_ten_times_cht.erl true 
+[2018-05-16 19:47:18] compiled[26.8%] cfg_task_obj_cht.erl true 
+[2018-05-16 19:47:18] compiled[27.0%] cfg_floatingPiece_cht.erl true 
+[2018-05-16 19:47:18] compiled[27.3%] gen_server2.erl true 
+[2018-05-16 19:47:18] compiled[27.5%] cfg_task_new_cht.erl true 
+[2018-05-16 19:47:18] compiled[27.8%] cfg_task_group_cht.erl true 
+[2018-05-16 19:47:18] compiled[28.0%] cfg_floatingClue_cht.erl true 
+[2018-05-16 19:47:18] compiled[28.2%] file_ex.erl true 
+[2018-05-16 19:47:18] compiled[28.5%] common_error_logger_h.erl true 
+[2018-05-16 19:47:18] compiled[28.7%] cfg_lottery_store_cht.erl true 
+[2018-05-16 19:47:18] compiled[29.0%] eep.erl true 
+[2018-05-16 19:47:18] compiled[29.2%] cfg_lottery_once_cht.erl true 
+[2018-05-16 19:47:18] compiled[29.4%] econfig_watcher_sup.erl true 
+[2018-05-16 19:47:18] compiled[29.7%] cfg_lottery_goblin_free_cd_cht.erl true 
+[2018-05-16 19:47:18] compiled[29.9%] common_error_logger.erl true 
+[2018-05-16 19:47:18] common_error_logger.erl:13: Warning: behaviour gen_server2 undefined
 
-[2018-05-16 15:28:52] compiled[54.2%] lib_monster.erl true 
-[2018-05-16 15:28:52] compiled[55.2%] pack_byte.erl true 
-[2018-05-16 15:28:52] compiled[56.1%] tcp_codec.erl true 
-[2018-05-16 15:28:52] compiled[57.1%] supervisor_separate.erl true 
-[2018-05-16 15:28:52] supervisor_separate.erl:3: Warning: behaviour ranch_protocol undefined
+[2018-05-16 19:47:18] compiled[30.2%] cfg_find_res_cht.erl true 
+[2018-05-16 19:47:18] compiled[30.4%] econfig_watcher.erl true 
+[2018-05-16 19:47:18] compiled[30.6%] econfig_util.erl true 
+[2018-05-16 19:47:18] compiled[30.9%] cfg_lottery_cht.erl true 
+[2018-05-16 19:47:18] compiled[31.1%] color.erl true 
+[2018-05-16 19:47:18] compiled[31.4%] cfg_fightForce_cht.erl true 
+[2018-05-16 19:47:18] compiled[31.6%] econfig_sup.erl true 
+[2018-05-16 19:47:18] compiled[31.8%] cfg_fightbossActivity_cht.erl true 
+[2018-05-16 19:47:18] compiled[32.1%] cfg_lotteryForTower_cht.erl true 
+[2018-05-16 19:47:18] compiled[32.3%] code_gen.erl true 
+[2018-05-16 19:47:18] compiled[32.6%] cfg_fightall_cht.erl true 
+[2018-05-16 19:47:18] compiled[32.8%] cfg_logic_group_cht.erl true 
+[2018-05-16 19:47:19] compiled[33.0%] background_gc.erl true 
+[2018-05-16 19:47:19] background_gc.erl:13: Warning: behaviour gen_server2 undefined
 
-[2018-05-16 15:28:52] compiled[58.0%] ranch_server.erl true 
-[2018-05-16 15:28:52] compiled[59.0%] misc.erl true 
-[2018-05-16 15:28:52] compiled[60.0%] ranch_protocol.erl true 
-[2018-05-16 15:28:52] compiled[60.9%] tcp_client.erl true 
-[2018-05-16 15:28:52] compiled[61.9%] fastlog.erl true 
-[2018-05-16 15:28:52] fastlog.erl:12: Warning: behaviour gen_server2 undefined
+[2018-05-16 19:47:19] compiled[33.3%] cfg_worldlevel_exp_cht.erl true 
+[2018-05-16 19:47:19] compiled[33.5%] cfg_logic_cht.erl true 
+[2018-05-16 19:47:19] compiled[33.8%] econfig_server.erl true 
+[2018-05-16 19:47:19] compiled[34.0%] cfg_worldboss_cht.erl true 
+[2018-05-16 19:47:19] compiled[34.2%] econfig_file_writer.erl true 
+[2018-05-16 19:47:19] compiled[34.5%] econfig_app.erl true 
+[2018-05-16 19:47:19] compiled[34.7%] cfg_wing_cht.erl true 
+[2018-05-16 19:47:19] compiled[35.0%] econfig.erl true 
+[2018-05-16 19:47:19] compiled[35.2%] cfg_wildboss_cht.erl true 
+[2018-05-16 19:47:19] compiled[35.4%] dynamic_compile.erl true 
+[2018-05-16 19:47:19] compiled[35.7%] cfg_welfare_cht.erl true 
+[2018-05-16 19:47:19] compiled[35.9%] test_login.erl true 
+[2018-05-16 19:47:19] compiled[36.2%] cfg_lifeskill_info_cht.erl true 
+[2018-05-16 19:47:19] compiled[36.4%] test_change_map.erl true 
+[2018-05-16 19:47:19] compiled[36.6%] cfg_wedding_type_cht.erl true 
+[2018-05-16 19:47:19] compiled[36.9%] cfg_lifeskill_everydayexp_cht.erl true 
+[2018-05-16 19:47:19] compiled[37.1%] cfg_copymapScheduleInit_cht.erl true 
+[2018-05-16 19:47:19] compiled[37.4%] cfg_wedding_type_candy_cht.erl true 
+[2018-05-16 19:47:19] compiled[37.6%] cfg_lifeskill_cht.erl true 
+[2018-05-16 19:47:19] compiled[37.8%] cfg_wedding_time_cht.erl true 
+[2018-05-16 19:47:19] compiled[38.1%] cfg_copymapScheduleCharacters_cht.erl true 
+[2018-05-16 19:47:19] compiled[38.3%] mod_transmit.erl true 
+[2018-05-16 19:47:19] mod_transmit.erl:12: Warning: behaviour gen_serverw undefined
+[2018-05-16 19:47:19] mod_transmit.erl:28: Warning: variable 'Data' is unused
 
-[2018-05-16 15:28:52] compiled[62.8%] shutdown_SUITE.erl true 
-[2018-05-16 15:28:52] compiled[63.8%] mod_transmit.erl true 
-[2018-05-16 15:28:52] mod_transmit.erl:12: Warning: behaviour gen_serverw undefined
-[2018-05-16 15:28:52] mod_transmit.erl:28: Warning: variable 'Data' is unused
+[2018-05-16 19:47:19] compiled[38.6%] mod_player_supervisor.erl true 
+[2018-05-16 19:47:19] compiled[38.8%] cfg_fashion_cht.erl true 
+[2018-05-16 19:47:19] compiled[39.0%] cfg_player_skills_upgrading_cht.erl true 
+[2018-05-16 19:47:19] compiled[39.3%] cfg_wedding_ring_cht.erl true 
+[2018-05-16 19:47:19] compiled[39.5%] cfg_level_reward_cht.erl true 
+[2018-05-16 19:47:19] compiled[39.8%] cfg_condition_group_cht.erl true 
+[2018-05-16 19:47:19] compiled[40.0%] cfg_ladder_item_cht.erl true 
+[2018-05-16 19:47:19] compiled[40.2%] cfg_wedding_fireworkshow_cht.erl true 
+[2018-05-16 19:47:19] compiled[40.5%] mod_player.erl true 
+[2018-05-16 19:47:19] mod_player.erl:20: Warning: behaviour tcp_behaviour undefined
 
-[2018-05-16 15:28:52] compiled[64.7%] eep_app.erl true 
-[2018-05-16 15:28:52] compiled[65.7%] lqueue.erl true 
-[2018-05-16 15:28:52] compiled[66.6%] ranch_listener_sup.erl true 
-[2018-05-16 15:28:52] compiled[67.6%] tcp_behaviour.erl true 
-[2018-05-16 15:28:52] compiled[68.5%] mod_player_supervisor.erl true 
-[2018-05-16 15:28:52] compiled[69.5%] lib_map_view.erl true 
-[2018-05-16 15:28:52] compiled[70.4%] gen_serverw.erl true 
-[2018-05-16 15:28:52] compiled[71.4%] sendfile_SUITE.erl true 
-[2018-05-16 15:28:52] compiled[72.3%] ranch_conns_sup.erl true 
-[2018-05-16 15:28:53] compiled[73.3%] mod_player.erl true 
-[2018-05-16 15:28:53] mod_player.erl:20: Warning: behaviour tcp_behaviour undefined
+[2018-05-16 19:47:19] compiled[40.7%] cfg_player_desc_cht.erl true 
+[2018-05-16 19:47:19] compiled[41.0%] cfg_ladder_1v1_reward_cht.erl true 
+[2018-05-16 19:47:19] compiled[41.2%] mod_map_supervisor.erl true 
+[2018-05-16 19:47:19] compiled[41.4%] cfg_weddingring_cht.erl true 
+[2018-05-16 19:47:19] compiled[41.7%] mod_map_mgr_supervisor.erl true 
+[2018-05-16 19:47:19] compiled[41.9%] cfg_player_base_cht.erl true 
+[2018-05-16 19:47:19] compiled[42.2%] cfg_ladder_1v1_rand_cht.erl true 
+[2018-05-16 19:47:19] compiled[42.4%] cfg_condition_cht.erl true 
+[2018-05-16 19:47:19] compiled[42.6%] cfg_pet_territory_time_cht.erl true 
+[2018-05-16 19:47:19] compiled[42.9%] cfg_ladder_1v1_cht.erl true 
+[2018-05-16 19:47:19] compiled[43.1%] cfg_comboSkill_cht.erl true 
+[2018-05-16 19:47:19] compiled[43.4%] cfg_pet_territory_search_cht.erl true 
+[2018-05-16 19:47:19] compiled[43.6%] mod_map_mgr.erl true 
+[2018-05-16 19:47:19] mod_map_mgr.erl:12: Warning: behaviour gen_serverw undefined
+[2018-05-16 19:47:19] mod_map_mgr.erl:77: Warning: variable 'PlayerID' is unused
+[2018-05-16 19:47:19] mod_map_mgr.erl:100: Warning: variable 'PlayerID' is unused
 
-[2018-05-16 15:28:53] compiled[74.2%] ranch_app.erl true 
-[2018-05-16 15:28:53] compiled[75.2%] netmsg.erl true 
-[2018-05-16 15:28:53] compiled[76.1%] remove_conn_and_wait_protocol.erl true 
-[2018-05-16 15:28:53] remove_conn_and_wait_protocol.erl:2: Warning: behaviour ranch_protocol undefined
+[2018-05-16 19:47:19] compiled[43.8%] cfg_fashionCollection_cht.erl true 
+[2018-05-16 19:47:19] compiled[44.1%] cfg_koreangift_cht.erl true 
+[2018-05-16 19:47:19] compiled[44.3%] cfg_color_cht.erl true 
+[2018-05-16 19:47:19] compiled[44.6%] cfg_pet_territory_reward_cht.erl true 
+[2018-05-16 19:47:19] compiled[44.8%] cfg_fashionCollectionLevel_cht.erl true 
+[2018-05-16 19:47:19] compiled[45.0%] cfg_collect_word_des_cht.erl true 
+[2018-05-16 19:47:19] compiled[45.3%] cfg_knighted_level_cht.erl true 
+[2018-05-16 19:47:19] compiled[45.5%] cfg_pet_territory_force_cht.erl true 
+[2018-05-16 19:47:19] compiled[45.8%] mod_map_creator.erl true 
+[2018-05-16 19:47:19] mod_map_creator.erl:12: Warning: behaviour gen_serverw undefined
+[2018-05-16 19:47:19] mod_map_creator.erl:55: Warning: variable 'Req' is unused
+[2018-05-16 19:47:19] mod_map_creator.erl:63: Warning: variable 'MapID' is unused
+[2018-05-16 19:47:19] mod_map_creator.erl:74: Warning: variable 'MapID' is unused
+[2018-05-16 19:47:19] mod_map_creator.erl:129: Warning: function born_map_id/0 is unused
 
-[2018-05-16 15:28:53] compiled[77.1%] lib_map.erl true 
-[2018-05-16 15:28:53] lib_map.erl:70: Warning: variable 'Conf' is unused
-[2018-05-16 15:28:53] lib_map.erl:72: Warning: variable 'Conf' is unused
+[2018-05-16 19:47:19] compiled[46.0%] cfg_collect_word_cht.erl true 
+[2018-05-16 19:47:19] compiled[46.2%] cfg_factionList_cht.erl true 
+[2018-05-16 19:47:19] compiled[46.5%] cfg_knightedPackage_cht.erl true 
+[2018-05-16 19:47:19] compiled[46.7%] cfg_pet_stronger_cht.erl true 
+[2018-05-16 19:47:19] compiled[47.0%] cfg_collectActivity_cht.erl true 
+[2018-05-16 19:47:19] compiled[47.2%] cfg_eventSoundCfg_cht.erl true 
+[2018-05-16 19:47:19] compiled[47.4%] cfg_warriortrial_cht.erl true 
+[2018-05-16 19:47:19] compiled[47.7%] mod_map.erl true 
+[2018-05-16 19:47:19] mod_map.erl:12: Warning: behaviour gen_serverw undefined
 
-[2018-05-16 15:28:53] compiled[78.0%] ranch_acceptors_sup.erl true 
-[2018-05-16 15:28:53] compiled[79.0%] mod_map_supervisor.erl true 
-[2018-05-16 15:28:53] compiled[80.0%] lib_login.erl true 
-[2018-05-16 15:28:53] compiled[80.9%] ranch_ct_hook.erl true 
-[2018-05-16 15:28:53] compiled[81.9%] mod_map_mgr_supervisor.erl true 
-[2018-05-16 15:28:53] compiled[82.8%] ranch_acceptor.erl true 
-[2018-05-16 15:28:53] compiled[83.8%] game_sup.erl true 
-[2018-05-16 15:28:53] compiled[84.7%] notify_and_wait_protocol.erl true 
-[2018-05-16 15:28:53] notify_and_wait_protocol.erl:2: Warning: behaviour ranch_protocol undefined
+[2018-05-16 19:47:19] compiled[47.9%] cfg_chatCommon_cht.erl true 
+[2018-05-16 19:47:19] compiled[48.2%] cfg_escort_monster_cht.erl true 
+[2018-05-16 19:47:20] compiled[48.4%] cfg_warriortrial_battle_power_cht.erl true 
+[2018-05-16 19:47:20] compiled[48.6%] cfg_escort_event_cht.erl true 
+[2018-05-16 19:47:20] compiled[48.9%] cfg_chaos_cht.erl true 
+[2018-05-16 19:47:20] compiled[49.1%] cfg_changemaphelp_cht.erl true 
+[2018-05-16 19:47:20] compiled[49.4%] mod_login.erl true 
+[2018-05-16 19:47:20] mod_login.erl:12: Warning: behaviour gen_serverw undefined
 
-[2018-05-16 15:28:53] compiled[85.7%] game.erl true 
-[2018-05-16 15:28:53] compiled[86.6%] gen_server2.erl true 
-[2018-05-16 15:28:53] compiled[87.6%] ranch.erl true 
-[2018-05-16 15:28:53] compiled[88.5%] eep.erl true 
-[2018-05-16 15:28:53] compiled[89.5%] tcp_reverse_sup.erl true 
-[2018-05-16 15:28:53] compiled[90.4%] econfig_watcher_sup.erl true 
-[2018-05-16 15:28:53] compiled[91.4%] mod_map_mgr.erl true 
-[2018-05-16 15:28:53] mod_map_mgr.erl:12: Warning: behaviour gen_serverw undefined
-[2018-05-16 15:28:53] mod_map_mgr.erl:77: Warning: variable 'PlayerID' is unused
-[2018-05-16 15:28:53] mod_map_mgr.erl:100: Warning: variable 'PlayerID' is unused
+[2018-05-16 19:47:20] compiled[49.6%] cfg_vip_power_cht.erl true 
+[2018-05-16 19:47:20] compiled[49.8%] cfg_vIP_expression_cht.erl true 
+[2018-05-16 19:47:20] compiled[50.1%] cfg_camera_shake_cht.erl true 
+[2018-05-16 19:47:20] compiled[50.3%] cfg_vIP_color_cht.erl true 
+[2018-05-16 19:47:20] compiled[50.5%] mod_dbs.erl true 
+[2018-05-16 19:47:20] mod_dbs.erl:12: Warning: behaviour gen_serverw undefined
 
-[2018-05-16 15:28:53] compiled[92.3%] echo_protocol.erl true 
-[2018-05-16 15:28:53] echo_protocol.erl:2: Warning: behaviour ranch_protocol undefined
+[2018-05-16 19:47:20] compiled[50.8%] cfg_camera_setting_cht.erl true 
+[2018-05-16 19:47:20] compiled[51.0%] cfg_vip_card_effect_cht.erl true 
+[2018-05-16 19:47:20] compiled[51.3%] lib_route.erl true 
+[2018-05-16 19:47:20] compiled[51.5%] cfg_vip_card_eco_cht.erl true 
+[2018-05-16 19:47:20] compiled[51.7%] cfg_bussyItemTree_cht.erl true 
+[2018-05-16 19:47:20] compiled[52.0%] cfg_pet_star_cht.erl true 
+[2018-05-16 19:47:20] compiled[52.2%] cfg_userFeedbackType_cht.erl true 
+[2018-05-16 19:47:20] compiled[52.5%] lib_player.erl true 
+[2018-05-16 19:47:20] lib_player.erl:53: Warning: variable 'Ack' is unused
 
-[2018-05-16 15:28:53] compiled[93.3%] econfig_watcher.erl true 
-[2018-05-16 15:28:53] compiled[94.2%] crash_protocol.erl true 
-[2018-05-16 15:28:53] compiled[95.2%] econfig_util.erl true 
-[2018-05-16 15:28:53] compiled[96.1%] sentinel_server.erl true 
-[2018-05-16 15:28:53] sentinel_server.erl:12: Warning: behaviour gen_serverw undefined
+[2018-05-16 19:47:20] compiled[52.7%] lib_pet.erl true 
+[2018-05-16 19:47:20] compiled[52.9%] lib_obj.erl true 
+[2018-05-16 19:47:20] compiled[53.2%] lib_monster.erl true 
+[2018-05-16 19:47:20] compiled[53.4%] cfg_business_cht.erl true 
+[2018-05-16 19:47:20] compiled[53.7%] cfg_eq_charge_cht.erl true 
+[2018-05-16 19:47:20] compiled[53.9%] lib_map_view.erl true 
+[2018-05-16 19:47:20] compiled[54.1%] lib_map.erl true 
+[2018-05-16 19:47:20] lib_map.erl:70: Warning: variable 'Conf' is unused
+[2018-05-16 19:47:20] lib_map.erl:72: Warning: variable 'Conf' is unused
 
-[2018-05-16 15:28:53] compiled[97.1%] file_ex.erl true 
-[2018-05-16 15:28:53] compiled[98.0%] map_root_supervisor.erl true 
-[2018-05-16 15:28:53] compiled[99.0%] check_tcp_options.erl true 
-[2018-05-16 15:28:53] check_tcp_options.erl:2: Warning: behaviour ranch_protocol undefined
+[2018-05-16 19:47:20] compiled[54.4%] cfg_equipWash_cht.erl true 
+[2018-05-16 19:47:20] compiled[54.6%] lib_login.erl true 
+[2018-05-16 19:47:20] compiled[54.9%] cfg_equipWashEco_cht.erl true 
+[2018-05-16 19:47:20] compiled[55.1%] cfg_uniqTierProperty_cht.erl true 
+[2018-05-16 19:47:20] compiled[55.3%] cfg_uiSoundCfg_cht.erl true 
+[2018-05-16 19:47:20] compiled[55.6%] cfg_turn_plate_rule_reward_cht.erl true 
+[2018-05-16 19:47:20] compiled[55.8%] cfg_pet_skills_upgrading_cht.erl true 
+[2018-05-16 19:47:20] compiled[56.1%] cfg_turn_plate_lucky_cost_cht.erl true 
+[2018-05-16 19:47:20] compiled[56.3%] cfg_pet_rebirth_cht.erl true 
+[2018-05-16 19:47:20] compiled[56.5%] cfg_pet_pvp_cht.erl true 
+[2018-05-16 19:47:21] compiled[56.8%] cfg_pet_cht.erl true 
+[2018-05-16 19:47:21] compiled[57.0%] cfg_petWar_cht.erl true 
+[2018-05-16 19:47:21] compiled[57.3%] cfg_petSkill_cht.erl true 
+[2018-05-16 19:47:21] compiled[57.5%] cfg_petSkillRoll_cht.erl true 
+[2018-05-16 19:47:21] compiled[57.7%] cfg_petrelation_cht.erl true 
+[2018-05-16 19:47:21] compiled[58.0%] cfg_petreborn_cht.erl true 
+[2018-05-16 19:47:21] compiled[58.2%] cfg_equipstar_cht.erl true 
+[2018-05-16 19:47:21] compiled[58.5%] cfg_petLevelProperty_cht.erl true 
+[2018-05-16 19:47:21] compiled[58.7%] cfg_petfightForce_cht.erl true 
+[2018-05-16 19:47:21] compiled[58.9%] cfg_petfairy_point_cht.erl true 
+[2018-05-16 19:47:21] compiled[59.2%] cfg_equipRecastRand_cht.erl true 
+[2018-05-16 19:47:21] compiled[59.4%] cfg_equipRecastInit_cht.erl true 
+[2018-05-16 19:47:21] compiled[59.7%] cfg_petfairy_level_cht.erl true 
+[2018-05-16 19:47:21] compiled[59.9%] cfg_petEquipment_cht.erl true 
+[2018-05-16 19:47:21] compiled[60.1%] cfg_petEquipmentLevel_cht.erl true 
+[2018-05-16 19:47:21] compiled[60.4%] cfg_petenhance_cht.erl true 
+[2018-05-16 19:47:21] compiled[60.6%] cfg_equipRecastAdvance_cht.erl true 
+[2018-05-16 19:47:21] compiled[60.9%] cfg_petAvatareffect_cht.erl true 
+[2018-05-16 19:47:21] compiled[61.1%] cfg_equipNewInten_cht.erl true 
+[2018-05-16 19:47:21] compiled[61.3%] cfg_per_book_cht.erl true 
+[2018-05-16 19:47:22] compiled[61.6%] cfg_partner_animation_cht.erl true 
+[2018-05-16 19:47:22] compiled[61.8%] cfg_panelHelp_cht.erl true 
+[2018-05-16 19:47:22] compiled[62.1%] cfg_openbag_cht.erl true 
+[2018-05-16 19:47:22] compiled[62.3%] cfg_online_reward_cht.erl true 
+[2018-05-16 19:47:22] compiled[62.5%] cfg_object_cht.erl true 
+[2018-05-16 19:47:22] compiled[62.8%] cfg_buff_cht.erl true 
+[2018-05-16 19:47:22] compiled[63.0%] cfg_buff_buy_cht.erl true 
+[2018-05-16 19:47:22] compiled[63.3%] cfg_buffAnnounce_cht.erl true 
+[2018-05-16 19:47:22] compiled[63.5%] cfg_buddy_gift_cht.erl true 
+[2018-05-16 19:47:22] compiled[63.7%] cfg_buddy_dailytask_cht.erl true 
+[2018-05-16 19:47:22] compiled[64.0%] cfg_item_cht.erl true 
+[2018-05-16 19:47:22] compiled[64.2%] cfg_bubbleExpression_cht.erl true 
+[2018-05-16 19:47:23] compiled[64.5%] cfg_bribery_money_cht.erl true 
+[2018-05-16 19:47:23] compiled[64.7%] cfg_bloom_cht.erl true 
+[2018-05-16 19:47:23] compiled[64.9%] cfg_bkreward_cht.erl true 
+[2018-05-16 19:47:23] compiled[65.2%] cfg_itemTinker_cht.erl true 
+[2018-05-16 19:47:23] compiled[65.4%] cfg_itemCDandCount_cht.erl true 
+[2018-05-16 19:47:23] compiled[65.7%] cfg_battlePropInfo_cht.erl true 
+[2018-05-16 19:47:23] compiled[65.9%] cfg_battlepower_cht.erl true 
+[2018-05-16 19:47:23] compiled[66.1%] cfg_equipment_randomprop_cht.erl true 
+[2018-05-16 19:47:23] compiled[66.4%] cfg_basic_head_cht.erl true 
+[2018-05-16 19:47:23] compiled[66.6%] cfg_attributeRegent_cht.erl true 
+[2018-05-16 19:47:23] compiled[66.9%] cfg_attedf_cht.erl true 
+[2018-05-16 19:47:23] compiled[67.1%] cfg_indexGrowth_cht.erl true 
+[2018-05-16 19:47:23] compiled[67.3%] cfg_arena_cht.erl true 
+[2018-05-16 19:47:23] compiled[67.6%] cfg_appointment_reward_cht.erl true 
+[2018-05-16 19:47:23] compiled[67.8%] cfg_appointment_cht.erl true 
+[2018-05-16 19:47:23] compiled[68.1%] cfg_animation_cht.erl true 
+[2018-05-16 19:47:23] compiled[68.3%] cfg_npc_cht.erl true 
+[2018-05-16 19:47:23] compiled[68.5%] cfg_angel_investment_cht.erl true 
+[2018-05-16 19:47:23] compiled[68.8%] cfg_alrest_buytime_cht.erl true 
+[2018-05-16 19:47:23] compiled[69.0%] cfg_indexFunction_cht.erl true 
+[2018-05-16 19:47:23] compiled[69.3%] cfg_improvePower_cht.erl true 
+[2018-05-16 19:47:23] compiled[69.5%] cfg_identity_zodiac_cht.erl true 
+[2018-05-16 19:47:23] compiled[69.7%] cfg_npcstore_cht.erl true 
+[2018-05-16 19:47:23] compiled[70.0%] cfg_npcdancer_cht.erl true 
+[2018-05-16 19:47:23] compiled[70.2%] cfg_identity_tag_cht.erl true 
+[2018-05-16 19:47:23] compiled[70.5%] cfg_notification_cht.erl true 
+[2018-05-16 19:47:23] compiled[70.7%] cfg_newplayer_Story_cht.erl true 
+[2018-05-16 19:47:24] compiled[70.9%] cfg_mysterious_shop_cht.erl true 
+[2018-05-16 19:47:24] compiled[71.2%] cfg_identity_area_cht.erl true 
+[2018-05-16 19:47:24] compiled[71.4%] cfg_mountSkin_cht.erl true 
+[2018-05-16 19:47:24] compiled[71.7%] cfg_honor_cht.erl true 
+[2018-05-16 19:47:24] compiled[71.9%] cfg_allplayerquestion_cht.erl true 
+[2018-05-16 19:47:24] compiled[72.1%] cfg_home_zoo_cht.erl true 
+[2018-05-16 19:47:24] compiled[72.4%] cfg_alive_reward_cht.erl true 
+[2018-05-16 19:47:24] compiled[72.6%] cfg_home_zoofood_cht.erl true 
+[2018-05-16 19:47:24] compiled[72.9%] cfg_monthly_signinaward_cht.erl true 
+[2018-05-16 19:47:24] compiled[73.1%] cfg_alive_cht.erl true 
+[2018-05-16 19:47:24] compiled[73.3%] cfg_home_sleep_cht.erl true 
+[2018-05-16 19:47:24] compiled[73.6%] cfg_activity_cht.erl true 
+[2018-05-16 19:47:24] compiled[73.8%] cfg_home_plants_cht.erl true 
+[2018-05-16 19:47:24] compiled[74.1%] cfg_activitylist_cht.erl true 
+[2018-05-16 19:47:24] compiled[74.3%] cfg_home_level_cht.erl true 
+[2018-05-16 19:47:24] compiled[74.5%] cfg_monthCard_cht.erl true 
+[2018-05-16 19:47:24] compiled[74.8%] cfg_acKingBattleBuyBuff_cht.erl true 
+[2018-05-16 19:47:24] compiled[75.0%] cfg_monster_file_cht.erl true 
+[2018-05-16 19:47:24] compiled[75.2%] cfg_home_furniture_cht.erl true 
+[2018-05-16 19:47:24] compiled[75.5%] cfg_home_cht.erl true 
+[2018-05-16 19:47:24] compiled[75.7%] cfg_monster_filekey_cht.erl true 
+[2018-05-16 19:47:24] compiled[76.0%] cfg_home_area_cht.erl true 
+[2018-05-16 19:47:24] compiled[76.2%] cfg_heraldry_cht.erl true 
+[2018-05-16 19:47:24] compiled[76.4%] cfg_help_cht.erl true 
+[2018-05-16 19:47:24] compiled[76.7%] cfg_achievement_cht.erl true 
+[2018-05-16 19:47:24] compiled[76.9%] cfg_achievecollection_cht.erl true 
+[2018-05-16 19:47:24] compiled[77.2%] cfg_guild_ride_cht.erl true 
+[2018-05-16 19:47:24] compiled[77.4%] cfg_accessresources_exp_cht.erl true 
+[2018-05-16 19:47:24] compiled[77.6%] cfg_guild_reward_cht.erl true 
+[2018-05-16 19:47:24] compiled[77.9%] cfg_guild_league_cht.erl true 
+[2018-05-16 19:47:24] compiled[78.1%] cfg_accessresources_cht.erl true 
+[2018-05-16 19:47:24] compiled[78.4%] cfg_guild_cht.erl true 
+[2018-05-16 19:47:24] compiled[78.6%] cfg_guild_boss_cht.erl true 
+[2018-05-16 19:47:24] compiled[78.8%] cfg_cht.erl true 
+[2018-05-16 19:47:24] compiled[79.1%] cfg_guildsupplies_cht.erl true 
+[2018-05-16 19:47:24] compiled[79.3%] cfg_chs.erl true 
+[2018-05-16 19:47:24] compiled[79.6%] cfg_guildsnowman_cht.erl true 
+[2018-05-16 19:47:24] compiled[79.8%] cfg.erl true 
+[2018-05-16 19:47:24] compiled[80.0%] cfg_guildsnoman_settle_cht.erl true 
+[2018-05-16 19:47:24] compiled[80.3%] trap_exit_protocol.erl true 
+[2018-05-16 19:47:24] trap_exit_protocol.erl:2: Warning: behaviour ranch_protocol undefined
 
-[2018-05-16 15:28:53] compiled[100.0%] mod_map_creator.erl true 
-[2018-05-16 15:28:53] mod_map_creator.erl:12: Warning: behaviour gen_serverw undefined
-[2018-05-16 15:28:53] mod_map_creator.erl:55: Warning: variable 'Req' is unused
-[2018-05-16 15:28:53] mod_map_creator.erl:63: Warning: variable 'MapID' is unused
-[2018-05-16 15:28:53] mod_map_creator.erl:74: Warning: variable 'MapID' is unused
-[2018-05-16 15:28:53] mod_map_creator.erl:129: Warning: function born_map_id/0 is unused
+[2018-05-16 19:47:24] compiled[80.5%] supervisor_separate.erl true 
+[2018-05-16 19:47:24] supervisor_separate.erl:3: Warning: behaviour ranch_protocol undefined
 
+[2018-05-16 19:47:24] compiled[80.8%] shutdown_SUITE.erl true 
+[2018-05-16 19:47:25] compiled[81.0%] sendfile_SUITE.erl true 
+[2018-05-16 19:47:25] compiled[81.2%] remove_conn_and_wait_protocol.erl true 
+[2018-05-16 19:47:25] remove_conn_and_wait_protocol.erl:2: Warning: behaviour ranch_protocol undefined
+
+[2018-05-16 19:47:25] compiled[81.5%] ranch_ct_hook.erl true 
+[2018-05-16 19:47:25] compiled[81.7%] notify_and_wait_protocol.erl true 
+[2018-05-16 19:47:25] notify_and_wait_protocol.erl:2: Warning: behaviour ranch_protocol undefined
+
+[2018-05-16 19:47:25] compiled[82.0%] cfg_guildskill_cht.erl true 
+[2018-05-16 19:47:25] compiled[82.2%] cfg_guildshop_cht.erl true 
+[2018-05-16 19:47:25] compiled[82.4%] cfg_guildhome_task_cht.erl true 
+[2018-05-16 19:47:25] compiled[82.7%] cfg_guildexchange_cht.erl true 
+[2018-05-16 19:47:25] compiled[82.9%] cfg_guildDonation_reward_cht.erl true 
+[2018-05-16 19:47:25] compiled[83.2%] cfg_guildbuff_cht.erl true 
+[2018-05-16 19:47:26] compiled[83.4%] cfg_task_cht.erl true 
+[2018-05-16 19:47:26] compiled[83.6%] cfg_target_cht.erl true 
+[2018-05-16 19:47:26] compiled[83.9%] cfg_talktoplayer_cht.erl true 
+[2018-05-16 19:47:26] compiled[84.1%] cfg_talentProp_cht.erl true 
+[2018-05-16 19:47:26] compiled[84.4%] cfg_talentExp_cht.erl true 
+[2018-05-16 19:47:26] compiled[84.6%] cfg_sweeping_drop_cht.erl true 
+[2018-05-16 19:47:26] compiled[84.8%] cfg_strref_cht.erl true 
+[2018-05-16 19:47:26] compiled[85.1%] cfg_equipment_cht.erl true 
+[2018-05-16 19:47:26] compiled[85.3%] cfg_starmoonbox_cht.erl true 
+[2018-05-16 19:47:26] compiled[85.6%] cfg_equipmentDisplay_cht.erl true 
+[2018-05-16 19:47:26] compiled[85.8%] cfg_spouseskill_cht.erl true 
+[2018-05-16 19:47:26] compiled[86.0%] cfg_spiritArea_cht.erl true 
+[2018-05-16 19:47:26] compiled[86.3%] cfg_equipIntensify_cht.erl true 
+[2018-05-16 19:47:26] compiled[86.5%] cfg_specialinstance_cht.erl true 
+[2018-05-16 19:47:26] compiled[86.8%] cfg_sourceshop_cht.erl true 
+[2018-05-16 19:47:26] compiled[87.0%] cfg_skill_up_cht.erl true 
+[2018-05-16 19:47:26] compiled[87.2%] cfg_equipIntenLevel_cht.erl true 
+[2018-05-16 19:47:27] compiled[87.5%] cfg_skill_effect_cht.erl true 
+[2018-05-16 19:47:27] compiled[87.7%] cfg_equipdrop_cht.erl true 
+[2018-05-16 19:47:28] compiled[88.0%] cfg_equipAffixes_cht.erl true 
+[2018-05-16 19:47:28] compiled[88.2%] cfg_dungeonschallenge_cht.erl true 
+[2018-05-16 19:47:30] compiled[88.4%] cfg_drop_package_cht.erl true 
+[2018-05-16 19:47:30] compiled[88.7%] cfg_drop_control_cht.erl true 
+[2018-05-16 19:47:30] compiled[88.9%] cfg_monster_cht.erl true 
+[2018-05-16 19:47:30] compiled[89.2%] cfg_monstergroup_cht.erl true 
+[2018-05-16 19:47:30] compiled[89.4%] cfg_monsterElite_cht.erl true 
+[2018-05-16 19:47:30] compiled[89.6%] cfg_monsterbox_cht.erl true 
+[2018-05-16 19:47:30] compiled[89.9%] cfg_monsterBoss_cht.erl true 
+[2018-05-16 19:47:31] compiled[90.1%] cfg_drop_cht.erl true 
+[2018-05-16 19:47:31] compiled[90.4%] cfg_di_mixcost_cht.erl true 
+[2018-05-16 19:47:32] compiled[90.6%] cfg_divine_cht.erl true 
+[2018-05-16 19:47:32] compiled[90.8%] cfg_demonreward_cht.erl true 
+[2018-05-16 19:47:32] compiled[91.1%] cfg_demonBattleLoc_cht.erl true 
+[2018-05-16 19:47:32] compiled[91.3%] cfg_demonBattleID_cht.erl true 
+[2018-05-16 19:47:32] compiled[91.6%] cfg_defRegent_cht.erl true 
+[2018-05-16 19:47:32] compiled[91.8%] cfg_darkness_cht.erl true 
+[2018-05-16 19:47:32] compiled[92.0%] cfg_dailytask_cht.erl true 
+[2018-05-16 19:47:32] compiled[92.3%] cfg_dailyrecharge_cht.erl true 
+[2018-05-16 19:47:32] compiled[92.5%] cfg_dailyinterface_index_cht.erl true 
+[2018-05-16 19:47:32] compiled[92.8%] cfg_dailyInterface_cht.erl true 
+[2018-05-16 19:47:33] compiled[93.0%] cfg_skill_cht.erl true 
+[2018-05-16 19:47:33] compiled[93.2%] cfg_skillmoneycost_cht.erl true 
+[2018-05-16 19:47:33] compiled[93.5%] cfg_skillLevelParam_cht.erl true 
+[2018-05-16 19:47:33] compiled[93.7%] cfg_skillCDGroup_cht.erl true 
+[2018-05-16 19:47:33] compiled[94.0%] cfg_skillBase_cht.erl true 
+[2018-05-16 19:47:33] compiled[94.2%] cfg_sixwar_monster_cht.erl true 
+[2018-05-16 19:47:33] compiled[94.4%] cfg_signinaward_cht.erl true 
+[2018-05-16 19:47:34] compiled[94.7%] cfg_show2_cht.erl true 
+[2018-05-16 19:47:34] compiled[94.9%] cfg_show1_cht.erl true 
+[2018-05-16 19:47:34] compiled[95.2%] cfg_shop_deal_cht.erl true 
+[2018-05-16 19:47:34] compiled[95.4%] cfg_shootingeffect_cht.erl true 
+[2018-05-16 19:47:34] compiled[95.6%] cfg_shenqi_cht.erl true 
+[2018-05-16 19:47:34] compiled[95.9%] cfg_severday_task_cht.erl true 
+[2018-05-16 19:47:34] compiled[96.1%] cfg_seven_day_aim_cht.erl true 
+[2018-05-16 19:47:34] compiled[96.4%] cfg_serverstrings_cht.erl true 
+[2018-05-16 19:47:34] compiled[96.6%] cfg_rune_suite_cht.erl true 
+[2018-05-16 19:47:34] compiled[96.8%] cfg_rune_smeltcost_cht.erl true 
+[2018-05-16 19:47:34] compiled[97.1%] cfg_rune_randomPro_cht.erl true 
+[2018-05-16 19:47:34] compiled[97.3%] cfg_rune_level_cht.erl true 
+[2018-05-16 19:47:34] compiled[97.6%] cfg_rune_compound_cht.erl true 
+[2018-05-16 19:47:34] compiled[97.8%] cfg_rune_cht.erl true 
+[2018-05-16 19:47:34] compiled[98.0%] cfg_rune_battlepower_cht.erl true 
+[2018-05-16 19:47:34] compiled[98.3%] cfg_rune_basePro_cht.erl true 
+[2018-05-16 19:47:34] compiled[98.5%] cfg_rndname_cht.erl true 
+[2018-05-16 19:47:34] compiled[98.8%] cfg_rift_rand_cht.erl true 
+[2018-05-16 19:47:34] compiled[99.0%] cfg_rift_cht.erl true 
+[2018-05-16 19:47:34] compiled[99.2%] cfg_ride_system_cht.erl true 
+[2018-05-16 19:47:34] compiled[99.5%] cfg_ride_cht.erl true 
+[2018-05-16 19:47:34] compiled[99.7%] cfg_removeSkillAffix_cht.erl true 
+[2018-05-16 19:47:34] compiled[100.0%] cfg_recharge_item_relation_cht.erl true 
 
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 
 
-@@@compile [cht,gsD] success@@@ at 2018-05-16 15:28:53 2.031 seconds 
+@@@compile [cht,gsD] success@@@ at 2018-05-16 19:47:34 19.058 seconds 
 
 
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^

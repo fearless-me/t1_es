@@ -19,24 +19,7 @@ connect(Port)->
 		platformName = "test",
 		platformNickName = "",
 		time = misc:seconds(),
-		sign = "owner",
-		deviceId = "xx",
-		%% String 手机串号
-		imei = "",
-		%% String 苹果推号
-		idfa = "",
-		%% String 网卡号
-		mac = "",
-		%% String 扩展参数串
-		extParam = "",
-		%% Int32 资源版本
-		versionRes = 100,
-		%% Int32 执行程序版本
-		versionExe = 101,
-		%% Int32 游戏版本？？
-		versionGame = 102,
-		%% Int32 协议版本
-		versionPro = 99
+		sign = "owner"
 	},
 
 	send_msg(Socket, Msg1),
