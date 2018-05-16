@@ -106,12 +106,9 @@ init(Args) ->
 %%--------------------------------------------------------------------
 handle_call(Request, From, State) ->
     Module = get(?LogicModule),
-    try
-        Module:do_handle_call(Request, From, State)
-    catch
-        T : E ->
-            ?ERROR("call ~w:~w,stack:~p",
-                [T, E, erlang:get_stacktrace()]),
+    try Module:do_handle_call(Request, From, State)
+    catch T : E ->
+            ?ERROR("call ~w:~w,stack:~p", [T, E, erlang:get_stacktrace()]),
             {reply, ok, State}
     end.
 %%--------------------------------------------------------------------
@@ -127,12 +124,9 @@ handle_call(Request, From, State) ->
 %%--------------------------------------------------------------------
 handle_cast(Request, State) ->
     Module = get(?LogicModule),
-    try
-        Module:do_handle_cast(Request, State)
-    catch
-        T : E ->
-            ?ERROR("cast ~w:~w,stack:~p",
-                [T, E, erlang:get_stacktrace()]),
+    try Module:do_handle_cast(Request, State)
+    catch T : E ->
+            ?ERROR("cast ~w:~w,stack:~p", [T, E, erlang:get_stacktrace()]),
             {noreply, State}
     end.
 
@@ -147,12 +141,9 @@ handle_cast(Request, State) ->
 %%--------------------------------------------------------------------
 handle_info(Info, State) ->
     Module = get(?LogicModule),
-    try
-        Module:do_handle_info(Info, State)
-    catch
-        T : E ->
-            ?ERROR("info ~w:~w,stack:~p",
-                [T, E, erlang:get_stacktrace()]),
+    try Module:do_handle_info(Info, State)
+    catch T : E ->
+            ?ERROR("info ~w:~w,stack:~p", [T, E, erlang:get_stacktrace()]),
             {noreply, State}
     end.
 

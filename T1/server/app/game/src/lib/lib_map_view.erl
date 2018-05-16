@@ -149,9 +149,11 @@ remove_from_vis_tile(Obj, VisTileIndex) ->
 %%%-------------------------------------------------------------------
 %% 把角色信息广播到九宫格中
 sync_big_vis_tile_to_player(Unit, VisTileList, Msg) ->
+    ?DEBUG("~p, msg ~p to view list:~p",
+        [Unit, Msg, VisTileList]),
     lists:foreach(
         fun(VisTile) ->
-            _ = [Role ! Msg || Role <- VisTile#visTile.player, is_visible(Unit, Role)]
+            _ = [Role#obj.pid ! Msg || Role <- VisTile#visTile.player, is_visible(Unit, Role)]
         end, VisTileList),
     ok.
 

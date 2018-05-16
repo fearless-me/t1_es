@@ -66,7 +66,7 @@ do_handle_call(Request, From, State) ->
 do_handle_info(status, State) ->
     catch show_status(),
     {noreply, State};
-do_handle_info(tick, State) ->
+do_handle_info(tick_now, State) ->
     {noreply, lib_map:tick(State)};
 do_handle_info(Info, State) ->
     ?ERROR("undeal info ~w", [Info]),

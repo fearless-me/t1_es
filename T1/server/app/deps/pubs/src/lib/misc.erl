@@ -23,6 +23,7 @@
 -export([parse_information_unit/1]).
 -export([register_process/3]).
 -export([create_process_name/2]).
+-export([register_name/1]).
 -export([to_atom/1]).
 
 %%%-------------------------------------------------------------------
@@ -35,6 +36,12 @@ create_process_name(Prefix, List) ->
 register_process(Pid, Prefix, List) ->
     ProcessName = misc:create_process_name(Prefix, List),
     erlang:register(ProcessName, Pid).
+
+register_name(Pid) ->
+    case erlang:process_info(Pid, registered_name) of
+        {registered_name,Name} -> Name;
+        _ -> unknown
+    end.
 
 
 %% @doc convert other type to atom

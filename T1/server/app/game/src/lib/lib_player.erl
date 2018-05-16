@@ -77,6 +77,7 @@ go_to_new_map(DestMapID, Pos) ->
             obj = make_obj()
         }
     ),
+    
     ?DEBUG("go_to_new_map(~p, ~w) -> ~w", [DestMapID, Pos, Ack]),
     mod_player:send(#pk_U2GS_ChangeMap{
         newMapID = Ack#change_map_ack.map_id,
@@ -101,4 +102,4 @@ get_player_status() ->
     end.
 
 make_obj() ->
-    #obj{type = ?OBJ_USR, pos = get_player_pos()}.
+    #obj{type = ?OBJ_USR, pos = get_player_pos(), pid = self()}.

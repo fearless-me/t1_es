@@ -102,5 +102,6 @@ get_player(PlayerCode) ->
 tick_msg() -> erlang:send_after(?MAP_TICK, self(), tick_now).
 
 tick(S) ->
+%%    ?DEBUG("~p,~p tick now",[misc:register_name(self()), self()]),
     tick_msg(),
     S.
