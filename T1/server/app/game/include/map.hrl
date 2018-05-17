@@ -13,8 +13,8 @@
 
 -include("type.hrl").
 
--define(TILE_SCALE, 50).
--define(VIS_DIST, 96).	%% 可视地砖的大小（64个格子）).
+-define(TILE_SCALE, 25).
+-define(VIS_DIST, 1).	
 -record(vector3,{
     x,y,z
 }).

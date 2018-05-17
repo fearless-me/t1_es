@@ -17,7 +17,6 @@
 
 %% API
 -export([init/1]).
--export([init_all_creature/0]).
 -export([tick/1]).
 -export([get_npc_ets/0, get_monster_ets/0]).
 -export([get_pet_ets/0, get_player_ets/0]).
@@ -39,7 +38,7 @@ init(S) ->
     Conf = mod_map_creator:map_conf(S#map_state.map_id),
     S1 = init_1(S),
     ok = init_2(S1),
-    ok = lib_map_view:init_vis_tile(1024, 1024, 64),
+    ok = lib_map_view:init_vis_tile(Conf),
     ok = init_npc(Conf),
     ok = init_monster(Conf),
     tick_msg(),
@@ -73,15 +72,7 @@ get_player_ets()    -> get(?MAP_USR_ETS).
 get_monster_ets()   -> get(?MAP_MON_ETS).
 
 %%%-------------------------------------------------------------------
-init_npc(Conf) -> ok.
-
-init_monster(Conf) -> ok.
-
-%%%-------------------------------------------------------------------
-
-
-%%%-------------------------------------------------------------------
-player_exit(S, PlayerCode) ->
+player_exit(S, {_PlayerID,PlayerCode}) ->
     Obj = get_player(PlayerCode),
     player_exit_1(Obj),
     {ok, S}.
@@ -105,24 +96,20 @@ get_player(PlayerCode) ->
     end.
 
 %%%-------------------------------------------------------------------
-init_all_creature() ->
-    MapID = get_map_id(),
-    #recGameMapCfg{
-        mapMonster = MonsterList,
-        mapNpc = NpcList
-    } = gameMapCfg:getMapCfg(MapID),
 
-    ok = init_all_monster(MonsterList),
-    ok = init_all_npc(NpcList),
+%%%-------------------------------------------------------------------
+init_npc( #recGameMapCfg{
+    mapNpc = _NpcList
+}) ->
     ok.
 
-init_all_monster([]) ->
-    ok;
-init_all_monster(ML) ->
+init_monster( #recGameMapCfg{
+    mapMonster = MonsterList
+}) ->
     lists:foreach(
         fun(MData) ->
             ok = init_all_monster_1(MData)
-        end , ML),
+        end , MonsterList),
     ok.
 
 init_all_monster_1(Mdata)->

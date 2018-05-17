@@ -13,6 +13,7 @@
 -include("common.hrl").
 -include("logger.hrl").
 -include("map.hrl").
+-include("obj.hrl").
 -define(MAP_LINES, map_line_ets__).
 
 
@@ -52,8 +53,8 @@ mod_init([MapID]) ->
 do_handle_call({join_map, Req}, _From, State) ->
     Ret = player_join_map_1(State, Req),
     {reply, Ret, State};
-do_handle_call({exit_map, PlayerID}, _From, State) ->
-    Ret = player_exit_map_1(State, PlayerID),
+do_handle_call({exit_map, Params}, _From, State) ->
+    Ret = player_exit_map_1(State, Params),
     {reply, Ret, State};
 do_handle_call(Request, From, State) ->
     ?ERROR("undeal call ~w from ~w", [Request, From]),
@@ -74,7 +75,7 @@ do_handle_cast(Request, State) ->
 %%--------------------------------------------------------------------
 player_join_map_1(
     S, #change_map_req{
-        player_id = PlayerID,
+        player_id = _PlayerID,
         map_id = MapID,
         pos = Pos,
         obj = Obj
@@ -92,14 +93,13 @@ player_join_map_1(
         end,
 
     #map_line{pid = MapPid, map_id = MapID, line_id = LineID} = Line,
-    mod_map:player_join(MapPid, Obj),
+    mod_map:player_join(MapPid, Obj#obj{map_id = MapID, line_id = LineID, map_pid = MapPid}),
     ets:update_counter(S#state.ets, LineID, {#map_line.in, 1}),
     #change_map_ack{map_id = MapID, line_id = LineID,  map_pid = MapPid, pos = Pos}.
 
 %%--------------------------------------------------------------------
-player_exit_map_1(_S, PlayerID) ->
-%%    CurPid = undefined,
-%%    mod_map:player_exit(CurPid, PlayerID).
+player_exit_map_1(_S, {PlayerID,PlayerCode,  MapPid}) ->
+    mod_map:player_exit(MapPid, {PlayerID,PlayerCode}),
     ok.
 
 %%--------------------------------------------------------------------
@@ -112,7 +112,6 @@ create_new_line(S, MapID, LineID) ->
         pid = Pid
     },
     ets:insert(S#state.ets, Line),
-    ps_mgr:send(Pid, init_all_creatue),
     Line.
 
 

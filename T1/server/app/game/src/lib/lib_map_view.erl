@@ -15,7 +15,7 @@
 -include_lib("stdlib/include/assert.hrl").
 
 %% API
--export([init_vis_tile/3]).
+-export([init_vis_tile/1]).
 -export([sync_movement_to_big_visual_tile/1]).
 -export([sync_change_pos_visual_tile/3]).
 -export([pos_to_vis_index/1]).
@@ -30,11 +30,12 @@
 -define(VIS_KEY, map_vis_key__).
 -define(VIS_W, map_vis_w__).
 -define(VIS_H, map_vis_h__).
+-define(CELL_SIZE, map_cell_size__).
 
 %%%-------------------------------------------------------------------
 sync_player_join_map(Obj) ->
     %% fix_pos(Obj),
-    Index = pos_to_vis_index(Obj#obj.pos, get(?VIS_W), 100),
+    Index = pos_to_vis_index(Obj#obj.pos, get(?VIS_W), ?VIS_DIST),
     Tiles = get_vis_tile_around(Index),
     sync_add_to_vis_tile(Obj, Tiles),
     add_to_vis_tile(Obj, Index),
@@ -42,7 +43,7 @@ sync_player_join_map(Obj) ->
 
 %%%-------------------------------------------------------------------
 sync_player_exit_map(Obj) ->
-    Index = pos_to_vis_index(Obj#obj.pos, get(?VIS_W), 100),
+    Index = pos_to_vis_index(Obj#obj.pos, get(?VIS_W), ?VIS_DIST),
     Tiles = get_vis_tile_around(Index),
     remove_from_vis_tile(Obj, Index),
     sync_remove_from_vis_tile(Obj, Tiles),
@@ -53,15 +54,20 @@ sync_remove_pet(_Obj)->ok.
 
 
 %%%-------------------------------------------------------------------
-init_vis_tile(Width, Height, ViewDist) ->
-    VisW = (Width + ViewDist - 1) div ViewDist + 2,
-    VisH = (Height + ViewDist - 1) div ViewDist + 2,
+init_vis_tile(#recGameMapCfg{
+    colCellNum = Col,
+    rowCellNum = Row,
+    cellSize = CellSize
+}) ->
+    VisW = (Col + ?VIS_DIST - 1) div ?VIS_DIST + 2,
+    VisH = (Row + ?VIS_DIST - 1) div ?VIS_DIST + 2,
     VisT = VisW * VisH,
 
     ?assert(VisT > 1),
 
     put(?VIS_W, VisW),
     put(?VIS_H, VisH),
+    put(?CELL_SIZE, CellSize),
     init_vis_tile_1(VisT),
     ok.
 
@@ -92,20 +98,22 @@ sync_change_pos_visual_tile(Obj, OldVisTileIndex, NewVisTileIndex) ->
 %%%-------------------------------------------------------------------
 %% 删除广播
 sync_remove_from_vis_tile(Obj, VisTiles) ->
-    sync_big_vis_tile_to_player(Obj, VisTiles, unit_remove),
+    sync_me_to_big_vis_tile(Obj, VisTiles, me_2_around_player_del),
+    sync_big_vis_tile_to_me(Obj, VisTiles, around_unit_2_me_del),
     ok.
 
 %%%-------------------------------------------------------------------
 %% 添加广播
 sync_add_to_vis_tile(Obj, VisTiles) ->
-    sync_big_vis_tile_to_player(Obj, VisTiles, unit_add),
+    sync_big_vis_tile_to_me(Obj, VisTiles, around_unit_2_me_add),
+    sync_me_to_big_vis_tile(Obj, VisTiles, me_2_around_player_add),
     ok.
 
 %%%-------------------------------------------------------------------
 %% 加入格子
 add_to_vis_tile(Obj, VisTileIndex) ->
     ?assert(is_number(VisTileIndex) andalso VisTileIndex > 0),
-
+    
     VisTile1 = get_vis_tile(VisTileIndex),
     VisTile2 =
         case lib_obj:obj_type(Obj) of
@@ -150,8 +158,22 @@ remove_from_vis_tile(Obj, VisTileIndex) ->
 
 %%%-------------------------------------------------------------------
 %% 把角色信息广播到九宫格中
-sync_big_vis_tile_to_player(Unit, VisTileList, Msg) ->
-    ?DEBUG("~p, msg ~p to view list:~p",
+sync_big_vis_tile_to_me(Obj, VisTileList, Msg) ->
+    ?DEBUG("~n~w~n~w~n~w",
+        [Obj, Msg, VisTileList]),
+    lists:foreach(
+        fun(VisTile) ->
+            _ = [Obj#obj.pid ! Msg || Player <- VisTile#visTile.player, is_visible(Obj, Player)]
+        end, VisTileList),
+
+    lists:foreach(
+        fun(VisTile) ->
+            _ = [Obj#obj.pid ! Msg || Monster <- VisTile#visTile.monster, is_visible(Obj, Monster)]
+        end, VisTileList),
+    ok.
+
+sync_me_to_big_vis_tile(Unit, VisTileList, Msg) ->
+    ?DEBUG("~n~w~n~w~n~w",
         [Unit, Msg, VisTileList]),
     lists:foreach(
         fun(VisTile) ->
@@ -162,12 +184,13 @@ sync_big_vis_tile_to_player(Unit, VisTileList, Msg) ->
 
 %%%-------------------------------------------------------------------
 pos_to_vis_index(Pos) ->
-    pos_to_vis_index(Pos, get(?VIS_W), 100).
+    pos_to_vis_index(Pos, get(?VIS_W), ?VIS_DIST).
 
 %% vector3 
 pos_to_vis_index(Pos, VisTileWidth, ViewDist) ->
-    IndexX = trunc(Pos#vector3.x / ?TILE_SCALE / ViewDist + 1),
-    IndexZ = trunc(Pos#vector3.z / ?TILE_SCALE / ViewDist + 1),
+    CellSize = get(?CELL_SIZE),
+    IndexX = trunc(Pos#vector3.x / CellSize / ?TILE_SCALE / ViewDist + 1),
+    IndexZ = trunc(Pos#vector3.z / CellSize / ?TILE_SCALE / ViewDist + 1),
 
     (IndexZ * VisTileWidth + IndexX).
 

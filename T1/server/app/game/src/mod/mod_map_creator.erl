@@ -23,6 +23,7 @@
 %% API
 -export([take_over_player_online/2]).
 -export([player_change_map/3]).
+-export([player_offline/4]).
 -export([map_conf/1]).
 -export([broadcast_all/0, broadcast_map/1]).
 
@@ -37,6 +38,12 @@ take_over_player_online(MapID, Req) ->
         #change_map_ack{} = Ack -> Ack;
         _ -> kick_to_born_map(Req)
     end,
+    ok.
+
+%%%-------------------------------------------------------------------
+player_offline(PlayerID, PlayerCode, MapID, MapPid) ->
+    Mgr = map_mgr(MapID),
+    mod_map_mgr:player_exit_map(Mgr, {PlayerID, PlayerCode, MapPid}),
     ok.
 
 %%%-------------------------------------------------------------------
@@ -71,8 +78,7 @@ map_mgr(MapID) ->
     end.
 
 %%%-------------------------------------------------------------------
-map_conf(MapID) ->
-    ok.
+map_conf(MapID) -> gameMapCfg:getMapCfg(MapID).
 
 %%%===================================================================
 %%% public functions

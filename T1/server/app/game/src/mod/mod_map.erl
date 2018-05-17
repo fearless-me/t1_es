@@ -23,10 +23,10 @@
 
 
 player_exit(MapPid, PlayerID) ->
-    gen_server:call(MapPid, {exit, PlayerID}).
+    gen_server:call(MapPid, {player_exit, PlayerID}).
 
 player_join(MapPid, PlayerID) ->
-    gen_server:call(MapPid, {join, PlayerID}).
+    gen_server:call(MapPid, {player_join, PlayerID}).
 
 status_(MapPid) -> ps_mgr:send(MapPid, status).
 
@@ -52,10 +52,10 @@ mod_init([MapID, MapLine]) ->
 do_handle_call({init}, _From, State) ->
     NewState = lib_map:init(State),
     {reply, ok, NewState};
-do_handle_call({join, Params}, _From, State) ->
+do_handle_call({player_join, Params}, _From, State) ->
     {Ret, NewState} = lib_map:player_join(State, Params),
     {reply, Ret, NewState};
-do_handle_call({exit, Params}, _From, State) ->
+do_handle_call({player_exit, Params}, _From, State) ->
     {Ret, NewState} = lib_map:player_exit(State, Params),
     {reply, Ret, NewState};
 do_handle_call(Request, From, State) ->
@@ -63,9 +63,6 @@ do_handle_call(Request, From, State) ->
     {reply, ok, State}.
 
 %%--------------------------------------------------------------------
-do_handle_info(init_all_creatue, State) ->
-    lib_map:init_all_creature(),
-    {noreply, State};
 do_handle_info(status, State) ->
     catch show_status(),
     {noreply, State};

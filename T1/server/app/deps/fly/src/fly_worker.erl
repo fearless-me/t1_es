@@ -206,9 +206,9 @@ process_src_files_incs(SrcFiles) ->
 process_src_file_incs(SrcFile) ->
     {ok, Forms} = epp_dodger:parse_file(SrcFile),
     IncludeFiles = src_file_include([], Forms),
-    ?WARN("parse src file ~ts, includes:~p",
-        [SrcFile, IncludeFiles]),
-%%    ?WARN("src ~ts, incs ~p",[SrcFile, IncludeFiles]),
+%%    ?WARN("parse src file ~ts, includes:~p",
+%%        [SrcFile, IncludeFiles]),
+
     lists:foreach(
         fun(IncludeFile) ->
             case ets:lookup(?SRC_INC_ETS, IncludeFile) of

@@ -5,333 +5,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" readonly="true" id="354d5196-8a2e-476f-8af6-71424480c5e1" name="Default" comment="">
-      <change afterPath="$PROJECT_DIR$/app/game/include/mapCfgPrivate.hrl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/game/src/core/foundation_server.erl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/game/src/core/mapReader.erl" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/fly/src/fly_worker.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/fly/src/fly_worker.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_acKingBattleBuyBuff_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_acKingBattleBuyBuff_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_accessresources_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_accessresources_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_accessresources_exp_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_accessresources_exp_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_achievecollection_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_achievecollection_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_achievement_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_achievement_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_activity_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_activity_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_activitylist_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_activitylist_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_alive_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_alive_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_alive_reward_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_alive_reward_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_allplayerquestion_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_allplayerquestion_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_alrest_buytime_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_alrest_buytime_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_angel_investment_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_angel_investment_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_animation_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_animation_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_appointment_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_appointment_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_appointment_reward_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_appointment_reward_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_arena_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_arena_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_attedf_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_attedf_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_attributeRegent_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_attributeRegent_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_basic_head_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_basic_head_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_battlePropInfo_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_battlePropInfo_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_battlepower_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_battlepower_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_bkreward_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_bkreward_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_bloom_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_bloom_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_bribery_money_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_bribery_money_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_bubbleExpression_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_bubbleExpression_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_buddy_dailytask_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_buddy_dailytask_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_buddy_gift_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_buddy_gift_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_buffAnnounce_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_buffAnnounce_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_buff_buy_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_buff_buy_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_buff_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_buff_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_business_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_business_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_bussyItemTree_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_bussyItemTree_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_camera_setting_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_camera_setting_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_camera_shake_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_camera_shake_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_changemaphelp_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_changemaphelp_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_chaos_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_chaos_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_chatCommon_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_chatCommon_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_collectActivity_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_collectActivity_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_collect_word_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_collect_word_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_collect_word_des_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_collect_word_des_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_color_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_color_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_comboSkill_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_comboSkill_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_condition_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_condition_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_condition_group_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_condition_group_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_copymapScheduleCharacters_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_copymapScheduleCharacters_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_copymapScheduleInit_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_copymapScheduleInit_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_copymapScheduleSettle_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_copymapScheduleSettle_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_cost_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_cost_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_dailyActive_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_dailyActive_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_dailyInterface_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_dailyInterface_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_dailyinterface_index_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_dailyinterface_index_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_dailyrecharge_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_dailyrecharge_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_dailytask_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_dailytask_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_darkness_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_darkness_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_defRegent_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_defRegent_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_demonBattleID_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_demonBattleID_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_demonBattleLoc_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_demonBattleLoc_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_demonreward_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_demonreward_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_di_mixcost_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_di_mixcost_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_divine_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_divine_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_drop_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_drop_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_drop_control_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_drop_control_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_drop_package_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_drop_package_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_dungeonschallenge_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_dungeonschallenge_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_eq_charge_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_eq_charge_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_equipAffixes_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_equipAffixes_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_equipIntenLevel_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_equipIntenLevel_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_equipIntensify_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_equipIntensify_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_equipNewInten_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_equipNewInten_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_equipRecastAdvance_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_equipRecastAdvance_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_equipRecastInit_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_equipRecastInit_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_equipRecastRand_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_equipRecastRand_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_equipWashEco_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_equipWashEco_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_equipWash_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_equipWash_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_equipdrop_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_equipdrop_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_equipmentDisplay_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_equipmentDisplay_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_equipment_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_equipment_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_equipment_randomprop_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_equipment_randomprop_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_equipstar_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_equipstar_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_escort_event_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_escort_event_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_escort_monster_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_escort_monster_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_eventSoundCfg_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_eventSoundCfg_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_factionList_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_factionList_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_fashionCollectionLevel_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_fashionCollectionLevel_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_fashionCollection_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_fashionCollection_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_fashion_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_fashion_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_fightForce_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_fightForce_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_fightall_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_fightall_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_fightbossActivity_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_fightbossActivity_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_find_res_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_find_res_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_floatingClue_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_floatingClue_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_floatingPiece_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_floatingPiece_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_gem_level_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_gem_level_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_gembox_info_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_gembox_info_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_gemproperty_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_gemproperty_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_globalsetup_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_globalsetup_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_goblin_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_goblin_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_goddess_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_goddess_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_goldDragon_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_goldDragon_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_gorgeous_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_gorgeous_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_group_buy_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_group_buy_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_group_buy_des_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_group_buy_des_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_group_buy_score_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_group_buy_score_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_guideAction_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_guideAction_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_guide_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_guide_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_guildDonation_reward_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_guildDonation_reward_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_guild_boss_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_guild_boss_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_guild_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_guild_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_guild_league_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_guild_league_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_guild_reward_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_guild_reward_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_guild_ride_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_guild_ride_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_guildbless_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_guildbless_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_guildbless_schedule_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_guildbless_schedule_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_guildboss_touchreward_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_guildboss_touchreward_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_guildbuff_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_guildbuff_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_guildexchange_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_guildexchange_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_guildhome_task_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_guildhome_task_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_guildshop_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_guildshop_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_guildskill_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_guildskill_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_guildsnoman_settle_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_guildsnoman_settle_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_guildsnowman_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_guildsnowman_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_guildsupplies_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_guildsupplies_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_help_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_help_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_heraldry_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_heraldry_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_home_area_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_home_area_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_home_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_home_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_home_furniture_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_home_furniture_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_home_level_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_home_level_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_home_plants_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_home_plants_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_home_sleep_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_home_sleep_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_home_zoo_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_home_zoo_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_home_zoofood_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_home_zoofood_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_honor_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_honor_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_identity_area_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_identity_area_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_identity_tag_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_identity_tag_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_identity_zodiac_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_identity_zodiac_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_improvePower_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_improvePower_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_indexFunction_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_indexFunction_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_indexGrowth_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_indexGrowth_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_itemCDandCount_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_itemCDandCount_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_itemTinker_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_itemTinker_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_item_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_item_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_knightedPackage_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_knightedPackage_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_knighted_level_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_knighted_level_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_koreangift_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_koreangift_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_ladder_1v1_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_ladder_1v1_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_ladder_1v1_rand_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_ladder_1v1_rand_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_ladder_1v1_reward_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_ladder_1v1_reward_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_ladder_item_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_ladder_item_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_level_reward_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_level_reward_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_lifeskill_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_lifeskill_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_lifeskill_everydayexp_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_lifeskill_everydayexp_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_lifeskill_info_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_lifeskill_info_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_logic_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_logic_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_logic_group_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_logic_group_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_lotteryForTower_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_lotteryForTower_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_lottery_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_lottery_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_lottery_goblin_free_cd_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_lottery_goblin_free_cd_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_lottery_once_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_lottery_once_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_lottery_store_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_lottery_store_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_lottery_ten_times_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_lottery_ten_times_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_mainMenu_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_mainMenu_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_mainmenu_FunctionOpen_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_mainmenu_FunctionOpen_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_mall_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_mall_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_mapConvey_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_mapConvey_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_mapsetting_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_mapsetting_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_mapshadow_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_mapshadow_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_monsterBoss_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_monsterBoss_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_monsterElite_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_monsterElite_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_monster_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_monster_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_monster_file_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_monster_file_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_monster_filekey_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_monster_filekey_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_monsterbox_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_monsterbox_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_monstergroup_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_monstergroup_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_monthCard_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_monthCard_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_monthly_signinaward_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_monthly_signinaward_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_mountSkin_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_mountSkin_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_mysterious_shop_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_mysterious_shop_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_newplayer_Story_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_newplayer_Story_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_notification_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_notification_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_npc_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_npc_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_npcdancer_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_npcdancer_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_npcstore_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_npcstore_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_object_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_object_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_online_reward_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_online_reward_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_openbag_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_openbag_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_panelHelp_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_panelHelp_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_partner_animation_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_partner_animation_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_per_book_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_per_book_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_petAvatareffect_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_petAvatareffect_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_petEquipmentLevel_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_petEquipmentLevel_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_petEquipment_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_petEquipment_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_petLevelProperty_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_petLevelProperty_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_petSkillRoll_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_petSkillRoll_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_petSkill_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_petSkill_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_petWar_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_petWar_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_pet_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_pet_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_pet_pvp_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_pet_pvp_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_pet_rebirth_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_pet_rebirth_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_pet_skills_upgrading_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_pet_skills_upgrading_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_pet_star_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_pet_star_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_pet_stronger_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_pet_stronger_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_pet_territory_force_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_pet_territory_force_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_pet_territory_reward_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_pet_territory_reward_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_pet_territory_search_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_pet_territory_search_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_pet_territory_time_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_pet_territory_time_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_petenhance_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_petenhance_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_petfairy_level_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_petfairy_level_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_petfairy_point_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_petfairy_point_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_petfightForce_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_petfightForce_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_petreborn_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_petreborn_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_petrelation_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_petrelation_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_player_base_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_player_base_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_player_desc_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_player_desc_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_player_skills_upgrading_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_player_skills_upgrading_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_prestige_Reward_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_prestige_Reward_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_price_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_price_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_question_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_question_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_race_chaosmode_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_race_chaosmode_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_race_item_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_race_item_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_race_waypoint_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_race_waypoint_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_rank_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_rank_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_rechargeAccumulation_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_rechargeAccumulation_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_rechargeActivitie_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_rechargeActivitie_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_rechargeFirstAD_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_rechargeFirstAD_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_rechargeFirst_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_rechargeFirst_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_recharge_item_relation_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_recharge_item_relation_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_removeSkillAffix_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_removeSkillAffix_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_ride_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_ride_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_ride_system_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_ride_system_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_rift_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_rift_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_rift_rand_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_rift_rand_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_rndname_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_rndname_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_rune_basePro_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_rune_basePro_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_rune_battlepower_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_rune_battlepower_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_rune_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_rune_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_rune_compound_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_rune_compound_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_rune_level_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_rune_level_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_rune_randomPro_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_rune_randomPro_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_rune_smeltcost_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_rune_smeltcost_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_rune_suite_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_rune_suite_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_serverstrings_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_serverstrings_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_seven_day_aim_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_seven_day_aim_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_severday_task_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_severday_task_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_shenqi_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_shenqi_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_shootingeffect_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_shootingeffect_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_shop_deal_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_shop_deal_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_show1_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_show1_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_show2_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_show2_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_signinaward_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_signinaward_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_sixwar_monster_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_sixwar_monster_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_skillBase_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_skillBase_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_skillCDGroup_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_skillCDGroup_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_skillLevelParam_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_skillLevelParam_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_skill_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_skill_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_skill_effect_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_skill_effect_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_skill_up_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_skill_up_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_skillmoneycost_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_skillmoneycost_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_sourceshop_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_sourceshop_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_specialinstance_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_specialinstance_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_spiritArea_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_spiritArea_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_spouseskill_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_spouseskill_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_starmoonbox_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_starmoonbox_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_strref_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_strref_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_sweeping_drop_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_sweeping_drop_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_talentExp_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_talentExp_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_talentProp_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_talentProp_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_talktoplayer_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_talktoplayer_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_target_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_target_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_task_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_task_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_task_group_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_task_group_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_task_new_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_task_new_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_task_obj_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_task_obj_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_task_other_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_task_other_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_thirty_day_login_gift_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_thirty_day_login_gift_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_tierBonus_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_tierBonus_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_titlesystem_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_titlesystem_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_top_award_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_top_award_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_transform_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_transform_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_transformspell_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_transformspell_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_treasure_event_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_treasure_event_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_treasure_map_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_treasure_map_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_treasuremap_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_treasuremap_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_trigger_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_trigger_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_turn_plate_box_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_turn_plate_box_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_turn_plate_lucky_cost_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_turn_plate_lucky_cost_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_turn_plate_rule_reward_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_turn_plate_rule_reward_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_uiSoundCfg_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_uiSoundCfg_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_uniqTierProperty_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_uniqTierProperty_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_userFeedbackType_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_userFeedbackType_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_vIP_color_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_vIP_color_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_vIP_expression_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_vIP_expression_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_vip_card_eco_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_vip_card_eco_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_vip_card_effect_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_vip_card_effect_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_vip_power_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_vip_power_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_warriortrial_battle_power_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_warriortrial_battle_power_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_warriortrial_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_warriortrial_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_wedding_fireworkshow_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_wedding_fireworkshow_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_wedding_ring_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_wedding_ring_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_wedding_time_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_wedding_time_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_wedding_type_candy_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_wedding_type_candy_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_wedding_type_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_wedding_type_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_weddingring_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_weddingring_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_welfare_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_welfare_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_wildboss_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_wildboss_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_wing_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_wing_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_worldboss_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_worldboss_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_worldlevel_exp_cht.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_worldlevel_exp_cht.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/data/fly.app" beforeDir="false" afterPath="$PROJECT_DIR$/app/game/data/fly.app" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/include/map.hrl" beforeDir="false" afterPath="$PROJECT_DIR$/app/game/include/map.hrl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/include/obj.hrl" beforeDir="false" afterPath="$PROJECT_DIR$/app/game/include/obj.hrl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/scripts/compileListDEtsFile.data" beforeDir="false" afterPath="$PROJECT_DIR$/app/game/scripts/compileListDEtsFile.data" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/scripts/compile_cht_gsD.txt" beforeDir="false" afterPath="$PROJECT_DIR$/app/game/scripts/compile_cht_gsD.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/scripts/start.bat" beforeDir="false" afterPath="$PROJECT_DIR$/app/game/scripts/start.bat" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/game_sup.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/game/src/game_sup.erl" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/game/src/lib/lib_map.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/game/src/lib/lib_map.erl" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/game/src/lib/lib_map_view.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/game/src/lib/lib_map_view.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/lib/lib_monster.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/game/src/lib/lib_monster.erl" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/game/src/lib/lib_player.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/game/src/lib/lib_player.erl" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/game/src/mod/mod_map.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/game/src/mod/mod_map.erl" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/game/src/mod/mod_map_creator.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/game/src/mod/mod_map_creator.erl" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/game/src/mod/mod_map_mgr.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/game/src/mod/mod_map_mgr.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server.iml" beforeDir="false" afterPath="$PROJECT_DIR$/server.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/game/src/mod/mod_player.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/game/src/mod/mod_player.erl" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -343,77 +24,92 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="fly_worker.erl" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/app/deps/fly/src/fly_worker.erl">
+      <file leaf-file-name="mod_map_creator.erl" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/game/src/mod/mod_map_creator.erl">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="436">
-              <caret line="208" column="13" lean-forward="true" selection-start-line="208" selection-start-column="13" selection-end-line="208" selection-end-column="13" />
+            <state relative-caret-position="289">
+              <caret line="43" selection-start-line="43" selection-end-line="43" />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="task.erl" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/deps/pubs/src/lib/task.erl">
+      <file leaf-file-name="mod_map_mgr.erl" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/game/src/mod/mod_map_mgr.erl">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-312" />
+            <state relative-caret-position="306">
+              <caret line="101" column="52" lean-forward="true" selection-start-line="101" selection-start-column="33" selection-end-line="101" selection-end-column="52" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="lib_player.erl" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/game/src/lib/lib_player.erl">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="289">
+              <caret line="46" selection-start-line="46" selection-end-line="46" />
+            </state>
           </provider>
         </entry>
       </file>
       <file leaf-file-name="lib_monster.erl" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/game/src/lib/lib_monster.erl">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="416">
+            <state relative-caret-position="338">
               <caret line="25" column="4" selection-start-line="25" selection-start-column="4" selection-end-line="25" selection-end-column="4" />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="cfg_buff_cht.erl" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_buff_cht.erl">
+      <file leaf-file-name="mod_map.erl" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/game/src/mod/mod_map.erl">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-1340485" />
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="econfig_watcher_sup.beam" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/dbs/ebin/econfig_watcher_sup.beam">
-          <provider selected="true" editor-type-id="text-editor" />
-          <provider editor-type-id="BEAM" />
-        </entry>
-      </file>
-      <file leaf-file-name="econfig_watcher_sup.erl" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/deps/econfig/src/econfig_watcher_sup.erl">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-145" />
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="dynamic_compile.erl" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/deps/dynamic_compile/src/dynamic_compile.erl">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-936" />
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="lists.erl" pinned="false" current-in-tab="false">
-        <entry file="file://C:/Program Files/erl7.3/lib/stdlib-2.8/src/lists.erl">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="341">
-              <caret line="353" selection-start-line="353" selection-end-line="353" />
+            <state relative-caret-position="306">
+              <caret line="58" column="38" lean-forward="true" selection-start-line="58" selection-start-column="38" selection-end-line="58" selection-end-column="38" />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="fastlog.erl" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/deps/fastlog/src/fastlog.erl">
-          <provider selected="true" editor-type-id="text-editor" />
-        </entry>
-      </file>
-      <file leaf-file-name="econfig_server.erl" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/deps/econfig/src/econfig_server.erl">
+      <file leaf-file-name="lib_map.erl" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/game/src/lib/lib_map.erl">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="289">
-              <caret line="432" column="13" selection-start-line="432" selection-start-column="13" selection-end-line="432" selection-end-column="13" />
+              <caret line="74" column="17" selection-start-line="74" selection-start-column="17" selection-end-line="74" selection-end-column="17" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="mod_player.erl" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/app/game/src/mod/mod_player.erl">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="427">
+              <caret line="66" column="44" selection-start-line="66" selection-start-column="44" selection-end-line="66" selection-end-column="44" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="player_status.hrl" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/game/include/player_status.hrl">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="523">
+              <caret line="23" column="18" selection-start-line="23" selection-start-column="8" selection-end-line="23" selection-end-column="18" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="map.hrl" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/game/include/map.hrl">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="679">
+              <caret line="75" column="8" selection-start-line="75" selection-start-column="8" selection-end-line="75" selection-end-column="8" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="obj.hrl" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/game/include/obj.hrl">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="367">
+              <caret line="25" column="4" selection-start-line="25" selection-start-column="4" selection-end-line="25" selection-end-column="4" />
             </state>
           </provider>
         </entry>
@@ -434,14 +130,7 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>-import_type(</find>
-      <find>-import(</find>
-      <find>ets:new(</find>
-      <find>login_ack</find>
-      <find>pk_U2GS_ChangeMap</find>
       <find>go_to_new_map</find>
-      <find>exit_map</find>
-      <find>join_map</find>
       <find>join</find>
       <find>erlang:process_info(</find>
       <find>color_inout</find>
@@ -464,6 +153,13 @@
       <find>SRC_INC_ETS</find>
       <find>hrl_file_srcs</find>
       <find>process_hrl_file_lastmod</find>
+      <find>.z</find>
+      <find>init_all_creature</find>
+      <find>init_vis_tile</find>
+      <find>join_map</find>
+      <find>player_exit_map_1</find>
+      <find>exit_map</find>
+      <find>player_exit</find>
     </findStrings>
     <replaceStrings>
       <replace>do_handle_call(</replace>
@@ -493,20 +189,16 @@
         <option value="$PROJECT_DIR$/app/game/include/player_status.hrl" />
         <option value="$PROJECT_DIR$/app/game/include/login.hrl" />
         <option value="$PROJECT_DIR$/app/game/src/mod/mod_login.erl" />
-        <option value="$PROJECT_DIR$/app/game/src/mod/mod_player.erl" />
         <option value="$PROJECT_DIR$/app/game/src/mod/mod_map_mgr_supervisor.erl" />
         <option value="$PROJECT_DIR$/app/game/src/lib/lib_route.erl" />
         <option value="$PROJECT_DIR$/app/deps/pubs/include/common.hrl" />
         <option value="$PROJECT_DIR$/app/game/src/mod/mod_map_supervisor.erl" />
         <option value="$PROJECT_DIR$/app/deps/pubs/src/lib/misc.erl" />
         <option value="$PROJECT_DIR$/app/deps/pubs/src/lib/gen_serverw.erl" />
-        <option value="$PROJECT_DIR$/app/game/src/lib/lib_player.erl" />
-        <option value="$PROJECT_DIR$/app/deps/pubs/src/net/tcp_client.erl" />
         <option value="$PROJECT_DIR$/app/deps/pubs/include/local_lang.erl" />
         <option value="$PROJECT_DIR$/app/deps/pubs/src/config/cfg/cfg.erl" />
         <option value="$PROJECT_DIR$/app/deps/pubs/include/local_lang.hrl" />
         <option value="$PROJECT_DIR$/app/deps/pubs/src/lib/getCfg.erl" />
-        <option value="$PROJECT_DIR$/app/game/src/mod/mod_map_creator.erl" />
         <option value="$PROJECT_DIR$/app/game/include/mapCfgPrivate.hrl" />
         <option value="$PROJECT_DIR$/app/game/include/gameMap.hrl" />
         <option value="$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_mapsetting_cht.erl" />
@@ -518,15 +210,19 @@
         <option value="$PROJECT_DIR$/app/game/src/core/foundation_server.erl" />
         <option value="$PROJECT_DIR$/app/game/src/game_sup.erl" />
         <option value="$PROJECT_DIR$/app/game/src/mapcfgs/gameMapCfg.erl" />
-        <option value="$PROJECT_DIR$/app/game/include/map.hrl" />
         <option value="$PROJECT_DIR$/app/game/include/obj.hrl" />
-        <option value="$PROJECT_DIR$/app/game/src/lib/lib_map_view.erl" />
-        <option value="$PROJECT_DIR$/app/game/src/mod/mod_map_mgr.erl" />
-        <option value="$PROJECT_DIR$/app/game/src/mod/mod_map.erl" />
         <option value="$PROJECT_DIR$/app/game/src/core/mapReader.erl" />
-        <option value="$PROJECT_DIR$/app/game/src/lib/lib_map.erl" />
         <option value="$PROJECT_DIR$/app/game/src/lib/lib_monster.erl" />
         <option value="$PROJECT_DIR$/app/deps/fly/src/fly_worker.erl" />
+        <option value="$PROJECT_DIR$/app/deps/pubs/src/net/tcp_client.erl" />
+        <option value="$PROJECT_DIR$/app/game/include/map.hrl" />
+        <option value="$PROJECT_DIR$/app/game/src/lib/lib_map_view.erl" />
+        <option value="$PROJECT_DIR$/app/game/src/mod/mod_map.erl" />
+        <option value="$PROJECT_DIR$/app/game/src/mod/mod_map_mgr.erl" />
+        <option value="$PROJECT_DIR$/app/game/src/lib/lib_map.erl" />
+        <option value="$PROJECT_DIR$/app/game/src/mod/mod_map_creator.erl" />
+        <option value="$PROJECT_DIR$/app/game/src/lib/lib_player.erl" />
+        <option value="$PROJECT_DIR$/app/game/src/mod/mod_player.erl" />
       </list>
     </option>
   </component>
@@ -628,6 +324,15 @@
               <item name="pubs" type="462c0819:PsiDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
               <item name="lib" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="server" type="b2602c69:ProjectViewProjectNode" />
+              <item name="server" type="462c0819:PsiDirectoryNode" />
+              <item name="app" type="462c0819:PsiDirectoryNode" />
+              <item name="deps" type="462c0819:PsiDirectoryNode" />
+              <item name="pubs" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="net" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="server" type="b2602c69:ProjectViewProjectNode" />
@@ -1089,12 +794,12 @@
       <workItem from="1526262326410" duration="6927000" />
       <workItem from="1526278125874" duration="15895000" />
       <workItem from="1526345821450" duration="41059000" />
-      <workItem from="1526451753320" duration="29059000" />
+      <workItem from="1526451753320" duration="34036000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="200999000" />
+    <option name="totallyTimeSpent" value="205976000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -1158,18 +863,6 @@
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/app/deps/pubs/src/lib/lqueue.erl">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/deps/pubs/src/config/cfg/cfg_chs.erl">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/deps/pubs/src/config/cfg/cfg_cht.erl">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/game/src/lib/lib_login.erl">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/game/src/lib/lib_pet.erl">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
@@ -1180,13 +873,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/game/src/mod/mod_map_creator.erl">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="583">
-          <caret line="113" column="43" selection-start-line="113" selection-start-column="43" selection-end-line="113" selection-end-column="43" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/deps/pubs/src/config/cht/cfg_mapConvey_cht.erl">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
@@ -1194,27 +880,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1074">
           <caret line="377" column="9" selection-start-line="377" selection-start-column="9" selection-end-line="377" selection-end-column="9" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/game/src/mapcfgs/cfg_gamemapcfg2.erl">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="78">
-          <caret line="3" column="20" selection-start-line="3" selection-start-column="20" selection-end-line="3" selection-end-column="20" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/game/src/mapcfgs/cfg_gamemapcfg3.erl">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="78">
-          <caret line="3" column="20" selection-start-line="3" selection-start-column="20" selection-end-line="3" selection-end-column="20" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/game/src/mapcfgs/cfg_gamemapcfg4.erl">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="26">
-          <caret line="3" selection-start-line="3" selection-end-line="3" selection-end-column="20" />
         </state>
       </provider>
     </entry>
@@ -1244,13 +909,6 @@
         <state relative-caret-position="-1003" />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/game/src/mod/mod_player.erl">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="817">
-          <caret line="87" column="17" selection-start-line="87" selection-start-column="17" selection-end-line="87" selection-end-column="17" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/game/src/mod/mod_map_mgr_supervisor.erl">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
@@ -1268,24 +926,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/game/src/mapcfgs/cfg_gamemapcfg1.erl">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="130">
-          <caret line="5" column="22" selection-start-line="5" selection-start-column="9" selection-end-line="5" selection-end-column="22" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/deps/pubs/src/lib/code_gen.erl">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1147">
           <caret line="52" selection-start-line="52" selection-end-line="52" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/game/src/mapcfgs/gameMapCfg.erl">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="104">
-          <caret line="4" column="36" selection-start-line="4" selection-start-column="36" selection-end-line="4" selection-end-column="36" />
         </state>
       </provider>
     </entry>
@@ -1296,66 +940,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/game/src/lib/lib_player.erl">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="817">
-          <caret line="87" selection-start-line="87" selection-end-line="87" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/game/include/map.hrl">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="436">
-          <caret line="134" column="26" selection-start-line="134" selection-start-column="26" selection-end-line="134" selection-end-column="26" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/deps/pubs/src/config/cfg_monster.hrl">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-8869">
           <caret line="4" column="8" selection-start-line="4" selection-start-column="8" selection-end-line="4" selection-end-column="8" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/game/src/lib/lib_map_view.erl">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="384">
-          <caret line="167" column="16" selection-start-line="167" selection-start-column="16" selection-end-line="167" selection-end-column="16" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/game/include/obj.hrl">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="367">
-          <caret line="19" column="15" selection-start-line="19" selection-start-column="8" selection-end-line="19" selection-end-column="15" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/game/src/mod/mod_map_mgr.erl">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="531">
-          <caret line="114" column="37" selection-start-line="114" selection-start-column="21" selection-end-line="114" selection-end-column="37" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/game/src/mod/mod_map.erl">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="442">
-          <caret line="71" column="34" selection-start-line="71" selection-start-column="34" selection-end-line="71" selection-end-column="34" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/game/src/core/mapReader.erl">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="130">
-          <caret line="5" selection-start-line="5" selection-end-line="5" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/game/src/lib/lib_map.erl">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="505">
-          <caret line="135" column="24" selection-start-line="135" selection-start-column="24" selection-end-line="135" selection-end-column="24" />
         </state>
       </provider>
     </entry>
@@ -1394,13 +982,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://C:/Program Files/erl7.3/lib/erts-7.3/src/erlang.erl">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="393">
-          <caret line="71" column="22" selection-start-line="71" selection-start-column="9" selection-end-line="71" selection-end-column="22" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://C:/Program Files/erl7.3/lib/kernel-4.2/src/os.erl">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="237">
@@ -1426,9 +1007,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-936" />
       </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/deps/fastlog/src/fastlog.erl">
-      <provider selected="true" editor-type-id="text-editor" />
     </entry>
     <entry file="file://C:/Program Files/erl7.3/lib/stdlib-2.8/src/lists.erl">
       <provider selected="true" editor-type-id="text-editor">
@@ -1456,17 +1034,156 @@
         <state relative-caret-position="-312" />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/game/src/lib/lib_monster.erl">
+    <entry file="file://$PROJECT_DIR$/app/deps/fly/src/fly_worker.erl">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="416">
+        <state relative-caret-position="332">
+          <caret line="204" column="30" lean-forward="true" selection-start-line="204" selection-start-column="30" selection-end-line="204" selection-end-column="30" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/game/src/mapcfgs/cfg_gamemapcfg2.erl">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="78">
+          <caret line="3" column="20" selection-start-line="3" selection-start-column="20" selection-end-line="3" selection-end-column="20" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/game/src/mapcfgs/cfg_gamemapcfg3.erl">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-23355">
+          <caret line="3" column="20" selection-start-line="3" selection-start-column="20" selection-end-line="3" selection-end-column="20" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/game/src/mapcfgs/cfg_gamemapcfg4.erl">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-364">
+          <caret line="3" selection-start-line="3" selection-end-line="3" selection-end-column="20" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/deps/pubs/src/net/tcp_client.erl">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="312">
+          <caret line="27" column="51" selection-start-line="27" selection-start-column="51" selection-end-line="27" selection-end-column="51" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/game/src/mapcfgs/cfg_gamemapcfg1.erl">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="234">
+          <caret line="9" column="8" selection-start-line="9" selection-start-column="8" selection-end-line="9" selection-end-column="8" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/game/src/core/mapReader.erl">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="575">
+          <caret line="208" column="20" selection-start-line="208" selection-start-column="20" selection-end-line="208" selection-end-column="20" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://C:/Program Files/erl7.3/lib/erts-7.3/src/erlang.erl">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="575">
+          <caret line="977" column="39" lean-forward="true" selection-start-line="977" selection-start-column="39" selection-end-line="977" selection-end-column="39" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/game/src/mapcfgs/gameMapCfg.erl">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="104">
+          <caret line="4" selection-start-line="4" selection-end-line="4" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/game/src/lib/lib_obj.erl">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/game/src/lib/lib_route.erl">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/deps/fastlog/src/fastlog.erl">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="713">
+          <caret line="451" lean-forward="true" selection-start-line="451" selection-end-line="451" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/game/src/lib/lib_map_view.erl">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="531">
+          <caret line="177" column="46" lean-forward="true" selection-start-line="177" selection-start-column="46" selection-end-line="177" selection-end-column="46" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/game/include/map.hrl">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="679">
+          <caret line="75" column="8" selection-start-line="75" selection-start-column="8" selection-end-line="75" selection-end-column="8" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/game/include/obj.hrl">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="367">
           <caret line="25" column="4" selection-start-line="25" selection-start-column="4" selection-end-line="25" selection-end-column="4" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/deps/fly/src/fly_worker.erl">
+    <entry file="file://$PROJECT_DIR$/app/game/src/lib/lib_monster.erl">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="436">
-          <caret line="208" column="13" lean-forward="true" selection-start-line="208" selection-start-column="13" selection-end-line="208" selection-end-column="13" />
+        <state relative-caret-position="338">
+          <caret line="25" column="4" selection-start-line="25" selection-start-column="4" selection-end-line="25" selection-end-column="4" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/game/src/mod/mod_map_mgr.erl">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="306">
+          <caret line="101" column="52" lean-forward="true" selection-start-line="101" selection-start-column="33" selection-end-line="101" selection-end-column="52" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/game/src/lib/lib_map.erl">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="289">
+          <caret line="74" column="17" selection-start-line="74" selection-start-column="17" selection-end-line="74" selection-end-column="17" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/game/src/mod/mod_map_creator.erl">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="289">
+          <caret line="43" selection-start-line="43" selection-end-line="43" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/game/src/mod/mod_map.erl">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="306">
+          <caret line="58" column="38" lean-forward="true" selection-start-line="58" selection-start-column="38" selection-end-line="58" selection-end-column="38" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/game/src/lib/lib_player.erl">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="289">
+          <caret line="46" selection-start-line="46" selection-end-line="46" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/game/include/player_status.hrl">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="523">
+          <caret line="23" column="18" selection-start-line="23" selection-start-column="8" selection-end-line="23" selection-end-column="18" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/game/src/mod/mod_player.erl">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="427">
+          <caret line="66" column="44" selection-start-line="66" selection-start-column="44" selection-end-line="66" selection-end-column="44" />
         </state>
       </provider>
     </entry>

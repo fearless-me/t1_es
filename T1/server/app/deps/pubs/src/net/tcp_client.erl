@@ -25,7 +25,7 @@ connect(Port)->
 	send_msg(Socket, Msg1),
 	recv_msg(Socket),
 
-	send_msg(Socket, #pk_GS2U_GoNewMap{tarMapID = 2, fX = 100.1, fY = 200.2}),
+	send_msg(Socket, #pk_GS2U_GoNewMap{tarMapID = 3, fX = 100.1, fY = 200.2}),
 	recv_msg(Socket),
 	ok.
 
