@@ -190,12 +190,12 @@ process_src_files_incs(SrcFiles) ->
             Now = os:system_time(milli_seconds),
             Pid = erlang:spawn(
                 fun() ->
-                    PidList = process_src_file_incs_1([], lists:sublist(SrcFiles, 50)),
+                    PidList = process_src_file_incs_1([], SrcFiles),
                     wait_src_parse_finish(erlang:length(PidList))
                 end),
             wait_pid_go_die(is_process_alive(Pid), Pid),
             Diff = os:system_time(milli_seconds) - Now,
-            ?WARN("src files ~p(s), parse hrl include use time ~p(ms)",
+            ?WARN("~p src file(s), parse hrl include use time ~p(ms)",
                 [erlang:length(SrcFiles), Diff]),
             ok;
         _ ->
@@ -206,6 +206,8 @@ process_src_files_incs(SrcFiles) ->
 process_src_file_incs(SrcFile) ->
     {ok, Forms} = epp_dodger:parse_file(SrcFile),
     IncludeFiles = src_file_include([], Forms),
+    ?WARN("parse src file ~ts, includes:~p",
+        [SrcFile, IncludeFiles]),
 %%    ?WARN("src ~ts, incs ~p",[SrcFile, IncludeFiles]),
     lists:foreach(
         fun(IncludeFile) ->

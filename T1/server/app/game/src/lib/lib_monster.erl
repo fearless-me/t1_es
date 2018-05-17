@@ -23,6 +23,7 @@ create(#recMapObjData{
     name = Name,
     groupID = Group
 }) ->
+    
     #monsterCfg{
         
     } = getCfg:getCfgByArgs(cfg_monster, Mid),
