@@ -103,7 +103,7 @@ sync_remove_from_vis_tile(Obj, VisTiles) ->
     ok.
 
 %%%-------------------------------------------------------------------
-%% 添加广播
+%% 添加广播                           N
 sync_add_to_vis_tile(Obj, VisTiles) ->
     sync_big_vis_tile_to_me(Obj, VisTiles, around_unit_2_me_add),
     sync_me_to_big_vis_tile(Obj, VisTiles, me_2_around_player_add),

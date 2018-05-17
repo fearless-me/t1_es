@@ -15,6 +15,7 @@
 -include("player_status.hrl").
 -include("login.hrl").
 -include("obj.hrl").
+%%-include("player_transmit.hrl").
 
 -export([init_from_db/1]).
 -export([login_ack/1]).

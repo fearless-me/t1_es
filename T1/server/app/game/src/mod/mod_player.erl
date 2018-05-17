@@ -63,8 +63,8 @@ on_data(Socket, Data)->
     ok.
 
 on_close(Socket, Reason) ->
-    lib_player:offline(),
     lib_player:set_player_status(?PS_OFFLINE),
+    lib_player:offline(),
     ?DEBUG("~p close,reason:~p",[Socket, Reason]),
     ok.
 %%%-------------------------------------------------------------------

@@ -38,10 +38,12 @@
 }).
 
 -record(hrl_file_srcs, {
-    inc_file = "",
-    src_files = []
+    file = "",
+    ref_files = []
 }).
--define(SRC_INC_ETS, src_inc_ets__).
+-define(INC_REF_SRC_ETS, inc_ref_src_ets__).
+-define(SRC_REF_INC_ETS, src_ref_inc_ets__).
+
 
 %% API
 -export([run_now/0, pause/0, continue/0]).
@@ -84,10 +86,17 @@ mod_init(_Args) ->
     erlang:process_flag(trap_exit, true),
     erlang:process_flag(priority, high),
     Interval = fly:info(interval),
-    ets:new(?SRC_INC_ETS,
+    ets:new(?INC_REF_SRC_ETS,
         [
             named_table, set, public,
-            {keypos, #hrl_file_srcs.inc_file},
+            {keypos, #hrl_file_srcs.file},
+            {write_concurrency, true},
+            {read_concurrency, true}
+        ]),
+    ets:new(?SRC_REF_INC_ETS,
+        [
+            named_table, set, public,
+            {keypos, #hrl_file_srcs.file},
             {write_concurrency, true},
             {read_concurrency, true}
         ]),
@@ -185,7 +194,7 @@ compare_hrl_files(State) ->
     {noreply, NewState}.
 
 process_src_files_incs(SrcFiles) ->
-    case ets:info(?SRC_INC_ETS, size) of
+    case ets:info(?INC_REF_SRC_ETS, size) of
         0 ->
             Now = os:system_time(milli_seconds),
             Pid = erlang:spawn(
@@ -209,18 +218,44 @@ process_src_file_incs(SrcFile) ->
 %%    ?WARN("parse src file ~ts, includes:~p",
 %%        [SrcFile, IncludeFiles]),
 
+    %% 头文件被删除
+    case ets:lookup(?SRC_REF_INC_ETS, SrcFile) of
+        [] -> skip;
+        [#hrl_file_srcs{ref_files = OldIncFiles} | _] ->
+            DiffIncFiles = lists:subtract(OldIncFiles, IncludeFiles),
+            ?WARN("~ts, delete hrl:~p",[SrcFile, DiffIncFiles]),
+            lists:foreach(
+                fun(IncFile)->
+                    case ets:lookup(?INC_REF_SRC_ETS, IncFile) of
+                        [] -> skip;
+                        [#hrl_file_srcs{ref_files = IncList} | _] ->
+                            ets:update_element(
+                                ?INC_REF_SRC_ETS,
+                                IncFile,
+                                {#hrl_file_srcs.ref_files, lists:delete(IncFile, IncList)}
+                            )
+                    end
+                end, DiffIncFiles),
+            ok
+    end,
+
+    ets:insert(?SRC_REF_INC_ETS, #hrl_file_srcs{
+        file = SrcFile, ref_files = IncludeFiles
+    }),
+
+    %% 头文件修改或者.erl添加了头文件
     lists:foreach(
         fun(IncludeFile) ->
-            case ets:lookup(?SRC_INC_ETS, IncludeFile) of
+            case ets:lookup(?INC_REF_SRC_ETS, IncludeFile) of
                 [] ->
                     ets:insert(
-                        ?SRC_INC_ETS,
-                        #hrl_file_srcs{inc_file = IncludeFile, src_files = [SrcFile]});
-                [#hrl_file_srcs{src_files = SrcFiles} | _] ->
+                        ?INC_REF_SRC_ETS,
+                        #hrl_file_srcs{file = IncludeFile, ref_files = [SrcFile]});
+                [#hrl_file_srcs{ref_files = SrcFiles} | _] ->
                     ets:update_element(
-                        ?SRC_INC_ETS,
+                        ?INC_REF_SRC_ETS,
                         IncludeFile,
-                        {#hrl_file_srcs.src_files, [ SrcFile | SrcFiles]}
+                        {#hrl_file_srcs.ref_files, [ SrcFile | SrcFiles]}
                     )
             end
         end, IncludeFiles),
@@ -461,8 +496,8 @@ format_error(Module, ErrorDescription) ->
 
 
 who_include(HrlFile, _SrcFiles) ->
-    case ets:lookup(?SRC_INC_ETS, HrlFile) of
-       [#hrl_file_srcs{src_files = SrcFiles} | _] -> SrcFiles;
+    case ets:lookup(?INC_REF_SRC_ETS, HrlFile) of
+       [#hrl_file_srcs{ref_files = SrcFiles} | _] -> SrcFiles;
         _ -> []
     end.
 %%who_include(HrlFile, SrcFiles) ->
