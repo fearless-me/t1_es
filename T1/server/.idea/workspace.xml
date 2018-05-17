@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="BookmarkManager">
-    <bookmark url="file://$PROJECT_DIR$/app/deps/fly/src/fly_worker.erl" line="265" />
+    <bookmark url="file://$PROJECT_DIR$/app/deps/fly/src/fly_worker.erl" line="264" />
   </component>
   <component name="ChangeListManager">
     <list default="true" readonly="true" id="354d5196-8a2e-476f-8af6-71424480c5e1" name="Default" comment="">
@@ -31,11 +31,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="lib_player.erl" pinned="false" current-in-tab="true">
+      <file leaf-file-name="lib_player.erl" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/game/src/lib/lib_player.erl">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="156">
-              <caret line="18" column="21" lean-forward="true" selection-start-line="18" selection-start-column="21" selection-end-line="18" selection-end-column="21" />
+            <state relative-caret-position="806">
+              <caret line="31" column="24" lean-forward="true" selection-start-line="31" selection-start-column="24" selection-end-line="31" selection-end-column="24" />
             </state>
           </provider>
         </entry>
@@ -67,11 +67,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="fly_worker.erl" pinned="false" current-in-tab="false">
+      <file leaf-file-name="fly_worker.erl" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app/deps/fly/src/fly_worker.erl">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="502">
-              <caret line="231" column="51" lean-forward="true" selection-start-line="231" selection-start-column="51" selection-end-line="231" selection-end-column="51" />
+            <state relative-caret-position="271">
+              <caret line="224" column="69" selection-start-line="224" selection-start-column="69" selection-end-line="224" selection-end-column="69" />
             </state>
           </provider>
         </entry>
@@ -219,8 +219,8 @@
         <option value="$PROJECT_DIR$/app/game/src/mod/mod_map_creator.erl" />
         <option value="$PROJECT_DIR$/app/game/src/mod/mod_player.erl" />
         <option value="$PROJECT_DIR$/app/game/src/lib/lib_map_view.erl" />
-        <option value="$PROJECT_DIR$/app/deps/fly/src/fly_worker.erl" />
         <option value="$PROJECT_DIR$/app/game/src/lib/lib_player.erl" />
+        <option value="$PROJECT_DIR$/app/deps/fly/src/fly_worker.erl" />
       </list>
     </option>
   </component>
@@ -793,12 +793,12 @@
       <workItem from="1526278125874" duration="15895000" />
       <workItem from="1526345821450" duration="41059000" />
       <workItem from="1526451753320" duration="34678000" />
-      <workItem from="1526557735146" duration="2247000" />
+      <workItem from="1526557735146" duration="2482000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="208865000" />
+    <option name="totallyTimeSpent" value="209100000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -1189,17 +1189,17 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/deps/fly/src/fly_worker.erl">
+    <entry file="file://$PROJECT_DIR$/app/game/src/lib/lib_player.erl">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="502">
-          <caret line="231" column="51" lean-forward="true" selection-start-line="231" selection-start-column="51" selection-end-line="231" selection-end-column="51" />
+        <state relative-caret-position="806">
+          <caret line="31" column="24" lean-forward="true" selection-start-line="31" selection-start-column="24" selection-end-line="31" selection-end-column="24" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/game/src/lib/lib_player.erl">
+    <entry file="file://$PROJECT_DIR$/app/deps/fly/src/fly_worker.erl">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="156">
-          <caret line="18" column="21" lean-forward="true" selection-start-line="18" selection-start-column="21" selection-end-line="18" selection-end-column="21" />
+        <state relative-caret-position="271">
+          <caret line="224" column="69" selection-start-line="224" selection-start-column="69" selection-end-line="224" selection-end-column="69" />
         </state>
       </provider>
     </entry>

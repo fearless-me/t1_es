@@ -223,16 +223,15 @@ process_src_file_incs(SrcFile) ->
         [] -> skip;
         [#hrl_file_srcs{ref_files = OldIncFiles} | _] ->
             DiffIncFiles = lists:subtract(OldIncFiles, IncludeFiles),
-            ?WARN("~ts, delete hrl:~p",[SrcFile, DiffIncFiles]),
             lists:foreach(
                 fun(IncFile)->
                     case ets:lookup(?INC_REF_SRC_ETS, IncFile) of
                         [] -> skip;
-                        [#hrl_file_srcs{ref_files = IncList} | _] ->
+                        [#hrl_file_srcs{ref_files = SrcFileList} | _] ->
                             ets:update_element(
                                 ?INC_REF_SRC_ETS,
                                 IncFile,
-                                {#hrl_file_srcs.ref_files, lists:delete(IncFile, IncList)}
+                                {#hrl_file_srcs.ref_files, lists:delete(SrcFile, SrcFileList)}
                             )
                     end
                 end, DiffIncFiles),
