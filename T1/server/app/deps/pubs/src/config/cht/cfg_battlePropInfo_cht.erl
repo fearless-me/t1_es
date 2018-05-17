@@ -3,7 +3,7 @@
 -module(cfg_battlePropInfo_cht).
 -compile(export_all).
 -include("cfg_battlePropInfo.hrl").
--include("logger.hrl").
+
 
 getRow(1)->
     #battlePropInfoCfg {

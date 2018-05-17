@@ -3,7 +3,7 @@
 -module(cfg_gembox_info_cht).
 -compile(export_all).
 -include("cfg_gembox_info.hrl").
--include("logger.hrl").
+
 
 getRow(0,1)->
     #gembox_infoCfg {

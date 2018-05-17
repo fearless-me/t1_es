@@ -3,7 +3,7 @@
 -module(cfg_ladder_1v1_rand_cht).
 -compile(export_all).
 -include("cfg_ladder_1v1_rand.hrl").
--include("logger.hrl").
+
 
 getRow(1,5)->
     #ladder_1v1_randCfg {

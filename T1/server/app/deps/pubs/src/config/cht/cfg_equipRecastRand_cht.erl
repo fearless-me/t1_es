@@ -3,7 +3,7 @@
 -module(cfg_equipRecastRand_cht).
 -compile(export_all).
 -include("cfg_equipRecastRand.hrl").
--include("logger.hrl").
+
 
 getRow(1)->
     #equipRecastRandCfg {

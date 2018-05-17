@@ -3,7 +3,7 @@
 -module(cfg_petEquipment_cht).
 -compile(export_all).
 -include("cfg_petEquipment.hrl").
--include("logger.hrl").
+
 
 getRow(1)->
     #petEquipmentCfg {

@@ -3,7 +3,7 @@
 -module(cfg_equipRecastInit_cht).
 -compile(export_all).
 -include("cfg_equipRecastInit.hrl").
--include("logger.hrl").
+
 
 getRow(1,101,29)->
     #equipRecastInitCfg {

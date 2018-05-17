@@ -3,7 +3,7 @@
 -module(cfg_shop_deal_cht).
 -compile(export_all).
 -include("cfg_shop_deal.hrl").
--include("logger.hrl").
+
 
 getRow(1)->
     #shop_dealCfg {

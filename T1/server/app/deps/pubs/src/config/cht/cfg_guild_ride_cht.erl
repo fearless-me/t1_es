@@ -3,7 +3,7 @@
 -module(cfg_guild_ride_cht).
 -compile(export_all).
 -include("cfg_guild_ride.hrl").
--include("logger.hrl").
+
 
 getRow(1,1)->
     #guild_rideCfg {

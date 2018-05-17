@@ -3,7 +3,7 @@
 -module(cfg_task_new_cht).
 -compile(export_all).
 -include("cfg_task_new.hrl").
--include("logger.hrl").
+
 
 getRow(50001)->
     #task_newCfg {

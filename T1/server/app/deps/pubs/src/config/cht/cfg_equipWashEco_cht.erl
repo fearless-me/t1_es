@@ -3,7 +3,7 @@
 -module(cfg_equipWashEco_cht).
 -compile(export_all).
 -include("cfg_equipWashEco.hrl").
--include("logger.hrl").
+
 
 getRow(25,3,0)->
     #equipWashEcoCfg {

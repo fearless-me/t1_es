@@ -3,7 +3,7 @@
 -module(cfg_achievecollection_cht).
 -compile(export_all).
 -include("cfg_achievecollection.hrl").
--include("logger.hrl").
+
 
 getRow(2)->
     #achievecollectionCfg {

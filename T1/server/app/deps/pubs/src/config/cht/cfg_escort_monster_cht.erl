@@ -3,7 +3,7 @@
 -module(cfg_escort_monster_cht).
 -compile(export_all).
 -include("cfg_escort_monster.hrl").
--include("logger.hrl").
+
 
 getRow(1)->
     #escort_monsterCfg {

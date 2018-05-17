@@ -3,7 +3,7 @@
 -module(cfg_home_furniture_cht).
 -compile(export_all).
 -include("cfg_home_furniture.hrl").
--include("logger.hrl").
+
 
 getRow(0)->
     #home_furnitureCfg {

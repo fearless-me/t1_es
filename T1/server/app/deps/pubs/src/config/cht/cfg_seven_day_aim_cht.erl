@@ -3,7 +3,7 @@
 -module(cfg_seven_day_aim_cht).
 -compile(export_all).
 -include("cfg_seven_day_aim.hrl").
--include("logger.hrl").
+
 
 getRow(1)->
     #seven_day_aimCfg {

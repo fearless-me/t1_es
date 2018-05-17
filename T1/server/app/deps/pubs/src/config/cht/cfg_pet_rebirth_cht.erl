@@ -3,7 +3,7 @@
 -module(cfg_pet_rebirth_cht).
 -compile(export_all).
 -include("cfg_pet_rebirth.hrl").
--include("logger.hrl").
+
 
 getRow(1,0)->
     #pet_rebirthCfg {

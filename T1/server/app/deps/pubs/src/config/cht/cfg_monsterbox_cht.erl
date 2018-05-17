@@ -3,7 +3,7 @@
 -module(cfg_monsterbox_cht).
 -compile(export_all).
 -include("cfg_monsterbox.hrl").
--include("logger.hrl").
+
 
 getRow(1)->
     #monsterboxCfg {

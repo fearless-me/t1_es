@@ -3,7 +3,7 @@
 -module(cfg_lottery_goblin_free_cd_cht).
 -compile(export_all).
 -include("cfg_lottery_goblin_free_cd.hrl").
--include("logger.hrl").
+
 
 getRow(1)->
     #lottery_goblin_free_cdCfg {

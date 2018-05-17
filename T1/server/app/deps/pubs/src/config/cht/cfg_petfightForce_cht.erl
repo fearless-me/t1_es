@@ -3,7 +3,7 @@
 -module(cfg_petfightForce_cht).
 -compile(export_all).
 -include("cfg_petfightForce.hrl").
--include("logger.hrl").
+
 
 getRow(1)->
     #petfightForceCfg {

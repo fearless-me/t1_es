@@ -3,7 +3,7 @@
 -module(cfg_petSkill_cht).
 -compile(export_all).
 -include("cfg_petSkill.hrl").
--include("logger.hrl").
+
 
 getRow(1109)->
     #petSkillCfg {

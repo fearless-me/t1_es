@@ -3,7 +3,7 @@
 -module(cfg_welfare_cht).
 -compile(export_all).
 -include("cfg_welfare.hrl").
--include("logger.hrl").
+
 
 getRow(1)->
     #welfareCfg {

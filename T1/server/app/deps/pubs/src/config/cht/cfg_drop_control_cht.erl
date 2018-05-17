@@ -3,7 +3,7 @@
 -module(cfg_drop_control_cht).
 -compile(export_all).
 -include("cfg_drop_control.hrl").
--include("logger.hrl").
+
 
 getRow(1)->
     #drop_controlCfg {

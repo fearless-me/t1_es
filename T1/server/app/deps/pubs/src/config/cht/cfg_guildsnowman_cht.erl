@@ -3,7 +3,7 @@
 -module(cfg_guildsnowman_cht).
 -compile(export_all).
 -include("cfg_guildsnowman.hrl").
--include("logger.hrl").
+
 
 getRow(1)->
     #guildsnowmanCfg {

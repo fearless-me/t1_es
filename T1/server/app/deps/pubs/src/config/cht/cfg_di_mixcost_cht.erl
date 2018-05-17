@@ -3,7 +3,7 @@
 -module(cfg_di_mixcost_cht).
 -compile(export_all).
 -include("cfg_di_mixcost.hrl").
--include("logger.hrl").
+
 
 getRow(1)->
     #di_mixcostCfg {

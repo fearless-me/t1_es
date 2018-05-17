@@ -3,7 +3,7 @@
 -module(cfg_petfairy_level_cht).
 -compile(export_all).
 -include("cfg_petfairy_level.hrl").
--include("logger.hrl").
+
 
 getRow(0)->
     #petfairy_levelCfg {

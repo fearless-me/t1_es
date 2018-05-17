@@ -3,7 +3,7 @@
 -module(cfg_guideAction_cht).
 -compile(export_all).
 -include("cfg_guideAction.hrl").
--include("logger.hrl").
+
 
 getRow(1001)->
     #guideActionCfg {

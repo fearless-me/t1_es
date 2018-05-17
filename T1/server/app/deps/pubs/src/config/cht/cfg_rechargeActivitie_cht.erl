@@ -3,7 +3,7 @@
 -module(cfg_rechargeActivitie_cht).
 -compile(export_all).
 -include("cfg_rechargeActivitie.hrl").
--include("logger.hrl").
+
 
 getRow(2)->
     #rechargeActivitieCfg {

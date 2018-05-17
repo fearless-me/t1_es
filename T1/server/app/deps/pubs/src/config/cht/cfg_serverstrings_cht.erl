@@ -3,7 +3,7 @@
 -module(cfg_serverstrings_cht).
 -compile(export_all).
 -include("cfg_serverstrings.hrl").
--include("logger.hrl").
+
 
 getRow(accountWelfareMailTxt)->
     #serverstringsCfg {

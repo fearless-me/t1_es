@@ -3,7 +3,7 @@
 -module(cfg_activity_cht).
 -compile(export_all).
 -include("cfg_activity.hrl").
--include("logger.hrl").
+
 
 getRow(1)->
     #activityCfg {

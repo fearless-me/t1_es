@@ -3,7 +3,7 @@
 -module(cfg_goldDragon_cht).
 -compile(export_all).
 -include("cfg_goldDragon.hrl").
--include("logger.hrl").
+
 
 getRow(11,1)->
     #goldDragonCfg {

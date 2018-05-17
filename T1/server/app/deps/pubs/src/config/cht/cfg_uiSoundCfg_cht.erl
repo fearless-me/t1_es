@@ -3,7 +3,7 @@
 -module(cfg_uiSoundCfg_cht).
 -compile(export_all).
 -include("cfg_uiSoundCfg.hrl").
--include("logger.hrl").
+
 
 getRow(1)->
     #uiSoundCfgCfg {

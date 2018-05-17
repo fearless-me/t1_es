@@ -3,7 +3,7 @@
 -module(cfg_identity_zodiac_cht).
 -compile(export_all).
 -include("cfg_identity_zodiac.hrl").
--include("logger.hrl").
+
 
 getRow(1)->
     #identity_zodiacCfg {

@@ -3,7 +3,7 @@
 -module(cfg_warriortrial_battle_power_cht).
 -compile(export_all).
 -include("cfg_warriortrial_battle_power.hrl").
--include("logger.hrl").
+
 
 getRow(1)->
     #warriortrial_battle_powerCfg {

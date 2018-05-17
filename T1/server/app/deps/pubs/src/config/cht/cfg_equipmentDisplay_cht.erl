@@ -3,7 +3,7 @@
 -module(cfg_equipmentDisplay_cht).
 -compile(export_all).
 -include("cfg_equipmentDisplay.hrl").
--include("logger.hrl").
+
 
 getRow(1)->
     #equipmentDisplayCfg {

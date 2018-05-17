@@ -3,7 +3,7 @@
 -module(cfg_rift_cht).
 -compile(export_all).
 -include("cfg_rift.hrl").
--include("logger.hrl").
+
 
 getRow(4)->
     #riftCfg {

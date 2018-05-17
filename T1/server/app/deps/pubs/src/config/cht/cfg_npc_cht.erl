@@ -3,7 +3,7 @@
 -module(cfg_npc_cht).
 -compile(export_all).
 -include("cfg_npc.hrl").
--include("logger.hrl").
+
 
 getRow(199)->
     #npcCfg {

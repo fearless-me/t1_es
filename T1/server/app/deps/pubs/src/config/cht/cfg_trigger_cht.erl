@@ -3,7 +3,7 @@
 -module(cfg_trigger_cht).
 -compile(export_all).
 -include("cfg_trigger.hrl").
--include("logger.hrl").
+
 
 getRow(1)->
     #triggerCfg {

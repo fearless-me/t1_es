@@ -3,7 +3,7 @@
 -module(cfg_goblin_cht).
 -compile(export_all).
 -include("cfg_goblin.hrl").
--include("logger.hrl").
+
 
 getRow(3)->
     #goblinCfg {

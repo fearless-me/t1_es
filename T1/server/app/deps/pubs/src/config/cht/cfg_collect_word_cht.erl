@@ -3,7 +3,7 @@
 -module(cfg_collect_word_cht).
 -compile(export_all).
 -include("cfg_collect_word.hrl").
--include("logger.hrl").
+
 
 getRow(101)->
     #collect_wordCfg {

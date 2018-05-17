@@ -3,7 +3,7 @@
 -module(cfg_rune_compound_cht).
 -compile(export_all).
 -include("cfg_rune_compound.hrl").
--include("logger.hrl").
+
 
 getRow(1)->
     #rune_compoundCfg {

@@ -3,7 +3,7 @@
 -module(cfg_vIP_expression_cht).
 -compile(export_all).
 -include("cfg_vIP_expression.hrl").
--include("logger.hrl").
+
 
 getRow(1)->
     #vIP_expressionCfg {

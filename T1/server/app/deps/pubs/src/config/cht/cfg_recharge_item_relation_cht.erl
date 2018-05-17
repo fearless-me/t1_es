@@ -3,7 +3,7 @@
 -module(cfg_recharge_item_relation_cht).
 -compile(export_all).
 -include("cfg_recharge_item_relation.hrl").
--include("logger.hrl").
+
 
 getRow(1)->
     #recharge_item_relationCfg {

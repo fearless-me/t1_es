@@ -3,7 +3,7 @@
 -module(cfg_worldlevel_exp_cht).
 -compile(export_all).
 -include("cfg_worldlevel_exp.hrl").
--include("logger.hrl").
+
 
 getRow(0)->
     #worldlevel_expCfg {

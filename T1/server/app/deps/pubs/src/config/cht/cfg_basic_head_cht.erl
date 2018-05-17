@@ -3,7 +3,7 @@
 -module(cfg_basic_head_cht).
 -compile(export_all).
 -include("cfg_basic_head.hrl").
--include("logger.hrl").
+
 
 getRow(1)->
     #basic_headCfg {

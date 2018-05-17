@@ -3,7 +3,7 @@
 -module(cfg_rune_level_cht).
 -compile(export_all).
 -include("cfg_rune_level.hrl").
--include("logger.hrl").
+
 
 getRow(1,1)->
     #rune_levelCfg {

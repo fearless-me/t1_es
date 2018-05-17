@@ -3,7 +3,7 @@
 -module(cfg_prestige_Reward_cht).
 -compile(export_all).
 -include("cfg_prestige_Reward.hrl").
--include("logger.hrl").
+
 
 getRow(1)->
     #prestige_RewardCfg {

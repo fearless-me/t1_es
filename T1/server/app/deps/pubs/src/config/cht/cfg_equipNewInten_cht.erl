@@ -3,7 +3,7 @@
 -module(cfg_equipNewInten_cht).
 -compile(export_all).
 -include("cfg_equipNewInten.hrl").
--include("logger.hrl").
+
 
 getRow(101)->
     #equipNewIntenCfg {

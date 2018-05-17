@@ -3,7 +3,7 @@
 -module(cfg_shootingeffect_cht).
 -compile(export_all).
 -include("cfg_shootingeffect.hrl").
--include("logger.hrl").
+
 
 getRow(1)->
     #shootingeffectCfg {

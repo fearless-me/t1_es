@@ -3,7 +3,7 @@
 -module(cfg_dailyinterface_index_cht).
 -compile(export_all).
 -include("cfg_dailyinterface_index.hrl").
--include("logger.hrl").
+
 
 getRow(1)->
     #dailyinterface_indexCfg {

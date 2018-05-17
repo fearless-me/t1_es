@@ -3,7 +3,7 @@
 -module(cfg_notification_cht).
 -compile(export_all).
 -include("cfg_notification.hrl").
--include("logger.hrl").
+
 
 getRow(1)->
     #notificationCfg {

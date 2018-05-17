@@ -3,7 +3,7 @@
 -module(cfg_mountSkin_cht).
 -compile(export_all).
 -include("cfg_mountSkin.hrl").
--include("logger.hrl").
+
 
 getRow(59)->
     #mountSkinCfg {

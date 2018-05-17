@@ -3,7 +3,7 @@
 -module(cfg_skill_effect_cht).
 -compile(export_all).
 -include("cfg_skill_effect.hrl").
--include("logger.hrl").
+
 
 getRow(0)->
     #skill_effectCfg {

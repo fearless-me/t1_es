@@ -3,7 +3,7 @@
 -module(cfg_weddingring_cht).
 -compile(export_all).
 -include("cfg_weddingring.hrl").
--include("logger.hrl").
+
 
 getRow(1,1)->
     #weddingringCfg {

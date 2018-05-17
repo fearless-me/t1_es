@@ -3,7 +3,7 @@
 -module(cfg_escort_event_cht).
 -compile(export_all).
 -include("cfg_escort_event.hrl").
--include("logger.hrl").
+
 
 getRow(1)->
     #escort_eventCfg {

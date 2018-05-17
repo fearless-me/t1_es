@@ -3,7 +3,7 @@
 -module(cfg_accessresources_cht).
 -compile(export_all).
 -include("cfg_accessresources.hrl").
--include("logger.hrl").
+
 
 getRow(1)->
     #accessresourcesCfg {

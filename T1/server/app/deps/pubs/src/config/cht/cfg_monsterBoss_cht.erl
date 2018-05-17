@@ -3,7 +3,7 @@
 -module(cfg_monsterBoss_cht).
 -compile(export_all).
 -include("cfg_monsterBoss.hrl").
--include("logger.hrl").
+
 
 getRow(4,1109)->
     #monsterBossCfg {

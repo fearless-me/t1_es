@@ -3,7 +3,7 @@
 -module(cfg_specialinstance_cht).
 -compile(export_all).
 -include("cfg_specialinstance.hrl").
--include("logger.hrl").
+
 
 getRow(528,1)->
     #specialinstanceCfg {

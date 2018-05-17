@@ -3,7 +3,7 @@
 -module(cfg_pet_cht).
 -compile(export_all).
 -include("cfg_pet.hrl").
--include("logger.hrl").
+
 
 getRow(50000)->
     #petCfg {

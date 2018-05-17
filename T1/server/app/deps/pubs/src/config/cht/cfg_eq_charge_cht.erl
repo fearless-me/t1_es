@@ -3,7 +3,7 @@
 -module(cfg_eq_charge_cht).
 -compile(export_all).
 -include("cfg_eq_charge.hrl").
--include("logger.hrl").
+
 
 getRow(1)->
     #eq_chargeCfg {

@@ -3,7 +3,7 @@
 -module(cfg_per_book_cht).
 -compile(export_all).
 -include("cfg_per_book.hrl").
--include("logger.hrl").
+
 
 getRow(1)->
     #per_bookCfg {

@@ -3,7 +3,7 @@
 -module(cfg_show1_cht).
 -compile(export_all).
 -include("cfg_show1.hrl").
--include("logger.hrl").
+
 
 getRow(103)->
     #show1Cfg {

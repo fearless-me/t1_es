@@ -3,7 +3,7 @@
 -module(cfg_thirty_day_login_gift_cht).
 -compile(export_all).
 -include("cfg_thirty_day_login_gift.hrl").
--include("logger.hrl").
+
 
 getRow(100)->
     #thirty_day_login_giftCfg {

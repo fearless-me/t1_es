@@ -3,7 +3,7 @@
 -module(cfg_guildboss_touchreward_cht).
 -compile(export_all).
 -include("cfg_guildboss_touchreward.hrl").
--include("logger.hrl").
+
 
 getRow(1)->
     #guildboss_touchrewardCfg {

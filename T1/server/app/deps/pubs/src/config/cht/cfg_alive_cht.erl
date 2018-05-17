@@ -3,7 +3,7 @@
 -module(cfg_alive_cht).
 -compile(export_all).
 -include("cfg_alive.hrl").
--include("logger.hrl").
+
 
 getRow(1)->
     #aliveCfg {

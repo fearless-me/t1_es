@@ -3,7 +3,7 @@
 -module(cfg_petenhance_cht).
 -compile(export_all).
 -include("cfg_petenhance.hrl").
--include("logger.hrl").
+
 
 getRow(1,1)->
     #petenhanceCfg {

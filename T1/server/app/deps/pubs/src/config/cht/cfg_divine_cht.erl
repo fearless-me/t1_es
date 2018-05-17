@@ -3,7 +3,7 @@
 -module(cfg_divine_cht).
 -compile(export_all).
 -include("cfg_divine.hrl").
--include("logger.hrl").
+
 
 getRow(1,1)->
     #divineCfg {

@@ -3,7 +3,7 @@
 -module(cfg_petrelation_cht).
 -compile(export_all).
 -include("cfg_petrelation.hrl").
--include("logger.hrl").
+
 
 getRow(1)->
     #petrelationCfg {

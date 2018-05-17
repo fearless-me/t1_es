@@ -3,7 +3,7 @@
 -module(cfg_online_reward_cht).
 -compile(export_all).
 -include("cfg_online_reward.hrl").
--include("logger.hrl").
+
 
 getRow(1)->
     #online_rewardCfg {

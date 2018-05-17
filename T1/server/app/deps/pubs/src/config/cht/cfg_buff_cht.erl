@@ -3,7 +3,7 @@
 -module(cfg_buff_cht).
 -compile(export_all).
 -include("cfg_buff.hrl").
--include("logger.hrl").
+
 
 getRow(1)->
     #buffCfg {

@@ -3,7 +3,7 @@
 -module(cfg_userFeedbackType_cht).
 -compile(export_all).
 -include("cfg_userFeedbackType.hrl").
--include("logger.hrl").
+
 
 getRow(1)->
     #userFeedbackTypeCfg {

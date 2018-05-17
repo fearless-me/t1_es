@@ -3,7 +3,7 @@
 -module(cfg_target_cht).
 -compile(export_all).
 -include("cfg_target.hrl").
--include("logger.hrl").
+
 
 getRow(1)->
     #targetCfg {

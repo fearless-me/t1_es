@@ -3,7 +3,7 @@
 -module(cfg_vip_card_effect_cht).
 -compile(export_all).
 -include("cfg_vip_card_effect.hrl").
--include("logger.hrl").
+
 
 getRow(50001,1)->
     #vip_card_effectCfg {

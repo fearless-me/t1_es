@@ -3,7 +3,7 @@
 -module(cfg_rndname_cht).
 -compile(export_all).
 -include("cfg_rndname.hrl").
--include("logger.hrl").
+
 
 getRow(1)->
     #rndnameCfg {

@@ -3,7 +3,7 @@
 -module(cfg_npcdancer_cht).
 -compile(export_all).
 -include("cfg_npcdancer.hrl").
--include("logger.hrl").
+
 
 getRow(1)->
     #npcdancerCfg {

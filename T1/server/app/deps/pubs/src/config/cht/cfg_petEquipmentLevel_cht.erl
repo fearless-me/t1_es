@@ -3,7 +3,7 @@
 -module(cfg_petEquipmentLevel_cht).
 -compile(export_all).
 -include("cfg_petEquipmentLevel.hrl").
--include("logger.hrl").
+
 
 getRow(1)->
     #petEquipmentLevelCfg {

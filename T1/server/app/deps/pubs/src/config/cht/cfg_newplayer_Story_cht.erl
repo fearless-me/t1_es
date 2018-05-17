@@ -3,7 +3,7 @@
 -module(cfg_newplayer_Story_cht).
 -compile(export_all).
 -include("cfg_newplayer_Story.hrl").
--include("logger.hrl").
+
 
 getRow(1)->
     #newplayer_StoryCfg {

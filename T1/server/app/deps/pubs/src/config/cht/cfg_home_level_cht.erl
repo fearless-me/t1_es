@@ -3,7 +3,7 @@
 -module(cfg_home_level_cht).
 -compile(export_all).
 -include("cfg_home_level.hrl").
--include("logger.hrl").
+
 
 getRow(1)->
     #home_levelCfg {

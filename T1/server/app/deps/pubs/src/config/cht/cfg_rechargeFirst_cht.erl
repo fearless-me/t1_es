@@ -3,7 +3,7 @@
 -module(cfg_rechargeFirst_cht).
 -compile(export_all).
 -include("cfg_rechargeFirst.hrl").
--include("logger.hrl").
+
 
 getRow(1)->
     #rechargeFirstCfg {

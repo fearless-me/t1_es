@@ -3,7 +3,7 @@
 -module(cfg_gem_level_cht).
 -compile(export_all).
 -include("cfg_gem_level.hrl").
--include("logger.hrl").
+
 
 getRow(6)->
     #gem_levelCfg {

@@ -3,7 +3,7 @@
 -module(cfg_shenqi_cht).
 -compile(export_all).
 -include("cfg_shenqi.hrl").
--include("logger.hrl").
+
 
 getRow(0,0)->
     #shenqiCfg {

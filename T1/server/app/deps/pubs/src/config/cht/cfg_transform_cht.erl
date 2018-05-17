@@ -3,7 +3,7 @@
 -module(cfg_transform_cht).
 -compile(export_all).
 -include("cfg_transform.hrl").
--include("logger.hrl").
+
 
 getRow(1,0)->
     #transformCfg {

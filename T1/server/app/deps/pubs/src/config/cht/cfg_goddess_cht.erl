@@ -3,7 +3,7 @@
 -module(cfg_goddess_cht).
 -compile(export_all).
 -include("cfg_goddess.hrl").
--include("logger.hrl").
+
 
 getRow(1)->
     #goddessCfg {

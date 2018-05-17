@@ -3,7 +3,7 @@
 -module(cfg_copymapScheduleCharacters_cht).
 -compile(export_all).
 -include("cfg_copymapScheduleCharacters.hrl").
--include("logger.hrl").
+
 
 getRow(1)->
     #copymapScheduleCharactersCfg {

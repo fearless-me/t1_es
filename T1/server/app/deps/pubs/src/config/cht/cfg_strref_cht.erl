@@ -3,7 +3,7 @@
 -module(cfg_strref_cht).
 -compile(export_all).
 -include("cfg_strref.hrl").
--include("logger.hrl").
+
 
 getRow(0)->
     #strrefCfg {

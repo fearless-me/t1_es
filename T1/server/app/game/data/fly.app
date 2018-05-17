@@ -16,7 +16,12 @@
                                 "../../deps/ranch"
                               ]
                     },
-					{inc_dirs,["../include", "../../deps/pubs/include", "../../deps/pubs/src/net", "../../deps/pubs/src/resource/pack"]},
+					{inc_dirs,[
+								"../include", 
+								"../../deps/pubs/include", 
+								"../../deps/pubs/src/config", 
+								"../../deps/pubs/src/net", 
+								"../../deps/pubs/src/resource/pack"]},
 					{opts,
 						[
 							debug_info, nowarn_export_all,{outdir, "./../ebin"},
@@ -32,6 +37,7 @@
 							{i, "../include"},
 							{i, "../../deps/pubs/include"},
 							{i, "../../deps/pubs/src/net"},
+							{i, "../../deps/pubs/src/config"},
 							{i, "../../deps/pubs/src/resource/pack"},
 							{i, "../../deps/mysql-otp/include"}
 						]

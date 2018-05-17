@@ -3,7 +3,7 @@
 -module(cfg_accessresources_exp_cht).
 -compile(export_all).
 -include("cfg_accessresources_exp.hrl").
--include("logger.hrl").
+
 
 getRow(1)->
     #accessresources_expCfg {

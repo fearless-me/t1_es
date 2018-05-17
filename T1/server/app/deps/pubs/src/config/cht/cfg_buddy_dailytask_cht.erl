@@ -3,7 +3,7 @@
 -module(cfg_buddy_dailytask_cht).
 -compile(export_all).
 -include("cfg_buddy_dailytask.hrl").
--include("logger.hrl").
+
 
 getRow(1)->
     #buddy_dailytaskCfg {

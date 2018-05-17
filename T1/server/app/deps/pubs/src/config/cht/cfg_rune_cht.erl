@@ -3,7 +3,7 @@
 -module(cfg_rune_cht).
 -compile(export_all).
 -include("cfg_rune.hrl").
--include("logger.hrl").
+
 
 getRow(100000)->
     #runeCfg {

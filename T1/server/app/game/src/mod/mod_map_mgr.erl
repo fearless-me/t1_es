@@ -112,6 +112,7 @@ create_new_line(S, MapID, LineID) ->
         pid = Pid
     },
     ets:insert(S#state.ets, Line),
+    ps_mgr:send(Pid, init_all_creatue),
     Line.
 
 

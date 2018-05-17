@@ -3,7 +3,7 @@
 -module(cfg_pet_skills_upgrading_cht).
 -compile(export_all).
 -include("cfg_pet_skills_upgrading.hrl").
--include("logger.hrl").
+
 
 getRow(1601,1)->
     #pet_skills_upgradingCfg {

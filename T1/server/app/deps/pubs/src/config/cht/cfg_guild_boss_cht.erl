@@ -3,7 +3,7 @@
 -module(cfg_guild_boss_cht).
 -compile(export_all).
 -include("cfg_guild_boss.hrl").
--include("logger.hrl").
+
 
 getRow(1)->
     #guild_bossCfg {

@@ -3,7 +3,7 @@
 -module(cfg_identity_tag_cht).
 -compile(export_all).
 -include("cfg_identity_tag.hrl").
--include("logger.hrl").
+
 
 getRow(1)->
     #identity_tagCfg {

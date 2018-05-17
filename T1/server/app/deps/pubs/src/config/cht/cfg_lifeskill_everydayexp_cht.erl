@@ -3,7 +3,7 @@
 -module(cfg_lifeskill_everydayexp_cht).
 -compile(export_all).
 -include("cfg_lifeskill_everydayexp.hrl").
--include("logger.hrl").
+
 
 getRow(1)->
     #lifeskill_everydayexpCfg {

@@ -3,7 +3,7 @@
 -module(cfg_treasure_map_cht).
 -compile(export_all).
 -include("cfg_treasure_map.hrl").
--include("logger.hrl").
+
 
 getRow(1)->
     #treasure_mapCfg {

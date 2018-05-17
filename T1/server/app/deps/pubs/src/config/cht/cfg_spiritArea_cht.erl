@@ -3,7 +3,7 @@
 -module(cfg_spiritArea_cht).
 -compile(export_all).
 -include("cfg_spiritArea.hrl").
--include("logger.hrl").
+
 
 getRow(11,1)->
     #spiritAreaCfg {

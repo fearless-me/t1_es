@@ -3,7 +3,7 @@
 -module(cfg_guildskill_cht).
 -compile(export_all).
 -include("cfg_guildskill.hrl").
--include("logger.hrl").
+
 
 getRow(1)->
     #guildskillCfg {

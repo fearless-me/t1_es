@@ -3,7 +3,7 @@
 -module(cfg_turn_plate_box_cht).
 -compile(export_all).
 -include("cfg_turn_plate_box.hrl").
--include("logger.hrl").
+
 
 getRow(1,10)->
     #turn_plate_boxCfg {

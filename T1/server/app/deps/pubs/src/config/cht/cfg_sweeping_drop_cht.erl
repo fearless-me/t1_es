@@ -3,7 +3,7 @@
 -module(cfg_sweeping_drop_cht).
 -compile(export_all).
 -include("cfg_sweeping_drop.hrl").
--include("logger.hrl").
+
 
 getRow(110)->
     #sweeping_dropCfg {

@@ -3,7 +3,7 @@
 -module(cfg_severday_task_cht).
 -compile(export_all).
 -include("cfg_severday_task.hrl").
--include("logger.hrl").
+
 
 getRow(1)->
     #severday_taskCfg {

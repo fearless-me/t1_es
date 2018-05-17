@@ -3,7 +3,7 @@
 -module(cfg_item_cht).
 -compile(export_all).
 -include("cfg_item.hrl").
--include("logger.hrl").
+
 
 getRow(1)->
     #itemCfg {

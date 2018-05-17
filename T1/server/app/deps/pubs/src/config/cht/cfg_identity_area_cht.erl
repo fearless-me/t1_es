@@ -3,7 +3,7 @@
 -module(cfg_identity_area_cht).
 -compile(export_all).
 -include("cfg_identity_area.hrl").
--include("logger.hrl").
+
 
 getRow(1,1)->
     #identity_areaCfg {

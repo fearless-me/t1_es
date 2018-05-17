@@ -3,7 +3,7 @@
 -module(cfg_rank_cht).
 -compile(export_all).
 -include("cfg_rank.hrl").
--include("logger.hrl").
+
 
 getRow(1)->
     #rankCfg {

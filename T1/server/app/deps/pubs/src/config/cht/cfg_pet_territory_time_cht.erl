@@ -3,7 +3,7 @@
 -module(cfg_pet_territory_time_cht).
 -compile(export_all).
 -include("cfg_pet_territory_time.hrl").
--include("logger.hrl").
+
 
 getRow(3,1)->
     #pet_territory_timeCfg {

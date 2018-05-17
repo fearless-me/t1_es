@@ -3,7 +3,7 @@
 -module(cfg_pet_stronger_cht).
 -compile(export_all).
 -include("cfg_pet_stronger.hrl").
--include("logger.hrl").
+
 
 getRow(135)->
     #pet_strongerCfg {

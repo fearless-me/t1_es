@@ -3,7 +3,7 @@
 -module(cfg_ride_system_cht).
 -compile(export_all).
 -include("cfg_ride_system.hrl").
--include("logger.hrl").
+
 
 getRow(1)->
     #ride_systemCfg {

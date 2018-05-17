@@ -3,7 +3,7 @@
 -module(cfg_player_base_cht).
 -compile(export_all).
 -include("cfg_player_base.hrl").
--include("logger.hrl").
+
 
 getRow(1,101)->
     #player_baseCfg {

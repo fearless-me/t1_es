@@ -3,7 +3,7 @@
 -module(cfg_bribery_money_cht).
 -compile(export_all).
 -include("cfg_bribery_money.hrl").
--include("logger.hrl").
+
 
 getRow(1)->
     #bribery_moneyCfg {

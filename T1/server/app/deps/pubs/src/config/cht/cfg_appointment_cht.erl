@@ -3,7 +3,7 @@
 -module(cfg_appointment_cht).
 -compile(export_all).
 -include("cfg_appointment.hrl").
--include("logger.hrl").
+
 
 getRow(1)->
     #appointmentCfg {

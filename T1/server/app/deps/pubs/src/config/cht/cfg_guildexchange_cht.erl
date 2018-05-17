@@ -3,7 +3,7 @@
 -module(cfg_guildexchange_cht).
 -compile(export_all).
 -include("cfg_guildexchange.hrl").
--include("logger.hrl").
+
 
 getRow(1,0)->
     #guildexchangeCfg {

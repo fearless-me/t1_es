@@ -3,7 +3,7 @@
 -module(cfg_itemCDandCount_cht).
 -compile(export_all).
 -include("cfg_itemCDandCount.hrl").
--include("logger.hrl").
+
 
 getRow(1)->
     #itemCDandCountCfg {

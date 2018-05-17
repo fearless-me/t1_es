@@ -3,7 +3,7 @@
 -module(cfg_dailyActive_cht).
 -compile(export_all).
 -include("cfg_dailyActive.hrl").
--include("logger.hrl").
+
 
 getRow(4)->
     #dailyActiveCfg {

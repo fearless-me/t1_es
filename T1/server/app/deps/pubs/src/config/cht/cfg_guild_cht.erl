@@ -3,7 +3,7 @@
 -module(cfg_guild_cht).
 -compile(export_all).
 -include("cfg_guild.hrl").
--include("logger.hrl").
+
 
 getRow(1)->
     #guildCfg {

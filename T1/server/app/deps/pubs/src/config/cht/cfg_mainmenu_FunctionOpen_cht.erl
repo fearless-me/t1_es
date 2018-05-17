@@ -3,7 +3,7 @@
 -module(cfg_mainmenu_FunctionOpen_cht).
 -compile(export_all).
 -include("cfg_mainmenu_FunctionOpen.hrl").
--include("logger.hrl").
+
 
 getRow(1)->
     #mainmenu_FunctionOpenCfg {

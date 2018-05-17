@@ -3,7 +3,7 @@
 -module(cfg_guildbless_schedule_cht).
 -compile(export_all).
 -include("cfg_guildbless_schedule.hrl").
--include("logger.hrl").
+
 
 getRow(1)->
     #guildbless_scheduleCfg {

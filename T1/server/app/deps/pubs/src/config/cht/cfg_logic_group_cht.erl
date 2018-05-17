@@ -3,7 +3,7 @@
 -module(cfg_logic_group_cht).
 -compile(export_all).
 -include("cfg_logic_group.hrl").
--include("logger.hrl").
+
 
 getRow(1)->
     #logic_groupCfg {

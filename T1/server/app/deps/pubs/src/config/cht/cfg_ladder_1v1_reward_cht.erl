@@ -3,7 +3,7 @@
 -module(cfg_ladder_1v1_reward_cht).
 -compile(export_all).
 -include("cfg_ladder_1v1_reward.hrl").
--include("logger.hrl").
+
 
 getRow(1,1)->
     #ladder_1v1_rewardCfg {

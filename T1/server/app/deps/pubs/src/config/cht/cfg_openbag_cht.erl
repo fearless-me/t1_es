@@ -3,7 +3,7 @@
 -module(cfg_openbag_cht).
 -compile(export_all).
 -include("cfg_openbag.hrl").
--include("logger.hrl").
+
 
 getRow(1)->
     #openbagCfg {

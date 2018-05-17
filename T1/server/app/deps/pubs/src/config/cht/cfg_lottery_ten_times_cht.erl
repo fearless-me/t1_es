@@ -3,7 +3,7 @@
 -module(cfg_lottery_ten_times_cht).
 -compile(export_all).
 -include("cfg_lottery_ten_times.hrl").
--include("logger.hrl").
+
 
 getRow(1)->
     #lottery_ten_timesCfg {

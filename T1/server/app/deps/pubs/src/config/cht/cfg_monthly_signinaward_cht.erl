@@ -3,7 +3,7 @@
 -module(cfg_monthly_signinaward_cht).
 -compile(export_all).
 -include("cfg_monthly_signinaward.hrl").
--include("logger.hrl").
+
 
 getRow(1,3)->
     #monthly_signinawardCfg {

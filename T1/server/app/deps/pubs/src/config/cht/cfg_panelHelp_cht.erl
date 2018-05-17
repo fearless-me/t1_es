@@ -3,7 +3,7 @@
 -module(cfg_panelHelp_cht).
 -compile(export_all).
 -include("cfg_panelHelp.hrl").
--include("logger.hrl").
+
 
 getRow(achievementpanel)->
     #panelHelpCfg {

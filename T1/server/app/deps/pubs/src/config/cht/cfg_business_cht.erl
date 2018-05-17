@@ -3,7 +3,7 @@
 -module(cfg_business_cht).
 -compile(export_all).
 -include("cfg_business.hrl").
--include("logger.hrl").
+
 
 getRow(1001)->
     #businessCfg {

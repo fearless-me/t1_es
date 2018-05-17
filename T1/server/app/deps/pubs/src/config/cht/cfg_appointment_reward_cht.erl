@@ -3,7 +3,7 @@
 -module(cfg_appointment_reward_cht).
 -compile(export_all).
 -include("cfg_appointment_reward.hrl").
--include("logger.hrl").
+
 
 getRow(1,15)->
     #appointment_rewardCfg {

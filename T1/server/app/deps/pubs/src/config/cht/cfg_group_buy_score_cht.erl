@@ -3,7 +3,7 @@
 -module(cfg_group_buy_score_cht).
 -compile(export_all).
 -include("cfg_group_buy_score.hrl").
--include("logger.hrl").
+
 
 getRow(101)->
     #group_buy_scoreCfg {

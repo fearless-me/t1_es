@@ -3,7 +3,7 @@
 -module(cfg_buddy_gift_cht).
 -compile(export_all).
 -include("cfg_buddy_gift.hrl").
--include("logger.hrl").
+
 
 getRow(1)->
     #buddy_giftCfg {

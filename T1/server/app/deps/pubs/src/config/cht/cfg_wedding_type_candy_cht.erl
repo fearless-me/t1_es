@@ -3,7 +3,7 @@
 -module(cfg_wedding_type_candy_cht).
 -compile(export_all).
 -include("cfg_wedding_type_candy.hrl").
--include("logger.hrl").
+
 
 getRow(1)->
     #wedding_type_candyCfg {

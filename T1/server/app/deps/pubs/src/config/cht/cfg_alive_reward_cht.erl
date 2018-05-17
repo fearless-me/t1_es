@@ -3,7 +3,7 @@
 -module(cfg_alive_reward_cht).
 -compile(export_all).
 -include("cfg_alive_reward.hrl").
--include("logger.hrl").
+
 
 getRow(1)->
     #alive_rewardCfg {

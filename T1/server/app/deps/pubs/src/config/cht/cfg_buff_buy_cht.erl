@@ -3,7 +3,7 @@
 -module(cfg_buff_buy_cht).
 -compile(export_all).
 -include("cfg_buff_buy.hrl").
--include("logger.hrl").
+
 
 getRow(1)->
     #buff_buyCfg {

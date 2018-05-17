@@ -3,7 +3,7 @@
 -module(cfg_changemaphelp_cht).
 -compile(export_all).
 -include("cfg_changemaphelp.hrl").
--include("logger.hrl").
+
 
 getRow(1)->
     #changemaphelpCfg {

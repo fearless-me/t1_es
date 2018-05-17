@@ -3,7 +3,7 @@
 -module(cfg_acKingBattleBuyBuff_cht).
 -compile(export_all).
 -include("cfg_acKingBattleBuyBuff.hrl").
--include("logger.hrl").
+
 
 getRow(1)->
     #acKingBattleBuyBuffCfg {

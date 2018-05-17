@@ -3,7 +3,7 @@
 -module(cfg_knightedPackage_cht).
 -compile(export_all).
 -include("cfg_knightedPackage.hrl").
--include("logger.hrl").
+
 
 getRow(1)->
     #knightedPackageCfg {

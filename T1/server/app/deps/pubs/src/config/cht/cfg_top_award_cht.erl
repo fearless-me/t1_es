@@ -3,7 +3,7 @@
 -module(cfg_top_award_cht).
 -compile(export_all).
 -include("cfg_top_award.hrl").
--include("logger.hrl").
+
 
 getRow(1)->
     #top_awardCfg {

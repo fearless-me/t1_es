@@ -3,7 +3,7 @@
 -module(cfg_level_reward_cht).
 -compile(export_all).
 -include("cfg_level_reward.hrl").
--include("logger.hrl").
+
 
 getRow(10)->
     #level_rewardCfg {

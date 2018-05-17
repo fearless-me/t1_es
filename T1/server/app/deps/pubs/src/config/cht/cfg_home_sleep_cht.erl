@@ -3,7 +3,7 @@
 -module(cfg_home_sleep_cht).
 -compile(export_all).
 -include("cfg_home_sleep.hrl").
--include("logger.hrl").
+
 
 getRow(24759)->
     #home_sleepCfg {

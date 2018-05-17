@@ -3,7 +3,7 @@
 -module(cfg_rune_randomPro_cht).
 -compile(export_all).
 -include("cfg_rune_randomPro.hrl").
--include("logger.hrl").
+
 
 getRow(1,135)->
     #rune_randomProCfg {

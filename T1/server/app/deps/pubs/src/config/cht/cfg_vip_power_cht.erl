@@ -3,7 +3,7 @@
 -module(cfg_vip_power_cht).
 -compile(export_all).
 -include("cfg_vip_power.hrl").
--include("logger.hrl").
+
 
 getRow(1,1)->
     #vip_powerCfg {

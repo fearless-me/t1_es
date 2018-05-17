@@ -3,7 +3,7 @@
 -module(cfg_equipdrop_cht).
 -compile(export_all).
 -include("cfg_equipdrop.hrl").
--include("logger.hrl").
+
 
 getRow(1)->
     #equipdropCfg {

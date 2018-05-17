@@ -3,7 +3,7 @@
 -module(cfg_demonreward_cht).
 -compile(export_all).
 -include("cfg_demonreward.hrl").
--include("logger.hrl").
+
 
 getRow(1)->
     #demonrewardCfg {

@@ -3,7 +3,7 @@
 -module(cfg_buffAnnounce_cht).
 -compile(export_all).
 -include("cfg_buffAnnounce.hrl").
--include("logger.hrl").
+
 
 getRow(1)->
     #buffAnnounceCfg {

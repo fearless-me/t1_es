@@ -3,7 +3,7 @@
 -module(cfg_demonBattleLoc_cht).
 -compile(export_all).
 -include("cfg_demonBattleLoc.hrl").
--include("logger.hrl").
+
 
 getRow(1)->
     #demonBattleLocCfg {

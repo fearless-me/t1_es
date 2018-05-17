@@ -3,7 +3,7 @@
 -module(cfg_indexGrowth_cht).
 -compile(export_all).
 -include("cfg_indexGrowth.hrl").
--include("logger.hrl").
+
 
 getRow(1)->
     #indexGrowthCfg {

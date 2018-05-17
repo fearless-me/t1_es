@@ -18,10 +18,12 @@
 -export([init_vis_tile/3]).
 -export([sync_movement_to_big_visual_tile/1]).
 -export([sync_change_pos_visual_tile/3]).
--export([pos_to_vis_tile/3]).
+-export([pos_to_vis_index/1]).
 -export([sync_remove_pet/1]).
 -export([sync_player_join_map/1]).
 -export([sync_player_exit_map/1]).
+
+-export([add_to_vis_tile/2]).
 
 
 
@@ -32,7 +34,7 @@
 %%%-------------------------------------------------------------------
 sync_player_join_map(Obj) ->
     %% fix_pos(Obj),
-    Index = pos_to_vis_tile(Obj#obj.pos, get(?VIS_W), 100),
+    Index = pos_to_vis_index(Obj#obj.pos, get(?VIS_W), 100),
     Tiles = get_vis_tile_around(Index),
     sync_add_to_vis_tile(Obj, Tiles),
     add_to_vis_tile(Obj, Index),
@@ -40,7 +42,7 @@ sync_player_join_map(Obj) ->
 
 %%%-------------------------------------------------------------------
 sync_player_exit_map(Obj) ->
-    Index = pos_to_vis_tile(Obj#obj.pos, get(?VIS_W), 100),
+    Index = pos_to_vis_index(Obj#obj.pos, get(?VIS_W), 100),
     Tiles = get_vis_tile_around(Index),
     remove_from_vis_tile(Obj, Index),
     sync_remove_from_vis_tile(Obj, Tiles),
@@ -159,8 +161,11 @@ sync_big_vis_tile_to_player(Unit, VisTileList, Msg) ->
 
 
 %%%-------------------------------------------------------------------
+pos_to_vis_index(Pos) ->
+    pos_to_vis_index(Pos, get(?VIS_W), 100).
+
 %% vector3 
-pos_to_vis_tile(Pos, VisTileWidth, ViewDist) ->
+pos_to_vis_index(Pos, VisTileWidth, ViewDist) ->
     IndexX = trunc(Pos#vector3.x / ?TILE_SCALE / ViewDist + 1),
     IndexZ = trunc(Pos#vector3.z / ?TILE_SCALE / ViewDist + 1),
 

@@ -3,7 +3,7 @@
 -module(cfg_guildsnoman_settle_cht).
 -compile(export_all).
 -include("cfg_guildsnoman_settle.hrl").
--include("logger.hrl").
+
 
 getRow(1)->
     #guildsnoman_settleCfg {

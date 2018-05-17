@@ -3,7 +3,7 @@
 -module(cfg_achievement_cht).
 -compile(export_all).
 -include("cfg_achievement.hrl").
--include("logger.hrl").
+
 
 getRow(101)->
     #achievementCfg {

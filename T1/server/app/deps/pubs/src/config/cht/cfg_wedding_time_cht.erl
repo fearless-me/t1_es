@@ -3,7 +3,7 @@
 -module(cfg_wedding_time_cht).
 -compile(export_all).
 -include("cfg_wedding_time.hrl").
--include("logger.hrl").
+
 
 getRow(1)->
     #wedding_timeCfg {

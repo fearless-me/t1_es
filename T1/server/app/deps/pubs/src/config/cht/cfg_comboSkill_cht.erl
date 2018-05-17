@@ -3,7 +3,7 @@
 -module(cfg_comboSkill_cht).
 -compile(export_all).
 -include("cfg_comboSkill.hrl").
--include("logger.hrl").
+
 
 getRow(101)->
     #comboSkillCfg {

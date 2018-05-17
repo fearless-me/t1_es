@@ -3,7 +3,7 @@
 -module(cfg_group_buy_cht).
 -compile(export_all).
 -include("cfg_group_buy.hrl").
--include("logger.hrl").
+
 
 getRow(1001)->
     #group_buyCfg {

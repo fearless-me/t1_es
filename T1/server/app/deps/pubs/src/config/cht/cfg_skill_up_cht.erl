@@ -3,7 +3,7 @@
 -module(cfg_skill_up_cht).
 -compile(export_all).
 -include("cfg_skill_up.hrl").
--include("logger.hrl").
+
 
 getRow(3035,0)->
     #skill_upCfg {

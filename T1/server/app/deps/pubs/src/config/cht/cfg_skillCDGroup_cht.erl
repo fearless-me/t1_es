@@ -3,7 +3,7 @@
 -module(cfg_skillCDGroup_cht).
 -compile(export_all).
 -include("cfg_skillCDGroup.hrl").
--include("logger.hrl").
+
 
 getRow(1)->
     #skillCDGroupCfg {

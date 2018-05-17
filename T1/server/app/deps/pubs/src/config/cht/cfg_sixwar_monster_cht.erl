@@ -3,7 +3,7 @@
 -module(cfg_sixwar_monster_cht).
 -compile(export_all).
 -include("cfg_sixwar_monster.hrl").
--include("logger.hrl").
+
 
 getRow(6031)->
     #sixwar_monsterCfg {

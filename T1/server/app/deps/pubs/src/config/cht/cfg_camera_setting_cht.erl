@@ -3,7 +3,7 @@
 -module(cfg_camera_setting_cht).
 -compile(export_all).
 -include("cfg_camera_setting.hrl").
--include("logger.hrl").
+
 
 getRow(1)->
     #camera_settingCfg {

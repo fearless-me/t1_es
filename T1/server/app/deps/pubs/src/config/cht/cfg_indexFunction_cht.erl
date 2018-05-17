@@ -3,7 +3,7 @@
 -module(cfg_indexFunction_cht).
 -compile(export_all).
 -include("cfg_indexFunction.hrl").
--include("logger.hrl").
+
 
 getRow(1)->
     #indexFunctionCfg {

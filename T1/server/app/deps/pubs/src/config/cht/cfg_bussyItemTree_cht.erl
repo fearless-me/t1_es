@@ -3,7 +3,7 @@
 -module(cfg_bussyItemTree_cht).
 -compile(export_all).
 -include("cfg_bussyItemTree.hrl").
--include("logger.hrl").
+
 
 getRow(1)->
     #bussyItemTreeCfg {

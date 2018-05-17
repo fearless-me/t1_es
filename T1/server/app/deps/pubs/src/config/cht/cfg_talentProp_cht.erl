@@ -3,7 +3,7 @@
 -module(cfg_talentProp_cht).
 -compile(export_all).
 -include("cfg_talentProp.hrl").
--include("logger.hrl").
+
 
 getRow(1)->
     #talentPropCfg {

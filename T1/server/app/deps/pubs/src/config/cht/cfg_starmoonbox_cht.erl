@@ -3,7 +3,7 @@
 -module(cfg_starmoonbox_cht).
 -compile(export_all).
 -include("cfg_starmoonbox.hrl").
--include("logger.hrl").
+
 
 getRow(1)->
     #starmoonboxCfg {

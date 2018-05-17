@@ -3,7 +3,7 @@
 -module(cfg_talktoplayer_cht).
 -compile(export_all).
 -include("cfg_talktoplayer.hrl").
--include("logger.hrl").
+
 
 getRow(1)->
     #talktoplayerCfg {

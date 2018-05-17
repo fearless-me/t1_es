@@ -3,7 +3,7 @@
 -module(cfg_home_zoo_cht).
 -compile(export_all).
 -include("cfg_home_zoo.hrl").
--include("logger.hrl").
+
 
 getRow(24786)->
     #home_zooCfg {

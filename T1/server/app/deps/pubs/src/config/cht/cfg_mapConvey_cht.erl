@@ -3,7 +3,7 @@
 -module(cfg_mapConvey_cht).
 -compile(export_all).
 -include("cfg_mapConvey.hrl").
--include("logger.hrl").
+
 
 getRow(1)->
     #mapConveyCfg {

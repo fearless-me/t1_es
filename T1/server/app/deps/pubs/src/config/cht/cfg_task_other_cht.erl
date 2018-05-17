@@ -3,7 +3,7 @@
 -module(cfg_task_other_cht).
 -compile(export_all).
 -include("cfg_task_other.hrl").
--include("logger.hrl").
+
 
 getRow(1,3)->
     #task_otherCfg {

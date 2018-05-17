@@ -3,7 +3,7 @@
 -module(cfg_worldboss_cht).
 -compile(export_all).
 -include("cfg_worldboss.hrl").
--include("logger.hrl").
+
 
 getRow(bossaward_normal)->
     #worldbossCfg {

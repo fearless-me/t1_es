@@ -3,7 +3,7 @@
 -module(cfg_heraldry_cht).
 -compile(export_all).
 -include("cfg_heraldry.hrl").
--include("logger.hrl").
+
 
 getRow(1)->
     #heraldryCfg {

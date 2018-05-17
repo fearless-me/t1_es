@@ -3,7 +3,7 @@
 -module(cfg_home_zoofood_cht).
 -compile(export_all).
 -include("cfg_home_zoofood.hrl").
--include("logger.hrl").
+
 
 getRow(24100)->
     #home_zoofoodCfg {

@@ -3,7 +3,7 @@
 -module(cfg_monsterElite_cht).
 -compile(export_all).
 -include("cfg_monsterElite.hrl").
--include("logger.hrl").
+
 
 getRow(3,30017)->
     #monsterEliteCfg {

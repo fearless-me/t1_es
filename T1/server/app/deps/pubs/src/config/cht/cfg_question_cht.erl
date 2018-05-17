@@ -3,7 +3,7 @@
 -module(cfg_question_cht).
 -compile(export_all).
 -include("cfg_question.hrl").
--include("logger.hrl").
+
 
 getRow(1)->
     #questionCfg {

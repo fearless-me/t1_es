@@ -3,7 +3,7 @@
 -module(cfg_pet_territory_reward_cht).
 -compile(export_all).
 -include("cfg_pet_territory_reward.hrl").
--include("logger.hrl").
+
 
 getRow(17)->
     #pet_territory_rewardCfg {

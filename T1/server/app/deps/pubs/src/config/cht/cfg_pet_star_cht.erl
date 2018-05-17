@@ -3,7 +3,7 @@
 -module(cfg_pet_star_cht).
 -compile(export_all).
 -include("cfg_pet_star.hrl").
--include("logger.hrl").
+
 
 getRow(1,0)->
     #pet_starCfg {

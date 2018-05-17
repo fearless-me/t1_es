@@ -3,7 +3,7 @@
 -module(cfg_dailytask_cht).
 -compile(export_all).
 -include("cfg_dailytask.hrl").
--include("logger.hrl").
+
 
 getRow(1)->
     #dailytaskCfg {

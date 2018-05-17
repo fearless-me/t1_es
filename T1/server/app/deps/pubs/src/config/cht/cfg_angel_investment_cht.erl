@@ -3,7 +3,7 @@
 -module(cfg_angel_investment_cht).
 -compile(export_all).
 -include("cfg_angel_investment.hrl").
--include("logger.hrl").
+
 
 getRow(1)->
     #angel_investmentCfg {

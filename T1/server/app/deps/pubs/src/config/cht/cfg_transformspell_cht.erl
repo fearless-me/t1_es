@@ -3,7 +3,7 @@
 -module(cfg_transformspell_cht).
 -compile(export_all).
 -include("cfg_transformspell.hrl").
--include("logger.hrl").
+
 
 getRow(1,101)->
     #transformspellCfg {

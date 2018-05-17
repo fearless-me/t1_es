@@ -3,7 +3,7 @@
 -module(cfg_turn_plate_rule_reward_cht).
 -compile(export_all).
 -include("cfg_turn_plate_rule_reward.hrl").
--include("logger.hrl").
+
 
 getRow(1,1)->
     #turn_plate_rule_rewardCfg {

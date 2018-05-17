@@ -3,7 +3,7 @@
 -module(cfg_guildhome_task_cht).
 -compile(export_all).
 -include("cfg_guildhome_task.hrl").
--include("logger.hrl").
+
 
 getRow(1)->
     #guildhome_taskCfg {

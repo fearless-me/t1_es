@@ -3,7 +3,7 @@
 -module(cfg_itemTinker_cht).
 -compile(export_all).
 -include("cfg_itemTinker.hrl").
--include("logger.hrl").
+
 
 getRow(1)->
     #itemTinkerCfg {

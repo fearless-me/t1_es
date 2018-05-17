@@ -3,7 +3,7 @@
 -module(cfg_arena_cht).
 -compile(export_all).
 -include("cfg_arena.hrl").
--include("logger.hrl").
+
 
 getRow(6018)->
     #arenaCfg {

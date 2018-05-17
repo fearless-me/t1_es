@@ -3,7 +3,7 @@
 -module(cfg_npcstore_cht).
 -compile(export_all).
 -include("cfg_npcstore.hrl").
--include("logger.hrl").
+
 
 getRow(1,31002)->
     #npcstoreCfg {

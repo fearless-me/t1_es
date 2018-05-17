@@ -3,7 +3,7 @@
 -module(cfg_guildshop_cht).
 -compile(export_all).
 -include("cfg_guildshop.hrl").
--include("logger.hrl").
+
 
 getRow(1)->
     #guildshopCfg {

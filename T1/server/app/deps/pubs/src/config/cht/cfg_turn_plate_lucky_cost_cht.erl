@@ -3,7 +3,7 @@
 -module(cfg_turn_plate_lucky_cost_cht).
 -compile(export_all).
 -include("cfg_turn_plate_lucky_cost.hrl").
--include("logger.hrl").
+
 
 getRow(1)->
     #turn_plate_lucky_costCfg {

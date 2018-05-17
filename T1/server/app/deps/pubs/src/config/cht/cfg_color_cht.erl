@@ -3,7 +3,7 @@
 -module(cfg_color_cht).
 -compile(export_all).
 -include("cfg_color.hrl").
--include("logger.hrl").
+
 
 getRow(1)->
     #colorCfg {

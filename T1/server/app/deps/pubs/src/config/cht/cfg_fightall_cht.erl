@@ -3,7 +3,7 @@
 -module(cfg_fightall_cht).
 -compile(export_all).
 -include("cfg_fightall.hrl").
--include("logger.hrl").
+
 
 getRow(100000)->
     #fightallCfg {

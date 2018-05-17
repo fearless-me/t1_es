@@ -3,7 +3,7 @@
 -module(cfg_home_plants_cht).
 -compile(export_all).
 -include("cfg_home_plants.hrl").
--include("logger.hrl").
+
 
 getRow(1)->
     #home_plantsCfg {

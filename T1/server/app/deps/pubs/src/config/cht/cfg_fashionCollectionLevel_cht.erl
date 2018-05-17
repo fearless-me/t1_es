@@ -3,7 +3,7 @@
 -module(cfg_fashionCollectionLevel_cht).
 -compile(export_all).
 -include("cfg_fashionCollectionLevel.hrl").
--include("logger.hrl").
+
 
 getRow(1)->
     #fashionCollectionLevelCfg {

@@ -3,7 +3,7 @@
 -module(cfg_mysterious_shop_cht).
 -compile(export_all).
 -include("cfg_mysterious_shop.hrl").
--include("logger.hrl").
+
 
 getRow(1,10001)->
     #mysterious_shopCfg {

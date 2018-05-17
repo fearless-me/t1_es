@@ -3,7 +3,7 @@
 -module(cfg_gorgeous_cht).
 -compile(export_all).
 -include("cfg_gorgeous.hrl").
--include("logger.hrl").
+
 
 getRow(0)->
     #gorgeousCfg {

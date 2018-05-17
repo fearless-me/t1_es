@@ -3,7 +3,7 @@
 -module(cfg_signinaward_cht).
 -compile(export_all).
 -include("cfg_signinaward.hrl").
--include("logger.hrl").
+
 
 getRow(0,605)->
     #signinawardCfg {

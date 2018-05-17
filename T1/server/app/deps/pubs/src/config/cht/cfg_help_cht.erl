@@ -3,7 +3,7 @@
 -module(cfg_help_cht).
 -compile(export_all).
 -include("cfg_help.hrl").
--include("logger.hrl").
+
 
 getRow(attributeandbag)->
     #helpCfg {

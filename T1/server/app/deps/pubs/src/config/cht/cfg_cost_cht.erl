@@ -3,7 +3,7 @@
 -module(cfg_cost_cht).
 -compile(export_all).
 -include("cfg_cost.hrl").
--include("logger.hrl").
+
 
 getRow(1)->
     #costCfg {

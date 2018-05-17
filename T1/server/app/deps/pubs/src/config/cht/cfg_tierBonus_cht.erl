@@ -3,7 +3,7 @@
 -module(cfg_tierBonus_cht).
 -compile(export_all).
 -include("cfg_tierBonus.hrl").
--include("logger.hrl").
+
 
 getRow(1,2)->
     #tierBonusCfg {

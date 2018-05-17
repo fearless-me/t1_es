@@ -3,7 +3,7 @@
 -module(cfg_warriortrial_cht).
 -compile(export_all).
 -include("cfg_warriortrial.hrl").
--include("logger.hrl").
+
 
 getRow(1)->
     #warriortrialCfg {

@@ -3,7 +3,7 @@
 -module(cfg_battlepower_cht).
 -compile(export_all).
 -include("cfg_battlepower.hrl").
--include("logger.hrl").
+
 
 getRow(1)->
     #battlepowerCfg {

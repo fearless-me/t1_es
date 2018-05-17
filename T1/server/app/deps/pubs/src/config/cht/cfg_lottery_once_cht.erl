@@ -3,7 +3,7 @@
 -module(cfg_lottery_once_cht).
 -compile(export_all).
 -include("cfg_lottery_once.hrl").
--include("logger.hrl").
+
 
 getRow(1)->
     #lottery_onceCfg {

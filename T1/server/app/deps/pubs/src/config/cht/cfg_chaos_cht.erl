@@ -3,7 +3,7 @@
 -module(cfg_chaos_cht).
 -compile(export_all).
 -include("cfg_chaos.hrl").
--include("logger.hrl").
+
 
 getRow(1)->
     #chaosCfg {

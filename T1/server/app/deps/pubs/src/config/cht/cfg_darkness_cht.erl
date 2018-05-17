@@ -3,7 +3,7 @@
 -module(cfg_darkness_cht).
 -compile(export_all).
 -include("cfg_darkness.hrl").
--include("logger.hrl").
+
 
 getRow(1)->
     #darknessCfg {

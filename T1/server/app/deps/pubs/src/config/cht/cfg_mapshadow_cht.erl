@@ -3,7 +3,7 @@
 -module(cfg_mapshadow_cht).
 -compile(export_all).
 -include("cfg_mapshadow.hrl").
--include("logger.hrl").
+
 
 getRow(1)->
     #mapshadowCfg {

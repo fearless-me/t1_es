@@ -3,7 +3,7 @@
 -module(cfg_condition_group_cht).
 -compile(export_all).
 -include("cfg_condition_group.hrl").
--include("logger.hrl").
+
 
 getRow(1)->
     #condition_groupCfg {

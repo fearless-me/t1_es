@@ -3,7 +3,7 @@
 -module(cfg_skillmoneycost_cht).
 -compile(export_all).
 -include("cfg_skillmoneycost.hrl").
--include("logger.hrl").
+
 
 getRow(1033,1)->
     #skillmoneycostCfg {

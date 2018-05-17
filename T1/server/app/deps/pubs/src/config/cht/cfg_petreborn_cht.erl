@@ -3,7 +3,7 @@
 -module(cfg_petreborn_cht).
 -compile(export_all).
 -include("cfg_petreborn.hrl").
--include("logger.hrl").
+
 
 getRow(1,0)->
     #petrebornCfg {

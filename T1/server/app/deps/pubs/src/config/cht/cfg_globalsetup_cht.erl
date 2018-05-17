@@ -3,7 +3,7 @@
 -module(cfg_globalsetup_cht).
 -compile(export_all).
 -include("cfg_globalsetup.hrl").
--include("logger.hrl").
+
 
 getRow(achievement_level)->
     #globalsetupCfg {

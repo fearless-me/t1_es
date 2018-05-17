@@ -3,7 +3,7 @@
 -module(cfg_honor_cht).
 -compile(export_all).
 -include("cfg_honor.hrl").
--include("logger.hrl").
+
 
 getRow(1)->
     #honorCfg {

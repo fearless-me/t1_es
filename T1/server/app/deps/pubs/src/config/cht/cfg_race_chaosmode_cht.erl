@@ -3,7 +3,7 @@
 -module(cfg_race_chaosmode_cht).
 -compile(export_all).
 -include("cfg_race_chaosmode.hrl").
--include("logger.hrl").
+
 
 getRow(1)->
     #race_chaosmodeCfg {

@@ -3,7 +3,7 @@
 -module(cfg_mall_cht).
 -compile(export_all).
 -include("cfg_mall.hrl").
--include("logger.hrl").
+
 
 getRow(150,3,15)->
     #mallCfg {

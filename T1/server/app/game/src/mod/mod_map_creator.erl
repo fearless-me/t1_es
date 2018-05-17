@@ -111,7 +111,7 @@ do_handle_cast(Request, State) ->
 
 %%--------------------------------------------------------------------
 load_all_map() ->
-    L = lists:seq(1, 10),
+    L = getCfg:get1KeyList(cfg_mapsetting),
     _ = [load_one_map(MapID) || MapID <- L],
     ok.
 

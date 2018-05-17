@@ -3,7 +3,7 @@
 -module(cfg_object_cht).
 -compile(export_all).
 -include("cfg_object.hrl").
--include("logger.hrl").
+
 
 getRow(21)->
     #objectCfg {

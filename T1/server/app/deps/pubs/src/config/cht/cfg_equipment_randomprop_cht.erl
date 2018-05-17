@@ -3,7 +3,7 @@
 -module(cfg_equipment_randomprop_cht).
 -compile(export_all).
 -include("cfg_equipment_randomprop.hrl").
--include("logger.hrl").
+
 
 getRow(25030,135)->
     #equipment_randompropCfg {

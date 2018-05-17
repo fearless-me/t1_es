@@ -3,7 +3,7 @@
 -module(cfg_allplayerquestion_cht).
 -compile(export_all).
 -include("cfg_allplayerquestion.hrl").
--include("logger.hrl").
+
 
 getRow(1)->
     #allplayerquestionCfg {

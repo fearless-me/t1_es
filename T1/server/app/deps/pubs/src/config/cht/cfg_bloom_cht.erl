@@ -3,7 +3,7 @@
 -module(cfg_bloom_cht).
 -compile(export_all).
 -include("cfg_bloom.hrl").
--include("logger.hrl").
+
 
 getRow(1)->
     #bloomCfg {

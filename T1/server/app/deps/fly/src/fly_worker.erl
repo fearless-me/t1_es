@@ -34,8 +34,14 @@
     src_file_lastmod = [],
     hrl_file_lastmod = [],
     paused = false
-    
+
 }).
+
+-record(hrl_file_srcs, {
+    inc_file = "",
+    src_files = []
+}).
+-define(SRC_INC_ETS, src_inc_ets__).
 
 %% API
 -export([run_now/0, pause/0, continue/0]).
@@ -59,10 +65,16 @@ continue() ->
     ok.
 
 run_now() ->
-    gen_server:cast(?MODULE, discover_src_dirs),
-    gen_server:cast(?MODULE, discover_src_files),
-    gen_server:cast(?MODULE, compare_src_files),
-    gen_server:cast(?MODULE, compare_hrl_files),
+    {_, MQueueLen} = erlang:process_info(whereis(?MODULE), message_queue_len),
+    case MQueueLen == 0 of
+        true ->
+            gen_server:cast(?MODULE, discover_src_dirs),
+            gen_server:cast(?MODULE, discover_src_files),
+            gen_server:cast(?MODULE, compare_src_files),
+            gen_server:cast(?MODULE, compare_hrl_files),
+            ok;
+        _ -> skip
+    end,
     ok.
 
 %%%===================================================================
@@ -70,10 +82,19 @@ run_now() ->
 %%%===================================================================	
 mod_init(_Args) ->
     erlang:process_flag(trap_exit, true),
-    %% erlang:process_flag(priority, high),
+    erlang:process_flag(priority, high),
     Interval = fly:info(interval),
-    timer:apply_interval(Interval, fly_worker, run_now , []),
+    ets:new(?SRC_INC_ETS,
+        [
+            named_table, set, public,
+            {keypos, #hrl_file_srcs.inc_file},
+            {write_concurrency, true},
+            {read_concurrency, true}
+        ]),
+    timer:apply_interval(Interval, fly_worker, run_now, []),
+    ?WARN("fly worker stared!"),
     {ok, #state{}}.
+
 %%%-------------------------------------------------------------------
 do_handle_call(Request, From, State) ->
     ?ERROR("undeal call ~w from ~w", [Request, From]),
@@ -125,6 +146,7 @@ discover_src_files(
         end,
     HrlFiles = lists:usort(lists:foldl(Fhrl, [], SrcDirs ++ IncDirs)),
     NewState = State#state{src_files = ErlFiles, hrl_files = HrlFiles},
+    process_src_files_incs(ErlFiles),
     {noreply, NewState}.
 
 
@@ -152,7 +174,7 @@ compare_hrl_files(State) ->
             {X, LastMod}
         end,
     NewHrlFileLastMod = lists:usort([F(X) || X <- State#state.hrl_files]),
-
+    
     %% Compare to previous results, if there are changes, then recompile src files that depends
     process_hrl_file_lastmod(State#state.hrl_file_lastmod, NewHrlFileLastMod, State#state.src_files, State#state.compile_opts),
 
@@ -162,6 +184,82 @@ compare_hrl_files(State) ->
     NewState = State#state{hrl_file_lastmod = NewHrlFileLastMod},
     {noreply, NewState}.
 
+process_src_files_incs(SrcFiles) ->
+    case ets:info(?SRC_INC_ETS, size) of
+        0 ->
+            Now = os:system_time(milli_seconds),
+            Pid = erlang:spawn(
+                fun() ->
+                    PidList = process_src_file_incs_1([], lists:sublist(SrcFiles, 50)),
+                    wait_src_parse_finish(erlang:length(PidList))
+                end),
+            wait_pid_go_die(is_process_alive(Pid), Pid),
+            Diff = os:system_time(milli_seconds) - Now,
+            ?WARN("src files ~p(s), parse hrl include use time ~p(ms)",
+                [erlang:length(SrcFiles), Diff]),
+            ok;
+        _ ->
+            skip
+    end.
+
+
+process_src_file_incs(SrcFile) ->
+    {ok, Forms} = epp_dodger:parse_file(SrcFile),
+    IncludeFiles = src_file_include([], Forms),
+%%    ?WARN("src ~ts, incs ~p",[SrcFile, IncludeFiles]),
+    lists:foreach(
+        fun(IncludeFile) ->
+            case ets:lookup(?SRC_INC_ETS, IncludeFile) of
+                [] ->
+                    ets:insert(
+                        ?SRC_INC_ETS,
+                        #hrl_file_srcs{inc_file = IncludeFile, src_files = [SrcFile]});
+                [#hrl_file_srcs{src_files = SrcFiles} | _] ->
+                    ets:update_element(
+                        ?SRC_INC_ETS,
+                        IncludeFile,
+                        {#hrl_file_srcs.src_files, [ SrcFile | SrcFiles]}
+                    )
+            end
+        end, IncludeFiles),
+    ok.
+
+process_src_file_incs_1(PidList, []) ->
+    PidList;
+process_src_file_incs_1(PidList, [SrcFile | SrcFiles]) ->
+    Pid = erlang:spawn_monitor(fun() -> process_src_file_incs(SrcFile) end),
+    process_src_file_incs_1([Pid | PidList], SrcFiles).
+
+src_file_include(HrlFiles, []) ->
+    HrlFiles;
+src_file_include(HrlFiles, [{tree, attribute, _, {attribute, _, [{_, _, IncludeFile}]}} | Forms]) when is_list(IncludeFile) ->
+    IncludeFileBaseName = filename:basename(IncludeFile),
+    case lists:member(IncludeFileBaseName, HrlFiles) of
+        true -> src_file_include(HrlFiles, Forms);
+        _ -> src_file_include([IncludeFileBaseName | HrlFiles], Forms)
+    end;
+src_file_include(HrlFiles, [_SomeForm | Forms]) ->
+    src_file_include(HrlFiles, Forms).
+
+wait_pid_go_die(true, Pid)->
+    timer:sleep(1),
+    wait_pid_go_die(is_process_alive(Pid), Pid);
+wait_pid_go_die(_, _Pid)-> ok.
+
+wait_src_parse_finish(0) ->
+    skip;
+wait_src_parse_finish(N) ->
+    receive
+        {'DOWN', _MRef, _process, _Pid, normal} ->
+            ok;
+        {'DOWN', _MRef, process, _Pid, _Reason} ->
+            ok;
+%%            ?WARN("~p|~p finished ~p~n",[Pid, MRef, Reason]);
+        {_Pid, _Result} ->
+            skip
+%%            ?WARN("~p finished ~p~n",[Pid,  Result])
+    end,
+    wait_src_parse_finish(N - 1).
 
 
 process_hrl_file_lastmod([{File, LastMod} | T1], [{File, LastMod} | T2], SrcFiles, Options) ->
@@ -242,6 +340,7 @@ process_src_file_lastmod(undefined, _Other, _) ->
 
 recompile_src_file(SrcFile, Options) ->
     %% Get the module, src dir, and options...
+    process_src_file_incs(SrcFile),
     {CompileFun, Module} =
         {fun compile:file/2, list_to_atom(filename:basename(SrcFile, ".erl"))},
 
@@ -359,32 +458,30 @@ format_error(Module, ErrorDescription) ->
     end.
 
 
-%%crc_file(File) ->
-%%    case file:read_file(File) of
-%%        {ok, Data} ->
-%%            erlang:crc32([Data]);
-%%        _ ->
-%%            throw(readfileCRCerror)
-%%    end.
+who_include(HrlFile, _SrcFiles) ->
+    case ets:lookup(?SRC_INC_ETS, HrlFile) of
+       [#hrl_file_srcs{src_files = SrcFiles} | _] -> SrcFiles;
+        _ -> []
+    end.
+%%who_include(HrlFile, SrcFiles) ->
+%%    HrlFileBaseName = filename:basename(HrlFile),
+%%    Pred = fun(SrcFile) ->
+%%        {ok, Forms} = epp_dodger:quick_parse_file(SrcFile),
+%%        is_include(HrlFileBaseName, Forms)
+%%           end,
+%%    lists:filter(Pred, SrcFiles).
 
-who_include(HrlFile, SrcFiles) ->
-    HrlFileBaseName = filename:basename(HrlFile),
-    Pred = fun(SrcFile) ->
-        {ok, Forms} = epp_dodger:parse_file(SrcFile),
-        is_include(HrlFileBaseName, Forms)
-           end,
-    lists:filter(Pred, SrcFiles).
 
-is_include(_HrlFile, []) ->
-    false;
-is_include(HrlFile, [{tree, attribute, _, {attribute, _, [{_, _, IncludeFile}]}} | Forms]) when is_list(IncludeFile) ->
-    IncludeFileBaseName = filename:basename(IncludeFile),
-    case IncludeFileBaseName of
-        HrlFile -> true;
-        _ -> is_include(HrlFile, Forms)
-    end;
-is_include(HrlFile, [_SomeForm | Forms]) ->
-    is_include(HrlFile, Forms).
+%%is_include(_HrlFile, []) ->
+%%    false;
+%%is_include(HrlFile, [{tree, attribute, _, {attribute, _, [{_, _, IncludeFile}]}} | Forms]) when is_list(IncludeFile) ->
+%%    IncludeFileBaseName = filename:basename(IncludeFile),
+%%    case IncludeFileBaseName of
+%%        HrlFile -> true;
+%%        _ -> is_include(HrlFile, Forms)
+%%    end;
+%%is_include(HrlFile, [_SomeForm | Forms]) ->
+%%    is_include(HrlFile, Forms).
 
 
 %% @private Return all files in a directory matching a regex.

@@ -3,7 +3,7 @@
 -module(cfg_pet_territory_force_cht).
 -compile(export_all).
 -include("cfg_pet_territory_force.hrl").
--include("logger.hrl").
+
 
 getRow(1)->
     #pet_territory_forceCfg {

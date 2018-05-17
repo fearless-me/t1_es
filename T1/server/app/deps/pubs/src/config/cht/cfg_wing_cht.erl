@@ -3,7 +3,7 @@
 -module(cfg_wing_cht).
 -compile(export_all).
 -include("cfg_wing.hrl").
--include("logger.hrl").
+
 
 getRow(1)->
     #wingCfg {

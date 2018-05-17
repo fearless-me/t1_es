@@ -3,7 +3,7 @@
 -module(cfg_petfairy_point_cht).
 -compile(export_all).
 -include("cfg_petfairy_point.hrl").
--include("logger.hrl").
+
 
 getRow(1)->
     #petfairy_pointCfg {

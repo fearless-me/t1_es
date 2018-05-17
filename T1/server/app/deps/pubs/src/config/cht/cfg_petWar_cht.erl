@@ -3,7 +3,7 @@
 -module(cfg_petWar_cht).
 -compile(export_all).
 -include("cfg_petWar.hrl").
--include("logger.hrl").
+
 
 getRow(1)->
     #petWarCfg {

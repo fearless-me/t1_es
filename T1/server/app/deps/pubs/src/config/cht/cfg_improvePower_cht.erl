@@ -3,7 +3,7 @@
 -module(cfg_improvePower_cht).
 -compile(export_all).
 -include("cfg_improvePower.hrl").
--include("logger.hrl").
+
 
 getRow(1)->
     #improvePowerCfg {

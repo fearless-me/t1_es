@@ -3,7 +3,7 @@
 -module(cfg_spouseskill_cht).
 -compile(export_all).
 -include("cfg_spouseskill.hrl").
--include("logger.hrl").
+
 
 getRow(1,1)->
     #spouseskillCfg {

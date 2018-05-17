@@ -3,7 +3,7 @@
 -module(cfg_pet_pvp_cht).
 -compile(export_all).
 -include("cfg_pet_pvp.hrl").
--include("logger.hrl").
+
 
 getRow(1)->
     #pet_pvpCfg {

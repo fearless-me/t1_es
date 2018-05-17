@@ -3,7 +3,7 @@
 -module(cfg_floatingPiece_cht).
 -compile(export_all).
 -include("cfg_floatingPiece.hrl").
--include("logger.hrl").
+
 
 getRow(1)->
     #floatingPieceCfg {

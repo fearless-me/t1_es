@@ -3,7 +3,7 @@
 -module(cfg_knighted_level_cht).
 -compile(export_all).
 -include("cfg_knighted_level.hrl").
--include("logger.hrl").
+
 
 getRow(-1)->
     #knighted_levelCfg {

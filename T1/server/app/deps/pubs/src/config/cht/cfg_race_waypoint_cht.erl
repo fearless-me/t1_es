@@ -3,7 +3,7 @@
 -module(cfg_race_waypoint_cht).
 -compile(export_all).
 -include("cfg_race_waypoint.hrl").
--include("logger.hrl").
+
 
 getRow(1)->
     #race_waypointCfg {

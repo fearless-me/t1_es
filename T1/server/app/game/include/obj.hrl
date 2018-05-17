@@ -25,12 +25,14 @@
 -record(obj, {
     code = 0,
     id = 0,
+    name = "",
+    group = 0,
     type = ?OBJ_ERR :: obj_type(),
     map_id = 0,
     line_id = 0,
     pid = 0,
     map_pid = undefined,
-    pos = undefined :: vector3() ,
+    pos = undefined, %% vector3()
     com = undefined 
 }).
 

@@ -3,7 +3,7 @@
 -module(cfg_floatingClue_cht).
 -compile(export_all).
 -include("cfg_floatingClue.hrl").
--include("logger.hrl").
+
 
 getRow(1)->
     #floatingClueCfg {

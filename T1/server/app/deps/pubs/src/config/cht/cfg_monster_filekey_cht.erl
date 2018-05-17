@@ -3,7 +3,7 @@
 -module(cfg_monster_filekey_cht).
 -compile(export_all).
 -include("cfg_monster_filekey.hrl").
--include("logger.hrl").
+
 
 getRow(1105)->
     #monster_filekeyCfg {

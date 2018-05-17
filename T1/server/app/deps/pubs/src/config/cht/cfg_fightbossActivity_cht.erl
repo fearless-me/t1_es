@@ -3,7 +3,7 @@
 -module(cfg_fightbossActivity_cht).
 -compile(export_all).
 -include("cfg_fightbossActivity.hrl").
--include("logger.hrl").
+
 
 getRow(1)->
     #fightbossActivityCfg {

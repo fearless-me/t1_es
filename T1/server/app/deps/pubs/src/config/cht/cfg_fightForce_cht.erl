@@ -3,7 +3,7 @@
 -module(cfg_fightForce_cht).
 -compile(export_all).
 -include("cfg_fightForce.hrl").
--include("logger.hrl").
+
 
 getRow(101)->
     #fightForceCfg {

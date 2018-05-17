@@ -3,7 +3,7 @@
 -module(cfg_partner_animation_cht).
 -compile(export_all).
 -include("cfg_partner_animation.hrl").
--include("logger.hrl").
+
 
 getRow(1)->
     #partner_animationCfg {

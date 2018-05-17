@@ -3,7 +3,7 @@
 -module(cfg_guildDonation_reward_cht).
 -compile(export_all).
 -include("cfg_guildDonation_reward.hrl").
--include("logger.hrl").
+
 
 getRow(2,1)->
     #guildDonation_rewardCfg {

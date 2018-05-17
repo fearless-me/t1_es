@@ -3,7 +3,7 @@
 -module(cfg_treasure_event_cht).
 -compile(export_all).
 -include("cfg_treasure_event.hrl").
--include("logger.hrl").
+
 
 getRow(1)->
     #treasure_eventCfg {

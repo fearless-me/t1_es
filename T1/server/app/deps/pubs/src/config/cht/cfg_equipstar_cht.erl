@@ -3,7 +3,7 @@
 -module(cfg_equipstar_cht).
 -compile(export_all).
 -include("cfg_equipstar.hrl").
--include("logger.hrl").
+
 
 getRow(0,0)->
     #equipstarCfg {

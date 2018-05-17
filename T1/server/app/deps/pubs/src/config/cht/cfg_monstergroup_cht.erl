@@ -3,7 +3,7 @@
 -module(cfg_monstergroup_cht).
 -compile(export_all).
 -include("cfg_monstergroup.hrl").
--include("logger.hrl").
+
 
 getRow(1,4000)->
     #monstergroupCfg {

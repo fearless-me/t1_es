@@ -46,7 +46,7 @@ mod_init([MapID, MapLine]) ->
     ProcessName = misc:create_process_name(mod_map, [MapID,MapLine]),
     erlang:register(ProcessName, self()),
     ?INFO("map ~p:~p started",[ProcessName, self()]),
-    {ok, lib_map:init(#map_state{map_id = MapID})}.
+    {ok, lib_map:init(#map_state{map_id = MapID, line_id = MapLine})}.
 
 %%--------------------------------------------------------------------
 do_handle_call({init}, _From, State) ->
@@ -63,6 +63,9 @@ do_handle_call(Request, From, State) ->
     {reply, ok, State}.
 
 %%--------------------------------------------------------------------
+do_handle_info(init_all_creatue, State) ->
+    lib_map:init_all_creature(),
+    {noreply, State};
 do_handle_info(status, State) ->
     catch show_status(),
     {noreply, State};

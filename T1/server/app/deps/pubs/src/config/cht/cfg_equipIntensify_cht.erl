@@ -3,7 +3,7 @@
 -module(cfg_equipIntensify_cht).
 -compile(export_all).
 -include("cfg_equipIntensify.hrl").
--include("logger.hrl").
+
 
 getRow(1,1)->
     #equipIntensifyCfg {

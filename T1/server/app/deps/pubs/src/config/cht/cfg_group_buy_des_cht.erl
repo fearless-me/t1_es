@@ -3,7 +3,7 @@
 -module(cfg_group_buy_des_cht).
 -compile(export_all).
 -include("cfg_group_buy_des.hrl").
--include("logger.hrl").
+
 
 getRow(1)->
     #group_buy_desCfg {

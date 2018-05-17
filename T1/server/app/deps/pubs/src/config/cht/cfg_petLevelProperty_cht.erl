@@ -3,7 +3,7 @@
 -module(cfg_petLevelProperty_cht).
 -compile(export_all).
 -include("cfg_petLevelProperty.hrl").
--include("logger.hrl").
+
 
 getRow(1)->
     #petLevelPropertyCfg {

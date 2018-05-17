@@ -3,7 +3,7 @@
 -module(cfg_dailyrecharge_cht).
 -compile(export_all).
 -include("cfg_dailyrecharge.hrl").
--include("logger.hrl").
+
 
 getRow(1)->
     #dailyrechargeCfg {

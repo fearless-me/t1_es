@@ -3,7 +3,7 @@
 -module(cfg_rift_rand_cht).
 -compile(export_all).
 -include("cfg_rift_rand.hrl").
--include("logger.hrl").
+
 
 getRow(8,347)->
     #rift_randCfg {

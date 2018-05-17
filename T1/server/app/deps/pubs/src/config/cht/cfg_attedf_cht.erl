@@ -3,7 +3,7 @@
 -module(cfg_attedf_cht).
 -compile(export_all).
 -include("cfg_attedf.hrl").
--include("logger.hrl").
+
 
 getRow(1)->
     #attedfCfg {

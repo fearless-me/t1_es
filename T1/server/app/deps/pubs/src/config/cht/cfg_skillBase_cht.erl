@@ -3,7 +3,7 @@
 -module(cfg_skillBase_cht).
 -compile(export_all).
 -include("cfg_skillBase.hrl").
--include("logger.hrl").
+
 
 getRow(breakRange)->
     #skillBaseCfg {

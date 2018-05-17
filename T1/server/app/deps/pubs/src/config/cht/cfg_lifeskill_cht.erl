@@ -3,7 +3,7 @@
 -module(cfg_lifeskill_cht).
 -compile(export_all).
 -include("cfg_lifeskill.hrl").
--include("logger.hrl").
+
 
 getRow(1,1)->
     #lifeskillCfg {

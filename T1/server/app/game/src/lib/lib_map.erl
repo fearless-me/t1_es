@@ -13,13 +13,16 @@
 -include("map.hrl").
 -include("obj.hrl").
 -include("common.hrl").
+-include("cfg_mapsetting.hrl").
 
 %% API
 -export([init/1]).
+-export([init_all_creature/0]).
 -export([tick/1]).
 -export([get_npc_ets/0, get_monster_ets/0]).
 -export([get_pet_ets/0, get_player_ets/0]).
--export([get_map_id/0, get_map_hook/0]).
+-export([get_map_id/0, get_line_id/0]).
+-export([get_map_hook/0]).
 -export([player_exit/2, player_join/2]).
 
 -define(MAP_MON_ETS, map_monster_ets__).
@@ -27,6 +30,7 @@
 -define(MAP_NPC_ETS, map_npc_ets__).
 -define(MAP_PET_ETS, map_pet_ets__).
 -define(MAP_ID, map_id__).
+-define(LINE_ID, line_id__).
 -define(MAP_HOOK, map_hook__).
 -define(MAP_TICK, 50).
 
@@ -51,20 +55,22 @@ init_1(State) ->
     }.
 
 init_2(State) ->
-    put(?MAP_NPC_ETS, State#map_state.npc),
-    put(?MAP_PET_ETS, State#map_state.pet),
-    put(?MAP_USR_ETS, State#map_state.player),
-    put(?MAP_MON_ETS, State#map_state.monster),
-    put(?MAP_ID, State#map_state.map_id),
-    put(?MAP_HOOK, State#map_state.hook_mod),
+    put(?MAP_ID,        State#map_state.map_id),
+    put(?LINE_ID,       State#map_state.line_id),
+    put(?MAP_NPC_ETS,   State#map_state.npc),
+    put(?MAP_PET_ETS,   State#map_state.pet),
+    put(?MAP_USR_ETS,   State#map_state.player),
+    put(?MAP_MON_ETS,   State#map_state.monster),
+    put(?MAP_HOOK,      State#map_state.hook_mod),
     ok.
 %%%-------------------------------------------------------------------
-get_map_id() -> get(?MAP_ID).
-get_map_hook() -> get(?MAP_HOOK).
-get_npc_ets() -> get(?MAP_NPC_ETS).
-get_pet_ets() -> get(?MAP_PET_ETS).
-get_player_ets() -> get(?MAP_USR_ETS).
-get_monster_ets() -> get(?MAP_MON_ETS).
+get_map_id()        -> get(?MAP_ID).
+get_line_id()       -> get(?LINE_ID).
+get_map_hook()      -> get(?MAP_HOOK).
+get_npc_ets()       -> get(?MAP_NPC_ETS).
+get_pet_ets()       -> get(?MAP_PET_ETS).
+get_player_ets()    -> get(?MAP_USR_ETS).
+get_monster_ets()   -> get(?MAP_MON_ETS).
 
 %%%-------------------------------------------------------------------
 init_npc(Conf) -> ok.
@@ -97,6 +103,54 @@ get_player(PlayerCode) ->
         [#obj{} = Obj | _] -> Obj;
         _ -> undefined
     end.
+
+%%%-------------------------------------------------------------------
+init_all_creature() ->
+    MapID = get_map_id(),
+    #recGameMapCfg{
+        mapMonster = MonsterList,
+        mapNpc = NpcList
+    } = gameMapCfg:getMapCfg(MapID),
+
+    ok = init_all_monster(MonsterList),
+    ok = init_all_npc(NpcList),
+    ok.
+
+init_all_monster([]) ->
+    ok;
+init_all_monster(ML) ->
+    lists:foreach(
+        fun(MData) ->
+            ok = init_all_monster_1(MData)
+        end , ML),
+    ok.
+
+init_all_monster_1(Mdata)->
+    Obj = lib_monster:create(Mdata),
+    init_all_monster_2(Obj).
+
+init_all_monster_2(#obj{
+  pos = Pos
+} = Obj) ->
+
+    add_obj_to_ets(Obj),
+    VisIndex = lib_map_view:pos_to_vis_index(Pos),
+    lib_map_view:add_to_vis_tile(Obj, VisIndex),
+    ?DEBUG("map ~p:~p create monster ~p, code ~p, visIndex ~p",
+        [lib_map:get_map_id(), lib_map:get_line_id(), Obj#obj.id, Obj#obj.code, VisIndex]),
+    ok;
+init_all_monster_2(_) -> error.
+
+add_obj_to_ets(#obj{type = ?OBJ_MON} = Obj) ->
+    ets:insert(get_monster_ets(), Obj);
+add_obj_to_ets(#obj{type = ?OBJ_USR} = Obj) ->
+    ets:insert(get_player_ets(), Obj);
+add_obj_to_ets(_) ->
+    ok.
+
+
+init_all_npc(NL) ->
+    ok.
 
 %%%-------------------------------------------------------------------
 tick_msg() -> erlang:send_after(?MAP_TICK, self(), tick_now).

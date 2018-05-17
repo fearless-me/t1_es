@@ -3,7 +3,7 @@
 -module(cfg_find_res_cht).
 -compile(export_all).
 -include("cfg_find_res.hrl").
--include("logger.hrl").
+
 
 getRow(1)->
     #find_resCfg {

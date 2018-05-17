@@ -3,7 +3,7 @@
 -module(cfg_wildboss_cht).
 -compile(export_all).
 -include("cfg_wildboss.hrl").
--include("logger.hrl").
+
 
 getRow(18001)->
     #wildbossCfg {

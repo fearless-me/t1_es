@@ -3,7 +3,7 @@
 -module(cfg_sourceshop_cht).
 -compile(export_all).
 -include("cfg_sourceshop.hrl").
--include("logger.hrl").
+
 
 getRow(1000)->
     #sourceshopCfg {

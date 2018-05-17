@@ -3,7 +3,7 @@
 -module(cfg_vip_card_eco_cht).
 -compile(export_all).
 -include("cfg_vip_card_eco.hrl").
--include("logger.hrl").
+
 
 getRow(50001)->
     #vip_card_ecoCfg {

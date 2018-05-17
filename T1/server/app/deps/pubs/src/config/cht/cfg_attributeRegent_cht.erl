@@ -3,7 +3,7 @@
 -module(cfg_attributeRegent_cht).
 -compile(export_all).
 -include("cfg_attributeRegent.hrl").
--include("logger.hrl").
+
 
 getRow(1)->
     #attributeRegentCfg {

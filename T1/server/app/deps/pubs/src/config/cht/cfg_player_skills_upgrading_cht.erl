@@ -3,7 +3,7 @@
 -module(cfg_player_skills_upgrading_cht).
 -compile(export_all).
 -include("cfg_player_skills_upgrading.hrl").
--include("logger.hrl").
+
 
 getRow(101000,1)->
     #player_skills_upgradingCfg {

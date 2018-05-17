@@ -3,7 +3,7 @@
 -module(cfg_dungeonschallenge_cht).
 -compile(export_all).
 -include("cfg_dungeonschallenge.hrl").
--include("logger.hrl").
+
 
 getRow(110)->
     #dungeonschallengeCfg {
