@@ -19,7 +19,7 @@
 -export([sync_movement_to_big_visual_tile/1]).
 -export([sync_change_pos_visual_tile/3]).
 -export([pos_to_vis_index/1]).
--export([sync_remove_pet/1]).
+-export([sync_del_pet/1]).
 -export([sync_player_join_map/1]).
 -export([sync_player_exit_map/1]).
 
@@ -45,12 +45,12 @@ sync_player_join_map(Obj) ->
 sync_player_exit_map(Obj) ->
     Index = pos_to_vis_index(Obj#r_obj.pos, get(?VIS_W), ?VIS_DIST),
     Tiles = get_vis_tile_around(Index),
-    remove_from_vis_tile(Obj, Index),
-    sync_remove_from_vis_tile(Obj, Tiles),
+    del_from_vis_tile(Obj, Index),
+    sync_del_from_vis_tile(Obj, Tiles),
     ok.
 
 %%%-------------------------------------------------------------------
-sync_remove_pet(_Obj)->ok.
+sync_del_pet(_Obj)->ok.
 
 
 %%%-------------------------------------------------------------------
@@ -88,16 +88,16 @@ sync_movement_to_big_visual_tile(_Msg) ->
 %%%-------------------------------------------------------------------
 %% 坐標位移廣播
 sync_change_pos_visual_tile(Obj, OldVisTileIndex, NewVisTileIndex) ->
-    remove_from_vis_tile(Obj, OldVisTileIndex),
+    del_from_vis_tile(Obj, OldVisTileIndex),
     {DecVisTile, AddVisTile} = vis_tile_add_dec(OldVisTileIndex, NewVisTileIndex),
-    sync_remove_from_vis_tile(Obj, DecVisTile),
+    sync_del_from_vis_tile(Obj, DecVisTile),
     sync_add_to_vis_tile(Obj, AddVisTile),
     add_to_vis_tile(Obj, NewVisTileIndex),
     ok.
 
 %%%-------------------------------------------------------------------
 %% 删除广播
-sync_remove_from_vis_tile(Obj, VisTiles) ->
+sync_del_from_vis_tile(Obj, VisTiles) ->
     sync_me_to_big_vis_tile(Obj, VisTiles, me_2_around_player_del),
     sync_big_vis_tile_to_me(Obj, VisTiles, around_unit_2_me_del),
     ok.
@@ -114,48 +114,70 @@ sync_add_to_vis_tile(Obj, VisTiles) ->
 add_to_vis_tile(Obj, VisTileIndex) ->
     ?assert(is_number(VisTileIndex) andalso VisTileIndex > 0),
 
-    Code = Obj#r_obj.code,
-    VisTile1 = get_vis_tile(VisTileIndex),
-    VisTile2 =
-        case lib_obj:obj_type(Obj) of
-            ?OBJ_USR ->
-                VisTile1#r_vis_tile{player = [Code | VisTile1#r_vis_tile.player]};
-            ?OBJ_MON ->
-                VisTile1#r_vis_tile{monster = [Code | VisTile1#r_vis_tile.monster]};
-            ?OBJ_PET ->
-                VisTile1#r_vis_tile{pet = [Code | VisTile1#r_vis_tile.pet]};
-            ?OBJ_NPC ->
-                VisTile1#r_vis_tile{npc = [Code | VisTile1#r_vis_tile.npc]};
-            _ -> VisTile1
-        end,
-
-    set_vis_tile(VisTileIndex, VisTile2),
+    VisTile = get_vis_tile(VisTileIndex),
+    add_to_vis_tile_1( lib_obj:obj_type(Obj), Obj#r_obj.code, VisTileIndex, VisTile),
     ok.
+
+%%
+add_to_vis_tile_1(Type, Code, VisTileIndex, undefined) ->
+    ?ERROR(" add t ~p, code ~p to visIdx ~p invalid",[Type, Code, VisTileIndex]);
+add_to_vis_tile_1(?OBJ_USR, Code, VisTileIndex, VisTile) ->
+    set_vis_tile(
+        VisTileIndex,
+        VisTile#r_vis_tile{player = [Code | VisTile#r_vis_tile.player]}
+    );
+add_to_vis_tile_1(?OBJ_MON, Code, VisTileIndex, VisTile) ->
+    set_vis_tile(
+        VisTileIndex,
+        VisTile#r_vis_tile{monster = [Code | VisTile#r_vis_tile.monster]}
+    );
+add_to_vis_tile_1(?OBJ_PET, Code, VisTileIndex, VisTile) ->
+    set_vis_tile(
+        VisTileIndex,
+        VisTile#r_vis_tile{pet = [Code | VisTile#r_vis_tile.pet]}
+    );
+add_to_vis_tile_1(?OBJ_NPC, Code, VisTileIndex, VisTile) ->
+    set_vis_tile(
+        VisTileIndex,
+        VisTile#r_vis_tile{npc = [Code | VisTile#r_vis_tile.npc]}
+    );
+add_to_vis_tile_1(_Type, _Code, _VisTileIndex, _VisTile) ->
+    ok.
+
 
 %%%-------------------------------------------------------------------
 %% 移除格子
-remove_from_vis_tile(Obj, VisTileIndex) ->
+del_from_vis_tile(Obj, VisTileIndex) ->
     ?assert(is_number(VisTileIndex) andalso VisTileIndex > 0),
 
-    Code = Obj#r_obj.code,
-    VisTile1 = get_vis_tile(VisTileIndex),
-    VisTile2 =
-        case lib_obj:obj_type(Obj) of
-            ?OBJ_USR ->
-                VisTile1#r_vis_tile{
-                    player = lists:delete(Code,VisTile1#r_vis_tile.player)
-                };
-            ?OBJ_MON ->
-                VisTile1#r_vis_tile{
-                    monster = lists:delete(Code, VisTile1#r_vis_tile.monster)
-                };
-            ?OBJ_PET ->
-                VisTile1#r_vis_tile{
-                    pet = lists:delete(Code, VisTile1#r_vis_tile.pet)
-                };
-            _ -> VisTile1
-        end,
-    set_vis_tile(VisTileIndex, VisTile2),
+    VisTile = get_vis_tile(VisTileIndex),
+    del_from_vis_tile_1( lib_obj:obj_type(Obj), Obj#r_obj.code, VisTileIndex, VisTile),
+    ok.
+
+%%
+del_from_vis_tile_1(Type, Code, VisTileIndex, undefined) ->
+    ?ERROR("del t ~p, code ~p from visIdx ~p invalid",[Type, Code, VisTileIndex]);
+del_from_vis_tile_1(?OBJ_USR, Code, VisTileIndex, VisTile) ->
+    set_vis_tile(
+        VisTileIndex,
+        VisTile#r_vis_tile{ player = lists:delete(Code,VisTile#r_vis_tile.player)}
+    );
+del_from_vis_tile_1(?OBJ_MON, Code, VisTileIndex, VisTile) ->
+    set_vis_tile(
+        VisTileIndex,
+        VisTile#r_vis_tile{monster = lists:delete(Code,VisTile#r_vis_tile.monster)}
+    );
+del_from_vis_tile_1(?OBJ_PET, Code, VisTileIndex, VisTile) ->
+    set_vis_tile(
+        VisTileIndex,
+        VisTile#r_vis_tile{pet = lists:delete(Code,VisTile#r_vis_tile.pet)}
+    );
+del_from_vis_tile_1(?OBJ_NPC, Code, VisTileIndex, VisTile) ->
+    set_vis_tile(
+        VisTileIndex,
+        VisTile#r_vis_tile{npc = lists:delete(Code,VisTile#r_vis_tile.npc)}
+    );
+del_from_vis_tile_1(_Type, _Code, _VisTileIndex, _VisTile) ->
     ok.
 
 %%%-------------------------------------------------------------------

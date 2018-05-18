@@ -20,9 +20,9 @@
 		{d,'GAME_SERVER',1},
 		%%{d,'RELEASE',1},
 		{i,"include"},
+		{i,"src/config"},
 		{i,"../deps/pubs/include"},
-		{i,"../deps/pubs/src/net"},
-		{i,"../deps/pubs/src/config"},		
+		{i,"../deps/pubs/src/net"},		
 		{i,"../deps/mysql-otp/include"},
 		{outdir,"./ebin"}
 	]

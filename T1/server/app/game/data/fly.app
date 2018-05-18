@@ -18,8 +18,8 @@
                     },
 					{inc_dirs,[
 								"../include", 
+								"../src/config", 
 								"../../deps/pubs/include", 
-								"../../deps/pubs/src/config", 
 								"../../deps/pubs/src/net", 
 								"../../deps/pubs/src/resource/pack"]},
 					{opts,
@@ -35,9 +35,9 @@
                                 "../../deps/ranch"
                               ]},
 							{i, "../include"},
+							{i, "../src/config"},
 							{i, "../../deps/pubs/include"},
 							{i, "../../deps/pubs/src/net"},
-							{i, "../../deps/pubs/src/config"},
 							{i, "../../deps/pubs/src/resource/pack"},
 							{i, "../../deps/mysql-otp/include"}
 						]

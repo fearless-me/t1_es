@@ -42,7 +42,7 @@ ready(V) ->
 
 ready()->
     case catch ets:lookup(?ServerState, 1) of
-        [#kv{v = V}] -> misc:integer_to_bool(V);
+        [#kv{v = V}] -> misc:i2b(V);
         _ -> false
     end.
 
@@ -83,8 +83,9 @@ print_status()->
     "dbs_worker:           ~w~n"
     "player_db_instance:   ~w~n"
     "player_db_partition:  ~w~n"
-    "auto reload src dirs: ~ts~n"
-    "auto reload inc incs: ~ts~n"
+    "auto reload src dirs: ~n\t~ts~n"
+    "auto reload inc dirs: ~n\t~ts~n"
+    "auto reload opt info: ~n\t~p~n"
     "auto reload interval: ~w(milliseconds)~n"
     "==========",
         [
@@ -93,8 +94,9 @@ print_status()->
             dbs_worker_manager:get_worker_size(),
             mysql_pool_manager:get_player_data_mysql_instance_num(),
             mod_ini_conf:get_mysql_player_db_table_partition(),
-            io_lib:format("~p",[fly:info(src_dirs)]),
-            io_lib:format("~p",[fly:info(inc_dirs)]),
+            io_lib:format("~ts",[misc:list_to_string(fly:info(src_dirs), "\n\t")]),
+            io_lib:format("~ts",[misc:list_to_string(fly:info(inc_dirs), "\n\t")]),
+            fly:info(opts),
             fly:info(interval)
         ]
     ),

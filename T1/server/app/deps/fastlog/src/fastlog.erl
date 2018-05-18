@@ -149,7 +149,7 @@ do_log(Level, F, A) ->
 discard(IsDiscardLog) ->
     ets:insert(
         ?FlagEts,
-        #recDiscard{isDiscard = misc:integer_to_bool(IsDiscardLog)}
+        #recDiscard{isDiscard = misc:i2b(IsDiscardLog)}
     ),
     ok.
 

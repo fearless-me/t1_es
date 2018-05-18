@@ -42,7 +42,7 @@ ready(V) ->
 
 ready()->
     case catch ets:lookup(?ServerState, 1) of
-        [#kv{v = V}] -> misc:integer_to_bool(V);
+        [#kv{v = V}] -> misc:i2b(V);
         _ -> false
     end.
 
@@ -79,13 +79,15 @@ do_handle_cast(Request, State) ->
 print_status()->
     ?WARN("status:~n"
     "==========~n"
-    "auto reload src dirs: ~ts~n"
-    "auto reload inc incs: ~ts~n"
+    "auto reload src dirs: ~n\t~ts~n"
+    "auto reload inc dirs: ~n\t~ts~n"
+    "auto reload opt info: ~n\t~p~n"
     "auto reload interval: ~w(milliseconds)~n"
     "==========",
         [
-            io_lib:format("~p",[fly:info(src_dirs)]),
-            io_lib:format("~p",[fly:info(inc_dirs)]),
+            io_lib:format("~ts",[misc:list_to_string(fly:info(src_dirs), "\n\t")]),
+            io_lib:format("~ts",[misc:list_to_string(fly:info(inc_dirs), "\n\t")]),
+            fly:info(opts),
             fly:info(interval)
         ]
     ),

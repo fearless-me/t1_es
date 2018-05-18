@@ -13,7 +13,7 @@
 -export([start_applications/1, ensure_all_applications_started/1]).
 -export([make_atom/2,atom_to_binary/1]).
 -export([interval_operation/5]).
--export([bool_to_integer/1, integer_to_bool/1]).
+-export([b2i/1, i2b/1]).
 -export([ntoa/1, ntoab/1]).
 -export([ip/0, peername/1, ip_string/1]).
 -export([ceil/1,mod_1/2, floor/1, clamp/3]).
@@ -26,6 +26,7 @@
 -export([register_name/1]).
 -export([is_alive/1]).
 -export([to_atom/1]).
+-export([list_to_string/2]).
 
 %%%-------------------------------------------------------------------
 atom_to_binary(A) ->
@@ -72,6 +73,9 @@ list_to_atom2(List) when is_list(List) ->
         {'EXIT', _} -> erlang:list_to_atom(List);
         Atom when is_atom(Atom) -> Atom
     end.
+
+list_to_string([], SuffixStr)-> SuffixStr;
+list_to_string(List, SuffixStr)-> string:join(List, SuffixStr).
 
 -spec ceil(X) -> integer() when X::number().
 ceil(X) ->
@@ -187,23 +191,15 @@ mod_1(Val, Base) -> (Val rem Base) + 1.
 make_atom(Fmt,Args)->
     list_to_atom(lists:flatten(io_lib:format(Fmt, Args))).
 
-bool_to_integer(true) ->
-    1;
-bool_to_integer(false) ->
-    0;
-bool_to_integer(1) ->
-    1;
-bool_to_integer(0) ->
-    0.
+b2i(true) -> 1;
+b2i(false) -> 0;
+b2i(1) -> 1;
+b2i(0) -> 0.
 
-integer_to_bool(0) ->
-    false;
-integer_to_bool(1) ->
-    true;
-integer_to_bool(false) ->
-    false;
-integer_to_bool(true) ->
-    true.
+i2b(0) -> false;
+i2b(1) -> true;
+i2b(false) -> false;
+i2b(true) -> true.
 
 %% Ideally, you'd want Fun to run every IdealInterval. but you don't
 %% want it to take more than MaxRatio of IdealInterval. So if it takes
