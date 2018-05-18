@@ -29,8 +29,8 @@
 
 %% API
 -export([stop/1, direct_stop/0, send/1,direct_send/1]).
--export([on_init/1, on_data/2, on_close/2]).
--export([on_info_msg/1, on_call_msg/2, on_cast_msg/1, on_net_msg/1]).
+-export([on_init/1, on_data/3, on_close/3]).
+-export([on_info_msg/2, on_call_msg/3, on_cast_msg/2, on_net_msg/2]).
 -export([socket/1, socket/0]).
 %%%-------------------------------------------------------------------
 stop(Reason)->
@@ -38,6 +38,7 @@ stop(Reason)->
 
 direct_stop()->
     erlang:exit(self(), normal).
+
 %%%-------------------------------------------------------------------
 send(IoList) when is_list(IoList)->
     tcp_handler:send_net_msg(IoList);
@@ -54,33 +55,33 @@ on_init(Socket) ->
     {Ip, Port} = misc:peername(Socket),
     socket(Socket),
     ?DEBUG("client connected: ~p ~ts:~p", [Socket, Ip, Port]),
-    ok.
+    {ok, {}}.
 
-on_data(Socket, Data)->
+on_data(Socket, Data, S)->
 %%    ?DEBUG("~p,recieve:~p",[Socket, Data]),
 %%    direct_send([Data]),
-    tcp_codec:decode(fun behaviour_example:on_net_msg/1, Socket, Data),
-    ok.
+    tcp_codec:decode(fun behaviour_example:on_net_msg/2, Socket, Data),
+    S.
 
-on_close(Socket, Reason) ->
+on_close(Socket, Reason, S) ->
     ?DEBUG("~p close,reason:~p",[Socket, Reason]),
-    ok.
+    S.
 %%%-------------------------------------------------------------------
-on_info_msg(Info) ->
+on_info_msg(Info, S) ->
     ?DEBUG("info:~p",[Info]),
-    ok.
+    S.
 
-on_call_msg(Request, From)->
+on_call_msg(Request, From, S)->
     ?DEBUG("call ~p from ~p",[Request, From]),
-    true.
+    {true, S}.
 
-on_cast_msg(Request) ->
+on_cast_msg(Request, S) ->
     ?DEBUG("cast:~p",[Request]),
-    ok.
+    S.
 
 
-on_net_msg(Msg)->
-    ?DEBUG("net msg:~p",[Msg]),
+on_net_msg(Cmd, Msg)->
+    ?DEBUG("net msg ~p,~p",[Cmd, Msg]),
     ok.
 
 %%%-------------------------------------------------------------------

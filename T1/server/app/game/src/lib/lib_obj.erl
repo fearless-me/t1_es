@@ -19,12 +19,12 @@
 -export([is_player/1, is_monster/1, is_pet/1, is_npc/1]).
 
 %%%-------------------------------------------------------------------
-obj_type(Obj) -> Obj#obj.type.
+obj_type(Obj) -> Obj#r_obj.type.
 
 %%%-------------------------------------------------------------------
-is_npc(Obj)     -> Obj#obj.type =:= ?OBJ_NPC.
-is_pet(Obj)     -> Obj#obj.type =:= ?OBJ_PET.
-is_player(Obj)  -> Obj#obj.type =:= ?OBJ_USR.
-is_monster(Obj) -> Obj#obj.type =:= ?OBJ_MON.
+is_npc(Obj)     -> Obj#r_obj.type =:= ?OBJ_NPC.
+is_pet(Obj)     -> Obj#r_obj.type =:= ?OBJ_PET.
+is_player(Obj)  -> Obj#r_obj.type =:= ?OBJ_USR.
+is_monster(Obj) -> Obj#r_obj.type =:= ?OBJ_MON.
 %%%-------------------------------------------------------------------
 

@@ -95,7 +95,7 @@ tick_msg() ->
     ok.
 
 nodedown(ServerNode, #state{db_id = DBId, register_name = RegName}) ->
-    ps_mgr:send(svr_worker_manager, {nodedown, ServerNode, DBId}),
+    ps:send(svr_worker_manager, {nodedown, ServerNode, DBId}),
     ?WARN("nodedown[~p], stop worker[~p][~p] now",
         [ServerNode, self(), RegName]),
     ok.

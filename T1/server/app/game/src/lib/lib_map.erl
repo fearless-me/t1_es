@@ -35,7 +35,7 @@
 
 %%%-------------------------------------------------------------------
 init(S) ->
-    Conf = mod_map_creator:map_conf(S#map_state.map_id),
+    Conf = mod_map_creator:map_conf(S#r_map_state.map_id),
     S1 = init_1(S),
     ok = init_2(S1),
     ok = lib_map_view:init_vis_tile(Conf),
@@ -46,21 +46,21 @@ init(S) ->
 
 %%%-------------------------------------------------------------------
 init_1(State) ->
-    State#map_state{
-        npc     = ets:new(?MAP_NPC_ETS, [protected, {keypos, #obj.code}, ?ETSRC]),
-        pet     = ets:new(?MAP_PET_ETS, [protected, {keypos, #obj.code}, ?ETSRC]),
-        player  = ets:new(?MAP_USR_ETS, [protected, {keypos, #obj.code}, ?ETSRC]),
-        monster = ets:new(?MAP_MON_ETS, [protected, {keypos, #obj.code}, ?ETSRC])
+    State#r_map_state{
+        npc     = ets:new(?MAP_NPC_ETS, [protected, {keypos, #r_obj.code}, ?ETSRC]),
+        pet     = ets:new(?MAP_PET_ETS, [protected, {keypos, #r_obj.code}, ?ETSRC]),
+        player  = ets:new(?MAP_USR_ETS, [protected, {keypos, #r_obj.code}, ?ETSRC]),
+        monster = ets:new(?MAP_MON_ETS, [protected, {keypos, #r_obj.code}, ?ETSRC])
     }.
 
 init_2(State) ->
-    put(?MAP_ID,        State#map_state.map_id),
-    put(?LINE_ID,       State#map_state.line_id),
-    put(?MAP_NPC_ETS,   State#map_state.npc),
-    put(?MAP_PET_ETS,   State#map_state.pet),
-    put(?MAP_USR_ETS,   State#map_state.player),
-    put(?MAP_MON_ETS,   State#map_state.monster),
-    put(?MAP_HOOK,      State#map_state.hook_mod),
+    put(?MAP_ID,        State#r_map_state.map_id),
+    put(?LINE_ID,       State#r_map_state.line_id),
+    put(?MAP_NPC_ETS,   State#r_map_state.npc),
+    put(?MAP_PET_ETS,   State#r_map_state.pet),
+    put(?MAP_USR_ETS,   State#r_map_state.player),
+    put(?MAP_MON_ETS,   State#r_map_state.monster),
+    put(?MAP_HOOK,      State#r_map_state.hook_mod),
     ok.
 %%%-------------------------------------------------------------------
 get_map_id()        -> get(?MAP_ID).
@@ -72,13 +72,15 @@ get_player_ets()    -> get(?MAP_USR_ETS).
 get_monster_ets()   -> get(?MAP_MON_ETS).
 
 %%%-------------------------------------------------------------------
-player_exit(S, {_PlayerID,PlayerCode}) ->
+player_exit(S, #r_exit_map_req{
+    code = PlayerCode
+}) ->
     Obj = get_player(PlayerCode),
     player_exit_1(Obj),
     {ok, S}.
 
 player_exit_1(Obj) ->
-    ets:delete(get_player_ets(), Obj#obj.code),
+    ets:delete(get_player_ets(), Obj#r_obj.code),
     lib_map_view:sync_player_exit_map(Obj),
     ok.
 
@@ -91,18 +93,11 @@ player_join(S, Obj) ->
 %%%-------------------------------------------------------------------
 get_player(PlayerCode) ->
     case ets:lookup(get_player_ets(), PlayerCode) of
-        [#obj{} = Obj | _] -> Obj;
+        [#r_obj{} = Obj | _] -> Obj;
         _ -> undefined
     end.
 
 %%%-------------------------------------------------------------------
-
-%%%-------------------------------------------------------------------
-init_npc( #recGameMapCfg{
-    mapNpc = _NpcList
-}) ->
-    ok.
-
 init_monster( #recGameMapCfg{
     mapMonster = MonsterList
 }) ->
@@ -116,7 +111,7 @@ init_all_monster_1(Mdata)->
     Obj = lib_monster:create(Mdata),
     init_all_monster_2(Obj).
 
-init_all_monster_2(#obj{
+init_all_monster_2(#r_obj{
   pos = Pos
 } = Obj) ->
 
@@ -124,19 +119,26 @@ init_all_monster_2(#obj{
     VisIndex = lib_map_view:pos_to_vis_index(Pos),
     lib_map_view:add_to_vis_tile(Obj, VisIndex),
     ?DEBUG("map ~p:~p create monster ~p, code ~p, visIndex ~p",
-        [lib_map:get_map_id(), lib_map:get_line_id(), Obj#obj.id, Obj#obj.code, VisIndex]),
+        [lib_map:get_map_id(), lib_map:get_line_id(), Obj#r_obj.id, Obj#r_obj.code, VisIndex]),
     ok;
 init_all_monster_2(_) -> error.
 
-add_obj_to_ets(#obj{type = ?OBJ_MON} = Obj) ->
-    ets:insert(get_monster_ets(), Obj);
-add_obj_to_ets(#obj{type = ?OBJ_USR} = Obj) ->
-    ets:insert(get_player_ets(), Obj);
-add_obj_to_ets(_) ->
+%%%-------------------------------------------------------------------
+init_npc( #recGameMapCfg{
+    mapNpc = NpcList
+}) ->
+    init_all_npc(NpcList),
     ok.
 
+init_all_npc(_NL) ->
+    ok.
 
-init_all_npc(NL) ->
+%%%-------------------------------------------------------------------
+add_obj_to_ets(#r_obj{type = ?OBJ_MON} = Obj) ->
+    ets:insert(get_monster_ets(), Obj);
+add_obj_to_ets(#r_obj{type = ?OBJ_USR} = Obj) ->
+    ets:insert(get_player_ets(), Obj);
+add_obj_to_ets(_) ->
     ok.
 
 %%%-------------------------------------------------------------------

@@ -251,11 +251,15 @@ process_src_file_incs(SrcFile) ->
                         ?INC_REF_SRC_ETS,
                         #hrl_file_srcs{file = IncludeFile, ref_files = [SrcFile]});
                 [#hrl_file_srcs{ref_files = SrcFiles} | _] ->
-                    ets:update_element(
-                        ?INC_REF_SRC_ETS,
-                        IncludeFile,
-                        {#hrl_file_srcs.ref_files, [ SrcFile | SrcFiles]}
-                    )
+                    case lists:member(SrcFile, SrcFiles) of
+                        true -> skip;
+                        _ ->
+                            ets:update_element(
+                                ?INC_REF_SRC_ETS,
+                                IncludeFile,
+                                {#hrl_file_srcs.ref_files, [ SrcFile | SrcFiles]}
+                            )
+                    end
             end
         end, IncludeFiles),
     ok.
@@ -304,6 +308,7 @@ process_hrl_file_lastmod([{File, LastMod} | T1], [{File, LastMod} | T2], SrcFile
 process_hrl_file_lastmod([{File, _} | T1], [{File, _} | T2], SrcFiles, Options) ->
     %% File has changed, recompile...
     WhoInclude = who_include(File, SrcFiles),
+%%  ?WARN("hrl file changed:~ts, src file: ~p", [File, WhoInclude]),
     [recompile_src_file(SrcFile, Options) || SrcFile <- WhoInclude],
     process_hrl_file_lastmod(T1, T2, SrcFiles, Options);
 process_hrl_file_lastmod([{File1, LastMod1} | T1], [{File2, LastMod2} | T2], SrcFiles, Options) ->
@@ -316,6 +321,7 @@ process_hrl_file_lastmod([{File1, LastMod1} | T1], [{File2, LastMod2} | T2], Src
         false ->
             %% File is new, look for src that include it
             WhoInclude = who_include(File2, SrcFiles),
+            ?WARN("hrl file changed:~ts", [File2]),
             [maybe_recompile_src_file(SrcFile, LastMod2, Options) || SrcFile <- WhoInclude],
             process_hrl_file_lastmod([{File1, LastMod1} | T1], T2, SrcFiles, Options)
     end;
@@ -495,7 +501,7 @@ format_error(Module, ErrorDescription) ->
 
 
 who_include(HrlFile, _SrcFiles) ->
-    case ets:lookup(?INC_REF_SRC_ETS, HrlFile) of
+    case ets:lookup(?INC_REF_SRC_ETS, filename:basename(HrlFile)) of
        [#hrl_file_srcs{ref_files = SrcFiles} | _] -> SrcFiles;
         _ -> []
     end.

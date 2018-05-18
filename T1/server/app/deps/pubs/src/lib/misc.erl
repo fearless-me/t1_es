@@ -24,6 +24,7 @@
 -export([register_process/3]).
 -export([create_process_name/2]).
 -export([register_name/1]).
+-export([is_alive/1]).
 -export([to_atom/1]).
 
 %%%-------------------------------------------------------------------
@@ -42,6 +43,18 @@ register_name(Pid) ->
         {registered_name,Name} -> Name;
         _ -> unknown
     end.
+
+
+is_alive(0)-> false;
+is_alive(undefined) -> false;
+is_alive(Name) when is_atom(Name) ->
+    case whereis(Name) of
+        undefined -> false;
+        Pid -> erlang:is_process_alive(Pid)
+    end;
+is_alive(Pid) when is_pid(Pid) ->
+    erlang:is_process_alive(Pid).
+
 
 
 %% @doc convert other type to atom

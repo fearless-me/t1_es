@@ -37,7 +37,7 @@ init(Handler) ->
 %%          remove_handler                              
 %%----------------------------------------------------------------------
 handle_event(Event, State) ->
-    ps_mgr:send(State, {event, Event}),
+    ps:send(State, {event, Event}),
     {ok, State}.
 
 %%----------------------------------------------------------------------

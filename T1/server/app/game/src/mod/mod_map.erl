@@ -22,13 +22,13 @@
 -export([mod_init/1, do_handle_call/3, do_handle_info/2, do_handle_cast/2]).
 
 
-player_exit(MapPid, PlayerID) ->
-    gen_server:call(MapPid, {player_exit, PlayerID}).
+player_exit(MapPid, Req) ->
+    gen_server:call(MapPid, {player_exit, Req}).
 
-player_join(MapPid, PlayerID) ->
-    gen_server:call(MapPid, {player_join, PlayerID}).
+player_join(MapPid, Obj) ->
+    gen_server:call(MapPid, {player_join, Obj}).
 
-status_(MapPid) -> ps_mgr:send(MapPid, status).
+status_(MapPid) -> ps:send(MapPid, status).
 
 
 %%%===================================================================
@@ -46,17 +46,17 @@ mod_init([MapID, MapLine]) ->
     ProcessName = misc:create_process_name(mod_map, [MapID,MapLine]),
     erlang:register(ProcessName, self()),
     ?INFO("map ~p:~p started",[ProcessName, self()]),
-    {ok, lib_map:init(#map_state{map_id = MapID, line_id = MapLine})}.
+    {ok, lib_map:init(#r_map_state{map_id = MapID, line_id = MapLine})}.
 
 %%--------------------------------------------------------------------
 do_handle_call({init}, _From, State) ->
     NewState = lib_map:init(State),
     {reply, ok, NewState};
-do_handle_call({player_join, Params}, _From, State) ->
-    {Ret, NewState} = lib_map:player_join(State, Params),
+do_handle_call({player_join, Obj}, _From, State) ->
+    {Ret, NewState} = lib_map:player_join(State, Obj),
     {reply, Ret, NewState};
-do_handle_call({player_exit, Params}, _From, State) ->
-    {Ret, NewState} = lib_map:player_exit(State, Params),
+do_handle_call({player_exit, Req}, _From, State) ->
+    {Ret, NewState} = lib_map:player_exit(State, Req),
     {reply, Ret, NewState};
 do_handle_call(Request, From, State) ->
     ?ERROR("undeal call ~w from ~w", [Request, From]),

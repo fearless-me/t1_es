@@ -22,14 +22,18 @@
 -include("logger.hrl").
 -include("netconf.hrl").
 -include("player_status.hrl").
+-include("record.hrl").
+-include("common.hrl").
 
 -define(SocketKey,socketRef___).
+
+-record(r_player_state,{}).
 
 
 %% API
 -export([stop/1, direct_stop/0, send/1,direct_send/1]).
--export([on_init/1, on_data/2, on_close/2]).
--export([on_info_msg/1, on_call_msg/2, on_cast_msg/1, on_net_msg/1]).
+-export([on_init/1, on_data/3, on_close/3]).
+-export([on_info_msg/2, on_call_msg/3, on_cast_msg/2, on_net_msg/2]).
 -export([socket/1, socket/0]).
 %%%-------------------------------------------------------------------
 stop(Reason)->
@@ -52,42 +56,41 @@ direct_send(IoList)->
 on_init(Socket) ->
     {Ip, Port} = misc:peername(Socket),
     socket(Socket),
-    lib_player:set_player_status(?PS_INIT),
+    lib_player:init(),
     ?DEBUG("client connected: ~p ~ts:~p", [Socket, Ip, Port]),
-    ok.
+    {ok, #r_player_state{}}.
 
-on_data(Socket, Data)->
+on_data(Socket, Data, S)->
 %%    ?DEBUG("~p,recieve:~p",[Socket, Data]),
 %%    direct_send([Data]),
-    tcp_codec:decode(fun mod_player:on_net_msg/1, Socket, Data),
-    ok.
+    tcp_codec:decode(fun mod_player:on_net_msg/2, Socket, Data),
+    S.
 
-on_close(Socket, Reason) ->
-    lib_player:set_player_status(?PS_OFFLINE),
+on_close(Socket, Reason, S) ->
     lib_player:offline(),
     ?DEBUG("~p close,reason:~p",[Socket, Reason]),
-    ok.
+    S.
 %%%-------------------------------------------------------------------
-on_info_msg({login_ack, Msg}) ->
+on_info_msg({login_ack, Msg}, S) ->
     ?DEBUG("login_ack:~p",[Msg]),
     lib_player:login_ack(Msg),
-    ok;
-on_info_msg(Info) ->
+    S;
+on_info_msg(Info, S) ->
     ?DEBUG("info:~p",[Info]),
-    ok.
+    S.
 
-on_call_msg(Request, From)->
+on_call_msg(Request, From, S)->
     ?DEBUG("call ~p from ~p",[Request, From]),
-    true.
+    {true, S}.
 
-on_cast_msg(Request) ->
+on_cast_msg(Request, S) ->
     ?DEBUG("cast:~p",[Request]),
-    ok.
+    S.
 
 
-on_net_msg({Cmd, Msg})->
+on_net_msg(Cmd, Msg)->
     ?DEBUG("net msg ~p:~p",[Cmd, Msg]),
-    lib_route:route(Msg),
+    ?TRY_CATCH( lib_route:route(Msg) ),
     ok.
 
 %%%-------------------------------------------------------------------

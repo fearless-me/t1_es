@@ -29,7 +29,7 @@ create(#recMapObjData{
     } = getCfg:getCfgByArgs(cfg_monster, Mid),
 
     Code = code_gen:gen(?OBJ_MON),
-    #obj{
+    #r_obj{
         code = Code,
         id = Mid,
         name = Name,

@@ -35,7 +35,7 @@
 %%%-------------------------------------------------------------------
 sync_player_join_map(Obj) ->
     %% fix_pos(Obj),
-    Index = pos_to_vis_index(Obj#obj.pos, get(?VIS_W), ?VIS_DIST),
+    Index = pos_to_vis_index(Obj#r_obj.pos, get(?VIS_W), ?VIS_DIST),
     Tiles = get_vis_tile_around(Index),
     sync_add_to_vis_tile(Obj, Tiles),
     add_to_vis_tile(Obj, Index),
@@ -43,7 +43,7 @@ sync_player_join_map(Obj) ->
 
 %%%-------------------------------------------------------------------
 sync_player_exit_map(Obj) ->
-    Index = pos_to_vis_index(Obj#obj.pos, get(?VIS_W), ?VIS_DIST),
+    Index = pos_to_vis_index(Obj#r_obj.pos, get(?VIS_W), ?VIS_DIST),
     Tiles = get_vis_tile_around(Index),
     remove_from_vis_tile(Obj, Index),
     sync_remove_from_vis_tile(Obj, Tiles),
@@ -77,7 +77,7 @@ init_vis_tile_1(X) when X < 0 ->
 init_vis_tile_1(X) when X =:= 0 ->
     ok;
 init_vis_tile_1(X) ->
-    set_vis_tile(X, #visTile{index = X}),
+    set_vis_tile(X, #r_vis_tile{index = X}),
     init_vis_tile_1(X - 1).
 
 %%%-------------------------------------------------------------------
@@ -113,18 +113,19 @@ sync_add_to_vis_tile(Obj, VisTiles) ->
 %% 加入格子
 add_to_vis_tile(Obj, VisTileIndex) ->
     ?assert(is_number(VisTileIndex) andalso VisTileIndex > 0),
-    
+
+    Code = Obj#r_obj.code,
     VisTile1 = get_vis_tile(VisTileIndex),
     VisTile2 =
         case lib_obj:obj_type(Obj) of
             ?OBJ_USR ->
-                VisTile1#visTile{player = [Obj | VisTile1#visTile.player]};
+                VisTile1#r_vis_tile{player = [Code | VisTile1#r_vis_tile.player]};
             ?OBJ_MON ->
-                VisTile1#visTile{monster = [Obj | VisTile1#visTile.monster]};
+                VisTile1#r_vis_tile{monster = [Code | VisTile1#r_vis_tile.monster]};
             ?OBJ_PET ->
-                VisTile1#visTile{pet = [Obj | VisTile1#visTile.pet]};
+                VisTile1#r_vis_tile{pet = [Code | VisTile1#r_vis_tile.pet]};
             ?OBJ_NPC ->
-                VisTile1#visTile{npc = [Obj | VisTile1#visTile.npc]};
+                VisTile1#r_vis_tile{npc = [Code | VisTile1#r_vis_tile.npc]};
             _ -> VisTile1
         end,
 
@@ -136,20 +137,21 @@ add_to_vis_tile(Obj, VisTileIndex) ->
 remove_from_vis_tile(Obj, VisTileIndex) ->
     ?assert(is_number(VisTileIndex) andalso VisTileIndex > 0),
 
+    Code = Obj#r_obj.code,
     VisTile1 = get_vis_tile(VisTileIndex),
     VisTile2 =
         case lib_obj:obj_type(Obj) of
             ?OBJ_USR ->
-                VisTile1#visTile{
-                    player = lists:keydelete(Obj#obj.code, #obj.code, VisTile1#visTile.player)
+                VisTile1#r_vis_tile{
+                    player = lists:delete(Code,VisTile1#r_vis_tile.player)
                 };
             ?OBJ_MON ->
-                VisTile1#visTile{
-                    monster = lists:keydelete(Obj#obj.code, #obj.code, VisTile1#visTile.monster)
+                VisTile1#r_vis_tile{
+                    monster = lists:delete(Code, VisTile1#r_vis_tile.monster)
                 };
             ?OBJ_PET ->
-                VisTile1#visTile{
-                    pet = lists:keydelete(Obj#obj.code, #obj.code, VisTile1#visTile.pet)
+                VisTile1#r_vis_tile{
+                    pet = lists:delete(Code, VisTile1#r_vis_tile.pet)
                 };
             _ -> VisTile1
         end,
@@ -161,24 +163,24 @@ remove_from_vis_tile(Obj, VisTileIndex) ->
 sync_big_vis_tile_to_me(Obj, VisTileList, Msg) ->
     ?DEBUG("~n~w~n~w~n~w",
         [Obj, Msg, VisTileList]),
-    lists:foreach(
-        fun(VisTile) ->
-            _ = [Obj#obj.pid ! Msg || Player <- VisTile#visTile.player, is_visible(Obj, Player)]
-        end, VisTileList),
-
-    lists:foreach(
-        fun(VisTile) ->
-            _ = [Obj#obj.pid ! Msg || Monster <- VisTile#visTile.monster, is_visible(Obj, Monster)]
-        end, VisTileList),
+%%    lists:foreach(
+%%        fun(VisTile) ->
+%%            _ = [Obj#r_obj.pid ! Msg || Player <- VisTile#r_vis_tile.player, is_visible(Obj, Player)]
+%%        end, VisTileList),
+%%
+%%    lists:foreach(
+%%        fun(VisTile) ->
+%%            _ = [Obj#r_obj.pid ! Msg || Monster <- VisTile#r_vis_tile.monster, is_visible(Obj, Monster)]
+%%        end, VisTileList),
     ok.
 
 sync_me_to_big_vis_tile(Unit, VisTileList, Msg) ->
     ?DEBUG("~n~w~n~w~n~w",
         [Unit, Msg, VisTileList]),
-    lists:foreach(
-        fun(VisTile) ->
-            _ = [Role#obj.pid ! Msg || Role <- VisTile#visTile.player, is_visible(Unit, Role)]
-        end, VisTileList),
+%%    lists:foreach(
+%%        fun(VisTile) ->
+%%            _ = [Role#r_obj.pid ! Msg || Role <- VisTile#r_vis_tile.player, is_visible(Unit, Role)]
+%%        end, VisTileList),
     ok.
 
 
@@ -239,6 +241,6 @@ set_vis_tile(VisTileIndex, VisTile) ->
     put({?VIS_KEY, VisTileIndex}, VisTile).
 
 %%%-------------------------------------------------------------------
-is_visible(_Self, _Target) -> true.
+%%is_visible(_Self, _Target) -> true.
 
 

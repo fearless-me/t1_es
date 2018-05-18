@@ -6,7 +6,7 @@
 %%% @end
 %%% Created : 02. 一月 2018 16:57
 %%%-------------------------------------------------------------------
--module(ps_mgr).
+-module(ps).
 -author("mawenhong").
 
 %% API
@@ -14,8 +14,9 @@
 %% send(,Msg) -> Msg
 %% send2(_,Msg) -> {Msg, FromPid}
 %% send3(_,Msg, FromPid) -> {Msg, FromPid}
-    send/2, send2/2, send3/3,
-    is_alive/1
+    send/2,
+    send2/2,
+    send3/3
 ]).
 
 send(undefined, _) -> ok;
@@ -65,14 +66,3 @@ send3(Pid, Msg, From) when is_pid(Pid) ->
     erlang:send(Pid, {Msg,From});
 send3(Dst,Msg, From) when is_tuple(Dst)->
     erlang:send(Dst, {Msg,From}).
-
-
-is_alive(0)-> false;
-is_alive(undefined) -> false;
-is_alive(Name) when is_atom(Name) ->
-    case whereis(Name) of
-        undefined -> false;
-        Pid -> erlang:is_process_alive(Pid)
-    end;
-is_alive(Pid) when is_pid(Pid) ->
-    erlang:is_process_alive(Pid).

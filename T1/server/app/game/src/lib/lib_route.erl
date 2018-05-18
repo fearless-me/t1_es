@@ -20,7 +20,8 @@
 
 route(Msg) ->
     %%1. hook
-    Status = lib_player:get_player_status(),
+    ?DEBUG("route(~p)",[Msg]),
+    Status = lib_player_rw:get_player_status(),
     case Status of
         ?PS_INIT -> ok;
         ?PS_VERIFY -> ok;
@@ -41,7 +42,8 @@ route_1(#pk_U2LS_Login_Normal{
     sign = Token
 
 }) ->
-    mod_login:login_(#login_req{
+    ?DEBUG("mod_login:login_"),
+    mod_login:login_(#r_login_req{
         plat_account_name = PlatAccount,
         access_token = Token,
         player_pid = self()
@@ -53,5 +55,5 @@ route_1(#pk_GS2U_GoNewMap{tarMapID = DestMapID, fX = X, fY = Y} = Msg) ->
         DestMapID, #vector3{x = X, y = 0.0, z = Y}),
     ok;
 route_1(Msg) ->
-    ?DEBUG("~p:~p", [Msg]),
+    ?DEBUG("~p", [Msg]),
     ok.

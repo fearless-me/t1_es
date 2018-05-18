@@ -25,8 +25,8 @@ worker_nodedown(ServerNode, ServerID) ->
 register({FromPid, DBId, ServerType, ServerName}) ->
     case can_register(sentinel_server:ready(), FromPid, DBId) of
         true -> do_register(FromPid, DBId, ServerType, ServerName);
-        {true, Worker} -> ps_mgr:send(FromPid, {registerAck, {true, Worker}});
-        Error -> ps_mgr:send(FromPid, {registerAck, Error})
+        {true, Worker} -> ps:send(FromPid, {registerAck, {true, Worker}});
+        Error -> ps:send(FromPid, {registerAck, Error})
     end,
     ok.
 
@@ -45,14 +45,14 @@ do_register(FromPid, ServerId, ServerType, ServerName) ->
             },
 
             svr_worker_manager:add_server_info(Info),
-            ps_mgr:send(FromPid, {registerAck, true, Pid}),
+            ps:send(FromPid, {registerAck, true, Pid}),
             ?WARN("id[~p],type[~p],node[~p],name[~ts],wnd[~p],worker[~p] registered, wait ack",
                 [ServerId, ServerType, GSNode, ServerName, FromPid, Pid]),
             ok;
         V ->
             ?ERROR("regiseter gameserver[~p] failed, reason:[~p]",
                 [ServerId, V]),
-            ps_mgr:send(FromPid, {registerAck, false, V}),
+            ps:send(FromPid, {registerAck, false, V}),
             ok
     end,
     ok.
@@ -63,7 +63,7 @@ can_register(_, FromPid, DBId) ->
     case svr_worker_manager:get_server_info(DBId) of
         #sever_info{worker_pid = Worker, node = Node} when is_pid(Worker) ->
             FromNode = erlang:node(FromPid),
-            case ps_mgr:is_alive(Worker) of
+            case misc:is_alive(Worker) of
                 true when FromNode =:= Node ->
                     {true, Worker};
                 _ ->

@@ -22,7 +22,7 @@
 
 %% API
 -export([take_over_player_online/2]).
--export([player_change_map/3]).
+-export([player_change_map/1]).
 -export([player_offline/4]).
 -export([map_conf/1]).
 -export([broadcast_all/0, broadcast_map/1]).
@@ -35,7 +35,7 @@
 take_over_player_online(MapID, Req) ->
     Mgr = map_mgr(MapID),
     case mod_map_mgr:player_join_map(Mgr, Req) of
-        #change_map_ack{} = Ack -> Ack;
+        #r_change_map_ack{} = Ack -> Ack;
         _ -> kick_to_born_map(Req)
     end,
     ok.
@@ -43,23 +43,46 @@ take_over_player_online(MapID, Req) ->
 %%%-------------------------------------------------------------------
 player_offline(PlayerID, PlayerCode, MapID, MapPid) ->
     Mgr = map_mgr(MapID),
-    mod_map_mgr:player_exit_map(Mgr, {PlayerID, PlayerCode, MapPid}),
+    mod_map_mgr:player_exit_map(
+        Mgr,
+        #r_exit_map_req{
+            map_id = MapID,
+            map_pid = MapPid,
+            uid = PlayerID,
+            code = PlayerCode
+        }
+    ),
     ok.
 
 %%%-------------------------------------------------------------------
-player_change_map(PlayerID, CurMap, Req) ->
-    CurMgr = map_mgr(CurMap),
-    TarMgr = map_mgr(Req#change_map_req.map_id),
+player_change_map(Req) ->
+    CurMgr = map_mgr(Req#r_change_map_req.map_id),
+    TarMgr = map_mgr(Req#r_change_map_req.tar_map_id),
     ?DEBUG("player ~p, changeMap ~p:~p -> ~p:~p",
-        [PlayerID, CurMap, CurMgr, Req#change_map_req.map_id, TarMgr]),
-    mod_map_mgr:player_exit_map(CurMgr, PlayerID),
+        [
+            Req#r_change_map_req.player_id,
+            Req#r_change_map_req.map_id,
+            CurMgr,
+            Req#r_change_map_req.tar_map_id,
+            TarMgr
+        ]
+    ),
+    mod_map_mgr:player_exit_map(
+        CurMgr,
+        #r_exit_map_req{
+            map_id = Req#r_change_map_req.map_id,
+            map_pid = Req#r_change_map_req.map_pid,
+            uid = Req#r_change_map_req.player_id,
+            code = Req#r_change_map_req.player_code
+        }
+    ),
     case mod_map_mgr:player_join_map(TarMgr, Req) of
-        #change_map_ack{} = Ack -> Ack;
+        #r_change_map_ack{} = Ack -> Ack;
         _ -> kick_to_born_map(Req)
     end.
 
 %%%-------------------------------------------------------------------
-kick_to_born_map(Req) ->
+kick_to_born_map(_Req) ->
     ok.
 
 %%%-------------------------------------------------------------------
@@ -73,7 +96,7 @@ broadcast_map(MapID) ->
 %%%-------------------------------------------------------------------
 map_mgr(MapID) ->
     case ets:lookup(?MAP_MGR_ETS, MapID) of
-        [#map_mgr_r{mgr = Mgr} | _ ] -> Mgr;
+        [#map_mgr_r{mgr = Mgr} | _] -> Mgr;
         _ -> undefined
     end.
 

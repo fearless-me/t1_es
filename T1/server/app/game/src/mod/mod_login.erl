@@ -19,8 +19,8 @@
 -export([start_link/0]).
 -export([mod_init/1, do_handle_call/3, do_handle_info/2, do_handle_cast/2]).
 
-login_(Ack)         -> ps_mgr:send(?MODULE, {login_req,Ack}).
-logout_(AccountID)  -> ps_mgr:send(?MODULE, {logout, AccountID}).
+login_(Ack)         -> ps:send(?MODULE, {login_req,Ack}).
+logout_(AccountID)  -> ps:send(?MODULE, {logout, AccountID}).
 
 
 -record(login_state, {lt = 1800, in = 0, lq = undefined}).
@@ -59,7 +59,7 @@ do_handle_cast(Request, State) ->
     {noreply, State}.
 
 %%--------------------------------------------------------------------
-login_1(#login_req{
+login_1(#r_login_req{
     player_pid = Pid,
     access_token = Token,
     plat_account_name = PlatAccount
@@ -68,18 +68,18 @@ login_1(#login_req{
     login_2(Pid, Ack, S).
 
 login_2(Pid, {false, Error}, S)->
-    ps_mgr:send(Pid, {login_ack, #login_ack{error = Error}}),
+    ps:send(Pid, {login_ack, #r_login_ack{error = Error}}),
     S;
 login_2(Pid, {true, PlatAccount}, S)->
     AccountInfo = load_account_info(PlatAccount),
-    ps_mgr:send(Pid, {login_ack, #login_ack{account_info = AccountInfo}}),
+    ps:send(Pid, {login_ack, #r_login_ack{account_info = AccountInfo}}),
     S#login_state{in = S#login_state.in + 1}.
 
 verify(PlatAccount, _Token) ->
     {true, PlatAccount}.
 
 load_account_info(Acc) ->
-    #account_info{account_name = Acc, account_id = 9999}.
+    #r_account_info{account_name = Acc, account_id = 9999}.
 %%--------------------------------------------------------------------
 logout_1(_AccountID, S) ->
     S#login_state{in = S#login_state.in - 1}.

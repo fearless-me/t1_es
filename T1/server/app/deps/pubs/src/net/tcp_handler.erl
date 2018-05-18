@@ -16,7 +16,7 @@
 -include("netconf.hrl").
 
 %% define
--record(state, {socket = undefined, handler = undefined}).
+-record(state, {socket = undefined, handler = undefined, cli_data = undefined}).
 
 %% API
 -export([active_stop/1, send_net_msg/1, direct_send_net_msg/2]).
@@ -28,10 +28,10 @@
 %%% API
 %%%===================================================================
 active_stop(Reason)->
-    ps_mgr:send(self(), {active_stop, Reason}).
+    ps:send(self(), {active_stop, Reason}).
 
 send_net_msg(DataBinaryList) when is_list(DataBinaryList)->
-    ps_mgr:send(self(), {write, DataBinaryList}),
+    ps:send(self(), {write, DataBinaryList}),
     ok.
 
 direct_send_net_msg(Socket, DataBinaryList) when is_list(DataBinaryList)->
@@ -51,52 +51,75 @@ mod_init({Ref, Socket, ranch_tcp, Opts}) ->
     Handler = misc:get_value(handler, Opts, false),
     SockOpts = misc:get_value(sock_opts, Opts, [{active, once}]),
     NetConf = misc:get_value(netConf, Opts, #net_conf{max_msg_bytes = 16 * 1024}),
+
     ok = ranch:accept_ack(Ref),
     ok = ranch_tcp:setopts(Socket, SockOpts),
-    ok = Handler:on_init(Socket),
     ok = tcp_codec:init(NetConf),
+    {ok, S} = Handler:on_init(Socket),
     erlang:process_flag(trap_exit, true),
     gen_server:enter_loop(?MODULE, [], #state{
-        socket = Socket,handler = Handler
+        socket = Socket,
+        handler = Handler,
+        cli_data = S
     }).
 
 
 %%--------------------------------------------------------------------	
-do_handle_call(Request, From,  #state{handler = Handler} = State) ->
-    Ret = Handler:on_call_msg(Request, From),
-    {reply, Ret, State}.
+do_handle_call(Request, From,  #state{handler = Handler, cli_data = S} = State) ->
+    {Ret, S1} = Handler:on_call_msg(Request, From, S),
+    {reply, Ret, State#state{cli_data = S1}}.
 
 %%--------------------------------------------------------------------
 do_handle_info({tcp, Socket, Data},
-    State=#state{socket=Socket, handler = Handler}
+    State=#state{socket=Socket, handler = Handler, cli_data = S}
 ) ->
     ranch_tcp:setopts(Socket, [{active, once}]),
-    try Handler:on_data(Socket,Data), {noreply, State}
+    try
+        S1 = Handler:on_data(Socket,Data, S), {noreply, State},
+        {noreply, State#state{cli_data = S1}}
     catch _:_ ->
             ranch_tcp:shutdown(Socket, read),
             ?WARN("~p stop,shutdown socket ~p",[self(), Socket]),
             {stop, shutdown, State}
     end;
-do_handle_info({tcp_closed, Socket}, #state{handler = Handler} = State) ->
-    ?TRY_CATCH(Handler:on_close(Socket, tcp_closed)),
+do_handle_info(
+    {tcp_closed, Socket},
+    #state{handler = Handler, cli_data = S} = State
+) ->
+    ?TRY_CATCH(Handler:on_close(Socket, tcp_closed, S)),
     {stop, normal, State};
-do_handle_info({tcp_error, Socket, Reason}, #state{handler = Handler} = State) ->
-    ?TRY_CATCH(Handler:on_close(Socket, tcp_error)),
+do_handle_info(
+    {tcp_error, Socket, Reason},
+    #state{handler = Handler, cli_data = S} = State
+) ->
+    ?TRY_CATCH(Handler:on_close(Socket, tcp_error, S)),
     {stop, Reason, State};
-do_handle_info({active_stop,Reason}, #state{handler = Handler, socket = Socket}=State) ->
-    ?TRY_CATCH(Handler:on_close(Socket, Reason)),
+do_handle_info(
+    {active_stop,Reason},
+    #state{handler = Handler, socket = Socket, cli_data = S}=State
+) ->
+    ?TRY_CATCH(Handler:on_close(Socket, Reason, S)),
     {stop, normal, State};
-do_handle_info({write,DataBinaryList}, #state{socket = Socket}=State) ->
+do_handle_info(
+    {write,DataBinaryList},
+    #state{socket = Socket}=State
+) ->
     ranch_tcp:send(Socket, DataBinaryList),
     {noreply, State};
-do_handle_info(Info, #state{handler = Handler} = State) ->
-    Handler:on_info_msg(Info),
-    {noreply, State}.
+do_handle_info(
+    Info,
+    #state{handler = Handler, cli_data = S} = State
+) ->
+    S1 = Handler:on_info_msg(Info, S),
+    {noreply, State#state{cli_data = S1}}.
 
 %%--------------------------------------------------------------------
-do_handle_cast(Request, #state{handler = Handler} = State) ->
-    Handler:on_cast_msg(Request),
-    {noreply, State}.
+do_handle_cast(
+    Request,
+    #state{handler = Handler, cli_data = S} = State
+) ->
+    S1 = Handler:on_cast_msg(Request, S),
+    {noreply, State#state{cli_data = S1}}.
 
 
 %%--------------------------------------------------------------------

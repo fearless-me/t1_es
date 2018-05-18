@@ -33,19 +33,19 @@ start_link(Index) ->
 %%% API
 %%%===================================================================
 save_player_data_(Worker, Data) ->
-    ps_mgr:send(Worker, {save_player_data, Data}).
+    ps:send(Worker, {save_player_data, Data}).
 
 save_player_data(Worker, Data) ->
     gen_server2:call(Worker,{save_player_data, Data}, infinity).
 
 load_player_data_(Worker, PlayerID) ->
-    ps_mgr:send(Worker, {load_player_data, {self(), PlayerID}}).
+    ps:send(Worker, {load_player_data, {self(), PlayerID}}).
 
 load_player_data(Worker, PlayerID) ->
     gen_server2:call(Worker, {load_player_data,PlayerID}, infinity).
 
 status_(Worker) ->
-    ps_mgr:send(Worker, status).
+    ps:send(Worker, status).
 
 status(Worker) ->
     gen_server2:call(Worker, status).
@@ -90,7 +90,7 @@ do_handle_info({save_player_data, Data}, #state{save = Saved, name = Name} = Sta
     {noreply, State#state{save = Saved + 1}};
 do_handle_info({load_player_data, {From, RoleID}}, #state{load = Loaded} = State) ->
     Data = mod_player_cache_manager:load(RoleID),
-    ps_mgr:send(From, Data),
+    ps:send(From, Data),
     {noreply, State#state{load = Loaded + 1}};
 do_handle_info(Info, State) ->
     ?ERROR("undeal info ~w", [Info]),

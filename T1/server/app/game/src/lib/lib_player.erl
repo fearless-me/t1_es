@@ -15,134 +15,134 @@
 -include("player_status.hrl").
 -include("login.hrl").
 -include("obj.hrl").
-%%-include("player_transmit.hrl").
 
--export([init_from_db/1]).
+-export([init/0]).
 -export([login_ack/1]).
+-export([load_all_role_info/1]).
+-export([create_player/1]).
+-export([select_player/1]).
+-export([loaded_player/1]).
 -export([offline/0]).
 -export([add_to_world/0, go_to_new_map/2]).
--export([get_player_status/0, set_player_status/1]).
--export([set_code/1, get_code/0]).
+
+init() ->
+    lib_player_rw:set_player_status(?PS_INIT),
+    ok.
 
 %%%-------------------------------------------------------------------
-login_ack(#login_ack{error = 0, account_info = AccountIfo}) ->
+login_ack(#r_login_ack{error = 0, account_info = AccountIfo}) ->
     mod_player:send(#pk_LS2U_LoginResult{
-        accountID = AccountIfo#account_info.account_id,
+        accountID = AccountIfo#r_account_info.account_id,
         identity = "",
         result = 0,
         msg = io_lib:format("ErrorCode:~p", [0])
     }),
-    set_code(code_gen:gen(?OBJ_USR)),
-    lib_player:set_player_status(?PS_WAIT_ROLELIST),
+    lib_player_rw:set_code(code_gen:gen(?OBJ_USR)),
+    lib_player_rw:set_player_status(?PS_WAIT_ROLELIST),
     ok;
-login_ack(#login_ack{error = Error}) ->
+login_ack(#r_login_ack{error = Error}) ->
     mod_player:send(#pk_LS2U_LoginResult{
-        accountID = 0,
-        identity = "",
         result = Error,
         msg = io_lib:format("ErrorCode:~p", [Error])
     }),
     ok.
 
-
-offline() ->
-    mod_map_creator:player_offline(
-       get_uid(),
-       get_code(),
-       get_map_id(),
-       get_map_pid()
-    ).
 %%%-------------------------------------------------------------------
-init_from_db(_DataBin) ->
-    set_player_status(?PS_WAIT_ENTER),
+load_all_role_info([]) ->
+    lib_player_rw:set_player_status(?PS_WAIT_CREATE),
+    ok;
+load_all_role_info(_RoleList) ->
+    lib_player_rw:set_player_status(?PS_WAIT_SELECT),
+    ok.
+%%%-------------------------------------------------------------------
+create_player(_Msg) ->
+    ok.
+
+%%%-------------------------------------------------------------------
+select_player(_PlayerID) ->
+    lib_player_rw:set_player_status(?PS_WAIT_LOAD),
+    ok.
+
+%%%-------------------------------------------------------------------
+loaded_player(_DataBin) ->
+    lib_player_rw:set_player_status(?PS_WAIT_ENTER),
     add_to_world(),
     ok.
 
+
+%%%-------------------------------------------------------------------
 add_to_world() ->
-    PlayerID = get_uid(),
-    MapID = get_map_id(),
-    Pos = get_pos(),
+    PlayerID = lib_player_rw:get_uid(),
+    MapID = lib_player_rw:get_map_id(),
+    Pos = lib_player_rw:get_pos(),
     Ack = mod_map_creator:take_over_player_online(
         MapID,
-        #change_map_req{
+        #r_change_map_req{
             player_id = PlayerID,
             player_pid = self(),
-            map_id = MapID,
-            pos = Pos,
+            tar_map_id = MapID,
+            tar_pos = Pos,
             obj = make_obj()
         }
     ),
-    set_map_id(MapID),
-    set_map_pid(Ack#change_map_ack.map_pid),
-    set_pos(Ack#change_map_ack.pos),
+    lib_player_rw:set_map_id(MapID),
+    lib_player_rw:set_map_pid(Ack#r_change_map_ack.map_pid),
+    lib_player_rw:set_pos(Ack#r_change_map_ack.pos),
     ok.
 
+%%%-------------------------------------------------------------------
 go_to_new_map(DestMapID, Pos) ->
-    PlayerID = get_uid(),
-    MapID = get_map_id(),
-    set_player_status(?PS_CHANGEMAP),
+    lib_player_rw:set_player_status(?PS_CHANGEMAP),
     Ack = mod_map_creator:player_change_map(
-        PlayerID,
-        MapID,
-        #change_map_req{
-            player_id = PlayerID,
+        #r_change_map_req{
+            player_id = lib_player_rw:get_uid(),
+            player_code = lib_player_rw:get_code(),
             player_pid = self(),
-            map_id = DestMapID,
-            pos = Pos,
+            map_id = lib_player_rw:get_map_id(),
+            map_pid = lib_player_rw:get_map_pid(),
+            tar_map_id = DestMapID,
+            tar_pos = Pos,
             obj = make_obj()
         }
     ),
-    
-    set_map_id(MapID),
-    set_map_pid(Ack#change_map_ack.map_pid),
-    set_pos(Ack#change_map_ack.pos),
+
+    lib_player_rw:set_map_id(Ack#r_change_map_ack.map_id),
+    lib_player_rw:set_map_pid(Ack#r_change_map_ack.map_pid),
+    lib_player_rw:set_pos(Ack#r_change_map_ack.pos),
     ?DEBUG("go_to_new_map(~p, ~w) -> ~w", [DestMapID, Pos, Ack]),
     mod_player:send(#pk_U2GS_ChangeMap{
-        newMapID = Ack#change_map_ack.map_id,
-        fX = Ack#change_map_ack.pos#vector3.x,
-        fY = Ack#change_map_ack.pos#vector3.y
+        newMapID = Ack#r_change_map_ack.map_id,
+        fX = Ack#r_change_map_ack.pos#vector3.x,
+        fY = Ack#r_change_map_ack.pos#vector3.y
     }),
     ok.
 
 
-get_uid() -> 99999.
 
-get_map_id() ->
-    case get('MAP_ID') of
-        undefined -> 1;
-        MapId -> MapId
-    end.
-
-set_map_id(MapId) -> put('MAP_ID', MapId).
-
-get_map_pid() -> get('MAP_PID').
-set_map_pid(Pid) -> put('MAP_PID', Pid).
-
-set_pos(Pos) -> put('POSITION', Pos).
-get_pos()    ->
-    case get('POSITION') of
-        undefined -> #vector3{x = 199.1, y= 0, z = 1255.3};
-        Position  -> Position
-    end.
-
-get_code()     -> get('CODE').
-set_code(Code) -> put('CODE', Code).
-
-set_player_status(Status) ->
-    put(?PLAYER_STATUS, Status),
+%%%-------------------------------------------------------------------
+offline()->
+    offline_1(lib_player_rw:get_player_status()),
     ok.
 
-get_player_status() ->
-    case get(?PLAYER_STATUS) of
-        undefined -> ?PS_ERROR;
-        V -> V
-    end.
+offline_1(Status)
+    when Status =:= ?PS_GAME ; Status =:= ?PS_CHANGEMAP  ->
+    lib_player_rw:set_player_status(?PS_OFFLINE),
+    mod_map_creator:player_offline(
+        lib_player_rw:get_uid(),
+        lib_player_rw:get_code(),
+        lib_player_rw:get_map_id(),
+        lib_player_rw:get_map_pid()
+    );
+offline_1(_Status) ->
+    lib_player_rw:set_player_status(?PS_OFFLINE),
+    ok.
+
 
 make_obj() ->
-    #obj{
+    #r_obj{
         type = ?OBJ_USR,
-        id   = get_uid(),
-        code = get_code(),
-        pos  = get_pos(),
+        id   = lib_player_rw:get_uid(),
+        code = lib_player_rw:get_code(),
+        pos  = lib_player_rw:get_pos(),
         pid  = self()
     }.

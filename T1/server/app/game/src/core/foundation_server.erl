@@ -12,6 +12,9 @@
 -behaviour(gen_serverw).
 -include("logger.hrl").
 -include("obj.hrl").
+-include("gsdef.hrl").
+-include("record.hrl").
+-include("common.hrl").
 
 %% API
 -export([start_link/0]).
@@ -27,13 +30,10 @@ start_link() ->
 %%% Internal functions
 %%%===================================================================	
 mod_init(_Args) ->
-     erlang:process_flag(trap_exit, true),
-    %% erlang:process_flag(priority, high),
-
-    code_gen:init(
-        1, 1,
-        lists:seq(?OBJ_MIN, ?OBJ_MAX)
-    ),
+    erlang:process_flag(trap_exit, true),
+    code_gen:init(1, 1, lists:seq(?OBJ_MIN, ?OBJ_MAX)),
+    ets:new(?ETS_ONLINE, [named_table, public, {keypos, #m_player.id}, ?ETSRC, ?ETSWC]),
+    
     {ok, #{}}.
 
 %%--------------------------------------------------------------------	

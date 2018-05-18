@@ -54,7 +54,7 @@ decode1(Handler, Socket, Bin) ->
     Ret = parse_msg(get_conf(), Bin),
     case Ret of
         {ok, Cmd, Pk, RemainBin} ->
-            catch Handler({Cmd, Pk}),
+            catch Handler(Cmd, Pk),
             decode1(Handler, Socket, RemainBin);
         {halfMsg, HalfMsg} ->
             set_buffer(HalfMsg);

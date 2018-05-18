@@ -35,7 +35,7 @@ status()->
     gen_server:call(?MODULE, status, infinity).
 
 status_()->
-    ps_mgr:send(?MODULE, status).
+    ps:send(?MODULE, status).
 
 ready(V) ->
     ets:insert(?ServerState, #kv{k = 1, v = V}).

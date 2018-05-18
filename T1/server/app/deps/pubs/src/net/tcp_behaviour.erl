@@ -10,11 +10,11 @@
 -author("mawenhong").
 
 %% API
--callback on_init(Socket::any()) -> State ::any().
--callback on_data(Socket::any(), Data :: binary()) -> ok.
--callback on_close(Socket::any(), Reason ::term()) -> ok.
+-callback on_init(Socket::any()) -> {ok, State :: any()}.
+-callback on_data(Socket::any(), Data :: binary(), State :: any()) -> ok.
+-callback on_close(Socket::any(), Reason ::term(), State :: any()) -> ok.
 
--callback on_info_msg(Info::any()) -> ok.
--callback on_call_msg(Request::any(), From::pid())-> Reply :: any().
--callback on_cast_msg(Request :: any) -> ok.
--callback on_net_msg(Msg :: any) -> ok.
+-callback on_info_msg(Info::any(), State :: any()) -> State :: any().
+-callback on_call_msg(Request::any(), From::pid(), State :: any())-> {Reply :: any(), State :: any()}.
+-callback on_cast_msg(Request :: any(), State :: any()) -> State :: any().
+-callback on_net_msg(Cmd :: integer(), Msg :: any) -> ok.
