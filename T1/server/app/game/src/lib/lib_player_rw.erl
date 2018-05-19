@@ -19,6 +19,7 @@
 -export([set_pos/1, get_pos/0]).
 -export([set_map_pid/1, get_map_pid/0]).
 -export([set_map_id/1, get_map_id/0]).
+-export([set_pre_map_id/1, get_pre_map_id/0]).
 
 
 
@@ -32,6 +33,15 @@ get_uid() ->
     end.
 
 set_uid(Uid) -> put('UID', Uid).
+
+set_pre_map_id(MapId) ->
+    put('PRE_MAP_ID', MapId).
+
+get_pre_map_id() ->
+    case get('PRE_MAP_ID') of
+        undefined -> 1;
+        MapId -> MapId
+    end.
 
 get_map_id() ->
     case get('MAP_ID') of

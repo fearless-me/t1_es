@@ -16,20 +16,24 @@
 
 -export([status_/1]).
 -export([player_exit/2, player_join/2]).
+-export([player_teleport_/2]).
 
 %% API
 -export([start_link/1]).
 -export([mod_init/1, do_handle_call/3, do_handle_info/2, do_handle_cast/2]).
 
-
+%%
 player_exit(MapPid, Req) ->
     gen_server:call(MapPid, {player_exit, Req}).
-
+%%
 player_join(MapPid, Obj) ->
     gen_server:call(MapPid, {player_join, Obj}).
+%%
+player_teleport_(MapPid, Req) ->
+    ps:send(MapPid, {player_teleport, Req}).
+
 
 status_(MapPid) -> ps:send(MapPid, status).
-
 
 %%%===================================================================
 %%% public functions
@@ -58,6 +62,9 @@ do_handle_call({player_join, Obj}, _From, State) ->
 do_handle_call({player_exit, Req}, _From, State) ->
     {Ret, NewState} = lib_map:player_exit(State, Req),
     {reply, Ret, NewState};
+do_handle_call({player_teleport, Req}, _From, State) ->
+    {Ret, NewState} = lib_map:force_teleport(State, Req),
+    {reply, Ret, NewState};
 do_handle_call(Request, From, State) ->
     ?ERROR("undeal call ~w from ~w", [Request, From]),
     {reply, ok, State}.
@@ -68,6 +75,10 @@ do_handle_info(status, State) ->
     {noreply, State};
 do_handle_info(tick_now, State) ->
     {noreply, lib_map:tick(State)};
+do_handle_info(start_stop_now, State) ->
+    {noreply, lib_map:start_stop_now(State)};
+do_handle_info(stop_immediately, State) ->
+    {stop, State};
 do_handle_info(Info, State) ->
     ?ERROR("undeal info ~w", [Info]),
     {noreply, State}.

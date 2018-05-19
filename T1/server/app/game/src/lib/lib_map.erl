@@ -18,11 +18,14 @@
 %% API
 -export([init/1]).
 -export([tick/1]).
+-export([start_stop_now/1]).
 -export([get_npc_ets/0, get_monster_ets/0]).
 -export([get_pet_ets/0, get_player_ets/0]).
 -export([get_map_id/0, get_line_id/0]).
 -export([get_map_hook/0]).
 -export([player_exit/2, player_join/2]).
+-export([force_teleport/2]).
+-export([get_player/1]).
 
 -define(MAP_MON_ETS, map_monster_ets__).
 -define(MAP_USR_ETS, map_player_ets__).
@@ -80,8 +83,8 @@ player_exit(S, #r_exit_map_req{
     {ok, S}.
 
 player_exit_1(Obj) ->
-    ?INFO("user ~p:~p exit map ~p:~p",
-        [Obj#r_obj.id, Obj#r_obj.code, get_map_id(), self()]),
+    ?INFO("user ~p:~p exit map ~p:~p:~p",
+        [Obj#r_obj.id, Obj#r_obj.code, get_map_id(), get_line_id(), self()]),
     ets:delete(get_player_ets(), Obj#r_obj.code),
     lib_map_view:sync_player_exit_map(Obj),
     ok.
@@ -92,6 +95,30 @@ player_join(S, Obj) ->
     lib_map_view:sync_player_join_map(Obj),
     {ok, S}.
 
+
+%%%-------------------------------------------------------------------
+force_teleport(S, #r_teleport_req{
+    player_code = PlayerCode,
+    tar_pos = TarPos
+}) ->
+    Obj = lib_map:get_player(PlayerCode),
+    on_player_pos_change(Obj, TarPos),
+    {ok, S}.
+
+on_player_pos_change(undefined, _TarPos) ->
+    ok;
+on_player_pos_change(Obj, TarPos) ->
+    stop_move(false),
+    OldVisIndex = lib_map_view:pos_to_vis_index(Obj#r_obj.pos),
+    NewVisIndex = lib_map_view:pos_to_vis_index(TarPos),
+    lib_map_view:sync_change_pos_visual_tile(Obj, OldVisIndex, NewVisIndex),
+    lib_map_rw:player_update(Obj#r_obj.code, {#r_obj.tar_pos, TarPos}),
+    lib_map_view:sync_movement_to_big_visual_tile(
+        {player_move_to, Obj#r_obj.pos, TarPos}),
+    ok.
+
+
+stop_move(_Send)->  ok.
 %%%-------------------------------------------------------------------
 get_player(PlayerCode) ->
     case ets:lookup(get_player_ets(), PlayerCode) of
@@ -146,7 +173,25 @@ add_obj_to_ets(_) ->
 %%%-------------------------------------------------------------------
 tick_msg() -> erlang:send_after(?MAP_TICK, self(), tick_now).
 
+tick(#r_map_state{exit = true, player = PL}) ->
+    real_stop_now(PL);
 tick(S) ->
-%%    ?DEBUG("~p,~p tick now",[misc:register_name(self()), self()]),
     tick_msg(),
     S.
+%%%-------------------------------------------------------------------
+real_stop_now([]) ->
+    ?DEBUG("~p,~p stop now",[misc:register_name(self()), self()]),
+    ps:send(self(), stop_immediately);
+real_stop_now(_Players) ->
+    ok.
+%%%-------------------------------------------------------------------
+start_stop_now(S) ->
+    kick_all_player(S),
+    S#r_map_state{exit = true}.
+
+kick_all_player(#r_map_state{player = Ets}) ->
+    ets:foldl(
+        fun(#r_obj{pid = Pid}, _) ->
+            ps:send(Pid, return_to_pre_map)
+        end, 0, Ets),
+    ok.

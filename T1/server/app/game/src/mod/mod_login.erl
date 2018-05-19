@@ -78,8 +78,7 @@ login_2(Pid, {true, PlatAccount}, S)->
 verify(PlatAccount, _Token) ->
     {true, PlatAccount}.
 
-load_account_info(Acc) ->
-    #r_account_info{account_name = Acc, account_id = 9999}.
+load_account_info(Acc) -> lib_db:load_account_info(Acc).
 %%--------------------------------------------------------------------
 logout_1(_AccountID, S) ->
     S#login_state{in = S#login_state.in - 1}.

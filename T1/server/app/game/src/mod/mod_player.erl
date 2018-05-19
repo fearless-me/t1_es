@@ -75,6 +75,9 @@ on_info_msg({login_ack, Msg}, S) ->
     ?DEBUG("login_ack:~p",[Msg]),
     lib_player:login_ack(Msg),
     S;
+on_info_msg(return_to_pre_map, S) ->
+    lib_player:return_to_pre_map(),
+    S;
 on_info_msg(Info, S) ->
     ?DEBUG("info:~p",[Info]),
     S.

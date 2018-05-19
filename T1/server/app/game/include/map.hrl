@@ -36,9 +36,9 @@
 -record(r_vis_tile,{index = 0, player = [], monster = [], npc = [], pet = []}).
 %%
 -record(r_map_state,{map_id = 0, line_id = 0, player = undefined, monster = undefined,
-    npc = undefined, pet = undefined, respawn = [], hook_mod = undefined}).
+    npc = undefined, pet = undefined, respawn = [], hook_mod = undefined, exit = false}).
 %%
--record(m_map_line,{map_id = 0, line_id = 0, pid = undefined, limits = 32, in = 0, dead_line = 0}).
+-record(m_map_line,{map_id = 0, line_id = 0, pid = undefined, limits = 1, in = 0, dead_line = 0}).
 %%
 -record(r_exit_map_req,{uid = 0, code = 0, map_id = 0, map_pid = undefined}).
 %%
@@ -47,7 +47,8 @@
     map_id = 0, map_pid = undefined, tar_map_id = 0, tar_pos = undefined, tar_map_pid = undefind, obj = undefined}).
 %%
 -record(r_change_map_ack,{map_id = 0, line_id = 0, pos = undefined, map_pid = undefind, error = 0}).
-
+%%
+-record(r_teleport_req,{player_code = 0, map_pid = undefined, tar_pos = undefined}).
 
 
 %地图中的复活点

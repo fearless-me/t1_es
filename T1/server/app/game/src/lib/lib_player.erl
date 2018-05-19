@@ -23,7 +23,7 @@
 -export([select_player/1]).
 -export([loaded_player/1]).
 -export([offline/0]).
--export([add_to_world/0, go_to_new_map/2]).
+-export([add_to_world/0, go_to_new_map/2, return_to_pre_map/0]).
 
 init() ->
     lib_player_rw:set_player_status(?PS_INIT),
@@ -85,6 +85,7 @@ add_to_world() ->
             obj = make_obj()
         }
     ),
+    lib_player_rw:set_pre_map_id(MapID),
     lib_player_rw:set_map_id(MapID),
     lib_player_rw:set_map_pid(Ack#r_change_map_ack.map_pid),
     lib_player_rw:set_pos(Ack#r_change_map_ack.pos),
@@ -92,6 +93,26 @@ add_to_world() ->
 
 %%%-------------------------------------------------------------------
 go_to_new_map(DestMapID, Pos) ->
+    go_to_new_map_1(
+        lib_player_rw:get_map_id(),
+        DestMapID,
+        Pos
+    ),
+    ok.
+
+go_to_new_map_1(DestMapId, DestMapId,  TarPos) ->
+    mod_map:player_teleport_(
+        lib_player_rw:get_map_pid(),
+        #r_teleport_req{
+            player_code = lib_player_rw:get_code(),
+            tar_pos = TarPos
+        }
+    ),
+    ok;
+go_to_new_map_1(_CurMapID, DestMapId,  TarPos) ->
+    go_to_new_map_2(DestMapId, TarPos).
+
+go_to_new_map_2(DestMapID, Pos) ->
     lib_player_rw:set_player_status(?PS_CHANGEMAP),
     Ack = mod_map_creator:player_change_map(
         #r_change_map_req{
@@ -106,6 +127,7 @@ go_to_new_map(DestMapID, Pos) ->
         }
     ),
 
+    lib_player_rw:set_pre_map_id(lib_player_rw:get_map_id()),
     lib_player_rw:set_map_id(Ack#r_change_map_ack.map_id),
     lib_player_rw:set_map_pid(Ack#r_change_map_ack.map_pid),
     lib_player_rw:set_pos(Ack#r_change_map_ack.pos),
@@ -117,6 +139,16 @@ go_to_new_map(DestMapID, Pos) ->
     }),
     ok.
 
+%%%-------------------------------------------------------------------
+return_to_pre_map() ->
+    ?DEBUG("player ~p return_to_pre_map from ~p to ~p",
+        [lib_player_rw:get_uid(), lib_player_rw:get_map_id(), lib_player_rw:get_pre_map_id()]),
+    go_to_new_map_1(
+        lib_player_rw:get_map_id(),
+        lib_player_rw:get_pre_map_id(),
+        lib_player_rw:get_pos()
+    ),
+    ok.
 
 
 %%%-------------------------------------------------------------------

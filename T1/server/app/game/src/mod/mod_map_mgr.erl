@@ -15,10 +15,12 @@
 -include("map.hrl").
 -include("obj.hrl").
 -define(MAP_LINES, map_line_ets__).
+-define(LINE_LIFETIME, 2 * 60 * 1000).
 
 
 -export([player_join_map/2]).
 -export([player_exit_map/2]).
+
 %% API
 -export([start_link/1]).
 -export([mod_init/1, do_handle_call/3, do_handle_info/2, do_handle_cast/2]).
@@ -61,6 +63,9 @@ do_handle_call(Request, From, State) ->
     {reply, ok, State}.
 
 %%--------------------------------------------------------------------
+do_handle_info({stop_line, Line}, State) ->
+    stop_map_line(State, Line),
+    {noreply, State};
 do_handle_info(broadcast, State) ->
     {noreply, State};
 do_handle_info(Info, State) ->
@@ -112,8 +117,10 @@ create_new_line(S, MapID, LineID) ->
     Line = #m_map_line{
         map_id = MapID,
         line_id = LineID,
-        pid = Pid
+        pid = Pid,
+        dead_line = misc:milli_seconds() + 2 * 60 * 1000
     },
+    erlang:send_after(?LINE_LIFETIME, self(), {stop_line, Line}),
     ets:insert(S#state.ets, Line),
     ?INFO("map ~p create new line ~p,~p",[MapID, LineID, Pid]),
     Line.
@@ -127,3 +134,10 @@ next_line_id() ->
         end,
     put('LINE_ID', LineID),
     LineID.
+
+stop_map_line(S, Line) ->
+    ?INFO("map ~p line ~p pid ~p will be kill",
+        [Line#m_map_line.map_id, Line#m_map_line.line_id, Line#m_map_line.pid]),
+    ets:delete(S#state.ets, Line#m_map_line.line_id),
+    ps:send(Line#m_map_line.pid, start_stop_now),
+    ok.

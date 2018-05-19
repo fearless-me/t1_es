@@ -4,16 +4,16 @@
 %%% @doc
 %%%
 %%% @end
-%%% Created : 18. 五月 2018 14:22
+%%% Created : 19. 五月 2018 17:09
 %%%-------------------------------------------------------------------
--module(lib_db).
+-module(lib_map_rw).
 -author("mawenhong").
--include("logger.hrl").
--include("record.hrl").
--include("login.hrl").
 
 %% API
--export([load_account_info/1]).
+-export([player_update/2]).
 
-load_account_info(AccName) ->
-    #r_account_info{account_name = AccName, account_id = 9999}.
+player_update(Code, Elements)->
+    ets:update_element(
+        lib_map:get_player_ets(),
+        Code, Elements),
+    ok.

@@ -25,7 +25,10 @@
 -record(r_obj, {
     code = 0, id = 0, name = "", group = 0,
     type = ?OBJ_ERR :: obj_type(),
-    map_id = 0, line_id = 0, pid = 0, map_pid = undefined, pos = undefined, com = undefined}).
+    map_id = 0, line_id = 0, pid = 0, map_pid = undefined,
+    pos = undefined, tar_pos = undefined,
+    com = undefined
+}).
 %%
 -record(r_obj_monster, {mid, attr= [], buff_list = [], status}).
 %%
