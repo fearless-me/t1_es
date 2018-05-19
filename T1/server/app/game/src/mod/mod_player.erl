@@ -68,7 +68,7 @@ on_data(Socket, Data, S)->
 
 on_close(Socket, Reason, S) ->
     lib_player:offline(),
-    ?DEBUG("~p close,reason:~p",[Socket, Reason]),
+    ?INFO("~p close,reason:~p",[Socket, Reason]),
     S.
 %%%-------------------------------------------------------------------
 on_info_msg({login_ack, Msg}, S) ->

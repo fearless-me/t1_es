@@ -183,8 +183,10 @@ del_from_vis_tile_1(_Type, _Code, _VisTileIndex, _VisTile) ->
 %%%-------------------------------------------------------------------
 %% 把角色信息广播到九宫格中
 sync_big_vis_tile_to_me(Obj, VisTileList, Msg) ->
-    ?DEBUG("~n~w~n~w~n~w",
-        [Obj, Msg, VisTileList]),
+    lists:foreach(
+        fun(VisTile) ->
+            ?DEBUG("~nsrc:~w~nmsg:~w~ntar:~w", [Obj#r_obj.code, Msg, VisTile#r_vis_tile.player])
+        end, VisTileList),
 %%    lists:foreach(
 %%        fun(VisTile) ->
 %%            _ = [Obj#r_obj.pid ! Msg || Player <- VisTile#r_vis_tile.player, is_visible(Obj, Player)]
@@ -196,9 +198,11 @@ sync_big_vis_tile_to_me(Obj, VisTileList, Msg) ->
 %%        end, VisTileList),
     ok.
 
-sync_me_to_big_vis_tile(Unit, VisTileList, Msg) ->
-    ?DEBUG("~n~w~n~w~n~w",
-        [Unit, Msg, VisTileList]),
+sync_me_to_big_vis_tile(Obj, VisTileList, Msg) ->
+    lists:foreach(
+        fun(VisTile) ->
+            ?DEBUG("~nsrc:~w~nmsg:~w~ntar:~w", [Obj#r_obj.code, Msg, VisTile#r_vis_tile.player])
+        end, VisTileList),
 %%    lists:foreach(
 %%        fun(VisTile) ->
 %%            _ = [Role#r_obj.pid ! Msg || Role <- VisTile#r_vis_tile.player, is_visible(Unit, Role)]

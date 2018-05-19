@@ -80,6 +80,8 @@ player_exit(S, #r_exit_map_req{
     {ok, S}.
 
 player_exit_1(Obj) ->
+    ?INFO("user ~p:~p exit map ~p:~p",
+        [Obj#r_obj.id, Obj#r_obj.code, get_map_id(), self()]),
     ets:delete(get_player_ets(), Obj#r_obj.code),
     lib_map_view:sync_player_exit_map(Obj),
     ok.

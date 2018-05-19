@@ -14,10 +14,9 @@
 -include("type.hrl").
 
 -define(TILE_SCALE, 25).
--define(VIS_DIST, 1).	
--record(vector3,{
-    x,y,z
-}).
+-define(VIS_DIST, 1).
+
+-record(vector3,{x,y=0.0,z}).
 -type vector3() :: #vector3{}.
 -export_type([vector3/0]).
 

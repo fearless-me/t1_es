@@ -10,6 +10,7 @@
 -author("mawenhong").
 -include("player_status.hrl").
 -include("map.hrl").
+-include("obj.hrl").
 
 %% API
 -export([get_player_status/0, set_player_status/1]).
@@ -21,7 +22,16 @@
 
 
 
-get_uid() -> 99999.
+get_uid() ->
+    case get('UID') of
+        undefined ->
+            Uid = code_gen:gen(?OBJ_USR),
+            set_uid(Uid),
+            Uid;
+        V -> V
+    end.
+
+set_uid(Uid) -> put('UID', Uid).
 
 get_map_id() ->
     case get('MAP_ID') of

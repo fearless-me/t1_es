@@ -34,11 +34,16 @@
 %%%-------------------------------------------------------------------
 take_over_player_online(MapID, Req) ->
     Mgr = map_mgr(MapID),
+    take_1(Mgr, Req),
+    ok.
+
+take_1(undefined, Req) ->
+    kick_to_born_map(Req);
+take_1(Mgr, Req) ->
     case mod_map_mgr:player_join_map(Mgr, Req) of
         #r_change_map_ack{} = Ack -> Ack;
         _ -> kick_to_born_map(Req)
-    end,
-    ok.
+    end.
 
 %%%-------------------------------------------------------------------
 player_offline(PlayerID, PlayerCode, MapID, MapPid) ->
@@ -58,7 +63,7 @@ player_offline(PlayerID, PlayerCode, MapID, MapPid) ->
 player_change_map(Req) ->
     CurMgr = map_mgr(Req#r_change_map_req.map_id),
     TarMgr = map_mgr(Req#r_change_map_req.tar_map_id),
-    ?DEBUG("player ~p, changeMap ~p:~p -> ~p:~p",
+    ?INFO("player ~p, changeMap ~p:~p -> ~p:~p",
         [
             Req#r_change_map_req.player_id,
             Req#r_change_map_req.map_id,
@@ -67,30 +72,58 @@ player_change_map(Req) ->
             TarMgr
         ]
     ),
-    mod_map_mgr:player_exit_map(
-        CurMgr,
-        #r_exit_map_req{
-            map_id = Req#r_change_map_req.map_id,
-            map_pid = Req#r_change_map_req.map_pid,
-            uid = Req#r_change_map_req.player_id,
-            code = Req#r_change_map_req.player_code
-        }
-    ),
-    case mod_map_mgr:player_join_map(TarMgr, Req) of
-        #r_change_map_ack{} = Ack -> Ack;
-        _ -> kick_to_born_map(Req)
+    case CurMgr of
+        undefined -> ?FATAL("player[~p] cur map[~p] not exists",
+            [Req#r_change_map_req.player_id, Req#r_change_map_req.map_id]);
+        _ ->
+            mod_map_mgr:player_exit_map(
+                CurMgr,
+                #r_exit_map_req{
+                    map_id = Req#r_change_map_req.map_id,
+                    map_pid = Req#r_change_map_req.map_pid,
+                    uid = Req#r_change_map_req.player_id,
+                    code = Req#r_change_map_req.player_code
+                }
+            )
+    end,
+    case TarMgr of
+        undefined ->
+            ?ERROR("player[~p] tar map[~p] not exists",
+                [Req#r_change_map_req.player_id, Req#r_change_map_req.tar_map_id]),
+            kick_to_born_map(Req);
+        _ ->
+            case mod_map_mgr:player_join_map(TarMgr, Req) of
+                #r_change_map_ack{} = Ack -> Ack;
+                _ -> kick_to_born_map(Req)
+            end
     end.
 
 %%%-------------------------------------------------------------------
-kick_to_born_map(_Req) ->
-    ok.
+kick_to_born_map(Req) ->
+    Mid = born_map_id(),
+    Pos = born_map_pos(),
+    Mgr = map_mgr( Mid ),
+    ?WARN("kick player[~p] to born map",
+        [Req#r_change_map_req.player_id]),
+    
+    case mod_map_mgr:player_join_map(
+        Mgr,
+        Req#r_change_map_req{
+           tar_map_id = Mid,
+            tar_pos = Pos
+        }
+     ) of
+        #r_change_map_ack{} = Ack -> Ack;
+        _ -> ?FATAL("fatal error, player[~p]can not enter the born map",
+            [Req#r_change_map_req.player_id])
+    end.
 
 %%%-------------------------------------------------------------------
 broadcast_all() ->
     ok.
 
 %%%-------------------------------------------------------------------
-broadcast_map(MapID) ->
+broadcast_map(_MapID) ->
     ok.
 
 %%%-------------------------------------------------------------------
@@ -155,7 +188,8 @@ load_one_map(MapID) ->
     ok.
 
 
-born_map_id() -> 1.
+born_map_id()   -> 1.
+born_map_pos()  -> #vector3{x = 323.19, z = 255.8}.
 
 
 
