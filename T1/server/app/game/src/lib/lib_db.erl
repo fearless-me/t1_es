@@ -11,9 +11,14 @@
 -include("logger.hrl").
 -include("record.hrl").
 -include("login.hrl").
+-include("db_record.hrl").
 
 %% API
 -export([load_account_info/1]).
 
 load_account_info(AccName) ->
-    #r_account_info{account_name = AccName, account_id = 9999}.
+    #p_account{
+        accountID = misc:crc32(AccName),
+        platformAccount = AccName,
+        platformAccountCrc = misc:crc32(AccName)
+    }.

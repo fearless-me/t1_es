@@ -15,13 +15,21 @@
 %% API
 -export([get_player_status/0, set_player_status/1]).
 -export([set_code/1, get_code/0]).
--export([get_uid/0]).
+-export([set_accid/1, get_accid/0]).
+-export([set_uid/1, get_uid/0]).
 -export([set_pos/1, get_pos/0]).
 -export([set_map_pid/1, get_map_pid/0]).
 -export([set_map_id/1, get_map_id/0]).
 -export([set_pre_map_id/1, get_pre_map_id/0]).
 
 
+get_accid() ->
+    case get('ACC_UID') of
+        undefined -> 0;
+        V -> V
+    end.
+
+set_accid(AccId) -> put('ACC_UID', AccId).
 
 get_uid() ->
     case get('UID') of

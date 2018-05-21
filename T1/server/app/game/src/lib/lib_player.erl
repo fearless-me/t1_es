@@ -15,6 +15,7 @@
 -include("player_status.hrl").
 -include("login.hrl").
 -include("obj.hrl").
+-include("db_record.hrl").
 
 -export([init/0]).
 -export([login_ack/1]).
@@ -32,11 +33,12 @@ init() ->
 %%%-------------------------------------------------------------------
 login_ack(#r_login_ack{error = 0, account_info = AccountIfo}) ->
     mod_player:send(#pk_LS2U_LoginResult{
-        accountID = AccountIfo#r_account_info.account_id,
+        accountID = AccountIfo#p_account.accountID,
         identity = "",
         result = 0,
         msg = io_lib:format("ErrorCode:~p", [0])
     }),
+    lib_player_rw:set_accid(AccountIfo#p_account.accountID),
     lib_player_rw:set_code(code_gen:gen(?OBJ_USR)),
     lib_player_rw:set_player_status(?PS_WAIT_ROLELIST),
     ok;
@@ -85,7 +87,7 @@ add_to_world() ->
             obj = make_obj()
         }
     ),
-    lib_player_rw:set_pre_map_id(MapID),
+    lib_player_rw:set_pre_map_id(0),
     lib_player_rw:set_map_id(MapID),
     lib_player_rw:set_map_pid(Ack#r_change_map_ack.map_pid),
     lib_player_rw:set_pos(Ack#r_change_map_ack.pos),
@@ -101,7 +103,7 @@ go_to_new_map(DestMapID, Pos) ->
     ok.
 
 go_to_new_map_1(DestMapId, DestMapId,  TarPos) ->
-    mod_map:player_teleport_(
+    mod_map:player_teleport(
         lib_player_rw:get_map_pid(),
         #r_teleport_req{
             player_code = lib_player_rw:get_code(),

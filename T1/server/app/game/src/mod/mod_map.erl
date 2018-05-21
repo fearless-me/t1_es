@@ -16,7 +16,7 @@
 
 -export([status_/1]).
 -export([player_exit/2, player_join/2]).
--export([player_teleport_/2]).
+-export([player_teleport/2]).
 
 %% API
 -export([start_link/1]).
@@ -29,8 +29,8 @@ player_exit(MapPid, Req) ->
 player_join(MapPid, Obj) ->
     gen_server:call(MapPid, {player_join, Obj}).
 %%
-player_teleport_(MapPid, Req) ->
-    ps:send(MapPid, {player_teleport, Req}).
+player_teleport(MapPid, Req) ->
+    gen_server:call(MapPid, {player_teleport, Req}).
 
 
 status_(MapPid) -> ps:send(MapPid, status).

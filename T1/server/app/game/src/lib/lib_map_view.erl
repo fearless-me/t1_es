@@ -182,10 +182,14 @@ del_from_vis_tile_1(_Type, _Code, _VisTileIndex, _VisTile) ->
 
 %%%-------------------------------------------------------------------
 %% 把角色信息广播到九宫格中
-sync_big_vis_tile_to_me(Obj, VisTileList, Msg) ->
+sync_big_vis_tile_to_me(
+    #r_obj{code = Code, type = ?OBJ_USR},
+    VisTileList,
+    Msg
+) ->
     lists:foreach(
         fun(VisTile) ->
-            ?DEBUG("~nsrc:~w~nmsg:~w~ntar:~w", [Obj#r_obj.code, Msg, VisTile#r_vis_tile.player])
+            ?DEBUG("~nsrc:~w~nmsg:~w~ntar:~w", [Code, Msg, VisTile#r_vis_tile.player])
         end, VisTileList),
 %%    lists:foreach(
 %%        fun(VisTile) ->
@@ -196,12 +200,13 @@ sync_big_vis_tile_to_me(Obj, VisTileList, Msg) ->
 %%        fun(VisTile) ->
 %%            _ = [Obj#r_obj.pid ! Msg || Monster <- VisTile#r_vis_tile.monster, is_visible(Obj, Monster)]
 %%        end, VisTileList),
-    ok.
+    ok;
+sync_big_vis_tile_to_me(_Obj, _VisTileList, _Msg) -> skip.
 
-sync_me_to_big_vis_tile(Obj, VisTileList, Msg) ->
+sync_me_to_big_vis_tile(#r_obj{code = Code}, VisTileList, Msg) ->
     lists:foreach(
         fun(VisTile) ->
-            ?DEBUG("~nsrc:~w~nmsg:~w~ntar:~w", [Obj#r_obj.code, Msg, VisTile#r_vis_tile.player])
+            ?DEBUG("~nsrc:~w~nmsg:~w~ntar:~w", [Code, Msg, VisTile#r_vis_tile.player])
         end, VisTileList),
 %%    lists:foreach(
 %%        fun(VisTile) ->
@@ -244,13 +249,13 @@ get_vis_tile_around_index(VisTileIndex) ->
 %% | lb | b | rb |
 %% ---------------
     ?assert(VisTileIndex > 0),
-    W = get(?VIS_W),
-    H = get(?VIS_H),
-    C = VisTileIndex,
-    L = C - 1,
-    R = C + 1,
-    T = C - W,
-    B = C + W,
+    W  = get(?VIS_W),
+    H  = get(?VIS_H),
+    C  = VisTileIndex,
+    L  = C - 1,
+    R  = C + 1,
+    T  = C - W,
+    B  = C + W,
     LT = T - 1,
     RT = T + 1,
     LB = B - 1,

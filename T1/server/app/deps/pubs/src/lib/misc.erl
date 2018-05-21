@@ -10,13 +10,16 @@
 -author("mawenhong").
 
 %% API
--export([start_applications/1, ensure_all_applications_started/1]).
+-export([start_application/1, start_all_application/1]).
 -export([make_atom/2,atom_to_binary/1]).
 -export([interval_operation/5]).
 -export([b2i/1, i2b/1]).
 -export([ntoa/1, ntoab/1]).
+-export([to_atom/1]).
+-export([list_to_string/2]).
 -export([ip/0, peername/1, ip_string/1]).
--export([ceil/1,mod_1/2, floor/1, clamp/3]).
+-export([crc32/1]).
+-export([ceil/1,mod_1/2, floor/1, clamp/3, rand/2]).
 -export([get_value/3]).
 -export([stacktrace/0, stacktraceE/0]).
 -export([milli_seconds/0, seconds/0]).
@@ -25,8 +28,6 @@
 -export([create_process_name/2]).
 -export([register_name/1]).
 -export([is_alive/1]).
--export([to_atom/1]).
--export([list_to_string/2]).
 
 %%%-------------------------------------------------------------------
 atom_to_binary(A) ->
@@ -56,6 +57,8 @@ is_alive(Name) when is_atom(Name) ->
 is_alive(Pid) when is_pid(Pid) ->
     erlang:is_process_alive(Pid).
 
+%%
+crc32(Str) -> erlang:adler32(Str).
 
 
 %% @doc convert other type to atom
@@ -76,6 +79,10 @@ list_to_atom2(List) when is_list(List) ->
 
 list_to_string([], SuffixStr)-> SuffixStr;
 list_to_string(List, SuffixStr)-> string:join(List, SuffixStr).
+
+%%
+rand(Min, Min)-> Min;
+rand(Min, Max)-> Min + random:uniform(Max - Min).
 
 -spec ceil(X) -> integer() when X::number().
 ceil(X) ->
@@ -172,14 +179,14 @@ ip_string(Address)->
     [A1,A2,A3,A4 | _] = AList,
     io_lib:format( "~w.~w.~w.~w", [A1,A2,A3,A4] ).
 
-start_applications(App)->
+start_application(App)->
     case application:start(App) of
         ok -> true;
         {error,{already_started,App}}-> true;
         {error,Reason} -> Reason
     end.
 
-ensure_all_applications_started(App) ->
+start_all_application(App) ->
     case application:ensure_all_started(App) of
         {ok,_} -> true;
         {error,Reason} -> Reason

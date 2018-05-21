@@ -103,6 +103,8 @@ force_teleport(S, #r_teleport_req{
 }) ->
     Obj = lib_map:get_player(PlayerCode),
     on_player_pos_change(Obj, TarPos),
+    ?DEBUG("player ~p teleport from ~p to ~p in map ~p",
+        [Obj#r_obj.code, Obj#r_obj.pos, TarPos, get_map_id()]),
     {ok, S}.
 
 on_player_pos_change(undefined, _TarPos) ->
@@ -113,8 +115,7 @@ on_player_pos_change(Obj, TarPos) ->
     NewVisIndex = lib_map_view:pos_to_vis_index(TarPos),
     lib_map_view:sync_change_pos_visual_tile(Obj, OldVisIndex, NewVisIndex),
     lib_map_rw:player_update(Obj#r_obj.code, {#r_obj.tar_pos, TarPos}),
-    lib_map_view:sync_movement_to_big_visual_tile(
-        {player_move_to, Obj#r_obj.pos, TarPos}),
+    lib_map_view:sync_movement_to_big_visual_tile({player_move_to, Obj#r_obj.pos, TarPos}),
     ok.
 
 
@@ -138,14 +139,14 @@ init_monster( #recGameMapCfg{
 
 init_all_monster_1(Mdata)->
     Obj = lib_monster:create(Mdata),
-    init_all_monster_2(Obj).
+    ok = init_all_monster_2(Obj).
 
 init_all_monster_2(#r_obj{
   pos = Pos
 } = Obj) ->
 
-    add_obj_to_ets(Obj),
     VisIndex = lib_map_view:pos_to_vis_index(Pos),
+    lib_map_rw:add_obj_to_ets(Obj),
     lib_map_view:add_to_vis_tile(Obj, VisIndex),
     ?DEBUG("map ~p:~p create monster ~p, code ~p, visIndex ~p",
         [lib_map:get_map_id(), lib_map:get_line_id(), Obj#r_obj.id, Obj#r_obj.code, VisIndex]),
@@ -160,14 +161,6 @@ init_npc( #recGameMapCfg{
     ok.
 
 init_all_npc(_NL) ->
-    ok.
-
-%%%-------------------------------------------------------------------
-add_obj_to_ets(#r_obj{type = ?OBJ_MON} = Obj) ->
-    ets:insert(get_monster_ets(), Obj);
-add_obj_to_ets(#r_obj{type = ?OBJ_USR} = Obj) ->
-    ets:insert(get_player_ets(), Obj);
-add_obj_to_ets(_) ->
     ok.
 
 %%%-------------------------------------------------------------------
