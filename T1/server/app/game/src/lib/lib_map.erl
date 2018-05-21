@@ -127,6 +127,7 @@ get_player(PlayerCode) ->
         _ -> undefined
     end.
 
+
 %%%-------------------------------------------------------------------
 init_monster( #recGameMapCfg{
     mapMonster = MonsterList

@@ -2,16 +2,24 @@
 -ifndef(netmsg).
 -define(netmsg,1).
 
--define(ProtoVersion,621).
+-define(ProtoVersion,623).
 
 %% 
-%% //gs在用GameServerInfo
--define(GS2U_ChangeLineResponse,15641).
--record(pk_GS2U_ChangeLineResponse,{
-	%% GameServerInfo线路列表
-	gameServers = [],
-	%% String验证码
-	identity = ""
+-define(GS2U_CreatePlayerResult,45054).
+-record(pk_GS2U_CreatePlayerResult,{
+	%% Int32
+	errorCode = 0,
+	%% UInt64
+	roleID = 0
+}).
+
+%% 
+-define(GS2U_DeletePlayerResult,39385).
+-record(pk_GS2U_DeletePlayerResult,{
+	%% UInt64
+	roleID = 0,
+	%% Int32
+	errorCode = 0
 }).
 
 %% 
@@ -25,46 +33,9 @@
 	fY = 0.0
 }).
 
--record(pk_GameServerInfo,{
-	%% Int16
-	lineid = 0,
-	%% String
-	name = "",
-	%% String
-	ip = "",
-	%% Int16
-	port = 0,
-	%% SByte
-	state = 0
-}).
-
 %% 
-%% //#define GameServer_State_UnCheckPass			0		//正常
-%% //#define GameServer_State_CheckPass				1		//火爆
-%% //#define GameServer_State_Running					2		//爆满
-%% //#define GameServer_State_ForbidLogin			3		//维护
-%% //#define GameServer_State_Closed					4		//维护
-%% //#define GameServer_State_SpecCanVisable			5	//测试人员可见
--define(LS2U_GameLineServerList,17992).
--record(pk_LS2U_GameLineServerList,{
-	%% GameServerInfo
-	gameServers = []
-}).
-
-%% 
--define(LS2U_LoginQue,25241).
--record(pk_LS2U_LoginQue,{
-	%% UInt64自己在队列中的序号
-	currentNumber = 0
-}).
-
-%% 
-%% //////////////////////////////////////////////////////////////////////////
-%% //<-发出去     ;      ->收消息
-%% /////////////////////////////////////////////////////////////////////////
-%% // LoginServer 2 User
--define(LS2U_LoginResult,4461).
--record(pk_LS2U_LoginResult,{
+-define(GS2U_LoginResult,22162).
+-record(pk_GS2U_LoginResult,{
 	%% SByte 0为登录成功，非0为登录失败原因
 	result = 0,
 	%% UInt64
@@ -73,6 +44,115 @@
 	identity = "",
 	%% String不为空，手机必须展示
 	msg = ""
+}).
+
+%% 
+%% // 玩家外观信息
+-define(GS2U_LookInfoPlayer,18166).
+-record(pk_GS2U_LookInfoPlayer,{
+	%% LookInfoPlayer
+	player_list = []
+}).
+
+%% 
+-define(GS2U_MonsterList,32656).
+-record(pk_GS2U_MonsterList,{
+	%% LookInfoMonster 视野范围内怪物列表
+	monster_list = []
+}).
+
+%% 
+-define(GS2U_SelPlayerResult,42464).
+-record(pk_GS2U_SelPlayerResult,{
+	%% Int32
+	result = 0
+}).
+
+%% 
+-define(GS2U_UserPlayerList,18582).
+-record(pk_GS2U_UserPlayerList,{
+	%% UserPlayerData
+	info = []
+}).
+
+-record(pk_LookInfoMonster,{
+	%% UInt64
+	code = 0,
+	%% UInt32 怪物 ID	
+	id = 0,
+	%% Single 怪物坐标
+	x = 0.0,
+	%% Single
+	y = 0.0,
+	%% Single旋转坐标W
+	rotW = 0.0,
+	%% Single 怪物移动的目标点X
+	targetX = 0.0,
+	%% Single 怪物移动的目标点Y
+	targetY = 0.0,
+	%% Single 怪物移动速度
+	move_speed = 0.0,
+	%% Single 怪物攻击速度
+	attack_speed = 0.0,
+	%% Byte 怪物现在是在走还是在跑（客户端用于播放动画）
+	moveStatus = 0,
+	%% Byte 类型 0:普通怪 1:载体怪
+	type = 0,
+	%% Byte 当前血量百分比
+	hp_per = 0,
+	%% SByte 阵营
+	camp = 0,
+	%% UInt64 归宿code
+	usercode = 0,
+	%% UInt64 怪物所属分组ID
+	groupID = 0,
+	%% UInt64 怪物所属军团ID
+	guildID = 0,
+	%% String 名字
+	name = "",
+	%% UInt16怪物等级
+	level = 0
+}).
+
+-record(pk_LookInfoPlayer,{
+	%% UInt64流水号
+	code = 0,
+	%% UInt64角色ID
+	roleID = 0,
+	%% String名字
+	name = "",
+	%% Single坐标X
+	x = 0.0,
+	%% Single坐标Y
+	y = 0.0,
+	%% SByte 种族
+	race = 0,
+	%% UInt32职业
+	career = 0,
+	%% SByte 性别
+	sex = 0,
+	%% SByte阵营
+	camp = 0,
+	%% Int32头
+	head = 0,
+	%% Single移动速度
+	move_speed = 0.0,
+	%% Int16当前等级	
+	level = 0,
+	%% Byte当前血量百分比
+	hp_per = 0,
+	%% UInt16坐骑外观ID （0 表示没有坐骑或者下马状态）
+	petID = 0,
+	%% UInt64双人坐骑对方的Code （0 表示没有）	
+	otherCode = 0,
+	%% String 当前服名
+	servername = "",
+	%% String 归属服名
+	myServerName = "",
+	%% Boolean 是否在跨服
+	isInCross = false,
+	%% Byte玩家Pk状态
+	pkMode = 0
 }).
 
 %% 
@@ -88,9 +168,10 @@
 
 %% 
 %% //////////////////////////////////////////////////////////////////////////
-%% // User 2 LoginServer
--define(U2LS_Login_Normal,41532).
--record(pk_U2LS_Login_Normal,{
+%% //<-发出去     ;      ->收消息
+%% /////////////////////////////////////////////////////////////////////////
+-define(U2GS_Login_Normal,58883).
+-record(pk_U2GS_Login_Normal,{
 	%% String 平台帐号（游戏内帐号用平台id来绑定创建）
 	platformAccount = "",
 	%% String 平台名
@@ -122,11 +203,59 @@
 }).
 
 %% 
-%% //请求线路列表
--define(U2LS_RequestGSLine,39508).
--record(pk_U2LS_RequestGSLine,{
-	%% Int32
-	lineID = 0
+-define(U2GS_RequestCreatePlayer,4022).
+-record(pk_U2GS_RequestCreatePlayer,{
+	%% String 名字
+	name = "",
+	%% SByte 阵营
+	camp = 0,
+	%% UInt32 职业
+	career = 0,
+	%% SByte 种族
+	race = 0,
+	%% SByte 性别
+	sex = 0,
+	%% Int32 头
+	head = 0
+}).
+
+%% 
+-define(U2GS_RequestDeletePlayer,23657).
+-record(pk_U2GS_RequestDeletePlayer,{
+	%% UInt64
+	roleID = 0
+}).
+
+%% 
+-define(U2GS_SelPlayerEnterGame,56497).
+-record(pk_U2GS_SelPlayerEnterGame,{
+	%% UInt64
+	roleID = 0
+}).
+
+-record(pk_UserPlayerData,{
+	%% UInt64 角色ID
+	roleID = 0,
+	%% String 角色名
+	name = "",
+	%% Int32 等级
+	level = 0,
+	%% Int32 翅膀等级
+	wingLevel = 0,
+	%% SByte 阵营
+	camp = 0,
+	%% SByte 种族
+	race = 0,
+	%% UInt32 职业
+	career = 0,
+	%% SByte 性别
+	sex = 0,
+	%% Int32 头
+	head = 0,
+	%% UInt16 角色所在当前地图ID
+	mapID = 0,
+	%% UInt16 角色之前所在地图ID
+	oldMapID = 0
 }).
 
 -endif. %%NetmsgRecords

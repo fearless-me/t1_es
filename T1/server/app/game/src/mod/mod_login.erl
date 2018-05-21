@@ -12,7 +12,7 @@
 -behaviour(gen_serverw).
 -include("logger.hrl").
 -include("netmsg.hrl").
--include("login.hrl").
+-include("common_record.hrl").
 
 -export([login_/1, logout_/1]).
 %% API

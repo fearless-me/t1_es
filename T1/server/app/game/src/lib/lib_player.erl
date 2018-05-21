@@ -13,14 +13,14 @@
 -include("netmsg.hrl").
 -include("map.hrl").
 -include("player_status.hrl").
--include("login.hrl").
+-include("common_record.hrl").
 -include("obj.hrl").
 -include("db_record.hrl").
 
 -export([init/0]).
 -export([login_ack/1]).
 -export([load_all_role_info/1]).
--export([create_player/1]).
+-export([create_player_/1, create_player_ack/1]).
 -export([select_player/1]).
 -export([loaded_player/1]).
 -export([offline/0]).
@@ -30,9 +30,13 @@ init() ->
     lib_player_rw:set_player_status(?PS_INIT),
     ok.
 
+%%
+init_on_create() ->
+    ok.
+
 %%%-------------------------------------------------------------------
 login_ack(#r_login_ack{error = 0, account_info = AccountIfo}) ->
-    mod_player:send(#pk_LS2U_LoginResult{
+    mod_player:send(#pk_GS2U_LoginResult{
         accountID = AccountIfo#p_account.accountID,
         identity = "",
         result = 0,
@@ -40,10 +44,11 @@ login_ack(#r_login_ack{error = 0, account_info = AccountIfo}) ->
     }),
     lib_player_rw:set_accid(AccountIfo#p_account.accountID),
     lib_player_rw:set_code(code_gen:gen(?OBJ_USR)),
-    lib_player_rw:set_player_status(?PS_WAIT_ROLELIST),
+    lib_player_rw:set_player_status(?PS_WAIT_LIST),
+    lib_db:load_player_list_(self(), AccountIfo#p_account.accountID),
     ok;
 login_ack(#r_login_ack{error = Error}) ->
-    mod_player:send(#pk_LS2U_LoginResult{
+    mod_player:send(#pk_GS2U_LoginResult{
         result = Error,
         msg = io_lib:format("ErrorCode:~p", [Error])
     }),
@@ -52,17 +57,31 @@ login_ack(#r_login_ack{error = Error}) ->
 %%%-------------------------------------------------------------------
 load_all_role_info([]) ->
     lib_player_rw:set_player_status(?PS_WAIT_CREATE),
+    mod_player:send(#pk_GS2U_UserPlayerList{}),
     ok;
 load_all_role_info(_RoleList) ->
     lib_player_rw:set_player_status(?PS_WAIT_SELECT),
+    mod_player:send(#pk_GS2U_UserPlayerList{}),
     ok.
 %%%-------------------------------------------------------------------
-create_player(_Msg) ->
+create_player_(Req) ->
+    lib_player_rw:set_player_status(?PS_CREATING),
+    lib_db:create_player_(self(), Req),
     ok.
 
 %%%-------------------------------------------------------------------
-select_player(_PlayerID) ->
+create_player_ack(#r_create_player_ack{error = 0, id = PlayerId}) ->
+    init_on_create(),
+    mod_player:send(#pk_GS2U_CreatePlayerResult{
+      errorCode = 0, roleID = PlayerId
+    });
+create_player_ack(#r_create_player_ack{error = Err}) ->
+    mod_player:send(#pk_GS2U_CreatePlayerResult{errorCode = Err}).
+
+%%%-------------------------------------------------------------------
+select_player(PlayerID) ->
     lib_player_rw:set_player_status(?PS_WAIT_LOAD),
+    lib_db:load_player_data(self(), lib_player_rw:get_accid(), PlayerID),
     ok.
 
 %%%-------------------------------------------------------------------
@@ -70,7 +89,6 @@ loaded_player(_DataBin) ->
     lib_player_rw:set_player_status(?PS_WAIT_ENTER),
     add_to_world(),
     ok.
-
 
 %%%-------------------------------------------------------------------
 add_to_world() ->
@@ -115,7 +133,7 @@ go_to_new_map_1(_CurMapID, DestMapId,  TarPos) ->
     go_to_new_map_2(DestMapId, TarPos).
 
 go_to_new_map_2(DestMapID, Pos) ->
-    lib_player_rw:set_player_status(?PS_CHANGEMAP),
+    lib_player_rw:set_player_status(?PS_CHANGE_MAP),
     Ack = mod_map_creator:player_change_map(
         #r_change_map_req{
             player_id = lib_player_rw:get_uid(),
@@ -159,7 +177,7 @@ offline()->
     ok.
 
 offline_1(Status)
-    when Status =:= ?PS_GAME ; Status =:= ?PS_CHANGEMAP  ->
+    when Status =:= ?PS_GAME ; Status =:= ?PS_CHANGE_MAP ->
     lib_player_rw:set_player_status(?PS_OFFLINE),
     mod_map_creator:player_offline(
         lib_player_rw:get_uid(),

@@ -12,6 +12,7 @@
 -define(GSDEF_HRL, true).
 
 -define(ETS_ONLINE, ets_online).
+-define(ETS_PLAYER_LIST, ets_playerlist).
 
 
 -endif.

@@ -18,7 +18,7 @@ connect(Port, MapID) ->
     tcp_codec:init(#net_conf{}),
     {ok, Socket} = ranch_tcp:connect({127, 0, 0, 1}, Port, [{active, false}]),
 
-    Msg1 = #pk_U2LS_Login_Normal{
+    Msg1 = #pk_U2GS_Login_Normal{
         platformAccount = "test_net",
         platformName = "test",
         platformNickName = "",

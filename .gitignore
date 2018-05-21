@@ -11,3 +11,5 @@ elog
 log
 /T1/server/app/game/data/elog
 /T1/server/app/game/data/log
+/T1/server/app/game/scripts/compile_cht_gsD.txt
+/T1/server/app/game/scripts/compileListDEtsFile.data

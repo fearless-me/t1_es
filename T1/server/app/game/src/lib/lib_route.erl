@@ -12,7 +12,7 @@
 -include("netmsg.hrl").
 -include("map.hrl").
 -include("player_status.hrl").
--include("login.hrl").
+-include("common_record.hrl").
 
 
 %% API
@@ -25,22 +25,21 @@ route(Msg) ->
     case Status of
         ?PS_INIT -> ok;
         ?PS_VERIFY -> ok;
-        ?PS_WAIT_ROLELIST -> ok;
+        ?PS_WAIT_LIST -> ok;
         ?PS_WAIT_CREATE -> ok;
         ?PS_WAIT_SELECT -> ok;
         ?PS_WAIT_LOAD -> ok;
         ?PS_WAIT_ENTER -> ok;
         ?PS_GAME -> ok;
-        ?PS_CHANGEMAP -> ok;
+        ?PS_CHANGE_MAP -> ok;
         _ -> ok
     end,
     %%2. route
     route_1(Msg),
     ok.
-route_1(#pk_U2LS_Login_Normal{
+route_1(#pk_U2GS_Login_Normal{
     platformAccount = PlatAccount,
     sign = Token
-
 }) ->
     ?DEBUG("mod_login:login_"),
     mod_login:login_(#r_login_req{
@@ -48,6 +47,20 @@ route_1(#pk_U2LS_Login_Normal{
         access_token = Token,
         player_pid = self()
     }),
+    ok;
+route_1(#pk_U2GS_RequestCreatePlayer{
+    name = Name,
+    camp = Camp,
+    career = Career,
+    race = Race,
+    sex = Sex,
+    head = Head
+}) ->
+    lib_player:create_player_(#r_create_player_req{
+       name = Name, camp = Camp, career = Career, race = Race, sex = Sex, head = Head
+    }),
+    ok;
+route_1(#pk_U2GS_SelPlayerEnterGame{}) ->
     ok;
 route_1(#pk_GS2U_GoNewMap{tarMapID = DestMapID, fX = X, fY = Y} = Msg) ->
     ?DEBUG("~p",[Msg]),
