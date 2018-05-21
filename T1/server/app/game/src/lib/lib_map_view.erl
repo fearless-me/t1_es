@@ -87,6 +87,8 @@ sync_movement_to_big_visual_tile(_Msg) ->
 
 %%%-------------------------------------------------------------------
 %% 坐標位移廣播
+sync_change_pos_visual_tile(_Obj, OldVisTileIndex, OldVisTileIndex) ->
+    skip;
 sync_change_pos_visual_tile(Obj, OldVisTileIndex, NewVisTileIndex) ->
     del_from_vis_tile(Obj, OldVisTileIndex),
     {DecVisTile, AddVisTile} = vis_tile_add_dec(OldVisTileIndex, NewVisTileIndex),
