@@ -36,7 +36,7 @@ load_player_data_(Pid, AccId, PlayerId) ->
             load_player_data_ack,
             #m_player{
                 uid = PlayerId,
-                accid = AccId,
+                aid = AccId,
                 other = #r_player_other{}
             }
         }

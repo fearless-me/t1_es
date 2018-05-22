@@ -5,344 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" readonly="true" id="354d5196-8a2e-476f-8af6-71424480c5e1" name="Default" comment="">
-      <change afterPath="$PROJECT_DIR$/app/game/src/core/vector3.erl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/game/src/lib/lib_battle.erl" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/lib/uid_gen.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/lib/uid_gen.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/include/obj.hrl" beforeDir="false" afterPath="$PROJECT_DIR$/app/game/include/map_obj.hrl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_acKingBattleBuyBuff.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_accessresources.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_accessresources_exp.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_achievecollection.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_achievement.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_activity.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_activitylist.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_alive.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_alive_reward.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_allplayerquestion.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_alrest_buytime.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_angel_investment.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_animation.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_appointment.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_appointment_reward.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_arena.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_attedf.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_attributeRegent.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_basic_head.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_battlePropInfo.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_battlepower.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_bkreward.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_bloom.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_bribery_money.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_bubbleExpression.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_buddy_dailytask.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_buddy_gift.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_buff.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_buffAnnounce.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_buff_buy.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_business.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_bussyItemTree.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_camera_setting.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_camera_shake.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_changemaphelp.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_chaos.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_chatCommon.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_collectActivity.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_collect_word.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_collect_word_des.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_color.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_comboSkill.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_condition.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_condition_group.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_copymapScheduleCharacters.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_copymapScheduleInit.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_copymapScheduleSettle.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_cost.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_dailyActive.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_dailyInterface.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_daily_interface.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_dailyinterface_index.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_dailyrecharge.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_dailytask.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_darkness.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_defRegent.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_demonBattleID.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_demonBattleLoc.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_demonreward.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_di_mixcost.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_divine.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_drop.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_drop_control.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_drop_package.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_dungeonschallenge.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_eq_charge.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_equipAffixes.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_equipIntenLevel.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_equipIntensify.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_equipNewInten.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_equipRecastAdvance.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_equipRecastInit.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_equipRecastRand.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_equipWash.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_equipWashEco.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_equipdrop.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_equipment.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_equipmentDisplay.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_equipment_randomprop.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_equipstar.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_escort_event.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_escort_monster.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_eventSoundCfg.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_factionList.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_fashion.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_fashionCollection.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_fashionCollectionLevel.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_fightForce.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_fightall.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_fightbossActivity.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_find_res.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_floatingClue.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_floatingPiece.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_gem_level.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_gembox_info.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_gemproperty.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_globalsetup.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_goblin.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_goddess.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_goldDragon.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_gorgeous.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_group_buy.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_group_buy_des.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_group_buy_score.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_guide.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_guideAction.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_guild.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_guildDonation_reward.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_guild_boss.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_guild_league.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_guild_reward.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_guild_ride.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_guildbless.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_guildbless_schedule.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_guildboss_touchreward.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_guildbuff.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_guildexchange.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_guildhome_task.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_guildshop.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_guildskill.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_guildsnoman_settle.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_guildsnowman.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_guildsupplies.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_help.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_heraldry.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_home.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_home_area.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_home_furniture.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_home_level.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_home_plants.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_home_sleep.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_home_zoo.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_home_zoofood.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_honor.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_identity_area.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_identity_tag.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_identity_zodiac.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_improvePower.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_indexFunction.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_indexGrowth.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_item.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_itemCDandCount.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_itemTinker.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_knightedPackage.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_knighted_level.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_koreangift.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_ladder_1v1.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_ladder_1v1_rand.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_ladder_1v1_reward.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_ladder_item.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_level_reward.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_lifeskill.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_lifeskill_everydayexp.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_lifeskill_info.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_logic.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_logic_group.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_lottery.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_lotteryForTower.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_lotteryForTowr.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_lottery_goblin_free_cd.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_lottery_once.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_lottery_store.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_lottery_ten_times.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_mainMenu.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_mainmenu_FunctionOpen.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_mall.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_mapConvey.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_mapshadow.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_moneyDungeon.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_monsterBoss.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_monsterElite.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_monster_file.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_monster_filekey.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_monsterbox.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_monstergroup.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_monthCard.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_monthly_signinaward.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_mount.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_mountSkin.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_mysterious_shop.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_newplayer_Story.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_newplayer_tory.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_notification.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_npc.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_npcdancer.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_npcstore.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_object.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_offstringingame.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_offstringlogin.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_online_reward.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_openbag.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_panelHelp.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_partner_animation.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_per_book.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_pet.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_petAvatareffect.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_petEquipment.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_petEquipmentLevel.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_petLevelProperty.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_petSkill.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_petSkillRoll.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_petWar.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_pet_pvp.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_pet_rebirth.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_pet_skills_upgrading.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_pet_star.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_pet_stronger.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_pet_territory_force.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_pet_territory_reward.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_pet_territory_search.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_pet_territory_time.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_petenhance.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_petfairy_level.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_petfairy_point.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_petfightForce.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_petreborn.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_petrelation.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_player_base.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_player_desc.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_player_skills_upgrading.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_prestige_Reward.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_price.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_question.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_race_chaosmode.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_race_item.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_race_waypoint.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_rank.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_recharge.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_rechargeAccum1ulation.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_rechargeAccumulation.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_rechargeActivitie.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_rechargeFirst.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_rechargeFirstAD.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_recharge_item_relation.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_removeSkillAffix.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_ride.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_ride_system.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_rift.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_rift_rand.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_rndname.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_rune.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_rune_basePro.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_rune_battlepower.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_rune_compound.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_rune_level.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_rune_randomPro.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_rune_smeltcost.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_rune_suite.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_serverstrings.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_seven_day_aim.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_severday_task.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_shenqi.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_shootingeffect.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_shop_deal.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_show1.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_show2.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_signinaward.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_sixwar_monster.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_skill.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_skillBase.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_skillCDGroup.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_skillLevelParam.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_skill_effect.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_skill_up.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_skillmoneycost.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_sourceshop.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_specialinstance.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_spiritArea.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_spouseskill.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_starmoonbox.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_strref.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_sweeping_drop.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_talentExp.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_talentProp.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_talktoplayer.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_target.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_task.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_task_group.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_task_new.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_task_obj.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_task_other.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_thirty_day_login_gift.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_tierBonus.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_titlesystem.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_top_award.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_transform.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_transformspell.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_treasure_event.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_treasure_map.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_treasuremap.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_trigger.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_turn_plate_box.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_turn_plate_convert.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_turn_plate_lucky_cost.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_turn_plate_rule_reward.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_uiSoundCfg.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_uniqTierProperty.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_userFeedbackType.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_vIP_color.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_vIP_colour.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_vIP_expression.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_vip_card_eco.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_vip_card_effect.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_vip_power.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_warriortrial.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_warriortrial_battle_power.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_wedding_blessing.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_wedding_fireworkshow.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_wedding_ring.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_wedding_time.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_wedding_type.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_wedding_type_candy.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_wedding_type_firework.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_wedding_type_flower.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_weddingring.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_welfare.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_wildboss.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_wing.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_worldboss.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/config/cfg_worldlevel_exp.hrl" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/core/foundation_server.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/game/src/core/foundation_server.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/game_sup.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/game/src/game_sup.erl" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/game/include/record.hrl" beforeDir="false" afterPath="$PROJECT_DIR$/app/game/include/record.hrl" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/game/src/lib/lib_db.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/game/src/lib/lib_db.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/lib/lib_map.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/game/src/lib/lib_map.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/lib/lib_map_rw.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/game/src/lib/lib_map_rw.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/lib/lib_map_view.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/game/src/lib/lib_map_view.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/lib/lib_monster.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/game/src/lib/lib_monster.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/lib/lib_move.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/game/src/lib/lib_move.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/lib/lib_obj.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/game/src/lib/lib_obj.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/lib/lib_player.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/game/src/lib/lib_player.erl" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/game/src/lib/lib_player_rw.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/game/src/lib/lib_player_rw.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/mod/mod_map_creator.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/game/src/mod/mod_map_creator.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/mod/mod_map_mgr.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/game/src/mod/mod_map_mgr.erl" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -354,92 +20,62 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="lib_move.erl" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/game/src/lib/lib_move.erl">
+      <file leaf-file-name="server_status.hrl" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/deps/mysql-otp/include/server_status.hrl">
+          <provider selected="true" editor-type-id="text-editor" />
+        </entry>
+      </file>
+      <file leaf-file-name="records.hrl" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/deps/mysql-otp/include/records.hrl">
+          <provider selected="true" editor-type-id="text-editor" />
+        </entry>
+      </file>
+      <file leaf-file-name="protocol.hrl" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/deps/mysql-otp/include/protocol.hrl">
+          <provider selected="true" editor-type-id="text-editor" />
+        </entry>
+      </file>
+      <file leaf-file-name="fly.erl" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/deps/fly/src/fly.erl">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="427">
-              <caret line="154" selection-start-line="154" selection-end-line="154" />
-            </state>
+            <state relative-caret-position="-546" />
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="lib_monster.erl" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/game/src/lib/lib_monster.erl">
+      <file leaf-file-name="fastlog.erl" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/deps/fastlog/src/fastlog.erl">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="895">
-              <caret line="39" column="28" selection-start-line="39" selection-start-column="28" selection-end-line="39" selection-end-column="28" />
-            </state>
+            <state relative-caret-position="-312" />
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="lib_player.erl" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/game/src/lib/lib_player.erl">
+      <file leaf-file-name="mnesia_utils.erl" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/deps/pubs/src/persistent/mnesia_utils.erl">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1701">
-              <caret line="196" column="24" selection-start-line="196" selection-start-column="24" selection-end-line="196" selection-end-column="24" />
-            </state>
+            <state relative-caret-position="-1950" />
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="lib_pet.erl" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/game/src/lib/lib_pet.erl">
+      <file leaf-file-name="mysql_pool.erl" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/deps/pubs/src/persistent/mysql_pool.erl">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="338">
-              <caret line="13" column="6" lean-forward="true" selection-start-line="13" selection-start-column="6" selection-end-line="13" selection-end-column="6" />
-            </state>
+            <state relative-caret-position="-119" />
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="map_obj.hrl" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/game/include/map_obj.hrl">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="323">
-              <caret line="24" column="14" selection-start-line="24" selection-start-column="14" selection-end-line="24" selection-end-column="14" />
-            </state>
-          </provider>
+      <file leaf-file-name="mysql_interface.erl" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/app/deps/pubs/src/persistent/mysql_interface.erl">
+          <provider selected="true" editor-type-id="text-editor" />
         </entry>
       </file>
-      <file leaf-file-name="record.hrl" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/app/game/include/record.hrl">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="895">
-              <caret line="38" column="21" lean-forward="true" selection-start-line="38" selection-start-column="21" selection-end-line="38" selection-end-column="21" />
-            </state>
-          </provider>
+      <file leaf-file-name="mnesia_dynamic.erl" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/deps/pubs/src/persistent/mnesia_dynamic.erl">
+          <provider selected="true" editor-type-id="text-editor" />
         </entry>
       </file>
-      <file leaf-file-name="player_status.hrl" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/game/include/player_status.hrl">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="323">
-              <caret line="16" column="16" selection-start-line="16" selection-start-column="16" selection-end-line="16" selection-end-column="16" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="lib_map.erl" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/game/src/lib/lib_map.erl">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-390" />
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="lib_obj.erl" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/game/src/lib/lib_obj.erl">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="338">
-              <caret line="13" column="24" selection-start-line="13" selection-start-column="24" selection-end-line="13" selection-end-column="24" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="lib_battle.erl" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/game/src/lib/lib_battle.erl">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="390">
-              <caret line="15" column="24" selection-start-line="15" selection-start-column="24" selection-end-line="15" selection-end-column="24" />
-            </state>
-          </provider>
+      <file leaf-file-name="mnesia_starter.erl" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/deps/pubs/src/persistent/mnesia_starter.erl">
+          <provider selected="true" editor-type-id="text-editor" />
         </entry>
       </file>
     </leaf>
@@ -540,13 +176,11 @@
         <option value="$PROJECT_DIR$/app/game/include/movement.hrl" />
         <option value="$PROJECT_DIR$/app/game/src/lib/lib_map_view.erl" />
         <option value="$PROJECT_DIR$/app/game/include/common_record.hrl" />
-        <option value="$PROJECT_DIR$/app/game/include/record.hrl" />
         <option value="$PROJECT_DIR$/app/game/include/map.hrl" />
         <option value="$PROJECT_DIR$/app/game/src/mod/mod_map_creator.erl" />
         <option value="$PROJECT_DIR$/app/game/src/lib/lib_move.erl" />
         <option value="$PROJECT_DIR$/app/game/src/core/foundation_server.erl" />
         <option value="$PROJECT_DIR$/app/game/src/lib/lib_db.erl" />
-        <option value="$PROJECT_DIR$/app/game/src/lib/lib_player_rw.erl" />
         <option value="$PROJECT_DIR$/app/game/src/game_sup.erl" />
         <option value="$PROJECT_DIR$/app/deps/pubs/src/lib/uid_gen.erl" />
         <option value="$PROJECT_DIR$/app/game/src/lib/lib_player.erl" />
@@ -556,6 +190,8 @@
         <option value="$PROJECT_DIR$/app/game/src/lib/lib_battle.erl" />
         <option value="$PROJECT_DIR$/app/game/include/obj.hrl" />
         <option value="$PROJECT_DIR$/app/game/include/map_obj.hrl" />
+        <option value="$PROJECT_DIR$/app/game/include/record.hrl" />
+        <option value="$PROJECT_DIR$/app/game/src/lib/lib_player_rw.erl" />
       </list>
     </option>
   </component>
@@ -577,6 +213,9 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="PackagesPane" />
+      <pane id="Scope" />
+      <pane id="AndroidView" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -593,36 +232,35 @@
               <item name="server" type="b2602c69:ProjectViewProjectNode" />
               <item name="server" type="462c0819:PsiDirectoryNode" />
               <item name="app" type="462c0819:PsiDirectoryNode" />
-              <item name="dbs" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="server" type="b2602c69:ProjectViewProjectNode" />
-              <item name="server" type="462c0819:PsiDirectoryNode" />
-              <item name="app" type="462c0819:PsiDirectoryNode" />
-              <item name="dbs" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="server" type="b2602c69:ProjectViewProjectNode" />
-              <item name="server" type="462c0819:PsiDirectoryNode" />
-              <item name="app" type="462c0819:PsiDirectoryNode" />
-              <item name="dbs" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="mysql" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="server" type="b2602c69:ProjectViewProjectNode" />
-              <item name="server" type="462c0819:PsiDirectoryNode" />
-              <item name="app" type="462c0819:PsiDirectoryNode" />
-              <item name="dbs" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="svr" type="462c0819:PsiDirectoryNode" />
+              <item name="deps" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="server" type="b2602c69:ProjectViewProjectNode" />
               <item name="server" type="462c0819:PsiDirectoryNode" />
               <item name="app" type="462c0819:PsiDirectoryNode" />
               <item name="deps" type="462c0819:PsiDirectoryNode" />
+              <item name="cache" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="server" type="b2602c69:ProjectViewProjectNode" />
+              <item name="server" type="462c0819:PsiDirectoryNode" />
+              <item name="app" type="462c0819:PsiDirectoryNode" />
+              <item name="deps" type="462c0819:PsiDirectoryNode" />
+              <item name="dynamic_compile" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="server" type="b2602c69:ProjectViewProjectNode" />
+              <item name="server" type="462c0819:PsiDirectoryNode" />
+              <item name="app" type="462c0819:PsiDirectoryNode" />
+              <item name="deps" type="462c0819:PsiDirectoryNode" />
+              <item name="econfig" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="server" type="b2602c69:ProjectViewProjectNode" />
+              <item name="server" type="462c0819:PsiDirectoryNode" />
+              <item name="app" type="462c0819:PsiDirectoryNode" />
+              <item name="deps" type="462c0819:PsiDirectoryNode" />
+              <item name="eep" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="server" type="b2602c69:ProjectViewProjectNode" />
@@ -742,6 +380,21 @@
               <item name="server" type="b2602c69:ProjectViewProjectNode" />
               <item name="server" type="462c0819:PsiDirectoryNode" />
               <item name="app" type="462c0819:PsiDirectoryNode" />
+              <item name="deps" type="462c0819:PsiDirectoryNode" />
+              <item name="ranch" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="server" type="b2602c69:ProjectViewProjectNode" />
+              <item name="server" type="462c0819:PsiDirectoryNode" />
+              <item name="app" type="462c0819:PsiDirectoryNode" />
+              <item name="deps" type="462c0819:PsiDirectoryNode" />
+              <item name="ranch" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="server" type="b2602c69:ProjectViewProjectNode" />
+              <item name="server" type="462c0819:PsiDirectoryNode" />
+              <item name="app" type="462c0819:PsiDirectoryNode" />
               <item name="game" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
@@ -855,9 +508,6 @@
           <select />
         </subPane>
       </pane>
-      <pane id="Scope" />
-      <pane id="PackagesPane" />
-      <pane id="AndroidView" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -1214,11 +864,12 @@
       <workItem from="1526710094932" duration="17622000" />
       <workItem from="1526883848230" duration="18832000" />
       <workItem from="1526966758527" duration="15274000" />
+      <workItem from="1526986647859" duration="3129000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="287244000" />
+    <option name="totallyTimeSpent" value="290373000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -1231,7 +882,6 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
-    <editor active="true" />
     <layout>
       <window_info anchor="right" id="Palette" order="3" />
       <window_info anchor="bottom" id="TODO" order="6" weight="0.32960895" />
@@ -1246,9 +896,8 @@
       <window_info anchor="bottom" id="Terminal" order="7" weight="0.32960895" />
       <window_info id="Capture Tool" order="2" />
       <window_info id="Designer" order="2" />
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.19509594" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.19722815" />
       <window_info anchor="right" id="Database" order="3" />
-      <window_info anchor="bottom" id="Find" order="1" weight="0.32960895" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info id="UI Designer" order="2" />
@@ -1261,6 +910,7 @@
       <window_info anchor="right" id="Commander" order="0" weight="0.4" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
+      <window_info anchor="bottom" id="Find" order="1" weight="0.32960895" />
     </layout>
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -1282,298 +932,145 @@
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://C:/Program Files/erl7.3/lib/stdlib-2.8/src/timer.erl">
+    <entry file="file://$PROJECT_DIR$/app/game/include/movement.hrl">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="289">
-          <caret line="149" column="12" selection-start-line="149" selection-start-column="12" selection-end-line="149" selection-end-column="12" />
+        <state relative-caret-position="583">
+          <caret line="47" column="8" selection-start-line="47" selection-start-column="8" selection-end-line="47" selection-end-column="8" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/game/src/lib/lib_map_rw.erl">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="650">
+          <caret line="76" selection-start-line="76" selection-end-line="76" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/game/src/lib/lib_db.erl">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="505">
+          <caret line="62" selection-start-line="62" selection-end-line="63" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/game/src/mod/mod_map_creator.erl">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-491">
+          <caret line="48" selection-start-line="48" selection-end-line="48" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/game/src/mod/mod_map_mgr.erl">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1586">
+        <state relative-caret-position="2533">
           <caret line="112" selection-start-line="112" selection-end-line="112" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/game/src/mod/mod_map.erl">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="280">
-          <caret line="31" column="13" lean-forward="true" selection-start-line="31" selection-start-column="13" selection-end-line="31" selection-end-column="13" />
+        <state relative-caret-position="289">
+          <caret line="31" column="11" selection-start-line="31" selection-start-column="11" selection-end-line="31" selection-end-column="11" />
         </state>
       </provider>
     </entry>
-    <entry file="file://C:/Program Files/erl7.3/lib/erts-7.3/src/erlang.erl">
+    <entry file="file://$PROJECT_DIR$/app/deps/pubs/src/net/tcp_listener.erl">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="575">
-          <caret line="533" column="12" selection-start-line="533" selection-start-column="12" selection-end-line="533" selection-end-column="12" />
-        </state>
+        <state relative-caret-position="-665" />
       </provider>
     </entry>
-    <entry file="file://C:/Program Files/erl7.3/lib/stdlib-2.8/src/random.erl">
+    <entry file="file://$PROJECT_DIR$/app/deps/pubs/src/net/tcp_codec.erl">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="601">
-          <caret line="117" selection-start-line="117" selection-end-line="117" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://C:/Program Files/erl7.3/lib/stdlib-2.8/include/assert.hrl">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2002">
-          <caret line="77" column="11" selection-start-line="77" selection-start-column="8" selection-end-line="77" selection-end-column="11" />
+        <state relative-caret-position="1144">
+          <caret line="44" column="44" lean-forward="true" selection-start-line="44" selection-start-column="44" selection-end-line="44" selection-end-column="44" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/deps/pubs/src/net/tcp_client.erl">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-145">
+        <state relative-caret-position="520">
           <caret line="20" column="18" selection-start-line="20" selection-start-column="18" selection-end-line="20" selection-end-column="18" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/game/src/mod/mod_login.erl">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="191">
-          <caret line="14" column="30" selection-start-line="14" selection-start-column="30" selection-end-line="14" selection-end-column="30" />
-        </state>
-      </provider>
+    <entry file="file://$PROJECT_DIR$/app/deps/pubs/src/net/tcp_behaviour.erl">
+      <provider selected="true" editor-type-id="text-editor" />
     </entry>
     <entry file="file://$PROJECT_DIR$/app/deps/pubs/src/net/netmsg.hrl">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-5865">
+        <state relative-caret-position="208">
           <caret line="8" column="8" selection-start-line="8" selection-start-column="8" selection-end-line="8" selection-end-column="8" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/deps/pubs/src/lib/common_error_logger_h.erl">
+    <entry file="file://$PROJECT_DIR$/app/deps/pubs/src/net/binary_lib.erl">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1419" />
+        <state relative-caret-position="-4825">
+          <caret line="39" column="10" selection-start-line="39" selection-start-column="10" selection-end-line="39" selection-end-column="10" />
+        </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/deps/pubs/src/lib/common_error_logger.erl">
+    <entry file="file://$PROJECT_DIR$/app/deps/pubs/src/net/behaviour_example.erl">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="4353">
-          <caret line="196" selection-start-line="196" selection-end-line="196" />
+        <state relative-caret-position="-546" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/deps/pubs/src/net/netmsg.erl">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-7644" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/deps/ranch/src/ranch_tcp.erl">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="289">
+          <caret line="125" selection-start-line="125" selection-end-line="125" />
         </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/deps/pubs/src/net/tcp_handler.erl">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-257">
+          <caret line="32" selection-start-line="32" selection-end-line="32" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/game/src/mod/mod_player_supervisor.erl">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-702" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/game/src/mod/mod_player.erl">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="315">
-          <caret line="87" column="22" selection-start-line="87" selection-start-column="22" selection-end-line="87" selection-end-column="22" />
+        <state relative-caret-position="653">
+          <caret line="107" column="27" lean-forward="true" selection-start-line="107" selection-start-column="27" selection-end-line="107" selection-end-column="27" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/game/include/player_status.hrl">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="364">
+          <caret line="14" column="8" selection-start-line="14" selection-start-column="8" selection-end-line="14" selection-end-column="8" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/game/src/lib/lib_route.erl">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="375">
-          <caret line="58" column="39" selection-start-line="58" selection-start-column="39" selection-end-line="58" selection-end-column="39" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/deps/pubs/src/resource/pack/player.hrl">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="494">
-          <caret line="28" column="114" lean-forward="true" selection-start-line="28" selection-start-column="114" selection-end-line="28" selection-end-column="114" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/deps/pubs/include/logger.hrl">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="572">
-          <caret line="22" column="8" selection-start-line="22" selection-start-column="8" selection-end-line="22" selection-end-column="8" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/deps/pubs/include/common.hrl">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://C:/Program Files/erl7.3/lib/stdlib-2.8/src/lists.erl">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="3328">
-          <caret line="128" column="11" selection-start-line="128" selection-start-column="3" selection-end-line="128" selection-end-column="11" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/deps/pubs/src/lib/misc.erl">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="26">
-          <caret line="117" selection-start-line="117" selection-end-line="117" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/game/src/test/test_login.erl">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/game/include/move.hrl">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="338">
-          <caret line="13" selection-start-line="13" selection-end-line="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/game/include/mapCfgPrivate.hrl">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/game/include/common_record.hrl">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="572">
-          <caret line="22" column="41" selection-start-line="22" selection-start-column="41" selection-end-line="22" selection-end-column="41" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/game/include/db_record.hrl">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="289">
-          <caret line="15" column="4" selection-start-line="15" selection-start-column="4" selection-end-line="15" selection-end-column="4" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/game/include/gsdef.hrl">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="364">
-          <caret line="14" column="40" selection-start-line="14" selection-start-column="40" selection-end-line="14" selection-end-column="40" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/game/include/movement.hrl">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="635">
-          <caret line="49" selection-start-line="49" selection-end-line="49" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/game/src/core/mapReader.erl">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="780">
-          <caret line="30" column="46" selection-start-line="30" selection-start-column="46" selection-end-line="30" selection-end-column="46" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/game/include/map.hrl">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="338">
-          <caret line="42" column="33" selection-start-line="42" selection-start-column="33" selection-end-line="42" selection-end-column="33" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/game/src/core/vector3.erl">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="427">
-          <caret line="31" selection-start-line="31" selection-end-line="31" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/game/src/lib/lib_map_view.erl">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="191">
-          <caret line="115" selection-start-line="115" selection-end-line="115" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://C:/Program Files/erl7.3/lib/stdlib-2.8/src/ets.erl">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="289">
-          <caret line="287" selection-start-line="287" selection-end-line="287" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/deps/pubs/include/type.hrl">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="349">
-          <caret line="41" column="6" selection-start-line="41" selection-start-column="6" selection-end-line="41" selection-end-column="6" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/game/src/core/foundation_server.erl">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="349">
-          <caret line="33" column="13" selection-start-line="33" selection-start-column="13" selection-end-line="33" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/deps/pubs/src/lib/code_gen.erl">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="208">
-          <caret line="8" column="13" selection-start-line="8" selection-start-column="13" selection-end-line="8" selection-end-column="13" />
+        <state relative-caret-position="-483">
+          <caret line="25" column="9" lean-forward="true" selection-start-line="25" selection-start-column="9" selection-end-line="25" selection-end-column="9" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/game/src/lib/lib_player_rw.erl">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="427">
-          <caret line="22" selection-start-line="22" selection-end-line="22" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/game/src/mod/mod_map_creator.erl">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="601">
-          <caret line="48" selection-start-line="48" selection-end-line="48" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/game/src/mod/mod_map_supervisor.erl">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-468" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/game/src/game_sup.erl">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="468">
-          <caret line="45" column="44" selection-start-line="45" selection-start-column="44" selection-end-line="45" selection-end-column="44" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/deps/pubs/src/lib/uid_gen.erl">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="444">
-          <caret line="90" selection-start-line="90" selection-end-line="90" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/game/src/lib/lib_map_rw.erl">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-379">
-          <caret line="63" column="31" selection-start-line="63" selection-start-column="31" selection-end-line="63" selection-end-column="31" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/game/src/lib/lib_db.erl">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="817">
-          <caret line="62" selection-start-line="62" selection-end-line="63" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/game/src/lib/lib_login.erl">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/game/src/lib/lib_move.erl">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="427">
-          <caret line="154" selection-start-line="154" selection-end-line="154" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/game/src/lib/lib_monster.erl">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="895">
-          <caret line="39" column="28" selection-start-line="39" selection-start-column="28" selection-end-line="39" selection-end-column="28" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/game/src/lib/lib_player.erl">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1701">
-          <caret line="196" column="24" selection-start-line="196" selection-start-column="24" selection-end-line="196" selection-end-column="24" />
+        <state relative-caret-position="1742">
+          <caret line="67" selection-start-line="67" selection-end-line="67" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/game/src/lib/lib_pet.erl">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="338">
-          <caret line="13" column="6" lean-forward="true" selection-start-line="13" selection-start-column="6" selection-end-line="13" selection-end-column="6" />
+          <caret line="13" selection-start-line="13" selection-end-line="13" />
         </state>
       </provider>
     </entry>
@@ -1591,31 +1088,132 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/app/game/src/core/foundation_server.erl">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="193">
+          <caret line="33" column="13" selection-start-line="33" selection-start-column="13" selection-end-line="33" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/game/src/core/map_root_supervisor.erl">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-780" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/game/src/core/mapReader.erl">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="780">
+          <caret line="30" column="46" selection-start-line="30" selection-start-column="46" selection-end-line="30" selection-end-column="46" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/game/src/core/sentinel_server.erl">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-1638" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/game/src/lib/lib_player.erl">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="445">
+          <caret line="123" column="12" selection-start-line="123" selection-start-column="12" selection-end-line="123" selection-end-column="12" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/app/game/src/lib/lib_map.erl">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-390" />
+        <state relative-caret-position="260">
+          <caret line="75" column="33" selection-start-line="75" selection-start-column="13" selection-end-line="75" selection-end-column="33" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/game/src/lib/lib_move.erl">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="635">
+          <caret line="162" column="49" selection-start-line="162" selection-start-column="17" selection-end-line="162" selection-end-column="49" />
+        </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/game/include/map_obj.hrl">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="323">
-          <caret line="24" column="14" selection-start-line="24" selection-start-column="14" selection-end-line="24" selection-end-column="14" />
+        <state relative-caret-position="349">
+          <caret line="26" column="4" selection-start-line="26" selection-start-column="4" selection-end-line="26" selection-end-column="4" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/game/include/player_status.hrl">
+    <entry file="file://$PROJECT_DIR$/app/game/src/lib/lib_map_view.erl">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="323">
-          <caret line="16" column="16" selection-start-line="16" selection-start-column="16" selection-end-line="16" selection-end-column="16" />
+        <state relative-caret-position="-855">
+          <caret line="119" column="62" selection-start-line="119" selection-start-column="62" selection-end-line="119" selection-end-column="62" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/game/include/record.hrl">
+    <entry file="file://$PROJECT_DIR$/app/game/src/lib/lib_login.erl">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/deps/pubs/src/lib/common_error_logger.erl">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/deps/pubs/src/lib/common_error_logger_h.erl">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="895">
-          <caret line="38" column="21" lean-forward="true" selection-start-line="38" selection-start-column="21" selection-end-line="38" selection-end-column="21" />
+        <state relative-caret-position="-702" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/deps/pubs/include/pack.hrl">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/deps/pubs/include/netconf.hrl">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/deps/pubs/include/type.hrl">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="624">
+          <caret line="24" column="8" selection-start-line="24" selection-start-column="8" selection-end-line="24" selection-end-column="8" />
         </state>
       </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/deps/pubs/include/logger.hrl">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/deps/pubs/include/common.hrl">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/deps/mysql-otp/include/server_status.hrl">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/deps/mysql-otp/include/records.hrl">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/deps/mysql-otp/include/protocol.hrl">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/deps/fly/src/fly.erl">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-546" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/deps/fastlog/src/fastlog.erl">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-312" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/deps/pubs/src/persistent/mnesia_dynamic.erl">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/deps/pubs/src/persistent/mnesia_starter.erl">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/deps/pubs/src/persistent/mnesia_utils.erl">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-1950" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/deps/pubs/src/persistent/mysql_pool.erl">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-119" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/deps/pubs/src/persistent/mysql_interface.erl">
+      <provider selected="true" editor-type-id="text-editor" />
     </entry>
   </component>
   <component name="masterDetails">

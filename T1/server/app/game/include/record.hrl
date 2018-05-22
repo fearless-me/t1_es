@@ -13,10 +13,10 @@
 
 %%
 -record(m_player,{
-    uid,                                     %% 用户ID
-    accid = 0,                              %% 平台账号ID
-    accname = "",                           %% 平台账号
-    nickname = "",                          %% 玩家名
+    uid,                                    %% 用户ID
+    aid = 0,                                %% 平台账号ID
+    acc = "",                               %% 平台账号
+    name = "",                              %% 玩家名
     status = 0,                             %% 玩家状态（0正常、1禁止、2战斗中、3死亡、4蓝名、5挂机、6打坐、7凝神修炼8采矿,9答题）,
     reg_time = 0,                           %% 注册时间
     last_login_time = 0,                    %% 最后登陆时间

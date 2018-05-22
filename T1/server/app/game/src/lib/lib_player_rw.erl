@@ -10,7 +10,6 @@
 -author("mawenhong").
 -include("player_status.hrl").
 -include("map.hrl").
--include("obj.hrl").
 
 %% API
 -export([get_player_status/0, set_player_status/1]).
