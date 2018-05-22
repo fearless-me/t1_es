@@ -19,19 +19,22 @@
 -define(OBJ_PET, 3).
 -define(OBJ_USR, 4).
 -define(OBJ_MAX, 4).
-
 -type obj_type() :: ?OBJ_MIN .. ?OBJ_MAX.
+
 %%
 -record(r_obj, {
-    code = 0, id = 0, name = "", group = 0,
-    type = ?OBJ_ERR :: obj_type(),
-    map_id = 0, line_id = 0, pid = 0, map_pid = undefined,
-    pos = undefined, tar_pos = undefined,
-    com = undefined
+%% 基础相关
+    uid = 0, pid = 0, did = 0,
+    name = "", group = 0, type = ?OBJ_ERR :: obj_type(),
+    map_id = 0, line_id = 0, map_pid = undefined,
+
+%%  移动相关
+    cur_move, next_move, pos, start, dir, dest, face, vis_tile_idx,
+    start_time = 0, last_up_time = 0, stopped, path_list = [],
+
+%%  战斗相关
+    attr= [], buff_list = []
+
 }).
-%%
--record(r_obj_monster, {mid, attr= [], buff_list = [], status}).
-%%
--record(r_obj_npc, {nid = 0, name = "", scene = 0, icon = 0, npc_type = 0}).
 
 -endif.

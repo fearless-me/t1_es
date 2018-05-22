@@ -35,7 +35,7 @@
 %%%-------------------------------------------------------------------
 sync_player_join_map(Obj) ->
     %% fix_pos(Obj),
-    Index = pos_to_vis_index(Obj#r_obj.pos, get(?VIS_W), ?VIS_DIST),
+    Index = pos_to_vis_index(lib_map_rw:get_obj_pos(Obj), get(?VIS_W), ?VIS_DIST),
     Tiles = get_vis_tile_around(Index),
     sync_add_to_vis_tile(Obj, Tiles),
     add_to_vis_tile(Obj, Index),
@@ -43,7 +43,7 @@ sync_player_join_map(Obj) ->
 
 %%%-------------------------------------------------------------------
 sync_player_exit_map(Obj) ->
-    Index = pos_to_vis_index(Obj#r_obj.pos, get(?VIS_W), ?VIS_DIST),
+    Index = pos_to_vis_index(lib_map_rw:get_obj_pos(Obj), get(?VIS_W), ?VIS_DIST),
     Tiles = get_vis_tile_around(Index),
     del_from_vis_tile(Obj, Index),
     sync_del_from_vis_tile(Obj, Tiles),
@@ -117,33 +117,33 @@ add_to_vis_tile(Obj, VisTileIndex) ->
     ?assert(is_number(VisTileIndex) andalso VisTileIndex > 0),
 
     VisTile = get_vis_tile(VisTileIndex),
-    add_to_vis_tile_1( lib_obj:obj_type(Obj), Obj#r_obj.code, VisTileIndex, VisTile),
+    add_to_vis_tile_1( lib_obj:obj_type(Obj), Obj#r_obj.uid, VisTileIndex, VisTile),
     ok.
 
 %%
-add_to_vis_tile_1(Type, Code, VisTileIndex, undefined) ->
-    ?ERROR(" add t ~p, code ~p to visIdx ~p invalid",[Type, Code, VisTileIndex]);
-add_to_vis_tile_1(?OBJ_USR, Code, VisTileIndex, VisTile) ->
+add_to_vis_tile_1(Type, Uid, VisTileIndex, undefined) ->
+    ?ERROR(" add t ~p, code ~p to visIdx ~p invalid",[Type, Uid, VisTileIndex]);
+add_to_vis_tile_1(?OBJ_USR, Uid, VisTileIndex, VisTile) ->
     set_vis_tile(
         VisTileIndex,
-        VisTile#r_vis_tile{player = [Code | VisTile#r_vis_tile.player]}
+        VisTile#r_vis_tile{player = [Uid | VisTile#r_vis_tile.player]}
     );
-add_to_vis_tile_1(?OBJ_MON, Code, VisTileIndex, VisTile) ->
+add_to_vis_tile_1(?OBJ_MON, Uid, VisTileIndex, VisTile) ->
     set_vis_tile(
         VisTileIndex,
-        VisTile#r_vis_tile{monster = [Code | VisTile#r_vis_tile.monster]}
+        VisTile#r_vis_tile{monster = [Uid | VisTile#r_vis_tile.monster]}
     );
-add_to_vis_tile_1(?OBJ_PET, Code, VisTileIndex, VisTile) ->
+add_to_vis_tile_1(?OBJ_PET, Uid, VisTileIndex, VisTile) ->
     set_vis_tile(
         VisTileIndex,
-        VisTile#r_vis_tile{pet = [Code | VisTile#r_vis_tile.pet]}
+        VisTile#r_vis_tile{pet = [Uid | VisTile#r_vis_tile.pet]}
     );
-add_to_vis_tile_1(?OBJ_NPC, Code, VisTileIndex, VisTile) ->
+add_to_vis_tile_1(?OBJ_NPC, Uid, VisTileIndex, VisTile) ->
     set_vis_tile(
         VisTileIndex,
-        VisTile#r_vis_tile{npc = [Code | VisTile#r_vis_tile.npc]}
+        VisTile#r_vis_tile{npc = [Uid | VisTile#r_vis_tile.npc]}
     );
-add_to_vis_tile_1(_Type, _Code, _VisTileIndex, _VisTile) ->
+add_to_vis_tile_1(_Type, _Uid, _VisTileIndex, _VisTile) ->
     ok.
 
 
@@ -153,45 +153,45 @@ del_from_vis_tile(Obj, VisTileIndex) ->
     ?assert(is_number(VisTileIndex) andalso VisTileIndex > 0),
 
     VisTile = get_vis_tile(VisTileIndex),
-    del_from_vis_tile_1( lib_obj:obj_type(Obj), Obj#r_obj.code, VisTileIndex, VisTile),
+    del_from_vis_tile_1( lib_obj:obj_type(Obj), Obj#r_obj.uid, VisTileIndex, VisTile),
     ok.
 
 %%
-del_from_vis_tile_1(Type, Code, VisTileIndex, undefined) ->
-    ?ERROR("del t ~p, code ~p from visIdx ~p invalid",[Type, Code, VisTileIndex]);
-del_from_vis_tile_1(?OBJ_USR, Code, VisTileIndex, VisTile) ->
+del_from_vis_tile_1(Type, Uid, VisTileIndex, undefined) ->
+    ?ERROR("del t ~p, code ~p from visIdx ~p invalid",[Type, Uid, VisTileIndex]);
+del_from_vis_tile_1(?OBJ_USR, Uid, VisTileIndex, VisTile) ->
     set_vis_tile(
         VisTileIndex,
-        VisTile#r_vis_tile{ player = lists:delete(Code,VisTile#r_vis_tile.player)}
+        VisTile#r_vis_tile{ player = lists:delete(Uid,VisTile#r_vis_tile.player)}
     );
-del_from_vis_tile_1(?OBJ_MON, Code, VisTileIndex, VisTile) ->
+del_from_vis_tile_1(?OBJ_MON, Uid, VisTileIndex, VisTile) ->
     set_vis_tile(
         VisTileIndex,
-        VisTile#r_vis_tile{monster = lists:delete(Code,VisTile#r_vis_tile.monster)}
+        VisTile#r_vis_tile{monster = lists:delete(Uid,VisTile#r_vis_tile.monster)}
     );
-del_from_vis_tile_1(?OBJ_PET, Code, VisTileIndex, VisTile) ->
+del_from_vis_tile_1(?OBJ_PET, Uid, VisTileIndex, VisTile) ->
     set_vis_tile(
         VisTileIndex,
-        VisTile#r_vis_tile{pet = lists:delete(Code,VisTile#r_vis_tile.pet)}
+        VisTile#r_vis_tile{pet = lists:delete(Uid,VisTile#r_vis_tile.pet)}
     );
-del_from_vis_tile_1(?OBJ_NPC, Code, VisTileIndex, VisTile) ->
+del_from_vis_tile_1(?OBJ_NPC, Uid, VisTileIndex, VisTile) ->
     set_vis_tile(
         VisTileIndex,
-        VisTile#r_vis_tile{npc = lists:delete(Code,VisTile#r_vis_tile.npc)}
+        VisTile#r_vis_tile{npc = lists:delete(Uid,VisTile#r_vis_tile.npc)}
     );
-del_from_vis_tile_1(_Type, _Code, _VisTileIndex, _VisTile) ->
+del_from_vis_tile_1(_Type, _Uid, _VisTileIndex, _VisTile) ->
     ok.
 
 %%%-------------------------------------------------------------------
 %% 把角色信息广播到九宫格中
 sync_big_vis_tile_to_me(
-    #r_obj{code = Code, type = ?OBJ_USR},
+    #r_obj{uid = Uid, type = ?OBJ_USR},
     VisTileList,
     Msg
 ) ->
     lists:foreach(
         fun(VisTile) ->
-            ?DEBUG("~nsrc:~w~nmsg:~w~ntar:~w", [Code, Msg, VisTile#r_vis_tile.player])
+            ?DEBUG("~nsrc:~w~nmsg:~w~ntar:~w", [Uid, Msg, VisTile#r_vis_tile.player])
         end, VisTileList),
 %%    lists:foreach(
 %%        fun(VisTile) ->
@@ -205,10 +205,10 @@ sync_big_vis_tile_to_me(
     ok;
 sync_big_vis_tile_to_me(_Obj, _VisTileList, _Msg) -> skip.
 
-sync_me_to_big_vis_tile(#r_obj{code = Code}, VisTileList, Msg) ->
+sync_me_to_big_vis_tile(#r_obj{uid = Uid}, VisTileList, Msg) ->
     lists:foreach(
         fun(VisTile) ->
-            ?DEBUG("~nsrc:~w~nmsg:~w~ntar:~w", [Code, Msg, VisTile#r_vis_tile.player])
+            ?DEBUG("~nsrc:~w~nmsg:~w~ntar:~w", [Uid, Msg, VisTile#r_vis_tile.player])
         end, VisTileList),
 %%    lists:foreach(
 %%        fun(VisTile) ->

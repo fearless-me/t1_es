@@ -40,15 +40,15 @@
 %%
 -record(m_map_line,{map_id = 0, line_id = 0, pid = undefined, limits = 1, in = 0, dead_line = 0}).
 %%
--record(r_exit_map_req,{uid = 0, code = 0, map_id = 0, map_pid = undefined}).
+-record(r_exit_map_req,{uid = 0, map_id = 0, map_pid = undefined}).
 %%
 -record(r_change_map_req,{
-    player_id = 0, player_code = 0, player_pid = undefined,
+    uid = 0, player_pid = undefined,
     map_id = 0, map_pid = undefined, tar_map_id = 0, tar_pos = undefined, tar_map_pid = undefind, obj = undefined}).
 %%
 -record(r_change_map_ack,{map_id = 0, line_id = 0, pos = undefined, map_pid = undefind, error = 0}).
 %%
--record(r_teleport_req,{player_code = 0, map_pid = undefined, tar_pos = undefined}).
+-record(r_teleport_req,{uid = 0, map_pid = undefined, tar_pos = undefined}).
 
 
 %地图中的复活点

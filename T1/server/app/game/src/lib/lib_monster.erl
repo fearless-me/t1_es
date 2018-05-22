@@ -28,17 +28,17 @@ create(#recMapObjData{
         
     } = getCfg:getCfgByArgs(cfg_monster, Mid),
 
-    Code = code_gen:gen(?OBJ_MON),
-    #r_obj{
-        code = Code,
-        id = Mid,
+    Pos =  #vector3{x = X, y = 0.0, z = Y},
+
+    Obj1 = #r_obj{
+        uid = uid_gen:mon_uid(),
+        did = Mid,
         name = Name,
         group = Group,
         type = ?OBJ_MON,
         map_id = lib_map:get_map_id(),
         line_id = lib_map:get_line_id(),
         pid = self(),
-        map_pid = self(),
-        pos = #vector3{x = X, y = 0.0, z = Y},
-        com = undefined
-    }.
+        map_pid = self()
+    },
+    lib_move:init(Obj1, Pos, #vector3{x= 0.1, z = 0.5}).

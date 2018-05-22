@@ -42,8 +42,8 @@ login_ack(#r_login_ack{error = 0, account_info = AccountIfo}) ->
         result = 0,
         msg = io_lib:format("ErrorCode:~p", [0])
     }),
-    lib_player_rw:set_accid(AccountIfo#p_account.accountID),
-    lib_player_rw:set_code(code_gen:gen(?OBJ_USR)),
+    lib_player_rw:set_acc_id(AccountIfo#p_account.accountID),
+    lib_player_rw:set_uid(uid_gen:player_uid()),
     lib_player_rw:set_player_status(?PS_WAIT_LIST),
     lib_db:load_player_list_(self(), AccountIfo#p_account.accountID),
     ok;
@@ -70,10 +70,10 @@ create_player_(Req) ->
     ok.
 
 %%%-------------------------------------------------------------------
-create_player_ack(#r_create_player_ack{error = 0, id = PlayerId}) ->
+create_player_ack(#r_create_player_ack{error = 0, uid = PlayerId}) ->
     init_on_create(),
     mod_player:send(#pk_GS2U_CreatePlayerResult{
-      errorCode = 0, roleID = PlayerId
+        errorCode = 0, roleID = PlayerId
     });
 create_player_ack(#r_create_player_ack{error = Err}) ->
     mod_player:send(#pk_GS2U_CreatePlayerResult{errorCode = Err}).
@@ -81,7 +81,7 @@ create_player_ack(#r_create_player_ack{error = Err}) ->
 %%%-------------------------------------------------------------------
 select_player(PlayerID) ->
     lib_player_rw:set_player_status(?PS_WAIT_LOAD),
-    lib_db:load_player_data(self(), lib_player_rw:get_accid(), PlayerID),
+    lib_db:load_player_data(self(), lib_player_rw:get_acc_id(), PlayerID),
     ok.
 
 %%%-------------------------------------------------------------------
@@ -98,7 +98,7 @@ add_to_world() ->
     Ack = mod_map_creator:take_over_player_online(
         MapID,
         #r_change_map_req{
-            player_id = PlayerID,
+            uid = PlayerID,
             player_pid = self(),
             tar_map_id = MapID,
             tar_pos = Pos,
@@ -120,24 +120,23 @@ go_to_new_map(DestMapID, Pos) ->
     ),
     ok.
 
-go_to_new_map_1(DestMapId, DestMapId,  TarPos) ->
+go_to_new_map_1(DestMapId, DestMapId, TarPos) ->
     mod_map:player_teleport(
         lib_player_rw:get_map_pid(),
         #r_teleport_req{
-            player_code = lib_player_rw:get_code(),
+            uid = lib_player_rw:get_uid(),
             tar_pos = TarPos
         }
     ),
     ok;
-go_to_new_map_1(_CurMapID, DestMapId,  TarPos) ->
+go_to_new_map_1(_CurMapID, DestMapId, TarPos) ->
     go_to_new_map_2(DestMapId, TarPos).
 
 go_to_new_map_2(DestMapID, Pos) ->
     lib_player_rw:set_player_status(?PS_CHANGE_MAP),
     Ack = mod_map_creator:player_change_map(
         #r_change_map_req{
-            player_id = lib_player_rw:get_uid(),
-            player_code = lib_player_rw:get_code(),
+            uid = lib_player_rw:get_uid(),
             player_pid = self(),
             map_id = lib_player_rw:get_map_id(),
             map_pid = lib_player_rw:get_map_pid(),
@@ -172,16 +171,15 @@ return_to_pre_map() ->
 
 
 %%%-------------------------------------------------------------------
-offline()->
+offline() ->
     offline_1(lib_player_rw:get_player_status()),
     ok.
 
 offline_1(Status)
-    when Status =:= ?PS_GAME ; Status =:= ?PS_CHANGE_MAP ->
+    when Status =:= ?PS_GAME; Status =:= ?PS_CHANGE_MAP ->
     lib_player_rw:set_player_status(?PS_OFFLINE),
     mod_map_creator:player_offline(
         lib_player_rw:get_uid(),
-        lib_player_rw:get_code(),
         lib_player_rw:get_map_id(),
         lib_player_rw:get_map_pid()
     );
@@ -191,10 +189,9 @@ offline_1(_Status) ->
 
 
 make_obj() ->
-    #r_obj{
+    Obj = #r_obj{
         type = ?OBJ_USR,
-        id   = lib_player_rw:get_uid(),
-        code = lib_player_rw:get_code(),
-        pos  = lib_player_rw:get_pos(),
-        pid  = self()
-    }.
+        uid = lib_player_rw:get_uid(),
+        pid = self()
+    },
+    lib_move:init(Obj, ib_player_rw:get_pos(), #vector3{x = 0.1, z = 0.5}).

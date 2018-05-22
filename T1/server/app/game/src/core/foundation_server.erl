@@ -31,8 +31,8 @@ start_link() ->
 %%%===================================================================	
 mod_init(_Args) ->
     erlang:process_flag(trap_exit, true),
-    code_gen:init(1, 1, lists:seq(?OBJ_MIN, ?OBJ_MAX)),
-    ets:new(?ETS_ONLINE, [named_table, public, {keypos, #m_player.id}, ?ETSRC, ?ETSWC]),
+    uid_gen:init(),
+    ets:new(?ETS_ONLINE, [named_table, public, {keypos, #m_player.uid}, ?ETSRC, ?ETSWC]),
     
     {ok, #{}}.
 

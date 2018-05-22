@@ -35,7 +35,7 @@ load_player_data_(Pid, AccId, PlayerId) ->
         {
             load_player_data_ack,
             #m_player{
-                id = PlayerId,
+                uid = PlayerId,
                 accid = AccId,
                 other = #r_player_other{}
             }
@@ -60,7 +60,7 @@ create_player_(
             create_player_ack,
             #r_create_player_ack{
                 error = 0,
-                id = code_gen:gen(?OBJ_USR),
+                uid = uid_gen:player_uid(),
                 acc_id = AccId,
                 name = Name,
                 camp = Camp,

@@ -19,28 +19,17 @@
 -export([init/1]).
 -export([tick/1]).
 -export([start_stop_now/1]).
--export([get_npc_ets/0, get_monster_ets/0]).
--export([get_pet_ets/0, get_player_ets/0]).
--export([get_map_id/0, get_line_id/0]).
--export([get_map_hook/0]).
+
 -export([player_exit/2, player_join/2]).
 -export([force_teleport/2]).
--export([get_player/1]).
 
--define(MAP_MON_ETS, map_monster_ets__).
--define(MAP_USR_ETS, map_player_ets__).
--define(MAP_NPC_ETS, map_npc_ets__).
--define(MAP_PET_ETS, map_pet_ets__).
--define(MAP_ID, map_id__).
--define(LINE_ID, line_id__).
--define(MAP_HOOK, map_hook__).
 -define(MAP_TICK, 50).
 
 %%%-------------------------------------------------------------------
 init(S) ->
     Conf = mod_map_creator:map_conf(S#r_map_state.map_id),
     S1 = init_1(S),
-    ok = init_2(S1),
+    ok = lib_map_rw:init_ets(S1),
     ok = lib_map_view:init_vis_tile(Conf),
     ok = init_npc(Conf),
     ok = init_monster(Conf),
@@ -50,82 +39,44 @@ init(S) ->
 %%%-------------------------------------------------------------------
 init_1(State) ->
     State#r_map_state{
-        npc     = ets:new(?MAP_NPC_ETS, [protected, {keypos, #r_obj.code}, ?ETSRC]),
-        pet     = ets:new(?MAP_PET_ETS, [protected, {keypos, #r_obj.code}, ?ETSRC]),
-        player  = ets:new(?MAP_USR_ETS, [protected, {keypos, #r_obj.code}, ?ETSRC]),
-        monster = ets:new(?MAP_MON_ETS, [protected, {keypos, #r_obj.code}, ?ETSRC])
+        npc     = ets:new(npc,      [protected, {keypos, #r_obj.uid}, ?ETSRC]),
+        pet     = ets:new(pet,      [protected, {keypos, #r_obj.uid}, ?ETSRC]),
+        player  = ets:new(player,   [protected, {keypos, #r_obj.uid}, ?ETSRC]),
+        monster = ets:new(monster,  [protected, {keypos, #r_obj.uid}, ?ETSRC])
     }.
-
-init_2(State) ->
-    put(?MAP_ID,        State#r_map_state.map_id),
-    put(?LINE_ID,       State#r_map_state.line_id),
-    put(?MAP_NPC_ETS,   State#r_map_state.npc),
-    put(?MAP_PET_ETS,   State#r_map_state.pet),
-    put(?MAP_USR_ETS,   State#r_map_state.player),
-    put(?MAP_MON_ETS,   State#r_map_state.monster),
-    put(?MAP_HOOK,      State#r_map_state.hook_mod),
-    ok.
-%%%-------------------------------------------------------------------
-get_map_id()        -> get(?MAP_ID).
-get_line_id()       -> get(?LINE_ID).
-get_map_hook()      -> get(?MAP_HOOK).
-get_npc_ets()       -> get(?MAP_NPC_ETS).
-get_pet_ets()       -> get(?MAP_PET_ETS).
-get_player_ets()    -> get(?MAP_USR_ETS).
-get_monster_ets()   -> get(?MAP_MON_ETS).
 
 %%%-------------------------------------------------------------------
 player_exit(S, #r_exit_map_req{
-    code = PlayerCode
+    uid = PlayerID
 }) ->
-    Obj = get_player(PlayerCode),
+    Obj = lib_map_rw:get_player(PlayerID),
     player_exit_1(Obj),
     {ok, S}.
 
 player_exit_1(Obj) ->
-    ?INFO("user ~p:~p exit map ~p:~p:~p",
-        [Obj#r_obj.id, Obj#r_obj.code, get_map_id(), get_line_id(), self()]),
-    ets:delete(get_player_ets(), Obj#r_obj.code),
+    ?INFO("user ~p exit map ~p:~p:~p",
+        [Obj#r_obj.uid, lib_map_rw:get_map_id(), lib_map_rw:get_line_id(), self()]),
+    ets:delete(lib_map_rw:get_player_ets(), Obj#r_obj.uid),
     lib_map_view:sync_player_exit_map(Obj),
     ok.
 
 %%%-------------------------------------------------------------------
 player_join(S, Obj) ->
-    ets:insert(get_player_ets(), Obj),
+    ets:insert(lib_map_rw:get_player_ets(), Obj),
     lib_map_view:sync_player_join_map(Obj),
     {ok, S}.
 
 
 %%%-------------------------------------------------------------------
 force_teleport(S, #r_teleport_req{
-    player_code = PlayerCode,
+    uid = PlayerId,
     tar_pos = TarPos
 }) ->
-    Obj = lib_map:get_player(PlayerCode),
-    on_player_pos_change(Obj, TarPos),
+    Obj = lib_map_rw:get_player(PlayerId),
+    lib_move:on_player_pos_change(Obj, TarPos),
     ?DEBUG("player ~p teleport from ~p to ~p in map ~p",
-        [Obj#r_obj.code, Obj#r_obj.pos, TarPos, get_map_id()]),
+        [Obj#r_obj.uid, lib_map_rw:get_obj_pos(Obj), TarPos, lib_map_rw:get_map_id()]),
     {ok, S}.
-
-on_player_pos_change(undefined, _TarPos) ->
-    ok;
-on_player_pos_change(Obj, TarPos) ->
-    stop_move(false),
-    OldVisIndex = lib_map_view:pos_to_vis_index(Obj#r_obj.pos),
-    NewVisIndex = lib_map_view:pos_to_vis_index(TarPos),
-    lib_map_view:sync_change_pos_visual_tile(Obj, OldVisIndex, NewVisIndex),
-    lib_map_rw:player_update(Obj#r_obj.code, {#r_obj.tar_pos, TarPos}),
-    lib_map_view:sync_movement_to_big_visual_tile({player_move_to, Obj#r_obj.pos, TarPos}),
-    ok.
-
-
-stop_move(_Send)->  ok.
-%%%-------------------------------------------------------------------
-get_player(PlayerCode) ->
-    case ets:lookup(get_player_ets(), PlayerCode) of
-        [#r_obj{} = Obj | _] -> Obj;
-        _ -> undefined
-    end.
 
 
 %%%-------------------------------------------------------------------
@@ -142,15 +93,12 @@ init_all_monster_1(Mdata)->
     Obj = lib_monster:create(Mdata),
     ok = init_all_monster_2(Obj).
 
-init_all_monster_2(#r_obj{
-  pos = Pos
-} = Obj) ->
-
-    VisIndex = lib_map_view:pos_to_vis_index(Pos),
+init_all_monster_2(#r_obj{} = Obj) ->
+    VisIndex = lib_map_view:pos_to_vis_index(Obj#r_obj.pos),
     lib_map_rw:add_obj_to_ets(Obj),
     lib_map_view:add_to_vis_tile(Obj, VisIndex),
-    ?DEBUG("map ~p:~p create monster ~p, code ~p, visIndex ~p",
-        [lib_map:get_map_id(), lib_map:get_line_id(), Obj#r_obj.id, Obj#r_obj.code, VisIndex]),
+    ?DEBUG("map ~p:~p create monster ~p, uid ~p, visIndex ~p",
+        [lib_map_rw:get_map_id(), lib_map_rw:get_line_id(), Obj#r_obj.uid, Obj#r_obj.uid, VisIndex]),
     ok;
 init_all_monster_2(_) -> error.
 
@@ -171,7 +119,20 @@ tick(#r_map_state{exit = true, player = PL}) ->
     real_stop_now(PL);
 tick(S) ->
     tick_msg(),
+    tick_obj(),
     S.
+
+tick_obj()->
+    tick_player(),
+    tick_monster(),
+    ok.
+
+tick_player() ->
+    ets:foldl(fun() -> ok end, 0, lib_map_rw:get_player_ets()).
+
+tick_monster() ->
+    ets:foldl(fun() -> ok end, 0, lib_map_rw:get_monster_ets()).
+
 %%%-------------------------------------------------------------------
 real_stop_now([]) ->
     ?DEBUG("~p,~p stop now",[misc:register_name(self()), self()]),

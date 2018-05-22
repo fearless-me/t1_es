@@ -80,7 +80,7 @@ do_handle_cast(Request, State) ->
 %%--------------------------------------------------------------------
 player_join_map_1(
     S, #r_change_map_req{
-        player_id = _PlayerID,
+        uid = _PlayerID,
         tar_map_id = MapID,
         tar_pos = Pos,
         obj = Obj

@@ -13,7 +13,7 @@
 
 %%
 -record(m_player,{
-    id,                                     %% 用户ID
+    uid,                                     %% 用户ID
     accid = 0,                              %% 平台账号ID
     accname = "",                           %% 平台账号
     nickname = "",                          %% 玩家名
@@ -36,13 +36,14 @@
     mount = 0,                              %% 坐骑ID
     other,                                  %% 其他附加数据集
     sn = 0,                                 %% 服务器标识
+    skill_list = [],
     lock_pid = []
 }).
 
 %%
 -record(r_player_other, {
-    player_id = 0,
-    player_pid = undefined,
+    uid = 0,
+    pid = undefined,
     map_id = 0,
     map_pid = undefined,
     old_map_id = 0,
