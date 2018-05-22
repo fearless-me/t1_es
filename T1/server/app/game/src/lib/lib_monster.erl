@@ -36,8 +36,8 @@ create(#recMapObjData{
         name = Name,
         group = Group,
         type = ?OBJ_MON,
-        map_id = lib_map:get_map_id(),
-        line_id = lib_map:get_line_id(),
+        map_id = lib_map_rw:get_map_id(),
+        line_id = lib_map_rw:get_line_id(),
         pid = self(),
         map_pid = self()
     },

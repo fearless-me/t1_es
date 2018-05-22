@@ -14,7 +14,7 @@
 -include("map.hrl").
 -include("player_status.hrl").
 -include("common_record.hrl").
--include("obj.hrl").
+-include("map_obj.hrl").
 -include("db_record.hrl").
 
 -export([init/0]).
@@ -189,9 +189,9 @@ offline_1(_Status) ->
 
 
 make_obj() ->
-    Obj = #r_obj{
+    Obj = #r_map_obj{
         type = ?OBJ_USR,
         uid = lib_player_rw:get_uid(),
         pid = self()
     },
-    lib_move:init(Obj, ib_player_rw:get_pos(), #vector3{x = 0.1, z = 0.5}).
+    lib_move:init(Obj, lib_player_rw:get_pos(), #vector3{x = 0.1, z = 0.5}).

@@ -22,7 +22,7 @@
 -type obj_type() :: ?OBJ_MIN .. ?OBJ_MAX.
 
 %%
--record(r_obj, {
+-record(r_map_obj, {
 %% 基础相关
     uid = 0, pid = 0, did = 0,
     name = "", group = 0, type = ?OBJ_ERR :: obj_type(),
@@ -33,6 +33,7 @@
     start_time = 0, last_up_time = 0, stopped, path_list = [],
 
 %%  战斗相关
+    hp = 1, max_hp = 1,
     attr= [], buff_list = []
 
 }).

@@ -8,7 +8,7 @@
 %%%-------------------------------------------------------------------
 -module(lib_move).
 -author("mawenhong").
--include("obj.hrl").
+-include("map_obj.hrl").
 -include("movement.hrl").
 -include("logger.hrl").
 
@@ -21,7 +21,7 @@
 
 %%%-------------------------------------------------------------------
 init(Obj, Pos, Face) ->
-    Obj#r_obj{
+    Obj#r_map_obj{
         cur_move = ?EMS_STAND,
         next_move = ?EMS_STAND,
         pos = Pos,
@@ -44,13 +44,13 @@ start_player_walk(Obj, Start, End) ->
     ok.
 
 start_player_walk_1(
-    #r_obj{uid = Code} = Obj,
+    #r_map_obj{uid = Code} = Obj,
     Start, End
 ) ->
     Now = misc:milli_seconds(),
     Dir = vector3:subtract(End, Start),
 
-    NewObj = Obj#r_obj{
+    NewObj = Obj#r_map_obj{
         cur_move = ?EMS_WALK,
         next_move = ?EMS_STAND,
         start = Start,
@@ -64,15 +64,15 @@ start_player_walk_1(
     lib_map_rw:player_update(
         Code,
         [
-            {#r_obj.cur_move, ?EMS_WALK},
-            {#r_obj.next_move, ?EMS_STAND},
-            {#r_obj.start, Start},
-            {#r_obj.dest, End},
-            {#r_obj.dir, Dir},
-            {#r_obj.face, Dir},
-            {#r_obj.start_time, Now},
-            {#r_obj.last_up_time, Now},
-            {#r_obj.stopped, false}
+            {#r_map_obj.cur_move, ?EMS_WALK},
+            {#r_map_obj.next_move, ?EMS_STAND},
+            {#r_map_obj.start, Start},
+            {#r_map_obj.dest, End},
+            {#r_map_obj.dir, Dir},
+            {#r_map_obj.face, Dir},
+            {#r_map_obj.start_time, Now},
+            {#r_map_obj.last_up_time, Now},
+            {#r_map_obj.stopped, false}
         ]
     ),
     on_player_pos_change(NewObj, Start).
@@ -82,11 +82,11 @@ is_role_can_walk(_Pos, _End) -> true.
 %%%-------------------------------------------------------------------
 
 update(Obj) ->
-    update_1(Obj, Obj#r_obj.cur_move).
+    update_1(Obj, Obj#r_map_obj.cur_move).
 
 
 update_1(Obj, ?EMS_WALK) ->
-    #r_obj{
+    #r_map_obj{
         pos = CurPos,
         last_up_time = LastUpTime,
         path_list = PathList
@@ -99,16 +99,16 @@ update_1(Obj, ?EMS_WALK) ->
             ok;
         {?ENR_TOBECONTINUED, NewPath} ->
             lib_map_rw:player_update(
-                Obj#r_obj.uid,
-                {#r_obj.path_list, NewPath}
+                Obj#r_map_obj.uid,
+                {#r_map_obj.path_list, NewPath}
             );
         _ ->
             lib_map_rw:player_update(
-                Obj#r_obj.uid,
+                Obj#r_map_obj.uid,
                 [
-                    {#r_obj.cur_move, ?EMS_STAND},
-                    {#r_obj.next_move, ?EMS_STAND},
-                    {#r_obj.path_list, []}
+                    {#r_map_obj.cur_move, ?EMS_STAND},
+                    {#r_map_obj.next_move, ?EMS_STAND},
+                    {#r_map_obj.path_list, []}
                 ]
             )
     end,
@@ -158,7 +158,7 @@ on_player_pos_change(Obj, TarPos) ->
     stop_move(false),
     OldVisIndex = lib_map_view:pos_to_vis_index(lib_map_rw:get_obj_pos(Obj)),
     NewVisIndex = lib_map_view:pos_to_vis_index(TarPos),
-    lib_map_rw:player_update_pos(Obj#r_obj.uid, TarPos),
+    lib_map_rw:player_update_pos(Obj#r_map_obj.uid, TarPos),
     lib_map_view:sync_change_pos_visual_tile(Obj, OldVisIndex, NewVisIndex),
     lib_map_view:sync_movement_to_big_visual_tile({player_move_to, lib_map_rw:get_obj_pos(Obj), TarPos}),
     ok.

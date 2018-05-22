@@ -43,7 +43,7 @@ start() ->
     wrapper({"test network 25555",          ?Wrap(start_listener_25555(SupPid))}),
     wrapper({"start map root supervisor",   ?Wrap(start_map_root_supervisor(SupPid))}),
     wrapper({"start login window",          ?Wrap(start_login(SupPid))}),
-    wrapper({"start _foundation",          ?Wrap(start_foundation(SupPid))}),
+    wrapper({"start _foundation",           ?Wrap(start_foundation(SupPid))}),
     wrapper({"start auto compile and load", ?Wrap(start_auto_reload(SupPid))}),
 
     sentinel_server:status(),

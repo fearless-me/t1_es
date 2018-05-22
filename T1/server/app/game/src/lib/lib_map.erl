@@ -11,7 +11,7 @@
 
 -include("logger.hrl").
 -include("map.hrl").
--include("obj.hrl").
+-include("map_obj.hrl").
 -include("common.hrl").
 -include("cfg_mapsetting.hrl").
 
@@ -39,10 +39,10 @@ init(S) ->
 %%%-------------------------------------------------------------------
 init_1(State) ->
     State#r_map_state{
-        npc     = ets:new(npc,      [protected, {keypos, #r_obj.uid}, ?ETSRC]),
-        pet     = ets:new(pet,      [protected, {keypos, #r_obj.uid}, ?ETSRC]),
-        player  = ets:new(player,   [protected, {keypos, #r_obj.uid}, ?ETSRC]),
-        monster = ets:new(monster,  [protected, {keypos, #r_obj.uid}, ?ETSRC])
+        npc     = ets:new(npc,      [protected, {keypos, #r_map_obj.uid}, ?ETSRC]),
+        pet     = ets:new(pet,      [protected, {keypos, #r_map_obj.uid}, ?ETSRC]),
+        player  = ets:new(player,   [protected, {keypos, #r_map_obj.uid}, ?ETSRC]),
+        monster = ets:new(monster,  [protected, {keypos, #r_map_obj.uid}, ?ETSRC])
     }.
 
 %%%-------------------------------------------------------------------
@@ -55,8 +55,8 @@ player_exit(S, #r_exit_map_req{
 
 player_exit_1(Obj) ->
     ?INFO("user ~p exit map ~p:~p:~p",
-        [Obj#r_obj.uid, lib_map_rw:get_map_id(), lib_map_rw:get_line_id(), self()]),
-    ets:delete(lib_map_rw:get_player_ets(), Obj#r_obj.uid),
+        [Obj#r_map_obj.uid, lib_map_rw:get_map_id(), lib_map_rw:get_line_id(), self()]),
+    ets:delete(lib_map_rw:get_player_ets(), Obj#r_map_obj.uid),
     lib_map_view:sync_player_exit_map(Obj),
     ok.
 
@@ -75,7 +75,7 @@ force_teleport(S, #r_teleport_req{
     Obj = lib_map_rw:get_player(PlayerId),
     lib_move:on_player_pos_change(Obj, TarPos),
     ?DEBUG("player ~p teleport from ~p to ~p in map ~p",
-        [Obj#r_obj.uid, lib_map_rw:get_obj_pos(Obj), TarPos, lib_map_rw:get_map_id()]),
+        [Obj#r_map_obj.uid, lib_map_rw:get_obj_pos(Obj), TarPos, lib_map_rw:get_map_id()]),
     {ok, S}.
 
 
@@ -93,12 +93,12 @@ init_all_monster_1(Mdata)->
     Obj = lib_monster:create(Mdata),
     ok = init_all_monster_2(Obj).
 
-init_all_monster_2(#r_obj{} = Obj) ->
-    VisIndex = lib_map_view:pos_to_vis_index(Obj#r_obj.pos),
+init_all_monster_2(#r_map_obj{} = Obj) ->
+    VisIndex = lib_map_view:pos_to_vis_index(Obj#r_map_obj.pos),
     lib_map_rw:add_obj_to_ets(Obj),
     lib_map_view:add_to_vis_tile(Obj, VisIndex),
     ?DEBUG("map ~p:~p create monster ~p, uid ~p, visIndex ~p",
-        [lib_map_rw:get_map_id(), lib_map_rw:get_line_id(), Obj#r_obj.uid, Obj#r_obj.uid, VisIndex]),
+        [lib_map_rw:get_map_id(), lib_map_rw:get_line_id(), Obj#r_map_obj.uid, Obj#r_map_obj.uid, VisIndex]),
     ok;
 init_all_monster_2(_) -> error.
 
@@ -128,10 +128,10 @@ tick_obj()->
     ok.
 
 tick_player() ->
-    ets:foldl(fun() -> ok end, 0, lib_map_rw:get_player_ets()).
+    ets:foldl(fun(_Obj, _) -> ok end, 0, lib_map_rw:get_player_ets()).
 
 tick_monster() ->
-    ets:foldl(fun() -> ok end, 0, lib_map_rw:get_monster_ets()).
+    ets:foldl(fun(_Obj, _) -> ok end, 0, lib_map_rw:get_monster_ets()).
 
 %%%-------------------------------------------------------------------
 real_stop_now([]) ->
@@ -146,7 +146,7 @@ start_stop_now(S) ->
 
 kick_all_player(#r_map_state{player = Ets}) ->
     ets:foldl(
-        fun(#r_obj{pid = Pid}, _) ->
+        fun(#r_map_obj{pid = Pid}, _) ->
             ps:send(Pid, return_to_pre_map)
         end, 0, Ets),
     ok.

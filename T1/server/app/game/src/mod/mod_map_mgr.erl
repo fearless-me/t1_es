@@ -13,7 +13,7 @@
 -include("common.hrl").
 -include("logger.hrl").
 -include("map.hrl").
--include("obj.hrl").
+-include("map_obj.hrl").
 -define(MAP_LINES, map_line_ets__).
 -define(LINE_LIFETIME, 2 * 60 * 1000).
 
@@ -98,7 +98,7 @@ player_join_map_1(
         end,
 
     #m_map_line{pid = MapPid, map_id = MapID, line_id = LineID} = Line,
-    mod_map:player_join(MapPid, Obj#r_obj{map_id = MapID, line_id = LineID, map_pid = MapPid}),
+    mod_map:player_join(MapPid, Obj#r_map_obj{map_id = MapID, line_id = LineID, map_pid = MapPid}),
     ets:update_counter(S#state.ets, LineID, {#m_map_line.in, 1}),
     #r_change_map_ack{map_id = MapID, line_id = LineID,  map_pid = MapPid, pos = Pos}.
 

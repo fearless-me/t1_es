@@ -11,7 +11,7 @@
 
 -include("logger.hrl").
 -include("map.hrl").
--include("obj.hrl").
+-include("map_obj.hrl").
 -include_lib("stdlib/include/assert.hrl").
 
 %% API
@@ -117,7 +117,7 @@ add_to_vis_tile(Obj, VisTileIndex) ->
     ?assert(is_number(VisTileIndex) andalso VisTileIndex > 0),
 
     VisTile = get_vis_tile(VisTileIndex),
-    add_to_vis_tile_1( lib_obj:obj_type(Obj), Obj#r_obj.uid, VisTileIndex, VisTile),
+    add_to_vis_tile_1( lib_obj:obj_type(Obj), Obj#r_map_obj.uid, VisTileIndex, VisTile),
     ok.
 
 %%
@@ -153,7 +153,7 @@ del_from_vis_tile(Obj, VisTileIndex) ->
     ?assert(is_number(VisTileIndex) andalso VisTileIndex > 0),
 
     VisTile = get_vis_tile(VisTileIndex),
-    del_from_vis_tile_1( lib_obj:obj_type(Obj), Obj#r_obj.uid, VisTileIndex, VisTile),
+    del_from_vis_tile_1( lib_obj:obj_type(Obj), Obj#r_map_obj.uid, VisTileIndex, VisTile),
     ok.
 
 %%
@@ -185,7 +185,7 @@ del_from_vis_tile_1(_Type, _Uid, _VisTileIndex, _VisTile) ->
 %%%-------------------------------------------------------------------
 %% 把角色信息广播到九宫格中
 sync_big_vis_tile_to_me(
-    #r_obj{uid = Uid, type = ?OBJ_USR},
+    #r_map_obj{uid = Uid, type = ?OBJ_USR},
     VisTileList,
     Msg
 ) ->
@@ -205,7 +205,7 @@ sync_big_vis_tile_to_me(
     ok;
 sync_big_vis_tile_to_me(_Obj, _VisTileList, _Msg) -> skip.
 
-sync_me_to_big_vis_tile(#r_obj{uid = Uid}, VisTileList, Msg) ->
+sync_me_to_big_vis_tile(#r_map_obj{uid = Uid}, VisTileList, Msg) ->
     lists:foreach(
         fun(VisTile) ->
             ?DEBUG("~nsrc:~w~nmsg:~w~ntar:~w", [Uid, Msg, VisTile#r_vis_tile.player])

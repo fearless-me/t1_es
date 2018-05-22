@@ -114,7 +114,7 @@ init_1(IsCenterServer) ->
 
             ets:insert(?UIDEts, #recUID{type = UIDType,curUID = MinUID,minUID = MinUID,maxUID = MaxUID}),
 
-            ?INFO("UIDType:~p,MinUID:~p,MaxUID:~p,Count:~p",
+            ?INFO("UIDType:~.2.0w, MinUID:~.19.0w, MaxUID:~.19.0w, Count:~.10.0w",
                 [
                     UIDType,
                     MinUID,
