@@ -47,20 +47,20 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="test.erl" pinned="false" current-in-tab="true">
+      <file leaf-file-name="test.erl" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/game/src/test/test.erl">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="364">
-              <caret line="14" column="117" lean-forward="true" selection-start-line="14" selection-start-column="117" selection-end-line="14" selection-end-column="117" />
+            <state relative-caret-position="661">
+              <caret line="36" column="60" lean-forward="true" selection-start-line="36" selection-start-column="60" selection-end-line="36" selection-end-column="60" />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="vector3.erl" pinned="false" current-in-tab="false">
+      <file leaf-file-name="vector3.erl" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app/deps/pubs/src/lib/vector3.erl">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="26">
-              <caret line="16" column="80" lean-forward="true" selection-start-line="16" selection-start-column="80" selection-end-line="16" selection-end-column="80" />
+            <state relative-caret-position="739">
+              <caret line="116" column="34" selection-start-line="116" selection-start-column="34" selection-end-line="116" selection-end-column="34" />
             </state>
           </provider>
         </entry>
@@ -178,8 +178,8 @@
         <option value="$PROJECT_DIR$/app/deps/pubs/src/lib/misc.erl" />
         <option value="$PROJECT_DIR$/app/game/src/core/foundation_server.erl" />
         <option value="$PROJECT_DIR$/app/deps/pubs/src/lib/uid_gen.erl" />
-        <option value="$PROJECT_DIR$/app/deps/pubs/src/lib/vector3.erl" />
         <option value="$PROJECT_DIR$/app/game/src/test/test.erl" />
+        <option value="$PROJECT_DIR$/app/deps/pubs/src/lib/vector3.erl" />
       </list>
     </option>
   </component>
@@ -898,12 +898,12 @@
       <workItem from="1526883848230" duration="18832000" />
       <workItem from="1526966758527" duration="15274000" />
       <workItem from="1526986647859" duration="3889000" />
-      <workItem from="1527039384351" duration="5449000" />
+      <workItem from="1527039384351" duration="6809000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="296582000" />
+    <option name="totallyTimeSpent" value="297942000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -1261,17 +1261,17 @@
       <provider selected="true" editor-type-id="text-editor" />
       <provider editor-type-id="BEAM" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/deps/pubs/src/lib/vector3.erl">
+    <entry file="file://$PROJECT_DIR$/app/game/src/test/test.erl">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="26">
-          <caret line="16" column="80" lean-forward="true" selection-start-line="16" selection-start-column="80" selection-end-line="16" selection-end-column="80" />
+        <state relative-caret-position="661">
+          <caret line="36" column="60" lean-forward="true" selection-start-line="36" selection-start-column="60" selection-end-line="36" selection-end-column="60" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/game/src/test/test.erl">
+    <entry file="file://$PROJECT_DIR$/app/deps/pubs/src/lib/vector3.erl">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="364">
-          <caret line="14" column="117" lean-forward="true" selection-start-line="14" selection-start-column="117" selection-end-line="14" selection-end-column="117" />
+        <state relative-caret-position="739">
+          <caret line="116" column="34" selection-start-line="116" selection-start-column="34" selection-end-line="116" selection-end-column="34" />
         </state>
       </provider>
     </entry>

@@ -32,7 +32,7 @@ tv3_1(Src, Dst) ->
     io:format("src:~w~n",[Src]),
     io:format("dst:~w~n",[Dst]),
     io:format("\tbehind     ~w -> ~w~n",[Src, vector3:behind(Src, Dst, 10)]),
-    io:format("\tbefore     ~w -> ~w~n",[Src, vector3:before(Src, Dst, 10)]),
-    io:format("\tSrc is_before P2 -> ~w~n", [vector3:is_behind(Src, Dst, vector3:subtract(Src, Dst))]),
-    io:format("\tSrc is_before P2 -> ~w~n", [vector3:is_behind(Src, Dst, vector3:subtract(Dst, Src))]),
+    io:format("\tbefore     ~w -> ~w~n",[Src, vector3:front(Src, Dst, 10)]),
+    io:format("\tSrc is_front Dst -> ~w~n", [vector3:is_front(Src, Dst, vector3:subtract(Src, Dst))]),
+    io:format("\tSrc is_front Dst -> ~w~n", [vector3:is_front(Src, Dst, vector3:subtract(Dst, Src))]),
     ok.

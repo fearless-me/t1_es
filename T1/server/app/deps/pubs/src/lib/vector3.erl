@@ -16,9 +16,9 @@
 -export([multi/2]).
 -export([divi/2]).
 -export([behind/3]).
--export([before/3]).
--export([is_behind/3]). %% 正面朝向我
--export([is_before/3]). %% 正面反向我
+-export([front/3]).
+-export([is_behind/3]). %% src 是否在目标反面
+-export([is_front/3]). %% src 是否在目标正面
 -export([normalized/1]).
 -export([dist/2, dist_sq/2]).
 -export([linear_lerp/3]).
@@ -48,11 +48,8 @@ divi(P, Factor) ->
     #vector3{x = X / Factor, y = Y / Factor, z = Z / Factor}.
 
 %%
-normalized(
-    #vector3{
-        x = X, y = Y, z = Z
-    } = P
-) ->
+normalized(P) ->
+    #vector3{x = X, y = Y, z = Z} = P,
     Len = math:sqrt(X * X + Y * Y + Z * Z),
     case Len == 0 of
         true -> P;
@@ -64,7 +61,7 @@ is_behind(Src, Dst, DstFace) ->
     %
     #vector3{x = X2, y = Y2, z = Z2} = DstFace,
     % dir
-    #vector3{x = X1, y = Y1, z = Z1} = subtract(Dst, Src),
+    #vector3{x = X1, y = Y1, z = Z1} = subtract(Src, Dst),
     % |A|*|B|*cosθ
     (X1 * X2 + Y1 * Y2 + Z1 * Z2) < 0.
 %%
@@ -79,7 +76,7 @@ behind(Src, Dst, Dist) ->
     add(Src, Delta).
 
 %%
-before(Src, Dst, Dist) ->
+front(Src, Dst, Dist) ->
     % dir
     Dir = subtract(Src, Dst),
     % normalize
@@ -90,11 +87,11 @@ before(Src, Dst, Dist) ->
     add(Src, Delta).
 
 %%
-is_before(Src, Dst, DstFace) ->
+is_front(Src, Dst, DstFace) ->
     %
     #vector3{x = X2, y = Y2, z = Z2} = DstFace,
     % dir
-    #vector3{x = X1, y = Y1, z = Z1} = subtract(Dst, Src),
+    #vector3{x = X1, y = Y1, z = Z1} = subtract(Src, Dst),
     % |A|*|B|*cosθ
     (X1 * X2 + Y1 * Y2 + Z1 * Z2) >= 0.
 
@@ -106,13 +103,16 @@ dist(P1, P2) ->
 
 %%
 dist_sq(P1, P2) ->
-    P1#vector3.x * P2#vector3.x +
-        P1#vector3.y * P2#vector3.y +
-        P1#vector3.z * P2#vector3.z.
+    #vector3{x = X1, y = Y1, z = Z1} = P1,
+    #vector3{x = X2, y = Y2, z = Z2} = P2,
+    X1 * X2 + Y1 * Y2 + Z1 * Z2.
+
 %%
-linear_lerp(Src, Dst, X) ->
+linear_lerp(Src, Dst, Factor) ->
+    #vector3{x = X1, y = Y1, z = Z1} = Src,
+    #vector3{x = X2, y = Y2, z = Z2} = Dst,
     #vector3{
-        x = Src#vector3.x * (1 - X) + Dst#vector3.x * X,
-        y = Src#vector3.y * (1 - X) + Dst#vector3.y * X,
-        z = Src#vector3.z * (1 - X) + Dst#vector3.z * X
+        x = X1 * (1 - Factor) + X2 * Factor,
+        y = Y1 * (1 - Factor) + Y2 * Factor,
+        z = Z1 * (1 - Factor) + Z2 * Factor
     }.
