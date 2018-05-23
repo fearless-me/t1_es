@@ -16,6 +16,7 @@
 -include("map_obj.hrl").
 -define(MAP_LINES, map_line_ets__).
 -define(LINE_LIFETIME, 30 * 1000).
+-define(DEAD_LINE_PROTECT, 15 * 1000).
 
 
 -export([player_join_map/2]).
@@ -79,9 +80,11 @@ do_handle_cast(Request, State) ->
 
 %%--------------------------------------------------------------------
 player_join_map_1(S, Req) ->
+    Now = misc:milli_seconds(),
     #r_change_map_req{tar_map_id = MapID, tar_pos = Pos, obj = Obj} = Req,
     MS = ets:fun2ms(
-        fun(T) when T#m_map_line.limits > T#m_map_line.in
+        fun(T) when T#m_map_line.limits > T#m_map_line.in,
+                    T#m_map_line.dead_line > Now + ?DEAD_LINE_PROTECT
             -> T
         end),
     Line =
