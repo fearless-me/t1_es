@@ -170,7 +170,7 @@ tick_monster_1(Obj) ->
 
 %%%-------------------------------------------------------------------
 real_stop_now(0) ->
-    ?DEBUG("~p,~p stop now",[misc:register_name(self()), self()]),
+    ?INFO("~p ~p stop now",[misc:register_name(self()), self()]),
     ps:send(self(), stop_immediately);
 real_stop_now(_Players) ->
     tick_msg(),
@@ -178,6 +178,9 @@ real_stop_now(_Players) ->
 
 %%%-------------------------------------------------------------------
 start_stop_now(S) ->
+    ?INFO("~p ~p start stop now, kick all player(s)",
+        [misc:register_name(self()), self()]),
+
     kick_all_player(S),
     S#r_map_state{status = ?MAP_READY_EXIT}.
 
