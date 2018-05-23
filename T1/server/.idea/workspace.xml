@@ -6,7 +6,6 @@
   <component name="ChangeListManager">
     <list default="true" readonly="true" id="354d5196-8a2e-476f-8af6-71424480c5e1" name="Default" comment="">
       <change afterPath="$PROJECT_DIR$/app/deps/pubs/include/vector3.hrl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/game/src/test/test.erl" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/dbs/src/mod/mod_ini_conf.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/dbs/src/mod/mod_ini_conf.erl" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/dbs/src/mod/mod_player_cache_impl_ets.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/dbs/src/mod/mod_player_cache_impl_ets.erl" afterDir="false" />
@@ -36,6 +35,7 @@
       <change beforePath="$PROJECT_DIR$/app/game/src/mod/mod_map_creator.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/game/src/mod/mod_map_creator.erl" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/game/src/mod/mod_map_mgr.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/game/src/mod/mod_map_mgr.erl" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/game/src/mod/mod_player.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/game/src/mod/mod_player.erl" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/game/src/test/test.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/game/src/test/test.erl" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -47,19 +47,19 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="test.erl" pinned="false" current-in-tab="false">
+      <file leaf-file-name="test.erl" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app/game/src/test/test.erl">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="572">
-              <caret line="22" column="79" selection-start-line="22" selection-start-column="79" selection-end-line="22" selection-end-column="79" />
+            <state relative-caret-position="364">
+              <caret line="14" column="117" lean-forward="true" selection-start-line="14" selection-start-column="117" selection-end-line="14" selection-end-column="117" />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="vector3.erl" pinned="false" current-in-tab="true">
+      <file leaf-file-name="vector3.erl" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/deps/pubs/src/lib/vector3.erl">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="416">
+            <state relative-caret-position="26">
               <caret line="16" column="80" lean-forward="true" selection-start-line="16" selection-start-column="80" selection-end-line="16" selection-end-column="80" />
             </state>
           </provider>
@@ -178,8 +178,8 @@
         <option value="$PROJECT_DIR$/app/deps/pubs/src/lib/misc.erl" />
         <option value="$PROJECT_DIR$/app/game/src/core/foundation_server.erl" />
         <option value="$PROJECT_DIR$/app/deps/pubs/src/lib/uid_gen.erl" />
-        <option value="$PROJECT_DIR$/app/game/src/test/test.erl" />
         <option value="$PROJECT_DIR$/app/deps/pubs/src/lib/vector3.erl" />
+        <option value="$PROJECT_DIR$/app/game/src/test/test.erl" />
       </list>
     </option>
   </component>
@@ -898,12 +898,12 @@
       <workItem from="1526883848230" duration="18832000" />
       <workItem from="1526966758527" duration="15274000" />
       <workItem from="1526986647859" duration="3889000" />
-      <workItem from="1527039384351" duration="5106000" />
+      <workItem from="1527039384351" duration="5449000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="296239000" />
+    <option name="totallyTimeSpent" value="296582000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -1261,17 +1261,17 @@
       <provider selected="true" editor-type-id="text-editor" />
       <provider editor-type-id="BEAM" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/game/src/test/test.erl">
+    <entry file="file://$PROJECT_DIR$/app/deps/pubs/src/lib/vector3.erl">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="572">
-          <caret line="22" column="79" selection-start-line="22" selection-start-column="79" selection-end-line="22" selection-end-column="79" />
+        <state relative-caret-position="26">
+          <caret line="16" column="80" lean-forward="true" selection-start-line="16" selection-start-column="80" selection-end-line="16" selection-end-column="80" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/deps/pubs/src/lib/vector3.erl">
+    <entry file="file://$PROJECT_DIR$/app/game/src/test/test.erl">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="416">
-          <caret line="16" column="80" lean-forward="true" selection-start-line="16" selection-start-column="80" selection-end-line="16" selection-end-column="80" />
+        <state relative-caret-position="364">
+          <caret line="14" column="117" lean-forward="true" selection-start-line="14" selection-start-column="117" selection-end-line="14" selection-end-column="117" />
         </state>
       </provider>
     </entry>
