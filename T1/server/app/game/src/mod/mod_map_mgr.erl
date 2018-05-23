@@ -44,10 +44,10 @@ start_link(MapID) ->
 %%% Internal functions
 %%%===================================================================	
 mod_init([MapID]) ->
-    %% erlang:process_flag(trap_exit, true),
-    %% erlang:process_flag(priority, high),
     ProcessName = misc:create_process_name(mod_map_mgr, [MapID]),
-    erlang:register(ProcessName, self()),
+    true = erlang:register(ProcessName, self()),
+    erlang:process_flag(trap_exit, true),
+    erlang:process_flag(priority, high),
     Ets = ets:new(?MAP_LINES, [{keypos, #m_map_line.line_id}, ?ETSRC]),
     ?INFO("mapMgr ~p started, line ets:~p,mapID:~p", [ProcessName, Ets, MapID]),
     {ok, #state{ets = Ets, map_id = MapID}}.
