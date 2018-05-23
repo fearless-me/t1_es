@@ -27,7 +27,7 @@
 -export([init/0, init/1]).
 
 
-%%数据库中UID的类型，取值范围为[1,15]
+%%数据库中UID的类型，取值范围为[0,31]
 -define(UID_TYPE_START,     0).      %% 开始值
 
 -define(UID_TYPE_TEMP,      0).      %% 宠物或者队伍
@@ -80,10 +80,10 @@ mail_uid() -> gen_1(?UID_TYPE_MAIL).
 
 -define(BIT_HIGH,   1).		% UID最高位，默认0，空位
 -define(BIT_TYPE,	5).		% UID类型?UID_TYPE_Start - ?UID_TYPE_End:0~31
--define(BIT_AREA,	4).		% ADBID:0~16
+-define(BIT_AREA,	4).		% ADBID:0~15
 -define(BIT_SVER,	10).	% DBID:0~1023
 -define(BIT_INDX,	13).	% DBID:0~8191
--define(BIT_ACCU,	31).	% ID累加值:0~2147483648
+-define(BIT_ACCU,	31).	% ID累加值:0~2147483647
 
 
 %%%-------------------------------------------------------------------
