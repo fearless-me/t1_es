@@ -17,6 +17,7 @@
 -export([player_update/2]).
 -export([player_update_pos/2]).
 -export([add_obj_to_ets/1]).
+-export([del_obj_to_ets/1]).
 -export([get_player/1]).
 -export([get_obj_pos/1]).
 -export([get_obj_dest_pos/1]).
@@ -86,6 +87,13 @@ add_obj_to_ets(#r_map_obj{type = ?OBJ_MON} = Obj) ->
 add_obj_to_ets(#r_map_obj{type = ?OBJ_USR} = Obj) ->
     ets:insert(lib_map_rw:get_player_ets(), Obj);
 add_obj_to_ets(_) ->
+    ok.
+
+del_obj_to_ets(#r_map_obj{uid = Uid, type = ?OBJ_MON}) ->
+    ets:delete(lib_map_rw:get_monster_ets(), Uid);
+del_obj_to_ets(#r_map_obj{uid = Uid, type = ?OBJ_USR}) ->
+    ets:delete(lib_map_rw:get_player_ets(), Uid);
+del_obj_to_ets(_) ->
     ok.
 
 %%%-------------------------------------------------------------------

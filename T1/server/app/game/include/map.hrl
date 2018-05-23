@@ -45,6 +45,8 @@
 -record(r_change_map_ack,{map_id = 0, line_id = 0, pos = undefined, map_pid = undefind, error = 0}).
 %%
 -record(r_teleport_req,{uid = 0, map_pid = undefined, tar_pos = undefined}).
+%%
+-record(r_player_start_move_req,{uid = 0, tar_pos = undefined}).
 
 
 %地图中的复活点

@@ -15,8 +15,10 @@
 
 
 -export([status_/1]).
--export([player_exit/2, player_join/2]).
+-export([player_join/2]).
+-export([player_exit/2]).
 -export([player_teleport/2]).
+-export([player_move_/2]).
 
 %% API
 -export([start_link/1]).
@@ -32,6 +34,9 @@ player_join(MapPid, Obj) ->
 player_teleport(MapPid, Req) ->
     gen_server:call(MapPid, {player_teleport, Req}).
 
+%%
+player_move_(MapPid, Req) ->
+    ps:send(MapPid, {start_move, Req}).
 
 status_(MapPid) -> ps:send(MapPid, status).
 
@@ -77,6 +82,9 @@ do_handle_info(tick_now, State) ->
     {noreply, lib_map:tick(State)};
 do_handle_info(start_stop_now, State) ->
     {noreply, lib_map:start_stop_now(State)};
+do_handle_info({start_move, Req}, State) ->
+    lib_map:player_start_move(Req),
+    {noreply, State};
 do_handle_info(stop_immediately, State) ->
     {stop, State};
 do_handle_info(Info, State) ->

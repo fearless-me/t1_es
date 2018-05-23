@@ -91,6 +91,9 @@ sync_movement_to_big_visual_tile(_Msg) ->
 sync_change_pos_visual_tile(_Obj, OldVisTileIndex, OldVisTileIndex) ->
     skip;
 sync_change_pos_visual_tile(Obj, OldVisTileIndex, NewVisTileIndex) ->
+    ?DEBUG("uid ~w vis_tile_index from ~w to ~w",
+        [Obj#r_map_obj.uid, OldVisTileIndex, NewVisTileIndex]),
+    
     del_from_vis_tile(Obj, OldVisTileIndex),
     {DecVisTile, AddVisTile} = vis_tile_add_dec(OldVisTileIndex, NewVisTileIndex),
     sync_del_from_vis_tile(Obj, DecVisTile),
@@ -192,7 +195,8 @@ sync_big_vis_tile_to_me(
 ) ->
     lists:foreach(
         fun(VisTile) ->
-            ?DEBUG("~nsrc:~w~nmsg:~w~ntar:~w", [Uid, Msg, VisTile#r_vis_tile.player])
+%%            ?DEBUG("~nsrc:~w~nmsg:~w~ntar:~w", [Uid, Msg, VisTile#r_vis_tile.player])
+            ok
         end, VisTileList),
 %%    lists:foreach(
 %%        fun(VisTile) ->
@@ -209,7 +213,8 @@ sync_big_vis_tile_to_me(_Obj, _VisTileList, _Msg) -> skip.
 sync_me_to_big_vis_tile(#r_map_obj{uid = Uid}, VisTileList, Msg) ->
     lists:foreach(
         fun(VisTile) ->
-            ?DEBUG("~nsrc:~w~nmsg:~w~ntar:~w", [Uid, Msg, VisTile#r_vis_tile.player])
+%%            ?DEBUG("~nsrc:~w~nmsg:~w~ntar:~w", [Uid, Msg, VisTile#r_vis_tile.player])
+            ok
         end, VisTileList),
 %%    lists:foreach(
 %%        fun(VisTile) ->

@@ -45,9 +45,12 @@ start_player_walk(Obj, Start, End) ->
     ok.
 
 start_player_walk_1(
-    #r_map_obj{uid = Code} = Obj,
+    #r_map_obj{uid = Uid} = Obj,
     Start, End
 ) ->
+    ?DEBUG("~p start move from ~w to ~w",
+        [Uid, Start, End]),
+    
     Now = misc:milli_seconds(),
     Dir = vector3:subtract(End, Start),
 
@@ -60,10 +63,11 @@ start_player_walk_1(
         face = Dir,
         start_time = Now,
         last_up_time = Now,
-        stopped = false
+        stopped = false,
+        path_list = [End]
     },
     lib_map_rw:player_update(
-        Code,
+        Uid,
         [
             {#r_map_obj.cur_move, ?EMS_WALK},
             {#r_map_obj.next_move, ?EMS_STAND},
@@ -73,7 +77,8 @@ start_player_walk_1(
             {#r_map_obj.face, Dir},
             {#r_map_obj.start_time, Now},
             {#r_map_obj.last_up_time, Now},
-            {#r_map_obj.stopped, false}
+            {#r_map_obj.stopped, false},
+            {#r_map_obj.path_list, [End]}
         ]
     ),
     on_player_pos_change(NewObj, Start).
@@ -97,11 +102,17 @@ update_1(Obj, ?EMS_WALK) ->
     Ret = update_role_walk(Obj, CurPos, PathList, DiffMs, 10),
     case Ret of
         ?ENR_TOBECONTINUED ->
-            ok;
+            lib_map_rw:player_update(
+                Obj#r_map_obj.uid,
+                {#r_map_obj.last_up_time, Now}
+            );
         {?ENR_TOBECONTINUED, NewPath} ->
             lib_map_rw:player_update(
                 Obj#r_map_obj.uid,
-                {#r_map_obj.path_list, NewPath}
+                [
+                    {#r_map_obj.path_list, NewPath},
+                    {#r_map_obj.last_up_time, Now}
+                ]
             );
         _ ->
             lib_map_rw:player_update(
@@ -124,7 +135,9 @@ update_role_walk(_Obj, CurPos, [CurPos], _DiffTime, _Speed) ->
 update_role_walk(Obj, CurPos, PathList, DiffTime, Speed) ->
     MoveDist = Speed * DiffTime / 1000,
     {NewPos, NewPathList} = linear_pos(CurPos, PathList, MoveDist),
+    ?DEBUG("mapid ~p ~w to ~w,tick move dist ~p",[self(), CurPos, NewPos, MoveDist]),
     on_player_pos_change(Obj, NewPos),
+
     case NewPathList of
         ?ENR_TOBECONTINUED -> ?ENR_TOBECONTINUED;
         _ -> {?ENR_TOBECONTINUED, NewPathList}
@@ -156,7 +169,10 @@ linear_pos_1(CurPos, TarPos, Dist, MoveDist) ->
 on_player_pos_change(undefined, _TarPos) ->
     ok;
 on_player_pos_change(Obj, TarPos) ->
-    stop_move(false),
+    %
+%%    ?DEBUG("~w pos change ~w", [Obj#r_map_obj.uid, TarPos]),
+
+    %
     OldVisIndex = lib_map_view:pos_to_vis_index(lib_map_rw:get_obj_pos(Obj)),
     NewVisIndex = lib_map_view:pos_to_vis_index(TarPos),
     lib_map_rw:player_update_pos(Obj#r_map_obj.uid, TarPos),

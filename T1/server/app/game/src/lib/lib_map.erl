@@ -20,10 +20,12 @@
 -export([tick/1]).
 -export([start_stop_now/1]).
 
--export([player_exit/2, player_join/2]).
+-export([player_join/2]).
+-export([player_exit/2]).
 -export([force_teleport/2]).
+-export([player_start_move/1]).
 
--define(MAP_TICK, 50).
+-define(MAP_TICK, 500).
 
 %%%-------------------------------------------------------------------
 init(S) ->
@@ -47,24 +49,34 @@ init_1(State) ->
 
 %%%-------------------------------------------------------------------
 player_exit(S, #r_exit_map_req{
-    uid = PlayerID
+    uid = Uid
 }) ->
-    Obj = lib_map_rw:get_player(PlayerID),
-    player_exit_1(Obj),
+    Obj = lib_map_rw:get_player(Uid),
+    player_exit_1(Obj, Uid),
     {ok, S}.
 
-player_exit_1(Obj) ->
+player_exit_1(#r_map_obj{} = Obj, _Uid) ->
     ?INFO("user ~p exit map ~p:~p:~p",
         [Obj#r_map_obj.uid, lib_map_rw:get_map_id(), lib_map_rw:get_line_id(), self()]),
-    ets:delete(lib_map_rw:get_player_ets(), Obj#r_map_obj.uid),
+
+    lib_map_rw:del_obj_to_ets(Obj),
     lib_map_view:sync_player_exit_map(Obj),
-    ok.
+    ok;
+player_exit_1(_, Uid) ->
+    ?ERROR("~w req exit map ~w ~w, but obj not exists!",
+        [Uid, self(), misc:register_name(self())]).
 
 %%%-------------------------------------------------------------------
-player_join(S, Obj) ->
-    ets:insert(lib_map_rw:get_player_ets(), Obj),
+player_join(S, #r_map_obj{} = Obj) ->
+    lib_map_rw:add_obj_to_ets(Obj),
     lib_map_view:sync_player_join_map(Obj),
-    {ok, S}.
+    ?DEBUG("uid ~p, join map ~w, name ~p",
+        [Obj#r_map_obj.uid, self(), misc:register_name(self())]),
+    {ok, S};
+player_join(S, Any) ->
+    ?ERROR("player join map ~w, name ~p, error obj data ~w",
+        [ self(), misc:register_name(self()), Any]),
+    {error, S}.
 
 
 %%%-------------------------------------------------------------------
@@ -115,12 +127,17 @@ init_all_npc(_NL) ->
 %%%-------------------------------------------------------------------
 tick_msg() -> erlang:send_after(?MAP_TICK, self(), tick_now).
 
-tick(#r_map_state{exit = true, player = PL}) ->
-    real_stop_now(PL);
 tick(S) ->
+    tick_1(S),
+    S.
+
+tick_1(#r_map_state{exit = true, player = PL}) ->
+    real_stop_now(PL),
+    ok;
+tick_1(_S) ->
     tick_msg(),
     tick_obj(),
-    S.
+    ok.
 
 tick_obj()->
     tick_player(),
@@ -128,10 +145,26 @@ tick_obj()->
     ok.
 
 tick_player() ->
-    ets:foldl(fun(_Obj, _) -> ok end, 0, lib_map_rw:get_player_ets()).
+    ets:foldl(
+        fun(Obj, _) -> tick_player_1(Obj) end,
+        0,
+        lib_map_rw:get_player_ets()
+    ).
+
+tick_player_1(Obj) ->
+    ?TRY_CATCH(lib_move:update(Obj)),
+    ok.
 
 tick_monster() ->
-    ets:foldl(fun(_Obj, _) -> ok end, 0, lib_map_rw:get_monster_ets()).
+    ets:foldl(
+        fun(Obj, _) -> tick_monster_1(Obj) end,
+        0,
+        lib_map_rw:get_monster_ets()
+    ).
+
+tick_monster_1(Obj) ->
+    ?TRY_CATCH(lib_move:update(Obj)),
+    ok.
 
 %%%-------------------------------------------------------------------
 real_stop_now([]) ->
@@ -139,6 +172,7 @@ real_stop_now([]) ->
     ps:send(self(), stop_immediately);
 real_stop_now(_Players) ->
     ok.
+
 %%%-------------------------------------------------------------------
 start_stop_now(S) ->
     kick_all_player(S),
@@ -147,6 +181,12 @@ start_stop_now(S) ->
 kick_all_player(#r_map_state{player = Ets}) ->
     ets:foldl(
         fun(#r_map_obj{pid = Pid}, _) ->
-            ps:send(Pid, return_to_pre_map)
+            ps:send(Pid, return_to_pre_map_ack)
         end, 0, Ets),
     ok.
+
+%%%-------------------------------------------------------------------
+player_start_move(Req) ->
+    #r_player_start_move_req{uid = Uid, tar_pos = TarPos} = Req,
+    Obj = lib_map_rw:get_player(Uid),
+    lib_move:start_player_walk(Obj, lib_map_rw:get_obj_pos(Obj), TarPos).

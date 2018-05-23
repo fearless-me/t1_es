@@ -157,6 +157,14 @@ go_to_new_map_2(DestMapID, Pos) ->
         fX = Ack#r_change_map_ack.pos#vector3.x,
         fY = Ack#r_change_map_ack.pos#vector3.y
     }),
+    
+%%    mod_map:player_move_(
+%%        Ack#r_change_map_ack.map_pid,
+%%        #r_player_start_move_req{
+%%            uid = lib_player_rw:get_uid(),
+%%            tar_pos = #vector3{x = 400.6, z = 358.9}
+%%        }
+%%    ),
     ok.
 
 %%%-------------------------------------------------------------------

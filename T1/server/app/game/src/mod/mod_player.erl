@@ -87,7 +87,10 @@ on_info_msg({create_player_ack, Ack}, S) ->
     ?DEBUG("load_player_data_ack"),
     lib_player:create_player_ack(Ack),
     S;
-on_info_msg(return_to_pre_map, S) ->
+on_info_msg(return_to_pre_map_ack, S) ->
+    lib_player:return_to_pre_map(),
+    S;
+on_info_msg(passive_change_req, S) ->
     lib_player:return_to_pre_map(),
     S;
 on_info_msg(Info, S) ->

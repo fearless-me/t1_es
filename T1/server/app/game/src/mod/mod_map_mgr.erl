@@ -15,7 +15,7 @@
 -include("map.hrl").
 -include("map_obj.hrl").
 -define(MAP_LINES, map_line_ets__).
--define(LINE_LIFETIME, 2 * 60 * 1000).
+-define(LINE_LIFETIME, 30 * 1000).
 
 
 -export([player_join_map/2]).
@@ -118,7 +118,7 @@ create_new_line(S, MapID, LineID) ->
         map_id = MapID,
         line_id = LineID,
         pid = Pid,
-        dead_line = misc:milli_seconds() + 2 * 60 * 1000
+        dead_line = misc:milli_seconds() + ?LINE_LIFETIME
     },
     erlang:send_after(?LINE_LIFETIME, self(), {stop_line, Line}),
     ets:insert(S#state.ets, Line),

@@ -61,44 +61,44 @@ is_behind(Src, Dst, DstFace) ->
     %
     #vector3{x = X2, y = Y2, z = Z2} = DstFace,
     % dir
-    #vector3{x = X1, y = Y1, z = Z1} = subtract(Src, Dst),
+    #vector3{x = X1, y = Y1, z = Z1} = vector3:subtract(Src, Dst),
     % |A|*|B|*cosθ
     (X1 * X2 + Y1 * Y2 + Z1 * Z2) < 0.
 %%
 behind(Src, Dst, Dist) ->
     % dir
-    Dir = subtract(Src, Dst),
+    Dir     = vector3:subtract(Src, Dst),
     % normalize
-    Normal  = normalized(Dir),
+    Normal  = vector3:normalized(Dir),
     % *
-    Delta   = multi(Normal, -Dist),
+    Delta   = vector3:multi(Normal, -Dist),
     % +
-    add(Src, Delta).
+    vector3:add(Src, Delta).
 
 %%
 front(Src, Dst, Dist) ->
     % dir
-    Dir = subtract(Src, Dst),
+    Dir     = vector3:subtract(Src, Dst),
     % normalize
-    Normal  = normalized(Dir),
+    Normal  = vector3:normalized(Dir),
     % *
-    Delta   = multi(Normal, Dist),
+    Delta   = vector3:multi(Normal, Dist),
     % +
-    add(Src, Delta).
+    vector3:add(Src, Delta).
 
 %%
 is_front(Src, Dst, DstFace) ->
     %
     #vector3{x = X2, y = Y2, z = Z2} = DstFace,
     % dir
-    #vector3{x = X1, y = Y1, z = Z1} = subtract(Src, Dst),
+    #vector3{x = X1, y = Y1, z = Z1} = vector3:subtract(Src, Dst),
     % |A|*|B|*cosθ
     (X1 * X2 + Y1 * Y2 + Z1 * Z2) >= 0.
 
 
 %%
 dist(P1, P2) ->
-    Sq = dist(P1, P2),
+    Sq = vector3:dist_sq(P1, P2),
     math:sqrt(Sq).
 
 %%
