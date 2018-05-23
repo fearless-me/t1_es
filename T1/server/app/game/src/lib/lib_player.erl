@@ -26,6 +26,7 @@
 -export([loaded_player/1]).
 -export([offline/0]).
 -export([add_to_world/0, go_to_new_map/2, return_to_pre_map/0]).
+-export([teleport/1]).
 
 init() ->
     lib_player_rw:set_player_status(?PS_INIT),
@@ -112,28 +113,27 @@ add_to_world() ->
     lib_player_rw:set_pos(Ack#r_change_map_ack.pos),
     ok.
 
-%%%-------------------------------------------------------------------
-go_to_new_map(DestMapID, Pos) ->
-    go_to_new_map_1(
-        lib_player_rw:get_map_id(),
-        DestMapID,
-        Pos
+
+%%-------------------------------------------------------------------
+teleport(NewPos) -> teleport_1(lib_player_rw:get_map_pid(), NewPos).
+
+teleport_1(undefined, _NewPos) ->
+    ?ERROR("");
+teleport_1(MapPid, NewPos) ->
+    Uid = lib_player_rw:get_uid(),
+    mod_map:player_teleport(
+        MapPid,
+        #r_teleport_req{ uid = Uid, tar_pos = NewPos }
     ),
     ok.
 
-go_to_new_map_1(DestMapId, DestMapId, TarPos) ->
-    mod_map:player_teleport(
-        lib_player_rw:get_map_pid(),
-        #r_teleport_req{
-            uid = lib_player_rw:get_uid(),
-            tar_pos = TarPos
-        }
-    ),
-    ok;
-go_to_new_map_1(_CurMapID, DestMapId, TarPos) ->
-    go_to_new_map_2(DestMapId, TarPos).
+%%-------------------------------------------------------------------
+go_to_new_map(DestMapID, Pos) ->
+    go_to_new_map_1(DestMapID, Pos),
+    ok.
 
-go_to_new_map_2(DestMapID, Pos) ->
+%%-------------------------------------------------------------------
+go_to_new_map_1(DestMapID, Pos) ->
     lib_player_rw:set_player_status(?PS_CHANGE_MAP),
     Ack = mod_map_creator:player_change_map(
         #r_change_map_req{
@@ -172,7 +172,6 @@ return_to_pre_map() ->
     ?DEBUG("player ~p return_to_pre_map from ~p to ~p",
         [lib_player_rw:get_uid(), lib_player_rw:get_map_id(), lib_player_rw:get_pre_map_id()]),
     go_to_new_map_1(
-        lib_player_rw:get_map_id(),
         lib_player_rw:get_pre_map_id(),
         lib_player_rw:get_pos()
     ),

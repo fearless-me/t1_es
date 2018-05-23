@@ -81,13 +81,14 @@ player_join(S, Any) ->
 
 %%%-------------------------------------------------------------------
 force_teleport(S, #r_teleport_req{
-    uid = PlayerId,
+    uid = Uid,
     tar_pos = TarPos
 }) ->
-    Obj = lib_map_rw:get_player(PlayerId),
+    Obj = lib_map_rw:get_player(Uid),
     lib_move:on_player_pos_change(Obj, TarPos),
-    ?DEBUG("player ~p teleport from ~p to ~p in map ~p",
-        [Obj#r_map_obj.uid, lib_map_rw:get_obj_pos(Obj), TarPos, lib_map_rw:get_map_id()]),
+    ?DEBUG("player ~p teleport from ~w to ~w in map ~p_~p",
+        [Obj#r_map_obj.uid, lib_map_rw:get_obj_pos(Obj), TarPos,
+            lib_map_rw:get_map_id(), lib_map_rw:get_line_id()]),
     {ok, S}.
 
 
@@ -131,8 +132,9 @@ tick(S) ->
     tick_1(S),
     S.
 
-tick_1(#r_map_state{exit = true, player = PL}) ->
-    real_stop_now(PL),
+tick_1(#r_map_state{status = ?MAP_READY_EXIT}) ->
+    PlayerSize = lib_map_rw:get_player_size(),
+    real_stop_now(PlayerSize),
     ok;
 tick_1(_S) ->
     tick_msg(),
@@ -167,16 +169,17 @@ tick_monster_1(Obj) ->
     ok.
 
 %%%-------------------------------------------------------------------
-real_stop_now([]) ->
+real_stop_now(0) ->
     ?DEBUG("~p,~p stop now",[misc:register_name(self()), self()]),
     ps:send(self(), stop_immediately);
 real_stop_now(_Players) ->
+    tick_msg(),
     ok.
 
 %%%-------------------------------------------------------------------
 start_stop_now(S) ->
     kick_all_player(S),
-    S#r_map_state{exit = true}.
+    S#r_map_state{status = ?MAP_READY_EXIT}.
 
 kick_all_player(#r_map_state{player = Ets}) ->
     ets:foldl(

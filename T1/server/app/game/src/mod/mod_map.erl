@@ -86,7 +86,7 @@ do_handle_info({start_move, Req}, State) ->
     lib_map:player_start_move(Req),
     {noreply, State};
 do_handle_info(stop_immediately, State) ->
-    {stop, State};
+    {stop, normal, State};
 do_handle_info(Info, State) ->
     ?ERROR("undeal info ~w", [Info]),
     {noreply, State}.

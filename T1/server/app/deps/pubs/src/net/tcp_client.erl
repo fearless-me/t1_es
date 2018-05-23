@@ -32,6 +32,7 @@ connect(Port, MapID) ->
     send_msg(Socket, #pk_GS2U_GoNewMap{tarMapID = MapID, fX = 100.1, fY = 200.2}),
 
     recv_msg(Socket),
+    send_msg(Socket, #pk_GS2U_GoNewMap{tarMapID = MapID, fX = 100.1, fY = 200.2}),
     timer:sleep(3*60*1000),
     ok.
 

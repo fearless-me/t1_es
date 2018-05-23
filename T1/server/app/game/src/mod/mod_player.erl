@@ -107,7 +107,7 @@ on_cast_msg(Request, S) ->
 
 
 on_net_msg(Cmd, Msg)->
-    ?DEBUG("net msg ~p:~p",[Cmd, Msg]),
+    ?DEBUG("net msg ~p:~w",[Cmd, Msg]),
     ?TRY_CATCH( lib_route:route(Msg) ),
     ok.
 

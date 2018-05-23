@@ -78,13 +78,8 @@ do_handle_cast(Request, State) ->
     {noreply, State}.
 
 %%--------------------------------------------------------------------
-player_join_map_1(
-    S, #r_change_map_req{
-        uid = _PlayerID,
-        tar_map_id = MapID,
-        tar_pos = Pos,
-        obj = Obj
-    }) ->
+player_join_map_1(S, Req) ->
+    #r_change_map_req{tar_map_id = MapID, tar_pos = Pos, obj = Obj} = Req,
     MS = ets:fun2ms(
         fun(T) when T#m_map_line.limits > T#m_map_line.in
             -> T

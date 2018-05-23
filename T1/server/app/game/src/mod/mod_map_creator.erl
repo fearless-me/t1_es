@@ -63,7 +63,7 @@ player_offline(Uid, MapID, MapPid) ->
 player_change_map(Req) ->
     CurMgr = map_mgr(Req#r_change_map_req.map_id),
     TarMgr = map_mgr(Req#r_change_map_req.tar_map_id),
-    ?INFO("player ~p, changeMap ~p:~p -> ~p:~p",
+    ?INFO("player ~p, changeMap mgr ~p:~p -> mgr ~p:~p",
         [
             Req#r_change_map_req.uid,
             Req#r_change_map_req.map_id,

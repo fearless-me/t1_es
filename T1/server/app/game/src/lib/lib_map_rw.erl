@@ -18,6 +18,7 @@
 -export([player_update_pos/2]).
 -export([add_obj_to_ets/1]).
 -export([del_obj_to_ets/1]).
+-export([get_player_size/0]).
 -export([get_player/1]).
 -export([get_obj_pos/1]).
 -export([get_obj_dest_pos/1]).
@@ -67,6 +68,8 @@ get_player(PlayerId) ->
         _ -> undefined
     end.
 
+get_player_size() ->
+    ets:info( get_player_ets(), size ).
 
 %%%-------------------------------------------------------------------
 player_update(PlayerId, Elements)->
