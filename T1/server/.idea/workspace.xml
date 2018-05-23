@@ -6,6 +6,7 @@
   <component name="ChangeListManager">
     <list default="true" readonly="true" id="354d5196-8a2e-476f-8af6-71424480c5e1" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/net/tcp_client.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/net/tcp_client.erl" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/game/src/lib/lib_map_view.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/game/src/lib/lib_map_view.erl" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
@@ -36,11 +37,20 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="lib_map_view.erl" pinned="false" current-in-tab="true">
+      <file leaf-file-name="lib_map_view.erl" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/game/src/lib/lib_map_view.erl">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="289">
-              <caret line="47" column="7" selection-start-line="47" selection-start-column="7" selection-end-line="47" selection-end-column="7" />
+            <state relative-caret-position="341">
+              <caret line="124" column="56" selection-start-line="124" selection-start-column="56" selection-end-line="124" selection-end-column="56" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="tcp_client.erl" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/app/deps/pubs/src/net/tcp_client.erl">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="234">
+              <caret line="9" column="13" selection-start-line="9" selection-start-column="13" selection-end-line="9" selection-end-column="13" />
             </state>
           </provider>
         </entry>
@@ -82,15 +92,6 @@
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="1430">
               <caret line="55" column="23" selection-start-line="55" selection-start-column="23" selection-end-line="55" selection-end-column="23" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="misc.erl" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/deps/pubs/src/lib/misc.erl">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="910">
-              <caret line="35" selection-start-line="35" selection-end-line="35" />
             </state>
           </provider>
         </entry>
@@ -211,7 +212,6 @@
         <option value="$PROJECT_DIR$/app/game/src/lib/lib_move.erl" />
         <option value="$PROJECT_DIR$/app/game/src/lib/lib_map_rw.erl" />
         <option value="$PROJECT_DIR$/app/game/include/map.hrl" />
-        <option value="$PROJECT_DIR$/app/deps/pubs/src/net/tcp_client.erl" />
         <option value="$PROJECT_DIR$/app/game/src/mod/mod_map_creator.erl" />
         <option value="$PROJECT_DIR$/app/game/src/lib/lib_map.erl" />
         <option value="$PROJECT_DIR$/app/game/src/lib/lib_player.erl" />
@@ -219,6 +219,7 @@
         <option value="$PROJECT_DIR$/app/game/src/mod/mod_map_mgr.erl" />
         <option value="$PROJECT_DIR$/app/game/src/mod/mod_map.erl" />
         <option value="$PROJECT_DIR$/app/game/src/lib/lib_map_view.erl" />
+        <option value="$PROJECT_DIR$/app/deps/pubs/src/net/tcp_client.erl" />
       </list>
     </option>
   </component>
@@ -962,12 +963,12 @@
       <workItem from="1526986647859" duration="3889000" />
       <workItem from="1527039384351" duration="7468000" />
       <workItem from="1527054342779" duration="15036000" />
-      <workItem from="1527073446656" duration="1129000" />
+      <workItem from="1527073446656" duration="1817000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="314766000" />
+    <option name="totallyTimeSpent" value="315454000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -1234,13 +1235,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/deps/pubs/src/net/tcp_client.erl">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="390">
-          <caret line="33" column="82" lean-forward="true" selection-start-line="33" selection-start-column="82" selection-end-line="33" selection-end-column="82" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/game/src/lib/lib_route.erl">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="583">
@@ -1365,8 +1359,15 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/app/game/src/lib/lib_map_view.erl">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="289">
-          <caret line="47" column="7" selection-start-line="47" selection-start-column="7" selection-end-line="47" selection-end-column="7" />
+        <state relative-caret-position="341">
+          <caret line="124" column="56" selection-start-line="124" selection-start-column="56" selection-end-line="124" selection-end-column="56" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/deps/pubs/src/net/tcp_client.erl">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="234">
+          <caret line="9" column="13" selection-start-line="9" selection-start-column="13" selection-end-line="9" selection-end-column="13" />
         </state>
       </provider>
     </entry>

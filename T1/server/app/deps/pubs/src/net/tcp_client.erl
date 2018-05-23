@@ -7,12 +7,17 @@
 %% API
 -export([c/1]).
 -export([c/2]).
+-export([nc/3]).
 -export([connect/2]).
+
 
 c(Port) ->
     spawn(fun() -> tcp_client:connect(Port, 3) end).
 c(Port, MapID) ->
     spawn(fun() -> tcp_client:connect(Port, MapID) end).
+
+nc(N, Port, MapId)->
+    lists:foreach(fun(_) -> tcp_client:c(Port, MapId) end, lists:seq(1, N)).
 
 connect(Port, MapID) ->
     tcp_codec:init(#net_conf{}),
