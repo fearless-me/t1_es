@@ -134,7 +134,7 @@ next_line_id() ->
     LineID.
 
 stop_map_line(S, Line) ->
-    ?INFO("map ~p line ~p pid ~p will be kill",
+    ?INFO("map ~p line ~p pid ~p will be stopped",
         [Line#m_map_line.map_id, Line#m_map_line.line_id, Line#m_map_line.pid]),
     ets:delete(S#state.ets, Line#m_map_line.line_id),
     ps:send(Line#m_map_line.pid, start_stop_now),
