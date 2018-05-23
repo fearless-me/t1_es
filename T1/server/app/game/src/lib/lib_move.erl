@@ -11,6 +11,7 @@
 -include("map_obj.hrl").
 -include("movement.hrl").
 -include("logger.hrl").
+-include("vector3.hrl").
 
 
 %% API

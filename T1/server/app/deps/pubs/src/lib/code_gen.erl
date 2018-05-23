@@ -10,7 +10,7 @@
 -author("mawenhong").
 
 -include("logger.hrl").
--include("common.hrl").
+-include("pub_common.hrl").
 
 %% API
 -export([

@@ -15,7 +15,7 @@
 
 
 init_conf(FileName)->
-    misc:start_all_application(econfig),
+    misc:start_all_app(econfig),
     ok = econfig:register_config(?DbsIniCfg, [FileName]),
     ok.
 

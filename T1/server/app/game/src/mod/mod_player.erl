@@ -22,8 +22,8 @@
 -include("logger.hrl").
 -include("netconf.hrl").
 -include("player_status.hrl").
--include("record.hrl").
--include("common.hrl").
+-include("player_record.hrl").
+-include("pub_common.hrl").
 
 -define(SocketKey,socketRef___).
 

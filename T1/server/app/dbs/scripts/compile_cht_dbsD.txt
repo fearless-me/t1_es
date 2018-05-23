@@ -1,0 +1,147 @@
+
+*********************************************************
+*********************************************************
+*  2018-05-23 10:17:32 dbsD cht 103 files 8 workers	*
+*********************************************************
+*********************************************************
+
+[2018-05-23 10:17:33] compiled[2.9%] mod_player_cache_impl_mnesia.erl true 
+[2018-05-23 10:17:33] compiled[4.8%] poolboy_test_worker.erl true 
+[2018-05-23 10:17:33] poolboy_test_worker.erl:3: Warning: behaviour poolboy_worker undefined
+
+[2018-05-23 10:17:33] compiled[1.9%] tcp_codec.erl true 
+[2018-05-23 10:17:33] compiled[3.8%] econfig_watcher_sup.erl true 
+[2018-05-23 10:17:33] compiled[5.8%] error_logger_acc.erl true 
+[2018-05-23 10:17:33] compiled[0.9%] cache_benchmark.erl true 
+[2018-05-23 10:17:33] compiled[6.7%] dbs_worker_manager.erl true 
+[2018-05-23 10:17:33] dbs_worker_manager.erl:12: Warning: behaviour gen_serverw undefined
+
+[2018-05-23 10:17:33] compiled[7.7%] pg_local.erl true 
+[2018-05-23 10:17:33] compiled[8.7%] econfig_watcher.erl true 
+[2018-05-23 10:17:33] compiled[9.7%] mysql_sock_tcp.erl true 
+[2018-05-23 10:17:33] compiled[10.6%] cache_app.erl true 
+[2018-05-23 10:17:33] compiled[11.6%] pack_byte.erl true 
+[2018-05-23 10:17:33] compiled[12.6%] tcp_client.erl true 
+[2018-05-23 10:17:33] compiled[13.5%] econfig_util.erl true 
+[2018-05-23 10:17:33] compiled[14.5%] mysql_sock_ssl.erl true 
+[2018-05-23 10:17:33] compiled[15.5%] misc.erl true 
+[2018-05-23 10:17:33] compiled[16.5%] tcp_behaviour.erl true 
+[2018-05-23 10:17:33] compiled[17.4%] econfig_sup.erl true 
+[2018-05-23 10:17:33] compiled[18.4%] mod_player_cache_impl_ets.erl true 
+[2018-05-23 10:17:33] compiled[19.4%] dbs_worker.erl true 
+[2018-05-23 10:17:33] dbs_worker.erl:12: Warning: behaviour gen_serverw undefined
+[2018-05-23 10:17:33] dbs_worker.erl:73: Warning: this clause cannot match because a previous clause at line 63 always matches
+
+[2018-05-23 10:17:33] compiled[20.3%] lqueue.erl true 
+[2018-05-23 10:17:33] compiled[21.3%] cache.erl true 
+[2018-05-23 10:17:33] compiled[22.3%] mod_ini_conf.erl true 
+[2018-05-23 10:17:33] compiled[23.3%] test_pack.erl true 
+[2018-05-23 10:17:33] compiled[24.2%] pack_data.erl true 
+[2018-05-23 10:17:33] compiled[25.2%] dbs_sup.erl true 
+[2018-05-23 10:17:33] compiled[26.2%] getCfg.erl true 
+[2018-05-23 10:17:33] compiled[27.1%] pubs_sup.erl true 
+[2018-05-23 10:17:33] compiled[28.1%] dbs.erl true 
+[2018-05-23 10:17:33] compiled[29.1%] pubs_app.erl true 
+[2018-05-23 10:17:33] compiled[30.0%] mysql_load.erl true 
+[2018-05-23 10:17:33] compiled[31.0%] gen_serverw.erl true 
+[2018-05-23 10:17:33] compiled[32.0%] mysql_pool_test.erl true 
+[2018-05-23 10:17:33] compiled[33.0%] econfig_server.erl true 
+[2018-05-23 10:17:33] compiled[33.9%] mysql_pool.erl true 
+[2018-05-23 10:17:33] compiled[34.9%] svr_worker_manager_logic.erl true 
+[2018-05-23 10:17:33] compiled[35.9%] econfig_file_writer.erl true 
+[2018-05-23 10:17:33] compiled[36.8%] econfig_app.erl true 
+[2018-05-23 10:17:33] compiled[37.8%] netmsg.erl true 
+[2018-05-23 10:17:33] compiled[38.8%] mysql_interface.erl true 
+[2018-05-23 10:17:33] compiled[39.8%] svr_worker_manager.erl true 
+[2018-05-23 10:17:33] svr_worker_manager.erl:12: Warning: behaviour gen_serverw undefined
+
+[2018-05-23 10:17:33] compiled[40.7%] mnesia_utils.erl true 
+[2018-05-23 10:17:33] compiled[41.7%] poolboy_tests.erl true 
+[2018-05-23 10:17:33] compiled[42.7%] binary_lib.erl true 
+[2018-05-23 10:17:34] compiled[43.6%] econfig.erl true 
+[2018-05-23 10:17:34] compiled[44.6%] mnesia_starter.erl true 
+[2018-05-23 10:17:34] compiled[45.6%] poolboy_eqc.erl true 
+[2018-05-23 10:17:34] compiled[46.6%] gen_server2.erl true 
+[2018-05-23 10:17:34] compiled[47.5%] poolboy_worker.erl true 
+[2018-05-23 10:17:34] compiled[48.5%] mnesia_dynamic.erl true 
+[2018-05-23 10:17:34] compiled[49.5%] poolboy_sup.erl true 
+[2018-05-23 10:17:34] compiled[50.4%] tcp_listener.erl true 
+[2018-05-23 10:17:34] compiled[51.4%] svr_worker.erl true 
+[2018-05-23 10:17:34] svr_worker.erl:12: Warning: behaviour gen_serverw undefined
+
+[2018-05-23 10:17:34] compiled[52.4%] dynamic_compile.erl true 
+[2018-05-23 10:17:34] compiled[53.3%] svr_supervisor.erl true 
+[2018-05-23 10:17:34] compiled[54.3%] cache_util.erl true 
+[2018-05-23 10:17:34] compiled[55.3%] behaviour_example.erl true 
+[2018-05-23 10:17:34] behaviour_example.erl:22: Warning: behaviour tcp_behaviour undefined
+
+[2018-05-23 10:17:34] compiled[56.3%] cache_sup.erl true 
+[2018-05-23 10:17:34] compiled[57.2%] mysql_protocol.erl true 
+[2018-05-23 10:17:34] compiled[58.2%] poolboy.erl true 
+[2018-05-23 10:17:34] compiled[59.2%] log_test.erl true 
+[2018-05-23 10:17:34] compiled[60.1%] mysql_poolboy_sup.erl true 
+[2018-05-23 10:17:34] compiled[61.1%] cache_heap.erl true 
+[2018-05-23 10:17:34] compiled[62.1%] mysql_encode.erl true 
+[2018-05-23 10:17:34] compiled[63.1%] file_ex.erl true 
+[2018-05-23 10:17:34] compiled[64.0%] loggerS.erl true 
+[2018-05-23 10:17:34] compiled[65.0%] tcp_handler.erl true 
+[2018-05-23 10:17:34] tcp_handler.erl:12: Warning: behaviour ranch_protocol undefined
+[2018-05-23 10:17:34] tcp_handler.erl:78: Warning: a term is constructed, but never used
+
+[2018-05-23 10:17:34] compiled[66.0%] mysql_poolboy_app.erl true 
+[2018-05-23 10:17:34] compiled[66.9%] cache_bucket_sup.erl true 
+[2018-05-23 10:17:34] compiled[67.9%] sentinel_server.erl true 
+[2018-05-23 10:17:34] sentinel_server.erl:12: Warning: behaviour gen_serverw undefined
+
+[2018-05-23 10:17:34] compiled[68.9%] common_error_logger_h.erl true 
+[2018-05-23 10:17:34] compiled[69.9%] mysql_cache.erl true 
+[2018-05-23 10:17:34] compiled[70.8%] mysql_poolboy.erl true 
+[2018-05-23 10:17:34] compiled[71.8%] vm_memory_monitor.erl true 
+[2018-05-23 10:17:34] compiled[72.8%] vector3.erl true 
+[2018-05-23 10:17:34] compiled[73.7%] common_error_logger.erl true 
+[2018-05-23 10:17:34] common_error_logger.erl:13: Warning: behaviour gen_server2 undefined
+
+[2018-05-23 10:17:34] compiled[74.7%] cache_bucket.erl true 
+[2018-05-23 10:17:34] compiled[75.7%] mysql_pool_manager.erl true 
+[2018-05-23 10:17:34] mysql_pool_manager.erl:12: Warning: behaviour gen_serverw undefined
+
+[2018-05-23 10:17:34] compiled[76.6%] color.erl true 
+[2018-05-23 10:17:34] compiled[77.6%] uid_gen.erl true 
+[2018-05-23 10:17:34] compiled[78.6%] mysql_instance_loader.erl true 
+[2018-05-23 10:17:34] compiled[79.6%] code_gen.erl true 
+[2018-05-23 10:17:34] compiled[80.5%] mod_sql_format.erl true 
+[2018-05-23 10:17:34] compiled[81.5%] task.erl true 
+[2018-05-23 10:17:34] compiled[82.5%] ps.erl true 
+[2018-05-23 10:17:34] compiled[83.4%] mod_player_load_save.erl true 
+[2018-05-23 10:17:34] compiled[84.4%] transaction_tests.erl true 
+[2018-05-23 10:17:34] compiled[85.4%] mysql.erl true 
+[2018-05-23 10:17:34] compiled[86.4%] mod_player_cache_manager.erl true 
+[2018-05-23 10:17:34] compiled[87.3%] background_gc.erl true 
+[2018-05-23 10:17:34] background_gc.erl:13: Warning: behaviour gen_server2 undefined
+
+[2018-05-23 10:17:34] compiled[88.3%] priority_queue.erl true 
+[2018-05-23 10:17:34] compiled[89.3%] dbs_worker_supervisor.erl true 
+[2018-05-23 10:17:34] compiled[90.2%] fly_worker.erl true 
+[2018-05-23 10:17:34] compiled[91.2%] fly.erl true 
+[2018-05-23 10:17:34] compiled[92.2%] fastlog_sup.erl true 
+[2018-05-23 10:17:34] compiled[93.2%] fastlog_app.erl true 
+[2018-05-23 10:17:34] compiled[94.1%] fastlog.erl true 
+[2018-05-23 10:17:34] fastlog.erl:12: Warning: behaviour gen_server2 undefined
+
+[2018-05-23 10:17:34] compiled[95.1%] eep_app.erl true 
+[2018-05-23 10:17:34] compiled[96.1%] mysql_tests.erl true 
+[2018-05-23 10:17:34] compiled[97.0%] mysql_protocol_tests.erl true 
+[2018-05-23 10:17:34] compiled[98.0%] mysql_encode_tests.erl true 
+[2018-05-23 10:17:34] compiled[99.0%] mock_tcp.erl true 
+[2018-05-23 10:17:34] compiled[100.0%] eep.erl true 
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+
+
+@@@compile [cht,dbsD] success@@@ at 2018-05-23 10:17:34 2.31 seconds 
+
+
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+

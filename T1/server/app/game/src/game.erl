@@ -16,8 +16,8 @@
 
 
 start() ->
-    application:ensure_all_started(?APP).
-                            m
+    true = misc:start_all_app(?APP).
+                            
 stop() ->
     application:stop(?APP),
     erlang:halt().

@@ -11,6 +11,7 @@
 -include("logger.hrl").
 -include("netmsg.hrl").
 -include("map.hrl").
+-include("vector3.hrl").
 -include("player_status.hrl").
 -include("common_record.hrl").
 

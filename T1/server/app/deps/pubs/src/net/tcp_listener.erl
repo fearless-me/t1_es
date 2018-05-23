@@ -16,7 +16,7 @@
 
 %% TransOpts = [{port, Port},{max_connections, Max}]
 start_listener(Ref, NumAcceptors, TransOpts, Handler) ->
-    true = misc:start_all_application(ranch),
+    true = misc:start_all_app(ranch),
     {ok, _} = ranch:start_listener(
         Ref,
         NumAcceptors,
@@ -28,7 +28,7 @@ start_listener(Ref, NumAcceptors, TransOpts, Handler) ->
     ok.
 
 start_listener(Ref, NumAcceptors, Port, MaxConnection, Handler) ->
-    true = misc:start_all_application(ranch),
+    true = misc:start_all_app(ranch),
     {ok, _} = ranch:start_listener(
         Ref,
         NumAcceptors,
@@ -40,7 +40,7 @@ start_listener(Ref, NumAcceptors, Port, MaxConnection, Handler) ->
     ok.
 
 start_listener(Ref, NumAcceptors, Port, MaxConnection, Handler, Conf) ->
-    true = misc:start_all_application(ranch),
+    true = misc:start_all_app(ranch),
     {ok, _} = ranch:start_listener(
         Ref,
         NumAcceptors,

@@ -9,7 +9,7 @@
 -module(uid_gen).
 -author("mawenhong").
 -include("logger.hrl").
--include("common.hrl").
+-include("pub_common.hrl").
 -include("type.hrl").
 
 %% API

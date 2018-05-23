@@ -12,7 +12,8 @@
 -behaviour(gen_serverw).
 -include("logger.hrl").
 -include("map.hrl").
--include("common.hrl").
+-include("pub_common.hrl").
+-include("vector3.hrl").
 
 -record(map_mgr_r, {
     map_id = 0,

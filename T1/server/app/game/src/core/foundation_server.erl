@@ -11,10 +11,10 @@
 
 -behaviour(gen_serverw).
 -include("logger.hrl").
--include("obj.hrl").
+-include("map_obj.hrl").
 -include("gsdef.hrl").
--include("record.hrl").
--include("common.hrl").
+-include("player_record.hrl").
+-include("pub_common.hrl").
 
 %% API
 -export([start_link/0]).

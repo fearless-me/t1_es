@@ -10,7 +10,8 @@
 -author("mawenhong").
 -include("logger.hrl").
 -include("map.hrl").
--include("obj.hrl").
+-include("map_obj.hrl").
+-include("vector3.hrl").
 -include("cfg_monster.hrl").
 
 %% API
@@ -30,7 +31,7 @@ create(#recMapObjData{
 
     Pos =  #vector3{x = X, y = 0.0, z = Y},
 
-    Obj1 = #r_obj{
+    Obj1 = #r_map_obj{
         uid = uid_gen:mon_uid(),
         did = Mid,
         name = Name,

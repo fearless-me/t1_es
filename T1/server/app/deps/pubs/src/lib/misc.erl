@@ -10,7 +10,7 @@
 -author("mawenhong").
 
 %% API
--export([start_application/1, start_all_application/1]).
+-export([start_app/1, start_all_app/1]).
 -export([make_atom/2,atom_to_binary/1]).
 -export([interval_operation/5]).
 -export([b2i/1, i2b/1]).
@@ -179,14 +179,14 @@ ip_string(Address)->
     [A1,A2,A3,A4 | _] = AList,
     io_lib:format( "~w.~w.~w.~w", [A1,A2,A3,A4] ).
 
-start_application(App)->
+start_app(App)->
     case application:start(App) of
         ok -> true;
         {error,{already_started,App}}-> true;
         {error,Reason} -> Reason
     end.
 
-start_all_application(App) ->
+start_all_app(App) ->
     case application:ensure_all_started(App) of
         {ok,_} -> true;
         {error,Reason} -> Reason

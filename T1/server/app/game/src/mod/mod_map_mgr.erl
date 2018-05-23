@@ -10,7 +10,7 @@
 -author("mawenhong").
 
 -behaviour(gen_serverw).
--include("common.hrl").
+-include("pub_common.hrl").
 -include("logger.hrl").
 -include("map.hrl").
 -include("map_obj.hrl").

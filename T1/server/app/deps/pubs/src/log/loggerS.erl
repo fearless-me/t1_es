@@ -20,7 +20,7 @@
 -export([start/0]).
 
 start( )->
-    true = misc:start_application(fastlog),
+    true = misc:start_app(fastlog),
 %%    true = misc:start_applications(log4erl),
 %%    log4erl:conf("log4erl.conf"),
 %%    set_cut_off(),

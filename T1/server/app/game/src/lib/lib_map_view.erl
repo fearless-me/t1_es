@@ -10,6 +10,7 @@
 -author("mawenhong").
 
 -include("logger.hrl").
+-include("vector3.hrl").
 -include("map.hrl").
 -include("map_obj.hrl").
 -include_lib("stdlib/include/assert.hrl").

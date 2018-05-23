@@ -16,6 +16,7 @@
 -include("common_record.hrl").
 -include("map_obj.hrl").
 -include("db_record.hrl").
+-include("vector3.hrl").
 
 -export([init/0]).
 -export([login_ack/1]).

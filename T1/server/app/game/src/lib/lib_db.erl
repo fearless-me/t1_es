@@ -9,10 +9,10 @@
 -module(lib_db).
 -author("mawenhong").
 -include("logger.hrl").
--include("record.hrl").
+-include("player_record.hrl").
 -include("common_record.hrl").
 -include("db_record.hrl").
--include("obj.hrl").
+-include("map_obj.hrl").
 
 %% API
 -export([load_account_info/1]).

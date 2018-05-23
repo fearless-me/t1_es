@@ -9,7 +9,7 @@
 -module(mod_player_cache_impl_ets).
 -author("mawenhong").
 
--include("common.hrl").
+-include("pub_common.hrl").
 -include("dbs_private.hrl").
 -include("logger.hrl").
 %%-include("emysql.hrl").

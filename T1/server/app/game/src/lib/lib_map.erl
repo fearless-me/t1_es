@@ -12,7 +12,7 @@
 -include("logger.hrl").
 -include("map.hrl").
 -include("map_obj.hrl").
--include("common.hrl").
+-include("pub_common.hrl").
 -include("cfg_mapsetting.hrl").
 
 %% API
