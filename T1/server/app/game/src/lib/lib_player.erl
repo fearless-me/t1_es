@@ -35,9 +35,27 @@ init() ->
 %%
 init_on_create() ->
     ok.
+%%%-------------------------------------------------------------------
+unique_register(AccId) ->
+    try  misc:register_process(self(), player, [AccId] ) of
+         true -> sucess
+    catch _ : _  -> already_started end.
 
 %%%-------------------------------------------------------------------
 login_ack(#r_login_ack{error = 0, account_info = AccountIfo}) ->
+    #p_account{ accountID = AccId} = AccountIfo,
+    Ret = unique_register(AccId),
+    login_ack_success(Ret, AccountIfo),
+    ok;
+login_ack(#r_login_ack{error = Error}) ->
+    mod_player:send(#pk_GS2U_LoginResult{
+        result = Error,
+        msg = io_lib:format("ErrorCode:~p", [Error])
+    }),
+    ok.
+
+%%%-------------------------------------------------------------------
+login_ack_success(sucess, AccountIfo) ->
     mod_player:send(#pk_GS2U_LoginResult{
         accountID = AccountIfo#p_account.accountID,
         identity = "",
@@ -49,11 +67,15 @@ login_ack(#r_login_ack{error = 0, account_info = AccountIfo}) ->
     lib_player_rw:set_player_status(?PS_WAIT_LIST),
     lib_db:load_player_list_(self(), AccountIfo#p_account.accountID),
     ok;
-login_ack(#r_login_ack{error = Error}) ->
+login_ack_success(Reason, AccountIfo) ->
+    ?WARN("acc ~w register process ~p faild with ~w",
+        [AccountIfo#p_account.accountID, self(), Reason]),
     mod_player:send(#pk_GS2U_LoginResult{
-        result = Error,
-        msg = io_lib:format("ErrorCode:~p", [Error])
+        result = -1,
+        msg = io_lib:format("ErrorCode:~p", [Reason])
     }),
+    lib_player_rw:set_player_status(?PS_ERROR),
+    mod_player:shutdown(read),
     ok.
 
 %%%-------------------------------------------------------------------
@@ -94,21 +116,21 @@ loaded_player(_DataBin) ->
 
 %%%-------------------------------------------------------------------
 add_to_world() ->
-    PlayerID = lib_player_rw:get_uid(),
-    MapID = lib_player_rw:get_map_id(),
+    Uid = lib_player_rw:get_uid(),
+    Mid = lib_player_rw:get_map_id(),
     Pos = lib_player_rw:get_pos(),
     Ack = mod_map_creator:take_over_player_online(
-        MapID,
+        Mid,
         #r_change_map_req{
-            uid = PlayerID,
+            uid = Uid,
             player_pid = self(),
-            tar_map_id = MapID,
+            tar_map_id = Mid,
             tar_pos = Pos,
             obj = make_obj()
         }
     ),
     lib_player_rw:set_pre_map_id(0),
-    lib_player_rw:set_map_id(MapID),
+    lib_player_rw:set_map_id(Mid),
     lib_player_rw:set_map_pid(Ack#r_change_map_ack.map_pid),
     lib_player_rw:set_pos(Ack#r_change_map_ack.pos),
     ok.

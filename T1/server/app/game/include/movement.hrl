@@ -48,5 +48,7 @@
 -define(ENR_TOBECONTINUED,  12).		%% 可以继续碰撞
 -type nav_result() :: ?ENR_FAILED .. ?ENR_TOBECONTINUED.
 
+-record(r_move_pos,{ dist = 0, start_pos, end_pos}).
+
 
 -endif.

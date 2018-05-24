@@ -69,7 +69,8 @@ set_map_pid(Pid) -> put('MAP_PID', Pid).
 set_pos(Pos) -> put('POSITION', Pos).
 get_pos()    ->
     case get('POSITION') of
-        undefined -> #vector3{x = 199.1, y= 0, z = 1255.3};
+        undefined ->
+            #vector3{x = misc:rand(500, 5000) / 10, y= 0, z = misc:rand(500, 3000) / 10};
         Position  -> Position
     end.
 

@@ -31,11 +31,18 @@
 
 
 %% API
+-export([shutdown/1]).
 -export([stop/1, direct_stop/0, send/1,direct_send/1]).
 -export([on_init/1, on_data/3, on_close/3]).
 -export([on_info_msg/2, on_call_msg/3, on_cast_msg/2, on_net_msg/2]).
 -export([socket/1, socket/0]).
 %%%-------------------------------------------------------------------
+
+-spec shutdown(How) -> ok when
+    How :: read | write | read_write.
+shutdown(How) -> 
+    tcp_handler:shutdown(socket(), How).
+
 stop(Reason)->
     tcp_handler:active_stop(Reason).
 
@@ -43,10 +50,10 @@ direct_stop()->
     erlang:exit(self(), normal).
 %%%-------------------------------------------------------------------
 send(IoList) when is_list(IoList)->
-    tcp_handler:send_net_msg(IoList);
+    tcp_handler:direct_send_net_msg(socket(), IoList);
 send(Msg) ->
     {_Bytes1, IoList} = tcp_codec:encode(Msg),
-    tcp_handler:send_net_msg(IoList),
+    tcp_handler:direct_send_net_msg(socket(), IoList),
     ok.
 
 direct_send(IoList)->
@@ -68,7 +75,7 @@ on_data(Socket, Data, S)->
 
 on_close(Socket, Reason, S) ->
     lib_player:offline(),
-    ?INFO("~p close,reason:~p",[Socket, Reason]),
+    ?INFO("~p socket ~p close,reason:~p",[self(), Socket, Reason]),
     S.
 %%%-------------------------------------------------------------------
 on_info_msg({login_ack, Msg}, S) ->

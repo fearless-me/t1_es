@@ -44,15 +44,17 @@ start_player_walk(Obj, Start, End) ->
     end,
     ok.
 
-start_player_walk_1(
-    #r_map_obj{uid = Uid} = Obj,
-    Start, End
-) ->
-    ?DEBUG("~p start move from ~w to ~w",
-        [Uid, Start, End]),
-    
+start_player_walk_1(Obj, Start, End) ->
+    #r_map_obj{uid = Uid, move_speed = Speed} = Obj,
+
     Now = misc:milli_seconds(),
     Dir = vector3:subtract(End, Start),
+    Dist = vector3:dist(End, Start),
+    TotalTime = Dist / Speed * 1000,
+    PathList = make_path_list([], Start, [End]),
+
+    ?WARN("~p start move from ~w to ~w, dist ~w, ~w(ms)",
+        [Uid, Start, End, Dist, TotalTime]),
 
     NewObj = Obj#r_map_obj{
         cur_move = ?EMS_WALK,
@@ -64,7 +66,7 @@ start_player_walk_1(
         start_time = Now,
         last_up_time = Now,
         stopped = false,
-        path_list = [End]
+        path_list = PathList
     },
     lib_map_rw:player_update(
         Uid,
@@ -77,14 +79,26 @@ start_player_walk_1(
             {#r_map_obj.face, Dir},
             {#r_map_obj.start_time, Now},
             {#r_map_obj.last_up_time, Now},
+            {#r_map_obj.total_move_time, TotalTime},
+            {#r_map_obj.total_move_time, 0},
             {#r_map_obj.stopped, false},
-            {#r_map_obj.path_list, [End]}
+            {#r_map_obj.path_list, PathList}
         ]
     ),
     on_player_pos_change(NewObj, Start).
 
 
 is_role_can_walk(_Pos, _End) -> true.
+
+make_path_list(Acc, _Start, []) -> lists:reverse(Acc);
+make_path_list(Acc, Start, [Tar | Left]) ->
+    R = make_move_r(Start, Tar),
+    make_path_list([R | Acc], Tar, Left).
+
+make_move_r(Start, End) ->
+    Dist = vector3:dist(Start, End),
+    #r_move_pos{dist = Dist, start_pos = Start, end_pos = End}.
+
 %%%-------------------------------------------------------------------
 
 update(Obj) ->
@@ -94,24 +108,28 @@ update(Obj) ->
 update_1(Obj, ?EMS_WALK) ->
     #r_map_obj{
         pos = CurPos,
-        last_up_time = LastUpTime,
-        path_list = PathList
+        path_list = PathList,
+        total_moved_time = MovedTime
     } = Obj,
     Now = misc:milli_seconds(),
-    DiffMs = Now - LastUpTime,
-    Ret = update_role_walk(Obj, CurPos, PathList, DiffMs, 10),
+    DiffMs = lib_map_rw:get_obj_move_diff_time(Obj, Now),
+    Ret = update_role_walk(Obj, CurPos, PathList, MovedTime + DiffMs),
     case Ret of
         ?ENR_TOBECONTINUED ->
             lib_map_rw:player_update(
                 Obj#r_map_obj.uid,
-                {#r_map_obj.last_up_time, Now}
+                [
+                    {#r_map_obj.last_up_time, Now},
+                    {#r_map_obj.total_moved_time, MovedTime + DiffMs}
+                ]
             );
         {?ENR_TOBECONTINUED, NewPath} ->
             lib_map_rw:player_update(
                 Obj#r_map_obj.uid,
                 [
                     {#r_map_obj.path_list, NewPath},
-                    {#r_map_obj.last_up_time, Now}
+                    {#r_map_obj.last_up_time, Now},
+                    {#r_map_obj.total_moved_time, 0}
                 ]
             );
         _ ->
@@ -128,14 +146,14 @@ update_1(Obj, ?EMS_WALK) ->
 update_1(_Obj, _Move) -> skip.
 
 %%%-------------------------------------------------------------------
-update_role_walk(_Obj, _CurPos, [], _DiffTime, _Speed) ->
+update_role_walk(Obj, CurPos, [], _MoveTime) ->
+    ?WARN("mapid ~p player ~w arrived ~w", [self(), Obj#r_map_obj.uid, CurPos]),
     ?ENR_ARRIVE;
-update_role_walk(_Obj, CurPos, [CurPos], _DiffTime, _Speed) ->
-    ?ENR_ARRIVE;
-update_role_walk(Obj, CurPos, PathList, DiffTime, Speed) ->
-    MoveDist = Speed * DiffTime / 1000,
-    {NewPos, NewPathList} = linear_pos(CurPos, PathList, MoveDist),
-    ?DEBUG("mapid ~p ~w to ~w,tick move dist ~p",[self(), CurPos, NewPos, MoveDist]),
+update_role_walk(Obj, CurPos, PathList, MoveTime) ->
+    MoveDist = lib_map_rw:get_obj_speed(Obj) * MoveTime / 1000,
+    {NewPos, NewPathList} = linear_pos(PathList, MoveDist),
+    ?DEBUG("mapid ~p ~w move from ~w to ~w,tick move dist ~p",
+        [self(), Obj#r_map_obj.uid, CurPos, NewPos, MoveDist]),
     on_player_pos_change(Obj, NewPos),
 
     case NewPathList of
@@ -144,25 +162,25 @@ update_role_walk(Obj, CurPos, PathList, DiffTime, Speed) ->
     end.
 
 %%%-------------------------------------------------------------------
-linear_pos(Cur, [EndPos], MoveDist) ->
-    Dist = vector3:dist(Cur, EndPos),
+linear_pos([MovePos], MoveDist) ->
+    #r_move_pos{dist = Dist, start_pos = Start, end_pos = End} = MovePos,
     if
-        MoveDist < Dist -> linear_pos_1(Cur, EndPos, Dist, MoveDist);
-        true -> {EndPos, []}
+        MoveDist < Dist -> linear_pos_1(Start, End, Dist, MoveDist);
+        true -> {End, []}
     end;
-linear_pos(Cur, [FirstPos | PathList], MoveDist) ->
-    Dist = vector3:dist(Cur, FirstPos),
+linear_pos([MovePos | PathList], MoveDist) ->
+    #r_move_pos{dist = Dist, start_pos = Start, end_pos = End} = MovePos,
     if
-        MoveDist == Dist -> {FirstPos, PathList};
-        MoveDist < Dist -> linear_pos_1(Cur, FirstPos, Dist, MoveDist);
-        true -> linear_pos(Cur, PathList, MoveDist)
+        MoveDist == Dist -> {End, PathList};
+        MoveDist < Dist -> linear_pos_1(Start, End, Dist, MoveDist);
+        true -> linear_pos(PathList, MoveDist)
     end.
 
-linear_pos_1(CurPos, TarPos, Dist, MoveDist) ->
+linear_pos_1(StartPos, EndPos, Dist, MoveDist) ->
     R1 = MoveDist / Dist,
     R2 = if R1 < 0 -> 0; true -> R1 end,
     R3 = if R2 > 1 -> 1; true -> R2 end,
-    Dst = vector3:linear_lerp(CurPos, TarPos, R3),
+    Dst = vector3:linear_lerp(StartPos, EndPos, R3),
     {Dst, ?ENR_TOBECONTINUED}.
 
 %%%-------------------------------------------------------------------

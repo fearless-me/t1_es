@@ -26,7 +26,9 @@
 -export([get_obj_face_to/1]).
 -export([get_obj_move_dir/1]).
 -export([get_obj_move_state/1]).
--export([get_obj_move_time/1]).
+-export([get_obj_moved_time/1]).
+-export([get_obj_move_diff_time/2]).
+-export([get_obj_speed/1]).
 -export([get_obj_vis_tile_index/1, set_obj_vis_tile_index/2]).
 
 -export([get_npc_ets/0, get_monster_ets/0]).
@@ -100,15 +102,18 @@ del_obj_to_ets(_) ->
     ok.
 
 %%%-------------------------------------------------------------------
-get_obj_pos(Obj) -> Obj#r_map_obj.pos.
-get_obj_move_state(Obj) -> Obj#r_map_obj.cur_move.
-get_obj_start_pos(Obj) -> Obj#r_map_obj.start.
-get_obj_dest_pos(Obj) -> Obj#r_map_obj.dest.
-get_obj_move_dir(Obj) -> Obj#r_map_obj.dir.
-get_obj_face_to(Obj) -> Obj#r_map_obj.face.
-get_obj_move_time(Obj) -> Obj#r_map_obj.last_up_time - Obj#r_map_obj.start_time.
-get_obj_vis_tile_index(Obj) -> Obj#r_map_obj.vis_tile_idx.
-set_obj_vis_tile_index(Obj, Index) -> Obj#r_map_obj{vis_tile_idx = Index}.
+get_obj_pos(Obj)                    -> Obj#r_map_obj.pos.
+get_obj_move_state(Obj)             -> Obj#r_map_obj.cur_move.
+get_obj_start_pos(Obj)              -> Obj#r_map_obj.start.
+get_obj_dest_pos(Obj)               -> Obj#r_map_obj.dest.
+get_obj_move_dir(Obj)               -> Obj#r_map_obj.dir.
+get_obj_face_to(Obj)                -> Obj#r_map_obj.face.
+get_obj_moved_time(Obj)             -> Obj#r_map_obj.total_moved_time.
+get_obj_move_diff_time(Obj, Now)    -> Now - Obj#r_map_obj.last_up_time.
+get_obj_speed(Obj)                  -> Obj#r_map_obj.move_speed.
+get_obj_vis_tile_index(Obj)         -> Obj#r_map_obj.vis_tile_idx.
+set_obj_vis_tile_index(Obj, Index)  -> Obj#r_map_obj{vis_tile_idx = Index}.
+
 
 
 

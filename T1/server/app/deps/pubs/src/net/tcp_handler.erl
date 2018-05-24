@@ -19,7 +19,9 @@
 -record(state, {socket = undefined, handler = undefined, cli_data = undefined}).
 
 %% API
--export([active_stop/1, send_net_msg/1, direct_send_net_msg/2]).
+-export([shutdown/2]).
+-export([active_stop/1]).
+-export([send_net_msg/1, direct_send_net_msg/2]).
 -export([start_link/4]).
 -export([init/1, handle_call/3, handle_cast/2, handle_info/2,
     terminate/2, code_change/3]).
@@ -29,6 +31,13 @@
 %%%===================================================================
 active_stop(Reason)->
     ps:send(self(), {active_stop, Reason}).
+
+-spec shutdown(Socket, How) -> ok when
+    Socket :: port(),
+    How :: read | write | read_write.
+shutdown(Socket, How) ->
+    ranch_tcp:shutdown(Socket, How),
+    ok.
 
 send_net_msg(DataBinaryList) when is_list(DataBinaryList)->
     ps:send(self(), {write, DataBinaryList}),
@@ -75,7 +84,7 @@ do_handle_info({tcp, Socket, Data},
 ) ->
     ranch_tcp:setopts(Socket, [{active, once}]),
     try
-        S1 = Handler:on_data(Socket,Data, S), {noreply, State},
+        S1 = Handler:on_data(Socket,Data, S),
         {noreply, State#state{cli_data = S1}}
     catch _:_ ->
             ranch_tcp:shutdown(Socket, read),

@@ -6,11 +6,15 @@
   <component name="ChangeListManager">
     <list default="true" readonly="true" id="354d5196-8a2e-476f-8af6-71424480c5e1" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/net/tcp_client.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/net/tcp_client.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/include/map.hrl" beforeDir="false" afterPath="$PROJECT_DIR$/app/game/include/map.hrl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/lib/lib_map.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/game/src/lib/lib_map.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/lib/lib_map_view.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/game/src/lib/lib_map_view.erl" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/net/tcp_handler.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/net/tcp_handler.erl" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/game/include/map_obj.hrl" beforeDir="false" afterPath="$PROJECT_DIR$/app/game/include/map_obj.hrl" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/game/include/movement.hrl" beforeDir="false" afterPath="$PROJECT_DIR$/app/game/include/movement.hrl" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/game/src/lib/lib_map_rw.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/game/src/lib/lib_map_rw.erl" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/game/src/lib/lib_move.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/game/src/lib/lib_move.erl" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/game/src/lib/lib_player.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/game/src/lib/lib_player.erl" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/game/src/mod/mod_map_mgr.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/game/src/mod/mod_map_mgr.erl" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/game/src/mod/mod_player.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/game/src/mod/mod_player.erl" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/清除日志.bat" beforeDir="false" afterPath="$PROJECT_DIR$/app/清除日志.bat" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -22,92 +26,88 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="mod_map_mgr.erl" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/game/src/mod/mod_map_mgr.erl">
+      <file leaf-file-name="mod_player.erl" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/game/src/mod/mod_player.erl">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="609">
-              <caret line="136" column="21" selection-start-line="136" selection-start-column="21" selection-end-line="136" selection-end-column="21" />
+            <state relative-caret-position="583">
+              <caret line="57" column="24" lean-forward="true" selection-start-line="57" selection-start-column="24" selection-end-line="57" selection-end-column="24" />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="tcp_client.erl" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/app/deps/pubs/src/net/tcp_client.erl">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="219">
-              <caret line="41" column="19" selection-start-line="41" selection-start-column="19" selection-end-line="41" selection-end-column="19" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="mod_map_creator.erl" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/game/src/mod/mod_map_creator.erl">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-41">
-              <caret line="93" column="36" selection-start-line="93" selection-start-column="36" selection-end-line="93" selection-end-column="36" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="mod_map.erl" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/game/src/mod/mod_map.erl">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="280">
-              <caret line="33" selection-start-line="33" selection-end-line="33" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="gen_server.erl" pinned="false" current-in-tab="false">
-        <entry file="file://C:/Program Files/erl7.3/lib/stdlib-2.8/src/gen_server.erl">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="133">
-              <caret line="192" column="35" selection-start-line="192" selection-start-column="35" selection-end-line="192" selection-end-column="35" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="gen.erl" pinned="false" current-in-tab="false">
-        <entry file="file://C:/Program Files/erl7.3/lib/stdlib-2.8/src/gen.erl">
+      <file leaf-file-name="tcp_handler.erl" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/deps/pubs/src/net/tcp_handler.erl">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="289">
-              <caret line="35" column="8" selection-start-line="35" selection-start-column="8" selection-end-line="35" selection-end-column="8" />
+              <caret line="37" selection-start-line="37" selection-end-line="37" />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="lib_map.erl" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/game/src/lib/lib_map.erl">
+      <file leaf-file-name="mod_login.erl" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/game/src/mod/mod_login.erl">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="531">
-              <caret line="172" column="14" selection-start-line="172" selection-start-column="14" selection-end-line="172" selection-end-column="14" />
+            <state relative-caret-position="427">
+              <caret line="57" column="30" selection-start-line="57" selection-start-column="30" selection-end-line="57" selection-end-column="30" />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="map.hrl" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/game/include/map.hrl">
+      <file leaf-file-name="tcp_client.erl" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/deps/pubs/src/net/tcp_client.erl">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="419">
-              <caret line="41" column="73" selection-start-line="41" selection-start-column="73" selection-end-line="41" selection-end-column="73" />
+            <state relative-caret-position="479">
+              <caret line="27" column="30" selection-start-line="27" selection-start-column="30" selection-end-line="27" selection-end-column="30" />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="lib_player.erl" pinned="false" current-in-tab="false">
+      <file leaf-file-name="lib_db.erl" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/game/src/lib/lib_db.erl">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="260">
+              <caret line="22" selection-start-line="22" selection-end-line="22" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="lib_player.erl" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app/game/src/lib/lib_player.erl">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="445">
-              <caret line="123" column="18" selection-start-line="123" selection-start-column="18" selection-end-line="123" selection-end-column="18" />
+            <state relative-caret-position="731">
+              <caret line="74" column="51" selection-start-line="74" selection-start-column="51" selection-end-line="74" selection-end-column="51" />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="gen_serverw.erl" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/deps/pubs/src/lib/gen_serverw.erl">
+      <file leaf-file-name="gen_tcp.erl" pinned="false" current-in-tab="false">
+        <entry file="file://C:/Program Files/erl7.3/lib/kernel-4.2/src/gen_tcp.erl">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="349">
-              <caret line="150" column="11" selection-start-line="150" selection-start-column="11" selection-end-line="150" selection-end-column="11" />
+            <state relative-caret-position="705">
+              <caret line="115" column="39" lean-forward="true" selection-start-line="115" selection-start-column="39" selection-end-line="115" selection-end-column="39" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="mod_map_mgr_supervisor.erl" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/game/src/mod/mod_map_mgr_supervisor.erl">
+          <provider selected="true" editor-type-id="text-editor" />
+        </entry>
+      </file>
+      <file leaf-file-name="common_record.hrl" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/game/include/common_record.hrl">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="416">
+              <caret line="16" column="11" selection-start-line="16" selection-start-column="11" selection-end-line="16" selection-end-column="11" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="misc.erl" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/deps/pubs/src/lib/misc.erl">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="601">
+              <caret line="50" column="53" lean-forward="true" selection-start-line="50" selection-start-column="53" selection-end-line="50" selection-end-column="53" />
             </state>
           </provider>
         </entry>
@@ -176,10 +176,8 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/app/game/include/player_transmit.hrl" />
         <option value="$PROJECT_DIR$/app/game/include/player_t.hrl" />
         <option value="$PROJECT_DIR$/app/deps/pubs/src/net/tcp_behaviour.erl" />
-        <option value="$PROJECT_DIR$/app/deps/pubs/src/net/tcp_handler.erl" />
         <option value="$PROJECT_DIR$/app/deps/fly/src/fly_worker.erl" />
         <option value="$PROJECT_DIR$/app/deps/pubs/src/net/tcp_codec.erl" />
         <option value="$PROJECT_DIR$/app/deps/pubs/src/net/behaviour_example.erl" />
@@ -197,16 +195,13 @@
         <option value="$PROJECT_DIR$/app/game/include/gsdef.hrl" />
         <option value="$PROJECT_DIR$/app/game/include/player_status.hrl" />
         <option value="$PROJECT_DIR$/app/game/include/move.hrl" />
-        <option value="$PROJECT_DIR$/app/game/include/movement.hrl" />
         <option value="$PROJECT_DIR$/app/game/include/common_record.hrl" />
         <option value="$PROJECT_DIR$/app/game/src/game_sup.erl" />
         <option value="$PROJECT_DIR$/app/game/src/lib/lib_battle.erl" />
         <option value="$PROJECT_DIR$/app/game/include/obj.hrl" />
-        <option value="$PROJECT_DIR$/app/game/include/map_obj.hrl" />
         <option value="$PROJECT_DIR$/app/game/include/record.hrl" />
         <option value="$PROJECT_DIR$/app/game/src/core/vector3.erl" />
         <option value="$PROJECT_DIR$/app/deps/pubs/include/vector3.hrl" />
-        <option value="$PROJECT_DIR$/app/game/src/lib/lib_player_rw.erl" />
         <option value="$PROJECT_DIR$/app/game/src/lib/lib_route.erl" />
         <option value="$PROJECT_DIR$/app/game/src/lib/lib_monster.erl" />
         <option value="$PROJECT_DIR$/app/game/src/lib/lib_db.erl" />
@@ -216,17 +211,22 @@
         <option value="$PROJECT_DIR$/app/deps/pubs/src/lib/uid_gen.erl" />
         <option value="$PROJECT_DIR$/app/game/src/test/test.erl" />
         <option value="$PROJECT_DIR$/app/deps/pubs/src/lib/vector3.erl" />
-        <option value="$PROJECT_DIR$/app/game/src/lib/lib_move.erl" />
-        <option value="$PROJECT_DIR$/app/game/src/lib/lib_map_rw.erl" />
         <option value="$PROJECT_DIR$/app/game/src/mod/mod_map_creator.erl" />
-        <option value="$PROJECT_DIR$/app/game/src/lib/lib_player.erl" />
-        <option value="$PROJECT_DIR$/app/game/src/mod/mod_player.erl" />
         <option value="$PROJECT_DIR$/app/game/src/mod/mod_map.erl" />
         <option value="$PROJECT_DIR$/app/game/src/lib/lib_map_view.erl" />
-        <option value="$PROJECT_DIR$/app/game/src/mod/mod_map_mgr.erl" />
         <option value="$PROJECT_DIR$/app/game/src/lib/lib_map.erl" />
         <option value="$PROJECT_DIR$/app/game/include/map.hrl" />
+        <option value="$PROJECT_DIR$/app/game/src/lib/lib_player_rw.erl" />
         <option value="$PROJECT_DIR$/app/deps/pubs/src/net/tcp_client.erl" />
+        <option value="$PROJECT_DIR$/app/game/include/map_obj.hrl" />
+        <option value="$PROJECT_DIR$/app/game/include/movement.hrl" />
+        <option value="$PROJECT_DIR$/app/game/src/lib/lib_map_rw.erl" />
+        <option value="$PROJECT_DIR$/app/game/src/mod/mod_map_mgr.erl" />
+        <option value="$PROJECT_DIR$/app/game/src/lib/lib_move.erl" />
+        <option value="$PROJECT_DIR$/app/deps/fastlog/src/fastlog.erl" />
+        <option value="$PROJECT_DIR$/app/deps/pubs/src/net/tcp_handler.erl" />
+        <option value="$PROJECT_DIR$/app/game/src/mod/mod_player.erl" />
+        <option value="$PROJECT_DIR$/app/game/src/lib/lib_player.erl" />
       </list>
     </option>
   </component>
@@ -237,8 +237,8 @@
     <sorting>DEFINITION_ORDER</sorting>
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="-8" />
-    <option name="y" value="-8" />
+    <option name="x" value="-5" />
+    <option name="y" value="470" />
     <option name="width" value="1936" />
     <option name="height" value="1056" />
   </component>
@@ -248,6 +248,8 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="PackagesPane" />
+      <pane id="Scope" />
       <pane id="AndroidView" />
       <pane id="ProjectPane">
         <subPane>
@@ -392,6 +394,15 @@
               <item name="pubs" type="462c0819:PsiDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
               <item name="lib" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="server" type="b2602c69:ProjectViewProjectNode" />
+              <item name="server" type="462c0819:PsiDirectoryNode" />
+              <item name="app" type="462c0819:PsiDirectoryNode" />
+              <item name="deps" type="462c0819:PsiDirectoryNode" />
+              <item name="pubs" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="log" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="server" type="b2602c69:ProjectViewProjectNode" />
@@ -572,6 +583,21 @@
               <item name="External Libraries" type="cb654da1:ExternalLibrariesNode" />
               <item name="&lt; Erlang 18 &gt;" type="70bed36:NamedLibraryElementNode" />
               <item name="lib" type="462c0819:PsiDirectoryNode" />
+              <item name="observer-2.1.2" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="server" type="b2602c69:ProjectViewProjectNode" />
+              <item name="External Libraries" type="cb654da1:ExternalLibrariesNode" />
+              <item name="&lt; Erlang 18 &gt;" type="70bed36:NamedLibraryElementNode" />
+              <item name="lib" type="462c0819:PsiDirectoryNode" />
+              <item name="observer-2.1.2" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="server" type="b2602c69:ProjectViewProjectNode" />
+              <item name="External Libraries" type="cb654da1:ExternalLibrariesNode" />
+              <item name="&lt; Erlang 18 &gt;" type="70bed36:NamedLibraryElementNode" />
+              <item name="lib" type="462c0819:PsiDirectoryNode" />
               <item name="stdlib-2.8" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
@@ -609,8 +635,6 @@
           <select />
         </subPane>
       </pane>
-      <pane id="PackagesPane" />
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -970,12 +994,13 @@
       <workItem from="1526986647859" duration="3889000" />
       <workItem from="1527039384351" duration="7468000" />
       <workItem from="1527054342779" duration="15036000" />
-      <workItem from="1527073446656" duration="4976000" />
+      <workItem from="1527073446656" duration="14735000" />
+      <workItem from="1527140763534" duration="6500000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="318613000" />
+    <option name="totallyTimeSpent" value="334872000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -1003,7 +1028,7 @@
       <window_info anchor="bottom" id="Terminal" order="7" weight="0.32960895" />
       <window_info id="Capture Tool" order="2" />
       <window_info id="Designer" order="2" />
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.20149253" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.20362474" />
       <window_info anchor="right" id="Database" order="3" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
@@ -1039,66 +1064,6 @@
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/app/game/src/lib/lib_pet.erl">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="338">
-          <caret line="13" selection-start-line="13" selection-end-line="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/game/src/lib/lib_obj.erl">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="338">
-          <caret line="13" column="24" selection-start-line="13" selection-start-column="24" selection-end-line="13" selection-end-column="24" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/game/src/lib/lib_battle.erl">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="390">
-          <caret line="15" column="24" selection-start-line="15" selection-start-column="24" selection-end-line="15" selection-end-column="24" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/game/src/core/map_root_supervisor.erl">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-780" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/game/src/core/mapReader.erl">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="780">
-          <caret line="30" column="46" selection-start-line="30" selection-start-column="46" selection-end-line="30" selection-end-column="46" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/deps/pubs/src/lib/common_error_logger_h.erl">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-702" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/deps/pubs/include/type.hrl">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="624">
-          <caret line="24" column="8" selection-start-line="24" selection-start-column="8" selection-end-line="24" selection-end-column="8" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/deps/fly/src/fly.erl">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-546" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/deps/fastlog/src/fastlog.erl">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-312" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/deps/pubs/src/persistent/mnesia_utils.erl">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1950" />
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/deps/pubs/src/persistent/mysql_pool.erl">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-119" />
@@ -1144,20 +1109,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/game/include/common_record.hrl">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="572">
-          <caret line="22" column="8" selection-start-line="22" selection-start-column="8" selection-end-line="22" selection-end-column="8" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/game/src/lib/lib_db.erl">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="702">
-          <caret line="60" column="29" selection-start-line="60" selection-start-column="29" selection-end-line="60" selection-end-column="29" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://C:/Program Files/erl7.3/lib/kernel-4.2/src/application.erl">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="471">
@@ -1186,24 +1137,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/deps/pubs/src/lib/vector3.erl">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="375">
-          <caret line="63" column="47" selection-start-line="63" selection-start-column="47" selection-end-line="63" selection-end-column="47" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/game/src/core/foundation_server.erl">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="572">
           <caret line="34" column="68" selection-start-line="34" selection-start-column="68" selection-end-line="34" selection-end-column="68" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/game/include/player_record.hrl">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="55">
-          <caret line="15" column="4" selection-start-line="15" selection-start-column="4" selection-end-line="15" selection-end-column="4" />
         </state>
       </provider>
     </entry>
@@ -1214,31 +1151,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/game/src/lib/lib_map_rw.erl">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="185">
-          <caret line="20" column="29" selection-start-line="20" selection-start-column="29" selection-end-line="20" selection-end-column="29" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/game/src/lib/lib_monster.erl">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="401">
           <caret line="33" column="18" selection-start-line="33" selection-start-column="18" selection-end-line="33" selection-end-column="18" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/game/src/lib/lib_route.erl">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="583">
-          <caret line="67" column="22" lean-forward="true" selection-start-line="67" selection-start-column="22" selection-end-line="67" selection-end-column="22" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/game/src/lib/lib_player_rw.erl">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="289">
-          <caret line="65" selection-start-line="65" selection-end-line="65" />
         </state>
       </provider>
     </entry>
@@ -1260,44 +1176,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="289">
           <caret line="26" selection-start-line="26" selection-end-line="26" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/game/src/mod/mod_player.erl">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2418">
-          <caret line="93" column="28" selection-start-line="93" selection-start-column="28" selection-end-line="93" selection-end-column="28" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/deps/pubs/src/lib/misc.erl">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="910">
-          <caret line="35" selection-start-line="35" selection-end-line="35" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://C:/Program Files/erl7.3/lib/erts-7.3/src/erlang.erl">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="39624">
-          <caret line="1524" selection-start-line="1524" selection-end-line="1524" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/game/include/movement.hrl">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/game/include/map_obj.hrl">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="505">
-          <caret line="32" column="32" selection-start-line="32" selection-start-column="20" selection-end-line="32" selection-end-column="32" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/game/src/lib/lib_move.erl">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2871">
-          <caret line="151" column="8" selection-start-line="151" selection-start-column="8" selection-end-line="151" selection-end-column="8" />
         </state>
       </provider>
     </entry>
@@ -1329,38 +1207,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/game/src/mod/mod_map_mgr.erl">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="609">
-          <caret line="136" column="21" selection-start-line="136" selection-start-column="21" selection-end-line="136" selection-end-column="21" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/deps/pubs/src/lib/gen_serverw.erl">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="349">
           <caret line="150" column="11" selection-start-line="150" selection-start-column="11" selection-end-line="150" selection-end-column="11" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/game/src/lib/lib_player.erl">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="445">
-          <caret line="123" column="18" selection-start-line="123" selection-start-column="18" selection-end-line="123" selection-end-column="18" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/game/src/mod/mod_map.erl">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="280">
-          <caret line="33" selection-start-line="33" selection-end-line="33" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/game/src/lib/lib_map.erl">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="531">
-          <caret line="172" column="14" selection-start-line="172" selection-start-column="14" selection-end-line="172" selection-end-column="14" />
         </state>
       </provider>
     </entry>
@@ -1371,10 +1221,191 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://C:/Program Files/erl7.3/lib/observer-2.1.2/src/observer.erl">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="104">
+          <caret line="4" column="2" selection-start-line="4" selection-start-column="2" selection-end-line="4" selection-end-column="2" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/game/include/player_record.hrl">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="390">
+          <caret line="15" column="4" selection-start-line="15" selection-start-column="4" selection-end-line="15" selection-end-column="4" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/game/src/mod/mod_map.erl">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2210">
+          <caret line="85" column="26" selection-start-line="85" selection-start-column="26" selection-end-line="85" selection-end-column="26" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/game/include/map_obj.hrl">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="884">
+          <caret line="34" column="37" selection-start-line="34" selection-start-column="37" selection-end-line="34" selection-end-column="37" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/game/include/movement.hrl">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1300">
+          <caret line="50" column="40" selection-start-line="50" selection-start-column="40" selection-end-line="50" selection-end-column="40" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://C:/Program Files/erl7.3/lib/stdlib-2.8/src/lists.erl">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="3770">
+          <caret line="145" selection-start-line="145" selection-end-line="145" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/deps/pubs/src/lib/vector3.erl">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2860">
+          <caret line="110" selection-start-line="110" selection-end-line="110" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/game/src/mod/mod_map_mgr.erl">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="575">
+          <caret line="28" column="5" lean-forward="true" selection-start-line="28" selection-start-column="5" selection-end-line="28" selection-end-column="5" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/deps/pubs/include/logger.hrl">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="260">
+          <caret line="10" column="30" lean-forward="true" selection-start-line="10" selection-start-column="30" selection-end-line="10" selection-end-column="30" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/deps/pubs/src/log/loggerS.erl">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="349">
+          <caret line="34" column="32" lean-forward="true" selection-start-line="34" selection-start-column="32" selection-end-line="34" selection-end-column="32" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/game/src/lib/lib_map_rw.erl">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="416">
+          <caret line="28" column="27" selection-start-line="28" selection-start-column="27" selection-end-line="28" selection-end-column="27" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/deps/fastlog/src/fastlog.erl">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="315">
+          <caret line="75" selection-start-line="75" selection-end-line="77" selection-end-column="7" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/game/src/lib/lib_map.erl">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="289">
+          <caret line="27" column="8" selection-start-line="27" selection-start-column="8" selection-end-line="27" selection-end-column="8" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/game/src/lib/lib_move.erl">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="375">
+          <caret line="88" column="49" lean-forward="true" selection-start-line="88" selection-start-column="49" selection-end-line="88" selection-end-column="49" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/game/src/lib/lib_player_rw.erl">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="445">
+          <caret line="71" column="20" selection-start-line="71" selection-start-column="20" selection-end-line="71" selection-end-column="20" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/game/src/lib/lib_route.erl">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1118">
+          <caret line="67" column="22" selection-start-line="67" selection-start-column="22" selection-end-line="67" selection-end-column="22" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/game/src/lib/lib_pet.erl">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://C:/Program Files/erl7.3/lib/erts-7.3/src/erlang.erl">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="583">
+          <caret line="1524" selection-start-line="1524" selection-end-line="1524" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/game/src/lib/lib_db.erl">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="260">
+          <caret line="22" selection-start-line="22" selection-end-line="22" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/game/include/common_record.hrl">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="416">
+          <caret line="16" column="11" selection-start-line="16" selection-start-column="11" selection-end-line="16" selection-end-column="11" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/game/src/mod/mod_login.erl">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="427">
+          <caret line="57" column="30" selection-start-line="57" selection-start-column="30" selection-end-line="57" selection-end-column="30" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/app/deps/pubs/src/net/tcp_client.erl">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="219">
-          <caret line="41" column="19" selection-start-line="41" selection-start-column="19" selection-end-line="41" selection-end-column="19" />
+        <state relative-caret-position="479">
+          <caret line="27" column="30" selection-start-line="27" selection-start-column="30" selection-end-line="27" selection-end-column="30" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/game/src/mod/mod_map_mgr_supervisor.erl">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/deps/pubs/src/lib/misc.erl">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="601">
+          <caret line="50" column="53" lean-forward="true" selection-start-line="50" selection-start-column="53" selection-end-line="50" selection-end-column="53" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://C:/Program Files/erl7.3/lib/kernel-4.2/src/gen_tcp.erl">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="705">
+          <caret line="115" column="39" lean-forward="true" selection-start-line="115" selection-start-column="39" selection-end-line="115" selection-end-column="39" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/deps/pubs/src/net/tcp_handler.erl">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="289">
+          <caret line="37" selection-start-line="37" selection-end-line="37" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/game/src/mod/mod_player.erl">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="583">
+          <caret line="57" column="24" lean-forward="true" selection-start-line="57" selection-start-column="24" selection-end-line="57" selection-end-column="24" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/game/src/lib/lib_player.erl">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="731">
+          <caret line="74" column="51" selection-start-line="74" selection-start-column="51" selection-end-line="74" selection-end-column="51" />
         </state>
       </provider>
     </entry>
