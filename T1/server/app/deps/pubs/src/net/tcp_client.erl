@@ -16,7 +16,7 @@ c(Port) ->
 c(Port, MapID) ->
     spawn(fun() -> tcp_client:connect(Port, MapID) end).
 
-nc(N, Port, MapId)->
+nc(N, Port, MapId) ->
     lists:foreach(fun(_) -> tcp_client:c(Port, MapId) end, lists:seq(1, N)).
 
 connect(Port, MapID) ->
@@ -24,7 +24,7 @@ connect(Port, MapID) ->
     {ok, Socket} = ranch_tcp:connect({127, 0, 0, 1}, Port, [{active, false}]),
 
     Msg1 = #pk_U2GS_Login_Normal{
-        platformAccount = "test_net",
+        platformAccount = "test_net" ++ integer_to_list(misc:milli_seconds()),
         platformName = "test",
         platformNickName = "",
         time = misc:seconds(),
@@ -34,12 +34,14 @@ connect(Port, MapID) ->
     send_msg(Socket, Msg1),
     recv_msg(Socket),
 
-    send_msg(Socket, #pk_GS2U_GoNewMap{tarMapID = MapID, fX = misc:rand(500, 5000) / 10, fY =  misc:rand(500, 3000) / 10}),
+    recv_msg(Socket),
+
+    send_msg(Socket, #pk_GS2U_GoNewMap{tarMapID = MapID, fX = misc:rand(500, 5000) / 10, fY = misc:rand(500, 3000) / 10}),
 
     timer:sleep(50),
     recv_msg(Socket),
-    send_msg(Socket, #pk_GS2U_GoNewMap{tarMapID = MapID, fX = misc:rand(500, 5000) / 10, fY =  misc:rand(500, 3000)/ 10}),
-    timer:sleep(300*60*1000),
+    send_msg(Socket, #pk_GS2U_GoNewMap{tarMapID = MapID, fX = misc:rand(500, 5000) / 10, fY = misc:rand(500, 3000) / 10}),
+    timer:sleep(300 * 60 * 1000),
     ok.
 
 send_msg(Socket, Msg) ->
@@ -47,14 +49,34 @@ send_msg(Socket, Msg) ->
     ranch_tcp:send(Socket, IoList1).
 
 recv_msg(Socket) ->
-
     case ranch_tcp:recv(Socket, 6, 50000) of
         {ok, Any} ->
             {Size, Left} = binary_lib:read_int32(Any),
             {Cmd, _} = binary_lib:read_int16(Left),
             {ok, MsgBin} = ranch_tcp:recv(Socket, Size - 6, 50000),
-            io:format("recv:~p~n", [netmsg:decode(Cmd, MsgBin)]),
+            Msg = netmsg:decode(Cmd, MsgBin),
+            handle(Socket, Msg),
             ok;
         _ ->
             skip
     end.
+
+
+handle(_Socket, #pk_GS2U_LoginResult{result = Ret, accountID = Aid, msg = Msg}) ->
+    io:format("LoginResult ~p acc ~p msg ~ts~n", [Ret, Aid, Msg]),
+    ok;
+handle(Socket, #pk_GS2U_UserPlayerList{info = Info}) ->
+    io:format("PlayerList ~w~n", [Info]),
+    case Info of
+        [] ->
+            send_msg(Socket, #pk_U2GS_RequestCreatePlayer{
+                name = "player" ++ integer_to_list(misc:milli_seconds()),
+                race = 1, career = 1,
+                sex = 1,   head = 1
+            });
+        [#pk_UserPlayerData{roleID = RoleID} | _ ] ->
+            send_msg(Socket, #pk_U2GS_SelPlayerEnterGame{roleID = RoleID})
+    end,
+    ok;
+handle(_Socket, Msg) ->
+    io:format("recv:~p~n", [Msg]).

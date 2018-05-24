@@ -19,7 +19,7 @@
 -export([start_link/0]).
 -export([mod_init/1, do_handle_call/3, do_handle_info/2, do_handle_cast/2]).
 
-login_(Ack)         -> ps:send(?MODULE, {login_req,Ack}).
+login_(Req)         -> ps:send(?MODULE, {login_req,Req}).
 logout_(AccountID)  -> ps:send(?MODULE, {logout, AccountID}).
 
 
