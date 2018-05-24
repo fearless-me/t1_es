@@ -70,7 +70,7 @@ set_pos(Pos) -> put('POSITION', Pos).
 get_pos()    ->
     case get('POSITION') of
         undefined ->
-            #vector3{x = misc:rand(500, 5000) / 10, y= 0, z = misc:rand(500, 3000) / 10};
+            #vector3{x = 100.0, y= 0, z = 100.0 };
         Position  -> Position
     end.
 

@@ -44,17 +44,20 @@ start_player_walk(Obj, Start, End) ->
     end,
     ok.
 
-start_player_walk_1(Obj, Start, End) ->
+start_player_walk_1(Obj, Start, _End) ->
     #r_map_obj{uid = Uid, move_speed = Speed} = Obj,
 
+    Mid = #vector3{x = 200.0, z = 400.0},
+    End = #vector3{x = 300.0, z = 150.0},
     Now = misc:milli_seconds(),
     Dir = vector3:subtract(End, Start),
-    Dist = vector3:dist(End, Start),
-    TotalTime = Dist / Speed * 1000,
-    PathList = make_path_list([], Start, [End]),
 
+    PathList = make_path_list([], Start, [Mid, End]),
+    TotalDist = lists:foldl(
+        fun(#r_move_pos{dist = DistCur}, Acc) -> Acc + DistCur end, 0, PathList),
+    TotalTime = TotalDist / Speed * 1000,
     ?WARN("~p start move from ~w to ~w, dist ~w, ~w(ms)",
-        [Uid, Start, End, Dist, TotalTime]),
+        [Uid, Start, End, TotalDist, TotalTime]),
 
     NewObj = Obj#r_map_obj{
         cur_move = ?EMS_WALK,
@@ -79,8 +82,7 @@ start_player_walk_1(Obj, Start, End) ->
             {#r_map_obj.face, Dir},
             {#r_map_obj.start_time, Now},
             {#r_map_obj.last_up_time, Now},
-            {#r_map_obj.total_move_time, TotalTime},
-            {#r_map_obj.total_move_time, 0},
+            {#r_map_obj.total_moved_time, 0},
             {#r_map_obj.stopped, false},
             {#r_map_obj.path_list, PathList}
         ]
@@ -154,6 +156,7 @@ update_role_walk(Obj, CurPos, PathList, MoveTime) ->
     {NewPos, NewPathList} = linear_pos(PathList, MoveDist),
     ?DEBUG("mapid ~p ~w move from ~w to ~w,tick move dist ~p",
         [self(), Obj#r_map_obj.uid, CurPos, NewPos, MoveDist]),
+    ?DEBUG("# ~p,~p",[NewPos#vector3.x, NewPos#vector3.z]),
     on_player_pos_change(Obj, NewPos),
 
     case NewPathList of
@@ -173,7 +176,7 @@ linear_pos([MovePos | PathList], MoveDist) ->
     if
         MoveDist == Dist -> {End, PathList};
         MoveDist < Dist -> linear_pos_1(Start, End, Dist, MoveDist);
-        true -> linear_pos(PathList, MoveDist)
+        true -> linear_pos(PathList, MoveDist - Dist)
     end.
 
 linear_pos_1(StartPos, EndPos, Dist, MoveDist) ->

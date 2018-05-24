@@ -30,7 +30,7 @@
 
 %%  移动相关
     cur_move, next_move, pos, start, dir, dest, face, vis_tile_idx,
-    start_time = 0, last_up_time = 0,  move_speed = 8,
+    start_time = 0, last_up_time = 0,  move_speed = 20,
     total_move_time = 0,   % 预估完成移动总时间
     total_moved_time = 0,  % 已经移动的总时间
     stopped, path_list = [],

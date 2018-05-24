@@ -40,7 +40,7 @@ connect(Port, MapID) ->
 
     timer:sleep(50),
     recv_msg(Socket),
-    send_msg(Socket, #pk_GS2U_GoNewMap{tarMapID = MapID, fX = misc:rand(500, 5000) / 10, fY = misc:rand(500, 3000) / 10}),
+%%    send_msg(Socket, #pk_GS2U_GoNewMap{tarMapID = MapID, fX = misc:rand(500, 5000) / 10, fY = misc:rand(500, 3000) / 10}),
     timer:sleep(300 * 60 * 1000),
     ok.
 
