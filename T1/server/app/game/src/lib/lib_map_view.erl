@@ -138,7 +138,7 @@ sync_add_to_vis_tile(Obj, VisTiles) ->
 add_to_vis_tile(Obj, VisTileIndex) ->
     ?assert(is_number(VisTileIndex) andalso VisTileIndex > 0),
 
-    ?DEBUG("add ~p to vis index ~p", [Obj#r_map_obj.uid, VisTileIndex]),
+%%    ?DEBUG("add ~p to vis index ~p", [Obj#r_map_obj.uid, VisTileIndex]),
     VisTile = get_vis_tile(VisTileIndex),
     add_to_vis_tile_1(lib_obj:obj_type(Obj), Obj#r_map_obj.uid, VisTileIndex, VisTile),
     ok.

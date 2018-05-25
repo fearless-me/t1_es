@@ -16,10 +16,15 @@
 %% API
 -export([player_update/2]).
 -export([player_update_pos/2]).
+
+%%
 -export([add_obj_to_ets/1]).
 -export([del_obj_to_ets/1]).
--export([get_player_size/0]).
--export([get_player/1]).
+
+%%
+-export([get_player/1, get_player_size/0]).
+
+%% obj
 -export([get_obj_pos/1]).
 -export([get_obj_dest_pos/1]).
 -export([get_obj_start_pos/1]).
@@ -31,12 +36,19 @@
 -export([get_obj_speed/1]).
 -export([get_obj_vis_tile_index/1, set_obj_vis_tile_index/2]).
 
+%% monster
+-export([get_monster/1, get_monster_size/0]).
+
+%% ets
 -export([get_npc_ets/0, get_monster_ets/0]).
 -export([get_pet_ets/0, get_player_ets/0]).
+
+%% map
 -export([get_map_id/0, get_line_id/0]).
 -export([get_map_hook/0]).
 
 
+%% define
 -define(MAP_MON_ETS, map_monster_ets__).
 -define(MAP_USR_ETS, map_player_ets__).
 -define(MAP_NPC_ETS, map_npc_ets__).
@@ -45,6 +57,7 @@
 -define(LINE_ID, line_id__).
 -define(MAP_HOOK, map_hook__).
 
+%%%-------------------------------------------------------------------
 init_ets(State) ->
     put(?MAP_ID,        State#r_map_state.map_id),
     put(?LINE_ID,       State#r_map_state.line_id),
@@ -54,6 +67,7 @@ init_ets(State) ->
     put(?MAP_MON_ETS,   State#r_map_state.monster),
     put(?MAP_HOOK,      State#r_map_state.hook_mod),
     ok.
+
 %%%-------------------------------------------------------------------
 get_map_id()        -> get(?MAP_ID).
 get_line_id()       -> get(?LINE_ID).
@@ -64,8 +78,8 @@ get_player_ets()    -> get(?MAP_USR_ETS).
 get_monster_ets()   -> get(?MAP_MON_ETS).
 
 %%%-------------------------------------------------------------------
-get_player(PlayerId) ->
-    case ets:lookup(lib_map_rw:get_player_ets(), PlayerId) of
+get_player(Uid) ->
+    case ets:lookup(lib_map_rw:get_player_ets(), Uid) of
         [#r_map_obj{} = Obj | _] -> Obj;
         _ -> undefined
     end.
@@ -74,17 +88,27 @@ get_player_size() ->
     ets:info( get_player_ets(), size ).
 
 %%%-------------------------------------------------------------------
-player_update(PlayerId, Elements)->
+player_update(Uid, Elements)->
     ets:update_element(
         lib_map_rw:get_player_ets(),
-        PlayerId, Elements),
+        Uid, Elements),
     ok.
 
-player_update_pos(PlayerId, Pos)->
+player_update_pos(Uid, Pos)->
     ets:update_element(
         lib_map_rw:get_player_ets(),
-        PlayerId, {#r_map_obj.pos, Pos}),
+        Uid, {#r_map_obj.cur_pos, Pos}),
     ok.
+
+%%%-------------------------------------------------------------------
+get_monster(Uid) ->
+    case ets:lookup(lib_map_rw:get_monster_ets(), Uid) of
+        [#r_map_obj{} = Obj | _] -> Obj;
+        _ -> undefined
+    end.
+
+get_monster_size() ->
+    ets:info( lib_map_rw:get_monster_ets(), size ).
 
 %%%-------------------------------------------------------------------
 add_obj_to_ets(#r_map_obj{type = ?OBJ_MON} = Obj) ->
@@ -102,18 +126,19 @@ del_obj_to_ets(_) ->
     ok.
 
 %%%-------------------------------------------------------------------
-get_obj_pos(Obj)                    -> Obj#r_map_obj.pos.
+get_obj_pos(Obj)                    -> Obj#r_map_obj.cur_pos.
 get_obj_move_state(Obj)             -> Obj#r_map_obj.cur_move.
-get_obj_start_pos(Obj)              -> Obj#r_map_obj.start.
-get_obj_dest_pos(Obj)               -> Obj#r_map_obj.dest.
+get_obj_start_pos(Obj)              -> Obj#r_map_obj.start_pos.
+get_obj_dest_pos(Obj)               -> Obj#r_map_obj.dest_pos.
 get_obj_move_dir(Obj)               -> Obj#r_map_obj.dir.
 get_obj_face_to(Obj)                -> Obj#r_map_obj.face.
-get_obj_moved_time(Obj)             -> Obj#r_map_obj.total_moved_time.
+get_obj_moved_time(Obj)             -> Obj#r_map_obj.moved_time.
 get_obj_move_diff_time(Obj, Now)    -> Now - Obj#r_map_obj.last_up_time.
 get_obj_speed(Obj)                  -> Obj#r_map_obj.move_speed.
 get_obj_vis_tile_index(Obj)         -> Obj#r_map_obj.vis_tile_idx.
 set_obj_vis_tile_index(Obj, Index)  -> Obj#r_map_obj{vis_tile_idx = Index}.
 
+%%%-------------------------------------------------------------------
 
 
 

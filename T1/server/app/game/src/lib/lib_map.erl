@@ -107,7 +107,7 @@ init_all_monster_1(Mdata)->
     ok = init_all_monster_2(Obj).
 
 init_all_monster_2(#r_map_obj{} = Obj) ->
-    VisIndex = lib_map_view:pos_to_vis_index(Obj#r_map_obj.pos),
+    VisIndex = lib_map_view:pos_to_vis_index(Obj#r_map_obj.cur_pos),
     lib_map_rw:add_obj_to_ets(Obj),
     lib_map_view:add_to_vis_tile(Obj, VisIndex),
     ?DEBUG("map ~p:~p create monster ~p, uid ~p, visIndex ~p",

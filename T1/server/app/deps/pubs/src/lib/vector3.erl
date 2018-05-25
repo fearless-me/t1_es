@@ -67,22 +67,22 @@ is_behind(Src, Dst, DstFace) ->
 %%
 behind(Src, Dst, Dist) ->
     % dir
-    Dir     = vector3:subtract(Src, Dst),
+    Dir = vector3:subtract(Src, Dst),
     % normalize
-    Normal  = vector3:normalized(Dir),
+    Normal = vector3:normalized(Dir),
     % *
-    Delta   = vector3:multi(Normal, -Dist),
+    Delta = vector3:multi(Normal, -Dist),
     % +
     vector3:add(Src, Delta).
 
 %%
 front(Src, Dst, Dist) ->
     % dir
-    Dir     = vector3:subtract(Src, Dst),
+    Dir = vector3:subtract(Src, Dst),
     % normalize
-    Normal  = vector3:normalized(Dir),
+    Normal = vector3:normalized(Dir),
     % *
-    Delta   = vector3:multi(Normal, Dist),
+    Delta = vector3:multi(Normal, Dist),
     % +
     vector3:add(Src, Delta).
 
@@ -105,7 +105,8 @@ dist(P1, P2) ->
 dist_sq(P1, P2) ->
     #vector3{x = X1, y = Y1, z = Z1} = P1,
     #vector3{x = X2, y = Y2, z = Z2} = P2,
-    X1 * X2 + Y1 * Y2 + Z1 * Z2.
+    X = X1 - X2, Y = Y1 - Y2, Z = Z1 - Z2,
+    X * X + Y * Y + Z * Z.
 
 %%
 linear_lerp(Src, Dst, Factor) ->
