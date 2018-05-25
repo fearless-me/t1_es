@@ -109,8 +109,8 @@ sync_movement_to_big_visual_tile(_Msg) ->
 sync_change_pos_visual_tile(_Obj, OldVisTileIndex, OldVisTileIndex) ->
     skip;
 sync_change_pos_visual_tile(Obj, OldVisTileIndex, NewVisTileIndex) ->
-    ?DEBUG("uid ~w vis_tile_index from ~w to ~w",
-        [Obj#r_map_obj.uid, OldVisTileIndex, NewVisTileIndex]),
+%%    ?DEBUG("uid ~w vis_tile_index from ~w to ~w",
+%%        [Obj#r_map_obj.uid, OldVisTileIndex, NewVisTileIndex]),
 
     del_from_vis_tile(Obj, OldVisTileIndex),
     {DecVisTile, AddVisTile} = vis_tile_add_dec(OldVisTileIndex, NewVisTileIndex),
@@ -175,7 +175,7 @@ add_to_vis_tile_1(_Type, _Uid, _VisTileIndex, _VisTile) ->
 del_from_vis_tile(Obj, VisTileIndex) ->
     ?assert(is_number(VisTileIndex) andalso VisTileIndex > 0),
 
-    ?DEBUG("del ~p from vis index ~p", [Obj#r_map_obj.uid, VisTileIndex]),
+%%    ?DEBUG("del ~p from vis index ~p", [Obj#r_map_obj.uid, VisTileIndex]),
     VisTile = get_vis_tile(VisTileIndex),
     del_from_vis_tile_1(lib_obj:obj_type(Obj), Obj#r_map_obj.uid, VisTileIndex, VisTile),
     ok.
@@ -215,14 +215,14 @@ sync_big_vis_tile_to_me(
 ) ->
     PlayerList = [{VisIndex, Players} ||
         #r_vis_tile{index = VisIndex, player = Players} <- VisTileList],
-    ?DEBUG("~nsrc:~w~nmsg:~w~ntar:~w", [Uid, Msg, PlayerList]),
+%%    ?DEBUG("~nsrc:~w~nmsg:~w~ntar:~w", [Uid, Msg, PlayerList]),
     ok;
 sync_big_vis_tile_to_me(_Obj, _VisTileList, _Msg) -> skip.
 
 sync_me_to_big_vis_tile(#r_map_obj{uid = Uid}, VisTileList, Msg) ->
     PlayerList = [{VisIndex, Players} ||
         #r_vis_tile{index = VisIndex, player = Players} <- VisTileList],
-    ?DEBUG("~nsrc:~w~nmsg:~w~ntar:~w", [Uid, Msg, PlayerList]),
+%%    ?DEBUG("~nsrc:~w~nmsg:~w~ntar:~w", [Uid, Msg, PlayerList]),
     ok.
 
 

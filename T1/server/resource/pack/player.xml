@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pack explain="玩家数据打包">
+	<!--
+	支持类型：bool,byte,short,int,bigint,float,double,string,any(保存方式为字符串),list
+	name：表名或者变量名
+	explain：注释
+	type：类型，当类型为list时，必须指定class结构
+	class：当指定class时，变量为某结构，只能是存在的结构；只有当type为list时，class才有效
+	sync：同步方式，有三种，3(广播),2(只同步给客户端自己),1(服务器自己使用)
+	save：是否保存数据库
+
+	注意事项：list结构中字段的sync和save属性会覆盖整个list的属性，any会被打成字符串保存，代码中会处理成term
+			 新增的map字段，必须从最后开始添加，如果修改类型或名字，或者中间添加字段，则需要停服清档
+	-->
+	<list name="r_array_1" explain="测试表1">
+		<field type="int" name="t_r_int" explain="测试int字段" />
+	</list>
+
+	<list name="r_array_2" explain="测试表2">
+		<field type="int" name="t_r_int" explain="测试int字段" sync="2" save="true"/>
+		<field type="list" class="r_array_1" name="t_r_array" explain="测试list字段" />
+	</list>
+
+	<map>
+		<field type="int" name="n_save_int" explain="测试int字段"/>
+		<field type="bool" name="t_bool" explain="测试bool字段"/>
+		<field type="byte" name="t_byte" explain="测试byte字段"/>
+		<field type="short" name="t_short" explain="测试short字段"/>
+		<field type="int" name="t_int" explain="测试int字段"/>
+		<field type="bigint" name="t_bigint" explain="测试bigint字段"/>
+		<field type="float" name="t_float" explain="测试float字段"/>
+		<field type="double" name="t_double" explain="测试double字段" save="true"/>
+		<field type="string" name="t_string" explain="测试string字段"/>
+		<field type="any" name="t_any1" explain="测试any1字段"/>
+		<field type="any" name="t_any2" explain="测试any2字段"/>
+		<field type="list" name="t_array" class="r_array_2" explain="测试list字段"/>
+	</map>
+</pack>

@@ -43,24 +43,24 @@ start_player_walk(Obj, Start, End) ->
     end,
     ok.
 
-test_path()->
+test_path() ->
     [
-        #vector3{x=150.0, z=150.0},
-        #vector3{x=200.0, z=150.0},
-        #vector3{x=250.0, z=200.0},
-        #vector3{x=300.0, z=50.00},
-        #vector3{x=350.0, z=250.0},
-        #vector3{x=250.0, z=350.0},
-        #vector3{x=200.0, z=200.0},
-        #vector3{x=50.00, z=300.0},
-        #vector3{x=100.0, z=150.0},
-        #vector3{x=50.00, z=100.0},
-        #vector3{x=220.0, z=80.01}
+        #vector3{x = 150.0, z = 150.0},
+        #vector3{x = 200.0, z = 150.0},
+        #vector3{x = 250.0, z = 200.0},
+        #vector3{x = 300.0, z = 50.00},
+        #vector3{x = 350.0, z = 250.0},
+        #vector3{x = 400.0, z = 200.0},
+        #vector3{x = 420.0, z = 300.0},
+        #vector3{x = 25.00, z = 280.0},
+        #vector3{x = 30.01, z = 230.0},
+        #vector3{x = 40.01, z = 100.0},
+        #vector3{x = 180.0, z = 250.0}
     ].
 
 test_dir() ->
-   S = #vector3{x=150.0, z=150.0},
-   E =  #vector3{x=200.0, z=150.0},
+    S = #vector3{x = 150.0, z = 150.0},
+    E = #vector3{x = 200.0, z = 150.0},
     vector3:subtract(E, S).
 
 start_player_walk_1(Obj, Start, _End) ->
@@ -154,16 +154,16 @@ update_player_move(Obj, ?EMS_WALK) ->
                     {#r_map_obj.moved_time, MovedTime + Delta}
                 ]
             );
-        {?ENR_TOBECONTINUED, NewPath, TarDir, Dest} ->
+        {?ENR_TOBECONTINUED, NewPath, TarDir, Dest, MoreMoveTime} ->
             lib_map_rw:player_update(
                 Obj#r_map_obj.uid,
                 [
                     {#r_map_obj.path_list, NewPath},
-                    {#r_map_obj.dir,  TarDir},
+                    {#r_map_obj.dir, TarDir},
                     {#r_map_obj.face, TarDir},
                     {#r_map_obj.dest_pos, Dest},
                     {#r_map_obj.last_up_time, Now},
-                    {#r_map_obj.moved_time, 0}
+                    {#r_map_obj.moved_time, MoreMoveTime}
                 ]
             );
         _ ->
@@ -185,38 +185,39 @@ update_role_walk(Obj, CurPos, [], _MoveTime) ->
     ?ENR_ARRIVE;
 update_role_walk(Obj, CurPos, PathList, MoveTime) ->
     MoveDist = lib_map_rw:get_obj_speed(Obj) * MoveTime / 1000,
-    {NewPos, NewPathList} = linear_pos(PathList, MoveDist, keep),
+    {NewPos, NewPathList, MoreDist} = linear_pos(PathList, MoveDist, keep),
 
     ?DEBUG("mapid ~p ~w move from ~w to ~w,tick move dist ~p",
         [self(), Obj#r_map_obj.uid, CurPos, NewPos, MoveDist]),
-    ?DEBUG("# ~p,~p",[NewPos#vector3.x, NewPos#vector3.z]),
+%%    ?DEBUG("# ~p,~p",[NewPos#vector3.x, NewPos#vector3.z]),
     on_player_pos_change(Obj, NewPos),
 
     #r_map_obj{dir = Dir, dest_pos = Dst} = Obj,
+    MoreTime = misc:ceil(MoreDist / lib_map_rw:get_obj_speed(Obj) * 1000),
     case NewPathList of
         ?ENR_TOBECONTINUED -> ?ENR_TOBECONTINUED;
-        [] -> {?ENR_TOBECONTINUED, [], Dir, Dst};
-        [#r_move_pos{end_pos = End, dir = TarDir} | _ ] ->
-            ?DEBUG("new dest ~w, dir ~w",[End, TarDir]),
-            {?ENR_TOBECONTINUED, NewPathList, TarDir, End}
+        [] -> {?ENR_TOBECONTINUED, [], Dir, Dst, MoreTime};
+        [#r_move_pos{end_pos = End, dir = TarDir} | _] ->
+%%            ?DEBUG("new dest ~w, dir ~w",[End, TarDir]),
+            {?ENR_TOBECONTINUED, NewPathList, TarDir, End, MoreTime}
     end.
 
 %%%-------------------------------------------------------------------
 -spec linear_pos(vector3(), list(), keep | changed) ->
-    {vector3(), list() | ?ENR_TOBECONTINUED}.
+    {vector3(), list() | ?ENR_TOBECONTINUED, float()}.
 
 linear_pos([MovePos] = PL, MoveDist, Flag) ->
     #r_move_pos{dist = Dist, start_pos = Start, end_pos = End} = MovePos,
     if
         MoveDist < Dist -> linear_pos_1(Start, End, Dist, MoveDist, PL, Flag);
-        true            -> {End, []}
+        true -> {End, [], 0}
     end;
 linear_pos([MovePos | PathList] = PL, MoveDist, Flag) ->
     #r_move_pos{dist = Dist, start_pos = Start, end_pos = End} = MovePos,
     if
-        MoveDist == Dist -> {End, PathList};
-        MoveDist < Dist  -> linear_pos_1(Start, End, Dist, MoveDist, PL, Flag);
-        true             -> linear_pos(PathList, MoveDist - Dist, changed)
+        MoveDist == Dist -> {End, PathList, 0};
+        MoveDist < Dist -> linear_pos_1(Start, End, Dist, MoveDist, PL, Flag);
+        true -> linear_pos(PathList, MoveDist - Dist, changed)
     end.
 
 %%%-------------------------------------------------------------------
@@ -225,20 +226,20 @@ linear_pos_1(StartPos, EndPos, Dist, MoveDist, PathList, Flag) ->
     R2 = if R1 < 0 -> 0; true -> R1 end,
     R3 = if R2 > 1 -> 1; true -> R2 end,
     Dst = vector3:linear_lerp(StartPos, EndPos, R3),
-    linear_pos_2(Dst, PathList, Flag).
+    linear_pos_2(Dst, PathList, MoveDist, Flag).
 
 %%%-------------------------------------------------------------------
-linear_pos_2(Dst, _PathList, keep) ->
-    {Dst, ?ENR_TOBECONTINUED};
-linear_pos_2(Dst, PathList, changed) ->
-    {Dst, PathList}.
+linear_pos_2(Dst, _PathList, _MoveDist, keep) ->
+    {Dst, ?ENR_TOBECONTINUED, 0};
+linear_pos_2(Dst, PathList, MoveDist, changed) ->
+    {Dst, PathList, MoveDist}.
 
 %%%-------------------------------------------------------------------
 on_player_pos_change(undefined, _TarPos) ->
     ok;
 on_player_pos_change(Obj, TarPos) ->
     %
-    ?DEBUG("~w pos change ~w", [Obj#r_map_obj.uid, TarPos]),
+%%    ?DEBUG("~w pos change ~w", [Obj#r_map_obj.uid, TarPos]),
 
     %
     OldVisIndex = lib_map_view:pos_to_vis_index(lib_map_rw:get_obj_pos(Obj)),
