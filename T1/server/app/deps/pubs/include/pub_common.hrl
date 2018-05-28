@@ -13,6 +13,16 @@
 -define(ETSRC,{read_concurrency,true}).
 -define(ETSWC,{write_concurrency,true}).
 
+%%
+-define(ST_GS,      1).
+-define(ST_CGS,     2).
+
+%%
+-define(SS_INIT,    0).
+-define(SS_READY,   1).
+-define(SS_DONE,    2).
+
+
 -record(kv,{k, v}).
 -define(ServerState, serverStateEts_).
 

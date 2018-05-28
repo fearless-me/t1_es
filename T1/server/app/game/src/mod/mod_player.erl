@@ -36,19 +36,20 @@
 -export([on_init/1, on_data/3, on_close/3]).
 -export([on_info_msg/2, on_call_msg/3, on_cast_msg/2, on_net_msg/2]).
 -export([socket/1, socket/0]).
-%%%-------------------------------------------------------------------
 
+%%-------------------------------------------------------------------
 -spec shutdown(How) -> ok when
     How :: read | write | read_write.
 shutdown(How) -> 
     tcp_handler:shutdown(socket(), How).
 
 stop(Reason)->
+    ?INFO("~p stopped with reason ~p",[self(), Reason]),
     tcp_handler:active_stop(Reason).
 
 direct_stop()->
     erlang:exit(self(), normal).
-%%%-------------------------------------------------------------------
+%%-------------------------------------------------------------------
 send(IoList) when is_list(IoList)->
     tcp_handler:direct_send_net_msg(socket(), IoList);
 send(Msg) ->
@@ -59,7 +60,7 @@ send(Msg) ->
 direct_send(IoList)->
     tcp_handler:direct_send_net_msg(socket(), IoList).
 
-%%%-------------------------------------------------------------------
+%%-------------------------------------------------------------------
 on_init(Socket) ->
     {Ip, Port} = misc:peername(Socket),
     socket(Socket),
@@ -67,17 +68,23 @@ on_init(Socket) ->
     ?DEBUG("client connected: ~p ~ts:~p", [Socket, Ip, Port]),
     {ok, #r_player_state{}}.
 
+%%-------------------------------------------------------------------
 on_data(Socket, Data, S)->
 %%    ?DEBUG("~p,recieve:~p",[Socket, Data]),
 %%    direct_send([Data]),
     tcp_codec:decode(fun mod_player:on_net_msg/2, Socket, Data),
     S.
 
+%%-------------------------------------------------------------------
 on_close(Socket, Reason, S) ->
     lib_player:offline(),
     ?INFO("~p socket ~p close,reason:~p",[self(), Socket, Reason]),
     S.
-%%%-------------------------------------------------------------------
+
+%%-------------------------------------------------------------------
+on_info_msg({kick, Reason}, S) ->
+    mod_player:stop(Reason),
+    S;
 on_info_msg({login_ack, Msg}, S) ->
     ?DEBUG("login_ack:~p",[Msg]),
     lib_player:login_ack(Msg),
@@ -100,24 +107,30 @@ on_info_msg(return_to_pre_map_ack, S) ->
 on_info_msg(passive_change_req, S) ->
     lib_player:return_to_pre_map(),
     S;
+on_info_msg({teleport, NewPos}, S) ->
+    lib_player:teleport(NewPos),
+    S;
 on_info_msg(Info, S) ->
-    ?DEBUG("info:~p",[Info]),
+    lib_player_logic:on_info_msg(Info),
     S.
 
+%%-------------------------------------------------------------------
 on_call_msg(Request, From, S)->
     ?DEBUG("call ~p from ~p",[Request, From]),
-    {true, S}.
+    Ret = lib_player_logic:on_call_msg(Request, From),
+    {Ret, S}.
 
+%%-------------------------------------------------------------------
 on_cast_msg(Request, S) ->
-    ?DEBUG("cast:~p",[Request]),
+    lib_player_logic:on_cast_msg(Request),
     S.
 
-
+%%-------------------------------------------------------------------
 on_net_msg(Cmd, Msg)->
     ?DEBUG("net msg ~p:~p",[Cmd, Msg]),
     ?TRY_CATCH( lib_route:route(Msg) ),
     ok.
 
-%%%-------------------------------------------------------------------
+%%-------------------------------------------------------------------
 socket(Socket) -> put(?SocketKey, Socket).
 socket()-> get(?SocketKey).

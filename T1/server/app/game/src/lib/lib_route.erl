@@ -27,12 +27,12 @@ route(Msg) ->
         ?PS_INIT -> ok;
         ?PS_VERIFY -> ok;
         ?PS_WAIT_LIST -> ok;
-        ?PS_WAIT_CREATE -> ok;
-        ?PS_WAIT_SELECT -> ok;
+        ?PS_WAIT_SELECT_CREATE -> ok;
         ?PS_WAIT_LOAD -> ok;
         ?PS_WAIT_ENTER -> ok;
         ?PS_GAME -> ok;
         ?PS_CHANGE_MAP -> ok;
+        ?PS_OFFLINE -> ok;
         _ -> ok
     end,
     %%2. route

@@ -34,18 +34,12 @@
 
 -define(DbsIniCfg, dbsIniConfig).
 
--define(SERVER_STATUS_INIT, 0).
--define(SERVER_STATUS_READY, 1).
--define(SERVER_STATUS_DONE, 2).
-
--define(SERVER_TYPE_GS, gs).
--define(SERVER_TYPE_CENTER, center).
 -record(sever_info,{
     db_id = 0,
     type = none,
     node = '',
     name = "",
-    status = ?SERVER_STATUS_INIT,
+    status = 0,
     src_pid = undefined,
     worker_pid = undefined
 }).

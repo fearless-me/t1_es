@@ -22,8 +22,6 @@
 login_(Req)         -> ps:send(?MODULE, {login_req,Req}).
 logout_(AccountID)  -> ps:send(?MODULE, {logout, AccountID}).
 
-
--record(login_state, {lt = 1800, in = 0, lq = undefined}).
 %%%===================================================================
 %%% public functions
 %%%===================================================================
@@ -46,9 +44,9 @@ do_handle_call(Request, From, State) ->
 
 %%--------------------------------------------------------------------
 do_handle_info({login_req, Req}, State) ->
-    {noreply, login_1(Req, State)};
+    {noreply, lib_login:login_1(Req, State)};
 do_handle_info({logout, AccountID}, State) ->
-    {noreply, logout_1(AccountID, State)};
+    {noreply, lib_login:logout_1(AccountID, State)};
 do_handle_info(Info, State) ->
     ?ERROR("undeal info ~w", [Info]),
     {noreply, State}.
@@ -57,30 +55,5 @@ do_handle_info(Info, State) ->
 do_handle_cast(Request, State) ->
     ?ERROR("undeal cast ~w", [Request]),
     {noreply, State}.
-
-%%--------------------------------------------------------------------
-login_1(#r_login_req{
-    player_pid = Pid,
-    access_token = Token,
-    plat_account_name = PlatAccount
-}, S) ->
-    Ack = verify(PlatAccount, Token),
-    login_2(Pid, Ack, S).
-
-login_2(Pid, {false, Error}, S)->
-    ps:send(Pid, {login_ack, #r_login_ack{error = Error}}),
-    S;
-login_2(Pid, {true, PlatAccount}, S)->
-    AccountInfo = load_account_info(PlatAccount),
-    ps:send(Pid, {login_ack, #r_login_ack{account_info = AccountInfo}}),
-    S#login_state{in = S#login_state.in + 1}.
-
-verify(PlatAccount, _Token) ->
-    {true, PlatAccount}.
-
-load_account_info(Acc) -> lib_db:load_account_info(Acc).
-%%--------------------------------------------------------------------
-logout_1(_AccountID, S) ->
-    S#login_state{in = S#login_state.in - 1}.
 
 

@@ -13,6 +13,10 @@
 
 -define(ETS_ONLINE, ets_online).
 -define(ETS_PLAYER_LIST, ets_playerlist).
+-define(ETS_GS_DBS, ets_db_info).
 
+
+%%
+-define(DBS_SVR_MGR, svr_worker_manager).
 
 -endif.

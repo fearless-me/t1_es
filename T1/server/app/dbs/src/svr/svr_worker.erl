@@ -11,6 +11,7 @@
 
 -behaviour(gen_serverw).
 -include("dbs_private.hrl").
+-include("pub_common.hrl").
 -include("logger.hrl").
 
 %% define
@@ -68,6 +69,9 @@ do_handle_info({nodedown, NodeName}, State) ->
     {stop, normal, State};
 do_handle_info(checkAlive, State) ->
     check_alive(State);
+do_handle_info({ready_now, From}, State) ->
+    ready(State#state.db_id, From),
+    {noreply, State};
 do_handle_info(Info, State) ->
     ?ERROR("undeal info ~w", [Info]),
     {noreply, State}.
@@ -94,8 +98,16 @@ tick_msg() ->
     erlang:send_after(?CheckAliveTime, self(), checkAlive),
     ok.
 
+%%--------------------------------------------------------------------
 nodedown(ServerNode, #state{db_id = DBId, register_name = RegName}) ->
     ps:send(svr_worker_manager, {nodedown, ServerNode, DBId}),
     ?WARN("nodedown[~p], stop worker[~p][~p] now",
         [ServerNode, self(), RegName]),
+    ok.
+
+%%--------------------------------------------------------------------
+ready(DbId, From) ->
+    ?WARN("server ~p  ~p ready,", [DbId, erlang:node(From)]),
+    svr_worker_manager:update_server_status(DbId, ?SS_DONE),
+    db_gs_interface:send_2_gs(DbId, {start_now, self()}),
     ok.

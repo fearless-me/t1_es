@@ -35,7 +35,7 @@ get_player_cache_num() ->
 get_mysql_pool_connections() ->
     econfig:get_integer(?DbsIniCfg, mysql_pool, connections, 10).
 
-get_mysql_player_db_table_partition()-> 5.
+get_mysql_player_db_table_partition()-> 1.
 
 get_mysql_pool_max_connections() ->
     econfig:get_integer(?DbsIniCfg, mysql_pool, max_connections, 20).

@@ -4,23 +4,32 @@
 %%% @doc
 %%%
 %%% @end
-%%% Created : 12. 一月 2018 10:40
+%%% Created : 28. 五月 2018 14:16
 %%%-------------------------------------------------------------------
--module(svr_worker_manager).
+-module(gs_db_manager).
 -author("mawenhong").
 
 -behaviour(gen_serverw).
--include("dbs_private.hrl").
 -include("logger.hrl").
+-include("pub_common.hrl").
+-include("common_record.hrl").
+-include("gsdef.hrl").
 
-%% define
--record(state, {}).
+-export([all_db_connected/0]).
 
 %% API
 -export([start_link/0]).
--export([update_server_status/2]).
--export([add_server_info/1, get_server_info/1,del_server_info/1]).
 -export([mod_init/1, do_handle_call/3, do_handle_info/2, do_handle_cast/2]).
+
+
+all_db_connected()->
+    ets:foldl(
+        fun
+            (_, false)-> false;
+            (#r_gs_db_info{status = Status}, _)->  Status =:= ?SS_DONE
+        end, true, ?ETS_GS_DBS).
+
+
 
 %%%===================================================================
 %%% public functions
@@ -29,32 +38,14 @@ start_link() ->
     gen_serverw:start_link({local, ?MODULE}, ?MODULE, [], []).
 
 %%%===================================================================
-%%% API
-%%%===================================================================
-add_server_info(Info)-> ets:insert(?ServerEts, Info).
-
-get_server_info(DBId) ->
-    case ets:lookup(?ServerEts, DBId) of
-        [#sever_info{} = Info] ->
-            Info;
-        _ ->
-            undefined
-    end.
-
-del_server_info(DBId) -> ets:delete(?ServerEts, DBId).
-
-update_server_status(DbId, Status) ->
-    ets:update_element(?ServerEts, DbId, {#sever_info.status, Status}).
-
-%%%===================================================================
 %%% Internal functions
 %%%===================================================================	
 mod_init(_Args) ->
     erlang:process_flag(trap_exit, true),
     erlang:process_flag(priority, high),
-    ets:new(?ServerEts,
-        [public, named_table, {keypos, #sever_info.db_id}, {read_concurrency, true}]),
-    {ok, #state{}}.
+    ets:new(?ETS_GS_DBS, [named_table, public, {keypos, #r_gs_db_info.node}, ?ETSRC, ?ETSWC]),
+    start_all_db_worker(),
+    {ok, #{}}.
 
 %%--------------------------------------------------------------------	
 do_handle_call(Request, From, State) ->
@@ -62,12 +53,6 @@ do_handle_call(Request, From, State) ->
     {reply, ok, State}.
 
 %%--------------------------------------------------------------------
-do_handle_info({register, Info}, State) ->
-    svr_worker_manager_logic:register(Info),
-    {noreply, State};
-do_handle_info({nodedown, ServerNode, DBId}, State) ->
-    svr_worker_manager_logic:worker_nodedown(ServerNode, DBId),
-    {noreply, State};
 do_handle_info(Info, State) ->
     ?ERROR("undeal info ~w", [Info]),
     {noreply, State}.
@@ -76,3 +61,29 @@ do_handle_info(Info, State) ->
 do_handle_cast(Request, State) ->
     ?ERROR("undeal cast ~w", [Request]),
     {noreply, State}.
+%%--------------------------------------------------------------------
+start_all_db_worker() ->
+    List = gs_core:get_db_nodes(),
+    lists:foreach(
+        fun(Node)->
+            start_worker_1(Node)
+        end , List),
+    ok.
+
+%%--------------------------------------------------------------------
+start_worker_1(Node) ->
+    case ets:lookup(?ETS_GS_DBS, Node) of
+        [#r_gs_db_info{}] ->
+            ok;
+        [] ->
+            connect_db_action(Node)
+    end,
+    ok.
+
+%%--------------------------------------------------------------------
+connect_db_action(DbNodeName) ->
+    {ok, WorkerPid} = gs_db_supervisor:start_child(DbNodeName),
+    ?INFO("gs to db ~p 's window ~p start ok",[DbNodeName, WorkerPid]),
+    ok.
+
+

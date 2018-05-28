@@ -26,7 +26,7 @@
 -export([loaded_player/1]).
 -export([offline/0]).
 -export([add_to_world/0, go_to_new_map/2, return_to_pre_map/0]).
--export([teleport/1]).
+-export([teleport/1, teleport_/1]).
 
 init() ->
     lib_player_rw:set_player_status(?PS_INIT),
@@ -68,23 +68,30 @@ login_ack_success(sucess, AccountIfo) ->
     lib_db:load_player_list_(self(), AccountIfo#p_account.accountID),
     ok;
 login_ack_success(Reason, AccountIfo) ->
+    #p_account{accountID = Aid} = AccountIfo,
     ?WARN("acc ~w register process ~p faild with ~w",
-        [AccountIfo#p_account.accountID, self(), Reason]),
+        [Aid, self(), Reason]),
     mod_player:send(#pk_GS2U_LoginResult{
         result = -1,
         msg = io_lib:format("ErrorCode:~p", [Reason])
     }),
     lib_player_rw:set_player_status(?PS_ERROR),
     mod_player:shutdown(read),
+    kick_account(Aid),
+    ok.
+
+kick_account(Aid) ->
+    Name = misc:create_process_name(player, [Aid]),
+    ps:send(Name, {kick, repeat_login}),
     ok.
 
 %%%-------------------------------------------------------------------
 load_all_role_info([]) ->
-    lib_player_rw:set_player_status(?PS_WAIT_CREATE),
+    lib_player_rw:set_player_status(?PS_WAIT_SELECT_CREATE),
     mod_player:send(#pk_GS2U_UserPlayerList{}),
     ok;
 load_all_role_info(_RoleList) ->
-    lib_player_rw:set_player_status(?PS_WAIT_SELECT),
+    lib_player_rw:set_player_status(?PS_WAIT_SELECT_CREATE),
     mod_player:send(#pk_GS2U_UserPlayerList{}),
     ok.
 %%%-------------------------------------------------------------------
@@ -95,11 +102,13 @@ create_player_(Req) ->
 
 %%%-------------------------------------------------------------------
 create_player_ack(#r_create_player_ack{error = 0, uid = PlayerId}) ->
+    lib_player_rw:set_player_status(?PS_WAIT_SELECT_CREATE),
     init_on_create(),
     mod_player:send(#pk_GS2U_CreatePlayerResult{
         errorCode = 0, roleID = PlayerId
     });
 create_player_ack(#r_create_player_ack{error = Err}) ->
+    lib_player_rw:set_player_status(?PS_WAIT_SELECT_CREATE),
     mod_player:send(#pk_GS2U_CreatePlayerResult{errorCode = Err}).
 
 %%%-------------------------------------------------------------------
@@ -135,6 +144,8 @@ add_to_world() ->
     lib_player_rw:set_pos(Ack#r_change_map_ack.pos),
     ok.
 
+%%-------------------------------------------------------------------
+teleport_(NewPos) -> ps:send(self(), {teleport, NewPos}).
 
 %%-------------------------------------------------------------------
 teleport(NewPos) -> teleport_1(lib_player_rw:get_map_pid(), NewPos).

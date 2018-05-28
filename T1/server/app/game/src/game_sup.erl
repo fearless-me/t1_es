@@ -37,15 +37,17 @@ start() ->
     wrapper({"logger", stdio,               ?Wrap(start_logs(SupPid))}),
     wrapper({"error Logger",                ?Wrap(start_errlog(SupPid))}),
     wrapper({"sentinel",                    ?Wrap(start_sentinel(SupPid))}),
-    wrapper({"config init",                 ?Wrap(start_conf(SupPid))}),
+    wrapper({"config init",                 ?Wrap(start_conf(SupPid, "game.ini"))}),
     wrapper({"monitor/gc/vms",              ?Wrap(start_gc_vm(SupPid, 0.5))}),
     wrapper({"test network 15555",          ?Wrap(start_listener_15555(SupPid))}),
     wrapper({"test network 25555",          ?Wrap(start_listener_25555(SupPid))}),
     wrapper({"start map root supervisor",   ?Wrap(start_map_root_supervisor(SupPid))}),
     wrapper({"start login window",          ?Wrap(start_login(SupPid))}),
     wrapper({"start _foundation",           ?Wrap(start_foundation(SupPid))}),
+    wrapper({"start db window",             ?Wrap(start_db_worker(SupPid))}),
     wrapper({"start auto compile and load", ?Wrap(start_auto_reload(SupPid))}),
 
+    sentinel_server:wait_all_started(),
     sentinel_server:status(),
     sentinel_server:ready(true),
     {ok, SupPid}.
@@ -79,8 +81,8 @@ start_sentinel(SupPid) ->
     {ok, _} = ?CHILD(SupPid, sentinel_server, worker),
     ok.
 
-start_conf(_SupPid) ->
-%%    mod_ini_conf:init_conf("dbs.ini"),
+start_conf(_SupPid, FileName) ->
+    gs_core:load_ini_conf(FileName),
     ok.
 
 
@@ -116,7 +118,11 @@ start_login(SupPid) ->
     {ok, _} = ?CHILD(SupPid, mod_login, worker),
     ok.
 
-
 start_map_root_supervisor(SupPid)->
     {ok, _} = ?CHILD(SupPid, map_root_supervisor, supervisor),
+    ok.
+
+start_db_worker(SupPid)->
+    {ok, _} = ?CHILD(SupPid, gs_db_supervisor, supervisor),
+    {ok, _} = ?CHILD(SupPid, gs_db_manager, worker),
     ok.

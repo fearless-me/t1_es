@@ -17,6 +17,7 @@
 -record(state, {}).
 
 %% API
+-export([wait_all_started/0]).
 -export([status/0, status_/0]).
 -export([ready/1, ready/0]).
 -export([start_link/0]).
@@ -46,6 +47,24 @@ ready()->
         _ -> false
     end.
 
+
+wait_all_started()->
+    case catch wait_all_started_1() of
+        true -> skip;
+        _ -> timer:sleep(5000), wait_all_started()
+    end.
+
+wait_all_started_1() ->
+    wrapper_check(is_connect_all_db(), "connect to all dbs"),
+    true.
+
+is_connect_all_db() ->
+    gs_db_manager:all_db_connected().
+
+
+
+wrapper_check(true, _) -> skip;
+wrapper_check(_, Msg) -> ?WARN("wait ~ts done", [Msg]), throw(wait).
 %%%===================================================================
 %%% Internal functions
 %%%===================================================================	

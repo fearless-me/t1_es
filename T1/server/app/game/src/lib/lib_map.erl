@@ -142,8 +142,10 @@ tick_1(_S) ->
     ok.
 
 tick_obj()->
+    tick_update_before(),
     tick_player(),
     tick_monster(),
+    tick_update_after(),
     ok.
 
 tick_player() ->
@@ -167,6 +169,11 @@ tick_monster() ->
 tick_monster_1(Obj) ->
     ?TRY_CATCH(lib_move:update(Obj)),
     ok.
+
+%%%-------------------------------------------------------------------
+tick_update_before() ->  ok.
+
+tick_update_after() -> ok.
 
 %%%-------------------------------------------------------------------
 real_stop_now(0) ->
