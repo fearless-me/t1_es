@@ -65,7 +65,7 @@ do_handle_call(Request, From, State) ->
 do_handle_info({register, Info}, State) ->
     svr_worker_manager_logic:register(Info),
     {noreply, State};
-do_handle_info({nodedown, ServerNode, DBId}, State) ->
+do_handle_info({nodedown, {ServerNode, DBId}}, State) ->
     svr_worker_manager_logic:worker_nodedown(ServerNode, DBId),
     {noreply, State};
 do_handle_info(Info, State) ->

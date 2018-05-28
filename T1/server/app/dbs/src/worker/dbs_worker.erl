@@ -33,13 +33,13 @@ start_link(Index) ->
 %%% API
 %%%===================================================================
 save_player_data_(Worker, Data) ->
-    ps:send(Worker, {save_player_data, Data}).
+    ps:send(Worker, save_player_data, Data).
 
 save_player_data(Worker, Data) ->
     gen_server2:call(Worker,{save_player_data, Data}, infinity).
 
 load_player_data_(Worker, PlayerID) ->
-    ps:send(Worker, {load_player_data, {self(), PlayerID}}).
+    ps:send(Worker, load_player_data, {self(), PlayerID}).
 
 load_player_data(Worker, PlayerID) ->
     gen_server2:call(Worker, {load_player_data,PlayerID}, infinity).

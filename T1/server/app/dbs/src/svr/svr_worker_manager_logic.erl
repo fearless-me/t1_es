@@ -26,8 +26,8 @@ worker_nodedown(ServerNode, ServerID) ->
 register({FromPid, DBId, ServerType}) ->
     case can_register(sentinel_server:ready(), FromPid, DBId) of
         true -> do_register(FromPid, DBId, ServerType);
-        {true, Worker} -> ps:send(FromPid, {register_ack, {true, Worker}});
-        Error -> ps:send(FromPid, {register_ack, Error})
+        {true, Worker} -> ps:send_with_from(FromPid, register_ack, {true, Worker});
+        Error -> ps:send_with_from(FromPid, register_ack, Error)
     end,
     ok.
 
@@ -46,14 +46,14 @@ do_register(FromPid, ServerId, ServerType) ->
             },
 
             svr_worker_manager:add_server_info(Info),
-            ps:send2(FromPid, {register_ack, {true, Pid}}),
+            ps:send_with_from(FromPid, register_ack, {true, Pid}),
             ?WARN("id[~p],type[~p],node[~p],wnd[~p],worker[~p] registered, wait ack",
                 [ServerId, ServerType, GSNode, FromPid, Pid]),
             ok;
         V ->
             ?ERROR("regiseter gameserver[~p] failed, reason:[~p]",
                 [ServerId, V]),
-            ps:send(FromPid, {register_ack, {false, V}}),
+            ps:send_with_from(FromPid, register_ack, {false, V}),
             ok
     end,
     ok.

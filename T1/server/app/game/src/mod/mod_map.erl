@@ -36,7 +36,7 @@ player_teleport(MapPid, Req) ->
 
 %%
 player_move_(MapPid, Req) ->
-    ps:send(MapPid, {start_move, Req}).
+    ps:send(MapPid, start_move, Req).
 
 status_(MapPid) -> ps:send(MapPid, status).
 

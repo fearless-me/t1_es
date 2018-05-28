@@ -82,7 +82,7 @@ login_ack_success(Reason, AccountIfo) ->
 
 kick_account(Aid) ->
     Name = misc:create_process_name(player, [Aid]),
-    ps:send(Name, {kick, repeat_login}),
+    ps:send(Name, kick, repeat_login),
     ok.
 
 %%%-------------------------------------------------------------------
@@ -145,7 +145,7 @@ add_to_world() ->
     ok.
 
 %%-------------------------------------------------------------------
-teleport_(NewPos) -> ps:send(self(), {teleport, NewPos}).
+teleport_(NewPos) -> ps:send(self(), teleport, NewPos).
 
 %%-------------------------------------------------------------------
 teleport(NewPos) -> teleport_1(lib_player_rw:get_map_pid(), NewPos).

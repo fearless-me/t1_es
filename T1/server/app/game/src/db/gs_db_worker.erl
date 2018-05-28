@@ -54,7 +54,7 @@ do_handle_info(start_connect, State) ->
     connect_db(maps:get(node, State)),
     {noreply, State};
 %%{{registerAck,{true,<8951.446.0>}},<8951.219.0>}
-do_handle_info({{register_ack, Data}, FromPid}, State) ->
+do_handle_info({register_ack, Data, FromPid}, State) ->
     register_ack(FromPid, Data),
     {noreply, State};
 do_handle_info({nodedown, NodeName}, State) ->
@@ -128,7 +128,7 @@ register_me_action(DbNode) ->
     ServerType = gs_core:server_type(),
 
     % 告诉跨服，保存本节点
-    ps:send({?DBS_SVR_MGR, DbNode}, {register, {self(), DBId, ServerType}}),
+    ps:send({?DBS_SVR_MGR, DbNode}, register, {self(), DBId, ServerType}),
     ets:insert(?ETS_GS_DBS, #r_gs_db_info{node = DbNode, status = ?SS_READY}),
     ?WARN("[~p][~p]wait dbs regiseter ack", [self(), DBId]),
     ok.
@@ -139,7 +139,7 @@ register_ack(MgrPid, {true, RemoteWorkerPid}) ->
     NodeName = erlang:node(MgrPid),
     ?WARN("[~p][~p]register to dbs[~p] ok, worker[~p], start bind",
         [self(), DbID, NodeName, RemoteWorkerPid]),
-    ps:send(RemoteWorkerPid, {ready_now, self()}),
+    ps:send(RemoteWorkerPid, ready_now, self()),
     ok;
 register_ack(MgrPid, {false, Reason}) ->
     NodeName = erlang:node(MgrPid),
@@ -161,7 +161,7 @@ start_now(RemoteWorker) ->
 
 %%--------------------------------------------------------------------
 nodedown(NodeName) ->
-    ?WARN("centerServer Node[~p] is down", [NodeName]),
+    ?WARN("dbs Node[~p] is down", [NodeName]),
     ets:update_element(
         ?ETS_GS_DBS,
         NodeName,

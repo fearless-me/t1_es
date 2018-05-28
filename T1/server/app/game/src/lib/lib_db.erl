@@ -28,17 +28,16 @@ load_account_info(AccName) ->
     }.
 
 load_player_list_(Pid, _AccId) ->
-    ps:send(Pid, {load_player_list_ack, []}).
+    ps:send(Pid, load_player_list_ack, []).
 
 load_player_data_(Pid, AccId, PlayerId) ->
-    ps:send(Pid,
-        {
-            load_player_data_ack,
-            #m_player{
-                uid = PlayerId,
-                aid = AccId,
-                other = #r_player_other{}
-            }
+    ps:send(
+        Pid,
+        load_player_data_ack,
+        #m_player{
+            uid = PlayerId,
+            aid = AccId,
+            other = #r_player_other{}
         }
     ),
     ok.
@@ -56,19 +55,17 @@ create_player_(
 ) ->
     ps:send(
         Pid,
-        {
-            create_player_ack,
-            #r_create_player_ack{
-                error = 0,
-                uid = uid_gen:player_uid(),
-                acc_id = AccId,
-                name = Name,
-                camp = Camp,
-                career = Career,
-                race = Race,
-                sex = Sex,
-                head = Head
-            }
+        create_player_ack,
+        #r_create_player_ack{
+            error = 0,
+            uid = uid_gen:player_uid(),
+            acc_id = AccId,
+            name = Name,
+            camp = Camp,
+            career = Career,
+            race = Race,
+            sex = Sex,
+            head = Head
         }
     ),
     ok.

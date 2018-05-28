@@ -30,7 +30,7 @@
 %%% API
 %%%===================================================================
 active_stop(Reason)->
-    ps:send(self(), {active_stop, Reason}).
+    ps:send(self(), active_stop, Reason).
 
 -spec shutdown(Socket, How) -> ok when
     Socket :: port(),
@@ -40,7 +40,7 @@ shutdown(Socket, How) ->
     ok.
 
 send_net_msg(DataBinaryList) when is_list(DataBinaryList)->
-    ps:send(self(), {write, DataBinaryList}),
+    ps:send(self(), write, DataBinaryList),
     ok.
 
 direct_send_net_msg(Socket, DataBinaryList) when is_list(DataBinaryList)->
@@ -109,8 +109,7 @@ do_handle_info(
 ) ->
     ?TRY_CATCH(Handler:on_close(Socket, Reason, S)),
     {stop, normal, State};
-do_handle_info(
-    {write,DataBinaryList},
+do_handle_info({write,DataBinaryList},
     #state{socket = Socket}=State
 ) ->
     ranch_tcp:send(Socket, DataBinaryList),

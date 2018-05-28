@@ -77,7 +77,7 @@ do_handle_cast(Request, State) ->
 
 %%--------------------------------------------------------------------
 print_status()->
-    ?WARN("status:~n"
+    ?DEBUG("status:~n"
     "==========~n"
     "cache:                ~w/~w(num/ttl)~n"
     "dbs_worker:           ~w~n"

@@ -49,22 +49,24 @@ ready()->
 
 
 wait_all_started()->
-    case catch wait_all_started_1() of
-        true -> skip;
-        _ -> timer:sleep(5000), wait_all_started()
+   wait_all_started_1(
+       fun gs_db_manager:all_db_connected/0,
+       "wait connect to all dbs ...",
+       "connected to all dbs done"
+   ),
+   ok.
+
+wait_all_started_1(Fun, Tip, Done) ->
+    case catch wrapper_check(Fun(), Tip) of
+        true ->
+            ?WARN("~ts",[Done]);
+        _ ->
+            timer:sleep(5000),
+            wait_all_started_1(Fun, Tip, Done)
     end.
 
-wait_all_started_1() ->
-    wrapper_check(is_connect_all_db(), "connect to all dbs"),
-    true.
-
-is_connect_all_db() ->
-    gs_db_manager:all_db_connected().
-
-
-
-wrapper_check(true, _) -> skip;
-wrapper_check(_, Msg) -> ?WARN("wait ~ts done", [Msg]), throw(wait).
+wrapper_check(true, _) -> true;
+wrapper_check(_, Msg) -> ?WARN("wait ~ts...", [Msg]), throw(wait).
 %%%===================================================================
 %%% Internal functions
 %%%===================================================================	
@@ -96,7 +98,7 @@ do_handle_cast(Request, State) ->
 
 %%--------------------------------------------------------------------
 print_status()->
-    ?WARN("status:~n"
+    ?DEBUG("status:~n"
     "==========~n"
     "auto reload src dirs: ~n\t~ts~n"
     "auto reload inc dirs: ~n\t~ts~n"

@@ -29,7 +29,7 @@ send_2_gs(ServerID, Msg) ->
 
 send_2_gs(ServerID, Msg, MsgData) ->
     Pid = sel_server_pid(ServerID, ?TYPE_WINDOW),
-    ps:send(Pid, {Msg, MsgData}),
+    ps:send(Pid, Msg, MsgData),
     ok.
 
 %%%-------------------------------------------------------------------
@@ -54,7 +54,7 @@ broadcast_with_msg([Pid | PidList], Msg) ->
 broadcast_with_msg_data([], _Msg, _MsgData) ->
     ok;
 broadcast_with_msg_data([Pid | PidList], Msg, MsgData) ->
-    catch ps:send(Pid, {Msg, MsgData}),
+    catch ps:send(Pid, Msg, MsgData),
     broadcast_with_msg_data(PidList, Msg, MsgData).
 
 
