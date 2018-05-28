@@ -14,8 +14,8 @@
 -define(ETSWC,{write_concurrency,true}).
 
 %%
--define(ST_GS,      1).
--define(ST_CGS,     2).
+-define(ST_GS,      gs).
+-define(ST_CGS,     cgs).
 
 %%
 -define(SS_INIT,    0).

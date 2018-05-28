@@ -100,7 +100,6 @@ add_tick() -> V = tick_count(), put(tickCount, V + 1).
 
 %%--------------------------------------------------------------------
 connect_db(Node) ->
-    ?DEBUG("connect to dbs ~p, is atom ~p", [Node, is_atom(Node)]),
     case ets:lookup(?ETS_GS_DBS, Node) of
         [#r_gs_db_info{status = Status}] when Status =/= ?SS_INIT ->
             ok;
@@ -113,7 +112,7 @@ connect_db(Node) ->
 connect_db_action(Node) ->
     case net_adm:ping(Node) of
         pong -> register_me_action(Node);
-        pang -> ?WARN("[~p][~p]connect centerServer failed:~p", [self(), gs_core:get_db_id(), Node])
+        pang -> ?WARN("[~p][~p]connect dbs failed:~p", [self(), gs_core:get_db_id(), Node])
     end,
     ok.
 

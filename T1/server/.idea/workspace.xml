@@ -6,7 +6,6 @@
       <change afterPath="$PROJECT_DIR$/app/game/src/core/gs_core.erl" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/app/game/src/db/gs_db_manager.erl" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/app/game/src/db/gs_db_supervisor.erl" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/game/src/db/gs_db_worker.erl" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/app/game/src/lib/lib_player_logic.erl" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/dbs/data/dbs.ini" beforeDir="false" afterPath="$PROJECT_DIR$/app/dbs/data/dbs.ini" afterDir="false" />
@@ -21,6 +20,7 @@
       <change beforePath="$PROJECT_DIR$/app/game/include/gsdef.hrl" beforeDir="false" afterPath="$PROJECT_DIR$/app/game/include/gsdef.hrl" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/game/include/player_status.hrl" beforeDir="false" afterPath="$PROJECT_DIR$/app/game/include/player_status.hrl" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/game/src/core/sentinel_server.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/game/src/core/sentinel_server.erl" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/game/src/db/gs_db_worker.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/game/src/db/gs_db_worker.erl" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/game/src/game_sup.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/game/src/game_sup.erl" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/game/src/lib/lib_login.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/game/src/lib/lib_login.erl" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/game/src/lib/lib_map.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/game/src/lib/lib_map.erl" afterDir="false" />
@@ -42,8 +42,26 @@
       <file leaf-file-name="gs_db_worker.erl" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/game/src/db/gs_db_worker.erl">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="380">
-              <caret line="71" column="39" selection-start-line="71" selection-start-column="39" selection-end-line="71" selection-end-column="39" />
+            <state relative-caret-position="205">
+              <caret line="114" column="42" selection-start-line="114" selection-start-column="42" selection-end-line="114" selection-end-column="42" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="svr_worker.erl" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/dbs/src/svr/svr_worker.erl">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="155">
+              <caret line="13" column="14" selection-start-line="13" selection-start-column="14" selection-end-line="13" selection-end-column="14" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="pub_common.hrl" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/app/deps/pubs/include/pub_common.hrl">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="425">
+              <caret line="17" column="23" selection-start-line="17" selection-start-column="23" selection-end-line="17" selection-end-column="23" />
             </state>
           </provider>
         </entry>
@@ -77,16 +95,7 @@
         <entry file="file://C:/Program Files/erl7.3/lib/stdlib-2.8/src/supervisor.erl">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="364">
-              <caret line="171" column="61" lean-forward="true" selection-start-line="171" selection-start-column="61" selection-end-line="171" selection-end-column="61" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="gsdef.hrl" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/game/include/gsdef.hrl">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="550">
-              <caret line="22" selection-start-line="22" selection-end-line="22" />
+              <caret line="171" column="46" selection-start-line="171" selection-start-column="46" selection-end-line="171" selection-end-column="46" />
             </state>
           </provider>
         </entry>
@@ -104,25 +113,16 @@
         <entry file="file://$PROJECT_DIR$/app/deps/pubs/src/lib/ps.erl">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="300">
-              <caret line="30" column="72" lean-forward="true" selection-start-line="30" selection-start-column="72" selection-end-line="30" selection-end-column="72" />
+              <caret line="30" column="36" selection-start-line="30" selection-start-column="36" selection-end-line="30" selection-end-column="36" />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="db_gs_interface.erl" pinned="false" current-in-tab="true">
+      <file leaf-file-name="db_gs_interface.erl" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/dbs/src/svr/db_gs_interface.erl">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="444">
               <caret line="25" column="49" selection-start-line="25" selection-start-column="49" selection-end-line="25" selection-end-column="49" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="ets.erl" pinned="false" current-in-tab="false">
-        <entry file="file://C:/Program Files/erl7.3/lib/stdlib-2.8/src/ets.erl">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="355">
-              <caret line="67" column="65" selection-start-line="67" selection-start-column="59" selection-end-line="67" selection-end-column="65" />
             </state>
           </provider>
         </entry>
@@ -167,12 +167,12 @@
       <find>export_type</find>
       <find>ETS_PLAYER_LIST</find>
       <find>ETS_ONLINE</find>
-      <find>register</find>
       <find>register_ack</find>
       <find>ready_now</find>
       <find>myEts</find>
       <find>look</find>
       <find>start_now</find>
+      <find>register</find>
     </findStrings>
     <replaceStrings>
       <replace>do_handle_call(</replace>
@@ -232,16 +232,16 @@
         <option value="$PROJECT_DIR$/app/game/src/game_sup.erl" />
         <option value="$PROJECT_DIR$/app/game/src/core/sentinel_server.erl" />
         <option value="$PROJECT_DIR$/app/game/src/db/gs_db_manager.erl" />
-        <option value="$PROJECT_DIR$/app/deps/pubs/include/pub_common.hrl" />
         <option value="$PROJECT_DIR$/app/game/include/gsdef.hrl" />
         <option value="$PROJECT_DIR$/app/dbs/include/dbs_private.hrl" />
         <option value="$PROJECT_DIR$/app/dbs/src/svr/svr_worker_manager_logic.erl" />
         <option value="$PROJECT_DIR$/app/game/src/core/gs_core.erl" />
         <option value="$PROJECT_DIR$/app/dbs/src/svr/svr_worker.erl" />
         <option value="$PROJECT_DIR$/app/game/src/db/gs_db_supervisor.erl" />
-        <option value="$PROJECT_DIR$/app/game/src/db/gs_db_worker.erl" />
         <option value="$PROJECT_DIR$/app/dbs/src/svr/svr_worker_manager.erl" />
         <option value="$PROJECT_DIR$/app/dbs/src/svr/db_gs_interface.erl" />
+        <option value="$PROJECT_DIR$/app/game/src/db/gs_db_worker.erl" />
+        <option value="$PROJECT_DIR$/app/deps/pubs/include/pub_common.hrl" />
       </list>
     </option>
   </component>
@@ -1053,12 +1053,12 @@
       <workItem from="1527159643573" duration="640000" />
       <workItem from="1527210976881" duration="20218000" />
       <workItem from="1527244912373" duration="2487000" />
-      <workItem from="1527478264820" duration="17095000" />
+      <workItem from="1527478264820" duration="17633000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="381968000" />
+    <option name="totallyTimeSpent" value="382506000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -1368,20 +1368,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/deps/pubs/include/pub_common.hrl">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="550">
-          <caret line="22" column="8" selection-start-line="22" selection-start-column="8" selection-end-line="22" selection-end-column="8" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/dbs/src/svr/svr_worker.erl">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="665">
-          <caret line="111" column="26" selection-start-line="111" selection-start-column="26" selection-end-line="111" selection-end-column="26" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://C:/Program Files/erl7.3/lib/stdlib-2.8/src/ets.erl">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="355">
@@ -1399,14 +1385,7 @@
     <entry file="file://C:/Program Files/erl7.3/lib/stdlib-2.8/src/supervisor.erl">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="364">
-          <caret line="171" column="61" lean-forward="true" selection-start-line="171" selection-start-column="61" selection-end-line="171" selection-end-column="61" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/game/src/db/gs_db_supervisor.erl">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="311">
-          <caret line="40" column="37" selection-start-line="40" selection-start-column="37" selection-end-line="40" selection-end-column="37" />
+          <caret line="171" column="46" selection-start-line="171" selection-start-column="46" selection-end-line="171" selection-end-column="46" />
         </state>
       </provider>
     </entry>
@@ -1422,13 +1401,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/game/src/db/gs_db_worker.erl">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="380">
-          <caret line="71" column="39" selection-start-line="71" selection-start-column="39" selection-end-line="71" selection-end-column="39" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/dbs/src/svr/svr_worker_manager.erl">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="394">
@@ -1439,7 +1411,7 @@
     <entry file="file://$PROJECT_DIR$/app/deps/pubs/src/lib/ps.erl">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="300">
-          <caret line="30" column="72" lean-forward="true" selection-start-line="30" selection-start-column="72" selection-end-line="30" selection-end-column="72" />
+          <caret line="30" column="36" selection-start-line="30" selection-start-column="36" selection-end-line="30" selection-end-column="36" />
         </state>
       </provider>
     </entry>
@@ -1447,6 +1419,34 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="444">
           <caret line="25" column="49" selection-start-line="25" selection-start-column="49" selection-end-line="25" selection-end-column="49" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/game/src/db/gs_db_supervisor.erl">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="311">
+          <caret line="40" column="37" selection-start-line="40" selection-start-column="37" selection-end-line="40" selection-end-column="37" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/game/src/db/gs_db_worker.erl">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="205">
+          <caret line="114" column="42" selection-start-line="114" selection-start-column="42" selection-end-line="114" selection-end-column="42" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/dbs/src/svr/svr_worker.erl">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="155">
+          <caret line="13" column="14" selection-start-line="13" selection-start-column="14" selection-end-line="13" selection-end-column="14" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/deps/pubs/include/pub_common.hrl">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="425">
+          <caret line="17" column="23" selection-start-line="17" selection-start-column="23" selection-end-line="17" selection-end-column="23" />
         </state>
       </provider>
     </entry>
