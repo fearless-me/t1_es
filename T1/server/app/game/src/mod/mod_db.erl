@@ -12,13 +12,9 @@
 -behaviour(gen_serverw).
 -include("logger.hrl").
 
--export([get_pool/0]).
-
 %% API
 -export([start_link/0]).
 -export([mod_init/1, do_handle_call/3, do_handle_info/2, do_handle_cast/2]).
-
-get_pool() -> gen_server:call(?MODULE, get_pool).
 
 %%%===================================================================
 %%% public functions
@@ -43,6 +39,9 @@ do_handle_call(Request, From, State) ->
     {reply, ok, State}.
 
 %%--------------------------------------------------------------------
+do_handle_info({transfer_to_db, {MsgId, Msg}, FromPid}, State) ->
+    db_handler:do_handle_info(MsgId, Msg, FromPid, maps:get(pool, State)),
+    {noreply, State};
 do_handle_info(Info, State) ->
     ?ERROR("undeal info ~w", [Info]),
     {noreply, State}.
@@ -57,7 +56,7 @@ do_handle_cast(Request, State) ->
 start_player_mysql_pool() ->
     Connections = 20, MaxConnections = 40,
     Pool = erlang:list_to_atom("player_db_pool_1"),
-    mysql_pool:start_db_pool_alone(
+    db_pool:add_pool(
         Pool, "127.0.0.1", 3306, "root", "1234", "player_data_1", Connections, MaxConnections),
     #{pool => Pool}.
 

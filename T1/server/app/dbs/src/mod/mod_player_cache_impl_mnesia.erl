@@ -27,10 +27,10 @@ load_1(PlayerID) ->
 
 load_from_persistent(MemTab, PlayerID) ->
     PoolID = mysql_pool_manager:get_player_mysql_pool(PlayerID),
-    Res = mysql_interface:execute(PoolID, get_player_data, [PlayerID]),
-    case mysql_interface:succeed(Res) of
+    Res = db:execute_stmt(PoolID, get_player_data, [PlayerID]),
+    case db:succeed(Res) of
         true ->
-            case mysql_interface:as_record(Res, player_data, record_info(fields, player_data)) of
+            case db:as_record(Res, player_data, record_info(fields, player_data)) of
                 [#player_data{} = Data] ->
                     mnesia_utils:dirty_write(MemTab, Data),
                     Data;
@@ -46,5 +46,5 @@ save(#player_data{player_id = PlayerID, name = Name, data = Data, data_version =
     PoolID = mysql_pool_manager:get_player_mysql_pool(PlayerID),
     MemTab = mnesia_starter:get_mem_table(player_data),
     ok = mnesia_utils:dirty_write(MemTab, Rec),
-    Res = mysql_interface:execute(PoolID, insert_player_data, [PlayerID, Name, Data, Version]),
-    mysql_interface:succeed(Res).
+    Res = db:execute_stmt(PoolID, insert_player_data, [PlayerID, Name, Data, Version]),
+    db:succeed(Res).

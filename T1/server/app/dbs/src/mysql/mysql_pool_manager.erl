@@ -84,8 +84,8 @@ check_player_db_1(PoolID, TabList, Num) ->
         lists:foldl(
             fun(Index, Acc) ->
                 Sql = mod_sql_format:format_check_player_db_sql(Index),
-                Res = mysql_interface:query(PoolID, Sql, 30 * 1000),
-                case mysql_interface:succeed(Res) of
+                Res = db:query(PoolID, Sql, 30 * 1000),
+                case db:succeed(Res) of
                     true -> Acc;
                     _ -> [Index | Acc]
                 end
@@ -149,7 +149,7 @@ start_player_mysql_pool_2(#player_db_instance_info{
     Connections = mod_ini_conf:get_mysql_pool_connections(),
     MaxConnections = mod_ini_conf:get_mysql_pool_max_connections(),
     Pool = erlang:list_to_atom(lists:flatten(io_lib:format("player_db_pool_~w", [Id]))),
-    mysql_pool:start_db_pool_alone(
+    db_pool:add_pool(
         Pool, Host, Port, User, Password, Database, Connections, MaxConnections),
     ets:insert(?PlayerDataMysqlPoolEts,
         #player_mysql_pool_info{id = Id, pool = Pool}),

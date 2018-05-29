@@ -33,7 +33,7 @@
 -define(UID_TYPE_TEMP,      0).      %% 宠物或者队伍
 -define(UID_TYPE_MON,       1).      %% 怪物
 -define(UID_TYPE_ACCOUNT,   2).      %% 账号
--define(UID_TYPE_ROLE,      3).      %% 角色
+-define(UID_TYPE_PLAYER,    3).      %% 角色
 -define(UID_TYPE_ITEM,      4).      %% 道具
 -define(UID_TYPE_MAIL,      5).      %% 邮件
 
@@ -54,7 +54,7 @@ acc_uid() -> gen_1(?UID_TYPE_ACCOUNT).
 
 %%生成角色UID
 -spec player_uid() -> uint64().
-player_uid() -> gen_1(?UID_TYPE_ROLE).
+player_uid() -> gen_1(?UID_TYPE_PLAYER).
 
 %%生成道具UID
 -spec item_uid() -> uint64().
@@ -217,5 +217,5 @@ short(UID) ->
 long(ShortID) ->
     <<IDRange:?BIT_ACCU, DBID:?BIT_SVER, UIDIndex:?BIT_INDX>>
         = <<ShortID:(?BIT_SVER + ?BIT_INDX + ?BIT_ACCU)>>,
-    gen(?UID_TYPE_ROLE, globalSetup:getADBID(), DBID, UIDIndex, IDRange).
+    gen(?UID_TYPE_PLAYER, globalSetup:getADBID(), DBID, UIDIndex, IDRange).
 %% ================以上两个方法仅针对角色UID================

@@ -143,7 +143,7 @@ update_player_move(Obj, ?EMS_WALK) ->
         cur_pos = CurPos, path_list = PathList, moved_time = MovedTime
     } = Obj,
     Now = misc:milli_seconds(),
-    Delta = lib_map_rw:get_obj_move_diff_time(Obj, Now),
+    Delta = lib_obj:get_obj_move_diff_time(Obj, Now),
     Ret = update_role_walk(Obj, CurPos, PathList, MovedTime + Delta),
     case Ret of
         ?ENR_TOBECONTINUED ->
@@ -184,7 +184,7 @@ update_role_walk(Obj, CurPos, [], _MoveTime) ->
     ?WARN("mapid ~p player ~w arrived ~w", [self(), Obj#r_map_obj.uid, CurPos]),
     ?ENR_ARRIVE;
 update_role_walk(Obj, CurPos, PathList, MoveTime) ->
-    MoveDist = lib_map_rw:get_obj_speed(Obj) * MoveTime / 1000,
+    MoveDist = lib_obj:get_obj_speed(Obj) * MoveTime / 1000,
     {NewPos, NewPathList, MoreDist} = linear_pos(PathList, MoveDist, keep),
 
     ?DEBUG("mapid ~p ~w move from ~w to ~w,tick move dist ~p",
@@ -193,7 +193,7 @@ update_role_walk(Obj, CurPos, PathList, MoveTime) ->
     on_player_pos_change(Obj, NewPos),
 
     #r_map_obj{dir = Dir, dest_pos = Dst} = Obj,
-    MoreTime = misc:ceil(MoreDist / lib_map_rw:get_obj_speed(Obj) * 1000),
+    MoreTime = misc:ceil(MoreDist / lib_obj:get_obj_speed(Obj) * 1000),
     case NewPathList of
         ?ENR_TOBECONTINUED -> ?ENR_TOBECONTINUED;
         [] -> {?ENR_TOBECONTINUED, [], Dir, Dst, MoreTime};
@@ -242,11 +242,11 @@ on_player_pos_change(Obj, TarPos) ->
 %%    ?DEBUG("~w pos change ~w", [Obj#r_map_obj.uid, TarPos]),
 
     %
-    OldVisIndex = lib_map_view:pos_to_vis_index(lib_map_rw:get_obj_pos(Obj)),
+    OldVisIndex = lib_map_view:pos_to_vis_index(lib_obj:get_obj_pos(Obj)),
     NewVisIndex = lib_map_view:pos_to_vis_index(TarPos),
     lib_map_rw:player_update_pos(Obj#r_map_obj.uid, TarPos),
     lib_map_view:sync_change_pos_visual_tile(Obj, OldVisIndex, NewVisIndex),
-    lib_map_view:sync_movement_to_big_visual_tile({player_move_to, lib_map_rw:get_obj_pos(Obj), TarPos}),
+    lib_map_view:sync_movement_to_big_visual_tile({player_move_to, lib_obj:get_obj_pos(Obj), TarPos}),
     ok.
 
 stop_move(_Send) -> ok.

@@ -87,7 +87,7 @@ force_teleport(S, #r_teleport_req{
     Obj = lib_map_rw:get_player(Uid),
     lib_move:on_player_pos_change(Obj, TarPos),
     ?DEBUG("player ~p teleport from ~w to ~w in map ~p_~p",
-        [Obj#r_map_obj.uid, lib_map_rw:get_obj_pos(Obj), TarPos,
+        [Obj#r_map_obj.uid, lib_obj:get_obj_pos(Obj), TarPos,
             lib_map_rw:get_map_id(), lib_map_rw:get_line_id()]),
     {ok, S}.
 
@@ -202,4 +202,4 @@ kick_all_player(#r_map_state{player = Ets}) ->
 player_start_move(Req) ->
     #r_player_start_move_req{uid = Uid, tar_pos = TarPos} = Req,
     Obj = lib_map_rw:get_player(Uid),
-    lib_move:start_player_walk(Obj, lib_map_rw:get_obj_pos(Obj), TarPos).
+    lib_move:start_player_walk(Obj, lib_obj:get_obj_pos(Obj), TarPos).

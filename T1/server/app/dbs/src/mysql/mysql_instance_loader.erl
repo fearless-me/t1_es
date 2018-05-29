@@ -23,7 +23,7 @@ load_db_conf()->
 %%%-------------------------------------------------------------------
 load_all_player_instance(Pid)->
     Res = mysql:execute(Pid, get_player_db_instance_conf,[]),
-    Ins = mysql_interface:as_record(Res, player_db_instance_info, record_info(fields, player_db_instance_info)),
+    Ins = db:as_record(Res, player_db_instance_info, record_info(fields, player_db_instance_info)),
     [modify_record(Instance) || Instance <- Ins].
 
 %%%-------------------------------------------------------------------

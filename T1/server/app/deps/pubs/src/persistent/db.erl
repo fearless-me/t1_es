@@ -6,12 +6,12 @@
 %%% @end
 %%% Created : 29. 十二月 2017 14:12
 %%%-------------------------------------------------------------------
--module(mysql_interface).
+-module(db).
 -author("mawenhong").
 
 %% API
 -export([
-    execute/3, execute/4,
+    execute_stmt/3, execute_stmt/4,
     query/2, query/3, query/4,
     transaction/2, transaction/3, transaction/4,
     with/2
@@ -26,11 +26,11 @@
 
 
 %% @doc Execute a mysql prepared statement with given params.
-execute(PoolName, StatementRef, Params) ->
+execute_stmt(PoolName, StatementRef, Params) ->
     mysql_poolboy:execute(PoolName, StatementRef, Params).
 
 %% @doc Execute a mysql prepared statement with given params and timeout
-execute(PoolName, StatementRef, Params, Timeout) ->
+execute_stmt(PoolName, StatementRef, Params, Timeout) ->
     mysql_poolboy:execute(PoolName, StatementRef, Params, Timeout).
 
 %% @doc Executes a query to a mysql connection in a given pool.
@@ -132,16 +132,10 @@ get_rows_count(_) -> 0.
 
 %%
 %% @doc package row data as a map
-as_maps(undefined, undefined) ->
-    [];
-as_maps(Fields, undefined)
-    when is_list(Fields) ->
-    [];
-as_maps(Fields, [])
-    when is_list(Fields) ->
-    [];
-as_maps(Fields, Rows)
-    when is_list(Fields), is_list(Rows) ->
+as_maps(undefined, undefined) -> [];
+as_maps(Fields, undefined) when is_list(Fields) -> [];
+as_maps(Fields, []) when is_list(Fields) -> [];
+as_maps(Fields, Rows) when is_list(Fields), is_list(Rows) ->
     [begin
          maps:from_list([{binary_to_atom(K,utf8), V} || {K, V} <- lists:zip(Fields, R)])
      end || R <- Rows].

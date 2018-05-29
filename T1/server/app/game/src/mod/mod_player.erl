@@ -91,7 +91,7 @@ on_info_msg({login_ack, Msg}, S) ->
     S;
 on_info_msg({load_player_list_ack, List}, S) ->
     ?DEBUG("load_player_list_ack:~p",[List]),
-    lib_player:load_all_role_info(List),
+    lib_player:loaded_player_list(List),
     S;
 on_info_msg({load_player_data_ack, Player}, S) ->
     ?DEBUG("load_player_data_ack"),

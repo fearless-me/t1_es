@@ -15,7 +15,6 @@
 -export([login_1/2]).
 -export([logout_1/2]).
 -export([verify/2]).
--export([load_account_info/1]).
 
 
 %%--------------------------------------------------------------------
@@ -31,16 +30,12 @@ login_2(Pid, {false, Error}, S)->
     ps:send(Pid, login_ack, #r_login_ack{error = Error}),
     S;
 login_2(Pid, {true, PlatAccount}, S)->
-    AccountInfo = load_account_info(PlatAccount),
-    ps:send(Pid, login_ack, #r_login_ack{account_info = AccountInfo}),
+    lib_db:action_(account_login, PlatAccount, Pid),
     S#login_state{in = S#login_state.in + 1}.
 
 %%--------------------------------------------------------------------
 verify(PlatAccount, _Token) ->
     {true, PlatAccount}.
-
-%%--------------------------------------------------------------------
-load_account_info(Acc) -> lib_db:load_account_info(Acc).
 
 %%--------------------------------------------------------------------
 logout_1(_AccountID, S) ->

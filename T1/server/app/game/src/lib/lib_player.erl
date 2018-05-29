@@ -20,7 +20,7 @@
 
 -export([init/0]).
 -export([login_ack/1]).
--export([load_all_role_info/1]).
+-export([loaded_player_list/1]).
 -export([create_player_/1, create_player_ack/1]).
 -export([select_player/1]).
 -export([loaded_player/1]).
@@ -64,7 +64,7 @@ login_ack_success(sucess, AccountIfo) ->
     }),
     lib_player_rw:set_acc_id(AccountIfo#p_account.accountID),
     lib_player_rw:set_player_status(?PS_WAIT_LIST),
-    lib_db:load_player_list_(AccountIfo#p_account.accountID),
+    lib_db:action_(load_player_list, AccountIfo#p_account.accountID),
     ok;
 login_ack_success(Reason, AccountIfo) ->
     #p_account{accountID = Aid} = AccountIfo,
@@ -85,11 +85,11 @@ kick_account(Aid) ->
     ok.
 
 %%%-------------------------------------------------------------------
-load_all_role_info([]) ->
+loaded_player_list([]) ->
     lib_player_rw:set_player_status(?PS_WAIT_SELECT_CREATE),
     mod_player:send(#pk_GS2U_UserPlayerList{}),
     ok;
-load_all_role_info(RoleList) ->
+loaded_player_list(RoleList) ->
     lib_player_rw:set_player_status(?PS_WAIT_SELECT_CREATE),
     Info = lists:map(
         fun(#p_player{
@@ -136,7 +136,7 @@ create_player_ack(#r_create_player_ack{error = Err}) ->
 %%%-------------------------------------------------------------------
 select_player(Uid) ->
     lib_player_rw:set_player_status(?PS_WAIT_LOAD),
-    lib_db:load_player_data_(self(), lib_player_rw:get_acc_id(), Uid),
+    lib_db:action_(load_player_data, {lib_player_rw:get_acc_id(), Uid}),
     ok.
 
 %%%-------------------------------------------------------------------
@@ -212,11 +212,11 @@ go_to_new_map_1(DestMapID, Pos) ->
     lib_player_rw:set_map_pid(Ack#r_change_map_ack.map_pid),
     lib_player_rw:set_pos(Ack#r_change_map_ack.pos),
     ?DEBUG("go_to_new_map(~p, ~w) -> ~w", [DestMapID, Pos, Ack]),
-    mod_player:send(#pk_U2GS_ChangeMap{
-        newMapID = Ack#r_change_map_ack.map_id,
-        fX = Ack#r_change_map_ack.pos#vector3.x,
-        fY = Ack#r_change_map_ack.pos#vector3.y
-    }),
+%%    mod_player:send(#pk_U2GS_ChangeMap{
+%%        newMapID = Ack#r_change_map_ack.map_id,
+%%        fX = Ack#r_change_map_ack.pos#vector3.x,
+%%        fY = Ack#r_change_map_ack.pos#vector3.y
+%%    }),
     
     mod_map:player_move_(
         Ack#r_change_map_ack.map_pid,

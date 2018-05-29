@@ -6,16 +6,16 @@
 %%% @end
 %%% Created : 29. 十二月 2017 9:54
 %%%-------------------------------------------------------------------
--module(mysql_pool).
+-module(db_pool).
 -author("mawenhong").
 
 %% API
 -export([
-    start_db_pool_alone/8,start_db_pool_alone_emysql/7
+    add_pool/8,start_db_pool_alone_emysql/7
 ]).
 
 
-start_db_pool_alone(
+add_pool(
     PoolName,
     Host, Port,
     User, Password, Database,

@@ -39,7 +39,7 @@ sync_player_join_map(Obj) ->
     %1.
     Index =
         pos_to_vis_index(
-            lib_map_rw:get_obj_pos(Obj),
+            lib_obj:get_obj_pos(Obj),
             get(?VIS_W),
             ?VIS_DIST
         ),
@@ -55,7 +55,7 @@ sync_player_exit_map(Obj) ->
     %1.
     Index =
         pos_to_vis_index(
-            lib_map_rw:get_obj_pos(Obj),
+            lib_obj:get_obj_pos(Obj),
             get(?VIS_W),
             ?VIS_DIST
         ),
@@ -252,13 +252,13 @@ get_vis_tile_around(VisTileIndex) ->
     [get_vis_tile(TileIndex) || TileIndex <- L1].
 
 get_vis_tile_around_index(VisTileIndex) ->
-%% _______________
-%% | lt | t | rt |
-%% ---------------
-%% | l  | c | r  |
-%% ---------------
-%% | lb | b | rb |
-%% ---------------
+%%    +--------------+
+%%    | tl | top|  tr|
+%%    +--------------+
+%%    | l  |  c |  r |
+%%    +--------------+
+%%    | bl |  b | br |
+%%    +--------------+
     ?assert(VisTileIndex > 0),
     W = get(?VIS_W),
     H = get(?VIS_H),

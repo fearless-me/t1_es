@@ -62,10 +62,10 @@ load_1(PlayerID) ->
 
 load_from_persistent(PlayerID) ->
     PoolID = mysql_pool_manager:get_player_mysql_pool_(PlayerID),
-    Res = mysql_interface:query(PoolID, mod_sql_format:format_load_sql(PlayerID), infinity),
-    case mysql_interface:succeed(Res) of
+    Res = db:query(PoolID, mod_sql_format:format_load_sql(PlayerID), infinity),
+    case db:succeed(Res) of
         true ->
-            case mysql_interface:as_record(Res, player_data, record_info(fields, player_data)) of
+            case db:as_record(Res, player_data, record_info(fields, player_data)) of
                 [#player_data{} = Data] ->
                     cache:put(player_cache, PlayerID, Data),
                     Data;
@@ -103,20 +103,20 @@ save(#player_data{player_id = PlayerID, name = Name, worker = Worker, data_versi
             #player_data{data_version = OldVersion} when OldVersion >= Version ->
                 ok;
             #player_data{} ->
-                mysql_interface:query(
+                db:query(
                     PoolID,
                     mod_sql_format:format_sql_update(PlayerID, Data, Version),
                     infinity
                 );
             _ ->
                 SqlIns = mod_sql_format:format_sql_insert(PlayerID),
-                mysql_interface:query(
+                db:query(
                     PoolID,
                     SqlIns,
                     [PlayerID, Name, Version, Data], infinity
                 )
         end,
-    case mysql_interface:succeed(Res) of
+    case db:succeed(Res) of
         true -> true;
         _ ->
             ?ERROR("[~p][~w],ret=~p,insert(~w)",
