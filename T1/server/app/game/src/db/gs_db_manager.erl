@@ -16,6 +16,7 @@
 -include("gsdef.hrl").
 
 -export([all_db_connected/0]).
+-export([send_to_dbs/3]).
 
 %% API
 -export([start_link/0]).
@@ -28,6 +29,13 @@ all_db_connected()->
             (_, false)-> false;
             (#r_gs_db_info{status = Status}, _)->  Status =:= ?SS_DONE
         end, true, ?ETS_GS_DBS).
+
+
+send_to_dbs(AccId, MsgId, Msg) ->
+    Size = ets:info(?ETS_GS_DBS, size),
+    L = ets:tab2list(?ETS_GS_DBS),
+    #r_gs_db_info{pid = Pid} = lists:nth( AccId rem Size, L),
+    ps:send_with_from(Pid, MsgId, Msg).
 
 
 

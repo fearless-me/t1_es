@@ -22,7 +22,7 @@
 -define(MAP_MGR_ETS, map_mgr_ets__).
 
 %% API
--export([take_over_player_online/2]).
+-export([take_player_online/2]).
 -export([player_change_map/1]).
 -export([player_offline/3]).
 -export([map_conf/1]).
@@ -33,10 +33,9 @@
 -export([mod_init/1, do_handle_call/3, do_handle_info/2, do_handle_cast/2]).
 
 %%%-------------------------------------------------------------------
-take_over_player_online(MapID, Req) ->
+take_player_online(MapID, Req) ->
     Mgr = map_mgr(MapID),
-    take_1(Mgr, Req),
-    ok.
+    take_1(Mgr, Req).
 
 take_1(undefined, Req) ->
     kick_to_born_map(Req);

@@ -15,12 +15,16 @@
     format_sql_del/1,
     format_sql_insert/1,
     format_sql_update/3,
-    format_check_player_db_sql/1
+    format_check_player_db_sql/1 ,
+    format_load_role_list_sql/1
 ]).
 
 format_check_player_db_sql(Idx)->
     io_lib:format("select min(player_id) from player_~p",[Idx]).
 
+format_load_role_list_sql(Aid)->
+    Idx = player_id_to_table_idx(Aid),
+    io_lib:format("select * from player_~p where aid = ~p", [Idx,Aid]).
 
 format_load_sql(PlayerID)->
     Idx = player_id_to_table_idx(PlayerID),

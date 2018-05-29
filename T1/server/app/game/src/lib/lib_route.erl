@@ -61,7 +61,8 @@ route_1(#pk_U2GS_RequestCreatePlayer{
        name = Name, camp = Camp, career = Career, race = Race, sex = Sex, head = Head
     }),
     ok;
-route_1(#pk_U2GS_SelPlayerEnterGame{}) ->
+route_1(#pk_U2GS_SelPlayerEnterGame{roleID = Uid}) ->
+    lib_player:select_player(Uid),
     ok;
 route_1(#pk_GS2U_GoNewMap{tarMapID = DestMapID, fX = X, fY = Y} = Msg) ->
     ?DEBUG("~p",[Msg]),

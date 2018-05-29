@@ -39,13 +39,13 @@ load_ini_conf(FileName) ->
     ok = econfig:register_config(?GS_INI_CONF, [FileName]),
     ok.
 
-get_db_nodes() ->
-    N = econfig:get_integer(?GS_INI_CONF, dbs_node, node_num, 0),
-    lists:foldl(
-        fun(X, Acc) ->
-            Node = list_to_atom(lists:flatten(io_lib:format("node_~p", [X]))),
-            case econfig:get_binary(?GS_INI_CONF, dbs_node, Node) of
-                undefined -> Acc;
-                NodeName -> [binary_to_atom(NodeName, utf8) | Acc]
-            end
-        end, [], lists:seq(1, N)).
+get_db_nodes() -> [].
+%%    N = econfig:get_integer(?GS_INI_CONF, dbs_node, node_num, 0),
+%%    lists:foldl(
+%%        fun(X, Acc) ->
+%%            Node = list_to_atom(lists:flatten(io_lib:format("node_~p", [X]))),
+%%            case econfig:get_binary(?GS_INI_CONF, dbs_node, Node) of
+%%                undefined -> Acc;
+%%                NodeName -> [binary_to_atom(NodeName, utf8) | Acc]
+%%            end
+%%        end, [], lists:seq(1, N)).

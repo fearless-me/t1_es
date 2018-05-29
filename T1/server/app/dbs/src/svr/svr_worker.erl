@@ -73,7 +73,7 @@ do_handle_info({ready_now, From}, State) ->
     ready(State#state.db_id, From),
     {noreply, State};
 do_handle_info(Info, State) ->
-    ?ERROR("undeal info ~w", [Info]),
+    db_msg:do_handle_info(Info),
     {noreply, State}.
 
 %%--------------------------------------------------------------------

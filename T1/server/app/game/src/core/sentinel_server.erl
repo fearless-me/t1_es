@@ -50,7 +50,8 @@ ready()->
 
 wait_all_started()->
    wait_all_started_1(
-       fun gs_db_manager:all_db_connected/0,
+%%       fun gs_db_manager:all_db_connected/0,
+        fun() -> true end,
        "wait connect to all dbs ...",
        "connected to all dbs done"
    ),

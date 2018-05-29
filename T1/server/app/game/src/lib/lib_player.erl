@@ -39,7 +39,7 @@ init_on_create() ->
 unique_register(AccId) ->
     try  misc:register_process(self(), player, [AccId] ) of
          true -> sucess
-    catch _ : _  -> already_started end.
+    catch _ : _  -> repeat_login end.
 
 %%%-------------------------------------------------------------------
 login_ack(#r_login_ack{error = 0, account_info = AccountIfo}) ->
@@ -63,9 +63,8 @@ login_ack_success(sucess, AccountIfo) ->
         msg = io_lib:format("ErrorCode:~p", [0])
     }),
     lib_player_rw:set_acc_id(AccountIfo#p_account.accountID),
-    lib_player_rw:set_uid(uid_gen:player_uid()),
     lib_player_rw:set_player_status(?PS_WAIT_LIST),
-    lib_db:load_player_list_(self(), AccountIfo#p_account.accountID),
+    lib_db:load_player_list_(AccountIfo#p_account.accountID),
     ok;
 login_ack_success(Reason, AccountIfo) ->
     #p_account{accountID = Aid} = AccountIfo,
@@ -90,14 +89,37 @@ load_all_role_info([]) ->
     lib_player_rw:set_player_status(?PS_WAIT_SELECT_CREATE),
     mod_player:send(#pk_GS2U_UserPlayerList{}),
     ok;
-load_all_role_info(_RoleList) ->
+load_all_role_info(RoleList) ->
     lib_player_rw:set_player_status(?PS_WAIT_SELECT_CREATE),
-    mod_player:send(#pk_GS2U_UserPlayerList{}),
+    Info = lists:map(
+        fun(#p_player{
+            uid = Uid, 
+            name = Name,
+            level = Lv,
+            wing_level = Wlv,
+            sex = Sex,
+            camp = Camp,
+            race = Race,
+            career = Career,
+            head = Head,
+            map_id = MapId,
+            old_map_id = OldMapId
+        })->
+            #pk_UserPlayerData{
+                roleID = Uid, name = Name,
+                level = Lv, wingLevel = Wlv,
+                camp = Camp, career = Career,
+                race = Race, sex = Sex, head = Head,
+                mapID = MapId, oldMapID = OldMapId
+            }
+        end, RoleList),
+    mod_player:send(#pk_GS2U_UserPlayerList{info = Info}),
     ok.
+
 %%%-------------------------------------------------------------------
 create_player_(Req) ->
     lib_player_rw:set_player_status(?PS_CREATING),
-    lib_db:create_player_(self(), Req),
+    lib_db:create_player_(self(), lib_player_rw:get_acc_id(), Req),
     ok.
 
 %%%-------------------------------------------------------------------
@@ -112,13 +134,17 @@ create_player_ack(#r_create_player_ack{error = Err}) ->
     mod_player:send(#pk_GS2U_CreatePlayerResult{errorCode = Err}).
 
 %%%-------------------------------------------------------------------
-select_player(PlayerID) ->
+select_player(Uid) ->
     lib_player_rw:set_player_status(?PS_WAIT_LOAD),
-    lib_db:load_player_data(self(), lib_player_rw:get_acc_id(), PlayerID),
+    lib_db:load_player_data_(self(), lib_player_rw:get_acc_id(), Uid),
     ok.
 
 %%%-------------------------------------------------------------------
-loaded_player(_DataBin) ->
+loaded_player(Player) ->
+    #p_player{uid = Uid, map_id = Mid, old_map_id = OldMid} = Player,
+    lib_player_rw:set_uid(Uid),
+    lib_player_rw:set_map_id(Mid),
+    lib_player_rw:set_pre_map_id(OldMid),
     lib_player_rw:set_player_status(?PS_WAIT_ENTER),
     add_to_world(),
     ok.
@@ -128,7 +154,7 @@ add_to_world() ->
     Uid = lib_player_rw:get_uid(),
     Mid = lib_player_rw:get_map_id(),
     Pos = lib_player_rw:get_pos(),
-    Ack = mod_map_creator:take_over_player_online(
+    Ack = mod_map_creator:take_player_online(
         Mid,
         #r_change_map_req{
             uid = Uid,
@@ -138,6 +164,7 @@ add_to_world() ->
             obj = make_obj()
         }
     ),
+    ?DEBUG("take over online:~w",[Ack]),
     lib_player_rw:set_pre_map_id(0),
     lib_player_rw:set_map_id(Mid),
     lib_player_rw:set_map_pid(Ack#r_change_map_ack.map_pid),

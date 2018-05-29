@@ -13,7 +13,10 @@
                                 "../../deps/econfig",
                                 "../../deps/fastlog",
                                 "../../deps/fly",
-                                "../../deps/ranch"
+                                "../../deps/ranch",
+								"../../deps/mysql-otp",
+								"../../deps/mysql-otp-poolboy",
+								"../../deps/poolboy"
                               ]
                     },
 					{inc_dirs,[
@@ -32,7 +35,10 @@
                                 "../../deps/econfig",
                                 "../../deps/fastlog",
                                 "../../deps/fly",
-                                "../../deps/ranch"
+                                "../../deps/ranch",
+								"../../deps/mysql-otp",
+								"../../deps/mysql-otp-poolboy",
+								"../../deps/poolboy"								
                               ]},
 							{i, "../include"},
 							{i, "../src/config"},

@@ -123,6 +123,7 @@ start_map_root_supervisor(SupPid)->
     ok.
 
 start_db_worker(SupPid)->
+    {ok, _} = ?CHILD(SupPid, mod_db, worker),
     {ok, _} = ?CHILD(SupPid, gs_db_supervisor, supervisor),
     {ok, _} = ?CHILD(SupPid, gs_db_manager, worker),
     ok.

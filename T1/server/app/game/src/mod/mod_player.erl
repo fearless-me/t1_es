@@ -93,12 +93,12 @@ on_info_msg({load_player_list_ack, List}, S) ->
     ?DEBUG("load_player_list_ack:~p",[List]),
     lib_player:load_all_role_info(List),
     S;
-on_info_msg({load_player_data_ack, DataBin}, S) ->
+on_info_msg({load_player_data_ack, Player}, S) ->
     ?DEBUG("load_player_data_ack"),
-    lib_player:loaded_player(DataBin),
+    lib_player:loaded_player(Player),
     S;
 on_info_msg({create_player_ack, Ack}, S) ->
-    ?DEBUG("load_player_data_ack"),
+    ?DEBUG("create_player_ack"),
     lib_player:create_player_ack(Ack),
     S;
 on_info_msg(return_to_pre_map_ack, S) ->

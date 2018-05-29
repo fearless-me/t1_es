@@ -24,7 +24,7 @@ connect(Port, MapID) ->
     {ok, Socket} = ranch_tcp:connect({127, 0, 0, 1}, Port, [{active, false}]),
 
     Msg1 = #pk_U2GS_Login_Normal{
-        platformAccount = "test_net" ++ integer_to_list(misc:milli_seconds()),
+        platformAccount = "test_net", %%++ integer_to_list(misc:milli_seconds()),
         platformName = "test",
         platformNickName = "",
         time = misc:seconds(),
@@ -34,6 +34,7 @@ connect(Port, MapID) ->
     send_msg(Socket, Msg1),
     recv_msg(Socket),
 
+    recv_msg(Socket),
     recv_msg(Socket),
 
     send_msg(Socket, #pk_GS2U_GoNewMap{tarMapID = MapID, fX = misc:rand(500, 5000) / 10, fY = misc:rand(500, 3000) / 10}),
@@ -51,10 +52,10 @@ send_msg(Socket, Msg) ->
 recv_msg(Socket) ->
     case ranch_tcp:recv(Socket, 6, 50000) of
         {ok, Any} ->
-            {Size, Left} = binary_lib:read_int32(Any),
-            {Cmd, _} = binary_lib:read_int16(Left),
+            {Size, Left} = binary_lib:read_uint32(Any),
+            {Cmd, _} = binary_lib:read_uint16(Left),
             {ok, MsgBin} = ranch_tcp:recv(Socket, Size - 6, 50000),
-            Msg = netmsg:decode(Cmd, MsgBin),
+            {Msg, _LeftBin} = netmsg:decode(Cmd, MsgBin),
             handle(Socket, Msg),
             ok;
         _ ->
@@ -72,9 +73,9 @@ handle(Socket, #pk_GS2U_UserPlayerList{info = Info}) ->
             send_msg(Socket, #pk_U2GS_RequestCreatePlayer{
                 name = "player" ++ integer_to_list(misc:milli_seconds()),
                 race = 1, career = 1,
-                sex = 1,   head = 1
+                sex = 1, head = 1
             });
-        [#pk_UserPlayerData{roleID = RoleID} | _ ] ->
+        [#pk_UserPlayerData{roleID = RoleID} | _] ->
             send_msg(Socket, #pk_U2GS_SelPlayerEnterGame{roleID = RoleID})
     end,
     ok;

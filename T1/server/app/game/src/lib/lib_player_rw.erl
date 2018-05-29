@@ -33,10 +33,7 @@ set_acc_id(AccId) -> put('ACC_UID', AccId).
 %%%-------------------------------------------------------------------
 get_uid() ->
     case get('UID') of
-        undefined ->
-            Uid = uid_gen:player_uid(),
-            set_uid(Uid),
-            Uid;
+        undefined -> 0;
         V -> V
     end.
 
