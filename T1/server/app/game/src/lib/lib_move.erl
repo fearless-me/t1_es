@@ -187,7 +187,7 @@ update_role_walk(Obj, CurPos, PathList, MoveTime) ->
     MoveDist = lib_obj:get_obj_speed(Obj) * MoveTime / 1000,
     {NewPos, NewPathList, MoreDist} = linear_pos(PathList, MoveDist, keep),
 
-    ?DEBUG("mapid ~p ~w move from ~w to ~w,tick move dist ~p",
+    ?DEBUG("mapid ~p ~w from ~w to ~w dist ~p",
         [self(), Obj#r_map_obj.uid, CurPos, NewPos, MoveDist]),
 %%    ?DEBUG("# ~p,~p",[NewPos#vector3.x, NewPos#vector3.z]),
     on_player_pos_change(Obj, NewPos),
