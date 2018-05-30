@@ -13,71 +13,20 @@
 -include("vector3.hrl").
 
 %% API
--export([get_player_status/0, set_player_status/1]).
 -export([set_uid/1, get_uid/0]).
--export([set_acc_id/1, get_acc_id/0]).
--export([set_pos/1, get_pos/0]).
--export([set_map_pid/1, get_map_pid/0]).
--export([set_map_id/1, get_map_id/0]).
--export([set_pre_map_id/1, get_pre_map_id/0]).
+-export([set_aid/1, get_aid/0]).
+-export([set_sid/1, get_sid/0]).
+-export([get_status/0, set_status/1]).
 
 %%%-------------------------------------------------------------------
-get_acc_id() ->
-    case get('ACC_UID') of
-        undefined -> 0;
-        V -> V
-    end.
-
-set_acc_id(AccId) -> put('ACC_UID', AccId).
-
+get_aid()           -> get('ACC_UID').
+set_aid(AccId)      -> put('ACC_UID', AccId).
 %%%-------------------------------------------------------------------
-get_uid() ->
-    case get('UID') of
-        undefined -> 0;
-        V -> V
-    end.
-
-set_uid(Uid) -> put('UID', Uid).
-
+get_uid()           -> get('UID').
+set_uid(Uid)        -> put('UID', Uid).
 %%%-------------------------------------------------------------------
-set_pre_map_id(MapId) ->
-    put('PRE_MAP_ID', MapId).
-
-get_pre_map_id() ->
-    case get('PRE_MAP_ID') of
-        undefined -> 1;
-        MapId -> MapId
-    end.
-
+get_sid()           -> get('SID').
+set_sid(Uid)        -> put('SID', Uid).
 %%%-------------------------------------------------------------------
-get_map_id() ->
-    case get('MAP_ID') of
-        undefined -> 1;
-        MapId -> MapId
-    end.
-
-set_map_id(MapId) -> put('MAP_ID', MapId).
-
-%%%-------------------------------------------------------------------
-get_map_pid() -> get('MAP_PID').
-set_map_pid(Pid) -> put('MAP_PID', Pid).
-
-%%%-------------------------------------------------------------------
-set_pos(Pos) -> put('POSITION', Pos).
-get_pos()    ->
-    case get('POSITION') of
-        undefined ->
-            #vector3{x = 100.0, y= 0, z = 100.0 };
-        Position  -> Position
-    end.
-
-%%%-------------------------------------------------------------------
-set_player_status(Status) ->
-    put(?PLAYER_STATUS, Status),
-    ok.
-
-get_player_status() ->
-    case get(?PLAYER_STATUS) of
-        undefined -> ?PS_ERROR;
-        V -> V
-    end.
+set_status(Status)  -> put(?PLAYER_STATUS, Status).
+get_status()        -> case get(?PLAYER_STATUS) of undefined -> ?PS_ERROR;V -> V end.

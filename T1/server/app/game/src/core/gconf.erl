@@ -11,6 +11,8 @@
 
 %% API
 -export([start/1]).
+-export([get_area/0]).
+-export([get_sid/0]).
 -export([get_db_conf/0]).
 
 %%-------------------------------------------------------------------
@@ -24,5 +26,11 @@ start(FileName) ->
 get_db_conf()->
     Conf = econfig:get_value(?GS_INI_CONF, db_conf),
     lists:map(fun({K,V}) -> {erlang:list_to_atom(K),V} end, Conf).
+
+get_area() ->
+    econfig:get_integer(?GS_INI_CONF, server, area_id).
+
+get_sid() ->
+    econfig:get_integer(?GS_INI_CONF, server, server_id).
 
 

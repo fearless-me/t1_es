@@ -53,19 +53,24 @@ do_handle_info(load_player_data, {_Aid, Uid}, FromPid, PoolId) ->
     ok;
 do_handle_info(create_player, {AccId, Req}, FromPid, PoolId) ->
     #r_create_player_req{
+        sid = Sid,
         name = Name,
         camp = Camp,
         career = Career,
         race = Race,
         sex = Sex,
-        head = Head
+        head = Head,
+        mid = Mid,
+        x =  X, y = Y
     } = Req,
     Uid = uid_gen:player_uid(),
-    Sql = "insert player(aid, uid, name, level, sex, camp, race,
-    career, head, map_id, old_map_id, version) values(?,?,?,?,?,?,?,?,?,?,?,?)",
+    Sql = "insert player(aid, uid, sid, name, level, sex, camp, race, career, head,
+    map_id, line, x, y, old_map_id, old_line, old_x, old_y, version)
+    values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
     Res = db:query(
         PoolId, Sql,
-        [AccId, Uid, Name, 1, Sex, Camp, Race, Career, Head, 1, 1, misc:milli_seconds()],
+        [AccId, Uid, Sid, Name, 1, Sex, Camp, Race, Career, Head,
+            Mid, 0, X, Y, Mid, 0, X, Y, misc:milli_seconds()],
         infinity),
 
     check_and_log(db:succeed(Res), Sql, Res),
@@ -90,4 +95,4 @@ do_handle_info(MsgId, Msg, FromPid, _PoolId) ->
 
 %%-------------------------------------------------------------------
 check_and_log(true, _Sql, _Res) -> skip;
-check_and_log(_, Sql, Res) -> ?ERROR("sql: ~ts ret: ~w", [Sql, Res]).
+check_and_log(_, Sql, Res) -> ?ERROR("ret: ~p, sql: ~ts", [Res, Sql]).

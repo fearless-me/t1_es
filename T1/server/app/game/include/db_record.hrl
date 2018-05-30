@@ -31,7 +31,7 @@
 }).
 
 -record(p_player,{aid, uid, sid, name, level, wing_level, sex, camp, race, career, head,
-    map_id, x = 0.0, y = 0.0, old_map_id, oldX = 0.0, oldY = 0.0, data, version
+    map_id, line, x = 0.0, y = 0.0, old_map_id, old_line, old_x = 0.0, old_y = 0.0, data, version
 }).
 
 

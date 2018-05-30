@@ -28,6 +28,9 @@
 -export([map_conf/1]).
 -export([broadcast_all/0, broadcast_map/1]).
 
+-export([born_map_id/0]).
+-export([born_map_pos/0]).
+
 %%
 -export([start_link/0]).
 -export([mod_init/1, do_handle_call/3, do_handle_info/2, do_handle_cast/2]).
@@ -187,7 +190,7 @@ load_one_map(MapID) ->
 
 
 born_map_id()   -> 1.
-born_map_pos()  -> #vector3{x = 323.19, z = 255.8}.
+born_map_pos()  -> vector3:new(323.19, 0, 255.8).
 
 
 

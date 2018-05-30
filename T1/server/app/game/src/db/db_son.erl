@@ -43,7 +43,7 @@ do_handle_call(Request, From, State) ->
 
 %%--------------------------------------------------------------------
 do_handle_info({scheduler, {MsgId, Msg, FromPid}}, State) ->
-    db_msg:do_handle_info(MsgId, Msg, FromPid, maps:get(pool, State)),
+    db_handler:do_handle_info(MsgId, Msg, FromPid, maps:get(pool, State)),
     {noreply, State};
 do_handle_info(Info, State) ->
     ?ERROR("undeal info ~w", [Info]),

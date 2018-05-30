@@ -22,7 +22,7 @@
 route(Msg) ->
     %%1. hook
     ?DEBUG("route(~p)",[Msg]),
-    Status = lib_player_rw:get_player_status(),
+    Status = lib_player_rw:get_status(),
     case Status of
         ?PS_INIT -> ok;
         ?PS_VERIFY -> ok;
@@ -57,8 +57,11 @@ route_1(#pk_U2GS_RequestCreatePlayer{
     sex = Sex,
     head = Head
 }) ->
+    BornMid = mod_map_creator:born_map_id(),
+    #vector3{x = X, z = Z} = mod_map_creator:born_map_pos(),
     lib_player:create_player_(#r_create_player_req{
-       name = Name, camp = Camp, career = Career, race = Race, sex = Sex, head = Head
+       name = Name, camp = Camp, career = Career, race = Race, sex = Sex,
+        head = Head, mid = BornMid, x = X, y = Z, sid = gconf:get_sid()
     }),
     ok;
 route_1(#pk_U2GS_SelPlayerEnterGame{roleID = Uid}) ->
@@ -66,8 +69,7 @@ route_1(#pk_U2GS_SelPlayerEnterGame{roleID = Uid}) ->
     ok;
 route_1(#pk_GS2U_GoNewMap{tarMapID = DestMapID, fX = X, fY = Y} = Msg) ->
     ?DEBUG("~p",[Msg]),
-    lib_player:go_to_new_map(
-        DestMapID, #vector3{x = X, y = 0.0, z = Y}),
+    lib_player:go_to_new_map(DestMapID, vector3:new(X, 0, Y)),
     ok;
 route_1(Msg) ->
     ?DEBUG("~p", [Msg]),

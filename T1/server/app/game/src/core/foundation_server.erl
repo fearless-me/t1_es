@@ -11,10 +11,6 @@
 
 -behaviour(gen_serverw).
 -include("logger.hrl").
--include("map_obj.hrl").
--include("gsdef.hrl").
--include("player_record.hrl").
--include("pub_common.hrl").
 
 %% API
 -export([start_link/0]).
@@ -32,8 +28,7 @@ start_link() ->
 mod_init(_Args) ->
     erlang:process_flag(trap_exit, true),
     uid_gen:init(),
-    ets:new(?ETS_ONLINE, [named_table, public, {keypos, #m_player.uid}, ?ETSRC, ?ETSWC]),
-    
+    gmem:init_mem_db(),
     {ok, #{}}.
 
 %%--------------------------------------------------------------------	

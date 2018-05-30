@@ -29,7 +29,7 @@ create(#recMapObjData{
         
     } = getCfg:getCfgByArgs(cfg_monster, Mid),
 
-    Pos =  #vector3{x = X, y = 0.0, z = Y},
+    Pos =  vector3:new(X, 0.0, Y),
 
     Obj1 = #r_map_obj{
         uid = uid_gen:mon_uid(),
@@ -42,4 +42,4 @@ create(#recMapObjData{
         pid = self(),
         map_pid = self()
     },
-    lib_move:init(Obj1, Pos, #vector3{x= 0.1, z = 0.5}).
+    lib_move:init(Obj1, Pos, vector3:new(0.1, 0, 0.5)).

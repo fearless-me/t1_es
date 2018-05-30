@@ -45,22 +45,22 @@ start_player_walk(Obj, Start, End) ->
 
 test_path() ->
     [
-        #vector3{x = 150.0, z = 150.0},
-        #vector3{x = 200.0, z = 150.0},
-        #vector3{x = 250.0, z = 200.0},
-        #vector3{x = 300.0, z = 50.00},
-        #vector3{x = 350.0, z = 250.0},
-        #vector3{x = 400.0, z = 200.0},
-        #vector3{x = 420.0, z = 300.0},
-        #vector3{x = 25.00, z = 280.0},
-        #vector3{x = 30.01, z = 230.0},
-        #vector3{x = 40.01, z = 100.0},
-        #vector3{x = 180.0, z = 250.0}
+        vector3:new(150.0, 0, 150.0),
+        vector3:new(200.0, 0, 150.0),
+        vector3:new(250.0, 0, 200.0),
+        vector3:new(300.0, 0, 50.00),
+        vector3:new(350.0, 0, 250.0),
+        vector3:new(400.0, 0, 200.0),
+        vector3:new(420.0, 0, 300.0),
+        vector3:new(25.00, 0, 280.0),
+        vector3:new(30.01, 0, 230.0),
+        vector3:new(40.01, 0, 100.0),
+        vector3:new(180.0, 0, 250.0)
     ].
 
 test_dir() ->
-    S = #vector3{x = 150.0, z = 150.0},
-    E = #vector3{x = 200.0, z = 150.0},
+    S = vector3:new(150.0, 0, 150.0),
+    E = vector3:new(200.0, 0, 150.0),
     vector3:subtract(E, S).
 
 start_player_walk_1(Obj, Start, _End) ->

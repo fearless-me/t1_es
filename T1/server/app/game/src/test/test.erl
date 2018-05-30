@@ -14,9 +14,9 @@
 -export([tv3/0]).
 
 tv3()->
-    P1 = #vector3{x = 150.1, z = 100.1},
-    P2 = #vector3{x = 100.1, z = 50.1},
-    P3 = #vector3{x = 100.1, z = 150.1},
+    P1 = vector3:new(150.1, 0, 100.1),
+    P2 = vector3:new(100.1, 0, 50.1),
+    P3 = vector3:new(100.1, 0, 150.1),
     io:format("normalized ~w -> ~w~n",[P1, vector3:normalized(P1)]),
 
     tv3_1(P1, P2),

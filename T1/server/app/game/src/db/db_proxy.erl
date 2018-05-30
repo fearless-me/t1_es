@@ -84,7 +84,6 @@ do_handle_cast(Request, State) ->
 %%--------------------------------------------------------------------
 hash_to_pool(Key) ->
     Size = ets:info(?ETS_PLAYER_DB_POOL, size),
-    ?DEBUG("hask key ~p, size ~p", [Key, Size]),
     PoolId = Key rem Size + 1,
     case ets:lookup(?ETS_PLAYER_DB_POOL, PoolId) of
         [#r_db_pool{mgr = Mgr}] -> Mgr;
