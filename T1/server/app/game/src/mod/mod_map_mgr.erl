@@ -44,7 +44,7 @@ start_link(MapID) ->
 %%% Internal functions
 %%%===================================================================	
 mod_init([MapID]) ->
-    ProcessName = misc:create_process_name(mod_map_mgr, [MapID]),
+    ProcessName = misc:create_atom(mod_map_mgr, [MapID]),
     true = erlang:register(ProcessName, self()),
     erlang:process_flag(trap_exit, true),
     erlang:process_flag(priority, high),

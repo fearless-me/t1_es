@@ -31,9 +31,9 @@ do_handle_info(load_player_list, AccId, FromPid, PoolId) ->
     Res = db:query(PoolId, Sql, [AccId], infinity),
     PL1 = db:as_record(Res, p_player, record_info(fields, p_player)),
     PL2 = lists:map(
-        fun(#p_player{name = Name} = Player)->
+        fun(#p_player{name = Name} = Player) ->
             Player#p_player{name = binary_to_list(Name)}
-        end , PL1),
+        end, PL1),
     ps:send(FromPid, load_player_list_ack, PL2),
     ok;
 do_handle_info(load_player_data, {_Aid, Uid}, FromPid, PoolId) ->
@@ -44,7 +44,7 @@ do_handle_info(load_player_data, {_Aid, Uid}, FromPid, PoolId) ->
             true ->
                 case db:as_record(Res, p_player, record_info(fields, p_player)) of
                     [#p_player{} = Player] -> Player;
-                    Err -> check_and_log(false, Sql, Err) , undefined
+                    Err -> check_and_log(false, Sql, Err), undefined
                 end;
             _ -> check_and_log(false, Sql, Res), undefined
         end,
@@ -60,12 +60,12 @@ do_handle_info(create_player, {AccId, Req}, FromPid, PoolId) ->
         sex = Sex,
         head = Head
     } = Req,
-    Uid =  uid_gen:player_uid(),
+    Uid = uid_gen:player_uid(),
     Sql = "insert player(aid, uid, name, level, sex, camp, race,
     career, head, map_id, old_map_id, version) values(?,?,?,?,?,?,?,?,?,?,?,?)",
     Res = db:query(
-        PoolId,  Sql,
-        [AccId, Uid, Name, 1, Sex, Camp, Race, Career, Head, 1,1, misc:milli_seconds()],
+        PoolId, Sql,
+        [AccId, Uid, Name, 1, Sex, Camp, Race, Career, Head, 1, 1, misc:milli_seconds()],
         infinity),
 
     check_and_log(db:succeed(Res), Sql, Res),
@@ -84,10 +84,10 @@ do_handle_info(create_player, {AccId, Req}, FromPid, PoolId) ->
     ),
     ok;
 do_handle_info(MsgId, Msg, FromPid, _PoolId) ->
-    ?ERROR("undeal msg ~w ~w from ~p",[MsgId, Msg, FromPid]),
+    ?ERROR("undeal msg ~w ~w from ~p", [MsgId, Msg, FromPid]),
     ok.
 
 
 %%-------------------------------------------------------------------
 check_and_log(true, _Sql, _Res) -> skip;
-check_and_log(_, Sql, Res) ->   ?ERROR("sql: ~ts ret: ~w", [Sql, Res]).
+check_and_log(_, Sql, Res) -> ?ERROR("sql: ~ts ret: ~w", [Sql, Res]).

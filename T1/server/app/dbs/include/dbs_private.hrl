@@ -16,7 +16,7 @@
 
 -define(WorkerEts, dbsWorkerEts_).
 
--define(PlayerDataMysqlInstanceEts, playerMysqlIntanceEts_).
+-define(ETS_PLAYER_INS, playerMysqlIntanceEts_).
 -record(player_db_instance_info,{
     id = 0,
     host = "",

@@ -10,10 +10,8 @@
 -author("mawenhong").
 
 %% API
--export([
-    add_pool/8,start_db_pool_alone_emysql/7
-]).
-
+-export([add_pool/8]).
+-export([start_db_pool_alone_emysql/7]).
 
 add_pool(
     PoolName,

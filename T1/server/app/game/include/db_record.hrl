@@ -30,25 +30,8 @@
     channelAccountID = ""                %%渠道账号ID，主要用于渠道方通过GM后台提供的API查询角色信息 varchar(255)
 }).
 
--record(p_player, {
-    aid,
-    uid,
-    name,
-    level,
-    wing_level,
-    sex,
-    camp,
-    race,
-    career,
-    head,
-    map_id,
-    x = 0.0,
-    y = 0.0,
-    old_map_id,
-    oldX = 0.0,
-    oldY = 0.0,
-    data,
-    version
+-record(p_player,{aid, uid, sid, name, level, wing_level, sex, camp, race, career, head,
+    map_id, x = 0.0, y = 0.0, old_map_id, oldX = 0.0, oldY = 0.0, data, version
 }).
 
 

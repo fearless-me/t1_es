@@ -43,7 +43,7 @@ start() ->
     wrapper({"test network 25555",          ?Wrap(start_listener_25555(SupPid))}),
     wrapper({"start map root supervisor",   ?Wrap(start_map_root_supervisor(SupPid))}),
     wrapper({"start login window",          ?Wrap(start_login(SupPid))}),
-    wrapper({"start _foundation",           ?Wrap(start_foundation(SupPid))}),
+    wrapper({"start foundation_server",     ?Wrap(start_foundation_server(SupPid))}),
     wrapper({"start db window",             ?Wrap(start_db_worker(SupPid))}),
     wrapper({"start auto compile and load", ?Wrap(start_auto_reload(SupPid))}),
 
@@ -82,7 +82,7 @@ start_sentinel(SupPid) ->
     ok.
 
 start_conf(_SupPid, FileName) ->
-    gs_core:load_ini_conf(FileName),
+    gconf:start(FileName),
     ok.
 
 
@@ -110,7 +110,7 @@ start_listener_15555(_SupPid) ->
 start_auto_reload(_SupPid) ->
     ok = fly:start().
 
-start_foundation(SupPid)->
+start_foundation_server(SupPid)->
     {ok, _} = ?CHILD(SupPid, foundation_server, worker),
     ok.
 
@@ -123,7 +123,8 @@ start_map_root_supervisor(SupPid)->
     ok.
 
 start_db_worker(SupPid)->
-    {ok, _} = ?CHILD(SupPid, mod_db, worker),
-    {ok, _} = ?CHILD(SupPid, gs_db_supervisor, supervisor),
-    {ok, _} = ?CHILD(SupPid, gs_db_manager, worker),
+    {ok, _} = ?CHILD(SupPid, db_sup, supervisor),
+    {ok, _} = ?CHILD(SupPid, db_mgr_sup, supervisor),
+    {ok, _} = ?CHILD(SupPid, db_proxy, worker),
+    ok = db_proxy:start_db_pool(50*1000),
     ok.

@@ -52,7 +52,7 @@ start_link(Params) ->
 mod_init([MapID, MapLine]) ->
      erlang:process_flag(trap_exit, true),
     %% erlang:process_flag(priority, high),
-    ProcessName = misc:create_process_name(mod_map, [MapID,MapLine]),
+    ProcessName = misc:create_atom(mod_map, [MapID,MapLine]),
     true = erlang:register(ProcessName, self()),
     ?INFO("map ~p:~p started",[ProcessName, self()]),
     {ok, lib_map:init(#r_map_state{map_id = MapID, line_id = MapLine})}.

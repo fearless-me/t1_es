@@ -47,10 +47,10 @@ set_player_data_mysql_instance(Ins)->
 
 %% 获取mysql实例
 get_player_data_mysql_instance() ->
-    ets:tab2list(?PlayerDataMysqlInstanceEts).
+    ets:tab2list(?ETS_PLAYER_INS).
 
 get_player_data_mysql_instance_num() ->
-    ets:info(?PlayerDataMysqlInstanceEts, size).
+    ets:info(?ETS_PLAYER_INS, size).
 
 %% 启动mysql pool
 start_player_mysql_pool() ->
@@ -105,13 +105,13 @@ mod_init(_Args) ->
     erlang:process_flag(priority, high),
     ets:new(?PlayerDataMysqlPoolEts,
         [protected, set, named_table, {keypos, #player_mysql_pool_info.id}, {read_concurrency, true}]),
-    ets:new(?PlayerDataMysqlInstanceEts,
+    ets:new(?ETS_PLAYER_INS,
         [protected, set, named_table, {keypos, #player_db_instance_info.id}, {read_concurrency, true}]),
     {ok, #state{}}.
 
 %%--------------------------------------------------------------------
 do_handle_call({set_player_data_mysql_instance, Ins}, _From, State)->
-    ets:insert(?PlayerDataMysqlInstanceEts, Ins),
+    ets:insert(?ETS_PLAYER_INS, Ins),
     {reply, ok, State};
 do_handle_call(start_player_mysql_pool, _From, State) ->
     start_player_mysql_pool_1(),

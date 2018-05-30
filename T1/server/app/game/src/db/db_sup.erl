@@ -4,9 +4,9 @@
 %%% @doc
 %%%
 %%% @end
-%%% Created : 28. 五月 2018 14:16
+%%% Created : 30. 五月 2018 14:12
 %%%-------------------------------------------------------------------
--module(gs_db_supervisor).
+-module(db_sup).
 -author("mawenhong").
 
 -behaviour(supervisor).
@@ -37,8 +37,8 @@
 start_link() ->
     supervisor:start_link({local, ?MODULE}, ?MODULE, []).
 
-start_child(CreateMapArg) ->
-    supervisor:start_child(?MODULE, [CreateMapArg]).
+start_child(Args) ->
+    supervisor:start_child(?MODULE, [Args]).
 
 %%%===================================================================
 %%% Supervisor callbacks
@@ -50,7 +50,7 @@ init([]) ->
             {simple_one_for_one, 5, 10},
             [
                 {   undefind,                               	% Id       = internal id
-                    {gs_db_worker, start_link, []},             % StartFun = {M, F, A}
+                    {db_son, start_link, []},             % StartFun = {M, F, A}
                     transient,                               	% Restart  = permanent | transient | temporary (不会重启)
                     2000,                                    	% Shutdown = brutal_kill | int() >= 0 | infinity
                     worker,                                  	% Type     = worker | supervisor

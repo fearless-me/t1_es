@@ -25,20 +25,22 @@
 -export([milli_seconds/0, seconds/0]).
 -export([parse_information_unit/1]).
 -export([register_process/3]).
--export([create_process_name/2]).
--export([register_name/1]).
+-export([create_atom/2]).
+-export([register_name/0, register_name/1]).
 -export([is_alive/1]).
 
 %%%-------------------------------------------------------------------
 atom_to_binary(A) ->
     list_to_binary(atom_to_list(A)).
 
-create_process_name(Prefix, List) ->
+create_atom(Prefix, List) ->
     to_atom(lists:concat(lists:flatten([Prefix] ++ lists:map(fun(T) -> ['_', T] end, List)))).
 
 register_process(Pid, Prefix, List) ->
-    ProcessName = misc:create_process_name(Prefix, List),
+    ProcessName = misc:create_atom(Prefix, List),
     erlang:register(ProcessName, Pid).
+
+register_name() -> register_name(self()).
 
 register_name(Pid) ->
     case erlang:process_info(Pid, registered_name) of

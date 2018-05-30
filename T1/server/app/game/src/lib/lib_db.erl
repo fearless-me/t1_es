@@ -9,13 +9,15 @@
 -module(lib_db).
 -author("mawenhong").
 
--export([action_/2]).
 -export([action_/3]).
+-export([action_/4]).
 
 %% API
-action_(MsgId, Msg) ->
-    ps:send_with_from(mod_db, transfer_to_db, {MsgId, Msg}).
+action_(HashKey, MsgId, Msg) ->
+    Mgr = db_proxy:checkout_(HashKey),
+    db_mgr:scheduler_(Mgr, HashKey, {MsgId, Msg, self()}).
 
-action_(MsgId, Msg, FromPid) ->
-    ps:send_with_from(mod_db, transfer_to_db, {MsgId, Msg}, FromPid).
+action_(HashKey, MsgId, Msg, FromPid) ->
+    Mgr = db_proxy:checkout_(HashKey),
+    db_mgr:scheduler_(Mgr, HashKey, {MsgId, Msg, FromPid}).
 

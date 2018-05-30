@@ -211,7 +211,7 @@ console: ${PKG}.tar.gz
 #####################################################################
 rebar3:
 	@echo "==> install rebar (${REBAR})" ;\
-	curl -L -O --progress-bar https://github.com/erlang/rebar3/releases/download/${REBAR}/rebar3 ;\
+	curl -L -O --progress-bak https://github.com/erlang/rebar3/releases/download/${REBAR}/rebar3 ;\
 	chmod +x $@
 
 .PHONY: test rel deps all pkg 

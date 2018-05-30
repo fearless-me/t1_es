@@ -64,18 +64,18 @@ player_exit_1(#r_map_obj{} = Obj, _Uid) ->
     ok;
 player_exit_1(_, Uid) ->
     ?ERROR("~w req exit map ~w ~w, but obj not exists!",
-        [Uid, self(), misc:register_name(self())]).
+        [Uid, self(), misc:register_name()]).
 
 %%%-------------------------------------------------------------------
 player_join(S, #r_map_obj{} = Obj) ->
     lib_map_rw:add_obj_to_ets(Obj),
     lib_map_view:sync_player_join_map(Obj),
     ?DEBUG("uid ~p, join map ~w, name ~p",
-        [Obj#r_map_obj.uid, self(), misc:register_name(self())]),
+        [Obj#r_map_obj.uid, self(), misc:register_name()]),
     {ok, S};
 player_join(S, Any) ->
     ?ERROR("player join map ~w, name ~p, error obj data ~w",
-        [ self(), misc:register_name(self()), Any]),
+        [ self(), misc:register_name(), Any]),
     {error, S}.
 
 
@@ -177,7 +177,7 @@ tick_update_after() -> ok.
 
 %%%-------------------------------------------------------------------
 real_stop_now(0) ->
-    ?INFO("~p ~p stop now",[misc:register_name(self()), self()]),
+    ?INFO("~p ~p stop now",[misc:register_name(), self()]),
     ps:send(self(), stop_immediately);
 real_stop_now(_Players) ->
     tick_msg(),
@@ -186,7 +186,7 @@ real_stop_now(_Players) ->
 %%%-------------------------------------------------------------------
 start_stop_now(S) ->
     ?INFO("~p ~p start stop now, kick all player(s)",
-        [misc:register_name(self()), self()]),
+        [misc:register_name(), self()]),
 
     kick_all_player(S),
     S#r_map_state{status = ?MAP_READY_EXIT}.

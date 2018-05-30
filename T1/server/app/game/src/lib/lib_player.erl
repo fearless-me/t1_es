@@ -56,15 +56,16 @@ login_ack(#r_login_ack{error = Error}) ->
 
 %%%-------------------------------------------------------------------
 login_ack_success(sucess, AccountIfo) ->
+    Aid = AccountIfo#p_account.accountID,
     mod_player:send(#pk_GS2U_LoginResult{
-        accountID = AccountIfo#p_account.accountID,
+        accountID = Aid,
         identity = "",
         result = 0,
         msg = io_lib:format("ErrorCode:~p", [0])
     }),
-    lib_player_rw:set_acc_id(AccountIfo#p_account.accountID),
+    lib_player_rw:set_acc_id(Aid),
     lib_player_rw:set_player_status(?PS_WAIT_LIST),
-    lib_db:action_(load_player_list, AccountIfo#p_account.accountID),
+    lib_db:action_(Aid, load_player_list, Aid),
     ok;
 login_ack_success(Reason, AccountIfo) ->
     #p_account{accountID = Aid} = AccountIfo,
@@ -80,7 +81,7 @@ login_ack_success(Reason, AccountIfo) ->
     ok.
 
 kick_account(Aid) ->
-    Name = misc:create_process_name(player, [Aid]),
+    Name = misc:create_atom(player, [Aid]),
     ps:send(Name, kick, repeat_login),
     ok.
 
@@ -118,16 +119,17 @@ loaded_player_list(RoleList) ->
 
 %%%-------------------------------------------------------------------
 create_player_(Req) ->
+    Aid = lib_player_rw:get_acc_id(),
     lib_player_rw:set_player_status(?PS_CREATING),
-    lib_db:create_player_(self(), lib_player_rw:get_acc_id(), Req),
+    lib_db:create_player_(Aid, create_player, {Aid, Req}),
     ok.
 
 %%%-------------------------------------------------------------------
-create_player_ack(#r_create_player_ack{error = 0, uid = PlayerId}) ->
+create_player_ack(#r_create_player_ack{error = 0, uid = Uid}) ->
     lib_player_rw:set_player_status(?PS_WAIT_SELECT_CREATE),
     init_on_create(),
     mod_player:send(#pk_GS2U_CreatePlayerResult{
-        errorCode = 0, roleID = PlayerId
+        errorCode = 0, roleID = Uid
     });
 create_player_ack(#r_create_player_ack{error = Err}) ->
     lib_player_rw:set_player_status(?PS_WAIT_SELECT_CREATE),
@@ -135,8 +137,9 @@ create_player_ack(#r_create_player_ack{error = Err}) ->
 
 %%%-------------------------------------------------------------------
 select_player(Uid) ->
+    Aid = lib_player_rw:get_acc_id(),
     lib_player_rw:set_player_status(?PS_WAIT_LOAD),
-    lib_db:action_(load_player_data, {lib_player_rw:get_acc_id(), Uid}),
+    lib_db:action_(Aid, load_player_data, {Aid, Uid}),
     ok.
 
 %%%-------------------------------------------------------------------
@@ -218,13 +221,13 @@ go_to_new_map_1(DestMapID, Pos) ->
 %%        fY = Ack#r_change_map_ack.pos#vector3.y
 %%    }),
     
-    mod_map:player_move_(
-        Ack#r_change_map_ack.map_pid,
-        #r_player_start_move_req{
-            uid = lib_player_rw:get_uid(),
-            tar_pos = #vector3{x = 400.6, z = 358.9}
-        }
-    ),
+%%    mod_map:player_move_(
+%%        Ack#r_change_map_ack.map_pid,
+%%        #r_player_start_move_req{
+%%            uid = lib_player_rw:get_uid(),
+%%            tar_pos = #vector3{x = 400.6, z = 358.9}
+%%        }
+%%    ),
     ok.
 
 %%%-------------------------------------------------------------------
