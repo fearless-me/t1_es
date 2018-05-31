@@ -11,6 +11,19 @@
 -include("gsdef.hrl").
 -include("pub_common.hrl").
 
+-export([register_ppid/2]).
+-export([kick_account/2]).
+
+register_ppid(Pid, Aid) ->
+    try  misc:register_process(Pid, player, [Aid] ) of
+        true -> sucess
+    catch _ : _  -> repeat_login end.
+
+kick_account(Aid, Reason) ->
+    Name = misc:create_atom(player, [Aid]),
+    ps:send(Name, kick, Reason),
+    ok.
+
 %%
 %%%% API
 %%-export([is_cross/0]).

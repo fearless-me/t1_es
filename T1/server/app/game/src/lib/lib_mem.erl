@@ -16,6 +16,7 @@
 
 %% API
 -export([new_player/1]).
+-export([del_player/1]).
 -export([get_player/1]).
 -export([player_update/2]).
 
@@ -25,19 +26,18 @@ new_player(#p_player{
     map_id = Mid, x = X, y = Y, old_map_id = OMid, old_x = Ox, old_y = Oy
 }) ->
     Player = #m_player{
-        uid =Uid,
-        aid= Aid,
-        sid= Sid,
-        name= Name,
-        sex = Sex,
-        career= Career,
-        level= Lv,
-        pid= self(),
+        uid =Uid, aid= Aid, sid= Sid,
+        name= Name, sex = Sex, camp = Camp,
+        career= Career, race = Race,
+        level= Lv, pid= self(), sock = mod_player:socket(),
         mid= Mid, line = 0, pos = vector3:new(X, 0, Y),
         old_mid= OMid, old_line = 1, old_pos = vector3:new(Ox, 0, Oy)
     },
     ets:insert(?ETS_PLAYER_PUB, Player),
     ok.
+
+del_player(Uid) ->
+    ets:delete(?ETS_PLAYER_PUB, Uid).
 
 get_player(Uid) ->
     case ets:lookup(?ETS_PLAYER_PUB, Uid) of
@@ -48,3 +48,4 @@ get_player(Uid) ->
 player_update(Uid, Elements)->
     ets:update_element(?ETS_PLAYER_PUB, Uid, Elements),
     ok.
+

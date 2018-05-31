@@ -77,7 +77,7 @@ on_data(Socket, Data, S)->
 
 %%-------------------------------------------------------------------
 on_close(Socket, Reason, S) ->
-    lib_player:offline(),
+    lib_player:offline(Reason),
     ?INFO("~p socket ~p close,reason:~p",[self(), Socket, Reason]),
     S.
 

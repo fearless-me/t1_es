@@ -18,6 +18,7 @@
 -include("db_record.hrl").
 -include("player_record.hrl").
 -include("vector3.hrl").
+-include("pub_common.hrl").
 
 -export([init/0]).
 -export([login_ack/1]).
@@ -25,7 +26,7 @@
 -export([create_player_/1, create_player_ack/1]).
 -export([select_player/1]).
 -export([loaded_player/1]).
--export([offline/0]).
+-export([offline/1]).
 -export([go_to_new_map/2, return_to_pre_map/0]).
 -export([teleport/1, teleport_/1]).
 
@@ -37,15 +38,12 @@ init() ->
 init_on_create() ->
     ok.
 %%%-------------------------------------------------------------------
-unique_register(AccId) ->
-    try  misc:register_process(self(), player, [AccId] ) of
-         true -> sucess
-    catch _ : _  -> repeat_login end.
+
 
 %%%-------------------------------------------------------------------
 login_ack(#r_login_ack{error = 0, account_info = AccountIfo}) ->
-    #p_account{ accountID = AccId} = AccountIfo,
-    Ret = unique_register(AccId),
+    #p_account{accountID = AccId} = AccountIfo,
+    Ret = gcore:register_ppid(self(), AccId),
     login_ack_success(Ret, AccountIfo),
     ok;
 login_ack(#r_login_ack{error = Error}) ->
@@ -78,12 +76,7 @@ login_ack_success(Reason, AccountIfo) ->
     }),
     lib_player_rw:set_status(?PS_ERROR),
     mod_player:shutdown(read),
-    kick_account(Aid),
-    ok.
-
-kick_account(Aid) ->
-    Name = misc:create_atom(player, [Aid]),
-    ps:send(Name, kick, repeat_login),
+    gcore:kick_account(Aid, repeat_login),
     ok.
 
 %%%-------------------------------------------------------------------
@@ -95,7 +88,7 @@ loaded_player_list(RoleList) ->
     lib_player_rw:set_status(?PS_WAIT_SELECT_CREATE),
     Info = lists:map(
         fun(#p_player{
-            uid = Uid, 
+            uid = Uid,
             name = Name,
             level = Lv,
             wing_level = Wlv,
@@ -106,7 +99,7 @@ loaded_player_list(RoleList) ->
             head = Head,
             map_id = MapId,
             old_map_id = OldMapId
-        })->
+        }) ->
             #pk_UserPlayerData{
                 roleID = Uid, name = Name,
                 level = Lv, wingLevel = Wlv,
@@ -148,7 +141,7 @@ select_player(Uid) ->
 loaded_player(undefined) ->
     Aid = lib_player_rw:get_aid(),
     Uid = lib_player_rw:get_uid(),
-    ?ERROR("~p load player ~p failed",[Aid, Uid]),
+    ?ERROR("~p load player ~p failed", [Aid, Uid]),
     lib_player_rw:set_uid(0),
     ok;
 loaded_player(Player) ->
@@ -174,7 +167,7 @@ add_to_world(Player) ->
             obj = make_obj(Pos)
         }
     ),
-    ?DEBUG("take over online:~w",[Ack]),
+    ?DEBUG("take over online:~w", [Ack]),
 
     lib_mem:player_update(
         Uid,
@@ -202,7 +195,7 @@ teleport_1(MapPid, NewPos) ->
     Uid = lib_player_rw:get_uid(),
     mod_map:player_teleport(
         MapPid,
-        #r_teleport_req{ uid = Uid, tar_pos = NewPos }
+        #r_teleport_req{uid = Uid, tar_pos = NewPos}
     ),
     ok.
 
@@ -215,11 +208,11 @@ go_to_new_map(DestMapID, Pos) ->
 go_to_new_map_1(DestMapID, TarPos) ->
     lib_player_rw:set_status(?PS_CHANGE_MAP),
     Uid = lib_player_rw:get_uid(),
-    #m_player{mid = Mid,line = Line, mpid = MPid, pos = Pos} = lib_mem:get_player(Uid),
+    #m_player{mid = Mid, line = Line, mpid = MPid, pos = Pos} = lib_mem:get_player(Uid),
     Ack = mod_map_creator:player_change_map(
         #r_change_map_req{
             uid = Uid, player_pid = self(),
-            map_id =  Mid, map_pid = MPid,
+            map_id = Mid, map_pid = MPid,
             tar_map_id = DestMapID, tar_pos = TarPos,
             obj = make_obj(TarPos)
         }
@@ -239,10 +232,10 @@ go_to_new_map_1(DestMapID, TarPos) ->
         ]
     ),
     ?DEBUG("go_to_new_map(~p, ~w) -> ~w", [DestMapID, Pos, Ack]),
-    
+
     mod_map:player_move_(
         Mpid1,
-        #r_player_start_move_req{uid = Uid, tar_pos = vector3:new(400.6,0,358.9)}
+        #r_player_start_move_req{uid = Uid, tar_pos = vector3:new(400.6, 0, 358.9)}
     ),
     ok.
 
@@ -256,8 +249,10 @@ return_to_pre_map() ->
 
 
 %%%-------------------------------------------------------------------
-offline() ->
-    offline_1(lib_player_rw:get_status()),
+offline(Reason) ->
+    ?TRY_CATCH(offline_1(lib_player_rw:get_status()), Err0),
+    ?TRY_CATCH(lib_mem:del_player(lib_player_rw:get_uid()), Err1),
+    ?TRY_CATCH(flush_cache(Reason), Err2),
     ok.
 
 offline_1(Status)
@@ -272,11 +267,17 @@ offline_1(_Status) ->
     lib_player_rw:set_status(?PS_OFFLINE),
     ok.
 
+%%%-------------------------------------------------------------------
+flush_cache(transfer_to_cross) -> ok;
+flush_cache(_) -> skip.
 
+%%%-------------------------------------------------------------------
 make_obj(Pos) ->
-    Obj = #r_map_obj{
-        type = ?OBJ_USR,
-        uid = lib_player_rw:get_uid(),
-        pid = self()
-    },
+    Obj =
+        #r_map_obj{
+            type    = ?OBJ_USR,
+            uid     = lib_player_rw:get_uid(),
+            pid     = self(),
+            sock    = mod_player:socket()
+        },
     lib_move:init(Obj, Pos, vector3:new(0.1, 0, 0.5)).

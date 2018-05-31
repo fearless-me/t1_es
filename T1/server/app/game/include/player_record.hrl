@@ -14,7 +14,7 @@
 %%
 -record(m_player,{
     % 玩家进程上线是初始化、运行时更新
-    uid, aid, sid, name, sex, career, level, pid,
+    uid, aid, sid, name, sex, career, race, camp, level, pid, sock,
     mid, line, mpid, old_mid, old_line, old_pos,
     % 进入地图进程同步更新
     pos, state=0, hp=0

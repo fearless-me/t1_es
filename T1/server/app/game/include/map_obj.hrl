@@ -24,7 +24,7 @@
 %%
 -record(r_map_obj, {
 %% 基础相关
-    uid = 0, pid = 0, did = 0,
+    uid = 0, pid = 0, did = 0, sock, owner = 0,
     name = "", group = 0, type = ?OBJ_ERR :: obj_type(),
     map_id = 0, line_id = 0, map_pid = undefined,
 

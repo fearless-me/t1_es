@@ -29,4 +29,4 @@ get_sid()           -> get('SID').
 set_sid(Uid)        -> put('SID', Uid).
 %%%-------------------------------------------------------------------
 set_status(Status)  -> put(?PLAYER_STATUS, Status).
-get_status()        -> case get(?PLAYER_STATUS) of undefined -> ?PS_ERROR;V -> V end.
+get_status()        -> case get(?PLAYER_STATUS) of undefined -> ?PS_ERROR; V -> V end.
