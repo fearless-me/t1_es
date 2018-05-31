@@ -12,6 +12,7 @@
 -include("movement.hrl").
 -include("logger.hrl").
 -include("vector3.hrl").
+-include("player_record.hrl").
 
 
 %% API
@@ -189,7 +190,7 @@ update_role_walk(Obj, CurPos, PathList, MoveTime) ->
 
     ?DEBUG("mapid ~p ~w from ~w to ~w dist ~p",
         [self(), Obj#r_map_obj.uid, CurPos, NewPos, MoveDist]),
-%%    ?DEBUG("# ~p,~p",[NewPos#vector3.x, NewPos#vector3.z]),
+    ?DEBUG("# ~p,~p",[NewPos#vector3.x, NewPos#vector3.z]),
     on_player_pos_change(Obj, NewPos),
 
     #r_map_obj{dir = Dir, dest_pos = Dst} = Obj,
@@ -242,9 +243,11 @@ on_player_pos_change(Obj, TarPos) ->
 %%    ?DEBUG("~w pos change ~w", [Obj#r_map_obj.uid, TarPos]),
 
     %
+    Uid = lib_obj:get_obj_uid(Obj),
     OldVisIndex = lib_map_view:pos_to_vis_index(lib_obj:get_obj_pos(Obj)),
     NewVisIndex = lib_map_view:pos_to_vis_index(TarPos),
-    lib_map_rw:player_update_pos(Obj#r_map_obj.uid, TarPos),
+    lib_map_rw:player_update_pos(Uid, TarPos),
+    lib_mem:player_update(Uid, {#m_player.pos, TarPos}),
     lib_map_view:sync_change_pos_visual_tile(Obj, OldVisIndex, NewVisIndex),
     lib_map_view:sync_movement_to_big_visual_tile({player_move_to, lib_obj:get_obj_pos(Obj), TarPos}),
     ok.

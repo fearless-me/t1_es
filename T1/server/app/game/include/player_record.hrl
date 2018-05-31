@@ -17,7 +17,7 @@
     uid, aid, sid, name, sex, career, level, pid,
     mid, line, mpid, old_mid, old_line, old_pos,
     % 进入地图进程同步更新
-    pos, state, hp
+    pos, state=0, hp=0
 }).
 
 -endif.

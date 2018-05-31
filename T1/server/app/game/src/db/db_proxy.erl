@@ -14,8 +14,11 @@
 -include("pub_common.hrl").
 
 %%
--export([checkout/1]).
--export([checkout_/1]).
+-export([checkout_ppool/1]).
+-export([checkout_ppool_/1]).
+-export([checkout_apool/1]).
+-export([checkout_apool_/1]).
+%%
 -export([start_db_pool/0]).
 -export([start_db_pool/1]).
 %%
@@ -30,11 +33,13 @@
 -define(CALL_TIMEOUT, 30 * 1000).
 
 %%
-checkout(AccId) ->
-    gen_server:call(?MODULE, {give_pool, AccId}, ?CALL_TIMEOUT).
+checkout_ppool(AccId) ->
+    gen_server:call(?MODULE, {give_ppool, AccId}, ?CALL_TIMEOUT).
+checkout_ppool_(AccId) -> hash_to_pool(?ETS_PLAYER_DB_POOL, AccId).
 
-%%
-checkout_(AccId) -> hash_to_pool(AccId).
+checkout_apool(AccId) ->
+    gen_server:call(?MODULE, {give_apool, AccId}, ?CALL_TIMEOUT).
+checkout_apool_(AccId) -> hash_to_pool(?ETS_ACCOUNT_DB_POOL, AccId).
 
 %% API
 start_db_pool() ->
@@ -63,8 +68,10 @@ mod_init(_Args) ->
 %%-------------------------------------------------------------------
 do_handle_call(start_db_pool, _From, State) ->
     {reply, init_pool(), State};
-do_handle_call({give_pool, AccId}, _From, State) ->
-    {reply, hash_to_pool(AccId), State};
+do_handle_call({give_ppool, AccId}, _From, State) ->
+    {reply, hash_to_pool(?ETS_PLAYER_DB_POOL, AccId), State};
+do_handle_call({give_apool, AccId}, _From, State) ->
+    {reply, hash_to_pool(?ETS_ACCOUNT_DB_POOL, AccId), State};
 do_handle_call(Request, From, State) ->
     ?ERROR("undeal call ~w from ~w", [Request, From]),
     {reply, ok, State}.
@@ -82,10 +89,10 @@ do_handle_cast(Request, State) ->
     {noreply, State}.
 
 %%--------------------------------------------------------------------
-hash_to_pool(Key) ->
-    Size = ets:info(?ETS_PLAYER_DB_POOL, size),
+hash_to_pool(Ets, Key) ->
+    Size = ets:info(Ets, size),
     PoolId = Key rem Size + 1,
-    case ets:lookup(?ETS_PLAYER_DB_POOL, PoolId) of
+    case ets:lookup(Ets, PoolId) of
         [#r_db_pool{mgr = Mgr}] -> Mgr;
         _ -> undefined
     end.

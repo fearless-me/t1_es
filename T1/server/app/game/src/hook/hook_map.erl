@@ -4,9 +4,9 @@
 %%% @doc
 %%%
 %%% @end
-%%% Created : 30. 五月 2018 19:07
+%%% Created : 31. 五月 2018 10:38
 %%%-------------------------------------------------------------------
--module(hook_player_map).
+-module(hook_map).
 -author("mawenhong").
 
 %% API

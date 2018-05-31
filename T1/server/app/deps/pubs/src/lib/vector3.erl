@@ -12,6 +12,7 @@
 -include("vector3.hrl").
 %% API
 -export([new/3]).
+-export([x/1,y/1,z/1]).
 -export([add/2]).
 -export([subtract/2]).
 -export([multi/2]).
@@ -21,11 +22,16 @@
 -export([is_behind/3]). %% src 是否在目标反面
 -export([is_front/3]). %% src 是否在目标正面
 -export([normalized/1]).
+-export([dist/1, dist_sq/1]).
 -export([dist/2, dist_sq/2]).
 -export([linear_lerp/3]).
 
 new(X, Y, Z) ->
     #vector3{x = float(X), y = float(Y), z = float(Z)}.
+
+x(Pos) -> Pos#vector3.x.
+y(Pos) -> Pos#vector3.y.
+z(Pos) -> Pos#vector3.z.
 
 %%
 add(P1, P2) ->
@@ -53,11 +59,12 @@ divi(P, Factor) ->
 
 %%
 normalized(P) ->
-    #vector3{x = X, y = Y, z = Z} = P,
-    Len = math:sqrt(X * X + Y * Y + Z * Z),
+    Len = vector3:dist(P),
     case Len == 0 of
         true -> P;
-        _ -> #vector3{x = X / Len, y = Y / Len, z = Z / Len}
+        _ ->
+            #vector3{x = X, y = Y, z = Z} = P,
+            #vector3{x = X / Len, y = Y / Len, z = Z / Len}
     end.
 
 %%
@@ -99,6 +106,14 @@ is_front(Src, Dst, DstFace) ->
     % |A|*|B|*cosθ
     (X1 * X2 + Y1 * Y2 + Z1 * Z2) >= 0.
 
+%%
+dist(P) ->
+    Sq = vector3:dist_sq(P),
+    math:sqrt(Sq).
+
+dist_sq(P) ->
+    #vector3{x = X, y = Y, z = Z} = P,
+    X * X + Y * Y + Z * Z.
 
 %%
 dist(P1, P2) ->

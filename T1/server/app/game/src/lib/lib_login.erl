@@ -30,7 +30,7 @@ login_2(Pid, {false, Error}, S)->
     ps:send(Pid, login_ack, #r_login_ack{error = Error}),
     S;
 login_2(Pid, {true, PlatAccount}, S)->
-    lib_db:action_(misc:crc32(PlatAccount), account_login,  PlatAccount, Pid),
+    lib_db:action_p_(misc:crc32(PlatAccount), account_login,  PlatAccount, Pid),
     S#login_state{in = S#login_state.in + 1}.
 
 %%--------------------------------------------------------------------

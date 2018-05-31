@@ -66,7 +66,7 @@ login_ack_success(sucess, AccountIfo) ->
     }),
     lib_player_rw:set_aid(Aid),
     lib_player_rw:set_status(?PS_WAIT_LIST),
-    lib_db:action_(Aid, load_player_list, Aid),
+    lib_db:action_p_(Aid, load_player_list, Aid),
     ok;
 login_ack_success(Reason, AccountIfo) ->
     #p_account{accountID = Aid} = AccountIfo,
@@ -122,7 +122,7 @@ loaded_player_list(RoleList) ->
 create_player_(Req) ->
     Aid = lib_player_rw:get_aid(),
     lib_player_rw:set_status(?PS_CREATING),
-    lib_db:action_(Aid, create_player, {Aid, Req}),
+    lib_db:action_p_(Aid, create_player, {Aid, Req}),
     ok.
 
 %%%-------------------------------------------------------------------
@@ -140,7 +140,7 @@ create_player_ack(#r_create_player_ack{error = Err}) ->
 select_player(Uid) ->
     Aid = lib_player_rw:get_aid(),
     lib_player_rw:set_status(?PS_WAIT_LOAD),
-    lib_db:action_(Aid, load_player_data, {Aid, Uid}),
+    lib_db:action_p_(Aid, load_player_data, {Aid, Uid}),
     ok.
 
 %%%-------------------------------------------------------------------
@@ -257,8 +257,10 @@ offline_1(Status)
     when Status =:= ?PS_GAME; Status =:= ?PS_CHANGE_MAP ->
     lib_player_rw:set_status(?PS_OFFLINE),
     Uid = lib_player_rw:get_uid(),
-    #m_player{mid = Mid, mpid = MPid} = lib_mem:get_player(Uid),
-    mod_map_creator:player_offline(Uid, Mid, MPid);
+    #m_player{mid = Mid, mpid = MPid} = Player = lib_mem:get_player(Uid),
+    lib_player_save:save(Player),
+    mod_map_creator:player_offline(Uid, Mid, MPid),
+    ok;
 offline_1(_Status) ->
     lib_player_rw:set_status(?PS_OFFLINE),
     ok.

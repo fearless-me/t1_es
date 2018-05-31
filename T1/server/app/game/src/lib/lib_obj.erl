@@ -16,6 +16,7 @@
 %% API
 
 %% obj
+-export([get_obj_uid/1]).
 -export([get_obj_pos/1]).
 -export([get_obj_dest_pos/1]).
 -export([get_obj_start_pos/1]).
@@ -40,6 +41,7 @@ is_player(Obj)  -> Obj#r_map_obj.type =:= ?OBJ_USR.
 is_monster(Obj) -> Obj#r_map_obj.type =:= ?OBJ_MON.
 
 %%-------------------------------------------------------------------
+get_obj_uid(Obj)                    -> Obj#r_map_obj.uid.
 get_obj_pos(Obj)                    -> Obj#r_map_obj.cur_pos.
 get_obj_move_state(Obj)             -> Obj#r_map_obj.cur_move.
 get_obj_start_pos(Obj)              -> Obj#r_map_obj.start_pos.

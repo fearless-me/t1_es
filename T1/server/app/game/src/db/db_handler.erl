@@ -14,6 +14,7 @@
 -include("common_record.hrl").
 -include("db_record.hrl").
 -include("map_obj.hrl").
+-include("vector3.hrl").
 
 %% API
 -export([do_handle_info/4]).
@@ -88,11 +89,24 @@ do_handle_info(create_player, {AccId, Req}, FromPid, PoolId) ->
         }
     ),
     ok;
+do_handle_info(save_player, Player, _FromPid, PoolId) ->
+    #m_player{
+        uid = Uid,  career = Career, level = Lv,
+        mid = Mid, line = Line, pos = Pos,
+        old_mid = OMid, old_line = OLine, old_pos = OPos
+    } = Player,
+    Sql = "update player set career=?, level=?, map_id=?,line=?,x=?,y=?,"
+     "old_map_id=?, old_line=?, old_x=?, old_y=?, version = ? where uid=?",
+    Params = [Career, Lv, Mid, Line, vector3:x(Pos),vector3:z(Pos),
+    OMid, OLine, vector3:x(OPos), vector3:z(OPos), misc:milli_seconds(), Uid],
+    Res = db:query(PoolId,Sql, Params),
+    check_and_log(db:succeed(Res), Sql, Res),
+    ok;
 do_handle_info(MsgId, Msg, FromPid, _PoolId) ->
     ?ERROR("undeal msg ~w ~w from ~p", [MsgId, Msg, FromPid]),
     ok.
 
 
 %%-------------------------------------------------------------------
-check_and_log(true, _Sql, _Res) -> skip;
+check_and_log(true, Sql, _Res) -> ?DEBUG("[success] ~ts",[Sql]);
 check_and_log(_, Sql, Res) -> ?ERROR("ret: ~p, sql: ~ts", [Res, Sql]).
