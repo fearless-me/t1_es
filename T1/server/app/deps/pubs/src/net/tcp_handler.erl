@@ -86,9 +86,10 @@ do_handle_info({tcp, Socket, Data},
     try
         S1 = Handler:on_data(Socket,Data, S),
         {noreply, State#state{cli_data = S1}}
-    catch _:_ ->
+    catch _:Err ->
             ranch_tcp:shutdown(Socket, read),
-            ?WARN("~p will be shutdown socket ~p",[self(), Socket]),
+            ?WARN("~p will be shutdown socket ~p, err ~p, st ~p",
+                [self(), Socket, Err, misc:stacktrace()]),
             {noreply, State}
     end;
 do_handle_info(

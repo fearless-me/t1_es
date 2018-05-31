@@ -27,7 +27,7 @@
 -export([select_player/1]).
 -export([loaded_player/1]).
 -export([offline/1]).
--export([go_to_new_map/2, return_to_pre_map/0]).
+-export([goto_new_map/2, goto_to_pre_map/0]).
 -export([teleport/1, teleport_/1]).
 
 init() ->
@@ -76,7 +76,7 @@ login_ack_success(Reason, AccountIfo) ->
     }),
     lib_player_rw:set_status(?PS_ERROR),
     mod_player:shutdown(read),
-    gcore:kick_account(Aid, repeat_login),
+    gcore:kick_account(Aid, Reason),
     ok.
 
 %%%-------------------------------------------------------------------
@@ -200,12 +200,12 @@ teleport_1(MapPid, NewPos) ->
     ok.
 
 %%-------------------------------------------------------------------
-go_to_new_map(DestMapID, Pos) ->
-    go_to_new_map_1(DestMapID, Pos),
+goto_new_map(DestMapID, Pos) ->
+    goto_new_map_1(DestMapID, Pos),
     ok.
 
 %%-------------------------------------------------------------------
-go_to_new_map_1(DestMapID, TarPos) ->
+goto_new_map_1(DestMapID, TarPos) ->
     lib_player_rw:set_status(?PS_CHANGE_MAP),
     Uid = lib_player_rw:get_uid(),
     #m_player{mid = Mid, line = Line, mpid = MPid, pos = Pos} = lib_mem:get_player(Uid),
@@ -218,7 +218,7 @@ go_to_new_map_1(DestMapID, TarPos) ->
         }
     ),
 
-    #r_change_map_ack{map_id = Mid1, line_id = Line1, map_pid = Mpid1} = Ack,
+    #r_change_map_ack{map_id = Mid1, line_id = Line1, map_pid = MPid1} = Ack,
     lib_mem:player_update(
         Uid,
         [
@@ -227,24 +227,24 @@ go_to_new_map_1(DestMapID, TarPos) ->
             {#m_player.old_pos, Pos},
             {#m_player.mid, Mid1},
             {#m_player.line, Line1},
-            {#m_player.mpid, Mpid1},
+            {#m_player.mpid, MPid1},
             {#m_player.pos, TarPos}
         ]
     ),
     ?DEBUG("go_to_new_map(~p, ~w) -> ~w", [DestMapID, Pos, Ack]),
-
+    
     mod_map:player_move_(
-        Mpid1,
+        MPid1,
         #r_player_start_move_req{uid = Uid, tar_pos = vector3:new(400.6, 0, 358.9)}
     ),
     ok.
 
 %%%-------------------------------------------------------------------
-return_to_pre_map() ->
+goto_to_pre_map() ->
     Uid = lib_player_rw:get_uid(),
     #m_player{mpid = Mid, old_mid = OMid, old_pos = OPos} = lib_mem:get_player(Uid),
     ?DEBUG("player ~p return_to_pre_map from ~p to ~p", [Uid, Mid, OMid]),
-    go_to_new_map_1(OMid, OPos),
+    goto_new_map_1(OMid, OPos),
     ok.
 
 

@@ -64,8 +64,8 @@ player_offline(Uid, MapID, MapPid) ->
 %%%-------------------------------------------------------------------
 player_change_map(Req) ->
     #r_change_map_req{
-        uid = Uid, map_pid = Mid, tar_map_id = TMid,
-        map_pid = Mpid
+        uid = Uid, tar_map_id = TMid,
+        map_id = Mid, map_pid = Mpid
     } = Req,
     CurMgr = map_mgr(Mid),
     TarMgr = map_mgr(TMid),
