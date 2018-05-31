@@ -113,9 +113,7 @@ player_exit_map_1(_S, Req) ->
 create_new_line(S, MapID, LineID) ->
     {ok, Pid} = mod_map_supervisor:start_child([MapID, LineID]),
     Line = #m_map_line{
-        map_id = MapID,
-        line_id = LineID,
-        pid = Pid,
+        map_id = MapID, line_id = LineID, pid = Pid,
         dead_line = misc:milli_seconds() + ?LINE_LIFETIME
     },
     erlang:send_after(?LINE_LIFETIME, self(), {stop_line, Line}),
@@ -134,8 +132,8 @@ next_line_id() ->
     LineID.
 
 stop_map_line(S, Line) ->
-    ?INFO("map_~p_~p ~p will be stopped",
-        [Line#m_map_line.map_id, Line#m_map_line.line_id, Line#m_map_line.pid]),
-    ets:delete(S#state.ets, Line#m_map_line.line_id),
-    ps:send(Line#m_map_line.pid, start_stop_now),
+    #m_map_line{map_id = Mid, line_id = Line, pid = Pid} = Line,
+    ?INFO("map_~p_~p ~p will be stopped", [Mid, Line, Pid]),
+    ets:delete(S#state.ets, Line),
+    ps:send(Pid, start_stop_now),
     ok.

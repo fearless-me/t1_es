@@ -88,8 +88,8 @@ do_handle_info({tcp, Socket, Data},
         {noreply, State#state{cli_data = S1}}
     catch _:_ ->
             ranch_tcp:shutdown(Socket, read),
-            ?WARN("~p stop,shutdown socket ~p",[self(), Socket]),
-            {stop, shutdown, State}
+            ?WARN("~p will be shutdown socket ~p",[self(), Socket]),
+            {noreply, State}
     end;
 do_handle_info(
     {tcp_closed, Socket},

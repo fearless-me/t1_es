@@ -63,34 +63,24 @@ player_offline(Uid, MapID, MapPid) ->
 
 %%%-------------------------------------------------------------------
 player_change_map(Req) ->
-    CurMgr = map_mgr(Req#r_change_map_req.map_id),
-    TarMgr = map_mgr(Req#r_change_map_req.tar_map_id),
+    #r_change_map_req{
+        uid = Uid, map_pid = Mid, tar_map_id = TMid,
+        map_pid = Mpid
+    } = Req,
+    CurMgr = map_mgr(Mid),
+    TarMgr = map_mgr(TMid),
     ?INFO("player ~p, changeMap mgr ~p:~p -> mgr ~p:~p",
-        [
-            Req#r_change_map_req.uid,
-            Req#r_change_map_req.map_id,
-            CurMgr,
-            Req#r_change_map_req.tar_map_id,
-            TarMgr
-        ]
-    ),
+        [Uid, Mid, CurMgr, TMid, TarMgr]),
     case CurMgr of
-        undefined -> ?FATAL("player[~p] cur map[~p] not exists",
-            [Req#r_change_map_req.uid, Req#r_change_map_req.map_id]);
+        undefined ->
+            ?FATAL("player[~p] cur map[~p] not exists", [Uid, Mid]);
         _ ->
-            mod_map_mgr:player_exit_map(
-                CurMgr,
-                #r_exit_map_req{
-                    map_id = Req#r_change_map_req.map_id,
-                    map_pid = Req#r_change_map_req.map_pid,
-                    uid = Req#r_change_map_req.uid
-                }
-            )
+            mod_map_mgr:player_exit_map(CurMgr,
+                #r_exit_map_req{map_id = Mid, map_pid = Mpid, uid = Uid})
     end,
     case TarMgr of
         undefined ->
-            ?ERROR("player[~p] tar map[~p] not exists",
-                [Req#r_change_map_req.uid, Req#r_change_map_req.tar_map_id]),
+            ?ERROR("player[~p] tar map[~p] not exists", [Uid, TMid]),
             kick_to_born_map(Req);
         _ ->
             case mod_map_mgr:player_join_map(TarMgr, Req) of
