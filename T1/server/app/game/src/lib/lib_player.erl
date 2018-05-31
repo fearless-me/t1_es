@@ -140,10 +140,17 @@ create_player_ack(#r_create_player_ack{error = Err}) ->
 select_player(Uid) ->
     Aid = lib_player_rw:get_aid(),
     lib_player_rw:set_status(?PS_WAIT_LOAD),
+    lib_player_rw:set_uid(Uid),
     lib_db:action_p_(Aid, load_player_data, {Aid, Uid}),
     ok.
 
 %%%-------------------------------------------------------------------
+loaded_player(undefined) ->
+    Aid = lib_player_rw:get_aid(),
+    Uid = lib_player_rw:get_uid(),
+    ?ERROR("~p load player ~p failed",[Aid, Uid]),
+    lib_player_rw:set_uid(0),
+    ok;
 loaded_player(Player) ->
     #p_player{uid = Uid, sid = Sid} = Player,
     lib_mem:new_player(Player),

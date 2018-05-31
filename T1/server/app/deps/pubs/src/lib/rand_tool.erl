@@ -31,20 +31,18 @@ new(Seed) ->
 
 -spec rand() -> integer().
 rand() ->
-    ensure_new(),
-    Key1 = get(?RAND_KEY),
+    Key1 = ensure_new(),
     % gcc
-    Key2 = ((Key1 * 1103515245 + 12345) bsl 1) band ?INT32_MAX ,
+    Key2 = ((Key1 * 1103515245 + 12345) bsr 1) band ?INT32_MAX ,
     put(?RAND_KEY, Key2),
     Key2.
 
 seed() ->
-    ensure_new(),
-    get(?RAND_KEY).
+    ensure_new().
 %%
 ensure_new() ->
     case get(?RAND_KEY) of
         undefined -> new();
-        _ -> skip
+        Key -> Key
     end.
 
