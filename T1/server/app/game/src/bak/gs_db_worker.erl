@@ -13,7 +13,7 @@
 %%-include("logger.hrl").
 %%-include("pub_common.hrl").
 %%-include("common_record.hrl").
-%%-include("gsdef.hrl").
+%%-include("gdef.hrl").
 %%
 %%
 %%%% API

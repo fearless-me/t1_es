@@ -17,14 +17,15 @@ c(Port, MapID) ->
     spawn(fun() -> tcp_client:connect(Port, MapID) end).
 
 nc(N, Port, MapId) ->
-    lists:foreach(fun(_) -> tcp_client:c(Port, MapId) end, lists:seq(1, N)).
+    lists:foreach(fun(_) -> tcp_client:c(Port, MapId), timer:sleep(1) end, lists:seq(1, N)).
 
 connect(Port, MapID) ->
     tcp_codec:init(#net_conf{}),
     {ok, Socket} = ranch_tcp:connect({127, 0, 0, 1}, Port, [{active, false}]),
 
+    send_msg(Socket, #pk_U2GS_SelPlayerEnterGame{roleID = 10}),
     Msg1 = #pk_U2GS_Login_Normal{
-        platformAccount = "test_net", %%++ integer_to_list(misc:milli_seconds()),
+        platformAccount = "test_net" ++ integer_to_list(misc:milli_seconds()),
         platformName = "test",
         platformNickName = "",
         time = misc:seconds(),
@@ -66,6 +67,12 @@ recv_msg(Socket) ->
 
 handle(_Socket, #pk_GS2U_LoginResult{result = Ret, accountID = Aid, msg = Msg}) ->
     io:format("LoginResult ~p acc ~p msg ~ts~n", [Ret, Aid, Msg]),
+    ok;
+handle(Socket, #pk_GS2U_CreatePlayerResult{errorCode = ErrCode, roleID = Uid}) ->
+    case ErrCode of
+       0 -> send_msg(Socket, #pk_U2GS_SelPlayerEnterGame{roleID = Uid});
+        _-> io:format("create role failed ~p~n",[ErrCode])
+    end,
     ok;
 handle(Socket, #pk_GS2U_UserPlayerList{info = Info}) ->
     io:format("PlayerList ~w~n", [Info]),

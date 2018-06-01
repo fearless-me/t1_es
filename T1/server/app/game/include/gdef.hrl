@@ -8,12 +8,12 @@
 %%%-------------------------------------------------------------------
 -author("mawenhong").
 
--ifndef(GSDEF_HRL).
--define(GSDEF_HRL, true).
+-ifndef(GDEF_HRL).
+-define(GDEF_HRL, true).
 
 -define(ETS_PLAYER_PUB, ets_player_PUB).
 -define(ETS_PLAYER_LIST, ets_playerlist).
--define(ETS_GS_DBS, ets_db_info).
+-define(ETS_PLAYER_PSOCK, ets_player_psock).
 
 
 %%

@@ -10,13 +10,16 @@
 -author("mawenhong").
 -include("logger.hrl").
 -include("pub_common.hrl").
--include("player_record.hrl").
--include("gsdef.hrl").
+-include("mem_record.hrl").
+-include("gdef.hrl").
 
 %% API
 -export([init_mem_db/0]).
+
+%%-------------------------------------------------------------------
 init_mem_db() ->
-    ets:new(?ETS_PLAYER_PUB, [named_table, public, {keypos, #m_player.uid}, ?ETSRC, ?ETSWC]),
+    ets:new(?ETS_PLAYER_PUB,   [named_table, public, {keypos, #m_player.uid},           ?ETSRC, ?ETSWC]),
+    ets:new(?ETS_PLAYER_PSOCK, [named_table, public, {keypos, #m_player_pid_sock.uid},  ?ETSRC, ?ETSWC]),
     ok.
 
 

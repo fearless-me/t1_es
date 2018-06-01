@@ -13,7 +13,7 @@
 %%-include("logger.hrl").
 %%-include("pub_common.hrl").
 %%-include("common_record.hrl").
-%%-include("gsdef.hrl").
+%%-include("gdef.hrl").
 %%
 %%-export([all_db_connected/0]).
 %%-export([send_to_dbs/3]).

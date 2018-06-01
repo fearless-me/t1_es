@@ -27,8 +27,6 @@
 %%
 %%-record(r_gs_db_info,{node = '', pid = 0, req_no = 0, status = 0}).
 
-%%
--record(m_account, {aid, uid}).
 
 
 

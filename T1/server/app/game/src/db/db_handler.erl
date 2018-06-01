@@ -10,7 +10,7 @@
 -author("mawenhong").
 
 -include("logger.hrl").
--include("player_record.hrl").
+-include("mem_record.hrl").
 -include("common_record.hrl").
 -include("db_record.hrl").
 -include("map_obj.hrl").

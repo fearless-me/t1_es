@@ -16,7 +16,7 @@
 -include("common_record.hrl").
 -include("map_obj.hrl").
 -include("db_record.hrl").
--include("player_record.hrl").
+-include("mem_record.hrl").
 -include("vector3.hrl").
 -include("pub_common.hrl").
 
@@ -145,11 +145,12 @@ loaded_player(undefined) ->
     lib_player_rw:set_uid(0),
     ok;
 loaded_player(Player) ->
-    #p_player{uid = Uid, sid = Sid} = Player,
-    lib_mem:new_player(Player),
+    #p_player{uid = Uid, aid = Aid, sid = Sid} = Player,
     lib_player_rw:set_uid(Uid),
     lib_player_rw:set_sid(Sid),
     lib_player_rw:set_status(?PS_WAIT_ENTER),
+    lib_mem:new_player(self(), mod_player:socket(), Player),
+    lib_mem:add_sock(Aid, Uid, self(), mod_player:socket()),
     add_to_world(Player),
     ok.
 
@@ -252,7 +253,8 @@ goto_to_pre_map() ->
 offline(Reason) ->
     ?TRY_CATCH(offline_1(lib_player_rw:get_status()), Err0),
     ?TRY_CATCH(lib_mem:del_player(lib_player_rw:get_uid()), Err1),
-    ?TRY_CATCH(flush_cache(Reason), Err2),
+    ?TRY_CATCH(lib_mem:del_sock(lib_player_rw:get_uid()), Err2),
+    ?TRY_CATCH(flush_cache(Reason), Err3),
     ok.
 
 offline_1(Status)

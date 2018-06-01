@@ -22,8 +22,10 @@
 -include("logger.hrl").
 -include("netconf.hrl").
 -include("player_status.hrl").
--include("player_record.hrl").
+-include("mem_record.hrl").
 -include("pub_common.hrl").
+-include("player_status.hrl").
+-include("netmsg.hrl").
 
 -define(SocketKey,socketRef___).
 
@@ -32,7 +34,7 @@
 
 %% API
 -export([shutdown/1]).
--export([stop/1, direct_stop/0, send/1,direct_send/1]).
+-export([stop/1, direct_stop/0, send/1, direct_send/1]).
 -export([on_init/1, on_data/3, on_close/3]).
 -export([on_info_msg/2, on_call_msg/3, on_cast_msg/2, on_net_msg/2]).
 -export([socket/1, socket/0]).
@@ -85,6 +87,9 @@ on_close(Socket, Reason, S) ->
 on_info_msg({kick, Reason}, S) ->
     mod_player:stop(Reason),
     S;
+on_info_msg({net_msg, NetMsg}, S) ->
+    mod_player:send(NetMsg),
+    S;
 on_info_msg({login_ack, Msg}, S) ->
     ?DEBUG("login_ack:~p",[Msg]),
     lib_player:login_ack(Msg),
@@ -128,8 +133,51 @@ on_cast_msg(Request, S) ->
 %%-------------------------------------------------------------------
 on_net_msg(Cmd, Msg)->
     ?DEBUG("net msg ~p:~p",[Cmd, Msg]),
-    ?TRY_CATCH( lib_route:route(Msg) ),
+    ?TRY_CATCH( route_msg(Cmd, Msg) ),
     ok.
+
+route_msg(Cmd, Msg) ->
+    %%1. hook
+    ?DEBUG("route(~p)",[Msg]),
+    Status = lib_player_rw:get_status(),
+    try filter_msg(Status, Cmd, Msg) of
+        _ -> skip
+    catch _:status_error ->
+        error_log_msg(Cmd, Msg)
+    end,
+    ok.
+
+filter_msg(?PS_ERROR, Cmd, Msg) ->
+    error_log_msg(Cmd, Msg);
+filter_msg(?PS_OFFLINE, Cmd, Msg) ->
+    error_log_msg(Cmd, Msg);
+filter_msg(_status, Cmd, Msg) ->
+    dispatcher_msg(Cmd, Msg).
+
+dispatcher_msg(?U2GS_Login_Normal, Msg) ->
+    check_status(?PS_INIT),
+    lib_route:handle(Msg);
+dispatcher_msg(?U2GS_RequestCreatePlayer, Msg) ->
+    check_status(?PS_WAIT_SELECT_CREATE),
+    lib_route:handle(Msg);
+dispatcher_msg(?U2GS_SelPlayerEnterGame, Msg) ->
+    check_status(?PS_WAIT_SELECT_CREATE),
+    lib_route:handle(Msg);
+dispatcher_msg(_, Msg) ->
+    lib_route:handle(Msg);
+dispatcher_msg(Cmd, Msg) ->
+    error_log_msg(Cmd, Msg).
+
+
+check_status(NeedStatus) ->
+    case lib_player_rw:get_status() of
+        NeedStatus -> skip;
+        _ -> throw(status_error)
+    end.
+
+error_log_msg(Cmd, Msg) ->
+    ?ERROR("status error ~p, Cmd ~p, msg ~w",
+        [lib_player_rw:get_status(), Cmd, Msg]).
 
 %%-------------------------------------------------------------------
 socket(Socket) -> put(?SocketKey, Socket).

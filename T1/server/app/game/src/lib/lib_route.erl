@@ -17,39 +17,21 @@
 
 
 %% API
--export([route/1]).
+-export([handle/1]).
 
-route(Msg) ->
-    %%1. hook
-    ?DEBUG("route(~p)",[Msg]),
-    Status = lib_player_rw:get_status(),
-    case Status of
-        ?PS_INIT -> ok;
-        ?PS_VERIFY -> ok;
-        ?PS_WAIT_LIST -> ok;
-        ?PS_WAIT_SELECT_CREATE -> ok;
-        ?PS_WAIT_LOAD -> ok;
-        ?PS_WAIT_ENTER -> ok;
-        ?PS_GAME -> ok;
-        ?PS_CHANGE_MAP -> ok;
-        ?PS_OFFLINE -> ok;
-        _ -> ok
-    end,
-    %%2. route
-    route_1(Msg),
-    ok.
-route_1(#pk_U2GS_Login_Normal{
+handle(#pk_U2GS_Login_Normal{
     platformAccount = PlatAccount,
     sign = Token
 }) ->
     ?DEBUG("mod_login:login_"),
+    lib_player_rw:set_status(?PS_VERIFY),
     mod_login:login_(#r_login_req{
         plat_account_name = PlatAccount,
         access_token = Token,
         player_pid = self()
     }),
     ok;
-route_1(#pk_U2GS_RequestCreatePlayer{
+handle(#pk_U2GS_RequestCreatePlayer{
     name = Name,
     camp = Camp,
     career = Career,
@@ -64,13 +46,13 @@ route_1(#pk_U2GS_RequestCreatePlayer{
         head = Head, mid = BornMid, x = X, y = Z, sid = gconf:get_sid()
     }),
     ok;
-route_1(#pk_U2GS_SelPlayerEnterGame{roleID = Uid}) ->
+handle(#pk_U2GS_SelPlayerEnterGame{roleID = Uid}) ->
     lib_player:select_player(Uid),
     ok;
-route_1(#pk_GS2U_GoNewMap{tarMapID = DestMapID, fX = X, fY = Y} = Msg) ->
+handle(#pk_GS2U_GoNewMap{tarMapID = DestMapID, fX = X, fY = Y} = Msg) ->
     ?DEBUG("~p",[Msg]),
     lib_player:goto_new_map(DestMapID, vector3:new(X, 0, Y)),
     ok;
-route_1(Msg) ->
+handle(Msg) ->
     ?DEBUG("~p", [Msg]),
     ok.
