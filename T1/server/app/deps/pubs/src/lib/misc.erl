@@ -28,6 +28,13 @@
 -export([create_atom/2]).
 -export([register_name/0, register_name/1]).
 -export([is_alive/1]).
+-export([get_pdict/2]).
+%%%-------------------------------------------------------------------
+get_pdict(Key, Def) ->
+    case get(Key) of
+        undefined -> Def;
+        V -> V
+    end.
 
 %%%-------------------------------------------------------------------
 atom_to_binary(A) ->
