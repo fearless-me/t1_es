@@ -20,7 +20,12 @@
 -include("vector3.hrl").
 -include("pub_common.hrl").
 
+%%
 -export([init/0]).
+-export([shutdown/1]).
+-export([stop/1, direct_stop/0, send/1]).
+-export([socket/0]).
+%%
 -export([login_ack/1]).
 -export([loaded_player_list/1]).
 -export([create_player_/1, create_player_ack/1]).
@@ -30,17 +35,30 @@
 -export([goto_new_map/2, goto_to_pre_map/0]).
 -export([teleport/1, teleport_/1]).
 
+%%-------------------------------------------------------------------
 init() ->
     lib_player_rw:set_status(?PS_INIT),
     ok.
 
-%%
-init_on_create() ->
-    ok.
-%%%-------------------------------------------------------------------
+%%-------------------------------------------------------------------
+-spec shutdown(How) -> ok when
+    How :: read | write | read_write.
+shutdown(How) -> mod_player:shutdown(socket(), How).
+stop(Reason)-> mod_player:active_stop(Reason).
+direct_stop()-> mod_player:direct_stop().
+%%-------------------------------------------------------------------
+
+-spec send(Msg :: list() | tuple()) -> ok.
+send(Msg) -> mod_player:send(Msg).
+socket()-> mod_player:socket().
+
+%%-------------------------------------------------------------------
+init_on_create() -> ok.
 
 
-%%%-------------------------------------------------------------------
+
+
+%%-------------------------------------------------------------------
 login_ack(#r_login_ack{error = 0, account_info = AccountIfo}) ->
     #p_account{accountID = AccId} = AccountIfo,
     Ret = gcore:register_ppid(self(), AccId),
@@ -53,7 +71,7 @@ login_ack(#r_login_ack{error = Error}) ->
     }),
     ok.
 
-%%%-------------------------------------------------------------------
+%%-------------------------------------------------------------------
 login_ack_success(sucess, AccountIfo) ->
     Aid = AccountIfo#p_account.accountID,
     mod_player:send(#pk_GS2U_LoginResult{
@@ -79,7 +97,7 @@ login_ack_success(Reason, AccountIfo) ->
     gcore:kick_account(Aid, Reason),
     ok.
 
-%%%-------------------------------------------------------------------
+%%-------------------------------------------------------------------
 loaded_player_list([]) ->
     lib_player_rw:set_status(?PS_WAIT_SELECT_CREATE),
     mod_player:send(#pk_GS2U_UserPlayerList{}),
@@ -111,14 +129,14 @@ loaded_player_list(RoleList) ->
     mod_player:send(#pk_GS2U_UserPlayerList{info = Info}),
     ok.
 
-%%%-------------------------------------------------------------------
+%%-------------------------------------------------------------------
 create_player_(Req) ->
     Aid = lib_player_rw:get_aid(),
     lib_player_rw:set_status(?PS_CREATING),
     lib_db:action_p_(Aid, create_player, {Aid, Req}),
     ok.
 
-%%%-------------------------------------------------------------------
+%%-------------------------------------------------------------------
 create_player_ack(#r_create_player_ack{error = 0, uid = Uid}) ->
     lib_player_rw:set_status(?PS_WAIT_SELECT_CREATE),
     init_on_create(),
@@ -129,7 +147,7 @@ create_player_ack(#r_create_player_ack{error = Err}) ->
     lib_player_rw:set_status(?PS_WAIT_SELECT_CREATE),
     mod_player:send(#pk_GS2U_CreatePlayerResult{errorCode = Err}).
 
-%%%-------------------------------------------------------------------
+%%-------------------------------------------------------------------
 select_player(Uid) ->
     Aid = lib_player_rw:get_aid(),
     lib_player_rw:set_status(?PS_WAIT_LOAD),
@@ -137,7 +155,7 @@ select_player(Uid) ->
     lib_db:action_p_(Aid, load_player_data, {Aid, Uid}),
     ok.
 
-%%%-------------------------------------------------------------------
+%%-------------------------------------------------------------------
 loaded_player(undefined) ->
     Aid = lib_player_rw:get_aid(),
     Uid = lib_player_rw:get_uid(),
@@ -154,7 +172,7 @@ loaded_player(Player) ->
     add_to_world(Player),
     ok.
 
-%%%-------------------------------------------------------------------
+%%-------------------------------------------------------------------
 add_to_world(Player) ->
     #p_player{uid = Uid, map_id = Mid, x = X, y = Y} = Player,
     Pos = vector3:new(X, 0, Y),
