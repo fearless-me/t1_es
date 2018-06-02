@@ -107,8 +107,8 @@ print_status()->
     "auto reload interval: ~w(milliseconds)~n"
     "==========",
         [
-            io_lib:format("~ts",[misc:list_to_string(fly:info(src_dirs), "\n\t")]),
-            io_lib:format("~ts",[misc:list_to_string(fly:info(inc_dirs), "\n\t")]),
+            io_lib:format("~ts",[misc:list_to_string_suffix(fly:info(src_dirs), "\n\t")]),
+            io_lib:format("~ts",[misc:list_to_string_suffix(fly:info(inc_dirs), "\n\t")]),
             fly:info(opts),
             fly:info(interval)
         ]

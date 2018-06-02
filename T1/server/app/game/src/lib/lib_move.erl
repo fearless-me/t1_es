@@ -67,7 +67,7 @@ test_dir() ->
 start_player_walk_1(Obj, Start, _End) ->
     #r_map_obj{uid = Uid, move_speed = Speed} = Obj,
 
-    Now = misc:milli_seconds(),
+    Now = time:milli_seconds(),
     Dir = test_dir(),
     Way = test_path(),
 
@@ -143,7 +143,7 @@ update_player_move(Obj, ?EMS_WALK) ->
     #r_map_obj{
         cur_pos = CurPos, path_list = PathList, moved_time = MovedTime
     } = Obj,
-    Now = misc:milli_seconds(),
+    Now = time:milli_seconds(),
     Delta = lib_obj:get_obj_move_diff_time(Obj, Now),
     Ret = update_role_walk(Obj, CurPos, PathList, MovedTime + Delta),
     case Ret of

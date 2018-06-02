@@ -16,13 +16,12 @@
 -export([b2i/1, i2b/1]).
 -export([ntoa/1, ntoab/1]).
 -export([to_atom/1]).
--export([list_to_string/2]).
+-export([list_to_string_suffix/2]).
 -export([ip/0, peername/1, ip_string/1]).
 -export([crc32/1]).
 -export([ceil/1,mod_1/2, floor/1, clamp/3, rand/2]).
 -export([get_value/3]).
 -export([stacktrace/0, stacktraceE/0]).
--export([milli_seconds/0, seconds/0]).
 -export([parse_information_unit/1]).
 -export([register_process/3]).
 -export([create_atom/2]).
@@ -86,8 +85,8 @@ list_to_atom2(List) when is_list(List) ->
         Atom when is_atom(Atom) -> Atom
     end.
 
-list_to_string([], SuffixStr)-> SuffixStr;
-list_to_string(List, SuffixStr)-> string:join(List, SuffixStr).
+list_to_string_suffix([], SuffixStr)-> SuffixStr;
+list_to_string_suffix(List, SuffixStr)-> string:join(List, SuffixStr).
 
 %%
 rand(Min, Min)-> Min;
@@ -144,12 +143,6 @@ stacktrace()->
 
 stacktraceE()->
    try erlang:error(callStack) catch _ : _ -> erlang:get_stacktrace() end.
-
-milli_seconds()->
-    os:system_time(milli_seconds).
-
-seconds() ->
-    os:system_time(seconds).
 
 %% Format IPv4-mapped IPv6 addresses as IPv4, since they're what we see
 %% when IPv6 is enabled but not used (i.e. 99% of the time).

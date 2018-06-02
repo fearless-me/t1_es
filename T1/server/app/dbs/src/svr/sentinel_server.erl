@@ -94,8 +94,8 @@ print_status()->
             dbs_worker_manager:get_worker_size(),
             mysql_pool_manager:get_player_data_mysql_instance_num(),
             mod_ini_conf:get_mysql_player_db_table_partition(),
-            io_lib:format("~ts",[misc:list_to_string(fly:info(src_dirs), "\n\t")]),
-            io_lib:format("~ts",[misc:list_to_string(fly:info(inc_dirs), "\n\t")]),
+            io_lib:format("~ts",[misc:list_to_string_suffix(fly:info(src_dirs), "\n\t")]),
+            io_lib:format("~ts",[misc:list_to_string_suffix(fly:info(inc_dirs), "\n\t")]),
             fly:info(opts),
             fly:info(interval)
         ]

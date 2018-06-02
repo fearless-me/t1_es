@@ -39,9 +39,11 @@ new_player(Pid, Sock, PPlayer) ->
         old_mid= OMid, old_line = 1, old_pos = vector3:new(Ox, 0, Oy)
     },
     ets:insert(?ETS_PLAYER_PUB, Player),
+    ?INFO("add player ~w to ETS_PLAYER_PUB", [Uid]),
     ok.
 %%-------------------------------------------------------------------
 del_player(Uid) ->
+    ?INFO("del player ~w from ETS_PLAYER_PUB", [Uid]),
     ets:delete(?ETS_PLAYER_PUB, Uid).
 %%-------------------------------------------------------------------
 get_player(Uid) ->

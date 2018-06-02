@@ -14,28 +14,26 @@
 %% API
 -export([login_1/2]).
 -export([logout_1/2]).
--export([verify/2]).
 
 
 %%--------------------------------------------------------------------
-login_1(#r_login_req{
-    player_pid = Pid,
-    access_token = Token,
-    plat_account_name = PlatAccount
-}, S) ->
-    Ack = verify(PlatAccount, Token),
-    login_2(Pid, Ack, S).
+login_1(Req, S) ->
+    Bool = verify(Req),
+    login_2(Bool, Req,  S).
 
-login_2(Pid, {false, Error}, S)->
-    ps:send(Pid, login_ack, #r_login_ack{error = Error}),
+login_2({false, Error}, Req, S)->
+    ps:send(Req#r_login_req.player_pid,
+        login_ack, #r_login_ack{error = Error}),
     S;
-login_2(Pid, {true, PlatAccount}, S)->
-    lib_db:action_p_(misc:crc32(PlatAccount), account_login,  PlatAccount, Pid),
+login_2(true, Req, S)->
+    #r_login_req{plat_name = PN, plat_account_name = PA} = Req,
+    MergeAccount = gcore:merge_plat_acc_name(PN, PA),
+    lib_db:action_a_(misc:crc32(MergeAccount), account_login,  Req),
     S#login_state{in = S#login_state.in + 1}.
 
 %%--------------------------------------------------------------------
-verify(PlatAccount, _Token) ->
-    {true, PlatAccount}.
+verify(#r_login_req{}) -> true;
+verify(#r_login_req{}) -> {false, invalid}.
 
 %%--------------------------------------------------------------------
 logout_1(_AccountID, S) ->

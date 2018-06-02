@@ -80,7 +80,7 @@ do_handle_cast(Request, State) ->
 
 %%--------------------------------------------------------------------
 player_join_map_1(S, Req) ->
-    Now = misc:milli_seconds(),
+    Now = time:milli_seconds(),
     #r_change_map_req{tar_map_id = MapID, tar_pos = Pos, obj = Obj} = Req,
     MS = ets:fun2ms(
         fun(T) when T#m_map_line.limits > T#m_map_line.in,
@@ -114,7 +114,7 @@ create_new_line(S, MapID, LineID) ->
     {ok, Pid} = mod_map_supervisor:start_child([MapID, LineID]),
     Line = #m_map_line{
         map_id = MapID, line_id = LineID, pid = Pid,
-        dead_line = misc:milli_seconds() + ?LINE_LIFETIME
+        dead_line = time:milli_seconds() + ?LINE_LIFETIME
     },
     erlang:send_after(?LINE_LIFETIME, self(), {stop_line, Line}),
     ets:insert(S#state.ets, Line),

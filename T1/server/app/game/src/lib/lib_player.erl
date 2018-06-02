@@ -60,7 +60,7 @@ init_on_create() -> ok.
 
 %%-------------------------------------------------------------------
 login_ack(#r_login_ack{error = 0, account_info = AccountIfo}) ->
-    #p_account{accountID = AccId} = AccountIfo,
+    #p_account{aid = AccId} = AccountIfo,
     Ret = gcore:register_ppid(self(), AccId),
     login_ack_success(Ret, AccountIfo),
     ok;
@@ -73,7 +73,7 @@ login_ack(#r_login_ack{error = Error}) ->
 
 %%-------------------------------------------------------------------
 login_ack_success(sucess, AccountIfo) ->
-    Aid = AccountIfo#p_account.accountID,
+    Aid = AccountIfo#p_account.aid,
     mod_player:send(#pk_GS2U_LoginResult{
         accountID = Aid,
         identity = "",
@@ -85,7 +85,7 @@ login_ack_success(sucess, AccountIfo) ->
     lib_db:action_p_(Aid, load_player_list, Aid),
     ok;
 login_ack_success(Reason, AccountIfo) ->
-    #p_account{accountID = Aid} = AccountIfo,
+    #p_account{aid = Aid} = AccountIfo,
     ?WARN("acc ~w register process ~p faild with ~w",
         [Aid, self(), Reason]),
     mod_player:send(#pk_GS2U_LoginResult{

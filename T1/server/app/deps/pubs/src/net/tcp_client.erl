@@ -25,10 +25,10 @@ connect(Port, MapID) ->
 
     send_msg(Socket, #pk_U2GS_SelPlayerEnterGame{roleID = 10}),
     Msg1 = #pk_U2GS_Login_Normal{
-        platformAccount = "test_net" ++ integer_to_list(misc:milli_seconds()),
+        platformAccount = "test_net" ++ integer_to_list(time:milli_seconds()),
         platformName = "test",
         platformNickName = "",
-        time = misc:seconds(),
+        time = time:utc_seconds(),
         sign = "owner"
     },
 
@@ -79,7 +79,7 @@ handle(Socket, #pk_GS2U_UserPlayerList{info = Info}) ->
     case Info of
         [] ->
             send_msg(Socket, #pk_U2GS_RequestCreatePlayer{
-                name = "player" ++ integer_to_list(misc:milli_seconds()),
+                name = "player" ++ integer_to_list(time:milli_seconds()),
                 race = 1, career = 1,
                 sex = 1, head = 1
             }),

@@ -12,6 +12,11 @@
 %% API
 -export([sql/1]).
 
+sql(load_acount) ->
+    "select * from account where account_crc = ?";
+sql(insert_acount) ->
+    "insert account(aid,account,account_crc, plat_account, plat_name, device, imei, idfa, mac, create_time, version_hash_code)
+     values(?,?,?,?,?,?,?,?,?,?,?);";
 sql(insert_player) ->
     "insert player(aid, uid, sid, name, level, sex, camp, race, career, head,
     map_id, line, x, y, old_map_id, old_line, old_x, old_y, version)

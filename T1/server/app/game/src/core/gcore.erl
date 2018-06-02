@@ -22,6 +22,8 @@
 -export([broadcast_msg/2]).
 %% 广播网络消息
 -export([broadcast_net_msg/1]).
+%%
+-export([merge_plat_acc_name/2]).
 
 %%-------------------------------------------------------------------
 register_ppid(Pid, Aid) ->
@@ -45,6 +47,10 @@ broadcast_net_msg(NetMsg) ->
 %%-------------------------------------------------------------------
 broadcast_msg(MsgId, Msg) ->
     ps:send(mod_broadcast, broadcast, {MsgId, Msg}).
+
+%%-------------------------------------------------------------------
+merge_plat_acc_name(PlatName, PlatAcc) ->
+    misc:list_to_string_suffix([PlatName, PlatAcc], "_").
 
 
 %%
