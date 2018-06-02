@@ -65,7 +65,7 @@ login_ack(#r_login_ack{error = 0, account_info = AccountIfo}) ->
     login_ack_success(Ret, AccountIfo),
     ok;
 login_ack(#r_login_ack{error = Error}) ->
-    mod_player:send(#pk_GS2U_LoginResult{
+    lib_player:send(#pk_GS2U_LoginResult{
         result = Error,
         msg = io_lib:format("ErrorCode:~p", [Error])
     }),
@@ -74,7 +74,7 @@ login_ack(#r_login_ack{error = Error}) ->
 %%-------------------------------------------------------------------
 login_ack_success(sucess, AccountIfo) ->
     Aid = AccountIfo#p_account.aid,
-    mod_player:send(#pk_GS2U_LoginResult{
+    lib_player:send(#pk_GS2U_LoginResult{
         accountID = Aid,
         identity = "",
         result = 0,
@@ -88,7 +88,7 @@ login_ack_success(Reason, AccountIfo) ->
     #p_account{aid = Aid} = AccountIfo,
     ?WARN("acc ~w register process ~p faild with ~w",
         [Aid, self(), Reason]),
-    mod_player:send(#pk_GS2U_LoginResult{
+    lib_player:send(#pk_GS2U_LoginResult{
         result = -1,
         msg = io_lib:format("ErrorCode:~p", [Reason])
     }),
@@ -100,7 +100,7 @@ login_ack_success(Reason, AccountIfo) ->
 %%-------------------------------------------------------------------
 loaded_player_list([]) ->
     lib_player_rw:set_status(?PS_WAIT_SELECT_CREATE),
-    mod_player:send(#pk_GS2U_UserPlayerList{}),
+    lib_player:send(#pk_GS2U_UserPlayerList{}),
     ok;
 loaded_player_list(RoleList) ->
     lib_player_rw:set_status(?PS_WAIT_SELECT_CREATE),
@@ -126,7 +126,7 @@ loaded_player_list(RoleList) ->
                 mapID = MapId, oldMapID = OldMapId
             }
         end, RoleList),
-    mod_player:send(#pk_GS2U_UserPlayerList{info = Info}),
+    lib_player:send(#pk_GS2U_UserPlayerList{info = Info}),
     ok.
 
 %%-------------------------------------------------------------------
@@ -140,12 +140,12 @@ create_player_(Req) ->
 create_player_ack(#r_create_player_ack{error = 0, uid = Uid}) ->
     lib_player_rw:set_status(?PS_WAIT_SELECT_CREATE),
     init_on_create(),
-    mod_player:send(#pk_GS2U_CreatePlayerResult{
+    lib_player:send(#pk_GS2U_CreatePlayerResult{
         errorCode = 0, roleID = Uid
     });
 create_player_ack(#r_create_player_ack{error = Err}) ->
     lib_player_rw:set_status(?PS_WAIT_SELECT_CREATE),
-    mod_player:send(#pk_GS2U_CreatePlayerResult{errorCode = Err}).
+    lib_player:send(#pk_GS2U_CreatePlayerResult{errorCode = Err}).
 
 %%-------------------------------------------------------------------
 select_player(Uid) ->
@@ -279,6 +279,7 @@ offline_1(Status)
     when Status =:= ?PS_GAME; Status =:= ?PS_CHANGE_MAP ->
     lib_player_rw:set_status(?PS_OFFLINE),
     Uid = lib_player_rw:get_uid(),
+    ?INFO("pid ~p sock ~p player ~w offline",[self(), socket(), Uid]),
     #m_player{mid = Mid, mpid = MPid} = Player = lib_mem:get_player(Uid),
     lib_player_save:save(Player),
     mod_map_creator:player_offline(Uid, Mid, MPid),

@@ -22,8 +22,7 @@ nc(N, Port, MapId) ->
 connect(Port, MapID) ->
     tcp_codec:init(#net_conf{}),
     {ok, Socket} = ranch_tcp:connect({127, 0, 0, 1}, Port, [{active, false}]),
-
-    send_msg(Socket, #pk_U2GS_SelPlayerEnterGame{roleID = 10}),
+    
     Msg1 = #pk_U2GS_Login_Normal{
         platformAccount = "test_net" ++ integer_to_list(time:milli_seconds()),
         platformName = "test",
@@ -39,12 +38,12 @@ connect(Port, MapID) ->
 
     timer:sleep(5000),
 
-    send_msg(Socket, #pk_GS2U_GoNewMap{tarMapID = MapID, fX = misc:rand(500, 5000) / 10, fY = misc:rand(500, 3000) / 10}),
+    send_msg(Socket, #pk_GS2U_GoNewMap{tarMapID = misc:rand(1,3), fX = misc:rand(500, 5000) / 10, fY = misc:rand(500, 3000) / 10}),
 
     timer:sleep(50),
     recv_msg(Socket),
 %%    send_msg(Socket, #pk_GS2U_GoNewMap{tarMapID = MapID, fX = misc:rand(500, 5000) / 10, fY = misc:rand(500, 3000) / 10}),
-    timer:sleep(3 * 60 * 1000),
+    timer:sleep(300 * 60 * 1000),
     ok.
 
 send_msg(Socket, Msg) ->

@@ -20,15 +20,15 @@
 -export([handle/1]).
 
 handle(#pk_U2GS_Login_Normal{
+    platformName = PlatName,
     platformAccount = PlatAccount,
     sign = Token
 }) ->
     ?DEBUG("mod_login:login_"),
     lib_player_rw:set_status(?PS_VERIFY),
     mod_login:login_(#r_login_req{
-        plat_account_name = PlatAccount,
-        access_token = Token,
-        player_pid = self()
+        plat_name = PlatName, plat_account_name = PlatAccount,
+        access_token = Token, player_pid = self()
     }),
     ok;
 handle(#pk_U2GS_RequestCreatePlayer{
