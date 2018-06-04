@@ -19,6 +19,9 @@ tv3()->
     P3 = vector3:new(100.1, 0, 150.1),
     io:format("normalized ~w -> ~w~n",[P1, vector3:normalized(P1)]),
 
+    vector3:divi(P1, 0),
+    vector3:divi(P1, 0.0),
+
     tv3_1(P1, P2),
     tv3_1(P1, P3),
     tv3_1(P2, P1),

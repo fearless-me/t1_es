@@ -51,7 +51,7 @@ multi(P, Factor) ->
     #vector3{x = X * Factor, y = Y * Factor, z = Z * Factor}.
 
 %%
-divi(_P, 0) ->
+divi(_P, Factor) when Factor == 0 ->
     #vector3{};
 divi(P, Factor) ->
     #vector3{x = X, y = Y, z = Z} = P,
