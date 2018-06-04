@@ -6,7 +6,7 @@
 %%% @end
 %%% Created : 15. 五月 2018 16:06
 %%%-------------------------------------------------------------------
--module(lib_route).
+-module(lib_player_netmsg).
 -author("mawenhong").
 -include("logger.hrl").
 -include("netmsg.hrl").
@@ -41,17 +41,17 @@ handle(#pk_U2GS_RequestCreatePlayer{
 }) ->
     BornMid = mod_map_creator:born_map_id(),
     #vector3{x = X, z = Z} = mod_map_creator:born_map_pos(),
-    lib_player:create_player_(#r_create_player_req{
+    lib_player_priv:create_player_(#r_create_player_req{
        name = Name, camp = Camp, career = Career, race = Race, sex = Sex,
         head = Head, mid = BornMid, x = X, y = Z, sid = gconf:get_sid()
     }),
     ok;
 handle(#pk_U2GS_SelPlayerEnterGame{roleID = Uid}) ->
-    lib_player:select_player(Uid),
+    lib_player_priv:select_player(Uid),
     ok;
 handle(#pk_GS2U_GoNewMap{tarMapID = DestMapID, fX = X, fY = Y} = Msg) ->
     ?DEBUG("~p",[Msg]),
-    lib_player:goto_new_map(DestMapID, vector3:new(X, 0, Y)),
+    lib_player_priv:goto_new_map(DestMapID, vector3:new(X, 0, Y)),
     ok;
 handle(Msg) ->
     ?DEBUG("~p", [Msg]),

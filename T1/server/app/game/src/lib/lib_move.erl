@@ -71,7 +71,7 @@ start_player_walk_1(Obj, Start, _End) ->
     Dir = test_dir(),
     Way = test_path(),
 
-    PathList = make_path_list([], Start, Way),
+    PathList = make_path_list([], Start, Way, Speed),
     TotalDist = lists:foldl(
         fun(#r_move_pos{dist = DistCur}, Acc) -> Acc + DistCur end, 0, PathList),
     TotalTime = TotalDist / Speed * 1000,
@@ -115,16 +115,17 @@ start_player_walk_1(Obj, Start, _End) ->
 is_role_can_walk(_Pos, _End) -> true.
 
 %%%-------------------------------------------------------------------
-make_path_list(Acc, _Start, []) -> lists:reverse(Acc);
-make_path_list(Acc, Start, [Tar | Left]) ->
-    R = make_move_r(Start, Tar),
-    make_path_list([R | Acc], Tar, Left).
+make_path_list(Acc, _Start, [], _Speed) -> lists:reverse(Acc);
+make_path_list(Acc, Start, [Tar | Left], Speed) ->
+    R = make_move_r(Start, Tar, Speed),
+    make_path_list([R | Acc], Tar, Left, Speed).
 
 %%%-------------------------------------------------------------------
-make_move_r(Start, End) ->
+make_move_r(Start, End, Speed) ->
     Dist = vector3:dist(Start, End),
     #r_move_pos{
         dist = Dist,
+        speed = Speed,
         start_pos = Start,
         end_pos = End,
         dir = vector3:subtract(End, Start)
@@ -185,16 +186,15 @@ update_role_walk(Obj, CurPos, [], _MoveTime) ->
     ?WARN("mapid ~p player ~w arrived ~w", [self(), Obj#r_map_obj.uid, CurPos]),
     ?ENR_ARRIVE;
 update_role_walk(Obj, CurPos, PathList, MoveTime) ->
-    MoveDist = lib_obj:get_obj_speed(Obj) * MoveTime / 1000,
-    {NewPos, NewPathList, MoreDist} = linear_pos(PathList, MoveDist, keep),
 
-    ?DEBUG("mapid ~p ~w from ~w to ~w dist ~p",
-        [self(), Obj#r_map_obj.uid, CurPos, NewPos, MoveDist]),
+    {NewPos, NewPathList, MoreTime} = linear_pos(PathList, MoveTime, keep),
+
+    ?DEBUG("mapid ~p ~w from ~w to ~w move time ~p",
+        [self(), Obj#r_map_obj.uid, CurPos, NewPos, MoveTime]),
     ?DEBUG("# ~p,~p",[NewPos#vector3.x, NewPos#vector3.z]),
     on_player_pos_change(Obj, NewPos),
 
     #r_map_obj{dir = Dir, dest_pos = Dst} = Obj,
-    MoreTime = misc:ceil(MoreDist / lib_obj:get_obj_speed(Obj) * 1000),
     case NewPathList of
         ?ENR_TOBECONTINUED -> ?ENR_TOBECONTINUED;
         [] -> {?ENR_TOBECONTINUED, [], Dir, Dst, MoreTime};
@@ -207,33 +207,41 @@ update_role_walk(Obj, CurPos, PathList, MoveTime) ->
 -spec linear_pos(vector3(), list(), keep | changed) ->
     {vector3(), list() | ?ENR_TOBECONTINUED, float()}.
 
-linear_pos([MovePos] = PL, MoveDist, Flag) ->
-    #r_move_pos{dist = Dist, start_pos = Start, end_pos = End} = MovePos,
+linear_pos([MovePos] = PL, MoveTime, Flag) ->
+    #r_move_pos{dist = Dist, start_pos = Start, end_pos = End, speed = Speed} = MovePos,
+    MoveDist = calc_move_dist(Speed, MoveTime),
     if
-        MoveDist < Dist -> linear_pos_1(Start, End, Dist, MoveDist, PL, Flag);
+        MoveDist < Dist -> linear_pos_1(Start, End, MoveDist/Dist, MoveTime, PL, Flag);
         true -> {End, [], 0}
     end;
-linear_pos([MovePos | PathList] = PL, MoveDist, Flag) ->
-    #r_move_pos{dist = Dist, start_pos = Start, end_pos = End} = MovePos,
+linear_pos([MovePos | PathList] = PL, MoveTime, Flag) ->
+    #r_move_pos{dist = Dist, start_pos = Start, end_pos = End, speed = Speed} = MovePos,
+    MoveDist = calc_move_dist(Speed, MoveTime),
     if
         MoveDist == Dist -> {End, PathList, 0};
-        MoveDist < Dist -> linear_pos_1(Start, End, Dist, MoveDist, PL, Flag);
-        true -> linear_pos(PathList, MoveDist - Dist, changed)
+        MoveDist < Dist -> linear_pos_1(Start, End, MoveDist/Dist, MoveTime, PL, Flag);
+        true -> linear_pos(PathList, calc_move_time(Speed, MoveDist - Dist), changed)
     end.
 
-%%%-------------------------------------------------------------------
-linear_pos_1(StartPos, EndPos, Dist, MoveDist, PathList, Flag) ->
-    R1 = MoveDist / Dist,
-    R2 = if R1 < 0 -> 0; true -> R1 end,
-    R3 = if R2 > 1 -> 1; true -> R2 end,
-    Dst = vector3:linear_lerp(StartPos, EndPos, R3),
-    linear_pos_2(Dst, PathList, MoveDist, Flag).
+calc_move_dist(Speed, MoveTime) ->
+    MoveTime * Speed / 1000.
+
+calc_move_time(Speed, Dist) ->
+    misc:ceil(Dist / Speed * 1000).
+
 
 %%%-------------------------------------------------------------------
-linear_pos_2(Dst, _PathList, _MoveDist, keep) ->
+linear_pos_1(StartPos, EndPos, K0, MoveTime, PathList, Flag) ->
+    K1 = if K0 < 0 -> 0; true -> K0 end,
+    K2 = if K1 > 1 -> 1; true -> K1 end,
+    Dst = vector3:linear_lerp(StartPos, EndPos, K2),
+    linear_pos_2(Dst, PathList, MoveTime, Flag).
+
+%%%-------------------------------------------------------------------
+linear_pos_2(Dst, _PathList, _MoveTime, keep) ->
     {Dst, ?ENR_TOBECONTINUED, 0};
-linear_pos_2(Dst, PathList, MoveDist, changed) ->
-    {Dst, PathList, MoveDist}.
+linear_pos_2(Dst, PathList, MoveTime, changed) ->
+    {Dst, PathList, MoveTime}.
 
 %%%-------------------------------------------------------------------
 on_player_pos_change(undefined, _TarPos) ->

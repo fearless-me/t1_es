@@ -102,7 +102,7 @@ init_1(IsCenterServer) ->
             true ->
                 {1, 9999, 1};
             _ ->
-                {1, 1, 1}
+                {1, 1, gconf:get_run_no()}
         end,
 
     ets:new(?UIDEts, [public, named_table, {keypos, #recUID.type}, ?ETSWC, ?ETSRC]),

@@ -15,10 +15,15 @@
 -module(lib_db).
 -author("mawenhong").
 
+%% 玩家数据库
 -export([action_p_/3]).
 -export([action_p_/4]).
+%% 账号库
 -export([action_a_/3]).
 -export([action_a_/4]).
+%% 公共库
+-export([action_pub_/3]).
+-export([action_pub_/4]).
 
 %% 玩家数据库
 action_p_(HashKey, MsgId, Msg) ->
@@ -36,5 +41,15 @@ action_a_(HashKey, MsgId, Msg) ->
 
 action_a_(HashKey, MsgId, Msg, FromPid) ->
     Mgr = db_proxy:checkout_apool_(HashKey),
+    db_mgr:scheduler_(Mgr, HashKey, {MsgId, Msg, FromPid}).
+
+
+%% 公共库
+action_pub_(HashKey, MsgId, Msg) ->
+    Mgr = db_proxy:checkout_pubpool_(HashKey),
+    db_mgr:scheduler_(Mgr, HashKey, {MsgId, Msg, self()}).
+
+action_pub_(HashKey, MsgId, Msg, FromPid) ->
+    Mgr = db_proxy:checkout_pubpool_(HashKey),
     db_mgr:scheduler_(Mgr, HashKey, {MsgId, Msg, FromPid}).
 

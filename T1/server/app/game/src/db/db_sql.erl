@@ -12,6 +12,8 @@
 %% API
 -export([sql/1]).
 
+sql(load_serv_start) ->
+    "call get_serv_start(?)";
 sql(load_acount) ->
     "select * from account where account_crc = ?";
 sql(insert_acount) ->

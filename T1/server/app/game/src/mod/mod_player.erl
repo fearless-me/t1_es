@@ -63,20 +63,18 @@ send(Msg) ->
 on_init(Socket) ->
     {Ip, Port} = misc:peername(Socket),
     socket(Socket),
-    lib_player:init(),
+    lib_player_priv:init(),
     ?DEBUG("client connected: ~p ~ts:~p", [Socket, Ip, Port]),
     {ok, #r_player_state{}}.
 
 %%-------------------------------------------------------------------
 on_data(Socket, Data, S)->
-%%    ?DEBUG("~p,recieve:~p",[Socket, Data]),
-%%    direct_send([Data]),
     tcp_codec:decode(fun mod_player:on_net_msg/2, Socket, Data),
     S.
 
 %%-------------------------------------------------------------------
 on_close(Socket, Reason, S) ->
-    lib_player:offline(Reason),
+    lib_player_priv:offline(Reason),
     ?INFO("~p socket ~p close,reason:~p",[self(), Socket, Reason]),
     S.
 
@@ -89,42 +87,42 @@ on_info_msg({net_msg, NetMsg}, S) ->
     S;
 on_info_msg({login_ack, Msg}, S) ->
     ?DEBUG("login_ack:~p",[Msg]),
-    lib_player:login_ack(Msg),
+    lib_player_priv:login_ack(Msg),
     S;
 on_info_msg({load_player_list_ack, List}, S) ->
     ?DEBUG("load_player_list_ack:~p",[List]),
-    lib_player:loaded_player_list(List),
+    lib_player_priv:loaded_player_list(List),
     S;
 on_info_msg({load_player_data_ack, Player}, S) ->
     ?DEBUG("load_player_data_ack"),
-    lib_player:loaded_player(Player),
+    lib_player_priv:loaded_player(Player),
     S;
 on_info_msg({create_player_ack, Ack}, S) ->
     ?DEBUG("create_player_ack"),
-    lib_player:create_player_ack(Ack),
+    lib_player_priv:create_player_ack(Ack),
     S;
 on_info_msg(return_to_pre_map_ack, S) ->
-    lib_player:goto_to_pre_map(),
+    lib_player_priv:goto_to_pre_map(),
     S;
 on_info_msg(passive_change_req, S) ->
-    lib_player:goto_to_pre_map(),
+    lib_player_priv:goto_to_pre_map(),
     S;
 on_info_msg({teleport, NewPos}, S) ->
-    lib_player:teleport(NewPos),
+    lib_player_priv:teleport(NewPos),
     S;
 on_info_msg(Info, S) ->
-    lib_player_logic:on_info_msg(Info),
+    lib_player:on_info_msg(Info),
     S.
 
 %%-------------------------------------------------------------------
 on_call_msg(Request, From, S)->
     ?DEBUG("call ~p from ~p",[Request, From]),
-    Ret = lib_player_logic:on_call_msg(Request, From),
+    Ret = lib_player:on_call_msg(Request, From),
     {Ret, S}.
 
 %%-------------------------------------------------------------------
 on_cast_msg(Request, S) ->
-    lib_player_logic:on_cast_msg(Request),
+    lib_player:on_cast_msg(Request),
     S.
 
 %%-------------------------------------------------------------------
@@ -137,44 +135,35 @@ route_msg(Cmd, Msg) ->
     %%1. hook
     ?DEBUG("route(~p)",[Msg]),
     Status = lib_player_rw:get_status(),
-    try filter_msg(Status, Cmd, Msg) of
-        _ -> skip
-    catch _:status_error ->
-        error_log_msg(Cmd, Msg)
-    end,
+    filter_msg(Status, Cmd, Msg),
     ok.
 
 filter_msg(?PS_ERROR, Cmd, Msg) ->
-    error_log_msg(Cmd, Msg);
+    log_error_msg(status_forbid, Cmd, Msg);
 filter_msg(?PS_OFFLINE, Cmd, Msg) ->
-    error_log_msg(Cmd, Msg);
+    log_error_msg(status_forbid, Cmd, Msg);
 filter_msg(_status, Cmd, Msg) ->
     dispatcher_msg(Cmd, Msg).
 
-dispatcher_msg(?U2GS_Login_Normal, Msg) ->
-    check_status(?PS_INIT),
-    lib_route:handle(Msg);
-dispatcher_msg(?U2GS_RequestCreatePlayer, Msg) ->
-    check_status(?PS_WAIT_SELECT_CREATE),
-    lib_route:handle(Msg);
-dispatcher_msg(?U2GS_SelPlayerEnterGame, Msg) ->
-    check_status(?PS_WAIT_SELECT_CREATE),
-    lib_route:handle(Msg);
+dispatcher_msg(Cmd = ?U2GS_Login_Normal, Msg) ->
+    dispatcher_msg_s(?PS_INIT, Cmd, Msg);
+dispatcher_msg(Cmd = ?U2GS_RequestCreatePlayer, Msg) ->
+    dispatcher_msg_s(?PS_WAIT_SELECT_CREATE, Cmd, Msg);
+dispatcher_msg(Cmd = ?U2GS_SelPlayerEnterGame, Msg) ->
+    dispatcher_msg_s(?PS_WAIT_SELECT_CREATE, Cmd, Msg);
 dispatcher_msg(_, Msg) ->
-    lib_route:handle(Msg);
-dispatcher_msg(Cmd, Msg) ->
-    error_log_msg(Cmd, Msg).
+    lib_player_netmsg:handle(Msg).
 
 
-check_status(NeedStatus) ->
+dispatcher_msg_s(NeedStatus, Cmd, Msg) ->
     case lib_player_rw:get_status() of
-        NeedStatus -> skip;
-        _ -> throw(status_error)
+        NeedStatus -> lib_player_netmsg:handle(Msg);
+        _ -> log_error_msg(status_error, Cmd, Msg)
     end.
 
-error_log_msg(Cmd, Msg) ->
-    ?ERROR("status error ~p, Cmd ~p, msg ~w",
-        [lib_player_rw:get_status(), Cmd, Msg]).
+log_error_msg(Reason, Cmd, Msg) ->
+    ?ERROR("~p ~p status ~p, Cmd ~p, msg ~w",
+        [lib_player_rw:get_uid(), Reason, lib_player_rw:get_status(), Cmd, Msg]).
 
 %%-------------------------------------------------------------------
 socket(Socket) -> put(?SocketKey, Socket).

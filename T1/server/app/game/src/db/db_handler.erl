@@ -18,16 +18,21 @@
 
 %% API
 -export([do_handle_info/4]).
-
+do_handle_info(serv_start, Sid, FromPid, PoolId) ->
+    Sql = db_sql:sql(load_serv_start),
+    Res = db:query(PoolId, Sql, [Sid], infinity),
+    check_res(Res, Sql, [Sid]),
+    RunNo = db:scalar(Res),
+    ps:send(FromPid, serv_start, RunNo),
+    ok;
 do_handle_info(account_login, Req, _FromPid, PoolId) ->
     ?DEBUG("account_login ~p pool ~p",[Req, PoolId]),
     #r_login_req{plat_name = PN, plat_account_name = PA, player_pid = ToPid} = Req,
     MergeAccount = gcore:merge_plat_acc_name(PN, PA),
     AccountCrc = misc:crc32(MergeAccount),
-    Param =  [AccountCrc],
     Sql = db_sql:sql(load_acount),
-    Res = db:query(PoolId, Sql, Param, infinity),
-    check_res(Res, Sql, Param),
+    Res = db:query(PoolId, Sql, [AccountCrc], infinity),
+    check_res(Res, Sql, [AccountCrc]),
 
     AccountList = db:as_record(Res, p_account, record_info(fields, p_account)),
     Info =
@@ -40,7 +45,7 @@ do_handle_info(account_login, Req, _FromPid, PoolId) ->
             Params = [NewAid, MergeAccount, AccountCrc, PA, PN, "","","","",NowStr, time:utc_seconds()],
             ResCreate =  db:query(PoolId, InsSql, Params),
             check_res(ResCreate, InsSql, Params),
-            Res11 = db:query(PoolId, Sql, Param, infinity),
+            Res11 = db:query(PoolId, Sql, [AccountCrc], infinity),
             [AccountInfo] = db:as_record(Res11, p_account, record_info(fields, p_account)),
             AccountInfo;
         [AccountInfo] ->

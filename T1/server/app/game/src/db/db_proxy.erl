@@ -18,6 +18,8 @@
 -export([checkout_ppool_/1]).
 -export([checkout_apool/1]).
 -export([checkout_apool_/1]).
+-export([checkout_pubpool/1]).
+-export([checkout_pubpool_/1]).
 %%
 -export([start_db_pool/0]).
 -export([start_db_pool/1]).
@@ -30,16 +32,18 @@
 
 -define(ETS_PLAYER_DB_POOL, playerMysqlPoolEts_).
 -define(ETS_ACCOUNT_DB_POOL, accountMysqlPoolEts_).
+-define(ETS_PUBLIC_DB_POOL, publicMysqlPoolEts_).
 -define(CALL_TIMEOUT, 30 * 1000).
 
 %%
-checkout_ppool(AccId) ->
-    gen_server:call(?MODULE, {give_ppool, AccId}, ?CALL_TIMEOUT).
+checkout_ppool(AccId) -> gen_server:call(?MODULE, {give_ppool, AccId}, ?CALL_TIMEOUT).
 checkout_ppool_(AccId) -> hash_to_pool(?ETS_PLAYER_DB_POOL, AccId).
 
-checkout_apool(AccId) ->
-    gen_server:call(?MODULE, {give_apool, AccId}, ?CALL_TIMEOUT).
+checkout_apool(AccId) -> gen_server:call(?MODULE, {give_apool, AccId}, ?CALL_TIMEOUT).
 checkout_apool_(AccId) -> hash_to_pool(?ETS_ACCOUNT_DB_POOL, AccId).
+
+checkout_pubpool(AccId) -> gen_server:call(?MODULE, {give_pubpool, AccId}, ?CALL_TIMEOUT).
+checkout_pubpool_(AccId) -> hash_to_pool(?ETS_PUBLIC_DB_POOL, AccId).
 
 %% API
 start_db_pool() ->
@@ -60,6 +64,7 @@ start_link() ->
 mod_init(_Args) ->
     ets:new(?ETS_PLAYER_DB_POOL, [protected, set, named_table, {keypos, #r_db_pool.id}, ?ETSRC]),
     ets:new(?ETS_ACCOUNT_DB_POOL, [protected, set, named_table, {keypos, #r_db_pool.id}, ?ETSRC]),
+    ets:new(?ETS_PUBLIC_DB_POOL, [protected, set, named_table, {keypos, #r_db_pool.id}, ?ETSRC]),
 %%    ets:new(?ETS_PLAYER_DB_INS, [protected, set, named_table, {keypos, #r_player_db_ins.id}, ?ETSRC]),
     erlang:process_flag(trap_exit, true),
     erlang:process_flag(priority, high),
@@ -72,6 +77,8 @@ do_handle_call({give_ppool, AccId}, _From, State) ->
     {reply, hash_to_pool(?ETS_PLAYER_DB_POOL, AccId), State};
 do_handle_call({give_apool, AccId}, _From, State) ->
     {reply, hash_to_pool(?ETS_ACCOUNT_DB_POOL, AccId), State};
+do_handle_call({give_pubpool, AccId}, _From, State) ->
+    {reply, hash_to_pool(?ETS_PUBLIC_DB_POOL, AccId), State};
 do_handle_call(Request, From, State) ->
     ?ERROR("undeal call ~w from ~w", [Request, From]),
     {reply, ok, State}.
@@ -110,6 +117,11 @@ init_pool() ->
     ?INFO("init account db pool ..."),
     db_pool_init(Pid, get_account_db_conf, adb_pool, ?ETS_ACCOUNT_DB_POOL),
     ?INFO("init account db pool done"),
+    ?INFO("#"),
+
+    ?INFO("init public db pool ..."),
+    db_pool_init(Pid, get_public_db_conf, pubdb_pool, ?ETS_PUBLIC_DB_POOL),
+    ?INFO("init public db pool done"),
     ?INFO("#"),
     
     erlang:exit(Pid, normal),
@@ -190,6 +202,6 @@ start_db_pool(PoolRef, Ets, Conf) ->
 
     db_mgr:start_worker(Pid),
 
-    ets:insert(Ets, #r_db_pool{id = Id, pool = PoolId, mgr = Pid}),
+    ets:insert(Ets, #r_db_pool{id = Id, pool = PoolId, mgr = Pid, conf = Conf}),
     ok.
 

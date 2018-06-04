@@ -9,12 +9,15 @@
 -module(gcore).
 -author("mawenhong").
 -include("gdef.hrl").
+-include("logger.hrl").
 -include("pub_common.hrl").
 
 %% 注册玩家进程
 -export([register_ppid/2]).
 %% 踢人
 -export([kick_account/2]).
+%% 封号
+-export([forbid_account/1]).
 %% ** 给某个角色发网络消息，比如 给好友发或者公共进程给角色发
 %% ** 给自己发 用 mod_player:send/1
 -export([send_net_msg/2]).
@@ -24,6 +27,9 @@
 -export([broadcast_net_msg/1]).
 %%
 -export([merge_plat_acc_name/2]).
+
+%%
+-export([halt/1]).
 
 %%-------------------------------------------------------------------
 register_ppid(Pid, Aid) ->
@@ -51,6 +57,18 @@ broadcast_msg(MsgId, Msg) ->
 %%-------------------------------------------------------------------
 merge_plat_acc_name(PlatName, PlatAcc) ->
     misc:list_to_string_suffix([PlatName, PlatAcc], "_").
+
+%%-------------------------------------------------------------------
+forbid_account(Aid) ->
+    gcore:kick_account(Aid, forbid_account).
+
+%%-------------------------------------------------------------------
+-define(CRASH_WAIT_SECONDS, 15).
+halt(Msg) ->
+    ?FATAL("~ts, after ~p second(s) app crash,~n~p",
+        [Msg, ?CRASH_WAIT_SECONDS, misc:stacktrace()]),
+    timer:sleep(?CRASH_WAIT_SECONDS * 1000),
+    erlang:halt().
 
 
 %%

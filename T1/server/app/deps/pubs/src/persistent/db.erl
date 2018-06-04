@@ -19,8 +19,9 @@
 
 %% API
 -export([
-    as_record/3, as_record/4, as_record/5, as_maps/2,
+    as_record/3, as_record/4, as_record/5, as_maps/1,
     get_rows_count/1,
+    scalar/1, scalar/2,
     succeed/1
 ]).
 
@@ -132,10 +133,19 @@ get_rows_count(_) -> 0.
 
 %%
 %% @doc package row data as a map
-as_maps(undefined, undefined) -> [];
-as_maps(Fields, undefined) when is_list(Fields) -> [];
-as_maps(Fields, []) when is_list(Fields) -> [];
-as_maps(Fields, Rows) when is_list(Fields), is_list(Rows) ->
+as_maps({ok, Fields, Rows}) when is_list(Fields), is_list(Rows) ->
     [begin
          maps:from_list([{binary_to_atom(K,utf8), V} || {K, V} <- lists:zip(Fields, R)])
      end || R <- Rows].
+
+
+%%
+%% @doc get first row's first field
+scalar({_, _Columns, Rows}) -> scalar_1(Rows, undefined).
+scalar({_, _Columns, Rows}, Def) -> scalar_1(Rows, Def).
+
+scalar_1(undefined, Def) -> Def;
+scalar_1([], Def) -> Def;
+scalar_1([[First | _] | _], _Def) ->  First;
+scalar_1(_, Def) -> Def.
+
