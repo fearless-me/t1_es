@@ -27,7 +27,7 @@ start(FileName) ->
 
 %%-------------------------------------------------------------------
 set_run_no(RunNo)->
-    econfig:set_value(?GS_INI_CONF, server, [{run_no, RunNo}], false),
+    econfig:set_value(?GS_INI_CONF, server, run_no, RunNo, false),
     ok.
 
 

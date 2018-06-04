@@ -252,7 +252,9 @@ goto_new_map_1(DestMapID, TarPos) ->
         ]
     ),
     ?DEBUG("go_to_new_map(~p, ~w) -> ~w", [DestMapID, Pos, Ack]),
-    
+
+    hook_player:on_change_map(Mid, Mid1),
+
     mod_map:player_move_(
         MPid1,
         #r_player_start_move_req{uid = Uid, tar_pos = vector3:new(400.6, 0, 358.9)}
