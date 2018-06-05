@@ -29,41 +29,41 @@
 new(X, Y, Z) ->
     #vector3{x = float(X), y = float(Y), z = float(Z)}.
 
-x(Pos) -> Pos#vector3.x.
-y(Pos) -> Pos#vector3.y.
-z(Pos) -> Pos#vector3.z.
+x(V) -> V#vector3.x.
+y(V) -> V#vector3.y.
+z(V) -> V#vector3.z.
 
 %%
-add(P1, P2) ->
-    #vector3{x = X1, y = Y1, z = Z1} = P1,
-    #vector3{x = X2, y = Y2, z = Z2} = P2,
+add(V1, V2) ->
+    #vector3{x = X1, y = Y1, z = Z1} = V1,
+    #vector3{x = X2, y = Y2, z = Z2} = V2,
     #vector3{x = X1 + X2, y = Y1 + Y2, z = Z1 + Z2}.
 
 %%
-subtract(P1, P2) ->
-    #vector3{x = X1, y = Y1, z = Z1} = P1,
-    #vector3{x = X2, y = Y2, z = Z2} = P2,
+subtract(V1, V2) ->
+    #vector3{x = X1, y = Y1, z = Z1} = V1,
+    #vector3{x = X2, y = Y2, z = Z2} = V2,
     #vector3{x = X1 - X2, y = Y1 - Y2, z = Z1 - Z2}.
 
 %%
-multi(P, Factor) ->
-    #vector3{x = X, y = Y, z = Z} = P,
+multi(V, Factor) ->
+    #vector3{x = X, y = Y, z = Z} = V,
     #vector3{x = X * Factor, y = Y * Factor, z = Z * Factor}.
 
 %%
-divi(_P, Factor) when Factor == 0 ->
+divi(_V, Factor) when Factor == 0 ->
     #vector3{};
-divi(P, Factor) ->
-    #vector3{x = X, y = Y, z = Z} = P,
+divi(V, Factor) ->
+    #vector3{x = X, y = Y, z = Z} = V,
     #vector3{x = X / Factor, y = Y / Factor, z = Z / Factor}.
 
 %%
-normalized(P) ->
-    Len = vector3:dist(P),
+normalized(V) ->
+    Len = vector3:dist(V),
     case Len == 0 of
-        true -> P;
+        true -> V;
         _ ->
-            #vector3{x = X, y = Y, z = Z} = P,
+            #vector3{x = X, y = Y, z = Z} = V,
             #vector3{x = X / Len, y = Y / Len, z = Z / Len}
     end.
 
@@ -107,23 +107,23 @@ is_front(Src, Dst, DstFace) ->
     (X1 * X2 + Y1 * Y2 + Z1 * Z2) >= 0.
 
 %%
-dist(P) ->
-    Sq = vector3:dist_sq(P),
+dist(V) ->
+    Sq = vector3:dist_sq(V),
     math:sqrt(Sq).
 
-dist_sq(P) ->
-    #vector3{x = X, y = Y, z = Z} = P,
+dist_sq(V) ->
+    #vector3{x = X, y = Y, z = Z} = V,
     X * X + Y * Y + Z * Z.
 
 %%
-dist(P1, P2) ->
-    Sq = vector3:dist_sq(P1, P2),
+dist(V1, V2) ->
+    Sq = vector3:dist_sq(V1, V2),
     math:sqrt(Sq).
 
 %%
-dist_sq(P1, P2) ->
-    #vector3{x = X1, y = Y1, z = Z1} = P1,
-    #vector3{x = X2, y = Y2, z = Z2} = P2,
+dist_sq(V1, V2) ->
+    #vector3{x = X1, y = Y1, z = Z1} = V1,
+    #vector3{x = X2, y = Y2, z = Z2} = V2,
     X = X1 - X2, Y = Y1 - Y2, Z = Z1 - Z2,
     X * X + Y * Y + Z * Z.
 

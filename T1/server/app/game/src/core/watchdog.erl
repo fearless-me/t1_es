@@ -6,7 +6,7 @@
 %%% @end
 %%% Created : 12. 一月 2018 10:28
 %%%-------------------------------------------------------------------
--module(sentinel_server).
+-module(watchdog).
 -author("mawenhong").
 
 -behaviour(gen_serverw).

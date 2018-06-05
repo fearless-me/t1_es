@@ -6,7 +6,7 @@
 %%% @end
 %%% Created : 17. 五月 2018 10:17
 %%%-------------------------------------------------------------------
--module(serv_mem_db).
+-module(serv_cache).
 -author("mawenhong").
 
 -behaviour(gen_serverw).
@@ -27,7 +27,7 @@ start_link() ->
 %%%===================================================================	
 mod_init(_Args) ->
     erlang:process_flag(trap_exit, true),
-    gmem:init_mem_db(),
+    gcache:init(),
     {ok, #{}}.
 
 %%--------------------------------------------------------------------	

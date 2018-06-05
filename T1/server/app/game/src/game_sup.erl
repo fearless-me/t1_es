@@ -37,14 +37,14 @@ start() ->
 
     wrapper({"logger", stdio,               ?Wrap(start_logs(SupPid))}),
     wrapper({"error Logger",                ?Wrap(start_errlog(SupPid))}),
-    wrapper({"sentinel",                    ?Wrap(start_sentinel(SupPid))}),
+    wrapper({"watchdog",                    ?Wrap(start_watchdog(SupPid))}),
     wrapper({"config init",                 ?Wrap(start_conf(SupPid, "game.ini"))}),
     wrapper({"monitor/gc/vms",              ?Wrap(start_gc_vm(SupPid, 0.5))}),
     wrapper({"test network 15555",          ?Wrap(start_listener_15555(SupPid))}),
     wrapper({"test network 25555",          ?Wrap(start_listener_25555(SupPid))}),
     wrapper({"map root supervisor",         ?Wrap(start_map_root_supervisor(SupPid))}),
     wrapper({"login window",                ?Wrap(start_login(SupPid))}),
-    wrapper({"serv_mem_db",                 ?Wrap(start_serv_mem_db(SupPid))}),
+    wrapper({"serv_cache",                  ?Wrap(start_serv_cache(SupPid))}),
     wrapper({"db window",                   ?Wrap(start_db_worker(SupPid))}),
     wrapper({"broadcast mod",               ?Wrap(start_broadcast(SupPid))}),
     wrapper({"serv data loader",            ?Wrap(start_serv_loader(SupPid))}),
@@ -76,8 +76,8 @@ start_logs(_SupPid) ->
 start_errlog(_SupPid) ->
     common_error_logger:start(game_sup, game).
 
-start_sentinel(SupPid) ->
-    {ok, _} = ?CHILD(SupPid, sentinel_server, worker),
+start_watchdog(SupPid) ->
+    {ok, _} = ?CHILD(SupPid, watchdog, worker),
     ok.
 
 start_conf(_SupPid, FileName) ->
@@ -109,8 +109,8 @@ start_listener_15555(_SupPid) ->
 start_auto_reload(_SupPid) ->
     ok = fly:start().
 
-start_serv_mem_db(SupPid) ->
-    {ok, _} = ?CHILD(SupPid, serv_mem_db, worker),
+start_serv_cache(SupPid) ->
+    {ok, _} = ?CHILD(SupPid, serv_cache, worker),
     ok.
 
 start_login(SupPid) ->

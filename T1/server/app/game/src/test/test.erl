@@ -14,20 +14,20 @@
 -export([tv3/0]).
 
 tv3()->
-    P1 = vector3:new(150.1, 0, 100.1),
-    P2 = vector3:new(100.1, 0, 50.1),
+    V1 = vector3:new(150.1, 0, 100.1),
+    V2 = vector3:new(100.1, 0, 50.1),
     P3 = vector3:new(100.1, 0, 150.1),
-    io:format("normalized ~w -> ~w~n",[P1, vector3:normalized(P1)]),
+    io:format("normalized ~w -> ~w~n",[V1, vector3:normalized(V1)]),
 
-    vector3:divi(P1, 0),
-    vector3:divi(P1, 0.0),
+    vector3:divi(V1, 0),
+    vector3:divi(V1, 0.0),
 
-    tv3_1(P1, P2),
-    tv3_1(P1, P3),
-    tv3_1(P2, P1),
-    tv3_1(P2, P3),
-    tv3_1(P3, P1),
-    tv3_1(P3, P2),
+    tv3_1(V1, V2),
+    tv3_1(V1, P3),
+    tv3_1(V2, V1),
+    tv3_1(V2, P3),
+    tv3_1(P3, V1),
+    tv3_1(P3, V2),
     ok.
 
 tv3_1(Src, Dst) ->
