@@ -16,22 +16,14 @@
 %% API
 -export([player_update/2]).
 -export([player_update_pos/2]).
-
-%%
 -export([add_obj_to_ets/1]).
 -export([del_obj_to_ets/1]).
-
-%%
+-export([get_obj/2]).
 -export([get_player/1, get_player_size/0]).
-
-%% monster
 -export([get_monster/1, get_monster_size/0]).
-
-%% ets
+-export([get_npc/1, get_pets/1]).
 -export([get_npc_ets/0, get_monster_ets/0]).
 -export([get_pet_ets/0, get_player_ets/0]).
-
-%% map
 -export([get_map_id/0, get_line_id/0]).
 -export([get_map_hook/0]).
 
@@ -56,14 +48,22 @@ init_ets(State) ->
     put(?MAP_HOOK,      State#r_map_state.hook_mod),
     ok.
 
-%%%-------------------------------------------------------------------
+%%-------------------------------------------------------------------
 get_map_id()        -> get(?MAP_ID).
 get_line_id()       -> get(?LINE_ID).
 get_map_hook()      -> get(?MAP_HOOK).
+
+%%-------------------------------------------------------------------
 get_npc_ets()       -> get(?MAP_NPC_ETS).
 get_pet_ets()       -> get(?MAP_PET_ETS).
 get_player_ets()    -> get(?MAP_USR_ETS).
 get_monster_ets()   -> get(?MAP_MON_ETS).
+
+get_obj(Ets, Uid) ->
+    case ets:lookup(Ets, Uid) of
+        [#r_map_obj{} = Obj | _] -> Obj;
+        _ -> undefined
+    end.
 
 %%-------------------------------------------------------------------
 get_player(Uid) ->
@@ -97,6 +97,20 @@ get_monster(Uid) ->
 
 get_monster_size() ->
     ets:info( lib_map_rw:get_monster_ets(), size ).
+
+%%-------------------------------------------------------------------
+get_npc(Uid) ->
+    case ets:lookup(lib_map_rw:get_npc_ets(), Uid) of
+        [#r_map_obj{} = Obj | _] -> Obj;
+        _ -> undefined
+    end.
+
+%%-------------------------------------------------------------------
+get_pets(Uid) ->
+    case ets:lookup(lib_map_rw:get_pet_ets(), Uid) of
+        [#r_map_obj{} = Obj | _] -> Obj;
+        _ -> undefined
+    end.
 
 %%-------------------------------------------------------------------
 add_obj_to_ets(#r_map_obj{type = ?OBJ_MON} = Obj) ->

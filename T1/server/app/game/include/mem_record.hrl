@@ -22,6 +22,7 @@
 
 %% 在线玩家的socket列表
 -record(m_player_pid_sock,{uid, aid, pid, sock}).
+-record(m_account_pid_sock,{aid, pid, sock}).
 
 %% 玩家数据预警
 -record(m_alarm_policy, {id, limit, warn}).

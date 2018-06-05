@@ -30,3 +30,4 @@ set_sid(Uid)        -> put('SID', Uid).
 %%%-------------------------------------------------------------------
 set_status(Status)  -> put(?PLAYER_STATUS, Status).
 get_status()        -> misc:get_pdict(?PLAYER_STATUS, ?PS_ERROR).
+

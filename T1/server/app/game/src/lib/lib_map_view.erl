@@ -13,18 +13,19 @@
 -include("vector3.hrl").
 -include("map.hrl").
 -include("map_obj.hrl").
+-include("netmsg.hrl").
 -include_lib("stdlib/include/assert.hrl").
 
 %% API
 -export([init_vis_tile/1]).
--export([sync_movement_to_big_visual_tile/1]).
+-export([sync_movement_to_big_visual_tile/2]).
 -export([sync_change_pos_visual_tile/3]).
 -export([pos_to_vis_index/1]).
 -export([sync_del_pet/1]).
 -export([sync_player_join_map/1]).
 -export([sync_player_exit_map/1]).
 
--export([add_to_vis_tile/2]).
+-export([add_obj_to_vis_tile/2]).
 
 
 
@@ -46,26 +47,22 @@ sync_player_join_map(Obj) ->
     Tiles = get_vis_tile_around(Index),
 
     %2.
-    sync_add_to_vis_tile(Obj, Tiles),
-    add_to_vis_tile(Obj, Index),
+    sync_add_obj(Obj, Tiles),
+    add_obj_to_vis_tile(Obj, Index),
     ok.
 
 %%%-------------------------------------------------------------------
 sync_player_exit_map(Obj) ->
     %1.
-    Index =
-        pos_to_vis_index(
-            lib_obj:get_obj_pos(Obj),
-            get(?VIS_W),
-            ?VIS_DIST
-        ),
+    Index = pos_to_vis_index(
+        lib_obj:get_obj_pos(Obj), get(?VIS_W), ?VIS_DIST),
 
     %2.
-    del_from_vis_tile(Obj, Index),
+    del_obj_from_vis_tile(Obj, Index),
 
     %3.
     Tiles = get_vis_tile_around(Index),
-    sync_del_from_vis_tile(Obj, Tiles),
+    sync_del_obj(Obj, Tiles),
     ok.
 
 %%%-------------------------------------------------------------------
@@ -101,7 +98,21 @@ init_vis_tile_1(X) ->
 
 %%%-------------------------------------------------------------------
 %% 开始移动广播
-sync_movement_to_big_visual_tile(_Msg) ->
+sync_movement_to_big_visual_tile(_VisTileIndex, undefined) ->
+    skip;
+sync_movement_to_big_visual_tile(VisTileIndex, Msg) ->
+    VisTileList = get_vis_tile_around(VisTileIndex),
+    sync_msg_to_big_vis_tile_1(VisTileList, Msg),
+    ok.
+
+sync_msg_to_big_vis_tile_1(_VisTileList, undefined) ->
+    skip;
+sync_msg_to_big_vis_tile_1(VisTileList, Msg) ->
+    PlayerList = [Players || #r_vis_tile{player = Players} <- VisTileList],
+    lists:foreach(
+        fun(Uid) -> gcore:send_net_msg(Uid, Msg) end,
+        lists:flatten(PlayerList)
+    ),
     ok.
 
 %%%-------------------------------------------------------------------
@@ -112,30 +123,30 @@ sync_change_pos_visual_tile(Obj, OldVisTileIndex, NewVisTileIndex) ->
 %%    ?DEBUG("uid ~w vis_tile_index from ~w to ~w",
 %%        [Obj#r_map_obj.uid, OldVisTileIndex, NewVisTileIndex]),
 
-    del_from_vis_tile(Obj, OldVisTileIndex),
-    {DecVisTile, AddVisTile} = vis_tile_add_dec(OldVisTileIndex, NewVisTileIndex),
-    sync_del_from_vis_tile(Obj, DecVisTile),
-    sync_add_to_vis_tile(Obj, AddVisTile),
-    add_to_vis_tile(Obj, NewVisTileIndex),
+    del_obj_from_vis_tile(Obj, OldVisTileIndex),
+    {VisTileLeave, VisTileEnter} = vis_tile_intersection(OldVisTileIndex, NewVisTileIndex),
+    sync_del_obj(Obj, VisTileLeave),
+    sync_add_obj(Obj, VisTileEnter),
+    add_obj_to_vis_tile(Obj, NewVisTileIndex),
     ok.
 
 %%%-------------------------------------------------------------------
 %% 删除广播
-sync_del_from_vis_tile(Obj, VisTiles) ->
-    sync_me_to_big_vis_tile(Obj, VisTiles, me_2_around_player_del),
-    sync_big_vis_tile_to_me(Obj, VisTiles, around_unit_2_me_del),
+sync_del_obj(Obj, VisTiles) ->
+    sync_me_to_big_vis_tile(Obj, VisTiles, del_me),
+    sync_big_vis_tile_to_me(Obj, VisTiles, del_all),
     ok.
 
 %%%-------------------------------------------------------------------
 %% 添加广播                           
-sync_add_to_vis_tile(Obj, VisTiles) ->
-    sync_big_vis_tile_to_me(Obj, VisTiles, around_unit_2_me_add),
-    sync_me_to_big_vis_tile(Obj, VisTiles, me_2_around_player_add),
+sync_add_obj(Obj, VisTiles) ->
+    sync_me_to_big_vis_tile(Obj, VisTiles, add_me),
+    sync_big_vis_tile_to_me(Obj, VisTiles, add_all),
     ok.
 
 %%%-------------------------------------------------------------------
 %% 加入格子
-add_to_vis_tile(Obj, VisTileIndex) ->
+add_obj_to_vis_tile(Obj, VisTileIndex) ->
     ?assert(is_number(VisTileIndex) andalso VisTileIndex > 0),
 
 %%    ?DEBUG("add ~p to vis index ~p", [Obj#r_map_obj.uid, VisTileIndex]),
@@ -169,10 +180,9 @@ add_to_vis_tile_1(?OBJ_NPC, Uid, VisTileIndex, VisTile) ->
 add_to_vis_tile_1(_Type, _Uid, _VisTileIndex, _VisTile) ->
     ok.
 
-
 %%%-------------------------------------------------------------------
 %% 移除格子
-del_from_vis_tile(Obj, VisTileIndex) ->
+del_obj_from_vis_tile(Obj, VisTileIndex) ->
     ?assert(is_number(VisTileIndex) andalso VisTileIndex > 0),
 
 %%    ?DEBUG("del ~p from vis index ~p", [Obj#r_map_obj.uid, VisTileIndex]),
@@ -206,25 +216,48 @@ del_from_vis_tile_1(?OBJ_NPC, Uid, VisTileIndex, VisTile) ->
 del_from_vis_tile_1(_Type, _Uid, _VisTileIndex, _VisTile) ->
     ok.
 
-%%%-------------------------------------------------------------------
-%% 把角色信息广播到九宫格中
-sync_big_vis_tile_to_me(
-    #r_map_obj{uid = Uid, type = ?OBJ_USR},
-    VisTileList,
-    Msg
-) ->
-    PlayerList = [{VisIndex, Players} ||
-        #r_vis_tile{index = VisIndex, player = Players} <- VisTileList],
-%%    ?DEBUG("~nsrc:~w~nmsg:~w~ntar:~w", [Uid, Msg, PlayerList]),
+%%-------------------------------------------------------------------
+%%-------------------------------------------------------------------
+%% 同步周围Obj给我
+sync_big_vis_tile_to_me(#r_map_obj{uid = Uid, type = ?OBJ_USR}, VisTileList, del_all) ->
+    UidList = lists:foldl(
+        fun(#r_vis_tile{player = PL, monster = ML, npc = NL, pet = Pets}, Acc) ->
+            PL ++ ML ++ NL ++ Pets ++ Acc
+        end, [], VisTileList),
+    Msg = #pk_GS2U_RemoveRemote{uid_list = UidList},
+    gcore:send_net_msg(Uid, Msg),
+    ok;
+sync_big_vis_tile_to_me(#r_map_obj{uid = TarUid, type = ?OBJ_USR}, VisTileList, add_all) ->
+    FC =
+        fun(Ets, Uid) ->
+            Obj = lib_map_rw:get_obj(Ets, Uid),
+            Msg = lib_move:cal_move_msg(Obj),
+            if Msg =/= undefined -> gcore:send_net_msg(TarUid, Msg); true -> skip end
+        end,
+    FV =
+        fun(#r_vis_tile{player = PL, monster = ML, npc = NL, pet = Pets}) ->
+            lists:foreach(fun(Uid) -> FC(lib_map_rw:get_player_ets(),   Uid) end, PL),
+            lists:foreach(fun(Uid) -> FC(lib_map_rw:get_monster_ets(),  Uid) end, ML),
+            lists:foreach(fun(Uid) -> FC(lib_map_rw:get_npc_ets(),      Uid) end, NL),
+            lists:foreach(fun(Uid) -> FC(lib_map_rw:get_pet_ets(),      Uid) end, Pets)
+        end,
+    lists:foreach(FV, VisTileList),
     ok;
 sync_big_vis_tile_to_me(_Obj, _VisTileList, _Msg) -> skip.
 
-sync_me_to_big_vis_tile(#r_map_obj{uid = Uid}, VisTileList, Msg) ->
-    PlayerList = [{VisIndex, Players} ||
-        #r_vis_tile{index = VisIndex, player = Players} <- VisTileList],
-%%    ?DEBUG("~nsrc:~w~nmsg:~w~ntar:~w", [Uid, Msg, PlayerList]),
+%%-------------------------------------------------------------------
+%% 把Obj信息广播到九宫格中
+sync_me_to_big_vis_tile(#r_map_obj{uid = Uid}, VisTileList, del_me) ->
+    Msg = #pk_GS2U_RemoveRemote{uid_list = [Uid]},
+    sync_msg_to_big_vis_tile_1(VisTileList, Msg),
+    ok;
+sync_me_to_big_vis_tile(#r_map_obj{} = Obj, VisTileList, add_me) ->
+    Msg = lib_move:cal_move_msg(Obj),
+    sync_msg_to_big_vis_tile_1(VisTileList, Msg),
     ok.
-
+%%-------------------------------------------------------------------
+%%
+%%-------------------------------------------------------------------
 
 %%%-------------------------------------------------------------------
 pos_to_vis_index(Pos) ->
@@ -239,11 +272,11 @@ pos_to_vis_index(Pos, VisTileWidth, ViewDist) ->
     (IndexZ * VisTileWidth + IndexX).
 
 %%%-------------------------------------------------------------------
-vis_tile_add_dec(OldVisTileIndex, NewVisTileIndex) ->
+vis_tile_intersection(OldVisTileIndex, NewVisTileIndex) ->
     L1 = get_vis_tile_around_index(OldVisTileIndex),
     L2 = get_vis_tile_around_index(NewVisTileIndex),
     L3 = lists:subtract(L1, L2),
-    L4 = lists:subtract(L2, L3),
+    L4 = lists:subtract(L2, L1),
     {[get_vis_tile(TileIndex) || TileIndex <- L3], [get_vis_tile(TileIndex) || TileIndex <- L4]}.
 
 %%%-------------------------------------------------------------------

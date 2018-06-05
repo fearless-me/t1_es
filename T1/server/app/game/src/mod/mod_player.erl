@@ -27,17 +27,20 @@
 -include("player_status.hrl").
 -include("netmsg.hrl").
 
--define(SocketKey,socketRef___).
-
--record(r_player_state,{}).
-
-
 %% API
 -export([shutdown/1]).
 -export([stop/1, direct_stop/0, send/1]).
 -export([on_init/1, on_data/3, on_close/3]).
 -export([on_info_msg/2, on_call_msg/3, on_cast_msg/2, on_net_msg/2]).
 -export([socket/1, socket/0]).
+
+
+
+%%-------------------------------------------------------------------
+-define(SocketKey,socketRef___).
+-define(DEATH_NET_TIME, 10*60*1000).
+-record(r_player_state,{}).
+
 
 %%-------------------------------------------------------------------
 -spec shutdown(How) -> ok when
@@ -55,6 +58,7 @@ direct_stop()->
 send(IoList) when is_list(IoList)->
     tcp_handler:direct_send_net_msg(socket(), IoList);
 send(Msg) ->
+    ?INFO("~p",[Msg]),
     {_Bytes1, IoList} = tcp_codec:encode(Msg),
     tcp_handler:direct_send_net_msg(socket(), IoList),
     ok.
@@ -64,11 +68,14 @@ on_init(Socket) ->
     {Ip, Port} = misc:peername(Socket),
     socket(Socket),
     lib_player_priv:init(),
+    set_latest_net_time(),
+    check_net_msg(),
     ?DEBUG("client connected: ~p ~ts:~p", [Socket, Ip, Port]),
     {ok, #r_player_state{}}.
 
 %%-------------------------------------------------------------------
 on_data(Socket, Data, S)->
+    set_latest_net_time(),
     tcp_codec:decode(fun mod_player:on_net_msg/2, Socket, Data),
     S.
 
@@ -79,6 +86,9 @@ on_close(Socket, Reason, S) ->
     S.
 
 %%-------------------------------------------------------------------
+on_info_msg(check_net, S) ->
+    check_net_alive(),
+    S;
 on_info_msg({kick, Reason}, S) ->
     mod_player:stop(Reason),
     S;
@@ -168,3 +178,16 @@ log_error_msg(Reason, Cmd, Msg) ->
 %%-------------------------------------------------------------------
 socket(Socket) -> put(?SocketKey, Socket).
 socket()-> get(?SocketKey).
+
+%%%-------------------------------------------------------------------
+set_latest_net_time() -> put('RECV_NETMSG_LATEST', time:milli_seconds()).
+check_net_msg() -> erlang:send_after(?DEATH_NET_TIME, self(), check_net).
+check_net_alive() ->
+    try
+        case time:milli_seconds() - get('RECV_NETMSG_LATEST') > ?DEATH_NET_TIME of
+            true -> mod_player:stop(net_heartbeat_stop);
+            false -> check_net_msg()
+        end
+    catch _: _ ->
+        mod_player:stop(net_heartbeat_stop)
+    end.

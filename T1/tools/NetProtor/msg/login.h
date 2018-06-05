@@ -1,5 +1,7 @@
 //////////////////////////////////////////////////////////////////////////
 //<-发出去     ;      ->收消息
+//不用使用int uint long 
+//
 /////////////////////////////////////////////////////////////////////////
 
 struct U2GS_Login_Normal ->
@@ -23,7 +25,7 @@ struct U2GS_Login_Normal ->
 struct GS2U_LoginResult <-
 {
 	int8	result;				// 0为登录成功，非0为登录失败原因
-	uint64	accountID;
+	uint64	aid;
 	string	identity;
 	string  msg;					//不为空，手机必须展示
 };
@@ -31,7 +33,7 @@ struct GS2U_LoginResult <-
 
 struct UserPlayerData
 {
-	uint64	roleID;			// 角色ID
+	uint64	uid;			// 角色ID
 	string	name;			// 角色名
 	int		level;			// 等级
 	int32	wingLevel;		// 翅膀等级
@@ -62,12 +64,12 @@ struct U2GS_RequestCreatePlayer ->
 struct GS2U_CreatePlayerResult <-
 {
 	int		errorCode;
-	uint64  roleID;
+	uint64  uid;
 };
 
 struct U2GS_SelPlayerEnterGame ->
 {
-	uint64	roleID;
+	uint64	uid;
 };
 
 struct GS2U_SelPlayerResult <-
@@ -77,46 +79,28 @@ struct GS2U_SelPlayerResult <-
 
 struct U2GS_RequestDeletePlayer ->
 {
-	uint64	roleID;
+	uint64	uid;
 };
 
 struct GS2U_DeletePlayerResult <-
 {
-	uint64	roleID;
+	uint64	uid;
 	int		errorCode;
 };
 
-struct U2GS_ChangeMap ->
-{
-	int32 newMapID;
-	float fX,
-	float fY
-};
-
-struct GS2U_GoNewMap <-
-{
-	int32 tarMapID;
-	float fX,
-	float fY
-};
-
-
 struct LookInfoMonster
 {
-	uint64	code;
-	uint	id;					// 怪物 ID	
+	uint64	uid;
+	uint	did;					// 怪物 ID	
 	float	x;					// 怪物坐标
 	float	y;
 	float	rotW;				//旋转坐标W
 	float	targetX;			// 怪物移动的目标点X
 	float	targetY;			// 怪物移动的目标点Y
 	float	move_speed;			// 怪物移动速度
-	float   attack_speed;       // 怪物攻击速度
-	uint8	moveStatus;			// 怪物现在是在走还是在跑（客户端用于播放动画）
-	uint8	type;				// 类型 0:普通怪 1:载体怪
 	uint8	hp_per;				// 当前血量百分比
 	int8	camp;			    // 阵营
-	uint64	usercode;			// 归宿code
+	uint64	owner;				// 归属
 	uint64	groupID;			// 怪物所属分组ID
 	uint64	guildID;			// 怪物所属军团ID
 	string  name;				// 名字
@@ -130,8 +114,7 @@ struct GS2U_MonsterList <-
 
 struct LookInfoPlayer
 {
-	uint64	code;				//流水号
-	uint64	roleID;				//角色ID
+	uint64	uid;				//角色ID
 	string  name;				//名字
 	float	x;					//坐标X
 	float	y;					//坐标Y
@@ -143,12 +126,6 @@ struct LookInfoPlayer
 	float	move_speed;			//移动速度
 	int16	level;				//当前等级	
 	uint8   hp_per;				//当前血量百分比
-    uint16  petID;              //坐骑外观ID （0 表示没有坐骑或者下马状态）
-	uint64	otherCode;			//双人坐骑对方的Code （0 表示没有）	
-	string	servername;			// 当前服名
-	string	myServerName;		// 归属服名
-	bool		isInCross;			// 是否在跨服
-	uint8   pkMode;             //玩家Pk状态
 };
 
 
@@ -157,4 +134,69 @@ struct GS2U_LookInfoPlayer <-
 {
 	vector<LookInfoPlayer> player_list;
 };
+
+//
+struct GS2U_RemoveRemote <-
+{
+	vector<uint64> uid_list;
+}
+
+// 切地图
+struct U2GS_ChangeMap ->
+{
+	uint16 map_id;
+	float x,
+	float y
+};
+
+// 进入地图信息
+struct GS2U_GotoNewMap <-
+{
+	uint16	map_id;			// 角色所在当前地图ID
+	float	x;				//坐标X
+	float	y;				//坐标Y
+};
+
+// 请求发送初始化数据
+struct U2GS_GetPlayerInitData ->
+{
+};
+
+// 测试用
+struct GS2U_PlayerInitBase <-
+{
+	uint64	uid;
+};
+
+// 初始化数据发送完毕
+struct GS2U_GetPlayerInitDataEnd <-
+{
+	
+};
+
+
+// 行走信息
+struct ObjWalk
+{
+	uint64	uid;
+	float	src_x;	 //坐标X
+	float	src_y;	 //坐标Y
+	float	dst_x;	 //坐标X
+	float	dst_y;	 //坐标Y
+	int32	move_time; //移动时间（毫秒）  
+	float	speed; //移动速度
+};
+
+// 移动
+struct GS2U_SyncWalk <-
+{
+	ObjWalk walk;
+};
+
+// 同步周围对象的移动信息
+struct GS2U_SyncWalkMany <-
+{
+	vector<ObjWalk> walks;
+};
+
 

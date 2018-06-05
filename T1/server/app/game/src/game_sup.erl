@@ -34,25 +34,29 @@ init([]) ->
 
 start() ->
     {ok, SupPid} = game_sup:start_link(),
+    
+    try
+        wrapper({"logger", stdio,               ?Wrap(start_logs(SupPid))}),
+        wrapper({"error Logger",                ?Wrap(start_errlog(SupPid))}),
+        wrapper({"watchdog",                    ?Wrap(start_watchdog(SupPid))}),
+        wrapper({"config init",                 ?Wrap(start_conf(SupPid, "game.ini"))}),
+        wrapper({"monitor/gc/vms",              ?Wrap(start_gc_vm(SupPid, 0.5))}),
+        wrapper({"test network 15555",          ?Wrap(start_listener_15555(SupPid))}),
+        wrapper({"test network 25555",          ?Wrap(start_listener_25555(SupPid))}),
+        wrapper({"map root supervisor",         ?Wrap(start_map_root_supervisor(SupPid))}),
+        wrapper({"login window",                ?Wrap(start_login(SupPid))}),
+        wrapper({"serv_cache",                  ?Wrap(start_serv_cache(SupPid))}),
+        wrapper({"db window",                   ?Wrap(start_db_worker(SupPid))}),
+        wrapper({"broadcast mod",               ?Wrap(start_broadcast(SupPid))}),
+        wrapper({"serv data loader",            ?Wrap(start_serv_loader(SupPid))}),
+        wrapper({"auto compile and load",       ?Wrap(start_auto_reload(SupPid))}),
 
-    wrapper({"logger", stdio,               ?Wrap(start_logs(SupPid))}),
-    wrapper({"error Logger",                ?Wrap(start_errlog(SupPid))}),
-    wrapper({"watchdog",                    ?Wrap(start_watchdog(SupPid))}),
-    wrapper({"config init",                 ?Wrap(start_conf(SupPid, "game.ini"))}),
-    wrapper({"monitor/gc/vms",              ?Wrap(start_gc_vm(SupPid, 0.5))}),
-    wrapper({"test network 15555",          ?Wrap(start_listener_15555(SupPid))}),
-    wrapper({"test network 25555",          ?Wrap(start_listener_25555(SupPid))}),
-    wrapper({"map root supervisor",         ?Wrap(start_map_root_supervisor(SupPid))}),
-    wrapper({"login window",                ?Wrap(start_login(SupPid))}),
-    wrapper({"serv_cache",                  ?Wrap(start_serv_cache(SupPid))}),
-    wrapper({"db window",                   ?Wrap(start_db_worker(SupPid))}),
-    wrapper({"broadcast mod",               ?Wrap(start_broadcast(SupPid))}),
-    wrapper({"serv data loader",            ?Wrap(start_serv_loader(SupPid))}),
-    wrapper({"auto compile and load",       ?Wrap(start_auto_reload(SupPid))}),
+        watchdog:wait(),
+        ok
+    catch _ : Err ->
+           gcore:halt("start app error ~p, stacktrace ~p", [Err, misc:stacktrace()])
+    end,
 
-    sentinel_server:wait_all_started(),
-    sentinel_server:status(),
-    sentinel_server:ready(true),
     {ok, SupPid}.
 
 
@@ -65,7 +69,7 @@ wrapper({Msg, Thunk}) ->
     ?INFO("~s ...", [Msg]),
     try Thunk()
     catch _ : _Err ->
-        gcore:halt(io_lib:format("run \'~ts\' failed",[Msg]))
+        gcore:halt("run \'~ts\' failed",[Msg])
     end,
     ?INFO("~s done", [Msg]),
     ok.

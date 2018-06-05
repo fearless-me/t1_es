@@ -75,7 +75,7 @@ login_ack(#r_login_ack{error = Error}) ->
 login_ack_success(sucess, AccountIfo) ->
     Aid = AccountIfo#p_account.aid,
     lib_player_priv:send(#pk_GS2U_LoginResult{
-        accountID = Aid,
+        aid = Aid,
         identity = "",
         result = 0,
         msg = io_lib:format("ErrorCode:~p", [0])
@@ -119,7 +119,7 @@ loaded_player_list(RoleList) ->
             old_map_id = OldMapId
         }) ->
             #pk_UserPlayerData{
-                roleID = Uid, name = Name,
+                uid = Uid, name = Name,
                 level = Lv, wingLevel = Wlv,
                 camp = Camp, career = Career,
                 race = Race, sex = Sex, head = Head,
@@ -141,7 +141,7 @@ create_player_ack(#r_create_player_ack{error = 0, uid = Uid}) ->
     lib_player_rw:set_status(?PS_WAIT_SELECT_CREATE),
     hook_player:on_create(Uid),
     lib_player_priv:send(#pk_GS2U_CreatePlayerResult{
-        errorCode = 0, roleID = Uid
+        errorCode = 0, uid = Uid
     });
 create_player_ack(#r_create_player_ack{error = Err}) ->
     lib_player_rw:set_status(?PS_WAIT_SELECT_CREATE),
@@ -273,7 +273,6 @@ goto_to_pre_map() ->
 %%%-------------------------------------------------------------------
 offline(Reason) ->
     ?TRY_CATCH(offline_1(lib_player_rw:get_status()), Err0),
-    ?TRY_CATCH(lib_mem:del_player(lib_player_rw:get_uid()), Err1),
     ?TRY_CATCH(lib_mem:del_sock(lib_player_rw:get_uid()), Err2),
     ?TRY_CATCH(flush_cache(Reason), Err3),
     ok.
@@ -282,11 +281,14 @@ offline_1(Status)
     when Status =:= ?PS_GAME; Status =:= ?PS_CHANGE_MAP ->
     lib_player_rw:set_status(?PS_OFFLINE),
     Uid = lib_player_rw:get_uid(),
-    ?INFO("pid ~p sock ~p player ~w offline",[self(), socket(), Uid]),
-    #m_player{mid = Mid, mpid = MPid} = Player = lib_mem:get_player(Uid),
-    lib_player_save:save(Player),
-    mod_map_creator:player_offline(Uid, Mid, MPid),
+    #m_player{
+        mid = Mid, mpid = MPid
+    } = Player = lib_mem:get_player(Uid),
     hook_player:on_offline(),
+    mod_map_creator:player_offline(Uid, Mid, MPid),
+    lib_player_save:save(Player),
+    lib_mem:offline(Uid),
+    ?INFO("pid ~p sock ~p player ~w offline",[self(), socket(), Uid]),
     ok;
 offline_1(_Status) ->
     lib_player_rw:set_status(?PS_OFFLINE),

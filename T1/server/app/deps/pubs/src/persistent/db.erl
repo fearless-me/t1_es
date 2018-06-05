@@ -140,7 +140,7 @@ as_maps({ok, Fields, Rows}) when is_list(Fields), is_list(Rows) ->
 
 
 %%
-%% @doc get first row's first field
+%% @doc return the first field fo first row
 scalar({_, _Columns, Rows}) -> scalar_1(Rows, undefined).
 scalar({_, _Columns, Rows}, Def) -> scalar_1(Rows, Def).
 

@@ -40,53 +40,60 @@
 	name/1
 ]).
 
-%GENERATED from file:msg.h => GS2U_CreatePlayerResult
+%GENERATED from file:login.h => GS2U_CreatePlayerResult
 decode(?GS2U_CreatePlayerResult,Bin0) ->
 	{ V_errorCode, Bin1 } = read_int32( Bin0 ),
-	{ V_roleID, Bin2 } = read_uint64( Bin1 ),
+	{ V_uid, Bin2 } = read_uint64( Bin1 ),
 	{ #pk_GS2U_CreatePlayerResult {
 		errorCode = V_errorCode,
-		roleID = V_roleID
+		uid = V_uid
 		},
 	Bin2 };
 
-%GENERATED from file:msg.h => GS2U_DeletePlayerResult
+%GENERATED from file:login.h => GS2U_DeletePlayerResult
 decode(?GS2U_DeletePlayerResult,Bin0) ->
-	{ V_roleID, Bin1 } = read_uint64( Bin0 ),
+	{ V_uid, Bin1 } = read_uint64( Bin0 ),
 	{ V_errorCode, Bin2 } = read_int32( Bin1 ),
 	{ #pk_GS2U_DeletePlayerResult {
-		roleID = V_roleID,
+		uid = V_uid,
 		errorCode = V_errorCode
 		},
 	Bin2 };
 
-%GENERATED from file:msg.h => GS2U_GoNewMap
-decode(?GS2U_GoNewMap,Bin0) ->
-	{ V_tarMapID, Bin1 } = read_int32( Bin0 ),
-	{ V_fX, Bin2 } = read_float( Bin1 ),
-	{ V_fY, Bin3 } = read_float( Bin2 ),
-	{ #pk_GS2U_GoNewMap {
-		tarMapID = V_tarMapID,
-		fX = V_fX,
-		fY = V_fY
+%GENERATED from file:login.h => GS2U_GetPlayerInitDataEnd
+decode(?GS2U_GetPlayerInitDataEnd,Bin0) ->
+	{ #pk_GS2U_GetPlayerInitDataEnd {
+
+		},
+	Bin0 };
+
+%GENERATED from file:login.h => GS2U_GotoNewMap
+decode(?GS2U_GotoNewMap,Bin0) ->
+	{ V_map_id, Bin1 } = read_uint16( Bin0 ),
+	{ V_x, Bin2 } = read_float( Bin1 ),
+	{ V_y, Bin3 } = read_float( Bin2 ),
+	{ #pk_GS2U_GotoNewMap {
+		map_id = V_map_id,
+		x = V_x,
+		y = V_y
 		},
 	Bin3 };
 
-%GENERATED from file:msg.h => GS2U_LoginResult
+%GENERATED from file:login.h => GS2U_LoginResult
 decode(?GS2U_LoginResult,Bin0) ->
 	{ V_result, Bin1 } = read_int8( Bin0 ),
-	{ V_accountID, Bin2 } = read_uint64( Bin1 ),
+	{ V_aid, Bin2 } = read_uint64( Bin1 ),
 	{ V_identity, Bin3 } = read_string( Bin2 ),
 	{ V_msg, Bin4 } = read_string( Bin3 ),
 	{ #pk_GS2U_LoginResult {
 		result = V_result,
-		accountID = V_accountID,
+		aid = V_aid,
 		identity = V_identity,
 		msg = V_msg
 		},
 	Bin4 };
 
-%GENERATED from file:msg.h => GS2U_LookInfoPlayer
+%GENERATED from file:login.h => GS2U_LookInfoPlayer
 decode(?GS2U_LookInfoPlayer,Bin0) ->
 	{ V_player_list, Bin1 } = read_array(Bin0, fun(X) -> decode_LookInfoPlayer( X ) end),
 	{ #pk_GS2U_LookInfoPlayer {
@@ -94,7 +101,7 @@ decode(?GS2U_LookInfoPlayer,Bin0) ->
 		},
 	Bin1 };
 
-%GENERATED from file:msg.h => GS2U_MonsterList
+%GENERATED from file:login.h => GS2U_MonsterList
 decode(?GS2U_MonsterList,Bin0) ->
 	{ V_monster_list, Bin1 } = read_array(Bin0, fun(X) -> decode_LookInfoMonster( X ) end),
 	{ #pk_GS2U_MonsterList {
@@ -102,7 +109,23 @@ decode(?GS2U_MonsterList,Bin0) ->
 		},
 	Bin1 };
 
-%GENERATED from file:msg.h => GS2U_SelPlayerResult
+%GENERATED from file:login.h => GS2U_PlayerInitBase
+decode(?GS2U_PlayerInitBase,Bin0) ->
+	{ V_uid, Bin1 } = read_uint64( Bin0 ),
+	{ #pk_GS2U_PlayerInitBase {
+		uid = V_uid
+		},
+	Bin1 };
+
+%GENERATED from file:login.h => GS2U_RemoveRemote
+decode(?GS2U_RemoveRemote,Bin0) ->
+	{ V_uid_list, Bin1 } = read_array(Bin0, fun(X) -> read_uint64( X ) end),
+	{ #pk_GS2U_RemoveRemote {
+		uid_list = V_uid_list
+		},
+	Bin1 };
+
+%GENERATED from file:login.h => GS2U_SelPlayerResult
 decode(?GS2U_SelPlayerResult,Bin0) ->
 	{ V_result, Bin1 } = read_int32( Bin0 ),
 	{ #pk_GS2U_SelPlayerResult {
@@ -110,7 +133,23 @@ decode(?GS2U_SelPlayerResult,Bin0) ->
 		},
 	Bin1 };
 
-%GENERATED from file:msg.h => GS2U_UserPlayerList
+%GENERATED from file:login.h => GS2U_SyncWalk
+decode(?GS2U_SyncWalk,Bin0) ->
+	{ V_walk, Bin1 } = decode_ObjWalk( Bin0 ),
+	{ #pk_GS2U_SyncWalk {
+		walk = V_walk
+		},
+	Bin1 };
+
+%GENERATED from file:login.h => GS2U_SyncWalkMany
+decode(?GS2U_SyncWalkMany,Bin0) ->
+	{ V_walks, Bin1 } = read_array(Bin0, fun(X) -> decode_ObjWalk( X ) end),
+	{ #pk_GS2U_SyncWalkMany {
+		walks = V_walks
+		},
+	Bin1 };
+
+%GENERATED from file:login.h => GS2U_UserPlayerList
 decode(?GS2U_UserPlayerList,Bin0) ->
 	{ V_info, Bin1 } = read_array(Bin0, fun(X) -> decode_UserPlayerData( X ) end),
 	{ #pk_GS2U_UserPlayerList {
@@ -118,19 +157,26 @@ decode(?GS2U_UserPlayerList,Bin0) ->
 		},
 	Bin1 };
 
-%GENERATED from file:msg.h => U2GS_ChangeMap
+%GENERATED from file:login.h => U2GS_ChangeMap
 decode(?U2GS_ChangeMap,Bin0) ->
-	{ V_newMapID, Bin1 } = read_int32( Bin0 ),
-	{ V_fX, Bin2 } = read_float( Bin1 ),
-	{ V_fY, Bin3 } = read_float( Bin2 ),
+	{ V_map_id, Bin1 } = read_uint16( Bin0 ),
+	{ V_x, Bin2 } = read_float( Bin1 ),
+	{ V_y, Bin3 } = read_float( Bin2 ),
 	{ #pk_U2GS_ChangeMap {
-		newMapID = V_newMapID,
-		fX = V_fX,
-		fY = V_fY
+		map_id = V_map_id,
+		x = V_x,
+		y = V_y
 		},
 	Bin3 };
 
-%GENERATED from file:msg.h => U2GS_Login_Normal
+%GENERATED from file:login.h => U2GS_GetPlayerInitData
+decode(?U2GS_GetPlayerInitData,Bin0) ->
+	{ #pk_U2GS_GetPlayerInitData {
+
+		},
+	Bin0 };
+
+%GENERATED from file:login.h => U2GS_Login_Normal
 decode(?U2GS_Login_Normal,Bin0) ->
 	{ V_platformAccount, Bin1 } = read_string( Bin0 ),
 	{ V_platformName, Bin2 } = read_string( Bin1 ),
@@ -164,7 +210,7 @@ decode(?U2GS_Login_Normal,Bin0) ->
 		},
 	Bin14 };
 
-%GENERATED from file:msg.h => U2GS_RequestCreatePlayer
+%GENERATED from file:login.h => U2GS_RequestCreatePlayer
 decode(?U2GS_RequestCreatePlayer,Bin0) ->
 	{ V_name, Bin1 } = read_string( Bin0 ),
 	{ V_camp, Bin2 } = read_int8( Bin1 ),
@@ -182,92 +228,78 @@ decode(?U2GS_RequestCreatePlayer,Bin0) ->
 		},
 	Bin6 };
 
-%GENERATED from file:msg.h => U2GS_RequestDeletePlayer
+%GENERATED from file:login.h => U2GS_RequestDeletePlayer
 decode(?U2GS_RequestDeletePlayer,Bin0) ->
-	{ V_roleID, Bin1 } = read_uint64( Bin0 ),
+	{ V_uid, Bin1 } = read_uint64( Bin0 ),
 	{ #pk_U2GS_RequestDeletePlayer {
-		roleID = V_roleID
+		uid = V_uid
 		},
 	Bin1 };
 
-%GENERATED from file:msg.h => U2GS_SelPlayerEnterGame
+%GENERATED from file:login.h => U2GS_SelPlayerEnterGame
 decode(?U2GS_SelPlayerEnterGame,Bin0) ->
-	{ V_roleID, Bin1 } = read_uint64( Bin0 ),
+	{ V_uid, Bin1 } = read_uint64( Bin0 ),
 	{ #pk_U2GS_SelPlayerEnterGame {
-		roleID = V_roleID
+		uid = V_uid
 		},
 	Bin1 }.
 
-%GENERATED from file:msg.h => LookInfoMonster
+%GENERATED from file:login.h => LookInfoMonster
 -spec decode_LookInfoMonster(Bin0) -> { #pk_LookInfoMonster{},LeftBin }
 	when Bin0 :: binary(), LeftBin :: binary().
 decode_LookInfoMonster(Bin0) ->
-	{ V_code, Bin1 } = read_uint64( Bin0 ),
-	{ V_id, Bin2 } = read_uint32( Bin1 ),
+	{ V_uid, Bin1 } = read_uint64( Bin0 ),
+	{ V_did, Bin2 } = read_uint32( Bin1 ),
 	{ V_x, Bin3 } = read_float( Bin2 ),
 	{ V_y, Bin4 } = read_float( Bin3 ),
 	{ V_rotW, Bin5 } = read_float( Bin4 ),
 	{ V_targetX, Bin6 } = read_float( Bin5 ),
 	{ V_targetY, Bin7 } = read_float( Bin6 ),
 	{ V_move_speed, Bin8 } = read_float( Bin7 ),
-	{ V_attack_speed, Bin9 } = read_float( Bin8 ),
-	{ V_moveStatus, Bin10 } = read_uint8( Bin9 ),
-	{ V_type, Bin11 } = read_uint8( Bin10 ),
-	{ V_hp_per, Bin12 } = read_uint8( Bin11 ),
-	{ V_camp, Bin13 } = read_int8( Bin12 ),
-	{ V_usercode, Bin14 } = read_uint64( Bin13 ),
-	{ V_groupID, Bin15 } = read_uint64( Bin14 ),
-	{ V_guildID, Bin16 } = read_uint64( Bin15 ),
-	{ V_name, Bin17 } = read_string( Bin16 ),
-	{ V_level, Bin18 } = read_uint16( Bin17 ),
+	{ V_hp_per, Bin9 } = read_uint8( Bin8 ),
+	{ V_camp, Bin10 } = read_int8( Bin9 ),
+	{ V_owner, Bin11 } = read_uint64( Bin10 ),
+	{ V_groupID, Bin12 } = read_uint64( Bin11 ),
+	{ V_guildID, Bin13 } = read_uint64( Bin12 ),
+	{ V_name, Bin14 } = read_string( Bin13 ),
+	{ V_level, Bin15 } = read_uint16( Bin14 ),
 	{ #pk_LookInfoMonster {
-		code = V_code,
-		id = V_id,
+		uid = V_uid,
+		did = V_did,
 		x = V_x,
 		y = V_y,
 		rotW = V_rotW,
 		targetX = V_targetX,
 		targetY = V_targetY,
 		move_speed = V_move_speed,
-		attack_speed = V_attack_speed,
-		moveStatus = V_moveStatus,
-		type = V_type,
 		hp_per = V_hp_per,
 		camp = V_camp,
-		usercode = V_usercode,
+		owner = V_owner,
 		groupID = V_groupID,
 		guildID = V_guildID,
 		name = V_name,
 		level = V_level
 		},
-	Bin18 }.
+	Bin15 }.
 
-%GENERATED from file:msg.h => LookInfoPlayer
+%GENERATED from file:login.h => LookInfoPlayer
 -spec decode_LookInfoPlayer(Bin0) -> { #pk_LookInfoPlayer{},LeftBin }
 	when Bin0 :: binary(), LeftBin :: binary().
 decode_LookInfoPlayer(Bin0) ->
-	{ V_code, Bin1 } = read_uint64( Bin0 ),
-	{ V_roleID, Bin2 } = read_uint64( Bin1 ),
-	{ V_name, Bin3 } = read_string( Bin2 ),
-	{ V_x, Bin4 } = read_float( Bin3 ),
-	{ V_y, Bin5 } = read_float( Bin4 ),
-	{ V_race, Bin6 } = read_int8( Bin5 ),
-	{ V_career, Bin7 } = read_uint32( Bin6 ),
-	{ V_sex, Bin8 } = read_int8( Bin7 ),
-	{ V_camp, Bin9 } = read_int8( Bin8 ),
-	{ V_head, Bin10 } = read_int32( Bin9 ),
-	{ V_move_speed, Bin11 } = read_float( Bin10 ),
-	{ V_level, Bin12 } = read_int16( Bin11 ),
-	{ V_hp_per, Bin13 } = read_uint8( Bin12 ),
-	{ V_petID, Bin14 } = read_uint16( Bin13 ),
-	{ V_otherCode, Bin15 } = read_uint64( Bin14 ),
-	{ V_servername, Bin16 } = read_string( Bin15 ),
-	{ V_myServerName, Bin17 } = read_string( Bin16 ),
-	{ V_isInCross, Bin18 } = read_bool( Bin17 ),
-	{ V_pkMode, Bin19 } = read_uint8( Bin18 ),
+	{ V_uid, Bin1 } = read_uint64( Bin0 ),
+	{ V_name, Bin2 } = read_string( Bin1 ),
+	{ V_x, Bin3 } = read_float( Bin2 ),
+	{ V_y, Bin4 } = read_float( Bin3 ),
+	{ V_race, Bin5 } = read_int8( Bin4 ),
+	{ V_career, Bin6 } = read_uint32( Bin5 ),
+	{ V_sex, Bin7 } = read_int8( Bin6 ),
+	{ V_camp, Bin8 } = read_int8( Bin7 ),
+	{ V_head, Bin9 } = read_int32( Bin8 ),
+	{ V_move_speed, Bin10 } = read_float( Bin9 ),
+	{ V_level, Bin11 } = read_int16( Bin10 ),
+	{ V_hp_per, Bin12 } = read_uint8( Bin11 ),
 	{ #pk_LookInfoPlayer {
-		code = V_code,
-		roleID = V_roleID,
+		uid = V_uid,
 		name = V_name,
 		x = V_x,
 		y = V_y,
@@ -278,21 +310,37 @@ decode_LookInfoPlayer(Bin0) ->
 		head = V_head,
 		move_speed = V_move_speed,
 		level = V_level,
-		hp_per = V_hp_per,
-		petID = V_petID,
-		otherCode = V_otherCode,
-		servername = V_servername,
-		myServerName = V_myServerName,
-		isInCross = V_isInCross,
-		pkMode = V_pkMode
+		hp_per = V_hp_per
 		},
-	Bin19 }.
+	Bin12 }.
 
-%GENERATED from file:msg.h => UserPlayerData
+%GENERATED from file:login.h => ObjWalk
+-spec decode_ObjWalk(Bin0) -> { #pk_ObjWalk{},LeftBin }
+	when Bin0 :: binary(), LeftBin :: binary().
+decode_ObjWalk(Bin0) ->
+	{ V_uid, Bin1 } = read_uint64( Bin0 ),
+	{ V_src_x, Bin2 } = read_float( Bin1 ),
+	{ V_src_y, Bin3 } = read_float( Bin2 ),
+	{ V_dst_x, Bin4 } = read_float( Bin3 ),
+	{ V_dst_y, Bin5 } = read_float( Bin4 ),
+	{ V_move_time, Bin6 } = read_int32( Bin5 ),
+	{ V_speed, Bin7 } = read_float( Bin6 ),
+	{ #pk_ObjWalk {
+		uid = V_uid,
+		src_x = V_src_x,
+		src_y = V_src_y,
+		dst_x = V_dst_x,
+		dst_y = V_dst_y,
+		move_time = V_move_time,
+		speed = V_speed
+		},
+	Bin7 }.
+
+%GENERATED from file:login.h => UserPlayerData
 -spec decode_UserPlayerData(Bin0) -> { #pk_UserPlayerData{},LeftBin }
 	when Bin0 :: binary(), LeftBin :: binary().
 decode_UserPlayerData(Bin0) ->
-	{ V_roleID, Bin1 } = read_uint64( Bin0 ),
+	{ V_uid, Bin1 } = read_uint64( Bin0 ),
 	{ V_name, Bin2 } = read_string( Bin1 ),
 	{ V_level, Bin3 } = read_int32( Bin2 ),
 	{ V_wingLevel, Bin4 } = read_int32( Bin3 ),
@@ -304,7 +352,7 @@ decode_UserPlayerData(Bin0) ->
 	{ V_mapID, Bin10 } = read_uint16( Bin9 ),
 	{ V_oldMapID, Bin11 } = read_uint16( Bin10 ),
 	{ #pk_UserPlayerData {
-		roleID = V_roleID,
+		uid = V_uid,
 		name = V_name,
 		level = V_level,
 		wingLevel = V_wingLevel,
@@ -318,53 +366,60 @@ decode_UserPlayerData(Bin0) ->
 		},
 	Bin11 }.
 
-%GENERATED from file:msg.h => GS2U_CreatePlayerResult
+%GENERATED from file:login.h => GS2U_CreatePlayerResult
 encode(#pk_GS2U_CreatePlayerResult{} = P) ->
 	Bin_errorCode = write_int32( P#pk_GS2U_CreatePlayerResult.errorCode ),
-	Bin_roleID = write_uint64( P#pk_GS2U_CreatePlayerResult.roleID ),
+	Bin_uid = write_uint64( P#pk_GS2U_CreatePlayerResult.uid ),
 	[
 		<<?GS2U_CreatePlayerResult:?U16>>,
 		Bin_errorCode,
-		Bin_roleID
+		Bin_uid
 	];
 
-%GENERATED from file:msg.h => GS2U_DeletePlayerResult
+%GENERATED from file:login.h => GS2U_DeletePlayerResult
 encode(#pk_GS2U_DeletePlayerResult{} = P) ->
-	Bin_roleID = write_uint64( P#pk_GS2U_DeletePlayerResult.roleID ),
+	Bin_uid = write_uint64( P#pk_GS2U_DeletePlayerResult.uid ),
 	Bin_errorCode = write_int32( P#pk_GS2U_DeletePlayerResult.errorCode ),
 	[
 		<<?GS2U_DeletePlayerResult:?U16>>,
-		Bin_roleID,
+		Bin_uid,
 		Bin_errorCode
 	];
 
-%GENERATED from file:msg.h => GS2U_GoNewMap
-encode(#pk_GS2U_GoNewMap{} = P) ->
-	Bin_tarMapID = write_int32( P#pk_GS2U_GoNewMap.tarMapID ),
-	Bin_fX = write_float( P#pk_GS2U_GoNewMap.fX ),
-	Bin_fY = write_float( P#pk_GS2U_GoNewMap.fY ),
+%GENERATED from file:login.h => GS2U_GetPlayerInitDataEnd
+encode(#pk_GS2U_GetPlayerInitDataEnd{}) ->
 	[
-		<<?GS2U_GoNewMap:?U16>>,
-		Bin_tarMapID,
-		Bin_fX,
-		Bin_fY
+		<<?GS2U_GetPlayerInitDataEnd:?U16>>
+
 	];
 
-%GENERATED from file:msg.h => GS2U_LoginResult
+%GENERATED from file:login.h => GS2U_GotoNewMap
+encode(#pk_GS2U_GotoNewMap{} = P) ->
+	Bin_map_id = write_uint16( P#pk_GS2U_GotoNewMap.map_id ),
+	Bin_x = write_float( P#pk_GS2U_GotoNewMap.x ),
+	Bin_y = write_float( P#pk_GS2U_GotoNewMap.y ),
+	[
+		<<?GS2U_GotoNewMap:?U16>>,
+		Bin_map_id,
+		Bin_x,
+		Bin_y
+	];
+
+%GENERATED from file:login.h => GS2U_LoginResult
 encode(#pk_GS2U_LoginResult{} = P) ->
 	Bin_result = write_int8( P#pk_GS2U_LoginResult.result ),
-	Bin_accountID = write_uint64( P#pk_GS2U_LoginResult.accountID ),
+	Bin_aid = write_uint64( P#pk_GS2U_LoginResult.aid ),
 	Bin_identity = write_string( P#pk_GS2U_LoginResult.identity ),
 	Bin_msg = write_string( P#pk_GS2U_LoginResult.msg ),
 	[
 		<<?GS2U_LoginResult:?U16>>,
 		Bin_result,
-		Bin_accountID,
+		Bin_aid,
 		Bin_identity,
 		Bin_msg
 	];
 
-%GENERATED from file:msg.h => GS2U_LookInfoPlayer
+%GENERATED from file:login.h => GS2U_LookInfoPlayer
 encode(#pk_GS2U_LookInfoPlayer{} = P) ->
 	Bin_player_list = write_array(P#pk_GS2U_LookInfoPlayer.player_list, fun(X) -> encode_LookInfoPlayer( X ) end),
 	[
@@ -372,7 +427,7 @@ encode(#pk_GS2U_LookInfoPlayer{} = P) ->
 		Bin_player_list
 	];
 
-%GENERATED from file:msg.h => GS2U_MonsterList
+%GENERATED from file:login.h => GS2U_MonsterList
 encode(#pk_GS2U_MonsterList{} = P) ->
 	Bin_monster_list = write_array(P#pk_GS2U_MonsterList.monster_list, fun(X) -> encode_LookInfoMonster( X ) end),
 	[
@@ -380,7 +435,23 @@ encode(#pk_GS2U_MonsterList{} = P) ->
 		Bin_monster_list
 	];
 
-%GENERATED from file:msg.h => GS2U_SelPlayerResult
+%GENERATED from file:login.h => GS2U_PlayerInitBase
+encode(#pk_GS2U_PlayerInitBase{} = P) ->
+	Bin_uid = write_uint64( P#pk_GS2U_PlayerInitBase.uid ),
+	[
+		<<?GS2U_PlayerInitBase:?U16>>,
+		Bin_uid
+	];
+
+%GENERATED from file:login.h => GS2U_RemoveRemote
+encode(#pk_GS2U_RemoveRemote{} = P) ->
+	Bin_uid_list = write_array(P#pk_GS2U_RemoveRemote.uid_list, fun(X) -> write_uint64( X ) end),
+	[
+		<<?GS2U_RemoveRemote:?U16>>,
+		Bin_uid_list
+	];
+
+%GENERATED from file:login.h => GS2U_SelPlayerResult
 encode(#pk_GS2U_SelPlayerResult{} = P) ->
 	Bin_result = write_int32( P#pk_GS2U_SelPlayerResult.result ),
 	[
@@ -388,7 +459,23 @@ encode(#pk_GS2U_SelPlayerResult{} = P) ->
 		Bin_result
 	];
 
-%GENERATED from file:msg.h => GS2U_UserPlayerList
+%GENERATED from file:login.h => GS2U_SyncWalk
+encode(#pk_GS2U_SyncWalk{} = P) ->
+	Bin_walk = encode_ObjWalk( P#pk_GS2U_SyncWalk.walk ),
+	[
+		<<?GS2U_SyncWalk:?U16>>,
+		Bin_walk
+	];
+
+%GENERATED from file:login.h => GS2U_SyncWalkMany
+encode(#pk_GS2U_SyncWalkMany{} = P) ->
+	Bin_walks = write_array(P#pk_GS2U_SyncWalkMany.walks, fun(X) -> encode_ObjWalk( X ) end),
+	[
+		<<?GS2U_SyncWalkMany:?U16>>,
+		Bin_walks
+	];
+
+%GENERATED from file:login.h => GS2U_UserPlayerList
 encode(#pk_GS2U_UserPlayerList{} = P) ->
 	Bin_info = write_array(P#pk_GS2U_UserPlayerList.info, fun(X) -> encode_UserPlayerData( X ) end),
 	[
@@ -396,19 +483,26 @@ encode(#pk_GS2U_UserPlayerList{} = P) ->
 		Bin_info
 	];
 
-%GENERATED from file:msg.h => U2GS_ChangeMap
+%GENERATED from file:login.h => U2GS_ChangeMap
 encode(#pk_U2GS_ChangeMap{} = P) ->
-	Bin_newMapID = write_int32( P#pk_U2GS_ChangeMap.newMapID ),
-	Bin_fX = write_float( P#pk_U2GS_ChangeMap.fX ),
-	Bin_fY = write_float( P#pk_U2GS_ChangeMap.fY ),
+	Bin_map_id = write_uint16( P#pk_U2GS_ChangeMap.map_id ),
+	Bin_x = write_float( P#pk_U2GS_ChangeMap.x ),
+	Bin_y = write_float( P#pk_U2GS_ChangeMap.y ),
 	[
 		<<?U2GS_ChangeMap:?U16>>,
-		Bin_newMapID,
-		Bin_fX,
-		Bin_fY
+		Bin_map_id,
+		Bin_x,
+		Bin_y
 	];
 
-%GENERATED from file:msg.h => U2GS_Login_Normal
+%GENERATED from file:login.h => U2GS_GetPlayerInitData
+encode(#pk_U2GS_GetPlayerInitData{}) ->
+	[
+		<<?U2GS_GetPlayerInitData:?U16>>
+
+	];
+
+%GENERATED from file:login.h => U2GS_Login_Normal
 encode(#pk_U2GS_Login_Normal{} = P) ->
 	Bin_platformAccount = write_string( P#pk_U2GS_Login_Normal.platformAccount ),
 	Bin_platformName = write_string( P#pk_U2GS_Login_Normal.platformName ),
@@ -442,7 +536,7 @@ encode(#pk_U2GS_Login_Normal{} = P) ->
 		Bin_versionPro
 	];
 
-%GENERATED from file:msg.h => U2GS_RequestCreatePlayer
+%GENERATED from file:login.h => U2GS_RequestCreatePlayer
 encode(#pk_U2GS_RequestCreatePlayer{} = P) ->
 	Bin_name = write_string( P#pk_U2GS_RequestCreatePlayer.name ),
 	Bin_camp = write_int8( P#pk_U2GS_RequestCreatePlayer.camp ),
@@ -460,68 +554,61 @@ encode(#pk_U2GS_RequestCreatePlayer{} = P) ->
 		Bin_head
 	];
 
-%GENERATED from file:msg.h => U2GS_RequestDeletePlayer
+%GENERATED from file:login.h => U2GS_RequestDeletePlayer
 encode(#pk_U2GS_RequestDeletePlayer{} = P) ->
-	Bin_roleID = write_uint64( P#pk_U2GS_RequestDeletePlayer.roleID ),
+	Bin_uid = write_uint64( P#pk_U2GS_RequestDeletePlayer.uid ),
 	[
 		<<?U2GS_RequestDeletePlayer:?U16>>,
-		Bin_roleID
+		Bin_uid
 	];
 
-%GENERATED from file:msg.h => U2GS_SelPlayerEnterGame
+%GENERATED from file:login.h => U2GS_SelPlayerEnterGame
 encode(#pk_U2GS_SelPlayerEnterGame{} = P) ->
-	Bin_roleID = write_uint64( P#pk_U2GS_SelPlayerEnterGame.roleID ),
+	Bin_uid = write_uint64( P#pk_U2GS_SelPlayerEnterGame.uid ),
 	[
 		<<?U2GS_SelPlayerEnterGame:?U16>>,
-		Bin_roleID
+		Bin_uid
 	];
 
 encode(_) -> noMatch.
 
-%GENERATED from file:msg.h => LookInfoMonster
+%GENERATED from file:login.h => LookInfoMonster
 encode_LookInfoMonster( #pk_LookInfoMonster{} = P ) ->
-	Bin_code = write_uint64( P#pk_LookInfoMonster.code ),
-	Bin_id = write_uint32( P#pk_LookInfoMonster.id ),
+	Bin_uid = write_uint64( P#pk_LookInfoMonster.uid ),
+	Bin_did = write_uint32( P#pk_LookInfoMonster.did ),
 	Bin_x = write_float( P#pk_LookInfoMonster.x ),
 	Bin_y = write_float( P#pk_LookInfoMonster.y ),
 	Bin_rotW = write_float( P#pk_LookInfoMonster.rotW ),
 	Bin_targetX = write_float( P#pk_LookInfoMonster.targetX ),
 	Bin_targetY = write_float( P#pk_LookInfoMonster.targetY ),
 	Bin_move_speed = write_float( P#pk_LookInfoMonster.move_speed ),
-	Bin_attack_speed = write_float( P#pk_LookInfoMonster.attack_speed ),
-	Bin_moveStatus = write_uint8( P#pk_LookInfoMonster.moveStatus ),
-	Bin_type = write_uint8( P#pk_LookInfoMonster.type ),
 	Bin_hp_per = write_uint8( P#pk_LookInfoMonster.hp_per ),
 	Bin_camp = write_int8( P#pk_LookInfoMonster.camp ),
-	Bin_usercode = write_uint64( P#pk_LookInfoMonster.usercode ),
+	Bin_owner = write_uint64( P#pk_LookInfoMonster.owner ),
 	Bin_groupID = write_uint64( P#pk_LookInfoMonster.groupID ),
 	Bin_guildID = write_uint64( P#pk_LookInfoMonster.guildID ),
 	Bin_name = write_string( P#pk_LookInfoMonster.name ),
 	Bin_level = write_uint16( P#pk_LookInfoMonster.level ),
 	[
-		Bin_code,
-		Bin_id,
+		Bin_uid,
+		Bin_did,
 		Bin_x,
 		Bin_y,
 		Bin_rotW,
 		Bin_targetX,
 		Bin_targetY,
 		Bin_move_speed,
-		Bin_attack_speed,
-		Bin_moveStatus,
-		Bin_type,
 		Bin_hp_per,
 		Bin_camp,
-		Bin_usercode,
+		Bin_owner,
 		Bin_groupID,
 		Bin_guildID,
 		Bin_name,
 		Bin_level	].
 
-%GENERATED from file:msg.h => LookInfoPlayer
+%GENERATED from file:login.h => LookInfoPlayer
 encode_LookInfoPlayer( #pk_LookInfoPlayer{} = P ) ->
-	Bin_code = write_uint64( P#pk_LookInfoPlayer.code ),
-	Bin_roleID = write_uint64( P#pk_LookInfoPlayer.roleID ),
+	Bin_uid = write_uint64( P#pk_LookInfoPlayer.uid ),
 	Bin_name = write_string( P#pk_LookInfoPlayer.name ),
 	Bin_x = write_float( P#pk_LookInfoPlayer.x ),
 	Bin_y = write_float( P#pk_LookInfoPlayer.y ),
@@ -533,15 +620,8 @@ encode_LookInfoPlayer( #pk_LookInfoPlayer{} = P ) ->
 	Bin_move_speed = write_float( P#pk_LookInfoPlayer.move_speed ),
 	Bin_level = write_int16( P#pk_LookInfoPlayer.level ),
 	Bin_hp_per = write_uint8( P#pk_LookInfoPlayer.hp_per ),
-	Bin_petID = write_uint16( P#pk_LookInfoPlayer.petID ),
-	Bin_otherCode = write_uint64( P#pk_LookInfoPlayer.otherCode ),
-	Bin_servername = write_string( P#pk_LookInfoPlayer.servername ),
-	Bin_myServerName = write_string( P#pk_LookInfoPlayer.myServerName ),
-	Bin_isInCross = write_bool( P#pk_LookInfoPlayer.isInCross ),
-	Bin_pkMode = write_uint8( P#pk_LookInfoPlayer.pkMode ),
 	[
-		Bin_code,
-		Bin_roleID,
+		Bin_uid,
 		Bin_name,
 		Bin_x,
 		Bin_y,
@@ -552,17 +632,29 @@ encode_LookInfoPlayer( #pk_LookInfoPlayer{} = P ) ->
 		Bin_head,
 		Bin_move_speed,
 		Bin_level,
-		Bin_hp_per,
-		Bin_petID,
-		Bin_otherCode,
-		Bin_servername,
-		Bin_myServerName,
-		Bin_isInCross,
-		Bin_pkMode	].
+		Bin_hp_per	].
 
-%GENERATED from file:msg.h => UserPlayerData
+%GENERATED from file:login.h => ObjWalk
+encode_ObjWalk( #pk_ObjWalk{} = P ) ->
+	Bin_uid = write_uint64( P#pk_ObjWalk.uid ),
+	Bin_src_x = write_float( P#pk_ObjWalk.src_x ),
+	Bin_src_y = write_float( P#pk_ObjWalk.src_y ),
+	Bin_dst_x = write_float( P#pk_ObjWalk.dst_x ),
+	Bin_dst_y = write_float( P#pk_ObjWalk.dst_y ),
+	Bin_move_time = write_int32( P#pk_ObjWalk.move_time ),
+	Bin_speed = write_float( P#pk_ObjWalk.speed ),
+	[
+		Bin_uid,
+		Bin_src_x,
+		Bin_src_y,
+		Bin_dst_x,
+		Bin_dst_y,
+		Bin_move_time,
+		Bin_speed	].
+
+%GENERATED from file:login.h => UserPlayerData
 encode_UserPlayerData( #pk_UserPlayerData{} = P ) ->
-	Bin_roleID = write_uint64( P#pk_UserPlayerData.roleID ),
+	Bin_uid = write_uint64( P#pk_UserPlayerData.uid ),
 	Bin_name = write_string( P#pk_UserPlayerData.name ),
 	Bin_level = write_int32( P#pk_UserPlayerData.level ),
 	Bin_wingLevel = write_int32( P#pk_UserPlayerData.wingLevel ),
@@ -574,7 +666,7 @@ encode_UserPlayerData( #pk_UserPlayerData{} = P ) ->
 	Bin_mapID = write_uint16( P#pk_UserPlayerData.mapID ),
 	Bin_oldMapID = write_uint16( P#pk_UserPlayerData.oldMapID ),
 	[
-		Bin_roleID,
+		Bin_uid,
 		Bin_name,
 		Bin_level,
 		Bin_wingLevel,
@@ -589,13 +681,19 @@ encode_UserPlayerData( #pk_UserPlayerData{} = P ) ->
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 name(?GS2U_CreatePlayerResult) -> "GS2U_CreatePlayerResult";
 name(?GS2U_DeletePlayerResult) -> "GS2U_DeletePlayerResult";
-name(?GS2U_GoNewMap) -> "GS2U_GoNewMap";
+name(?GS2U_GetPlayerInitDataEnd) -> "GS2U_GetPlayerInitDataEnd";
+name(?GS2U_GotoNewMap) -> "GS2U_GotoNewMap";
 name(?GS2U_LoginResult) -> "GS2U_LoginResult";
 name(?GS2U_LookInfoPlayer) -> "GS2U_LookInfoPlayer";
 name(?GS2U_MonsterList) -> "GS2U_MonsterList";
+name(?GS2U_PlayerInitBase) -> "GS2U_PlayerInitBase";
+name(?GS2U_RemoveRemote) -> "GS2U_RemoveRemote";
 name(?GS2U_SelPlayerResult) -> "GS2U_SelPlayerResult";
+name(?GS2U_SyncWalk) -> "GS2U_SyncWalk";
+name(?GS2U_SyncWalkMany) -> "GS2U_SyncWalkMany";
 name(?GS2U_UserPlayerList) -> "GS2U_UserPlayerList";
 name(?U2GS_ChangeMap) -> "U2GS_ChangeMap";
+name(?U2GS_GetPlayerInitData) -> "U2GS_GetPlayerInitData";
 name(?U2GS_Login_Normal) -> "U2GS_Login_Normal";
 name(?U2GS_RequestCreatePlayer) -> "U2GS_RequestCreatePlayer";
 name(?U2GS_RequestDeletePlayer) -> "U2GS_RequestDeletePlayer";

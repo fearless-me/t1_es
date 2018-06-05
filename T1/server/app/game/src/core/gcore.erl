@@ -29,7 +29,7 @@
 -export([merge_plat_acc_name/2]).
 
 %%
--export([halt/1]).
+-export([halt/1, halt/2]).
 
 %%-------------------------------------------------------------------
 register_ppid(Pid, Aid) ->
@@ -64,6 +64,7 @@ forbid_account(Aid) ->
 
 %%-------------------------------------------------------------------
 -define(CRASH_WAIT_SECONDS, 15).
+halt(Fmt, Args) -> gcore:halt(io_lib:format(Fmt, Args)).
 halt(Msg) ->
     ?FATAL("~ts, after ~p second(s) app crash,~n~p",
         [Msg, ?CRASH_WAIT_SECONDS, misc:stacktrace()]),

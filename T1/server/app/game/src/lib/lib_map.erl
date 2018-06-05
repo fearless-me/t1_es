@@ -14,6 +14,7 @@
 -include("map_obj.hrl").
 -include("pub_common.hrl").
 -include("cfg_mapsetting.hrl").
+-include("netmsg.hrl").
 
 %% API
 -export([init/1]).
@@ -68,6 +69,7 @@ player_exit_1(_, Uid) ->
 
 %%%-------------------------------------------------------------------
 player_join(S, #r_map_obj{} = Obj) ->
+    send_goto_map_msg(Obj),
     lib_map_rw:add_obj_to_ets(Obj),
     lib_map_view:sync_player_join_map(Obj),
     ?DEBUG("uid ~p, join map ~w, name ~p",
@@ -109,7 +111,7 @@ init_all_monster_1(Mdata)->
 init_all_monster_2(#r_map_obj{} = Obj) ->
     VisIndex = lib_map_view:pos_to_vis_index(Obj#r_map_obj.cur_pos),
     lib_map_rw:add_obj_to_ets(Obj),
-    lib_map_view:add_to_vis_tile(Obj, VisIndex),
+    lib_map_view:add_obj_to_vis_tile(Obj, VisIndex),
     ?DEBUG("map ~p:~p create monster ~p, uid ~p, visIndex ~p",
         [lib_map_rw:get_map_id(), lib_map_rw:get_line_id(), Obj#r_map_obj.uid, Obj#r_map_obj.uid, VisIndex]),
     ok;
@@ -198,8 +200,17 @@ kick_all_player(#r_map_state{player = Ets}) ->
         end, 0, Ets),
     ok.
 
-%%%-------------------------------------------------------------------
+%%-------------------------------------------------------------------
 player_start_move(Req) ->
     #r_player_start_move_req{uid = Uid, tar_pos = TarPos} = Req,
     Obj = lib_map_rw:get_player(Uid),
     lib_move:start_player_walk(Obj, lib_obj:get_obj_pos(Obj), TarPos).
+
+%%-------------------------------------------------------------------
+send_goto_map_msg(#r_map_obj{uid = Uid, cur_pos = Pos})->
+    Msg = #pk_GS2U_GotoNewMap{
+        map_id = lib_map_rw:get_map_id(),
+        x = vector3:x(Pos), y = vector3:z(Pos)
+    },
+    gcore:send_net_msg(Uid, Msg),
+    ok.

@@ -35,8 +35,12 @@ encode(Msg) ->
     #net_conf{
         hdr_size_bytes = HeaderSize
     } = get_conf(),
-    MsgDataList = netmsg:encode(Msg),
-    add_header(MsgDataList, HeaderSize).
+    try
+        MsgDataList = netmsg:encode(Msg),
+        add_header(MsgDataList, HeaderSize)
+    catch _ : Err ->
+        ?ERROR("encode msg ~p, error ~p",[Msg, Err])
+    end.
 
 %%%-------------------------------------------------------------------
 decode(Handler, Socket, Bin) ->

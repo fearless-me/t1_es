@@ -46,10 +46,10 @@ handle(#pk_U2GS_RequestCreatePlayer{
         head = Head, mid = BornMid, x = X, y = Z, sid = gconf:get_sid()
     }),
     ok;
-handle(#pk_U2GS_SelPlayerEnterGame{roleID = Uid}) ->
+handle(#pk_U2GS_SelPlayerEnterGame{uid = Uid}) ->
     lib_player_priv:select_player(Uid),
     ok;
-handle(#pk_GS2U_GoNewMap{tarMapID = DestMapID, fX = X, fY = Y} = Msg) ->
+handle(#pk_GS2U_GotoNewMap{ map_id = DestMapID, x = X, y = Y} = Msg) ->
     ?DEBUG("~p",[Msg]),
     lib_player_priv:goto_new_map(DestMapID, vector3:new(X, 0, Y)),
     ok;

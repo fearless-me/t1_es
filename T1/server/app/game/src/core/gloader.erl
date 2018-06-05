@@ -31,8 +31,8 @@ on_info_msg({serv_start, RunNo}) ->
         uid_gen:init(),
         task_done(serv_start)
     catch _ : Err ->
-        gcore:halt(io_lib:format("save serv_start failed, error ~p, current stack ~p",
-            [Err, misc:stacktrace()]))
+        gcore:halt("save serv_start failed, error ~p, current stack ~p",
+            [Err, misc:stacktrace()])
     end,
     ok;
 on_info_msg({loal_all_role_info, xx}) ->

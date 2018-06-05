@@ -16,7 +16,7 @@
 -include("netconf.hrl").
 
 %% define
--record(state, {socket = undefined, handler = undefined, cli_data = undefined}).
+-record(state, {socket, handler, cli_data}).
 
 %% API
 -export([shutdown/2]).

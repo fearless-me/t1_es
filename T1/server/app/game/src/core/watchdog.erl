@@ -17,21 +17,19 @@
 -record(state, {}).
 
 %% API
--export([wait_all_started/0]).
+-export([wait/0]).
 -export([status/0, status_/0]).
 -export([ready/1, ready/0]).
 -export([start_link/0]).
 -export([mod_init/1, do_handle_call/3, do_handle_info/2, do_handle_cast/2]).
 
 %%%===================================================================
-%%% public functions
-%%%===================================================================
-start_link() ->
-    gen_serverw:start_link({local, ?MODULE}, ?MODULE, [], []).
+wait() ->
+    wait_all_started(),
+    status(),
+    ready(true),
+    ok.
 
-%%%===================================================================
-%%% API
-%%%===================================================================
 status()->
     gen_server:call(?MODULE, status, infinity).
 
@@ -67,6 +65,12 @@ wait_all_started_1(Fun, Tip, Done) ->
 
 wrapper_check(true, _) -> true;
 wrapper_check(_, Msg) -> ?WARN("wait ~ts...", [Msg]), throw(wait).
+%%%===================================================================
+%%% public functions
+%%%===================================================================
+start_link() ->
+    gen_serverw:start_link({local, ?MODULE}, ?MODULE, [], []).
+
 %%%===================================================================
 %%% Internal functions
 %%%===================================================================	

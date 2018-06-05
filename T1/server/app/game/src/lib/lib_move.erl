@@ -13,6 +13,7 @@
 -include("logger.hrl").
 -include("vector3.hrl").
 -include("mem_record.hrl").
+-include("netmsg.hrl").
 
 
 %% API
@@ -20,6 +21,7 @@
 -export([update/1]).
 -export([start_player_walk/3]).
 -export([on_player_pos_change/2]).
+-export([cal_move_msg/1]).
 
 %%%-------------------------------------------------------------------
 init(Obj, Pos, Face) ->
@@ -108,7 +110,12 @@ start_player_walk_1(Obj, Start, _End) ->
             {#r_map_obj.path_list, PathList}
         ]
     ),
-    on_player_pos_change(NewObj, Start).
+    on_player_pos_change(NewObj, Start),
+    %
+    Msg = cal_move_msg(NewObj),
+    NewVisIndex = lib_map_view:pos_to_vis_index(Start),
+    lib_map_view:sync_movement_to_big_visual_tile(NewVisIndex, Msg),
+    ok.
 
 
 %%%-------------------------------------------------------------------
@@ -191,7 +198,7 @@ update_role_walk(Obj, CurPos, PathList, MoveTime) ->
 
     ?DEBUG("mapid ~p ~w from ~w to ~w move time ~p",
         [self(), Obj#r_map_obj.uid, CurPos, NewPos, MoveTime]),
-    ?DEBUG("# ~p,~p",[NewPos#vector3.x, NewPos#vector3.z]),
+    ?DEBUG("# ~p,~p", [NewPos#vector3.x, NewPos#vector3.z]),
     on_player_pos_change(Obj, NewPos),
 
     #r_map_obj{dir = Dir, dest_pos = Dst} = Obj,
@@ -211,7 +218,7 @@ linear_pos([MovePos] = PL, MoveTime, Flag) ->
     #r_move_pos{dist = Dist, start_pos = Start, end_pos = End, speed = Speed} = MovePos,
     MoveDist = calc_move_dist(Speed, MoveTime),
     if
-        MoveDist < Dist -> linear_pos_1(Start, End, MoveDist/Dist, MoveTime, PL, Flag);
+        MoveDist < Dist -> linear_pos_1(Start, End, MoveDist / Dist, MoveTime, PL, Flag);
         true -> {End, [], 0}
     end;
 linear_pos([MovePos | PathList] = PL, MoveTime, Flag) ->
@@ -219,7 +226,7 @@ linear_pos([MovePos | PathList] = PL, MoveTime, Flag) ->
     MoveDist = calc_move_dist(Speed, MoveTime),
     if
         MoveDist == Dist -> {End, PathList, 0};
-        MoveDist < Dist -> linear_pos_1(Start, End, MoveDist/Dist, MoveTime, PL, Flag);
+        MoveDist < Dist -> linear_pos_1(Start, End, MoveDist / Dist, MoveTime, PL, Flag);
         true -> linear_pos(PathList, calc_move_time(Speed, MoveDist - Dist), changed)
     end.
 
@@ -257,7 +264,20 @@ on_player_pos_change(Obj, TarPos) ->
     lib_map_rw:player_update_pos(Uid, TarPos),
     lib_mem:player_update(Uid, {#m_player.pos, TarPos}),
     lib_map_view:sync_change_pos_visual_tile(Obj, OldVisIndex, NewVisIndex),
-    lib_map_view:sync_movement_to_big_visual_tile({player_move_to, lib_obj:get_obj_pos(Obj), TarPos}),
     ok.
+
+%%%-------------------------------------------------------------------
+cal_move_msg(#r_map_obj{cur_move = ?EMS_WALK} = Obj) ->
+    #r_map_obj{uid = Uid, start_pos = Src, dest_pos = Dst, moved_time = MovedTime} = Obj,
+    Walk = #pk_ObjWalk{
+        uid = Uid, move_time = MovedTime,
+        src_x = vector3:x(Src), src_y = vector3:z(Src),
+        dst_x = vector3:x(Dst), dst_y = vector3:z(Dst),
+        speed = lib_obj:get_obj_speed(Obj)
+    },
+    #pk_GS2U_SyncWalk{walk = Walk};
+cal_move_msg(_Obj) ->
+    undefined.
+
 
 stop_move(_Send) -> ok.

@@ -17,6 +17,7 @@
 %% API
 -export([new_player/3]).
 -export([del_player/1]).
+-export([offline/1]).
 -export([get_player/1]).
 -export([player_update/2]).
 
@@ -45,6 +46,19 @@ new_player(Pid, Sock, PPlayer) ->
 del_player(Uid) ->
     ?INFO("del player ~w from ETS_PLAYER_PUB", [Uid]),
     ets:delete(?ETS_PLAYER_PUB, Uid).
+
+%%-------------------------------------------------------------------
+offline(Uid) ->
+    ?INFO("player ~w offline", [Uid]),
+    ets:update_element(
+        ?ETS_PLAYER_PUB,
+        Uid,
+        [
+            {#m_player.pid, 0},
+            {#m_player.sock, undefined}
+        ]
+    ),
+    ok.
 %%-------------------------------------------------------------------
 get_player(Uid) ->
     case ets:lookup(?ETS_PLAYER_PUB, Uid) of

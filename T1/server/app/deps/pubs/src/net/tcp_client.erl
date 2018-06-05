@@ -38,7 +38,7 @@ connect(Port, MapID) ->
 
     timer:sleep(5000),
 
-    send_msg(Socket, #pk_GS2U_GoNewMap{tarMapID = misc:rand(1, 4), fX = misc:rand(500, 5000) / 10, fY = misc:rand(500, 3000) / 10}),
+    send_msg(Socket, #pk_GS2U_GotoNewMap{map_id = misc:rand(1, 4), x = misc:rand(500, 5000) / 10, y = misc:rand(500, 3000) / 10}),
 
     timer:sleep(50),
     recv_msg(Socket),
@@ -64,12 +64,12 @@ recv_msg(Socket) ->
     end.
 
 
-handle(_Socket, #pk_GS2U_LoginResult{result = Ret, accountID = Aid, msg = Msg}) ->
+handle(_Socket, #pk_GS2U_LoginResult{result = Ret, aid = Aid, msg = Msg}) ->
     io:format("LoginResult ~p acc ~p msg ~ts~n", [Ret, Aid, Msg]),
     ok;
-handle(Socket, #pk_GS2U_CreatePlayerResult{errorCode = ErrCode, roleID = Uid}) ->
+handle(Socket, #pk_GS2U_CreatePlayerResult{errorCode = ErrCode, uid = Uid}) ->
     case ErrCode of
-       0 -> send_msg(Socket, #pk_U2GS_SelPlayerEnterGame{roleID = Uid});
+       0 -> send_msg(Socket, #pk_U2GS_SelPlayerEnterGame{uid = Uid});
         _-> io:format("create role failed ~p~n",[ErrCode])
     end,
     ok;
@@ -83,8 +83,9 @@ handle(Socket, #pk_GS2U_UserPlayerList{info = Info}) ->
                 sex = 1, head = 1
             }),
             recv_msg(Socket);
-        [#pk_UserPlayerData{roleID = RoleID} | _] ->
-            send_msg(Socket, #pk_U2GS_SelPlayerEnterGame{roleID = RoleID})
+        [#pk_UserPlayerData{uid = RoleID} | _] ->
+            send_msg(Socket, #pk_U2GS_SelPlayerEnterGame{uid = RoleID}),
+            recv_msg(Socket)
     end,
     ok;
 handle(_Socket, Msg) ->
