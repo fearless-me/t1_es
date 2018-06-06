@@ -44,16 +44,22 @@ connect(Port, MapID) ->
 
     timer:sleep(50),
     Pid = self(),
-    timer:apply_interval(15*60*1000, erlang, exit, [Pid, normal]),
+    erlang:send_after(10 * 60 * 1000, self(), exit),
     loop_recv(),
 %%    send_msg(Socket, #pk_GS2U_GoNewMap{tarMapID = MapID, fX = misc:rand(500, 5000) / 10, fY = misc:rand(500, 3000) / 10}),
 
     ok.
 
-loop_recv()->
-    recv_msg(socket()),
-    timer:sleep(50),
-    loop_recv().
+loop_recv() ->
+    receive
+        exit ->
+            gen_tcp:close(socket()),
+            ok
+    after 0 ->
+        recv_msg(socket()),
+        timer:sleep(50),
+        loop_recv()
+    end.
 
 send_msg(Socket, Msg) ->
     {_Bytes1, IoList1} = tcp_codec:encode(Msg),
@@ -79,8 +85,8 @@ handle(#pk_GS2U_LoginResult{result = Ret, aid = Aid, msg = Msg}) ->
     ok;
 handle(#pk_GS2U_CreatePlayerResult{errorCode = ErrCode, uid = Uid}) ->
     case ErrCode of
-       0 -> send_msg(socket(), #pk_U2GS_SelPlayerEnterGame{uid = Uid});
-        _-> io:format("create role failed ~p~n",[ErrCode])
+        0 -> send_msg(socket(), #pk_U2GS_SelPlayerEnterGame{uid = Uid});
+        _ -> io:format("create role failed ~p~n", [ErrCode])
     end,
     ok;
 handle(#pk_GS2U_UserPlayerList{info = Info}) ->
@@ -101,6 +107,6 @@ handle(#pk_GS2U_UserPlayerList{info = Info}) ->
 handle(Msg) ->
     io:format("recv:~p~n", [Msg]).
 
--define(SocketKey,socketRef___).
+-define(SocketKey, socketRef___).
 socket(Socket) -> put(?SocketKey, Socket).
-socket()-> get(?SocketKey).
+socket() -> get(?SocketKey).

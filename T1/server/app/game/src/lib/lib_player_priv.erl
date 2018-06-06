@@ -198,6 +198,7 @@ add_to_world(Player) ->
             {#m_player.pos, Ack#r_change_map_ack.pos}
         ]
     ),
+    lib_player_rw:set_status(?PS_GAME),
     ok.
 
 %%-------------------------------------------------------------------
@@ -255,6 +256,8 @@ goto_new_map_1(DestMapID, TarPos) ->
 
     hook_player:on_change_map(Mid, Mid1),
 
+    lib_player_rw:set_status(?PS_GAME),
+
     mod_map:player_move_(
         MPid1,
         #r_player_start_move_req{uid = Uid, tar_pos = vector3:new(400.6, 0, 358.9)}
@@ -288,10 +291,14 @@ offline_1(Status)
     mod_map_creator:player_offline(Uid, Mid, MPid),
     lib_player_save:save(Player),
     lib_mem:offline(Uid),
-    ?INFO("pid ~p sock ~p player ~w offline",[self(), socket(), Uid]),
+    ?INFO("player ~p pid ~p sock ~p player ~w offline status ~p",
+        [Uid, self(), socket(), Uid, Status]),
     ok;
-offline_1(_Status) ->
+offline_1(Status) ->
+    Uid = lib_player_rw:get_uid(),
     lib_player_rw:set_status(?PS_OFFLINE),
+    ?INFO("player ~p pid ~p sock ~p player ~w offline status ~p",
+        [Uid, self(), socket(), Uid, Status]),
     ok.
 
 %%%-------------------------------------------------------------------
