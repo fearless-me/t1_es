@@ -43,8 +43,7 @@ connect(Port, MapID) ->
     send_msg(Socket, #pk_GS2U_GotoNewMap{map_id = misc:rand(1, 4), x = misc:rand(500, 5000) / 10, y = misc:rand(500, 3000) / 10}),
 
     timer:sleep(50),
-    Pid = self(),
-    erlang:send_after(10 * 60 * 1000, self(), exit),
+    erlang:send_after(100 * 60 * 1000, self(), exit),
     loop_recv(),
 %%    send_msg(Socket, #pk_GS2U_GoNewMap{tarMapID = MapID, fX = misc:rand(500, 5000) / 10, fY = misc:rand(500, 3000) / 10}),
 

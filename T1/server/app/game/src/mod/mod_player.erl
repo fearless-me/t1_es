@@ -38,7 +38,7 @@
 
 %%-------------------------------------------------------------------
 -define(SocketKey,socketRef___).
--define(NET_IDLE_TIME, 5*60*1000).
+-define(NET_IDLE_TIME, 6*60*1000).
 -record(r_player_state,{}).
 
 
