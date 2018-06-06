@@ -50,5 +50,8 @@
 
 -record(r_move_pos,{ dist = 0, speed=1, start_pos, end_pos, dir}).
 
+%% 当前时间,上次更新时间，两次更新时间的时间差
+-record(r_move_timer, {now, latest_up, delta}).
+
 
 -endif.

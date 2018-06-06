@@ -32,9 +32,7 @@
     move_speed = 20,
     cur_move, next_move,  vis_tile_idx,
     cur_pos, start_pos, dest_pos, face, dir,
-    start_time = 0, last_up_time = 0,
-    move_time = 0,   % 预估完成移动总时间
-    moved_time = 0,  % 已经移动的总时间
+    start_time = 0, seg_move_time = 0,  % 分段已经移动时间
     stopped, path_list = [],
 
 %%  战斗相关

@@ -75,8 +75,8 @@ init_vis_tile(#recGameMapCfg{
     rowCellNum = Row,
     cellSize = CellSize
 }) ->
-    VisW = (Col + ?VIS_DIST - 1) div ?VIS_DIST + 2,
-    VisH = (Row + ?VIS_DIST - 1) div ?VIS_DIST + 2,
+    VisW = (Col + ?VIS_DIST ) div ?VIS_DIST ,
+    VisH = (Row + ?VIS_DIST ) div ?VIS_DIST ,
     VisT = VisW * VisH,
 
     ?assert(VisT > 1),
@@ -156,7 +156,9 @@ add_obj_to_vis_tile(Obj, VisTileIndex) ->
 
 %%
 add_to_vis_tile_1(Type, Uid, VisTileIndex, undefined) ->
-    ?ERROR(" add t ~p, code ~p to visIdx ~p invalid", [Type, Uid, VisTileIndex]);
+    W = get(?VIS_W), H = get(?VIS_H),
+    ?ERROR("add t ~p, code ~p to visIdx ~p invalid ~p, W ~p H ~p",
+        [Type, Uid, VisTileIndex, W *H,  W, H]);
 add_to_vis_tile_1(?OBJ_USR, Uid, VisTileIndex, VisTile) ->
     set_vis_tile(
         VisTileIndex,
@@ -192,7 +194,9 @@ del_obj_from_vis_tile(Obj, VisTileIndex) ->
 
 %%
 del_from_vis_tile_1(Type, Uid, VisTileIndex, undefined) ->
-    ?ERROR("del t ~p, code ~p from visIdx ~p invalid", [Type, Uid, VisTileIndex]);
+    W = get(?VIS_W), H = get(?VIS_H),
+    ?ERROR("del t ~p, code ~p to visIdx ~p invalid ~p, W ~p H ~p",
+        [Type, Uid, VisTileIndex, W *H,  W, H]);
 del_from_vis_tile_1(?OBJ_USR, Uid, VisTileIndex, VisTile) ->
     set_vis_tile(
         VisTileIndex,
@@ -224,24 +228,35 @@ sync_big_vis_tile_to_me(#r_map_obj{uid = Uid, type = ?OBJ_USR}, VisTileList, del
         fun(#r_vis_tile{player = PL, monster = ML, npc = NL, pet = Pets}, Acc) ->
             PL ++ ML ++ NL ++ Pets ++ Acc
         end, [], VisTileList),
-    Msg = #pk_GS2U_RemoveRemote{uid_list = UidList},
-    gcore:send_net_msg(Uid, Msg),
+    case UidList of
+        [] -> skip;
+        _ ->
+            Msg = #pk_GS2U_RemoveRemote{uid_list = UidList},
+            gcore:send_net_msg(Uid, Msg)
+    end,
     ok;
 sync_big_vis_tile_to_me(#r_map_obj{uid = TarUid, type = ?OBJ_USR}, VisTileList, add_all) ->
     FC =
-        fun(Ets, Uid) ->
+        fun(Ets, Uid, Acc) ->
             Obj = lib_map_rw:get_obj(Ets, Uid),
-            Msg = lib_move:cal_move_msg(Obj),
-            if Msg =/= undefined -> gcore:send_net_msg(TarUid, Msg); true -> skip end
+            Info = lib_move:cal_move_msg_info(Obj),
+            if
+                Info =/= undefined -> [Info | Acc];
+                true -> Acc
+            end
         end,
     FV =
-        fun(#r_vis_tile{player = PL, monster = ML, npc = NL, pet = Pets}) ->
-            lists:foreach(fun(Uid) -> FC(lib_map_rw:get_player_ets(),   Uid) end, PL),
-            lists:foreach(fun(Uid) -> FC(lib_map_rw:get_monster_ets(),  Uid) end, ML),
-            lists:foreach(fun(Uid) -> FC(lib_map_rw:get_npc_ets(),      Uid) end, NL),
-            lists:foreach(fun(Uid) -> FC(lib_map_rw:get_pet_ets(),      Uid) end, Pets)
+        fun(#r_vis_tile{player = PL, monster = ML, npc = NL, pet = Pets}, Acc0) ->
+            Acc1 = lists:foldl(fun(Uid, Acc) -> FC(lib_map_rw:get_player_ets(),   Uid, Acc) end, Acc0, PL),
+            Acc2 = lists:foldl(fun(Uid, Acc) -> FC(lib_map_rw:get_monster_ets(),  Uid, Acc) end, Acc1, ML),
+            Acc3 = lists:foldl(fun(Uid, Acc) -> FC(lib_map_rw:get_npc_ets(),      Uid, Acc) end, Acc2, NL),
+                   lists:foldl(fun(Uid, Acc) -> FC(lib_map_rw:get_pet_ets(),      Uid, Acc) end, Acc3, Pets)
         end,
-    lists:foreach(FV, VisTileList),
+    InfoList = lists:foldl(FV, [], VisTileList),
+    case InfoList of
+        [] -> skip;
+        _ -> gcore:send_net_msg(TarUid, #pk_GS2U_SyncWalkMany{walks = InfoList})
+    end,
     ok;
 sync_big_vis_tile_to_me(_Obj, _VisTileList, _Msg) -> skip.
 
@@ -266,8 +281,8 @@ pos_to_vis_index(Pos) ->
 %% vector3 
 pos_to_vis_index(Pos, VisTileWidth, ViewDist) ->
     CellSize = get(?CELL_SIZE),
-    IndexX = trunc(Pos#vector3.x / CellSize / ?TILE_SCALE / ViewDist + 1),
-    IndexZ = trunc(Pos#vector3.z / CellSize / ?TILE_SCALE / ViewDist + 1),
+    IndexX = trunc(Pos#vector3.x / CellSize / ?TILE_SCALE / ViewDist) + 1,
+    IndexZ = trunc(Pos#vector3.z / CellSize / ?TILE_SCALE / ViewDist) + 1,
 
     (IndexZ * VisTileWidth + IndexX).
 

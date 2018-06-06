@@ -17,6 +17,7 @@
 -export([init/1, encode/1, decode/3]).
 -export([get_conf/0]).
 -export([get_buffer/0]).
+-define(COMPRESS_FLAG, 30).
 
 
 -define(NetBuff, netBuff___).
@@ -33,14 +34,27 @@ init(#net_conf{} = Conf) ->
     when Len :: integer(), IoList :: iolist().
 encode(Msg) ->
     #net_conf{
+        compress_bytes = ComBytes,
         hdr_size_bytes = HeaderSize
     } = get_conf(),
     try
         MsgDataList = netmsg:encode(Msg),
-        add_header(MsgDataList, HeaderSize)
+        IoListBytes = erlang:iolist_size(MsgDataList),
+        compress(ComBytes, IoListBytes, MsgDataList, HeaderSize)
     catch _ : Err ->
-        ?ERROR("encode msg ~p, error ~p",[Msg, Err])
+        ?ERROR("encode msg ~p, error ~p stack ~p",[Msg, Err, misc:stacktrace()])
     end.
+
+compress(ComBytes, IoListBytes, IoList, HeaderSize) when ComBytes =< 0; ComBytes > IoListBytes->
+    add_header(IoList, IoListBytes, HeaderSize);
+compress(_ComBytes, IoListBytes, IoList, HeaderSize) ->
+    Bin0 = iolist_to_binary(IoList),
+    Bin1 = zlib:compress(Bin0),
+    Bytes = erlang:byte_size(Bin1),
+    ?WARN("msg compressed ~p -> ~p = ~p%",
+        [IoListBytes, Bytes, trunc(Bytes / IoListBytes * 10000)/100]),
+    add_header(Bin1, marshal_msg_len(Bytes), HeaderSize).
+
 
 %%%-------------------------------------------------------------------
 decode(Handler, Socket, Bin) ->
@@ -48,6 +62,14 @@ decode(Handler, Socket, Bin) ->
     set_buffer(<<>>),
     decode1(Handler, Socket, NewMsg),
     ok.
+
+uncompress(0, Bin) -> Bin;
+uncompress(_, Bin) -> zlib:uncompress(Bin).
+
+real_msg_len(Len) ->  Len band (bnot (1 bsl ?COMPRESS_FLAG)).
+marshal_msg_len(Len) -> (Len bsr ?COMPRESS_FLAG) bor 0.
+is_compressed(Len) -> Len band (1 bsl ?COMPRESS_FLAG ).
+
 
 %%%-------------------------------------------------------------------
 %%%-------------------------------------------------------------------
@@ -82,12 +104,15 @@ parse_msg(#net_conf{
     MinMsgByteSize = HeaderSizeBytes + CmdIDBytes,
     case MsgByteSize >= MinMsgByteSize of
         true ->
-            {Len, RemainBin} = read_msg_size(HeaderSizeBytes, MsgBuff),
+            {Len0, RemainBin} = read_msg_size(HeaderSizeBytes, MsgBuff),
+            Len = real_msg_len(Len0),
             case (Len >= MinMsgByteSize) andalso (Len =< MaxMsgBytes) of
                 true when Len > MsgByteSize -> %半包
                     {halfMsg, MsgBuff};
                 true -> %%多于一个包 | 正常的单个包
-                    {Cmd, Msg, LeftBin} = read_one_msg(CmdIDBytes, RemainBin),
+                    MsgBytes = Len - HeaderSizeBytes,
+                    <<MsgBin:MsgBytes/binary, LeftBin/binary>> = RemainBin,
+                    {Cmd, Msg, _} = read_one_msg(CmdIDBytes, uncompress(is_compressed(Len0),MsgBin)),
                     {ok, Cmd, Msg, LeftBin};
                 false -> %错误
                     try
@@ -139,20 +164,21 @@ read_msg_size(2, NewMsg) ->
 read_msg_size(4, NewMsg) ->
     binary_lib:read_uint32(NewMsg).
 
+
 read_msg_id(2, Bin) ->
     binary_lib:read_uint16(Bin);
 read_msg_id(4, Bin) ->
     binary_lib:read_uint32(Bin).
 
-
 %%网络消息发送前，添加包头
--spec add_header(List, _HeadSize) -> {Len, list()} when Len :: uint(), List :: list().
-add_header(List, 2) ->
-    Len = erlang:iolist_size(List) + 2,
-    {Len, [<<Len:?U16>> | List]};
-add_header(List, 4) ->
-    Len = erlang:iolist_size(List) + 4,
-    {Len, [<<Len:?U32>> | List]}.
+-spec add_header(Data :: iodata(), IoListSize :: non_neg_integer(), HeadSize :: non_neg_integer()) ->
+    {Len :: non_neg_integer(), list()}.
+add_header(Data, IoListSize, 2) ->
+    Len = IoListSize + 2,
+    {Len, [<<Len:?U16>> | Data]};
+add_header(Data, IoListSize, 4) ->
+    Len = IoListSize + 4,
+    {Len, [<<Len:?U32>> | Data]}.
 
 %%%-------------------------------------------------------------------
 get_buffer() -> get(?NetBuff).

@@ -10,6 +10,8 @@
 -author("mawenhong").
 -include("map_obj.hrl").
 -include("map.hrl").
+-include("movement.hrl").
+
 %%
 -export([init_ets/1]).
 
@@ -27,6 +29,11 @@
 -export([get_map_id/0, get_line_id/0]).
 -export([get_map_hook/0]).
 
+-export([update_move_timer/0]).
+-export([get_move_timer_delta/0]).
+-export([get_move_timer_now/0]).
+-export([get_move_timer_pass_time/1]).
+
 
 %% define
 -define(MAP_MON_ETS, map_monster_ets__).
@@ -36,9 +43,11 @@
 -define(MAP_ID, map_id__).
 -define(LINE_ID, line_id__).
 -define(MAP_HOOK, map_hook__).
+-define(MOVE_TIMER, map_move_timer__).
 
 %%%-------------------------------------------------------------------
 init_ets(State) ->
+    Now = time:milli_seconds(),
     put(?MAP_ID,        State#r_map_state.map_id),
     put(?LINE_ID,       State#r_map_state.line_id),
     put(?MAP_NPC_ETS,   State#r_map_state.npc),
@@ -46,6 +55,7 @@ init_ets(State) ->
     put(?MAP_USR_ETS,   State#r_map_state.player),
     put(?MAP_MON_ETS,   State#r_map_state.monster),
     put(?MAP_HOOK,      State#r_map_state.hook_mod),
+    put(?MOVE_TIMER,    #r_move_timer{now = Now, latest_up = Now, delta = 0}),
     ok.
 
 %%-------------------------------------------------------------------
@@ -126,6 +136,25 @@ del_obj_to_ets(#r_map_obj{uid = Uid, type = ?OBJ_USR}) ->
     ets:delete(lib_map_rw:get_player_ets(), Uid);
 del_obj_to_ets(_) ->
     ok.
+%%-------------------------------------------------------------------
+update_move_timer() ->
+    Now = time:milli_seconds(),
+    #r_move_timer{latest_up = Latest} = get(?MOVE_TIMER),
+    put(?MOVE_TIMER, #r_move_timer{now = Now, latest_up = Now, delta = Now - Latest}),
+    ok.
+
+get_move_timer_now() ->
+    #r_move_timer{now = Now} = get(?MOVE_TIMER),
+    Now.
+
+get_move_timer_pass_time(StartTime) ->
+    #r_move_timer{now = Now} = get(?MOVE_TIMER),
+    Now - StartTime.
+
+get_move_timer_delta() ->
+    #r_move_timer{delta = Delta} = get(?MOVE_TIMER),
+    Delta.
+
 %%-------------------------------------------------------------------
 
 

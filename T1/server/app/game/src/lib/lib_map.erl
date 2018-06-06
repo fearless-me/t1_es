@@ -26,7 +26,7 @@
 -export([force_teleport/2]).
 -export([player_start_move/1]).
 
--define(MAP_TICK, 500).
+-define(MAP_TICK, 200).
 
 %%%-------------------------------------------------------------------
 init(S) ->
@@ -131,6 +131,7 @@ init_all_npc(_NL) ->
 tick_msg() -> erlang:send_after(?MAP_TICK, self(), tick_now).
 
 tick(S) ->
+    lib_map_rw:update_move_timer(),
     tick_1(S),
     S.
 
@@ -153,8 +154,7 @@ tick_obj()->
 tick_player() ->
     ets:foldl(
         fun(Obj, _) -> tick_player_1(Obj) end,
-        0,
-        lib_map_rw:get_player_ets()
+        0, lib_map_rw:get_player_ets()
     ).
 
 tick_player_1(Obj) ->
@@ -164,8 +164,7 @@ tick_player_1(Obj) ->
 tick_monster() ->
     ets:foldl(
         fun(Obj, _) -> tick_monster_1(Obj) end,
-        0,
-        lib_map_rw:get_monster_ets()
+        0, lib_map_rw:get_monster_ets()
     ).
 
 tick_monster_1(Obj) ->
@@ -214,3 +213,5 @@ send_goto_map_msg(#r_map_obj{uid = Uid, cur_pos = Pos})->
     },
     gcore:send_net_msg(Uid, Msg),
     ok.
+
+

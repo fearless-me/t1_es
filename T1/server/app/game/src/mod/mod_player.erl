@@ -38,7 +38,7 @@
 
 %%-------------------------------------------------------------------
 -define(SocketKey,socketRef___).
--define(DEATH_NET_TIME, 10*60*1000).
+-define(NET_IDLE_TIME, 5*60*1000).
 -record(r_player_state,{}).
 
 
@@ -58,7 +58,7 @@ direct_stop()->
 send(IoList) when is_list(IoList)->
     tcp_handler:direct_send_net_msg(socket(), IoList);
 send(Msg) ->
-    ?INFO("~p",[Msg]),
+    ?INFO("uid ~p recv ~w",[lib_player_rw:get_uid(), Msg]),
     {_Bytes1, IoList} = tcp_codec:encode(Msg),
     tcp_handler:direct_send_net_msg(socket(), IoList),
     ok.
@@ -69,7 +69,7 @@ on_init(Socket) ->
     socket(Socket),
     lib_player_priv:init(),
     set_latest_net_time(),
-    check_net_msg(),
+    check_idle_msg(),
     ?DEBUG("client connected: ~p ~ts:~p", [Socket, Ip, Port]),
     {ok, #r_player_state{}}.
 
@@ -87,7 +87,7 @@ on_close(Socket, Reason, S) ->
 
 %%-------------------------------------------------------------------
 on_info_msg(check_net, S) ->
-    check_net_alive(),
+    check_idle_action(),
     S;
 on_info_msg({kick, Reason}, S) ->
     mod_player:stop(Reason),
@@ -181,12 +181,12 @@ socket()-> get(?SocketKey).
 
 %%%-------------------------------------------------------------------
 set_latest_net_time() -> put('RECV_NETMSG_LATEST', time:milli_seconds()).
-check_net_msg() -> erlang:send_after(?DEATH_NET_TIME, self(), check_net).
-check_net_alive() ->
+check_idle_msg() -> erlang:send_after(?NET_IDLE_TIME, self(), check_net).
+check_idle_action() ->
     try
-        case time:milli_seconds() - get('RECV_NETMSG_LATEST') > ?DEATH_NET_TIME of
+        case time:milli_seconds() - get('RECV_NETMSG_LATEST') > ?NET_IDLE_TIME of
             true -> mod_player:stop(net_heartbeat_stop);
-            false -> check_net_msg()
+            false -> check_idle_msg()
         end
     catch _: _ ->
         mod_player:stop(net_heartbeat_stop)

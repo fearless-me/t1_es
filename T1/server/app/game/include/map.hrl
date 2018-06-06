@@ -13,8 +13,8 @@
 
 -include("type.hrl").
 
--define(TILE_SCALE, 25).
--define(VIS_DIST, 1).
+-define(TILE_SCALE, 1).
+-define(VIS_DIST, 32).
 
 -define(ED_Center, 0).
 -define(ED_Top, 1).
