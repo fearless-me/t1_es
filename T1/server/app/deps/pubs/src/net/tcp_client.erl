@@ -52,6 +52,7 @@ connect(Port, MapID) ->
 
 loop_recv()->
     recv_msg(socket()),
+    timer:sleep(50),
     loop_recv().
 
 send_msg(Socket, Msg) ->
