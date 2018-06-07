@@ -72,8 +72,8 @@ player_change_map(Req) ->
     } = Req,
     CurMgr = map_mgr(Mid),
     TarMgr = map_mgr(TMid),
-    ?INFO("player ~p, changeMap mgr ~p:~p -> mgr ~p:~p",
-        [Uid, Mid, CurMgr, TMid, TarMgr]),
+    ?INFO("player ~p, changeMap mgr ~p:~p:~p -> mgr ~p:~p",
+        [Uid, Mid, LineId, CurMgr, TMid, TarMgr]),
     case CurMgr of
         undefined ->
             ?FATAL("player[~p] cur map[~p] not exists", [Uid, Mid]);

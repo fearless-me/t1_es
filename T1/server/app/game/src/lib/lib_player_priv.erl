@@ -190,12 +190,13 @@ add_to_world(Player) ->
         }
     ),
 
-    #r_change_map_ack{map_pid =MPid, pos = CurPos} = Ack,
+    #r_change_map_ack{map_pid =MPid, line_id = LineId, pos = CurPos} = Ack,
     lib_mem:player_update(
         Uid,
         [
             {#m_player.old_mid, Mid},
             {#m_player.mid, Mid},
+            {#m_player.line, LineId},
             {#m_player.mpid, MPid},
             {#m_player.pos, CurPos}
         ]
