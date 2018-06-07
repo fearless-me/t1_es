@@ -58,18 +58,17 @@ init_1(State) ->
 player_exit(S, #r_exit_map_req{
     uid = Uid
 }) ->
-    Obj = lib_map_rw:get_player(Uid),
-    player_exit_1(Obj, Uid),
+    player_exit_1(Uid),
     {ok, S}.
 
-player_exit_1(#m_map_obj{} = Obj, _Uid) ->
+player_exit_1(Uid) ->
     ?INFO("user ~p exit map ~p:~p:~p",
-        [Obj#m_map_obj.uid, lib_map_rw:get_map_id(), lib_map_rw:get_line_id(), self()]),
+        [Uid, lib_map_rw:get_map_id(), lib_map_rw:get_line_id(), self()]),
 
-    lib_map_rw:del_obj_to_ets(Obj),
-    lib_map_view:sync_player_exit_map(Obj),
+    lib_map_rw:del_obj_to_ets(#m_map_obj{uid = Uid, type = ?OBJ_USR}),
+    lib_map_view:sync_player_exit_map(Uid),
     ok;
-player_exit_1(_, Uid) ->
+player_exit_1(Uid) ->
     ?ERROR("~w req exit map ~w ~w, but obj not exists!",
         [Uid, self(), misc:register_name()]).
 
@@ -78,11 +77,11 @@ player_exit_1(_, Uid) ->
 %% call
 player_join(
     S,
-    #r_change_map_req{uid = Uid, name = Name, pid = Pid, group = Group, tar_pos = Pos} = Req
+    #r_change_map_req{uid = Uid, name = Name, pid = Pid, group = Group, tar_pos = Pos}
 ) ->
     lib_obj:new(?OBJ_USR, Uid, Name, 0, Pid, Group, Pos),
     send_goto_map_msg(Uid, Pos),
-    lib_map_rw:add_obj_to_ets(Uid),
+    lib_map_rw:add_obj_to_ets(#m_map_obj{uid = Uid, type = ?OBJ_USR}),
     lib_map_view:sync_player_join_map(Uid),
     ?DEBUG("uid ~p, join map ~w, name ~p", [uid, self(), misc:register_name()]),
     {ok, S};
@@ -123,12 +122,11 @@ init_all_monster_1(Mdata)->
 init_all_monster_2(Uid) ->
     Did = lib_obj_rw:get_did(Uid),
     VisIndex = lib_map_view:pos_to_vis_index(lib_obj_rw:get_cur_pos(Uid)),
-    lib_map_rw:add_obj_to_ets(Uid),
+    lib_map_rw:add_obj_to_ets(#m_map_obj{uid = Uid, type = ?OBJ_MON}),
     lib_map_view:add_obj_to_vis_tile(Uid, VisIndex),
     ?DEBUG("map ~p:~p create monster ~p, uid ~p, visIndex ~p",
         [lib_map_rw:get_map_id(), lib_map_rw:get_line_id(), Did, Uid, VisIndex]),
-    ok;
-init_all_monster_2(_) -> error.
+    ok.
 
 %%%-------------------------------------------------------------------
 init_npc( #recGameMapCfg{
