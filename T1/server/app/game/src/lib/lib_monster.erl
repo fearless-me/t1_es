@@ -31,15 +31,12 @@ create(#recMapObjData{
 
     Pos =  vector3:new(X, 0.0, Y),
 
-    Obj1 = #r_map_obj{
+    Obj1 = #m_map_obj{
         uid = uid_gen:mon_uid(),
         did = Mid,
         name = Name,
         group = Group,
         type = ?OBJ_MON,
-        map_id = lib_map_rw:get_map_id(),
-        line_id = lib_map_rw:get_line_id(),
-        pid = self(),
-        map_pid = self()
+        pid = self()
     },
     lib_move:init(Obj1, Pos, vector3:new(0.1, 0, 0.5)).

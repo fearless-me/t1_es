@@ -36,7 +36,6 @@
 
 %%%-------------------------------------------------------------------
 sync_player_join_map(Obj) ->
-    %% fix_pos(Obj),
     %1.
     Index =
         pos_to_vis_index(
@@ -121,7 +120,7 @@ sync_change_pos_visual_tile(_Obj, OldVisTileIndex, OldVisTileIndex) ->
     skip;
 sync_change_pos_visual_tile(Obj, OldVisTileIndex, NewVisTileIndex) ->
 %%    ?DEBUG("uid ~w vis_tile_index from ~w to ~w",
-%%        [Obj#r_map_obj.uid, OldVisTileIndex, NewVisTileIndex]),
+%%        [Obj#m_map_obj.uid, OldVisTileIndex, NewVisTileIndex]),
 
     del_obj_from_vis_tile(Obj, OldVisTileIndex),
     {VisTileLeave, VisTileEnter} = vis_tile_intersection(OldVisTileIndex, NewVisTileIndex),
@@ -149,16 +148,16 @@ sync_add_obj(Obj, VisTiles) ->
 add_obj_to_vis_tile(Obj, VisTileIndex) ->
     ?assert(is_number(VisTileIndex) andalso VisTileIndex > 0),
 
-%%    ?DEBUG("add ~p to vis index ~p", [Obj#r_map_obj.uid, VisTileIndex]),
+%%    ?DEBUG("add ~p to vis index ~p", [Obj#m_map_obj.uid, VisTileIndex]),
     VisTile = get_vis_tile(VisTileIndex),
-    add_to_vis_tile_1(lib_obj:obj_type(Obj), Obj#r_map_obj.uid, VisTileIndex, VisTile),
+    add_to_vis_tile_1(lib_obj:obj_type(Obj), Obj#m_map_obj.uid, VisTileIndex, VisTile),
     ok.
 
 %%
 add_to_vis_tile_1(Type, Uid, VisTileIndex, undefined) ->
     W = get(?VIS_W), H = get(?VIS_H),
-    ?ERROR("add t ~p, code ~p to visIdx ~p invalid ~p, W ~p H ~p",
-        [Type, Uid, VisTileIndex, W *H,  W, H]);
+    ?ERROR("map ~p add t ~p  code ~p to visIdx ~p invalid ~p, W ~p H ~p",
+        [lib_map_rw:get_map_id(), Type, Uid, VisTileIndex, W *H,  W, H]);
 add_to_vis_tile_1(?OBJ_USR, Uid, VisTileIndex, VisTile) ->
     set_vis_tile(
         VisTileIndex,
@@ -187,9 +186,9 @@ add_to_vis_tile_1(_Type, _Uid, _VisTileIndex, _VisTile) ->
 del_obj_from_vis_tile(Obj, VisTileIndex) ->
     ?assert(is_number(VisTileIndex) andalso VisTileIndex > 0),
 
-%%    ?DEBUG("del ~p from vis index ~p", [Obj#r_map_obj.uid, VisTileIndex]),
+%%    ?DEBUG("del ~p from vis index ~p", [Obj#m_map_obj.uid, VisTileIndex]),
     VisTile = get_vis_tile(VisTileIndex),
-    del_from_vis_tile_1(lib_obj:obj_type(Obj), Obj#r_map_obj.uid, VisTileIndex, VisTile),
+    del_from_vis_tile_1(lib_obj:obj_type(Obj), Obj#m_map_obj.uid, VisTileIndex, VisTile),
     ok.
 
 %%
@@ -223,7 +222,7 @@ del_from_vis_tile_1(_Type, _Uid, _VisTileIndex, _VisTile) ->
 %%-------------------------------------------------------------------
 %%-------------------------------------------------------------------
 %% 同步周围Obj给我
-sync_big_vis_tile_to_me(#r_map_obj{uid = Uid, type = ?OBJ_USR}, VisTileList, del_all) ->
+sync_big_vis_tile_to_me(#m_map_obj{uid = Uid, type = ?OBJ_USR}, VisTileList, del_all) ->
     UidList = lists:foldl(
         fun(#r_vis_tile{player = PL, monster = ML, npc = NL, pet = Pets}, Acc) ->
             PL ++ ML ++ NL ++ Pets ++ Acc
@@ -235,7 +234,7 @@ sync_big_vis_tile_to_me(#r_map_obj{uid = Uid, type = ?OBJ_USR}, VisTileList, del
             gcore:send_net_msg(Uid, Msg)
     end,
     ok;
-sync_big_vis_tile_to_me(#r_map_obj{uid = TarUid, type = ?OBJ_USR}, VisTileList, add_all) ->
+sync_big_vis_tile_to_me(#m_map_obj{uid = TarUid, type = ?OBJ_USR}, VisTileList, add_all) ->
     FC =
         fun(Ets, Uid, Acc) ->
             Obj = lib_map_rw:get_obj(Ets, Uid),
@@ -262,11 +261,11 @@ sync_big_vis_tile_to_me(_Obj, _VisTileList, _Msg) -> skip.
 
 %%-------------------------------------------------------------------
 %% 把Obj信息广播到九宫格中
-sync_me_to_big_vis_tile(#r_map_obj{uid = Uid}, VisTileList, del_me) ->
+sync_me_to_big_vis_tile(#m_map_obj{uid = Uid}, VisTileList, del_me) ->
     Msg = #pk_GS2U_RemoveRemote{uid_list = [Uid]},
     sync_msg_to_big_vis_tile_1(VisTileList, Msg),
     ok;
-sync_me_to_big_vis_tile(#r_map_obj{} = Obj, VisTileList, add_me) ->
+sync_me_to_big_vis_tile(#m_map_obj{} = Obj, VisTileList, add_me) ->
     Msg = lib_move:cal_move_msg(Obj),
     sync_msg_to_big_vis_tile_1(VisTileList, Msg),
     ok.
@@ -320,7 +319,7 @@ get_vis_tile_around_index(VisTileIndex) ->
     LB = B - 1,
     RB = B + 1,
     [TileIndex || TileIndex <- [C, L, R, T, B, LT, RT, LB, RB]
-        , TileIndex > 1, TileIndex =< (W * H)].
+        , TileIndex > 0, TileIndex =< (W * H)].
 
 %%%-------------------------------------------------------------------
 get_vis_tile(VisTileIndex) ->

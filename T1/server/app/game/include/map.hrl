@@ -41,11 +41,11 @@
 %%
 -record(m_map_line,{map_id = 0, line_id = 0, pid = undefined, limits = 50, in = 0, dead_line = 0}).
 %%
--record(r_exit_map_req,{uid = 0, map_id = 0, map_pid = undefined}).
+-record(r_exit_map_req,{uid = 0, map_id = 0, line_id=0, map_pid = undefined}).
 %%
 -record(r_change_map_req,{
     uid = 0, player_pid = undefined,
-    map_id = 0, map_pid = undefined, tar_map_id = 0, tar_pos = undefined, tar_map_pid = undefind, obj = undefined}).
+    map_id = 0, map_pid = undefined, tar_map_id = 0, tar_pos = undefined, tar_map_pid = undefind}).
 %%
 -record(r_change_map_ack,{map_id = 0, line_id = 0, pos = undefined, map_pid = undefind, error = 0}).
 %%

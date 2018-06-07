@@ -28,6 +28,8 @@
 %%
 -export([merge_plat_acc_name/2]).
 
+-export([fix_pos/2]).
+
 %%
 -export([halt/1, halt/2]).
 
@@ -70,6 +72,10 @@ halt(Msg) ->
         [Msg, ?CRASH_WAIT_SECONDS, misc:stacktrace()]),
     timer:sleep(?CRASH_WAIT_SECONDS * 1000),
     erlang:halt().
+
+%%
+fix_pos(MapId, Pos) ->
+    ok.
 
 
 %%

@@ -14,7 +14,7 @@
 -include("map_obj.hrl").
 
 %% API
-
+-export([new/5]).
 %% obj
 -export([get_obj_uid/1]).
 -export([get_obj_pos/1]).
@@ -30,25 +30,32 @@
 -export([obj_type/1]).
 -export([is_player/1, is_monster/1, is_pet/1, is_npc/1]).
 
-%%-------------------------------------------------------------------
-obj_type(Obj) -> Obj#r_map_obj.type.
+%%
+new(Type, Uid, Pid, Pos, _Line) ->
+    Obj = #m_map_obj{
+        uid = Uid, pid = Pid, type = Type, cur_pos = Pos
+    },
+    lib_move:init(Obj, Pos, vector3:new(0.1, 0, 0.5)).
 
 %%-------------------------------------------------------------------
-is_npc(Obj)     -> Obj#r_map_obj.type =:= ?OBJ_NPC.
-is_pet(Obj)     -> Obj#r_map_obj.type =:= ?OBJ_PET.
-is_player(Obj)  -> Obj#r_map_obj.type =:= ?OBJ_USR.
-is_monster(Obj) -> Obj#r_map_obj.type =:= ?OBJ_MON.
+obj_type(Obj) -> Obj#m_map_obj.type.
 
 %%-------------------------------------------------------------------
-get_obj_uid(Obj)                    -> Obj#r_map_obj.uid.
-get_obj_pos(Obj)                    -> Obj#r_map_obj.cur_pos.
-get_obj_move_state(Obj)             -> Obj#r_map_obj.cur_move.
-get_obj_start_pos(Obj)              -> Obj#r_map_obj.start_pos.
-get_obj_dest_pos(Obj)               -> Obj#r_map_obj.dest_pos.
-get_obj_move_dir(Obj)               -> Obj#r_map_obj.dir.
-get_obj_face_to(Obj)                -> Obj#r_map_obj.face.
-get_obj_moved_time(Obj)             -> Obj#r_map_obj.seg_move_time.
-get_obj_speed(Obj)                  -> Obj#r_map_obj.move_speed.
-get_obj_vis_tile_index(Obj)         -> Obj#r_map_obj.vis_tile_idx.
-set_obj_vis_tile_index(Obj, Index)  -> Obj#r_map_obj{vis_tile_idx = Index}.
+is_npc(Obj) -> Obj#m_map_obj.type =:= ?OBJ_NPC.
+is_pet(Obj) -> Obj#m_map_obj.type =:= ?OBJ_PET.
+is_player(Obj) -> Obj#m_map_obj.type =:= ?OBJ_USR.
+is_monster(Obj) -> Obj#m_map_obj.type =:= ?OBJ_MON.
+
+%%-------------------------------------------------------------------
+get_obj_uid(Obj) -> Obj#m_map_obj.uid.
+get_obj_pos(Obj) -> Obj#m_map_obj.cur_pos.
+get_obj_move_state(Obj) -> Obj#m_map_obj.cur_move.
+get_obj_start_pos(Obj) -> Obj#m_map_obj.start_pos.
+get_obj_dest_pos(Obj) -> Obj#m_map_obj.dest_pos.
+get_obj_move_dir(Obj) -> Obj#m_map_obj.dir.
+get_obj_face_to(Obj) -> Obj#m_map_obj.face.
+get_obj_moved_time(Obj) -> Obj#m_map_obj.seg_move_time.
+get_obj_speed(Obj) -> Obj#m_map_obj.move_speed.
+get_obj_vis_tile_index(Obj) -> Obj#m_map_obj.vis_tile_idx.
+set_obj_vis_tile_index(Obj, Index) -> Obj#m_map_obj{vis_tile_idx = Index}.
 

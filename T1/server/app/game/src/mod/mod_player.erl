@@ -118,7 +118,7 @@ on_info_msg(passive_change_req, S) ->
     lib_player_priv:goto_to_pre_map(),
     S;
 on_info_msg({teleport, NewPos}, S) ->
-    lib_player_priv:teleport(NewPos),
+    lib_player_priv:teleport_call(NewPos),
     S;
 on_info_msg(Info, S) ->
     lib_player:on_info_msg(Info),

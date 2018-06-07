@@ -20,12 +20,14 @@
 -include("vector3.hrl").
 -include("pub_common.hrl").
 
-%%
--export([init/0]).
+%% 玩家进程其他模块可调用的接口
 -export([shutdown/1]).
 -export([stop/1, direct_stop/0, send/1]).
 -export([socket/0]).
-%%
+-export([teleport_/1]).
+
+%% 逻辑层不要调用这些接口
+-export([init/0]).
 -export([login_ack/1]).
 -export([loaded_player_list/1]).
 -export([create_player_/1, create_player_ack/1]).
@@ -33,7 +35,8 @@
 -export([loaded_player/1]).
 -export([offline/1]).
 -export([goto_new_map/2, goto_to_pre_map/0]).
--export([teleport/1, teleport_/1]).
+%% 逻辑层调用 teleport_/1, 不要調用teleport_call
+-export([teleport_call/1]).
 
 %%-------------------------------------------------------------------
 init() ->
@@ -176,43 +179,43 @@ loaded_player(Player) ->
 %%-------------------------------------------------------------------
 add_to_world(Player) ->
     #p_player{uid = Uid, map_id = Mid, x = X, y = Y} = Player,
-    Pos = vector3:new(X, 0, Y),
-    Ack = mod_map_creator:take_player_online(
+    
+    Ack = mod_map_creator:player_online(
         Mid,
         #r_change_map_req{
             uid = Uid,
             player_pid = self(),
             tar_map_id = Mid,
-            tar_pos = Pos,
-            obj = make_obj(Pos)
+            tar_pos = vector3:new(X, 0, Y)
         }
     ),
-    ?DEBUG("take over online:~w", [Ack]),
 
+    #r_change_map_ack{map_pid =MPid, pos = CurPos} = Ack,
     lib_mem:player_update(
         Uid,
         [
             {#m_player.old_mid, Mid},
             {#m_player.mid, Mid},
-            {#m_player.mpid, Ack#r_change_map_ack.map_pid},
-            {#m_player.pos, Ack#r_change_map_ack.pos}
+            {#m_player.mpid, MPid},
+            {#m_player.pos, CurPos}
         ]
     ),
     lib_player_rw:set_status(?PS_GAME),
+    ?DEBUG("take over online:~w", [Ack]),
     ok.
 
 %%-------------------------------------------------------------------
 teleport_(NewPos) -> ps:send(self(), teleport, NewPos).
 
 %%-------------------------------------------------------------------
-teleport(NewPos) ->
+teleport_call(NewPos) ->
     Uid = lib_player_rw:get_uid(),
     #m_player{mpid = MPid} = lib_mem:get_player(Uid),
-    teleport_1(MPid, NewPos).
+    do_teleport(MPid, NewPos).
 
-teleport_1(undefined, _NewPos) ->
+do_teleport(undefined, _NewPos) ->
     ?ERROR("");
-teleport_1(MapPid, NewPos) ->
+do_teleport(MapPid, NewPos) ->
     Uid = lib_player_rw:get_uid(),
     mod_map:player_teleport(
         MapPid,
@@ -234,8 +237,7 @@ goto_new_map_1(DestMapID, TarPos) ->
         #r_change_map_req{
             uid = Uid, player_pid = self(),
             map_id = Mid, map_pid = MPid,
-            tar_map_id = DestMapID, tar_pos = TarPos,
-            obj = make_obj(TarPos)
+            tar_map_id = DestMapID, tar_pos = TarPos
         }
     ),
 
@@ -285,10 +287,10 @@ offline_1(Status)
     lib_player_rw:set_status(?PS_OFFLINE),
     Uid = lib_player_rw:get_uid(),
     #m_player{
-        mid = Mid, mpid = MPid
+        mid = Mid, mpid = MPid, line = LineId
     } = Player = lib_mem:get_player(Uid),
     hook_player:on_offline(),
-    mod_map_creator:player_offline(Uid, Mid, MPid),
+    mod_map_creator:player_offline(Uid, Mid, LineId, MPid),
     lib_player_save:save(Player),
     lib_mem:offline(Uid),
     ?INFO("player ~p pid ~p sock ~p player ~w offline status ~p",
@@ -305,13 +307,4 @@ offline_1(Status) ->
 flush_cache(transfer_to_cross) -> ok;
 flush_cache(_) -> skip.
 
-%%%-------------------------------------------------------------------
-make_obj(Pos) ->
-    Obj =
-        #r_map_obj{
-            type    = ?OBJ_USR,
-            uid     = lib_player_rw:get_uid(),
-            pid     = self(),
-            sock    = mod_player:socket()
-        },
-    lib_move:init(Obj, Pos, vector3:new(0.1, 0, 0.5)).
+

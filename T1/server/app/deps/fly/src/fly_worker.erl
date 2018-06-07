@@ -211,9 +211,16 @@ process_src_files_incs(SrcFiles) ->
             skip
     end.
 
-
 process_src_file_incs(SrcFile) ->
-    {ok, Forms} = epp_dodger:parse_file(SrcFile),
+    try epp_dodger:parse_file(SrcFile) of
+        {ok, Forms} ->
+            do_process_src_file_incs(SrcFile, Forms);
+        Error ->
+            ?ERROR("epp_dodger parse_file ~ts failed, ~p",[SrcFile, Error])
+    catch _:_ -> skip
+    end.
+
+do_process_src_file_incs(SrcFile, Forms) ->
     IncludeFiles = src_file_include([], Forms),
 %%    ?WARN("parse src file ~ts, includes:~p",
 %%        [SrcFile, IncludeFiles]),

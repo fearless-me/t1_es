@@ -64,7 +64,7 @@ can_register(_, FromPid, DBId) ->
     case svr_worker_manager:get_server_info(DBId) of
         #sever_info{worker_pid = Worker, node = Node} when is_pid(Worker) ->
             FromNode = erlang:node(FromPid),
-            case misc:is_alive(Worker) of
+            case misc:is_palive(Worker) of
                 true when FromNode =:= Node ->
                     {true, Worker};
                 _ ->

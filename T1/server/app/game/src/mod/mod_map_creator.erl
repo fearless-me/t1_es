@@ -21,13 +21,16 @@
 }).
 -define(MAP_MGR_ETS, map_mgr_ets__).
 
-%% API
--export([take_player_online/2]).
+%%--------------------------------
+%% WARNING!!! WARNING!!! WARNING!!!
+%% call
+-export([player_online/2]).
 -export([player_change_map/1]).
--export([player_offline/3]).
+-export([player_offline/4]).
+%%--------------------------------
+
 -export([map_conf/1]).
 -export([broadcast_all/0, broadcast_map/1]).
-
 -export([born_map_id/0]).
 -export([born_map_pos/0]).
 
@@ -36,28 +39,28 @@
 -export([mod_init/1, do_handle_call/3, do_handle_info/2, do_handle_cast/2]).
 
 %%%-------------------------------------------------------------------
-take_player_online(MapID, Req) ->
+%% WARNING!!! WARNING!!! WARNING!!!
+%% call
+player_online(MapID, Req) ->
     Mgr = map_mgr(MapID),
-    take_1(Mgr, Req).
+    do_player_online(Mgr, Req).
 
-take_1(undefined, Req) ->
+%%
+do_player_online(undefined, Req) ->
     kick_to_born_map(Req);
-take_1(Mgr, Req) ->
+do_player_online(Mgr, Req) ->
     case mod_map_mgr:player_join_map(Mgr, Req) of
         #r_change_map_ack{} = Ack -> Ack;
         _ -> kick_to_born_map(Req)
     end.
+%%%-------------------------------------------------------------------
 
 %%%-------------------------------------------------------------------
-player_offline(Uid, MapID, MapPid) ->
+player_offline(Uid, MapID, LineId, MapPid) ->
     Mgr = map_mgr(MapID),
     mod_map_mgr:player_exit_map(
         Mgr,
-        #r_exit_map_req{
-            map_id = MapID,
-            map_pid = MapPid,
-            uid = Uid
-        }
+        #r_exit_map_req{map_id = MapID, line_id = LineId,  map_pid = MapPid, uid = Uid}
     ),
     ok.
 

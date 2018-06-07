@@ -18,19 +18,25 @@
 -define(LINE_LIFETIME, 5 * 60 * 1000).
 -define(DEAD_LINE_PROTECT, 15 * 1000).
 
-
+%%--------------------------------
+%% WARNING!!! WARNING!!! WARNING!!!
+%% call
 -export([player_join_map/2]).
 -export([player_exit_map/2]).
+%%--------------------------------
 
 %% API
 -export([start_link/1]).
 -export([mod_init/1, do_handle_call/3, do_handle_info/2, do_handle_cast/2]).
 
+%%--------------------------------
+%% WARNING!!! WARNING!!! WARNING!!!
+%% call
 player_join_map(MgrPid, Req) ->
     gen_server:call(MgrPid, {join_map, Req}).
-
 player_exit_map(MgrPid, Req) ->
     gen_server:call(MgrPid, {exit_map, Req}).
+%%--------------------------------
 
 %%%===================================================================
 %%% public functions
@@ -54,10 +60,10 @@ mod_init([MapID]) ->
 
 %%--------------------------------------------------------------------
 do_handle_call({join_map, Req}, _From, State) ->
-    Ret = player_join_map_1(State, Req),
+    Ret = do_player_join_map(State, Req),
     {reply, Ret, State};
 do_handle_call({exit_map, Req}, _From, State) ->
-    Ret = player_exit_map_1(State, Req),
+    Ret = do_player_exit_map(State, Req),
     {reply, Ret, State};
 do_handle_call(Request, From, State) ->
     ?ERROR("undeal call ~w from ~w", [Request, From]),
@@ -79,9 +85,9 @@ do_handle_cast(Request, State) ->
     {noreply, State}.
 
 %%--------------------------------------------------------------------
-player_join_map_1(S, Req) ->
+do_player_join_map(S, Req) ->
+    %1. 选线
     Now = time:milli_seconds(),
-    #r_change_map_req{tar_map_id = MapID, tar_pos = Pos, obj = Obj} = Req,
     MS = ets:fun2ms(
         fun(T) when T#m_map_line.limits > T#m_map_line.in,
                     T#m_map_line.dead_line > Now + ?DEAD_LINE_PROTECT
@@ -95,15 +101,28 @@ player_join_map_1(S, Req) ->
                 create_new_line(S, S#state.map_id, next_line_id())
         end,
 
+    %2. **
+    #r_change_map_req{uid = Uid, player_pid = Pid, tar_map_id = MapID, tar_pos = Pos} = Req,
     #m_map_line{pid = MapPid, map_id = MapID, line_id = LineID} = Line,
-    mod_map:player_join(MapPid, Obj#r_map_obj{map_id = MapID, line_id = LineID, map_pid = MapPid, cur_pos = Pos}),
+
+    %3. 加入
+    MapObj = lib_obj:new(?OBJ_USR, Uid, Pid, Pos, Line),
+    mod_map:player_join(MapPid, MapObj),
+
+    %4. 更新
     ets:update_counter(S#state.ets, LineID, {#m_map_line.in, 1}),
+
+    %5. ack
     #r_change_map_ack{map_id = MapID, line_id = LineID,  map_pid = MapPid, pos = Pos}.
 
 %%--------------------------------------------------------------------
-player_exit_map_1(_S, Req) ->
-    MapPid = Req#r_exit_map_req.map_pid,
-    case misc:is_alive(MapPid) of
+do_player_exit_map(S, Req) ->
+    %%1.
+    #r_exit_map_req{map_pid = MapPid, line_id = LineID} = Req,
+    ets:update_counter(S#state.ets, LineID, {#m_map_line.in, -1}),
+
+    %%2.
+    case misc:is_palive(MapPid) of
         true -> mod_map:player_exit(MapPid, Req);
         _ -> skip
     end,

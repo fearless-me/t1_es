@@ -26,7 +26,7 @@
 -export([register_process/3]).
 -export([create_atom/2]).
 -export([register_name/0, register_name/1]).
--export([is_alive/1]).
+-export([is_palive/1, is_palive_g/1, is_palive_lg/1]).
 -export([get_pdict/2]).
 %%%-------------------------------------------------------------------
 get_pdict(Key, Def) ->
@@ -54,15 +54,41 @@ register_name(Pid) ->
         _ -> unknown
     end.
 
-
-is_alive(0)-> false;
-is_alive(undefined) -> false;
-is_alive(Name) when is_atom(Name) ->
+%% local
+is_palive(0)-> false;
+is_palive(undefined) -> false;
+is_palive(Name) when is_atom(Name) ->
     case whereis(Name) of
         undefined -> false;
         Pid -> erlang:is_process_alive(Pid)
     end;
-is_alive(Pid) when is_pid(Pid) ->
+is_palive(Pid) when is_pid(Pid) ->
+    erlang:is_process_alive(Pid).
+
+%% global
+is_palive_g(0)-> false;
+is_palive_g(undefined) -> false;
+is_palive_g(Name) when is_atom(Name) ->
+    case global:whereis_name(Name) of
+        undefined -> false;
+        Pid -> erlang:is_process_alive(Pid)
+    end;
+is_palive_g(Pid) when is_pid(Pid) ->
+    erlang:is_process_alive(Pid).
+
+%% local and global
+is_palive_lg(0)-> false;
+is_palive_lg(undefined) -> false;
+is_palive_lg(Name) when is_atom(Name) ->
+    case whereis(Name) of
+        undefined ->
+            case global:whereis_name(Name) of
+                undefined -> false;
+                Pid -> erlang:is_process_alive(Pid)
+            end;
+        Pid -> erlang:is_process_alive(Pid)
+    end;
+is_palive_lg(Pid) when is_pid(Pid) ->
     erlang:is_process_alive(Pid).
 
 %%

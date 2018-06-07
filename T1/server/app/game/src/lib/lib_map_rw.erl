@@ -71,14 +71,14 @@ get_monster_ets()   -> get(?MAP_MON_ETS).
 
 get_obj(Ets, Uid) ->
     case ets:lookup(Ets, Uid) of
-        [#r_map_obj{} = Obj | _] -> Obj;
+        [#m_map_obj{} = Obj | _] -> Obj;
         _ -> undefined
     end.
 
 %%-------------------------------------------------------------------
 get_player(Uid) ->
     case ets:lookup(lib_map_rw:get_player_ets(), Uid) of
-        [#r_map_obj{} = Obj | _] -> Obj;
+        [#m_map_obj{} = Obj | _] -> Obj;
         _ -> undefined
     end.
 
@@ -95,13 +95,13 @@ player_update(Uid, Elements)->
 player_update_pos(Uid, Pos)->
     ets:update_element(
         lib_map_rw:get_player_ets(),
-        Uid, {#r_map_obj.cur_pos, Pos}),
+        Uid, {#m_map_obj.cur_pos, Pos}),
     ok.
 
 %%-------------------------------------------------------------------
 get_monster(Uid) ->
     case ets:lookup(lib_map_rw:get_monster_ets(), Uid) of
-        [#r_map_obj{} = Obj | _] -> Obj;
+        [#m_map_obj{} = Obj | _] -> Obj;
         _ -> undefined
     end.
 
@@ -111,28 +111,28 @@ get_monster_size() ->
 %%-------------------------------------------------------------------
 get_npc(Uid) ->
     case ets:lookup(lib_map_rw:get_npc_ets(), Uid) of
-        [#r_map_obj{} = Obj | _] -> Obj;
+        [#m_map_obj{} = Obj | _] -> Obj;
         _ -> undefined
     end.
 
 %%-------------------------------------------------------------------
 get_pets(Uid) ->
     case ets:lookup(lib_map_rw:get_pet_ets(), Uid) of
-        [#r_map_obj{} = Obj | _] -> Obj;
+        [#m_map_obj{} = Obj | _] -> Obj;
         _ -> undefined
     end.
 
 %%-------------------------------------------------------------------
-add_obj_to_ets(#r_map_obj{type = ?OBJ_MON} = Obj) ->
+add_obj_to_ets(#m_map_obj{type = ?OBJ_MON} = Obj) ->
     ets:insert(lib_map_rw:get_monster_ets(), Obj);
-add_obj_to_ets(#r_map_obj{type = ?OBJ_USR} = Obj) ->
+add_obj_to_ets(#m_map_obj{type = ?OBJ_USR} = Obj) ->
     ets:insert(lib_map_rw:get_player_ets(), Obj);
 add_obj_to_ets(_) ->
     ok.
 
-del_obj_to_ets(#r_map_obj{uid = Uid, type = ?OBJ_MON}) ->
+del_obj_to_ets(#m_map_obj{uid = Uid, type = ?OBJ_MON}) ->
     ets:delete(lib_map_rw:get_monster_ets(), Uid);
-del_obj_to_ets(#r_map_obj{uid = Uid, type = ?OBJ_USR}) ->
+del_obj_to_ets(#m_map_obj{uid = Uid, type = ?OBJ_USR}) ->
     ets:delete(lib_map_rw:get_player_ets(), Uid);
 del_obj_to_ets(_) ->
     ok.
