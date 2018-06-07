@@ -68,7 +68,7 @@ player_offline(Uid, MapID, LineId, MapPid) ->
 player_change_map(Req) ->
     #r_change_map_req{
         uid = Uid, tar_map_id = TMid,
-        map_id = Mid, map_pid = Mpid
+        map_id = Mid, line_id = LineId, map_pid = Mpid
     } = Req,
     CurMgr = map_mgr(Mid),
     TarMgr = map_mgr(TMid),
@@ -79,7 +79,7 @@ player_change_map(Req) ->
             ?FATAL("player[~p] cur map[~p] not exists", [Uid, Mid]);
         _ ->
             mod_map_mgr:player_exit_map(CurMgr,
-                #r_exit_map_req{map_id = Mid, map_pid = Mpid, uid = Uid})
+                #r_exit_map_req{map_id = Mid, line_id = LineId, map_pid = Mpid, uid = Uid})
     end,
     case TarMgr of
         undefined ->

@@ -44,8 +44,8 @@
 -record(r_exit_map_req,{uid = 0, map_id = 0, line_id=0, map_pid = undefined}).
 %%
 -record(r_change_map_req,{
-    uid = 0, player_pid = undefined,
-    map_id = 0, map_pid = undefined, tar_map_id = 0, tar_pos = undefined, tar_map_pid = undefind}).
+    uid = 0, name, group =0, pid = undefined,
+    map_id = 0, line_id = 0, map_pid = undefined, tar_map_id = 0, tar_pos = undefined, tar_map_pid = undefind}).
 %%
 -record(r_change_map_ack,{map_id = 0, line_id = 0, pos = undefined, map_pid = undefind, error = 0}).
 %%

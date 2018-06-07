@@ -32,8 +32,7 @@ run() ->
             [
                 ["logger.hrl", "map_obj.hrl", "db_record.hrl"],
                 [
-                    {m_map_obj, record_info(fields, m_map_obj), obj, ["Uid"]},
-                    {p_player, record_info(fields, p_player), none, []}
+                    {m_map_obj, record_info(fields, m_map_obj), none, ["Uid"]}
                 ]
             ]
         ),

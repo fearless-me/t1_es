@@ -184,7 +184,7 @@ add_to_world(Player) ->
         Mid,
         #r_change_map_req{
             uid = Uid,
-            player_pid = self(),
+            pid = self(),
             tar_map_id = Mid,
             tar_pos = vector3:new(X, 0, Y)
         }
@@ -235,8 +235,8 @@ goto_new_map_1(DestMapID, TarPos) ->
     #m_player{mid = Mid, line = Line, mpid = MPid, pos = Pos} = lib_mem:get_player(Uid),
     Ack = mod_map_creator:player_change_map(
         #r_change_map_req{
-            uid = Uid, player_pid = self(),
-            map_id = Mid, map_pid = MPid,
+            uid = Uid, pid = self(),
+            map_id = Mid, line_id = Line, map_pid = MPid,
             tar_map_id = DestMapID, tar_pos = TarPos
         }
     ),

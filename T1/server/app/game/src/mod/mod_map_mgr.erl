@@ -102,12 +102,11 @@ do_player_join_map(S, Req) ->
         end,
 
     %2. **
-    #r_change_map_req{uid = Uid, player_pid = Pid, tar_map_id = MapID, tar_pos = Pos} = Req,
+    #r_change_map_req{tar_map_id = MapID, tar_pos = Pos} = Req,
     #m_map_line{pid = MapPid, map_id = MapID, line_id = LineID} = Line,
 
     %3. 加入
-    MapObj = lib_obj:new(?OBJ_USR, Uid, Pid, Pos, Line),
-    mod_map:player_join(MapPid, MapObj),
+    mod_map:player_join(MapPid, Req),
 
     %4. 更新
     ets:update_counter(S#state.ets, LineID, {#m_map_line.in, 1}),

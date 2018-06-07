@@ -76,12 +76,15 @@ player_exit_1(_, Uid) ->
 %%%-------------------------------------------------------------------
 %% WARNING!!! WARNING!!! WARNING!!!
 %% call
-player_join(S, #m_map_obj{} = Obj) ->
-    send_goto_map_msg(Obj),
-    lib_map_rw:add_obj_to_ets(Obj),
-    lib_map_view:sync_player_join_map(Obj),
-    ?DEBUG("uid ~p, join map ~w, name ~p",
-        [Obj#m_map_obj.uid, self(), misc:register_name()]),
+player_join(
+    S,
+    #r_change_map_req{uid = Uid, name = Name, pid = Pid, group = Group, tar_pos = Pos} = Req
+) ->
+    lib_obj:new(?OBJ_USR, Uid, Name, 0, Pid, Group, Pos),
+    send_goto_map_msg(Uid, Pos),
+    lib_map_rw:add_obj_to_ets(Uid),
+    lib_map_view:sync_player_join_map(Uid),
+    ?DEBUG("uid ~p, join map ~w, name ~p", [uid, self(), misc:register_name()]),
     {ok, S};
 player_join(S, Any) ->
     ?ERROR("player join map ~w, name ~p, error obj data ~w",
@@ -96,11 +99,10 @@ force_teleport(S, #r_teleport_req{
     uid = Uid,
     tar_pos = TarPos
 }) ->
-    Obj = lib_map_rw:get_player(Uid),
-    lib_move:on_player_pos_change(Obj, TarPos),
+    Cur = lib_obj_rw:get_cur_pos(Uid),
+    lib_move:on_player_pos_change(Uid, Cur, TarPos),
     ?DEBUG("player ~p teleport from ~w to ~w in map ~p_~p",
-        [Obj#m_map_obj.uid, lib_obj:get_obj_pos(Obj), TarPos,
-            lib_map_rw:get_map_id(), lib_map_rw:get_line_id()]),
+        [Uid, lib_Cur, TarPos, lib_map_rw:get_map_id(), lib_map_rw:get_line_id()]),
     {ok, S}.
 
 
@@ -115,15 +117,16 @@ init_monster( #recGameMapCfg{
     ok.
 
 init_all_monster_1(Mdata)->
-    Obj = lib_monster:create(Mdata),
-    ok = init_all_monster_2(Obj).
+    Uid = lib_monster:create(Mdata),
+    ok = init_all_monster_2(Uid).
 
-init_all_monster_2(#m_map_obj{} = Obj) ->
-    VisIndex = lib_map_view:pos_to_vis_index(Obj#m_map_obj.cur_pos),
-    lib_map_rw:add_obj_to_ets(Obj),
-    lib_map_view:add_obj_to_vis_tile(Obj, VisIndex),
+init_all_monster_2(Uid) ->
+    Did = lib_obj_rw:get_did(Uid),
+    VisIndex = lib_map_view:pos_to_vis_index(lib_obj_rw:get_cur_pos(Uid)),
+    lib_map_rw:add_obj_to_ets(Uid),
+    lib_map_view:add_obj_to_vis_tile(Uid, VisIndex),
     ?DEBUG("map ~p:~p create monster ~p, uid ~p, visIndex ~p",
-        [lib_map_rw:get_map_id(), lib_map_rw:get_line_id(), Obj#m_map_obj.uid, Obj#m_map_obj.uid, VisIndex]),
+        [lib_map_rw:get_map_id(), lib_map_rw:get_line_id(), Did, Uid, VisIndex]),
     ok;
 init_all_monster_2(_) -> error.
 
@@ -211,12 +214,11 @@ kick_all_player(#r_map_state{player = Ets}) ->
 
 %%-------------------------------------------------------------------
 player_start_move(Req) ->
-    #r_player_start_move_req{uid = Uid, tar_pos = TarPos} = Req,
-    Obj = lib_map_rw:get_player(Uid),
-    lib_move:start_player_walk(Obj, lib_obj:get_obj_pos(Obj), TarPos).
+    #r_player_start_move_req{uid = Uid, tar_pos = Dst} = Req,
+    lib_move:start_player_walk(Uid, lib_obj_rw:get_cur_pos(Uid), Dst).
 
 %%-------------------------------------------------------------------
-send_goto_map_msg(#m_map_obj{uid = Uid, cur_pos = Pos})->
+send_goto_map_msg(Uid, Pos)->
     Msg = #pk_GS2U_GotoNewMap{
         map_id = lib_map_rw:get_map_id(),
         x = vector3:x(Pos), y = vector3:z(Pos)

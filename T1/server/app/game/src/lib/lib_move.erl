@@ -20,28 +20,41 @@
 -export([init/3]).
 -export([update/1]).
 -export([start_player_walk/3]).
--export([on_player_pos_change/2]).
+-export([on_player_pos_change/3]).
 -export([cal_move_msg/1]).
--export([cal_move_msg_info/1]).
+-export([cal_move_msg_info/2]).
 
 %%%-------------------------------------------------------------------
-init(Obj, Pos, Face) ->
-    Obj#m_map_obj{
-        cur_move = ?EMS_STAND,
-        next_move = ?EMS_STAND,
-        cur_pos = Pos,
-        face = Face,
-        start_pos = Pos,
-        dest_pos = Pos,
-        dir = Face,
-        vis_tile_idx = 0,
-        stopped = false
-    }.
+init(Uid, Pos, Face) ->
+    lib_obj_rw:set_cur_move(Uid, ?EMS_STAND),
+    lib_obj_rw:set_next_move(Uid, ?EMS_STAND),
+    lib_obj_rw:set_cur_pos(Uid, Pos),
+    lib_obj_rw:set_face(Uid, Face),
+    lib_obj_rw:set_dir(Uid, Face),
+    lib_obj_rw:set_start_pos(Uid, Pos),
+    lib_obj_rw:set_dest_pos(Uid, Pos),
+    lib_obj_rw:set_vis_tile_idx(Uid, 0),
+    lib_obj_rw:set_stopped(Uid, false),
+    lib_obj_rw:set_move_speed(Uid, 20),
+    ok.
+
+start_walk_set(Uid, CurMove, NextMove, Src, Dst, Face, Dir, Now, PathList) ->
+    lib_obj_rw:set_cur_move(Uid, CurMove),
+    lib_obj_rw:set_next_move(Uid, NextMove),
+    lib_obj_rw:set_face(Uid, Face),
+    lib_obj_rw:set_dir(Uid, Dir),
+    lib_obj_rw:set_start_pos(Uid, Src),
+    lib_obj_rw:set_dest_pos(Uid, Dst),
+    lib_obj_rw:set_seg_move_time(Uid, 0),
+    lib_obj_rw:set_start_time(Uid, Now),
+    lib_obj_rw:set_stopped(Uid, false),
+    lib_obj_rw:set_path_list(Uid, PathList),
+    ok.
 
 %%%-------------------------------------------------------------------
-start_player_walk(Obj, Start, End) ->
+start_player_walk(Uid, Start, End) ->
     case is_role_can_walk(Start, End) of
-        true -> start_player_walk_1(Obj, Start, End);
+        true -> start_player_walk_1(Uid, Start, End);
         _ -> false
     end,
     ok.
@@ -66,14 +79,16 @@ test_dir() ->
     E = vector3:new(200.0, 0, 150.0),
     vector3:subtract(E, S).
 
-start_player_walk_1(Obj, Start, _End) ->
-    #m_map_obj{uid = Uid, move_speed = Speed} = Obj,
+start_player_walk_1(Uid, Start, _End) ->
 
+    Speed = lib_obj_rw:get_move_speed(Uid),
     Now = lib_map_rw:get_move_timer_now(),
     Dir = test_dir(),
     Way = test_path(),
 
     PathList = make_path_list([], Start, Way, Speed),
+
+    %%
     TotalDist = lists:foldl(
         fun(#r_move_pos{dist = DistCur}, Acc) -> Acc + DistCur end, 0, PathList),
     TotalTime = TotalDist / Speed * 1000,
@@ -82,36 +97,12 @@ start_player_walk_1(Obj, Start, _End) ->
 
     % 路点变化时同步到ETS
     [End | _] = Way,
-    NewObj = Obj#m_map_obj{
-        cur_move = ?EMS_WALK,
-        next_move = ?EMS_STAND,
-        start_pos = Start,
-        dest_pos = End,
-        dir = Dir,
-        face = Dir,
-        seg_move_time = 0,
-        start_time = Now,
-        stopped = false,
-        path_list = PathList
-    },
-    lib_map_rw:player_update(
-        Uid,
-        [
-            {#m_map_obj.cur_move, ?EMS_WALK},
-            {#m_map_obj.next_move, ?EMS_STAND},
-            {#m_map_obj.start_pos, Start},
-            {#m_map_obj.dest_pos, End},
-            {#m_map_obj.dir, Dir},
-            {#m_map_obj.face, Dir},
-            {#m_map_obj.start_time, Now},
-            {#m_map_obj.seg_move_time, 0},
-            {#m_map_obj.stopped, false},
-            {#m_map_obj.path_list, PathList}
-        ]
-    ),
-    on_player_pos_change(NewObj, Start),
+
+    start_walk_set(Uid, ?EMS_WALK, ?EMS_STAND, Start, End, Dir, Dir, Now, PathList),
+
+    on_player_pos_change(Uid, Start, Start),
     %
-    Msg = cal_move_msg(NewObj),
+    Msg = cal_move_msg(Uid),
     NewVisIndex = lib_map_view:pos_to_vis_index(Start),
     lib_map_view:sync_movement_to_big_visual_tile(NewVisIndex, Msg),
     ok.
@@ -147,13 +138,13 @@ update_dispatcher(_Obj) -> skip.
 
 %%%-------------------------------------------------------------------
 update_player_move(Obj, ?EMS_WALK) ->
-    #m_map_obj{
-        cur_pos = CurPos, path_list = PathList,
-        seg_move_time = SegMovedTime
-    } = Obj,
-    
+    #m_map_obj{uid = Uid} = Obj,
+
+    CurPos = lib_obj_rw:get_cur_pos(Uid),
+    PathList = lib_obj_rw:get_path_list(Uid),
+    SegMovedTime = lib_obj_rw:get_seg_move_time(Uid),
     Delta = lib_map_rw:get_move_timer_delta(),
-    Ret = update_role_walk(Obj, CurPos, PathList, SegMovedTime + Delta),
+    Ret = update_role_walk(Uid, CurPos, PathList, SegMovedTime + Delta),
     case Ret of
         ?ENR_TOBECONTINUED ->
             lib_map_rw:player_update(
@@ -188,24 +179,34 @@ update_player_move(Obj, ?EMS_WALK) ->
 update_player_move(_Obj, _Move) -> skip.
 
 %%%-------------------------------------------------------------------
-update_role_walk(Obj, CurPos, [], _MoveTime) ->
-    ?WARN("mapid ~p player ~w arrived ~w", [self(), Obj#m_map_obj.uid, CurPos]),
+update_role_walk(Uid, CurPos, [], _MoveTime) ->
+    ?WARN("mapid ~p player ~w arrived ~w", [self(), Uid, CurPos]),
     ?ENR_ARRIVE;
-update_role_walk(Obj, CurPos, PathList, MoveTime) ->
+update_role_walk(Uid, CurPos, PathList, MoveTime) ->
 
+    Dir = lib_obj_rw:get_dir(Uid),
+    Dst = lib_obj_rw:get_dest_pos(Uid),
     {NewPos, NewPathList, MoreTime} = linear_pos(PathList, MoveTime, keep),
 
 %%    ?DEBUG("mapid ~p ~w from ~w to ~w move time ~p",
 %%        [self(), Obj#m_map_obj.uid, CurPos, NewPos, MoveTime]),
 %%    ?DEBUG("# ~p,~p", [NewPos#vector3.x, NewPos#vector3.z]),
-    on_player_pos_change(Obj, NewPos),
+    on_player_pos_change(Uid, CurPos, NewPos),
 
-    #m_map_obj{dir = Dir, dest_pos = Dst} = Obj,
     case NewPathList of
-        ?ENR_TOBECONTINUED -> ?ENR_TOBECONTINUED;
-        [] -> {?ENR_TOBECONTINUED, [], Dir, Dst, MoreTime};
+        ?ENR_TOBECONTINUED ->
+            lib_obj_rw:set_seg_move_time(Uid, MoveTime),
+            ?ENR_TOBECONTINUED;
+        [] ->
+            lib_obj_rw:set_path_list(Uid, []),
+            lib_obj_rw:set_seg_move_time(Uid, MoreTime),
+            {?ENR_TOBECONTINUED, [], Dir, Dst, MoreTime};
         [#r_move_pos{end_pos = End, dir = TarDir} | _] ->
 %%            ?DEBUG("new dest ~w, dir ~w",[End, TarDir]),
+            lib_obj_rw:set_path_list(Uid, NewPathList),
+            lib_obj_rw:set_dir(Uid, TarDir),
+            lib_obj_rw:set_dest_pos(Uid, End),
+            lib_obj_rw:set_seg_move_time(Uid, MoreTime),
             {?ENR_TOBECONTINUED, NewPathList, TarDir, End, MoreTime}
     end.
 
@@ -250,37 +251,41 @@ linear_pos_2(Dst, PathList, MoveTime, changed) ->
     {Dst, PathList, MoveTime}.
 
 %%%-------------------------------------------------------------------
-on_player_pos_change(undefined, _TarPos) ->
-    ok;
-on_player_pos_change(Obj, TarPos) ->
+on_player_pos_change(Uid, Src, Tar) ->
     %
-%%    ?DEBUG("~w pos change ~w", [Obj#m_map_obj.uid, TarPos]),
+    % ?DEBUG("~w pos change ~w", [Uid, Tar]),
 
     %
-    Uid = lib_obj:get_obj_uid(Obj),
-    OldVisIndex = lib_map_view:pos_to_vis_index(lib_obj:get_obj_pos(Obj)),
-    NewVisIndex = lib_map_view:pos_to_vis_index(TarPos),
-    lib_map_rw:player_update_pos(Uid, TarPos),
-    lib_mem:player_update(Uid, {#m_player.pos, TarPos}),
-    lib_map_view:sync_change_pos_visual_tile(Obj, OldVisIndex, NewVisIndex),
+    lib_obj_rw:set_cur_pos(Uid, Tar),
+    OldVisIndex = lib_map_view:pos_to_vis_index(Src),
+    NewVisIndex = lib_map_view:pos_to_vis_index(Tar),
+    lib_mem:player_update(Uid, {#m_player.pos, Tar}),
+    lib_map_view:sync_change_pos_visual_tile(Uid, OldVisIndex, NewVisIndex),
     ok.
 
 %%%-------------------------------------------------------------------
-cal_move_msg(#m_map_obj{cur_move = ?EMS_WALK} = Obj) ->
-    Walk = cal_move_msg_info(Obj),
+cal_move_msg(Uid) ->
+    do_cal_move_msg(lib_obj_rw:get_cur_move(Uid), Uid).
+
+do_cal_move_msg(?EMS_WALK, Uid) ->
+    Walk = cal_move_msg_info(?EMS_WALK, Uid),
     #pk_GS2U_SyncWalk{walk = Walk};
-cal_move_msg(_Obj) ->
+do_cal_move_msg(_S, _Uid) ->
     undefined.
 
-cal_move_msg_info(#m_map_obj{cur_move = ?EMS_WALK} = Obj) ->
-    #m_map_obj{uid = Uid, start_pos = Src, dest_pos = Dst, start_time = StartTime} = Obj,
+cal_move_msg_info(?EMS_WALK, Uid) ->
+    Src = lib_obj_rw:get_start_pos(Uid),
+    Dst = lib_obj_rw:get_dest_pos(Uid),
+    Speed = lib_obj_rw:get_move_speed(Uid),
+    StartTime = lib_obj_rw:get_start_time(Uid),
     #pk_ObjWalk{
-        uid = Uid, move_time = lib_map_rw:get_move_timer_pass_time(StartTime),
+        uid = Uid,
+        move_time = lib_map_rw:get_move_timer_pass_time(StartTime),
         src_x = vector3:x(Src), src_y = vector3:z(Src),
         dst_x = vector3:x(Dst), dst_y = vector3:z(Dst),
-        speed = lib_obj:get_obj_speed(Obj)
+        speed = Speed
     };
-cal_move_msg_info(_Obj) ->
+cal_move_msg_info(_S, _Uid) ->
     undefined.
 
 

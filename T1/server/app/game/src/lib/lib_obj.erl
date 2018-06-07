@@ -14,7 +14,7 @@
 -include("map_obj.hrl").
 
 %% API
--export([new/5]).
+-export([new/7]).
 %% obj
 -export([get_obj_uid/1]).
 -export([get_obj_pos/1]).
@@ -31,11 +31,16 @@
 -export([is_player/1, is_monster/1, is_pet/1, is_npc/1]).
 
 %%
-new(Type, Uid, Pid, Pos, _Line) ->
-    Obj = #m_map_obj{
-        uid = Uid, pid = Pid, type = Type, cur_pos = Pos
-    },
-    lib_move:init(Obj, Pos, vector3:new(0.1, 0, 0.5)).
+new(Type, Uid, Name, Mid, Pid, Group, Pos) ->
+    lib_obj_rw:set_uid(Uid, Uid),
+    lib_obj_rw:set_did(Uid, Mid),
+    lib_obj_rw:set_name(Uid, Name),
+    lib_obj_rw:set_group(Uid, Group),
+    lib_obj_rw:set_type(Uid, Type),
+    lib_obj_rw:set_pid(Uid, Pid),
+
+    lib_move:init(Uid, Pos, vector3:new(0.1, 0, 0.5)),
+    ok.
 
 %%-------------------------------------------------------------------
 obj_type(Obj) -> Obj#m_map_obj.type.
