@@ -93,7 +93,7 @@ init_vis_tile_1(X) when X < 0 ->
 init_vis_tile_1(X) when X =:= 0 ->
     ok;
 init_vis_tile_1(X) ->
-    set_vis_tile(X, #r_vis_tile{index = X}),
+    set_vis_tile(X, #m_vis_tile{index = X}),
     init_vis_tile_1(X - 1).
 
 %%%-------------------------------------------------------------------
@@ -108,7 +108,7 @@ sync_movement_to_big_visual_tile(VisTileIndex, Msg) ->
 sync_msg_to_big_vis_tile_1(_VisTileList, undefined) ->
     skip;
 sync_msg_to_big_vis_tile_1(VisTileList, Msg) ->
-    PlayerList = [Players || #r_vis_tile{player = Players} <- VisTileList],
+    PlayerList = [Players || #m_vis_tile{player = Players} <- VisTileList],
     lists:foreach(
         fun(Uid) -> gcore:send_net_msg(Uid, Msg) end,
         lists:flatten(PlayerList)
@@ -166,22 +166,22 @@ add_to_vis_tile_1(Type, Uid, VisTileIndex, undefined) ->
 add_to_vis_tile_1(?OBJ_USR, Uid, VisTileIndex, VisTile) ->
     set_vis_tile(
         VisTileIndex,
-        VisTile#r_vis_tile{player = [Uid | VisTile#r_vis_tile.player]}
+        VisTile#m_vis_tile{player = [Uid | VisTile#m_vis_tile.player]}
     );
 add_to_vis_tile_1(?OBJ_MON, Uid, VisTileIndex, VisTile) ->
     set_vis_tile(
         VisTileIndex,
-        VisTile#r_vis_tile{monster = [Uid | VisTile#r_vis_tile.monster]}
+        VisTile#m_vis_tile{monster = [Uid | VisTile#m_vis_tile.monster]}
     );
 add_to_vis_tile_1(?OBJ_PET, Uid, VisTileIndex, VisTile) ->
     set_vis_tile(
         VisTileIndex,
-        VisTile#r_vis_tile{pet = [Uid | VisTile#r_vis_tile.pet]}
+        VisTile#m_vis_tile{pet = [Uid | VisTile#m_vis_tile.pet]}
     );
 add_to_vis_tile_1(?OBJ_NPC, Uid, VisTileIndex, VisTile) ->
     set_vis_tile(
         VisTileIndex,
-        VisTile#r_vis_tile{npc = [Uid | VisTile#r_vis_tile.npc]}
+        VisTile#m_vis_tile{npc = [Uid | VisTile#m_vis_tile.npc]}
     );
 add_to_vis_tile_1(_Type, _Uid, _VisTileIndex, _VisTile) ->
     ok.
@@ -204,22 +204,22 @@ del_from_vis_tile_1(Type, Uid, VisTileIndex, undefined) ->
 del_from_vis_tile_1(?OBJ_USR, Uid, VisTileIndex, VisTile) ->
     set_vis_tile(
         VisTileIndex,
-        VisTile#r_vis_tile{player = lists:delete(Uid, VisTile#r_vis_tile.player)}
+        VisTile#m_vis_tile{player = lists:delete(Uid, VisTile#m_vis_tile.player)}
     );
 del_from_vis_tile_1(?OBJ_MON, Uid, VisTileIndex, VisTile) ->
     set_vis_tile(
         VisTileIndex,
-        VisTile#r_vis_tile{monster = lists:delete(Uid, VisTile#r_vis_tile.monster)}
+        VisTile#m_vis_tile{monster = lists:delete(Uid, VisTile#m_vis_tile.monster)}
     );
 del_from_vis_tile_1(?OBJ_PET, Uid, VisTileIndex, VisTile) ->
     set_vis_tile(
         VisTileIndex,
-        VisTile#r_vis_tile{pet = lists:delete(Uid, VisTile#r_vis_tile.pet)}
+        VisTile#m_vis_tile{pet = lists:delete(Uid, VisTile#m_vis_tile.pet)}
     );
 del_from_vis_tile_1(?OBJ_NPC, Uid, VisTileIndex, VisTile) ->
     set_vis_tile(
         VisTileIndex,
-        VisTile#r_vis_tile{npc = lists:delete(Uid, VisTile#r_vis_tile.npc)}
+        VisTile#m_vis_tile{npc = lists:delete(Uid, VisTile#m_vis_tile.npc)}
     );
 del_from_vis_tile_1(_Type, _Uid, _VisTileIndex, _VisTile) ->
     ok.
@@ -235,7 +235,7 @@ sync_big_vis_tile_to_me(Obj, VisTileList, Msg)->
 
 do_sync_big_vis_tile_to_me(?OBJ_USR, Uid, VisTileList, del_all) ->
     UidList = lists:foldl(
-        fun(#r_vis_tile{player = PL, monster = ML, npc = NL, pet = Pets}, Acc) ->
+        fun(#m_vis_tile{player = PL, monster = ML, npc = NL, pet = Pets}, Acc) ->
             PL ++ ML ++ NL ++ Pets ++ Acc
         end, [], VisTileList),
     case UidList of
@@ -256,7 +256,7 @@ do_sync_big_vis_tile_to_me(?OBJ_USR, TarUid, VisTileList, add_all) ->
             end
         end,
     FV =
-        fun(#r_vis_tile{player = PL, monster = ML, npc = NL, pet = Pets}, Acc0) ->
+        fun(#m_vis_tile{player = PL, monster = ML, npc = NL, pet = Pets}, Acc0) ->
             Acc1 = lists:foldl(fun(Uid, Acc) -> FC(lib_map_rw:get_player_ets(),   Uid, Acc) end, Acc0, PL),
             Acc2 = lists:foldl(fun(Uid, Acc) -> FC(lib_map_rw:get_monster_ets(),  Uid, Acc) end, Acc1, ML),
             Acc3 = lists:foldl(fun(Uid, Acc) -> FC(lib_map_rw:get_npc_ets(),      Uid, Acc) end, Acc2, NL),

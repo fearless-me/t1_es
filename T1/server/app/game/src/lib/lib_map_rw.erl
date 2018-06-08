@@ -14,13 +14,8 @@
 
 %%
 -export([init_ets/1]).
-
-%% API
-%%-export([player_update/2]).
-%%-export([player_update_pos/2]).
 -export([add_obj_to_ets/1]).
 -export([del_obj_to_ets/1]).
--export([get_obj/2]).
 -export([get_player/1, get_player_size/0]).
 -export([get_monster/1, get_monster_size/0]).
 -export([get_npc/1, get_pets/1]).
@@ -28,7 +23,6 @@
 -export([get_pet_ets/0, get_player_ets/0]).
 -export([get_map_id/0, get_line_id/0]).
 -export([get_map_hook/0]).
-
 -export([update_move_timer/0]).
 -export([get_move_timer_delta/0]).
 -export([get_move_timer_now/0]).
@@ -48,13 +42,13 @@
 %%%-------------------------------------------------------------------
 init_ets(State) ->
     Now = time:milli_seconds(),
-    put(?MAP_ID,        State#r_map_state.map_id),
-    put(?LINE_ID,       State#r_map_state.line_id),
-    put(?MAP_NPC_ETS,   State#r_map_state.npc),
-    put(?MAP_PET_ETS,   State#r_map_state.pet),
-    put(?MAP_USR_ETS,   State#r_map_state.player),
-    put(?MAP_MON_ETS,   State#r_map_state.monster),
-    put(?MAP_HOOK,      State#r_map_state.hook_mod),
+    put(?MAP_ID,        State#m_map_state.map_id),
+    put(?LINE_ID,       State#m_map_state.line_id),
+    put(?MAP_NPC_ETS,   State#m_map_state.npc),
+    put(?MAP_PET_ETS,   State#m_map_state.pet),
+    put(?MAP_USR_ETS,   State#m_map_state.player),
+    put(?MAP_MON_ETS,   State#m_map_state.monster),
+    put(?MAP_HOOK,      State#m_map_state.hook_mod),
     put(?MOVE_TIMER,    #m_move_timer{now = Now, latest_up = Now, delta = 0}),
     ok.
 
@@ -68,12 +62,6 @@ get_npc_ets()       -> get(?MAP_NPC_ETS).
 get_pet_ets()       -> get(?MAP_PET_ETS).
 get_player_ets()    -> get(?MAP_USR_ETS).
 get_monster_ets()   -> get(?MAP_MON_ETS).
-
-get_obj(Ets, Uid) ->
-    case ets:lookup(Ets, Uid) of
-        [#m_map_obj{} = Obj | _] -> Obj;
-        _ -> undefined
-    end.
 
 %%-------------------------------------------------------------------
 get_player(Uid) ->

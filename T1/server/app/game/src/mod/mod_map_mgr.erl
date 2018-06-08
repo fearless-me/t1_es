@@ -33,9 +33,9 @@
 %% WARNING!!! WARNING!!! WARNING!!!
 %% call
 player_join_map(MgrPid, Req) ->
-    gen_server:call(MgrPid, {join_map, Req}).
+    gen_server:call(MgrPid, {join_map, Req}, ?MAP_CALL_TIMEOUT).
 player_exit_map(MgrPid, Req) ->
-    gen_server:call(MgrPid, {exit_map, Req}).
+    gen_server:call(MgrPid, {exit_map, Req}, ?MAP_CALL_TIMEOUT).
 %%--------------------------------
 
 %%%===================================================================

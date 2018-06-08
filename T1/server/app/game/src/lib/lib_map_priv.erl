@@ -34,7 +34,7 @@
 
 %%%-------------------------------------------------------------------
 init(S) ->
-    Conf = mod_map_creator:map_conf(S#r_map_state.map_id),
+    Conf = mod_map_creator:map_conf(S#m_map_state.map_id),
     S1 = init_1(S),
     ok = lib_map_rw:init_ets(S1),
     ok = lib_map_view:init_vis_tile(Conf),
@@ -45,7 +45,7 @@ init(S) ->
 
 %%%-------------------------------------------------------------------
 init_1(State) ->
-    State#r_map_state{
+    State#m_map_state{
         npc     = ets:new(npc,      [protected, {keypos, #m_map_obj.uid}, ?ETSRC]),
         pet     = ets:new(pet,      [protected, {keypos, #m_map_obj.uid}, ?ETSRC]),
         player  = ets:new(player,   [protected, {keypos, #m_map_obj.uid}, ?ETSRC]),
@@ -148,7 +148,7 @@ tick(S) ->
     tick_1(S),
     S.
 
-tick_1(#r_map_state{status = ?MAP_READY_EXIT}) ->
+tick_1(#m_map_state{status = ?MAP_READY_EXIT}) ->
     PlayerSize = lib_map_rw:get_player_size(),
     real_stop_now(PlayerSize),
     ok;
@@ -203,9 +203,9 @@ start_stop_now(S) ->
         [misc:register_name(), self()]),
 
     kick_all_player(S),
-    S#r_map_state{status = ?MAP_READY_EXIT}.
+    S#m_map_state{status = ?MAP_READY_EXIT}.
 
-kick_all_player(#r_map_state{player = Ets}) ->
+kick_all_player(#m_map_state{player = Ets}) ->
     ets:foldl(
         fun(#m_map_obj{pid = Pid}, _) ->
             ps:send(Pid, return_to_pre_map_ack)

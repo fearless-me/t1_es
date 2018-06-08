@@ -32,13 +32,13 @@
 %% WARNING!!! WARNING!!! WARNING!!!
 %% call
 player_exit(MapPid, Req) ->
-    gen_server:call(MapPid, {player_exit, Req}).
+    gen_server:call(MapPid, {player_exit, Req}, ?MAP_CALL_TIMEOUT).
 %%
 player_join(MapPid, Obj) ->
-    gen_server:call(MapPid, {player_join, Obj}).
+    gen_server:call(MapPid, {player_join, Obj}, ?MAP_CALL_TIMEOUT).
 %%
 player_teleport(MapPid, Req) ->
-    gen_server:call(MapPid, {player_teleport, Req}).
+    gen_server:call(MapPid, {player_teleport, Req}, ?MAP_CALL_TIMEOUT).
 %%--------------------------------
 
 %%
@@ -62,7 +62,7 @@ mod_init([MapID, MapLine]) ->
     ProcessName = misc:create_atom(mod_map, [MapID,MapLine]),
     true = erlang:register(ProcessName, self()),
     ?INFO("map ~p:~p started",[ProcessName, self()]),
-    {ok, lib_map_priv:init(#r_map_state{map_id = MapID, line_id = MapLine})}.
+    {ok, lib_map_priv:init(#m_map_state{map_id = MapID, line_id = MapLine})}.
 
 %%--------------------------------------------------------------------
 do_handle_call({init}, _From, State) ->

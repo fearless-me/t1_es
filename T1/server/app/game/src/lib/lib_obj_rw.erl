@@ -7,95 +7,200 @@
 
 %%-------------------------------------------------------------------
 -include("logger.hrl").
--include("map_obj.hrl").
+-include("rw_record.hrl").
 %%-------------------------------------------------------------------
 
--export([get_pid/1,set_pid/2]).
--export([get_did/1,set_did/2]).
--export([get_group/1,set_group/2]).
--export([get_owner/1,set_owner/2]).
--export([get_move_speed/1,set_move_speed/2]).
--export([get_cur_move/1,set_cur_move/2]).
--export([get_next_move/1,set_next_move/2]).
--export([get_vis_tile_idx/1,set_vis_tile_idx/2]).
--export([get_cur_pos/1,set_cur_pos/2]).
--export([get_start_pos/1,set_start_pos/2]).
--export([get_dest_pos/1,set_dest_pos/2]).
--export([get_face/1,set_face/2]).
--export([get_dir/1,set_dir/2]).
--export([get_start_time/1,set_start_time/2]).
--export([get_seg_move_time/1,set_seg_move_time/2]).
--export([get_stopped/1,set_stopped/2]).
--export([get_path_list/1,set_path_list/2]).
--export([get_hp/1,set_hp/2]).
--export([get_max_hp/1,set_max_hp/2]).
--export([get_attr/1,set_attr/2]).
--export([get_buff_list/1,set_buff_list/2]).
+-export([get_pid/1, get_pid_def/2, set_pid/2]).
+-export([get_did/1, get_did_def/2, set_did/2]).
+-export([get_group/1, get_group_def/2, set_group/2]).
+-export([get_owner/1, get_owner_def/2, set_owner/2]).
+-export([get_move_speed/1, get_move_speed_def/2, set_move_speed/2]).
+-export([get_cur_move/1, get_cur_move_def/2, set_cur_move/2]).
+-export([get_next_move/1, get_next_move_def/2, set_next_move/2]).
+-export([get_vis_tile_idx/1, get_vis_tile_idx_def/2, set_vis_tile_idx/2]).
+-export([get_cur_pos/1, get_cur_pos_def/2, set_cur_pos/2]).
+-export([get_start_pos/1, get_start_pos_def/2, set_start_pos/2]).
+-export([get_dest_pos/1, get_dest_pos_def/2, set_dest_pos/2]).
+-export([get_face/1, get_face_def/2, set_face/2]).
+-export([get_dir/1, get_dir_def/2, set_dir/2]).
+-export([get_start_time/1, get_start_time_def/2, set_start_time/2]).
+-export([get_seg_move_time/1, get_seg_move_time_def/2, set_seg_move_time/2]).
+-export([get_stopped/1, get_stopped_def/2, set_stopped/2]).
+-export([get_path_list/1, get_path_list_def/2, set_path_list/2]).
+-export([get_hp/1, get_hp_def/2, set_hp/2]).
+-export([get_max_hp/1, get_max_hp_def/2, set_max_hp/2]).
+-export([get_attr/1, get_attr_def/2, set_attr/2]).
+-export([get_buff_list/1, get_buff_list_def/2, set_buff_list/2]).
 -export([del/1]).
 -export([to_record/1]).
 %%-------------------------------------------------------------------
 %%-------------------------------------------------------------------
 get_pid(Uid)-> get({pid,Uid}).
+get_pid_def(Uid, Def)->
+	case get({pid,Uid}) of
+		undefined -> Def;
+		V -> V
+	end.
 set_pid(Uid, V)-> put({pid,Uid}, V).
 
 get_did(Uid)-> get({did,Uid}).
+get_did_def(Uid, Def)->
+	case get({did,Uid}) of
+		undefined -> Def;
+		V -> V
+	end.
 set_did(Uid, V)-> put({did,Uid}, V).
 
 get_group(Uid)-> get({group,Uid}).
+get_group_def(Uid, Def)->
+	case get({group,Uid}) of
+		undefined -> Def;
+		V -> V
+	end.
 set_group(Uid, V)-> put({group,Uid}, V).
 
 get_owner(Uid)-> get({owner,Uid}).
+get_owner_def(Uid, Def)->
+	case get({owner,Uid}) of
+		undefined -> Def;
+		V -> V
+	end.
 set_owner(Uid, V)-> put({owner,Uid}, V).
 
 get_move_speed(Uid)-> get({move_speed,Uid}).
+get_move_speed_def(Uid, Def)->
+	case get({move_speed,Uid}) of
+		undefined -> Def;
+		V -> V
+	end.
 set_move_speed(Uid, V)-> put({move_speed,Uid}, V).
 
 get_cur_move(Uid)-> get({cur_move,Uid}).
+get_cur_move_def(Uid, Def)->
+	case get({cur_move,Uid}) of
+		undefined -> Def;
+		V -> V
+	end.
 set_cur_move(Uid, V)-> put({cur_move,Uid}, V).
 
 get_next_move(Uid)-> get({next_move,Uid}).
+get_next_move_def(Uid, Def)->
+	case get({next_move,Uid}) of
+		undefined -> Def;
+		V -> V
+	end.
 set_next_move(Uid, V)-> put({next_move,Uid}, V).
 
 get_vis_tile_idx(Uid)-> get({vis_tile_idx,Uid}).
+get_vis_tile_idx_def(Uid, Def)->
+	case get({vis_tile_idx,Uid}) of
+		undefined -> Def;
+		V -> V
+	end.
 set_vis_tile_idx(Uid, V)-> put({vis_tile_idx,Uid}, V).
 
 get_cur_pos(Uid)-> get({cur_pos,Uid}).
+get_cur_pos_def(Uid, Def)->
+	case get({cur_pos,Uid}) of
+		undefined -> Def;
+		V -> V
+	end.
 set_cur_pos(Uid, V)-> put({cur_pos,Uid}, V).
 
 get_start_pos(Uid)-> get({start_pos,Uid}).
+get_start_pos_def(Uid, Def)->
+	case get({start_pos,Uid}) of
+		undefined -> Def;
+		V -> V
+	end.
 set_start_pos(Uid, V)-> put({start_pos,Uid}, V).
 
 get_dest_pos(Uid)-> get({dest_pos,Uid}).
+get_dest_pos_def(Uid, Def)->
+	case get({dest_pos,Uid}) of
+		undefined -> Def;
+		V -> V
+	end.
 set_dest_pos(Uid, V)-> put({dest_pos,Uid}, V).
 
 get_face(Uid)-> get({face,Uid}).
+get_face_def(Uid, Def)->
+	case get({face,Uid}) of
+		undefined -> Def;
+		V -> V
+	end.
 set_face(Uid, V)-> put({face,Uid}, V).
 
 get_dir(Uid)-> get({dir,Uid}).
+get_dir_def(Uid, Def)->
+	case get({dir,Uid}) of
+		undefined -> Def;
+		V -> V
+	end.
 set_dir(Uid, V)-> put({dir,Uid}, V).
 
 get_start_time(Uid)-> get({start_time,Uid}).
+get_start_time_def(Uid, Def)->
+	case get({start_time,Uid}) of
+		undefined -> Def;
+		V -> V
+	end.
 set_start_time(Uid, V)-> put({start_time,Uid}, V).
 
 get_seg_move_time(Uid)-> get({seg_move_time,Uid}).
+get_seg_move_time_def(Uid, Def)->
+	case get({seg_move_time,Uid}) of
+		undefined -> Def;
+		V -> V
+	end.
 set_seg_move_time(Uid, V)-> put({seg_move_time,Uid}, V).
 
 get_stopped(Uid)-> get({stopped,Uid}).
+get_stopped_def(Uid, Def)->
+	case get({stopped,Uid}) of
+		undefined -> Def;
+		V -> V
+	end.
 set_stopped(Uid, V)-> put({stopped,Uid}, V).
 
 get_path_list(Uid)-> get({path_list,Uid}).
+get_path_list_def(Uid, Def)->
+	case get({path_list,Uid}) of
+		undefined -> Def;
+		V -> V
+	end.
 set_path_list(Uid, V)-> put({path_list,Uid}, V).
 
 get_hp(Uid)-> get({hp,Uid}).
+get_hp_def(Uid, Def)->
+	case get({hp,Uid}) of
+		undefined -> Def;
+		V -> V
+	end.
 set_hp(Uid, V)-> put({hp,Uid}, V).
 
 get_max_hp(Uid)-> get({max_hp,Uid}).
+get_max_hp_def(Uid, Def)->
+	case get({max_hp,Uid}) of
+		undefined -> Def;
+		V -> V
+	end.
 set_max_hp(Uid, V)-> put({max_hp,Uid}, V).
 
 get_attr(Uid)-> get({attr,Uid}).
+get_attr_def(Uid, Def)->
+	case get({attr,Uid}) of
+		undefined -> Def;
+		V -> V
+	end.
 set_attr(Uid, V)-> put({attr,Uid}, V).
 
 get_buff_list(Uid)-> get({buff_list,Uid}).
+get_buff_list_def(Uid, Def)->
+	case get({buff_list,Uid}) of
+		undefined -> Def;
+		V -> V
+	end.
 set_buff_list(Uid, V)-> put({buff_list,Uid}, V).
 
 del(Uid)->

@@ -10,6 +10,7 @@
 -author("mawenhong").
 -include("map_obj.hrl").
 -include("db_record.hrl").
+-include("rw_record.hrl").
 -define(LogFileOptions, [exclusive, append, raw, binary]).
 %% API
 -export([run/0]).
@@ -30,9 +31,19 @@ run() ->
             "..\\src\\lib\\lib_obj_rw.erl",
             lib_obj_rw,
             [
-                ["logger.hrl", "map_obj.hrl"],
+                ["logger.hrl", "rw_record.hrl"],
                 [
                     {m_map_obj_rw, record_info(fields, m_map_obj_rw), none, ["Uid"]}
+                ]
+            ]
+        ),
+        multi_to_code(
+            "..\\src\\lib\\lib_player_rw.erl",
+            lib_player_rw,
+            [
+                ["logger.hrl", "player_status.hrl", "rw_record.hrl", "vector3.hrl"],
+                [
+                    {m_player_rw, record_info(fields, m_player_rw), none, []}
                 ]
             ]
         ),
@@ -99,13 +110,13 @@ inc_files(Fd, Incs) ->
 
 %%-----------------------------------------------------------------------
 field_fun_export(Fd, Field, none, GetN, SetN) ->
-    S = io_lib:format("-export([get_~p/~p,set_~p/~p]).",
-        [Field,  GetN, Field, SetN]),
+    S = io_lib:format("-export([get_~p/~p, get_~p_def/~p, set_~p/~p]).",
+        [Field,  GetN, Field,  GetN+1, Field, SetN]),
     write_file(Fd, "~ts~n", [S]),
     ok;
 field_fun_export(Fd, Field, Suffix, GetN, SetN) ->
-    S = io_lib:format("-export([get_~p_~p/~p,set_~p_~p/~p]).",
-        [Suffix, Field, GetN, Suffix, Field, SetN]),
+    S = io_lib:format("-export([get_~p_~p/~p, get_~p_~p_def/~p, set_~p_~p/~p]).",
+        [Suffix, Field, GetN, Suffix, Field, GetN+1, Suffix, Field, SetN]),
     write_file(Fd, "~ts~n", [S]),
     ok.
 
@@ -134,10 +145,13 @@ field_fun(Fd, Field, Suffix, []) ->
     case Suffix of
         none ->
             write_file(Fd, "get_~p()-> get(~p).~n", [Field, Field]),
+            write_file(Fd, "get_~p_def(Def)->\n\tcase get(~p) of\n\t\tundefined -> Def;\n\t\tV -> V\n\tend.~n", [Field, Field]),
             write_file(Fd, "set_~p(V)-> put(~p, V).~n~n", [Field, Field]),
             ok;
         _ ->
             write_file(Fd, "get_~p_~p()-> get(~p).~n", [Suffix, Field, Field]),
+            write_file(Fd, "get_~p_~p_def(Def)->\n\tcase get(~p) of\n\t undefined -> Def;\n\tV -> V\n\tend.~n", [Suffix, Field, Field]),
+
             write_file(Fd, "set_~p_~p(V)-> put(~p, V).~n~n", [Suffix, Field, Field]),
             ok
     end,
@@ -146,10 +160,12 @@ field_fun(Fd, Field, Suffix, ExParam) ->
     case Suffix of
         none ->
             write_file(Fd, "get_~p(~ts)-> get({~p,~ts}).~n", [Field, ExParam, Field, ExParam]),
+            write_file(Fd, "get_~p_def(~ts, Def)->\n\tcase get({~p,~ts}) of\n\t\tundefined -> Def;\n\t\tV -> V\n\tend.~n", [Field, ExParam, Field, ExParam]),
             write_file(Fd, "set_~p(~ts, V)-> put({~p,~ts}, V).~n~n", [Field, ExParam, Field, ExParam]),
             ok;
         _ ->
             write_file(Fd, "get_~p_~p(~ts)-> get({~p,~ts}).~n", [ Suffix, Field, ExParam, Field, ExParam]),
+            write_file(Fd, "get_~p_~p_def(~ts)->\n\tcase get({~p,~ts}) of\n\t\tundefined -> Def;\n\t\tV -> V\n\tend.~n", [ Suffix, Field, ExParam, Field, ExParam]),
             write_file(Fd, "set_~p_~p(~ts, V)-> put({~p,~ts}, V).~n~n", [Suffix, Field, ExParam, Field, ExParam]),
             ok
     end,

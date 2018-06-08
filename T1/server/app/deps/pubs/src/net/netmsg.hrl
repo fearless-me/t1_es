@@ -2,7 +2,7 @@
 -ifndef(netmsg).
 -define(netmsg,1).
 
--define(ProtoVersion,629).
+-define(ProtoVersion,630).
 
 %% 
 -define(GS2U_CreatePlayerResult,45054).
@@ -72,8 +72,24 @@
 %% // 测试用
 -define(GS2U_PlayerInitBase,32262).
 -record(pk_GS2U_PlayerInitBase,{
-	%% UInt64
-	uid = 0
+	%% UInt64 角色ID
+	uid = 0,
+	%% String 角色名
+	name = "",
+	%% Int32 等级
+	level = 0,
+	%% SByte 阵营
+	camp = 0,
+	%% SByte 种族
+	race = 0,
+	%% UInt32 职业
+	career = 0,
+	%% SByte 性别
+	sex = 0,
+	%% Int32 头
+	head = 0,
+	%% UInt16 角色所在当前地图ID
+	mapID = 0
 }).
 
 %% 

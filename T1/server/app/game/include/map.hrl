@@ -32,14 +32,18 @@
 -define(MAP_READY_EXIT, 2).
 -define(MAP_EXIT,       3).
 
+-define(MAP_CALL_TIMEOUT, 5000).
+
 
 %%
--record(r_vis_tile,{index = 0, player = [], monster = [], npc = [], pet = []}).
+-record(m_vis_tile,{index = 0, player = [], monster = [], npc = [], pet = []}).
 %%
--record(r_map_state,{map_id = 0, line_id = 0, player = undefined, monster = undefined,
+-record(m_map_state,{map_id = 0, line_id = 0, player = undefined, monster = undefined,
     npc = undefined, pet = undefined, respawn = [], hook_mod = undefined, status = ?MAP_NORMAL}).
 %%
 -record(m_map_line,{map_id = 0, line_id = 0, pid = undefined, limits = 50, in = 0, dead_line = 0}).
+
+
 %%
 -record(r_exit_map_req,{uid = 0, map_id = 0, line_id=0, map_pid = undefined}).
 %%

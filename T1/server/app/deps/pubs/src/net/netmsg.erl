@@ -112,10 +112,26 @@ decode(?GS2U_MonsterList,Bin0) ->
 %GENERATED from file:login.h => GS2U_PlayerInitBase
 decode(?GS2U_PlayerInitBase,Bin0) ->
 	{ V_uid, Bin1 } = read_uint64( Bin0 ),
+	{ V_name, Bin2 } = read_string( Bin1 ),
+	{ V_level, Bin3 } = read_int32( Bin2 ),
+	{ V_camp, Bin4 } = read_int8( Bin3 ),
+	{ V_race, Bin5 } = read_int8( Bin4 ),
+	{ V_career, Bin6 } = read_uint32( Bin5 ),
+	{ V_sex, Bin7 } = read_int8( Bin6 ),
+	{ V_head, Bin8 } = read_int32( Bin7 ),
+	{ V_mapID, Bin9 } = read_uint16( Bin8 ),
 	{ #pk_GS2U_PlayerInitBase {
-		uid = V_uid
+		uid = V_uid,
+		name = V_name,
+		level = V_level,
+		camp = V_camp,
+		race = V_race,
+		career = V_career,
+		sex = V_sex,
+		head = V_head,
+		mapID = V_mapID
 		},
-	Bin1 };
+	Bin9 };
 
 %GENERATED from file:login.h => GS2U_RemoveRemote
 decode(?GS2U_RemoveRemote,Bin0) ->
@@ -438,9 +454,25 @@ encode(#pk_GS2U_MonsterList{} = P) ->
 %GENERATED from file:login.h => GS2U_PlayerInitBase
 encode(#pk_GS2U_PlayerInitBase{} = P) ->
 	Bin_uid = write_uint64( P#pk_GS2U_PlayerInitBase.uid ),
+	Bin_name = write_string( P#pk_GS2U_PlayerInitBase.name ),
+	Bin_level = write_int32( P#pk_GS2U_PlayerInitBase.level ),
+	Bin_camp = write_int8( P#pk_GS2U_PlayerInitBase.camp ),
+	Bin_race = write_int8( P#pk_GS2U_PlayerInitBase.race ),
+	Bin_career = write_uint32( P#pk_GS2U_PlayerInitBase.career ),
+	Bin_sex = write_int8( P#pk_GS2U_PlayerInitBase.sex ),
+	Bin_head = write_int32( P#pk_GS2U_PlayerInitBase.head ),
+	Bin_mapID = write_uint16( P#pk_GS2U_PlayerInitBase.mapID ),
 	[
 		<<?GS2U_PlayerInitBase:?U16>>,
-		Bin_uid
+		Bin_uid,
+		Bin_name,
+		Bin_level,
+		Bin_camp,
+		Bin_race,
+		Bin_career,
+		Bin_sex,
+		Bin_head,
+		Bin_mapID
 	];
 
 %GENERATED from file:login.h => GS2U_RemoveRemote
