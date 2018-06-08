@@ -15,7 +15,7 @@
 -include("map.hrl").
 -include("map_obj.hrl").
 -define(MAP_LINES, map_line_ets__).
--define(LINE_LIFETIME, 5 * 60 * 1000).
+-define(LINE_LIFETIME, 15 * 60 * 1000).
 -define(DEAD_LINE_PROTECT, 15 * 1000).
 
 %%--------------------------------

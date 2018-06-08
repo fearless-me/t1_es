@@ -8,17 +8,12 @@
 %%-------------------------------------------------------------------
 -include("logger.hrl").
 -include("map_obj.hrl").
--include("db_record.hrl").
 %%-------------------------------------------------------------------
 
--export([get_uid/1,set_uid/2]).
 -export([get_pid/1,set_pid/2]).
 -export([get_did/1,set_did/2]).
--export([get_sock/1,set_sock/2]).
--export([get_owner/1,set_owner/2]).
--export([get_name/1,set_name/2]).
 -export([get_group/1,set_group/2]).
--export([get_type/1,set_type/2]).
+-export([get_owner/1,set_owner/2]).
 -export([get_move_speed/1,set_move_speed/2]).
 -export([get_cur_move/1,set_cur_move/2]).
 -export([get_next_move/1,set_next_move/2]).
@@ -40,29 +35,17 @@
 -export([to_record/1]).
 %%-------------------------------------------------------------------
 %%-------------------------------------------------------------------
-get_uid(Uid)-> get({uid,Uid}).
-set_uid(Uid, V)-> put({uid,Uid}, V).
-
 get_pid(Uid)-> get({pid,Uid}).
 set_pid(Uid, V)-> put({pid,Uid}, V).
 
 get_did(Uid)-> get({did,Uid}).
 set_did(Uid, V)-> put({did,Uid}, V).
 
-get_sock(Uid)-> get({sock,Uid}).
-set_sock(Uid, V)-> put({sock,Uid}, V).
-
-get_owner(Uid)-> get({owner,Uid}).
-set_owner(Uid, V)-> put({owner,Uid}, V).
-
-get_name(Uid)-> get({name,Uid}).
-set_name(Uid, V)-> put({name,Uid}, V).
-
 get_group(Uid)-> get({group,Uid}).
 set_group(Uid, V)-> put({group,Uid}, V).
 
-get_type(Uid)-> get({type,Uid}).
-set_type(Uid, V)-> put({type,Uid}, V).
+get_owner(Uid)-> get({owner,Uid}).
+set_owner(Uid, V)-> put({owner,Uid}, V).
 
 get_move_speed(Uid)-> get({move_speed,Uid}).
 set_move_speed(Uid, V)-> put({move_speed,Uid}, V).
@@ -116,14 +99,10 @@ get_buff_list(Uid)-> get({buff_list,Uid}).
 set_buff_list(Uid, V)-> put({buff_list,Uid}, V).
 
 del(Uid)->
-	erase({uid, Uid}),
 	erase({pid, Uid}),
 	erase({did, Uid}),
-	erase({sock, Uid}),
-	erase({owner, Uid}),
-	erase({name, Uid}),
 	erase({group, Uid}),
-	erase({type, Uid}),
+	erase({owner, Uid}),
 	erase({move_speed, Uid}),
 	erase({cur_move, Uid}),
 	erase({next_move, Uid}),
@@ -143,15 +122,11 @@ del(Uid)->
 	erase({buff_list, Uid}),
 	ok.
 to_record(Uid)->
-	#m_map_obj{
-		uid = get_uid(Uid),
+	#m_map_obj_rw{
 		pid = get_pid(Uid),
 		did = get_did(Uid),
-		sock = get_sock(Uid),
-		owner = get_owner(Uid),
-		name = get_name(Uid),
 		group = get_group(Uid),
-		type = get_type(Uid),
+		owner = get_owner(Uid),
 		move_speed = get_move_speed(Uid),
 		cur_move = get_cur_move(Uid),
 		next_move = get_next_move(Uid),

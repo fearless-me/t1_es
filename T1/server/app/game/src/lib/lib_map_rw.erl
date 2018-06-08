@@ -16,8 +16,8 @@
 -export([init_ets/1]).
 
 %% API
--export([player_update/2]).
--export([player_update_pos/2]).
+%%-export([player_update/2]).
+%%-export([player_update_pos/2]).
 -export([add_obj_to_ets/1]).
 -export([del_obj_to_ets/1]).
 -export([get_obj/2]).
@@ -55,7 +55,7 @@ init_ets(State) ->
     put(?MAP_USR_ETS,   State#r_map_state.player),
     put(?MAP_MON_ETS,   State#r_map_state.monster),
     put(?MAP_HOOK,      State#r_map_state.hook_mod),
-    put(?MOVE_TIMER,    #r_move_timer{now = Now, latest_up = Now, delta = 0}),
+    put(?MOVE_TIMER,    #m_move_timer{now = Now, latest_up = Now, delta = 0}),
     ok.
 
 %%-------------------------------------------------------------------
@@ -86,17 +86,17 @@ get_player_size() ->
     ets:info( get_player_ets(), size ).
 
 %%-------------------------------------------------------------------
-player_update(Uid, Elements)->
-    ets:update_element(
-        lib_map_rw:get_player_ets(),
-        Uid, Elements),
-    ok.
-
-player_update_pos(Uid, Pos)->
-    ets:update_element(
-        lib_map_rw:get_player_ets(),
-        Uid, {#m_map_obj.cur_pos, Pos}),
-    ok.
+%%player_update(Uid, Elements)->
+%%    ets:update_element(
+%%        lib_map_rw:get_player_ets(),
+%%        Uid, Elements),
+%%    ok.
+%%
+%%player_update_pos(Uid, Pos)->
+%%    ets:update_element(
+%%        lib_map_rw:get_player_ets(),
+%%        Uid, {#m_map_obj.cur_pos, Pos}),
+%%    ok.
 
 %%-------------------------------------------------------------------
 get_monster(Uid) ->
@@ -139,20 +139,21 @@ del_obj_to_ets(_) ->
 %%-------------------------------------------------------------------
 update_move_timer() ->
     Now = time:milli_seconds(),
-    #r_move_timer{latest_up = Latest} = get(?MOVE_TIMER),
-    put(?MOVE_TIMER, #r_move_timer{now = Now, latest_up = Now, delta = Now - Latest}),
+    #m_move_timer{latest_up = Latest} = get(?MOVE_TIMER),
+    put(?MOVE_TIMER, #m_move_timer{now = Now, latest_up = Now, delta = Now - Latest}),
     ok.
 
+%%-------------------------------------------------------------------
 get_move_timer_now() ->
-    #r_move_timer{now = Now} = get(?MOVE_TIMER),
+    #m_move_timer{now = Now} = get(?MOVE_TIMER),
     Now.
 
 get_move_timer_pass_time(StartTime) ->
-    #r_move_timer{now = Now} = get(?MOVE_TIMER),
+    #m_move_timer{now = Now} = get(?MOVE_TIMER),
     Now - StartTime.
 
 get_move_timer_delta() ->
-    #r_move_timer{delta = Delta} = get(?MOVE_TIMER),
+    #m_move_timer{delta = Delta} = get(?MOVE_TIMER),
     Delta.
 
 %%-------------------------------------------------------------------

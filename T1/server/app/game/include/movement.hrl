@@ -48,10 +48,10 @@
 -define(ENR_TOBECONTINUED,  12).		%% 可以继续碰撞
 -type nav_result() :: ?ENR_FAILED .. ?ENR_TOBECONTINUED.
 
--record(r_move_pos,{ dist = 0, speed=1, start_pos, end_pos, dir}).
+-record(m_move_pos,{ dist = 0, speed=1, start_pos, end_pos, dir}).
 
 %% 当前时间,上次更新时间，两次更新时间的时间差
--record(r_move_timer, {now, latest_up, delta}).
+-record(m_move_timer, {now, latest_up, delta}).
 
 
 -endif.

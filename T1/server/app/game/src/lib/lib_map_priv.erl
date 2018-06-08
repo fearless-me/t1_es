@@ -58,17 +58,18 @@ init_1(State) ->
 player_exit(S, #r_exit_map_req{
     uid = Uid
 }) ->
-    player_exit_1(Uid),
+    Obj = lib_map_rw:get_player(Uid),
+    do_player_exit(Uid, Obj),
     {ok, S}.
 
-player_exit_1(Uid) ->
+do_player_exit(Uid, #m_map_obj{} = Obj) ->
     ?INFO("user ~p exit map ~p:~p:~p",
         [Uid, lib_map_rw:get_map_id(), lib_map_rw:get_line_id(), self()]),
 
-    lib_map_rw:del_obj_to_ets(#m_map_obj{uid = Uid, type = ?OBJ_USR}),
-    lib_map_view:sync_player_exit_map(Uid),
+    lib_map_rw:del_obj_to_ets(Obj),
+    lib_map_view:sync_player_exit_map(Obj),
     ok;
-player_exit_1(Uid) ->
+do_player_exit(Uid, _Obj) ->
     ?ERROR("~w req exit map ~w ~w, but obj not exists!",
         [Uid, self(), misc:register_name()]).
 
@@ -77,13 +78,14 @@ player_exit_1(Uid) ->
 %% call
 player_join(
     S,
-    #r_change_map_req{uid = Uid, name = Name, pid = Pid, group = Group, tar_pos = Pos}
+    #r_change_map_req{uid = Uid, name = _Name, pid = Pid, group = Group, tar_pos = Pos}
 ) ->
-    lib_obj:new(?OBJ_USR, Uid, Name, 0, Pid, Group, Pos),
+    Obj = lib_obj:new_player(Pid, Uid, Group, Pos, vector3:new(0.1, 0, 0.5)),
     send_goto_map_msg(Uid, Pos),
-    lib_map_rw:add_obj_to_ets(#m_map_obj{uid = Uid, type = ?OBJ_USR}),
-    lib_map_view:sync_player_join_map(Uid),
-    ?DEBUG("uid ~p, join map ~w, name ~p", [uid, self(), misc:register_name()]),
+    lib_map_rw:add_obj_to_ets(Obj),
+    lib_map_view:sync_player_join_map(Obj),
+    ?DEBUG("uid ~p, join map ~w, name ~p",
+        [lib_obj:get_uid(Obj), self(), misc:register_name()]),
     {ok, S};
 player_join(S, Any) ->
     ?ERROR("player join map ~w, name ~p, error obj data ~w",
@@ -116,16 +118,16 @@ init_monster( #recGameMapCfg{
     ok.
 
 init_all_monster_1(Mdata)->
-    Uid = lib_monster:create(Mdata),
-    ok = init_all_monster_2(Uid).
+    Obj = lib_monster:create(Mdata),
+    ok = init_all_monster_2(Obj).
 
-init_all_monster_2(Uid) ->
-    Did = lib_obj_rw:get_did(Uid),
+init_all_monster_2(Obj) ->
+    Uid = lib_obj:get_uid(Obj),
     VisIndex = lib_map_view:pos_to_vis_index(lib_obj_rw:get_cur_pos(Uid)),
-    lib_map_rw:add_obj_to_ets(#m_map_obj{uid = Uid, type = ?OBJ_MON}),
-    lib_map_view:add_obj_to_vis_tile(Uid, VisIndex),
+    lib_map_rw:add_obj_to_ets(Obj),
+    lib_map_view:add_obj_to_vis_tile(Obj, VisIndex),
     ?DEBUG("map ~p:~p create monster ~p, uid ~p, visIndex ~p",
-        [lib_map_rw:get_map_id(), lib_map_rw:get_line_id(), Did, Uid, VisIndex]),
+        [lib_map_rw:get_map_id(), lib_map_rw:get_line_id(), lib_obj:get_did(Obj), Uid, VisIndex]),
     ok.
 
 %%%-------------------------------------------------------------------

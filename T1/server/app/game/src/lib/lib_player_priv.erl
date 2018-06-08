@@ -202,6 +202,7 @@ add_to_world(Player) ->
         ]
     ),
     lib_player_rw:set_status(?PS_GAME),
+    ?WARN("player ~p enter map ~p line ~p",[Uid, Mid, LineId]),
     ?DEBUG("take over online:~w", [Ack]),
     ok.
 
@@ -257,6 +258,7 @@ goto_new_map_1(DestMapID, TarPos) ->
     ),
     ?DEBUG("go_to_new_map(~p, ~w) -> ~w", [DestMapID, Pos, Ack]),
 
+    ?WARN("player ~p enter map ~p line ~p",[Uid, Mid1, Line1]),
     hook_player:on_change_map(Mid, Mid1),
 
     lib_player_rw:set_status(?PS_GAME),
@@ -290,6 +292,7 @@ offline_1(Status)
     #m_player{
         mid = Mid, mpid = MPid, line = LineId
     } = Player = lib_mem:get_player(Uid),
+    ?WARN("player ~p exit map ~p line ~p",[Uid, Mid, LineId]),
     hook_player:on_offline(),
     mod_map_creator:player_offline(Uid, Mid, LineId, MPid),
     lib_player_save:save(Player),

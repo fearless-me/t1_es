@@ -30,9 +30,9 @@ run() ->
             "..\\src\\lib\\lib_obj_rw.erl",
             lib_obj_rw,
             [
-                ["logger.hrl", "map_obj.hrl", "db_record.hrl"],
+                ["logger.hrl", "map_obj.hrl"],
                 [
-                    {m_map_obj, record_info(fields, m_map_obj), none, ["Uid"]}
+                    {m_map_obj_rw, record_info(fields, m_map_obj_rw), none, ["Uid"]}
                 ]
             ]
         ),
