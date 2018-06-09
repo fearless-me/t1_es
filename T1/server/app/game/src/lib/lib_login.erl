@@ -29,7 +29,7 @@ login_2(true, Req, S)->
     #r_login_req{plat_name = PN, plat_account_name = PA} = Req,
     MergeAccount = gcore:merge_plat_acc_name(PN, PA),
     lib_db:action_a_(misc:crc32(MergeAccount), account_login,  Req),
-    S#login_state{in = S#login_state.in + 1}.
+    maps:update(in, maps:get(in, S) + 1, S).
 
 %%--------------------------------------------------------------------
 verify(#r_login_req{}) -> true;
@@ -37,4 +37,4 @@ verify(#r_login_req{}) -> {false, invalid}.
 
 %%--------------------------------------------------------------------
 logout_1(_AccountID, S) ->
-    S#login_state{in = S#login_state.in - 1}.
+    maps:update(in, maps:get(in, S) - 1, S).

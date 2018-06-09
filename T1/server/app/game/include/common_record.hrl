@@ -12,8 +12,6 @@
 -define(COMMON_RECORD_HRL, true).
 
 %%
--record(login_state, {lt = 1800, in = 0, lq = undefined}).
-%%
 -record(r_login_req, {plat_name="", plat_account_name = "", access_token = "", player_pid = 0}).
 %%
 -record(r_login_ack, {error = 0, account_info = undefined}).

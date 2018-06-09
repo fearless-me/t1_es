@@ -35,7 +35,7 @@ mod_init(_Args) ->
      erlang:process_flag(trap_exit, true),
      erlang:process_flag(priority, high),
 
-    {ok, #login_state{lq = lqueue:new()}}.
+    {ok, #{lt => 1800, in => 0, lq => lqueue:new()}}.
 
 %%--------------------------------------------------------------------	
 do_handle_call(Request, From, State) ->
