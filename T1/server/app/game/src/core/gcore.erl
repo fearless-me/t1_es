@@ -37,7 +37,7 @@
 register_ppid(Pid, Aid) ->
     try  misc:register_process(Pid, player, [Aid] ) of
         true -> sucess
-    catch _ : _  -> repeat_login end.
+    catch _:_:_  -> repeat_login end.
 %%-------------------------------------------------------------------
 kick_account(Aid, Reason) ->
     Name = misc:create_atom(player, [Aid]),
@@ -68,8 +68,8 @@ forbid_account(Aid) ->
 -define(CRASH_WAIT_SECONDS, 15).
 halt(Fmt, Args) -> gcore:halt(io_lib:format(Fmt, Args)).
 halt(Msg) ->
-    ?FATAL("~ts, after ~p second(s) app crash,~n~p",
-        [Msg, ?CRASH_WAIT_SECONDS, misc:stacktrace()]),
+    ?FATAL("~ts, after ~p second(s) app crash,~n",
+        [Msg, ?CRASH_WAIT_SECONDS]),
     timer:sleep(?CRASH_WAIT_SECONDS * 1000),
     erlang:halt().
 

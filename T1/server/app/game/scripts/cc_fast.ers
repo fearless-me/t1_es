@@ -285,9 +285,9 @@ compile(Lang, V) ->
 
 		compile_done(Ms, LogFile, Lang, Target)
 	catch
-		_:Why ->
+		_:Why:St->
 			errorLog("***compile [~p,~p] ERROR ERROR ERROR !!!*** ~ts ~p,~p ~n",
-				[Lang, Target, time_format(), Why,erlang:get_stacktrace()])
+				[Lang, Target, time_format(), Why, St])
 	end,
 
 	menu2(Lang).

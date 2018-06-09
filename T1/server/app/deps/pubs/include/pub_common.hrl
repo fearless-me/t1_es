@@ -28,59 +28,53 @@
 
 
 %%-------------------------------------------------------------------------------
--define(TRY_CATCH(Fun,ErrReason, Format, Args),
+-define(TRY_CATCH(Fun, Err, St, Format, Args),
     try
         Fun
-    catch
-        _:ErrReason ->
-            ?ERROR(Format ++ "Reason=~w,Stacktrace=~p", Args ++ [ErrReason,erlang:get_stacktrace()])
+    catch _:Err:St ->
+        ?ERROR(Format ++ "Reason=~w,Stacktrace=~p", Args ++ [Err, St])
     end).
 
--define(TRY_CATCH(Fun,ErrReason,Tip),
+-define(TRY_CATCH(Fun, Err, St, Tip),
     try
         Fun
-    catch
-        _:ErrReason ->
-            ?ERROR("~ts: Reason=~w,Stacktrace=~p", [Tip,ErrReason,erlang:get_stacktrace()])
+    catch _:Err:St ->
+        ?ERROR("~ts: Reason=~w,Stacktrace=~p", [Tip, Err, St])
     end).
--define(TRY_CATCH(Fun,ErrReason),
+-define(TRY_CATCH(Fun, Err, St),
     try
         Fun
-    catch
-        _:ErrReason ->
-            ?ERROR("Reason=~w,Stacktrace=~p", [ErrReason,erlang:get_stacktrace()])
+    catch _:Err:St ->
+        ?ERROR("Reason=~w,Stacktrace=~p", [Err, St])
     end).
 
--define(TRY_CATCH(Fun), ?TRY_CATCH(Fun,ErrReason)).
+-define(TRY_CATCH(Fun), ?TRY_CATCH(Fun,Err,St)).
 
 %%---------------
--define(TRY_CATCH_RET(Fun, Ret,ErrReason, Format, Args),
+-define(TRY_CATCH_RET(Fun, Ret, Err, St, Format, Args),
     try
         Fun
-    catch
-        _:ErrReason ->
-            ?ERROR(Format ++ "Reason=~w,Stacktrace=~p", Args ++ [ErrReason,erlang:get_stacktrace()]),
-            Ret
+    catch _:Err:St ->
+        ?ERROR(Format ++ "Reason=~w,Stacktrace=~p", Args ++ [Err, St]),
+        Ret
     end).
 
--define(TRY_CATCH_RET(Fun, Ret,ErrReason,Tip),
+-define(TRY_CATCH_RET(Fun, Ret, Err, St, Tip),
     try
         Fun
-    catch
-        _:ErrReason ->
-            ?ERROR("~ts: Reason=~w,Stacktrace=~p", [Tip,ErrReason,erlang:get_stacktrace()]),
-            Ret
+    catch _:Err:St ->
+        ?ERROR("~ts: Reason=~w,Stacktrace=~p", [Tip,Err,St]),
+        Ret
     end).
--define(TRY_CATCH_RET(Fun, Ret, ErrReason),
+-define(TRY_CATCH_RET(Fun, Ret, Err, St),
     try
         Fun
-    catch
-        _:ErrReason ->
-            ?ERROR("Reason=~w,Stacktrace=~p", [ErrReason,erlang:get_stacktrace()]),
-            Ret
+    catch _:Err:St ->
+        ?ERROR("Reason=~w,Stacktrace=~p", [Err,St]),
+        Ret
     end).
 
--define(TRY_CATCH_RET(Fun,Ret), ?TRY_CATCH_RET(Fun, Ret,ErrReason)).
+-define(TRY_CATCH_RET(Fun,Ret), ?TRY_CATCH_RET(Fun, Ret,Err,St)).
 %%---------------
 
 -define(TRY_CATCH_ONLY(Fun),

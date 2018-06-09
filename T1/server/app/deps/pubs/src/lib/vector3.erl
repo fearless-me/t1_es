@@ -12,6 +12,7 @@
 -include("vector3.hrl").
 %% API
 -export([new/3]).
+-export([zero/0]).
 -export([x/1,y/1,z/1]).
 -export([add/2]).
 -export([subtract/2]).
@@ -25,6 +26,9 @@
 -export([dist/1, dist_sq/1]).
 -export([dist/2, dist_sq/2]).
 -export([linear_lerp/3]).
+
+
+zero()-> #vector3{}.
 
 new(X, Y, Z) ->
     #vector3{x = float(X), y = float(Y), z = float(Z)}.

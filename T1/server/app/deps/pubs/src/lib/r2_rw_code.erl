@@ -48,8 +48,8 @@ run() ->
             ]
         ),
         ok
-    catch _:Err ->
-        io:format("~p,~p~n", [Err, erlang:get_stacktrace()])
+    catch _:Err:ST ->
+        io:format("~p,~p~n", [Err, ST])
     end,
     ok.
 

@@ -110,7 +110,7 @@ load_and_save(NeedSave) ->
                     PlayerData#player_data{data_version = nowNano()}
                 )
             catch
-               _ : Reason ->  ?ERROR("save player error ~p",[Reason])
+               _ : Reason : _ST ->  ?ERROR("save player error ~p",[Reason])
             end ;
         #player_data{} ->
             skip;

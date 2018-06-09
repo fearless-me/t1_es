@@ -53,8 +53,8 @@ start() ->
 
         watchdog:wait(),
         ok
-    catch _ : Err ->
-           gcore:halt("start app error ~p, stacktrace ~p", [Err, misc:stacktrace()])
+    catch _ : Err : ST ->
+           gcore:halt("start app error ~p, stacktrace ~p", [Err, ST])
     end,
 
     {ok, SupPid}.
@@ -68,7 +68,7 @@ wrapper({Msg, stdio, Thunk}) ->
 wrapper({Msg, Thunk}) ->
     ?INFO("~s ...", [Msg]),
     try Thunk()
-    catch _ : _Err ->
+    catch _ : _Err : _ST ->
         gcore:halt("run \'~ts\' failed",[Msg])
     end,
     ?INFO("~s done", [Msg]),

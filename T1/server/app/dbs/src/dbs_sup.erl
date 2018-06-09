@@ -62,8 +62,8 @@ wrapper({Msg, Thunk}) ->
     try
         Thunk()
     catch
-        _ : Err  ->
-            ?ERROR("run ~p,error ~p, app crash!!! ",[Thunk, Err]),
+        _ : Err : Stack  ->
+            ?ERROR("run ~p,error ~p, ~p app crash!!! ",[Thunk, Err, Stack]),
             timer:sleep(50000),
             erlang:halt()
     end,

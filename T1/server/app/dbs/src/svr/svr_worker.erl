@@ -52,7 +52,7 @@ mod_init({DBId, SeverType, FromPid}) ->
         ?WARN("server [~p] id[~p],type[~p] [~p] init OK", [GSNode, DBId, SeverType, NameAtom]),
         {ok, #state{db_id = DBId, type = SeverType, from_pid = FromPid, register_name = NameAtom}}
     catch
-        _ : Err ->
+        _ : Err : _ST ->
             ?ERROR("start s[~p],t[~p],node[~p],err[~p]",
                 [DBId, SeverType, erlang:node(FromPid), Err]),
             {stop, exception}

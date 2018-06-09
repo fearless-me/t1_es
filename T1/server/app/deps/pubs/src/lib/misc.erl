@@ -21,7 +21,7 @@
 -export([crc32/1]).
 -export([ceil/1,mod_1/2, floor/1, clamp/3, rand/2]).
 -export([get_value/3]).
--export([stacktrace/0, stacktraceE/0]).
+-export([stacktraceE/0]).
 -export([parse_information_unit/1]).
 -export([register_process/3]).
 -export([create_atom/2]).
@@ -116,7 +116,7 @@ list_to_string_suffix(List, SuffixStr)-> string:join(List, SuffixStr).
 
 %%
 rand(Min, Min)-> Min;
-rand(Min, Max)-> Min + random:uniform(Max - Min).
+rand(Min, Max)-> Min + rand:uniform(Max - Min).
 
 -spec ceil(X) -> integer() when X::number().
 ceil(X) ->
@@ -164,11 +164,8 @@ get_value(Key, Opts, Default) ->
         _ -> Default
     end.
 
-stacktrace()->
-    erlang:get_stacktrace().
-
 stacktraceE()->
-   try erlang:error(callStack) catch _ : _ -> erlang:get_stacktrace() end.
+   try erlang:error(callStack) catch _ : _ : ST -> ST end.
 
 %% Format IPv4-mapped IPv6 addresses as IPv4, since they're what we see
 %% when IPv6 is enabled but not used (i.e. 99% of the time).

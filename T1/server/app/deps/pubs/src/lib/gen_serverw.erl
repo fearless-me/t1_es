@@ -82,13 +82,10 @@ init(Args) ->
     try
         [Module, ArgList] = Args,
         put(?LogicModule, Module),
-        random:seed(os:timestamp()),
         Module:mod_init(ArgList)
-    catch
-        _ : Error ->
-            ?ERROR("module ~p,args ~p,error ~p,st ~p",
-                [get(?LogicModule), Args, Error, misc:stacktrace()]),
-            {stop, Error}
+    catch _ : Error : ST ->
+        ?ERROR("module ~p,args ~p,error ~p,st ~p", [get(?LogicModule), Args, Error, ST]),
+        {stop, Error}
     end
 .
 
@@ -107,9 +104,9 @@ init(Args) ->
 handle_call(Request, From, State) ->
     Module = get(?LogicModule),
     try Module:do_handle_call(Request, From, State)
-    catch T : E ->
-            ?ERROR("call ~w:~p,stack:~p", [T, E, erlang:get_stacktrace()]),
-            {reply, E, State}
+    catch T : E : ST ->
+        ?ERROR("call ~w:~p,stack:~p", [T, E, ST]),
+        {reply, E, State}
     end.
 %%--------------------------------------------------------------------
 %% @private
@@ -125,9 +122,9 @@ handle_call(Request, From, State) ->
 handle_cast(Request, State) ->
     Module = get(?LogicModule),
     try Module:do_handle_cast(Request, State)
-    catch T : E ->
-            ?ERROR("cast ~w:~p,stack:~p", [T, E, erlang:get_stacktrace()]),
-            {noreply, State}
+    catch T : E : ST ->
+        ?ERROR("cast ~w:~p,stack:~p", [T, E, ST]),
+        {noreply, State}
     end.
 
 %%--------------------------------------------------------------------
@@ -142,9 +139,9 @@ handle_cast(Request, State) ->
 handle_info(Info, State) ->
     Module = get(?LogicModule),
     try Module:do_handle_info(Info, State)
-    catch T : E ->
-            ?ERROR("info ~w:~p,stack:~p", [T, E, erlang:get_stacktrace()]),
-            {noreply, State}
+    catch T : E : ST ->
+        ?ERROR("info ~w:~p,stack:~p", [T, E, ST]),
+        {noreply, State}
     end.
 
 %%--------------------------------------------------------------------

@@ -150,13 +150,13 @@ do_apply(TaskOwnerInfo, {Mod, Fun, Args} = MFA) ->
     try
         erlang:apply(Mod, Fun, Args)
     catch
-        error: Value ->
+        error: Value : ST ->
             task_exit(TaskOwnerInfo, MFA,
-                      {Value, erlang:get_stacktrace()});
-        throw: Value ->
+                      {Value, ST});
+        throw: Value : ST ->
             task_exit(TaskOwnerInfo, MFA,
-                      {{nocatch, Value}, erlang:get_stacktrace()});
-        exit: Value ->
+                      {{nocatch, Value}, ST});
+        exit: Value : _ ->
             task_exit(TaskOwnerInfo, MFA, Value)
     end.
 

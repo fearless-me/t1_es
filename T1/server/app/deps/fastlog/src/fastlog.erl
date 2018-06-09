@@ -202,7 +202,7 @@ handle_call(Request, From, State) ->
     try
         call(Request, From, State)
     catch
-        T : E ->
+        T : E : _ST ->
             error_logger:error_report([{T, E}]),
             {reply, ok, State}
     end.
@@ -238,10 +238,9 @@ handle_cast(_Request, State) ->
 handle_info(Info, State) ->
     try
         do_handle_info(Info, State)
-    catch
-        T : E ->
-            error_logger:error_report([{T, E}]),
-            {noreply, State}
+    catch T : E : _ST ->
+        error_logger:error_report([{T, E}]),
+        {noreply, State}
     end.
 
 %%--------------------------------------------------------------------

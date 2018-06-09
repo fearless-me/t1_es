@@ -28,6 +28,12 @@
 
 }).
 
--record(m_player_rw, {aid,uid,sid,status,name}).
+-record(m_player_rw, {
+    aid, uid, sid,
+    name, level, sex, head,
+    race, career,
+    map_id, line, pos,
+    status
+}).
 
 -endif.

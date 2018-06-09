@@ -132,14 +132,14 @@ member_died(Ref) ->
 join_group(Name, Pid) ->
     Ref_Pid = {ref, Pid},
     try _ = ets:update_counter(pg_local_table, Ref_Pid, {3, +1})
-    catch _:_ ->
+    catch _:_:_ ->
             Ref = erlang:monitor(process, Pid),
             true = ets:insert(pg_local_table, {Ref_Pid, Ref, 1}),
             true = ets:insert(pg_local_table, {{ref, Ref}, Pid})
     end,
     Member_Name_Pid = {member, Name, Pid},
     try _ = ets:update_counter(pg_local_table, Member_Name_Pid, {2, +1})
-    catch _:_ ->
+    catch _:_:_ ->
             true = ets:insert(pg_local_table, {Member_Name_Pid, 1}),
             true = ets:insert(pg_local_table, {{pid, Pid, Name}})
     end.
@@ -166,7 +166,7 @@ leave_group(Name, Pid) ->
                 _ ->
                     ok
             end
-    catch _:_ ->
+    catch _:_:_ ->
             ok
     end.
 

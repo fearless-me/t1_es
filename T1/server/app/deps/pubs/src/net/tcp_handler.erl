@@ -29,7 +29,7 @@
 %%%===================================================================
 %%% API
 %%%===================================================================
-active_stop(Reason)->
+active_stop(Reason) ->
     ps:send(self(), active_stop, Reason).
 
 -spec shutdown(Socket, How) -> ok when
@@ -39,11 +39,11 @@ shutdown(Socket, How) ->
     ranch_tcp:shutdown(Socket, How),
     ok.
 
-send_net_msg(DataBinaryList) when is_list(DataBinaryList)->
+send_net_msg(DataBinaryList) when is_list(DataBinaryList) ->
     ps:send(self(), write, DataBinaryList),
     ok.
 
-direct_send_net_msg(Socket, DataBinaryList) when is_list(DataBinaryList)->
+direct_send_net_msg(Socket, DataBinaryList) when is_list(DataBinaryList) ->
     ranch_tcp:send(Socket, DataBinaryList),
     ok.
 %%%===================================================================
@@ -74,23 +74,22 @@ mod_init({Ref, Socket, ranch_tcp, Opts}) ->
 
 
 %%--------------------------------------------------------------------	
-do_handle_call(Request, From,  #state{handler = Handler, cli_data = S} = State) ->
+do_handle_call(Request, From, #state{handler = Handler, cli_data = S} = State) ->
     {Ret, S1} = Handler:on_call_msg(Request, From, S),
     {reply, Ret, State#state{cli_data = S1}}.
 
 %%--------------------------------------------------------------------
 do_handle_info({tcp, Socket, Data},
-    State=#state{socket=Socket, handler = Handler, cli_data = S}
+    State = #state{socket = Socket, handler = Handler, cli_data = S}
 ) ->
     ranch_tcp:setopts(Socket, [{active, once}]),
     try
-        S1 = Handler:on_data(Socket,Data, S),
+        S1 = Handler:on_data(Socket, Data, S),
         {noreply, State#state{cli_data = S1}}
-    catch _:Err ->
-            ranch_tcp:shutdown(Socket, read),
-            ?WARN("~p will be shutdown socket ~p, err ~p, st ~p",
-                [self(), Socket, Err, misc:stacktrace()]),
-            {noreply, State}
+    catch _:Err:ST ->
+        ranch_tcp:shutdown(Socket, read),
+        ?WARN("~p will be shutdown socket ~p, err ~p, st ~p", [self(), Socket, Err, ST]),
+        {noreply, State}
     end;
 do_handle_info(
     {tcp_closed, Socket},
@@ -105,13 +104,13 @@ do_handle_info(
     ?TRY_CATCH(Handler:on_close(Socket, tcp_error, S)),
     {stop, Reason, State};
 do_handle_info(
-    {active_stop,Reason},
-    #state{handler = Handler, socket = Socket, cli_data = S}=State
+    {active_stop, Reason},
+    #state{handler = Handler, socket = Socket, cli_data = S} = State
 ) ->
     ?TRY_CATCH(Handler:on_close(Socket, Reason, S)),
     {stop, normal, State};
-do_handle_info({write,DataBinaryList},
-    #state{socket = Socket}=State
+do_handle_info({write, DataBinaryList},
+    #state{socket = Socket} = State
 ) ->
     ranch_tcp:send(Socket, DataBinaryList),
     {noreply, State};
@@ -158,9 +157,8 @@ handle_call(Request, From, State) ->
     try
         do_handle_call(Request, From, State)
     catch
-        T : E ->
-            ?ERROR("call ~w:~w,stack:~p",
-                [T, E, erlang:get_stacktrace()]),
+        T : E : ST->
+            ?ERROR("call ~w:~w,stack:~p", [T, E, ST]),
             {reply, ok, State}
     end.
 %%--------------------------------------------------------------------
@@ -178,9 +176,9 @@ handle_cast(Request, State) ->
     try
         do_handle_cast(Request, State)
     catch
-        T : E ->
+        T : E : ST ->
             ?ERROR("cast ~w:~w,stack:~p",
-                [T, E, erlang:get_stacktrace()]),
+                [T, E, ST]),
             {noreply, State}
     end.
 
@@ -197,9 +195,9 @@ handle_info(Info, State) ->
     try
         do_handle_info(Info, State)
     catch
-        T : E ->
+        T : E : ST ->
             ?ERROR("info ~w:~w,stack:~p",
-                [T, E, erlang:get_stacktrace()]),
+                [T, E, ST]),
             {noreply, State}
     end.
 

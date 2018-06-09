@@ -54,7 +54,7 @@ handle(#pk_GS2U_GotoNewMap{ map_id = DestMapID, x = X, y = Y} = Msg) ->
     lib_player_priv:goto_new_map(DestMapID, vector3:new(X, 0, Y)),
     ok;
 handle(#pk_U2GS_GetPlayerInitData{}) ->
-    lib_player_priv:send(#pk_GS2U_GetPlayerInitDataEnd{}),
+    lib_player_base:send_init_data(),
     ok;
 handle(Msg) ->
     ?DEBUG("~p", [Msg]),

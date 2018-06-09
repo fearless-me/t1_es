@@ -15,13 +15,13 @@
 -export([start_link/1, start_link/3]).
 
 -export([init/1, handle_call/3, handle_cast/2, handle_info/2,
-         terminate/2, code_change/3]).
+    terminate/2, code_change/3]).
 
 -export([log_ps_info/0]).
 -export([get_total_memory/0, get_vm_limit/0,
-         get_check_interval/0, set_check_interval/1,
-         get_vm_memory_high_watermark/0, set_vm_memory_high_watermark/1,
-         get_memory_limit/0]).
+    get_check_interval/0, set_check_interval/1,
+    get_vm_memory_high_watermark/0, set_vm_memory_high_watermark/1,
+    get_memory_limit/0]).
 
 %% for tests
 -export([parse_line_linux/1]).
@@ -39,13 +39,13 @@
 -define(DEFAULT_VM_MEMORY_HIGH_WATERMARK, 0.4).
 
 -record(state, {total_memory,
-                memory_limit,
-                memory_config_limit,
-                timeout,
-                timer,
-                alarmed,
-                alarm_funs
-               }).
+    memory_limit,
+    memory_config_limit,
+    timeout,
+    timer,
+    alarmed,
+    alarm_funs
+}).
 
 %%----------------------------------------------------------------------------
 
@@ -54,7 +54,7 @@
 -type(vm_memory_high_watermark() :: (float() | {'absolute', integer() | string()})).
 -spec(start_link/1 :: (float()) -> rabbit_types:ok_pid_or_error()).
 -spec(start_link/3 :: (float(), fun ((any()) -> 'ok'),
-                       fun ((any()) -> 'ok')) -> rabbit_types:ok_pid_or_error()).
+    fun ((any()) -> 'ok')) -> rabbit_types:ok_pid_or_error()).
 -spec(get_total_memory/0 :: () -> (non_neg_integer() | 'unknown')).
 -spec(get_vm_limit/0 :: () -> non_neg_integer()).
 -spec(get_check_interval/0 :: () -> non_neg_integer()).
@@ -72,11 +72,9 @@
 get_total_memory() ->
     try
         get_total_memory(os:type())
-    catch _:Error ->
-            ?WARN(
-              "Failed to get total system memory: ~n~p~n~p~n",
-              [Error, erlang:get_stacktrace()]),
-            unknown
+    catch _:Error:ST ->
+        ?WARN("Failed to get total system memory: ~n~p~n~p~n", [Error, ST]),
+        unknown
     end.
 
 get_vm_limit() -> get_vm_limit(os:type()).
@@ -92,7 +90,7 @@ get_vm_memory_high_watermark() ->
 
 set_vm_memory_high_watermark(Fraction) ->
     gen_server:call(?MODULE, {set_vm_memory_high_watermark, Fraction},
-                    infinity).
+        infinity).
 
 get_memory_limit() ->
     gen_server:call(?MODULE, get_memory_limit, infinity).
@@ -102,24 +100,24 @@ get_memory_limit() ->
 %%----------------------------------------------------------------------------
 start_link(MemFraction) ->
     start_link(MemFraction,
-               fun alarm_handler:set_alarm/1, fun alarm_handler:clear_alarm/1).
+        fun alarm_handler:set_alarm/1, fun alarm_handler:clear_alarm/1).
 
 start_link(MemFraction, AlarmSet, AlarmClear) ->
     gen_server:start_link({local, ?SERVER}, ?MODULE,
-                          [MemFraction, {AlarmSet, AlarmClear}], []).
+        [MemFraction, {AlarmSet, AlarmClear}], []).
 
 init([MemFraction, AlarmFuns]) ->
     TRef = start_timer(?DEFAULT_MEMORY_CHECK_INTERVAL),
     start_portprogram(os:type()),
-    State = #state { timeout    = ?DEFAULT_MEMORY_CHECK_INTERVAL,
-                     timer      = TRef,
-                     alarmed    = false,
-                     alarm_funs = AlarmFuns },
+    State = #state{timeout = ?DEFAULT_MEMORY_CHECK_INTERVAL,
+        timer = TRef,
+        alarmed = false,
+        alarm_funs = AlarmFuns},
     timer:send_interval(?TICK_LOG, tick),
     {ok, set_mem_limits(State, MemFraction)}.
 
 handle_call(get_vm_memory_high_watermark, _From,
-	    #state{memory_config_limit = MemLimit} = State) ->
+    #state{memory_config_limit = MemLimit} = State) ->
     {reply, MemLimit, State};
 
 handle_call({set_vm_memory_high_watermark, MemLimit}, _From, State) ->
@@ -160,8 +158,8 @@ code_change(_OldVsn, State, _Extra) ->
 %%----------------------------------------------------------------------------
 %% Server Internals
 %%----------------------------------------------------------------------------
-start_portprogram( {win32, _OSname})->
-    {ok,_} = os_mon_sysinfo:start_link(),
+start_portprogram({win32, _OSname}) ->
+    {ok, _} = os_mon_sysinfo:start_link(),
     ok;
 start_portprogram(_Any) -> ok.
 
@@ -170,9 +168,9 @@ set_mem_limits(State, MemLimit) ->
     case erlang:system_info(wordsize) of
         4 ->
             ?WARN(
-              "You are using a 32-bit version of Erlang: you may run into "
-              "memory address~n"
-              "space exhaustion or statistic counters overflow.~n");
+                "You are using a 32-bit version of Erlang: you may run into "
+                "memory address~n"
+                "space exhaustion or statistic counters overflow.~n");
         _ ->
             ok
     end,
@@ -180,13 +178,13 @@ set_mem_limits(State, MemLimit) ->
         case get_total_memory() of
             unknown ->
                 case State of
-                    #state { total_memory = undefined,
-                             memory_limit = undefined } ->
+                    #state{total_memory = undefined,
+                        memory_limit = undefined} ->
                         ?WARN(
-                          "Unknown total memory size for your OS ~p. "
-                          "Assuming memory size is ~pMB.~n",
-                          [os:type(),
-                           trunc(?MEMORY_SIZE_FOR_UNKNOWN_OS/?ONE_MB)]);
+                            "Unknown total memory size for your OS ~p. "
+                            "Assuming memory size is ~pMB.~n",
+                            [os:type(),
+                                trunc(?MEMORY_SIZE_FOR_UNKNOWN_OS / ?ONE_MB)]);
                     _ ->
                         ok
                 end,
@@ -197,20 +195,20 @@ set_mem_limits(State, MemLimit) ->
         case get_vm_limit() of
             Limit when Limit < TotalMemory ->
                 ?WARN(
-                  "Only ~pMB of ~pMB memory usable due to "
-                  "limited address space.~n"
-                  "Crashes due to memory exhaustion are possible",
-                  [trunc(V/?ONE_MB) || V <- [Limit, TotalMemory]]),
+                    "Only ~pMB of ~pMB memory usable due to "
+                    "limited address space.~n"
+                    "Crashes due to memory exhaustion are possible",
+                    [trunc(V / ?ONE_MB) || V <- [Limit, TotalMemory]]),
                 Limit;
             _ ->
                 TotalMemory
         end,
     MemLim = interpret_limit(parse_mem_limit(MemLimit), UsableMemory),
     ?INFO("Memory limit set to ~pMB of ~pMB total.",
-                          [trunc(MemLim/?ONE_MB), trunc(TotalMemory/?ONE_MB)]),
-    internal_update(State #state { total_memory    = TotalMemory,
-                                   memory_limit    = MemLim,
-                                   memory_config_limit = MemLimit}).
+        [trunc(MemLim / ?ONE_MB), trunc(TotalMemory / ?ONE_MB)]),
+    internal_update(State#state{total_memory = TotalMemory,
+        memory_limit = MemLim,
+        memory_config_limit = MemLimit}).
 
 interpret_limit({'absolute', MemLim}, UsableMemory) ->
     erlang:min(MemLim, UsableMemory);
@@ -231,24 +229,24 @@ parse_mem_limit(_) ->
     ?DEFAULT_VM_MEMORY_HIGH_WATERMARK.
 
 
-internal_update(State = #state { memory_limit = MemLimit,
-                                 alarmed      = Alarmed,
-                                 alarm_funs   = {AlarmSet, AlarmClear} }) ->
+internal_update(State = #state{memory_limit = MemLimit,
+    alarmed = Alarmed,
+    alarm_funs = {AlarmSet, AlarmClear}}) ->
     MemUsed = erlang:memory(total),
     NewAlarmed = MemUsed > MemLimit,
     case {Alarmed, NewAlarmed} of
         {false, true} -> emit_update_info(set, MemUsed, MemLimit),
-                         AlarmSet({{resource_limit, memory, node()}, []});
+            AlarmSet({{resource_limit, memory, node()}, []});
         {true, false} -> emit_update_info(clear, MemUsed, MemLimit),
-                         AlarmClear({resource_limit, memory, node()});
-        _             -> ok
+            AlarmClear({resource_limit, memory, node()});
+        _ -> ok
     end,
-    State #state {alarmed = NewAlarmed}.
+    State#state{alarmed = NewAlarmed}.
 
 emit_update_info(AlarmState, MemUsed, MemLimit) ->
     ?INFO(
-      "vm_memory_high_watermark ~p. Memory used:~p allowed:~p~n",
-      [AlarmState, MemUsed, MemLimit]).
+        "vm_memory_high_watermark ~p. Memory used:~p allowed:~p~n",
+        [AlarmState, MemUsed, MemLimit]).
 
 start_timer(Timeout) ->
     {ok, TRef} = timer:send_interval(Timeout, update),
@@ -256,19 +254,19 @@ start_timer(Timeout) ->
 
 %% According to http://msdn.microsoft.com/en-us/library/aa366778(VS.85).aspx
 %% Windows has 2GB and 8TB of address space for 32 and 64 bit accordingly.
-get_vm_limit({win32,_OSname}) ->
+get_vm_limit({win32, _OSname}) ->
     case erlang:system_info(wordsize) of
-        4 -> 2*1024*1024*1024;          %% 2 GB for 32 bits  2^31
-        8 -> 8*1024*1024*1024*1024      %% 8 TB for 64 bits  2^42
+        4 -> 2 * 1024 * 1024 * 1024;          %% 2 GB for 32 bits  2^31
+        8 -> 8 * 1024 * 1024 * 1024 * 1024      %% 8 TB for 64 bits  2^42
     end;
 
 %% On a 32-bit machine, if you're using more than 2 gigs of RAM you're
 %% in big trouble anyway.
 get_vm_limit(_OsType) ->
     case erlang:system_info(wordsize) of
-        4 -> 2*1024*1024*1024;          %% 2 GB for 32 bits  2^31
-        8 -> 256*1024*1024*1024*1024    %% 256 TB for 64 bits 2^48
-             %%http://en.wikipedia.org/wiki/X86-64#Virtual_address_space_details
+        4 -> 2 * 1024 * 1024 * 1024;          %% 2 GB for 32 bits  2^31
+        8 -> 256 * 1024 * 1024 * 1024 * 1024    %% 256 TB for 64 bits 2^48
+        %%http://en.wikipedia.org/wiki/X86-64#Virtual_address_space_details
     end.
 
 %%----------------------------------------------------------------------------
@@ -278,35 +276,35 @@ cmd(Command) ->
     Exec = hd(string:tokens(Command, " ")),
     case os:find_executable(Exec) of
         false -> throw({command_not_found, Exec});
-        _     -> os:cmd(Command)
+        _ -> os:cmd(Command)
     end.
 
 %% get_total_memory(OS) -> Total
 %% Windows and Freebsd code based on: memsup:get_memory_usage/1
 %% Original code was part of OTP and released under "Erlang Public License".
 
-get_total_memory({unix,darwin}) ->
+get_total_memory({unix, darwin}) ->
     File = cmd("/usr/bin/vm_stat"),
     Lines = string:tokens(File, "\n"),
     Dict = dict:from_list(lists:map(fun parse_line_mach/1, Lines)),
     [PageSize, Inactive, Active, Free, Wired] =
         [dict:fetch(Key, Dict) ||
             Key <- [page_size, 'Pages inactive', 'Pages active', 'Pages free',
-                    'Pages wired down']],
+                'Pages wired down']],
     PageSize * (Inactive + Active + Free + Wired);
 
-get_total_memory({unix,freebsd}) ->
-    PageSize  = sysctl("vm.stats.vm.v_page_size"),
+get_total_memory({unix, freebsd}) ->
+    PageSize = sysctl("vm.stats.vm.v_page_size"),
     PageCount = sysctl("vm.stats.vm.v_page_count"),
     PageCount * PageSize;
 
-get_total_memory({unix,openbsd}) ->
+get_total_memory({unix, openbsd}) ->
     sysctl("hw.usermem");
 
-get_total_memory({win32,_OSname}) ->
-    [Result|_] = os_mon_sysinfo:get_mem_info(),
+get_total_memory({win32, _OSname}) ->
+    [Result | _] = os_mon_sysinfo:get_mem_info(),
     {ok, [_MemLoad, TotPhys, _AvailPhys, _TotPage, _AvailPage, _TotV, _AvailV],
-     _RestStr} =
+        _RestStr} =
         io_lib:fread("~d~d~d~d~d~d~d", Result),
     TotPhys;
 
@@ -359,9 +357,9 @@ parse_line_linux(Line) ->
                 {K, V, Unit}
         end,
     Value1 = case UnitRest of
-        []     -> list_to_integer(Value); %% no units
-        ["kB"] -> list_to_integer(Value) * 1024
-    end,
+                 [] -> list_to_integer(Value); %% no units
+                 ["kB"] -> list_to_integer(Value) * 1024
+             end,
     {list_to_atom(Name), Value1}.
 
 %% A line looks like "Memory size: 1024 Megabytes"
@@ -389,10 +387,10 @@ parse_line_aix(Line) ->
     [Value | NameWords] = string:tokens(Line, " "),
     Name = string:join(NameWords, " "),
     {list_to_atom(Name),
-     case lists:member($., Value) of
-         true  -> trunc(list_to_float(Value));
-         false -> list_to_integer(Value)
-     end}.
+        case lists:member($., Value) of
+            true -> trunc(list_to_float(Value));
+            false -> list_to_integer(Value)
+        end}.
 
 sysctl(Def) ->
     list_to_integer(cmd("/sbin/sysctl -n " ++ Def) -- "\n").
@@ -411,18 +409,18 @@ read_proc_file(File) ->
 read_proc_file(IoDevice, Acc) ->
     case file:read(IoDevice, ?BUFFER_SIZE) of
         {ok, Res} -> read_proc_file(IoDevice, [Res | Acc]);
-        eof       -> Acc
+        eof -> Acc
     end.
 
 
--define(KIB,(1024)).
--define(MIB,(?KIB*1024)).
--define(GIB,(?MIB*1024)).
+-define(KIB, (1024)).
+-define(MIB, (?KIB * 1024)).
+-define(GIB, (?MIB * 1024)).
 mem2str(Mem) ->
-    if Mem > ?GIB -> io_lib:format("~.3fG",[Mem/?GIB]);
-        Mem > ?MIB -> io_lib:format("~.3fM",[Mem/?MIB]);
-        Mem > ?KIB -> io_lib:format("~.3fK",[Mem/?KIB]);
-        Mem >= 0 -> io_lib:format("~.1fB",[Mem/1.0])
+    if Mem > ?GIB -> io_lib:format("~.3fG", [Mem / ?GIB]);
+        Mem > ?MIB -> io_lib:format("~.3fM", [Mem / ?MIB]);
+        Mem > ?KIB -> io_lib:format("~.3fK", [Mem / ?KIB]);
+        Mem >= 0 -> io_lib:format("~.1fB", [Mem / 1.0])
     end.
 
 log_ps_info() ->
@@ -441,33 +439,32 @@ log_ps_info() ->
 
     PSList = erlang:processes(),
 
-    ProcessesProplist =  [ [ {pid,erlang:pid_to_list(P)} | process_info_items(P) ] || P <- PSList ],
+    ProcessesProplist = [[{pid, erlang:pid_to_list(P)} | process_info_items(P)] || P <- PSList],
 
     Fun =
-        fun(L,AccIn) ->
+        fun(L, AccIn) ->
             try
-                Pid = proplists:get_value(pid,L),
-                RegName = case proplists:get_value(registered_name,L) of
+                Pid = proplists:get_value(pid, L),
+                RegName = case proplists:get_value(registered_name, L) of
                               [] ->
                                   "null";
                               V ->
                                   V
                           end,
-                Red = proplists:get_value(reductions,L),
-                MQL = proplists:get_value(message_queue_len,L),
-                Mem = proplists:get_value(memory,L),
-                Heap = proplists:get_value(heap_size,L),
-                Stack = proplists:get_value(stack_size,L),
-                TotalHeap = proplists:get_value(total_heap_size,L),
-                CF = proplists:get_value(current_stacktrace,L),
-     
-                [{Pid,RegName,Red,MQL,Mem,TotalHeap, Heap, Stack, cf_parse(CF, "")} | AccIn]
-            catch
-                _ : _ ->
+                Red = proplists:get_value(reductions, L),
+                MQL = proplists:get_value(message_queue_len, L),
+                Mem = proplists:get_value(memory, L),
+                Heap = proplists:get_value(heap_size, L),
+                Stack = proplists:get_value(stack_size, L),
+                TotalHeap = proplists:get_value(total_heap_size, L),
+                CF = proplists:get_value(current_stacktrace, L),
+
+                [{Pid, RegName, Red, MQL, Mem, TotalHeap, Heap, Stack, cf_parse(CF, "")} | AccIn]
+            catch _ : _ : _ ->
                     AccIn
             end
         end,
-    PPList = lists:foldl(Fun,[],ProcessesProplist),
+    PPList = lists:foldl(Fun, [], ProcessesProplist),
     Str1 = log_sort_mqueue(PPList),
     Str2 = log_sort_memory(PPList),
     ?INFO("~n~nProcess: total ~p(RQ:~p) using:~s(~s allocated) nodes:~p~n"
@@ -476,7 +473,7 @@ log_ps_info() ->
     "Row      Pid                 RegName                       Reductions     MQueue(*)      Memory           TotalHeap        Heap             Stack            current_stacktrace~n~ts"
     "SortByMem:~n"
     "Row      Pid                 RegName                       Reductions     MQueue         Memory(*)        TotalHeap        Heap             Stack            current_stacktrace~n~ts",
-        [PS_Count,RQ,mem2str(ProcessUsed),mem2str(ProcessTotal),nodes(),SystemMem,AtomUsedMem,AtomMem,BinMem,CodeMem,EtsMem,Str1,Str2]),
+        [PS_Count, RQ, mem2str(ProcessUsed), mem2str(ProcessTotal), nodes(), SystemMem, AtomUsedMem, AtomMem, BinMem, CodeMem, EtsMem, Str1, Str2]),
 
     %% 	[{PsPid,RegisterName,_,_,_,PD,_}|_] = List,
 %% 	PDKeyList = [Key || {Key,_} <- PD],
@@ -485,26 +482,26 @@ log_ps_info() ->
 
 cf_parse([], Acc) ->
     Acc;
-cf_parse([{_M,F,Arti,[{_,File},{_, Line} | _]} | Left], Acc) ->
+cf_parse([{_M, F, Arti, [{_, File}, {_, Line} | _]} | Left], Acc) ->
     NewAcc = io_lib:format("~ts:~p ~p/~p|",
         [filename:basename(File), Line, F, Arti]) ++ Acc,
     cf_parse(Left, NewAcc).
 
 log_sort_mqueue(PPList) ->
-    List = lists:reverse(lists:keysort(4,PPList)),
+    List = lists:reverse(lists:keysort(4, PPList)),
     log_sort_format(List).
 
 log_sort_memory(PPList) ->
-    List = lists:reverse(lists:keysort(5,PPList)),
+    List = lists:reverse(lists:keysort(5, PPList)),
     log_sort_format(List).
 
-log_sort_format(List)->
+log_sort_format(List) ->
     List2 = lists:reverse(lists:sublist(List, 15)),
     {_, Str} = lists:foldl(
-        fun({Pid,RegName,Red,MQL,Mem,TotalHeap, Heap, Stack, ST}, {N, AccIn}) ->
-            {N-1, io_lib:format("~-9w~-20ts~-30ts~-15w~-15w~-17ts~-17ts~-17ts~-17ts~ts~n",
-                [N, Pid,RegName,Red,MQL,mem2str(Mem),mem2str(TotalHeap),mem2str(Heap),mem2str(Stack),ST]) ++ AccIn}
-        end, {15,""}, List2),
+        fun({Pid, RegName, Red, MQL, Mem, TotalHeap, Heap, Stack, ST}, {N, AccIn}) ->
+            {N - 1, io_lib:format("~-9w~-20ts~-30ts~-15w~-15w~-17ts~-17ts~-17ts~-17ts~ts~n",
+                [N, Pid, RegName, Red, MQL, mem2str(Mem), mem2str(TotalHeap), mem2str(Heap), mem2str(Stack), ST]) ++ AccIn}
+        end, {15, ""}, List2),
     Str.
 
 process_info_items(P) ->

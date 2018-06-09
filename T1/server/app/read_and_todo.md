@@ -29,7 +29,7 @@
 * bak    
 * config    
 * core    
-     ```galarm.erl ``` 用于一些阈值报警数据初始化和临时存储    
+     > ```galarm.erl ```   用于一些阈值报警数据初始化和临时存储    
      ```gcache.erl ``` 管理所有内存数据   
      ```gconf.erl ```  配置文件   
      ```gcore.erl ```  核心代码    
@@ -42,7 +42,7 @@
      ```watchdog.erl ```     看门狗  
 
 * db  
-     ```db_handler.erl ``` 所有db消息都会在这里处理  
+    > ```db_handler.erl ``` 所有db消息都会在这里处理  
      ```db_mgr.erl ```     一个数据库对应一个mgr  
      ```db_mgr_sup.erl ```  
      ```db_proxy.erl ```   加载所有数据的配置，并创建对应的Mgr，分发数据库处理消息  
@@ -51,11 +51,11 @@
      ```db_sup.erl ```  
 
 * hook  
-    ```hook_map.erl ```  地图事件拦截 map otp调用  
+    >```hook_map.erl ```  地图事件拦截 map otp调用  
     ```hook_player.erl ``` 玩家事件拦截  player otp
 
 * lib  
-     ```lib_battle.erl ``` 战斗模块 map otp调用   
+     >```lib_battle.erl ``` 战斗模块 map otp调用   
      ```lib_db.erl ```      数据库对外接口，任何逻辑模块可调用    
      ```lib_login.erl ```   登录逻辑 login otp调用  
      ```lib_map_priv.erl ``` 地图逻辑模块 map otp调用  
@@ -79,7 +79,7 @@
 * mapcfgs  
   
 * mod  
-     ```mod_broadcast.erl ``` 广播otp    
+     >```mod_broadcast.erl ``` 广播otp    
      ```mod_login.erl ```    login otp    
      ```mod_map.erl ```       map otp    
      ```mod_map_creator.erl ```  初始化所有地图信息的otp  

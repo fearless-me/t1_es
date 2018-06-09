@@ -90,7 +90,7 @@ do_write(Fd, Time, Type, Format, Args) ->
     try
         M = io_lib:format(Format, Args),
         file:write_file(Fd, M, [append])
-    catch _:Error ->
+    catch _:Error:_ST ->
         ?ERROR("log error ~p ~p ~p", [Error, Format, Args])
     end.
 

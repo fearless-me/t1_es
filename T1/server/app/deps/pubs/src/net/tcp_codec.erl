@@ -41,8 +41,8 @@ encode(Msg) ->
         MsgDataList = netmsg:encode(Msg),
         IoListBytes = erlang:iolist_size(MsgDataList),
         compress(ComBytes, IoListBytes, MsgDataList, HeaderSize)
-    catch _ : Err ->
-        ?ERROR("encode msg ~p, error ~p stack ~p",[Msg, Err, misc:stacktrace()])
+    catch _ : Err : ST ->
+        ?ERROR("encode msg ~p, error ~p stack ~p",[Msg, Err, ST])
     end.
 
 compress(ComBytes, IoListBytes, IoList, HeaderSize) when ComBytes =< 0; ComBytes > IoListBytes->
@@ -120,8 +120,7 @@ parse_msg(#net_conf{
                         ErrorMsg = io_lib:format("Error Msg[~p][~ts] Len:~p",
                             [Cmd, netmsgCmdStr:getNetMsgCmdStr(Cmd), Len]),
                         {error, MsgByteSize, ErrorMsg}
-                    catch
-                        _:_ ->
+                    catch _:_:_ ->
                             ErrorMsg1 = io_lib:format("Error Msg Len:~p", [Len]),
                             {error, MsgByteSize, ErrorMsg1}
                     end

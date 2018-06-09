@@ -183,7 +183,7 @@ compare_hrl_files(State) ->
             {X, LastMod}
         end,
     NewHrlFileLastMod = lists:usort([F(X) || X <- State#state.hrl_files]),
-    
+
     %% Compare to previous results, if there are changes, then recompile src files that depends
     process_hrl_file_lastmod(State#state.hrl_file_lastmod, NewHrlFileLastMod, State#state.src_files, State#state.compile_opts),
 
@@ -216,8 +216,8 @@ process_src_file_incs(SrcFile) ->
         {ok, Forms} ->
             do_process_src_file_incs(SrcFile, Forms);
         Error ->
-            ?ERROR("epp_dodger parse_file ~ts failed, ~p",[SrcFile, Error])
-    catch _:_ -> skip
+            ?ERROR("epp_dodger parse_file ~ts failed, ~p", [SrcFile, Error])
+    catch _:_:_ -> skip
     end.
 
 do_process_src_file_incs(SrcFile, Forms) ->
@@ -231,7 +231,7 @@ do_process_src_file_incs(SrcFile, Forms) ->
         [#hrl_file_srcs{ref_files = OldIncFiles} | _] ->
             DiffIncFiles = lists:subtract(OldIncFiles, IncludeFiles),
             lists:foreach(
-                fun(IncFile)->
+                fun(IncFile) ->
                     case ets:lookup(?INC_REF_SRC_ETS, IncFile) of
                         [] -> skip;
                         [#hrl_file_srcs{ref_files = SrcFileList} | _] ->
@@ -264,7 +264,7 @@ do_process_src_file_incs(SrcFile, Forms) ->
                             ets:update_element(
                                 ?INC_REF_SRC_ETS,
                                 IncludeFile,
-                                {#hrl_file_srcs.ref_files, [ SrcFile | SrcFiles]}
+                                {#hrl_file_srcs.ref_files, [SrcFile | SrcFiles]}
                             )
                     end
             end
@@ -288,10 +288,10 @@ src_file_include(HrlFiles, [{tree, attribute, _, {attribute, _, [{_, _, IncludeF
 src_file_include(HrlFiles, [_SomeForm | Forms]) ->
     src_file_include(HrlFiles, Forms).
 
-wait_pid_go_die(true, Pid)->
+wait_pid_go_die(true, Pid) ->
     timer:sleep(1),
     wait_pid_go_die(is_process_alive(Pid), Pid);
-wait_pid_go_die(_, _Pid)-> ok.
+wait_pid_go_die(_, _Pid) -> ok.
 
 wait_src_parse_finish(0) ->
     skip;
@@ -509,7 +509,7 @@ format_error(Module, ErrorDescription) ->
 
 who_include(HrlFile, _SrcFiles) ->
     case ets:lookup(?INC_REF_SRC_ETS, filename:basename(HrlFile)) of
-       [#hrl_file_srcs{ref_files = SrcFiles} | _] -> SrcFiles;
+        [#hrl_file_srcs{ref_files = SrcFiles} | _] -> SrcFiles;
         _ -> []
     end.
 %%who_include(HrlFile, SrcFiles) ->
@@ -619,11 +619,9 @@ init(Args) -> mod_init(Args).
 handle_call(Request, From, State) ->
     try
         do_handle_call(Request, From, State)
-    catch
-        T : E ->
-            ?ERROR("call ~w:~w,stack:~p",
-                [T, E, erlang:get_stacktrace()]),
-            {reply, ok, State}
+    catch T : E : ST ->
+        ?ERROR("call ~w:~w,stack:~p", [T, E, ST]),
+        {reply, ok, State}
     end.
 %%--------------------------------------------------------------------
 %% @private
@@ -639,11 +637,9 @@ handle_call(Request, From, State) ->
 handle_cast(Request, State) ->
     try
         do_handle_cast(Request, State)
-    catch
-        T : E ->
-            ?ERROR("cast ~w:~w,stack:~p",
-                [T, E, erlang:get_stacktrace()]),
-            {noreply, State}
+    catch T : E : ST ->
+        ?ERROR("cast ~w:~w,stack:~p", [T, E, ST]),
+        {noreply, State}
     end.
 
 %%--------------------------------------------------------------------
@@ -659,9 +655,8 @@ handle_info(Info, State) ->
     try
         do_handle_info(Info, State)
     catch
-        T : E ->
-            ?ERROR("info ~w:~w,stack:~p",
-                [T, E, erlang:get_stacktrace()]),
+        T : E : ST ->
+            ?ERROR("info ~w:~w,stack:~p", [T, E, ST]),
             {noreply, State}
     end.
 

@@ -188,6 +188,6 @@ check_idle_action() ->
             true -> mod_player:stop(net_heartbeat_stop);
             false -> check_idle_msg()
         end
-    catch _: _ ->
+    catch _ : _ : _ ->
         mod_player:stop(net_heartbeat_stop)
     end.

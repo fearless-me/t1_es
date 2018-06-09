@@ -166,9 +166,8 @@ loaded_player(undefined) ->
     lib_player_rw:set_uid(0),
     ok;
 loaded_player(Player) ->
-    #p_player{uid = Uid, aid = Aid, sid = Sid} = Player,
-    lib_player_rw:set_uid(Uid),
-    lib_player_rw:set_sid(Sid),
+    #p_player{uid = Uid, aid = Aid} = Player,
+    lib_player_base:init(Player),
     lib_player_rw:set_status(?PS_WAIT_ENTER),
     lib_mem:new_player(self(), mod_player:socket(), Player),
     lib_mem:add_sock(Aid, Uid, self(), mod_player:socket()),
@@ -178,7 +177,10 @@ loaded_player(Player) ->
 
 %%-------------------------------------------------------------------
 add_to_world(Player) ->
-    #p_player{uid = Uid, map_id = Mid, x = X, y = Y} = Player,
+    #p_player{
+        uid = Uid, map_id = Mid, x = X, y = Y,
+        old_map_id = OldMid, old_line = OldLine, old_x = OX, old_y = OY
+    } = Player,
     
     Ack = mod_map_creator:player_online(
         Mid,
@@ -190,20 +192,7 @@ add_to_world(Player) ->
         }
     ),
 
-    #r_change_map_ack{map_pid =MPid, line_id = LineId, pos = CurPos} = Ack,
-    lib_mem:player_update(
-        Uid,
-        [
-            {#m_player.old_mid, Mid},
-            {#m_player.mid, Mid},
-            {#m_player.line, LineId},
-            {#m_player.mpid, MPid},
-            {#m_player.pos, CurPos}
-        ]
-    ),
-    lib_player_rw:set_status(?PS_GAME),
-    ?WARN("player ~p enter map ~p line ~p",[Uid, Mid, LineId]),
-    ?DEBUG("take over online:~w", [Ack]),
+    do_change_map_ack(OldMid, OldLine, vector3:new(OX, 0, OY), Ack),
     ok.
 
 %%-------------------------------------------------------------------
@@ -243,30 +232,46 @@ goto_new_map_1(DestMapID, TarPos) ->
         }
     ),
 
-    #r_change_map_ack{map_id = Mid1, line_id = Line1, map_pid = MPid1} = Ack,
+    do_change_map_ack(Mid, Line, Pos, Ack),
+    ok.
+
+
+do_change_map_ack(
+    OldMid, OldLineId, OldPos,
+    #r_change_map_ack{
+        error = 0,
+        map_id = Mid, line_id = Line,
+        map_pid = MPid , pos = Pos
+}) ->
+    Uid = lib_player_rw:get_uid(),
     lib_mem:player_update(
         Uid,
         [
-            {#m_player.old_mid, Mid},
-            {#m_player.old_line, Line},
-            {#m_player.old_pos, Pos},
-            {#m_player.mid, Mid1},
-            {#m_player.line, Line1},
-            {#m_player.mpid, MPid1},
-            {#m_player.pos, TarPos}
+            {#m_player.old_mid, OldMid},
+            {#m_player.old_line, OldLineId},
+            {#m_player.old_pos, OldPos},
+            {#m_player.mid, Mid},
+            {#m_player.line, Line},
+            {#m_player.mpid, MPid},
+            {#m_player.pos, Pos}
         ]
     ),
-    ?DEBUG("go_to_new_map(~p, ~w) -> ~w", [DestMapID, Pos, Ack]),
-
-    ?WARN("player ~p enter map ~p line ~p",[Uid, Mid1, Line1]),
-    hook_player:on_change_map(Mid, Mid1),
+    ?WARN("player ~p enter map ~p line ~p",[Uid, Mid, Line]),
+    hook_player:on_change_map(Mid, Mid),
 
     lib_player_rw:set_status(?PS_GAME),
 
     mod_map:player_move_(
-        MPid1,
+        MPid,
         #r_player_start_move_req{uid = Uid, tar_pos = vector3:new(400.6, 0, 358.9)}
     ),
+    ok;
+do_change_map_ack(
+    OldMid, OldLineId, _OldPos,
+    #r_change_map_ack{error = Err, map_id = Mid}
+)->
+    ?ERROR("player ~p change from map ~p:~p to map ~p failed with ~p",
+        [lib_player_rw:get_uid(), OldMid, OldLineId, Mid, Err]),
     ok.
 
 %%%-------------------------------------------------------------------
@@ -280,9 +285,9 @@ goto_to_pre_map() ->
 
 %%%-------------------------------------------------------------------
 offline(Reason) ->
-    ?TRY_CATCH(offline_1(lib_player_rw:get_status()), Err0),
-    ?TRY_CATCH(lib_mem:del_sock(lib_player_rw:get_uid()), Err2),
-    ?TRY_CATCH(flush_cache(Reason), Err3),
+    ?TRY_CATCH(offline_1(lib_player_rw:get_status()), Err0, St0),
+    ?TRY_CATCH(lib_mem:del_sock(lib_player_rw:get_uid()), Err1, St1),
+    ?TRY_CATCH(flush_cache(Reason), Err2, St2),
     ok.
 
 offline_1(Status)
