@@ -76,9 +76,9 @@ do_handle_info(load_player_data, {_Aid, Uid}, FromPid, PoolId) ->
     Sql = db_sql:sql(load_player),
     Res = db:query(PoolId, Sql, [Uid], infinity),
     check_res(Res, Sql, [Uid]),
-    [#p_player{} = Player] =
+    [#p_player{name = Name} = Player] =
         db:as_record(Res, p_player, record_info(fields, p_player)),
-    ps:send(FromPid, load_player_data_ack, Player),
+    ps:send(FromPid, load_player_data_ack, Player#p_player{name = binary_to_list(Name)}),
     ok;
 do_handle_info(create_player, {AccId, Req}, FromPid, PoolId) ->
     #r_create_player_req{

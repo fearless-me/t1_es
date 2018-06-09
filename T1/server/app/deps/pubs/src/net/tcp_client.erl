@@ -103,6 +103,9 @@ handle(#pk_GS2U_UserPlayerList{info = Info}) ->
             recv_msg(socket())
     end,
     ok;
+handle(#pk_GS2U_GotoNewMap{}) ->
+    send_msg(socket(), #pk_U2GS_GetPlayerInitData{}),
+    ok;
 handle(Msg) ->
     io:format("recv:~p~n", [Msg]).
 
