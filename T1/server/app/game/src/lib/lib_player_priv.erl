@@ -216,11 +216,11 @@ do_teleport(MapPid, NewPos) ->
 
 %%-------------------------------------------------------------------
 goto_new_map(DestMapID, Pos) ->
-    goto_new_map_1(DestMapID, Pos),
+    do_goto_new_map(DestMapID, Pos),
     ok.
 
 %%-------------------------------------------------------------------
-goto_new_map_1(DestMapID, TarPos) ->
+do_goto_new_map(DestMapID, TarPos) ->
     lib_player_rw:set_status(?PS_CHANGE_MAP),
     Uid = lib_player_rw:get_uid(),
     #m_player{mid = Mid, line = Line, mpid = MPid, pos = Pos} = lib_mem:get_player(Uid),
@@ -279,7 +279,7 @@ goto_to_pre_map() ->
     Uid = lib_player_rw:get_uid(),
     #m_player{mpid = Mid, old_mid = OMid, old_pos = OPos} = lib_mem:get_player(Uid),
     ?DEBUG("player ~p return_to_pre_map from ~p to ~p", [Uid, Mid, OMid]),
-    goto_new_map_1(OMid, OPos),
+    do_goto_new_map(OMid, OPos),
     ok.
 
 
