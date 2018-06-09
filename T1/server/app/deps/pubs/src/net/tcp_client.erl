@@ -20,9 +20,13 @@ c(Port, MapID) ->
 nc(N, Port, MapId) ->
     lists:foreach(fun(_) -> tcp_client:c(Port, MapId), timer:sleep(1) end, lists:seq(1, N)).
 
+set_buff(Bin) -> put('fak_buf', Bin).
+get_bufff(  ) -> get('fak_buf').
+
 connect(Port, MapID) ->
     tcp_codec:init(#net_conf{}),
 
+     set_buff(<<>>),
     {ok, Socket} = ranch_tcp:connect({127, 0, 0, 1}, Port, [{active, false}]),
     socket(Socket),
     Msg1 = #pk_U2GS_Login_Normal{
@@ -65,14 +69,19 @@ send_msg(Socket, Msg) ->
     io:format("~p~n", [iolist_to_binary(IoList1)]),
     ranch_tcp:send(Socket, IoList1).
 
+
 recv_msg(Socket) ->
     case ranch_tcp:recv(Socket, 6, 15000) of
-        {ok, Any} ->
+        {ok, Any0} ->
+            B1 = get_bufff(),
+            Any = <<B1/binary, Any0/binary>>,
             {Size, Left} = binary_lib:read_uint32(Any),
             {Cmd, _} = binary_lib:read_uint16(Left),
             {ok, MsgBin} = ranch_tcp:recv(Socket, Size - 6, 15000),
-            {Msg, _LeftBin} = netmsg:decode(Cmd, MsgBin),
+            {Msg, LeftBin} = netmsg:decode(Cmd, MsgBin),
             tcp_client:handle(Msg),
+            set_buff(LeftBin),
+            io:format("~n######~n~n ~p ~n#######~n~n",[LeftBin]),
             ok;
         _ ->
             skip
