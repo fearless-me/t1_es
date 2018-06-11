@@ -35,6 +35,8 @@
 -export([to_record/1]).
 %%-------------------------------------------------------------------
 %%-------------------------------------------------------------------
+%%-------------------------------------------------------------------
+%% #m_map_obj_rw.pid
 get_pid(Uid)-> get({pid,Uid}).
 get_pid_def(Uid, Def)->
 	case get({pid,Uid}) of
@@ -43,6 +45,8 @@ get_pid_def(Uid, Def)->
 	end.
 set_pid(Uid, V)-> put({pid,Uid}, V).
 
+%%-------------------------------------------------------------------
+%% #m_map_obj_rw.did
 get_did(Uid)-> get({did,Uid}).
 get_did_def(Uid, Def)->
 	case get({did,Uid}) of
@@ -51,6 +55,8 @@ get_did_def(Uid, Def)->
 	end.
 set_did(Uid, V)-> put({did,Uid}, V).
 
+%%-------------------------------------------------------------------
+%% #m_map_obj_rw.group
 get_group(Uid)-> get({group,Uid}).
 get_group_def(Uid, Def)->
 	case get({group,Uid}) of
@@ -59,6 +65,8 @@ get_group_def(Uid, Def)->
 	end.
 set_group(Uid, V)-> put({group,Uid}, V).
 
+%%-------------------------------------------------------------------
+%% #m_map_obj_rw.owner
 get_owner(Uid)-> get({owner,Uid}).
 get_owner_def(Uid, Def)->
 	case get({owner,Uid}) of
@@ -67,6 +75,8 @@ get_owner_def(Uid, Def)->
 	end.
 set_owner(Uid, V)-> put({owner,Uid}, V).
 
+%%-------------------------------------------------------------------
+%% #m_map_obj_rw.move_speed
 get_move_speed(Uid)-> get({move_speed,Uid}).
 get_move_speed_def(Uid, Def)->
 	case get({move_speed,Uid}) of
@@ -75,6 +85,8 @@ get_move_speed_def(Uid, Def)->
 	end.
 set_move_speed(Uid, V)-> put({move_speed,Uid}, V).
 
+%%-------------------------------------------------------------------
+%% #m_map_obj_rw.cur_move
 get_cur_move(Uid)-> get({cur_move,Uid}).
 get_cur_move_def(Uid, Def)->
 	case get({cur_move,Uid}) of
@@ -83,6 +95,8 @@ get_cur_move_def(Uid, Def)->
 	end.
 set_cur_move(Uid, V)-> put({cur_move,Uid}, V).
 
+%%-------------------------------------------------------------------
+%% #m_map_obj_rw.next_move
 get_next_move(Uid)-> get({next_move,Uid}).
 get_next_move_def(Uid, Def)->
 	case get({next_move,Uid}) of
@@ -91,6 +105,8 @@ get_next_move_def(Uid, Def)->
 	end.
 set_next_move(Uid, V)-> put({next_move,Uid}, V).
 
+%%-------------------------------------------------------------------
+%% #m_map_obj_rw.vis_tile_idx
 get_vis_tile_idx(Uid)-> get({vis_tile_idx,Uid}).
 get_vis_tile_idx_def(Uid, Def)->
 	case get({vis_tile_idx,Uid}) of
@@ -99,6 +115,8 @@ get_vis_tile_idx_def(Uid, Def)->
 	end.
 set_vis_tile_idx(Uid, V)-> put({vis_tile_idx,Uid}, V).
 
+%%-------------------------------------------------------------------
+%% #m_map_obj_rw.cur_pos
 get_cur_pos(Uid)-> get({cur_pos,Uid}).
 get_cur_pos_def(Uid, Def)->
 	case get({cur_pos,Uid}) of
@@ -107,6 +125,8 @@ get_cur_pos_def(Uid, Def)->
 	end.
 set_cur_pos(Uid, V)-> put({cur_pos,Uid}, V).
 
+%%-------------------------------------------------------------------
+%% #m_map_obj_rw.start_pos
 get_start_pos(Uid)-> get({start_pos,Uid}).
 get_start_pos_def(Uid, Def)->
 	case get({start_pos,Uid}) of
@@ -115,6 +135,8 @@ get_start_pos_def(Uid, Def)->
 	end.
 set_start_pos(Uid, V)-> put({start_pos,Uid}, V).
 
+%%-------------------------------------------------------------------
+%% #m_map_obj_rw.dest_pos
 get_dest_pos(Uid)-> get({dest_pos,Uid}).
 get_dest_pos_def(Uid, Def)->
 	case get({dest_pos,Uid}) of
@@ -123,6 +145,8 @@ get_dest_pos_def(Uid, Def)->
 	end.
 set_dest_pos(Uid, V)-> put({dest_pos,Uid}, V).
 
+%%-------------------------------------------------------------------
+%% #m_map_obj_rw.face
 get_face(Uid)-> get({face,Uid}).
 get_face_def(Uid, Def)->
 	case get({face,Uid}) of
@@ -131,6 +155,8 @@ get_face_def(Uid, Def)->
 	end.
 set_face(Uid, V)-> put({face,Uid}, V).
 
+%%-------------------------------------------------------------------
+%% #m_map_obj_rw.dir
 get_dir(Uid)-> get({dir,Uid}).
 get_dir_def(Uid, Def)->
 	case get({dir,Uid}) of
@@ -139,6 +165,8 @@ get_dir_def(Uid, Def)->
 	end.
 set_dir(Uid, V)-> put({dir,Uid}, V).
 
+%%-------------------------------------------------------------------
+%% #m_map_obj_rw.start_time
 get_start_time(Uid)-> get({start_time,Uid}).
 get_start_time_def(Uid, Def)->
 	case get({start_time,Uid}) of
@@ -147,6 +175,8 @@ get_start_time_def(Uid, Def)->
 	end.
 set_start_time(Uid, V)-> put({start_time,Uid}, V).
 
+%%-------------------------------------------------------------------
+%% #m_map_obj_rw.seg_move_time
 get_seg_move_time(Uid)-> get({seg_move_time,Uid}).
 get_seg_move_time_def(Uid, Def)->
 	case get({seg_move_time,Uid}) of
@@ -155,6 +185,8 @@ get_seg_move_time_def(Uid, Def)->
 	end.
 set_seg_move_time(Uid, V)-> put({seg_move_time,Uid}, V).
 
+%%-------------------------------------------------------------------
+%% #m_map_obj_rw.stopped
 get_stopped(Uid)-> get({stopped,Uid}).
 get_stopped_def(Uid, Def)->
 	case get({stopped,Uid}) of
@@ -163,6 +195,8 @@ get_stopped_def(Uid, Def)->
 	end.
 set_stopped(Uid, V)-> put({stopped,Uid}, V).
 
+%%-------------------------------------------------------------------
+%% #m_map_obj_rw.path_list
 get_path_list(Uid)-> get({path_list,Uid}).
 get_path_list_def(Uid, Def)->
 	case get({path_list,Uid}) of
@@ -171,6 +205,8 @@ get_path_list_def(Uid, Def)->
 	end.
 set_path_list(Uid, V)-> put({path_list,Uid}, V).
 
+%%-------------------------------------------------------------------
+%% #m_map_obj_rw.hp
 get_hp(Uid)-> get({hp,Uid}).
 get_hp_def(Uid, Def)->
 	case get({hp,Uid}) of
@@ -179,6 +215,8 @@ get_hp_def(Uid, Def)->
 	end.
 set_hp(Uid, V)-> put({hp,Uid}, V).
 
+%%-------------------------------------------------------------------
+%% #m_map_obj_rw.max_hp
 get_max_hp(Uid)-> get({max_hp,Uid}).
 get_max_hp_def(Uid, Def)->
 	case get({max_hp,Uid}) of
@@ -187,6 +225,8 @@ get_max_hp_def(Uid, Def)->
 	end.
 set_max_hp(Uid, V)-> put({max_hp,Uid}, V).
 
+%%-------------------------------------------------------------------
+%% #m_map_obj_rw.attr
 get_attr(Uid)-> get({attr,Uid}).
 get_attr_def(Uid, Def)->
 	case get({attr,Uid}) of
@@ -195,6 +235,8 @@ get_attr_def(Uid, Def)->
 	end.
 set_attr(Uid, V)-> put({attr,Uid}, V).
 
+%%-------------------------------------------------------------------
+%% #m_map_obj_rw.buff_list
 get_buff_list(Uid)-> get({buff_list,Uid}).
 get_buff_list_def(Uid, Def)->
 	case get({buff_list,Uid}) of

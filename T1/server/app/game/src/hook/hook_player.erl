@@ -9,6 +9,7 @@
 -module(hook_player).
 -author("mawenhong").
 -include("logger.hrl").
+-include("mem_record.hrl").
 
 %% API
 -export([on_create/1]).
@@ -16,6 +17,7 @@
 -export([on_offline/0]).
 -export([on_change_map/2]).
 -export([on_tick/0, on_second/0, on_minute/0, on_hour/0, on_sharp/1]).
+-export([on_rw_update/2]).
 
 %%-------------------------------------------------------------------
 on_create(Uid) ->
@@ -50,12 +52,12 @@ on_tick() ->
 
 %%-------------------------------------------------------------------
 on_second() ->
-    ?INFO("player ~p on_second", [lib_player_rw:get_uid()]),
+%%    ?INFO("player ~p on_second", [lib_player_rw:get_uid()]),
     ok.
 
 %%-------------------------------------------------------------------
 on_minute() ->
-    ?INFO("player ~p on_minute", [lib_player_rw:get_uid()]),
+%%    ?INFO("player ~p on_minute", [lib_player_rw:get_uid()]),
     ok.
 
 %%-------------------------------------------------------------------
@@ -69,4 +71,11 @@ on_sharp(Hour) ->
     ok.
 
 %%-------------------------------------------------------------------
-
+%%不要在调用lib_player_rw:set_xxx
+on_rw_update(level, Level) ->
+    Uid = lib_player_rw:get_uid(),
+    lib_mem:player_update(Uid, {#m_player.level, Level}),
+    ok;
+on_rw_update(_Key, _Value) ->
+%%    ?DEBUG("player ~p key ~p  value ~p", [lib_player_rw:get_uid(), Key, Value]),
+    ok.

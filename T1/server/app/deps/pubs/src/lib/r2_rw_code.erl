@@ -33,7 +33,7 @@ run() ->
             [
                 ["logger.hrl", "rw_record.hrl"],
                 [
-                    {m_map_obj_rw, record_info(fields, m_map_obj_rw), none, ["Uid"]}
+                    {m_map_obj_rw, record_info(fields, m_map_obj_rw), none, ["Uid"], ""}
                 ]
             ]
         ),
@@ -43,7 +43,7 @@ run() ->
             [
                 ["logger.hrl", "player_status.hrl", "rw_record.hrl", "vector3.hrl"],
                 [
-                    {m_player_rw, record_info(fields, m_player_rw), none, []}
+                    {m_player_rw, record_info(fields, m_player_rw), none, [], "hook_player:on_rw_update"}
                 ]
             ]
         ),
@@ -68,7 +68,7 @@ multi_to_code(Fname, ModName, [IncFiles, Cfgs]) ->
     write_file(Fname, "~ts~n", [?SPLIT_LINE]),
 
     lists:foreach(
-        fun({_Record, FieldList, Suffix, ExParams}) ->
+        fun({_Record, FieldList, Suffix, ExParams, _HookUpdate}) ->
             ExParamN = erlang:length(ExParams),
             lists:foreach(
                 fun(Field) ->
@@ -85,9 +85,13 @@ multi_to_code(Fname, ModName, [IncFiles, Cfgs]) ->
     write_file(Fname, "~ts", [?SPLIT_LINE]),
 
     lists:foreach(
-        fun({Record, FieldList, Suffix, ExParams}) ->
+        fun({Record, FieldList, Suffix, ExParams, HookUpdate}) ->
             ExParamS = string:join(ExParams, ","),
-            lists:foreach(fun(Field) -> field_fun(Fname, Field, Suffix, ExParamS) end, FieldList),
+            lists:foreach(
+                fun(Field) ->
+                    write_file(Fname, "~ts%% #~p.~p\n", [?SPLIT_LINE, Record, Field]),
+                    field_fun(Fname, Field, Suffix, ExParamS, HookUpdate)
+                end, FieldList),
 
             del_fun(Fname, Suffix, del, FieldList, ExParamS),
             to_record(Fname, Suffix, to, Record, FieldList, ExParamS),
@@ -142,32 +146,46 @@ field_fun_export_to(Fd, F, Suffix, N) ->
 
 %%-----------------------------------------------------------------------
 
-field_fun(Fd, Field, Suffix, []) ->
+field_fun(Fd, Field, Suffix, [], HookUpdate) ->
     case Suffix of
         none ->
             write_file(Fd, "get_~p()-> get(~p).~n", [Field, Field]),
             write_file(Fd, "get_~p_def(Def)->\n\tcase get(~p) of\n\t\tundefined -> Def;\n\t\tV -> V\n\tend.~n", [Field, Field]),
-            write_file(Fd, "set_~p(V)-> put(~p, V).~n~n", [Field, Field]),
+            case HookUpdate of
+                [] -> write_file(Fd, "set_~p(V)-> put(~p, V).~n~n", [Field, Field]);
+                _ -> write_file(Fd, "set_~p(V)-> put(~p, V), ~ts(~p, V).~n~n", [Field, Field, HookUpdate, Field])
+            end,
             ok;
         _ ->
             write_file(Fd, "get_~p_~p()-> get(~p).~n", [Suffix, Field, Field]),
             write_file(Fd, "get_~p_~p_def(Def)->\n\tcase get(~p) of\n\t undefined -> Def;\n\tV -> V\n\tend.~n", [Suffix, Field, Field]),
 
-            write_file(Fd, "set_~p_~p(V)-> put(~p, V).~n~n", [Suffix, Field, Field]),
+            case HookUpdate of
+                [] -> write_file(Fd, "set_~p_~p(V)-> put(~p, V).~n~n", [Suffix, Field, Field]);
+                _ -> write_file(Fd, "set_~p_~p(V)-> put(~p, V), ~ts(~p, V).~n~n", [Suffix, Field, Field, HookUpdate, Field])
+            end,
             ok
     end,
     ok;
-field_fun(Fd, Field, Suffix, ExParam) ->
+field_fun(Fd, Field, Suffix, ExParam, HookUpdate) ->
     case Suffix of
         none ->
             write_file(Fd, "get_~p(~ts)-> get({~p,~ts}).~n", [Field, ExParam, Field, ExParam]),
             write_file(Fd, "get_~p_def(~ts, Def)->\n\tcase get({~p,~ts}) of\n\t\tundefined -> Def;\n\t\tV -> V\n\tend.~n", [Field, ExParam, Field, ExParam]),
-            write_file(Fd, "set_~p(~ts, V)-> put({~p,~ts}, V).~n~n", [Field, ExParam, Field, ExParam]),
+            case HookUpdate of
+                [] -> write_file(Fd, "set_~p(~ts, V)-> put({~p,~ts}, V).~n~n", [Field, ExParam, Field, ExParam]);
+                _ -> write_file(Fd, "set_~p(~ts, V)-> put({~p,~ts}, V), ~ts(~ts, ~p, V).~n~n",
+                        [Field, ExParam, Field, ExParam,  HookUpdate, ExParam, Field])
+            end,
             ok;
         _ ->
             write_file(Fd, "get_~p_~p(~ts)-> get({~p,~ts}).~n", [ Suffix, Field, ExParam, Field, ExParam]),
             write_file(Fd, "get_~p_~p_def(~ts)->\n\tcase get({~p,~ts}) of\n\t\tundefined -> Def;\n\t\tV -> V\n\tend.~n", [ Suffix, Field, ExParam, Field, ExParam]),
-            write_file(Fd, "set_~p_~p(~ts, V)-> put({~p,~ts}, V).~n~n", [Suffix, Field, ExParam, Field, ExParam]),
+            case HookUpdate of
+                [] -> write_file(Fd, "set_~p_~p(~ts, V)-> put({~p,~ts}, V).~n~n", [Suffix, Field, ExParam, Field, ExParam]);
+                _ -> write_file(Fd, "set_~p_~p(~ts, V)-> put({~p,~ts}, V), ~ts(~ts, ~p, V).~n~n",
+                        [Suffix, Field, ExParam, Field, ExParam,  HookUpdate, ExParam, Field])
+            end,
             ok
     end,
 
