@@ -120,6 +120,7 @@ field_fun_export(Fd, Field, Suffix, GetN, SetN) ->
     write_file(Fd, "~ts~n", [S]),
     ok.
 
+
 field_fun_export_del(Fd, F, none, N) ->
     S = io_lib:format("-export([~p/~p]).", [F, N]),
     write_file(Fd, "~ts~n", [S]),

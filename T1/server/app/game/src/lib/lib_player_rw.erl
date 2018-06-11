@@ -24,6 +24,9 @@
 -export([get_map_id/0, get_map_id_def/1, set_map_id/1]).
 -export([get_line/0, get_line_def/1, set_line/1]).
 -export([get_pos/0, get_pos_def/1, set_pos/1]).
+-export([get_last_second_tick/0, get_last_second_tick_def/1, set_last_second_tick/1]).
+-export([get_last_minute_tick/0, get_last_minute_tick_def/1, set_last_minute_tick/1]).
+-export([get_last_hour_tick/0, get_last_hour_tick_def/1, set_last_hour_tick/1]).
 -export([get_status/0, get_status_def/1, set_status/1]).
 -export([del/0]).
 -export([to_record/0]).
@@ -125,6 +128,30 @@ get_pos_def(Def)->
 	end.
 set_pos(V)-> put(pos, V).
 
+get_last_second_tick()-> get(last_second_tick).
+get_last_second_tick_def(Def)->
+	case get(last_second_tick) of
+		undefined -> Def;
+		V -> V
+	end.
+set_last_second_tick(V)-> put(last_second_tick, V).
+
+get_last_minute_tick()-> get(last_minute_tick).
+get_last_minute_tick_def(Def)->
+	case get(last_minute_tick) of
+		undefined -> Def;
+		V -> V
+	end.
+set_last_minute_tick(V)-> put(last_minute_tick, V).
+
+get_last_hour_tick()-> get(last_hour_tick).
+get_last_hour_tick_def(Def)->
+	case get(last_hour_tick) of
+		undefined -> Def;
+		V -> V
+	end.
+set_last_hour_tick(V)-> put(last_hour_tick, V).
+
 get_status()-> get(status).
 get_status_def(Def)->
 	case get(status) of
@@ -146,6 +173,9 @@ del()->
 	erase(map_id),
 	erase(line),
 	erase(pos),
+	erase(last_second_tick),
+	erase(last_minute_tick),
+	erase(last_hour_tick),
 	erase(status),
 	ok.
 to_record()->
@@ -162,6 +192,9 @@ to_record()->
 		map_id = get_map_id(),
 		line = get_line(),
 		pos = get_pos(),
+		last_second_tick = get_last_second_tick(),
+		last_minute_tick = get_last_minute_tick(),
+		last_hour_tick = get_last_hour_tick(),
 		status = get_status()
 	}.
 %%-------------------------------------------------------------------

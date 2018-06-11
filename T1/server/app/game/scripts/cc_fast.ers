@@ -324,7 +324,7 @@ loop_wait(N) ->
 	loop_wait(N - 1).
 
 compile2(SrcFile, Opts, LogFile, FileNumbers) ->
-	Ret = compile:file(SrcFile, [return, report_errors, error_summary | Opts]), %% report,
+	Ret = compile:file(SrcFile, [return, report_errors, error_summary, bin_opt_info | Opts]), %% report,
 	{CompileResult, Str} = check_return(SrcFile, Ret),
 
 	case CompileResult =/= error of

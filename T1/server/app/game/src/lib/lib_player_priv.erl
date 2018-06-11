@@ -261,10 +261,10 @@ do_change_map_ack(
 
     lib_player_rw:set_status(?PS_GAME),
 
-    mod_map:player_move_(
-        MPid,
-        #r_player_start_move_req{uid = Uid, tar_pos = vector3:new(400.6, 0, 358.9)}
-    ),
+%%    mod_map:player_move_(
+%%        MPid,
+%%        #r_player_start_move_req{uid = Uid, tar_pos = vector3:new(400.6, 0, 358.9)}
+%%    ),
     ok;
 do_change_map_ack(
     OldMid, OldLineId, _OldPos,

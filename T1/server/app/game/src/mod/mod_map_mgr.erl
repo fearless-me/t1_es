@@ -15,7 +15,7 @@
 -include("map.hrl").
 -include("map_obj.hrl").
 -define(MAP_LINES, map_line_ets__).
--define(LINE_LIFETIME, 15 * 60 * 1000).
+-define(LINE_LIFETIME, 3 * 60 * 1000).
 -define(DEAD_LINE_PROTECT, 15 * 1000).
 
 %%--------------------------------
@@ -117,14 +117,18 @@ do_player_join_map(S, Req) ->
 %%--------------------------------------------------------------------
 do_player_exit_map(S, Req) ->
     %%1.
-    #r_exit_map_req{map_pid = MapPid, line_id = LineID} = Req,
-    ets:update_counter(S#state.ets, LineID, {#m_map_line.in, -1}),
+    #r_exit_map_req{uid = Uid, line_id = LineID} = Req,
 
-    %%2.
-    case misc:is_palive(MapPid) of
-        true -> mod_map:player_exit(MapPid, Req);
+    ?WARN("player ~p exit map_~p_~p",[Uid, S#state.map_id, LineID]),
+
+    %2.
+    case ets:lookup(S#state.ets, LineID) of
+        [#m_map_line{pid = Mpid}] ->
+            ets:update_counter(S#state.ets, LineID, {#m_map_line.in, -1}),
+            mod_map:player_exit(Mpid, Req);
         _ -> skip
     end,
+
     ok.
 
 %%--------------------------------------------------------------------
@@ -136,7 +140,7 @@ create_new_line(S, MapID, LineID) ->
     },
     erlang:send_after(?LINE_LIFETIME, self(), {stop_line, Line}),
     ets:insert(S#state.ets, Line),
-    ?INFO("map ~p create new line ~p,~p",[MapID, LineID, Pid]),
+    ?WARN("map_~p_~p ~p start",[MapID, LineID, Pid]),
     Line.
 
 
@@ -151,7 +155,7 @@ next_line_id() ->
 
 stop_map_line(S, Line) ->
     #m_map_line{map_id = Mid, line_id = LineId, pid = Pid} = Line,
-    ?INFO("map_~p_~p ~p will be stopped", [Mid, LineId, Pid]),
+    ?WARN("map_~p_~p ~p will be stopped", [Mid, LineId, Pid]),
     ets:delete(S#state.ets, LineId),
     ps:send(Pid, start_stop_now),
     ok.

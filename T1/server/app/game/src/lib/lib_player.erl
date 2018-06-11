@@ -17,6 +17,9 @@
 -export([on_info_msg/1]).
 
 %%-------------------------------------------------------------------
+on_info_msg(tick_me) ->
+    lib_player_sub:tick_me(),
+    ok;
 on_info_msg(Info) ->
     ?DEBUG("info:~p",[Info]),
     ok.

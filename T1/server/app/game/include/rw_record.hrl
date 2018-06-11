@@ -33,6 +33,7 @@
     name, level, sex, head,
     race, career,
     map_id, line, pos,
+    last_second_tick, last_minute_tick, last_hour_tick,
     status
 }).
 

@@ -21,7 +21,7 @@
 -export([crc32/1]).
 -export([ceil/1,mod_1/2, floor/1, clamp/3, rand/2]).
 -export([get_value/3]).
--export([stacktraceE/0]).
+-export([callstack/0]).
 -export([parse_information_unit/1]).
 -export([register_process/3]).
 -export([create_atom/2]).
@@ -164,7 +164,7 @@ get_value(Key, Opts, Default) ->
         _ -> Default
     end.
 
-stacktraceE()->
+callstack()->
    try erlang:error(callStack) catch _ : _ : ST -> ST end.
 
 %% Format IPv4-mapped IPv6 addresses as IPv4, since they're what we see
