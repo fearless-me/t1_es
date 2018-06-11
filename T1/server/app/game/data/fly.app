@@ -27,19 +27,23 @@
 								"../../deps/pubs/src/resource/pack"]},
 					{opts,
 						[
-							debug_info, nowarn_export_all,{outdir, "./../ebin"},
-							{src_dirs, [
-                                "../src",
-                                "../../deps/pubs",
-								"../../deps/dynamic_compile",
-                                "../../deps/econfig",
-                                "../../deps/fastlog",
-                                "../../deps/fly",
-                                "../../deps/ranch",
-								"../../deps/mysql-otp",
-								"../../deps/mysql-otp-poolboy",
-								"../../deps/poolboy"								
-                              ]},
+							debug_info, nowarn_export_all, bin_opt_info,
+							{outdir, "./../ebin"},
+							{
+								src_dirs, 
+								[
+									"../src",
+									"../../deps/pubs",
+									"../../deps/dynamic_compile",
+									"../../deps/econfig",
+									"../../deps/fastlog",
+									"../../deps/fly",
+									"../../deps/ranch",
+									"../../deps/mysql-otp",
+									"../../deps/mysql-otp-poolboy",
+									"../../deps/poolboy"								
+                               ]
+							},
 							{i, "../include"},
 							{i, "../src/config"},
 							{i, "../../deps/pubs/include"},

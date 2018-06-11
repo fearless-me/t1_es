@@ -50,7 +50,7 @@ wait_all_started()->
    wait_all_started_1(
        fun serv_loader_logic:is_task_all_done/0,
        "wait all data load ...",
-       " all data load done"
+       "all data load done"
    ),
    ok.
 
