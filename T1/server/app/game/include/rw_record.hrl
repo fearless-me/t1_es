@@ -32,7 +32,7 @@
     aid, uid, sid,
     name, level, sex, head,
     race, career,
-    map_id, line, pos,
+    map_id, line, 
     last_second_tick, last_minute_tick, last_hour_tick,
     status
 }).

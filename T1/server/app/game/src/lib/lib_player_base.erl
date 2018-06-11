@@ -33,7 +33,6 @@ init(Player) ->
     lib_player_rw:set_head(Head),
     lib_player_rw:set_map_id(Mid),
     lib_player_rw:set_line(Lid),
-    lib_player_rw:set_pos(vector3:new(X, 0, Y)),
     ok.
 %%-------------------------------------------------------------------
 send_init_data() ->

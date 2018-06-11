@@ -23,7 +23,6 @@
 -export([get_career/0, get_career_def/1, set_career/1]).
 -export([get_map_id/0, get_map_id_def/1, set_map_id/1]).
 -export([get_line/0, get_line_def/1, set_line/1]).
--export([get_pos/0, get_pos_def/1, set_pos/1]).
 -export([get_last_second_tick/0, get_last_second_tick_def/1, set_last_second_tick/1]).
 -export([get_last_minute_tick/0, get_last_minute_tick_def/1, set_last_minute_tick/1]).
 -export([get_last_hour_tick/0, get_last_hour_tick_def/1, set_last_hour_tick/1]).
@@ -143,16 +142,6 @@ get_line_def(Def)->
 set_line(V)-> put(line, V), hook_player:on_rw_update(line, V).
 
 %%-------------------------------------------------------------------
-%% #m_player_rw.pos
-get_pos()-> get(pos).
-get_pos_def(Def)->
-	case get(pos) of
-		undefined -> Def;
-		V -> V
-	end.
-set_pos(V)-> put(pos, V), hook_player:on_rw_update(pos, V).
-
-%%-------------------------------------------------------------------
 %% #m_player_rw.last_second_tick
 get_last_second_tick()-> get(last_second_tick).
 get_last_second_tick_def(Def)->
@@ -204,7 +193,6 @@ del()->
 	erase(career),
 	erase(map_id),
 	erase(line),
-	erase(pos),
 	erase(last_second_tick),
 	erase(last_minute_tick),
 	erase(last_hour_tick),
@@ -223,7 +211,6 @@ to_record()->
 		career = get_career(),
 		map_id = get_map_id(),
 		line = get_line(),
-		pos = get_pos(),
 		last_second_tick = get_last_second_tick(),
 		last_minute_tick = get_last_minute_tick(),
 		last_hour_tick = get_last_hour_tick(),
