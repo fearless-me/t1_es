@@ -6,7 +6,7 @@
 %%% @end
 %%% Created : 30. 五月 2018 19:15
 %%%-------------------------------------------------------------------
--module(gcache).
+-module(serv_cache_logic).
 -author("mawenhong").
 -include("logger.hrl").
 -include("pub_common.hrl").

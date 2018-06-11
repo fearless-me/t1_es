@@ -6,7 +6,7 @@
 %%% @end
 %%% Created : 04. 六月 2018 10:37
 %%%-------------------------------------------------------------------
--module(gloader).
+-module(serv_loader_logic).
 -author("mawenhong").
 -include("logger.hrl").
 

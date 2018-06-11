@@ -6,7 +6,7 @@
 %%% @end
 %%% Created : 04. 六月 2018 15:09
 %%%-------------------------------------------------------------------
--module(galarm).
+-module(serv_alarm_logic).
 -author("mawenhong").
 -include("pub_common.hrl").
 -include("common_record.hrl").

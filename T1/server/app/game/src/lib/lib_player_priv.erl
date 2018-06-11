@@ -169,8 +169,8 @@ loaded_player(Player) ->
     #p_player{uid = Uid, aid = Aid} = Player,
     lib_player_base:init(Player),
     lib_player_rw:set_status(?PS_WAIT_ENTER),
-    lib_mem:new_player(self(), mod_player:socket(), Player),
-    lib_mem:add_sock(Aid, Uid, self(), mod_player:socket()),
+    lib_cache:new_player(self(), mod_player:socket(), Player),
+    lib_cache:add_sock(Aid, Uid, self(), mod_player:socket()),
     add_to_world(Player),
     hook_player:on_login(),
     ok.
@@ -201,7 +201,7 @@ teleport_(NewPos) -> ps:send(self(), teleport, NewPos).
 %%-------------------------------------------------------------------
 teleport_call(NewPos) ->
     Uid = lib_player_rw:get_uid(),
-    #m_player{mpid = MPid} = lib_mem:get_player(Uid),
+    #m_player{mpid = MPid} = lib_cache:get_player(Uid),
     do_teleport(MPid, NewPos).
 
 do_teleport(undefined, _NewPos) ->
@@ -223,7 +223,7 @@ goto_new_map(DestMapID, Pos) ->
 do_goto_new_map(DestMapID, TarPos) ->
     lib_player_rw:set_status(?PS_CHANGE_MAP),
     Uid = lib_player_rw:get_uid(),
-    #m_player{mid = Mid, line = Line, mpid = MPid, pos = Pos} = lib_mem:get_player(Uid),
+    #m_player{mid = Mid, line = Line, mpid = MPid, pos = Pos} = lib_cache:get_player(Uid),
     Ack = mod_map_creator:player_change_map(
         #r_change_map_req{
             uid = Uid, pid = self(),
@@ -244,7 +244,7 @@ do_change_map_ack(
         map_pid = MPid , pos = Pos
 }) ->
     Uid = lib_player_rw:get_uid(),
-    lib_mem:player_update(
+    lib_cache:player_update(
         Uid,
         [
             {#m_player.old_mid, OldMid},
@@ -277,7 +277,7 @@ do_change_map_ack(
 %%%-------------------------------------------------------------------
 goto_to_pre_map() ->
     Uid = lib_player_rw:get_uid(),
-    #m_player{mpid = Mid, old_mid = OMid, old_pos = OPos} = lib_mem:get_player(Uid),
+    #m_player{mpid = Mid, old_mid = OMid, old_pos = OPos} = lib_cache:get_player(Uid),
     ?DEBUG("player ~p return_to_pre_map from ~p to ~p", [Uid, Mid, OMid]),
     do_goto_new_map(OMid, OPos),
     ok.
@@ -286,7 +286,7 @@ goto_to_pre_map() ->
 %%%-------------------------------------------------------------------
 offline(Reason) ->
     ?TRY_CATCH(offline_1(lib_player_rw:get_status()), Err0, St0),
-    ?TRY_CATCH(lib_mem:del_sock(lib_player_rw:get_uid()), Err1, St1),
+    ?TRY_CATCH(lib_cache:del_sock(lib_player_rw:get_uid()), Err1, St1),
     ?TRY_CATCH(flush_cache(Reason), Err2, St2),
     ok.
 
@@ -296,12 +296,12 @@ offline_1(Status)
     Uid = lib_player_rw:get_uid(),
     #m_player{
         mid = Mid, mpid = MPid, line = LineId
-    } = Player = lib_mem:get_player(Uid),
+    } = Player = lib_cache:get_player(Uid),
     ?WARN("player ~p exit map ~p line ~p",[Uid, Mid, LineId]),
     hook_player:on_offline(),
     mod_map_creator:player_offline(Uid, Mid, LineId, MPid),
     lib_player_save:save(Player),
-    lib_mem:offline(Uid),
+    lib_cache:offline(Uid),
     ?INFO("player ~p pid ~p sock ~p player ~w offline status ~p",
         [Uid, self(), socket(), Uid, Status]),
     ok;

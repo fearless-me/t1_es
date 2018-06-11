@@ -25,6 +25,7 @@ tick_go() ->
     ok.
 %%-------------------------------------------------------------------
 tick_msg()-> erlang:send_after(100, self(), tick_me).
+
 %%-------------------------------------------------------------------
 tick_me()->
     %
@@ -32,30 +33,32 @@ tick_me()->
     
     Now = time:milli_seconds(),
     %
-    hook_player:on_tick(),
+    ?TRY_CATCH(hook_player:on_tick()),
     S = second_action(Now),
     M = minute_action(S, Now),
     _ = hour_action(M, Now),
     _ = sharp_action(M, Now),
     ok.
 
+%%-------------------------------------------------------------------
 second_action(Now) ->
     Latest = lib_player_rw:get_last_second_tick(),
     case Now - Latest >= ?ONS_SECOND_MS of
         true ->
             lib_player_rw:set_last_second_tick(Now),
-            hook_player:on_second(),
+            ?TRY_CATCH(hook_player:on_second()),
             true;
         _ -> false
     end.
 
+%%-------------------------------------------------------------------
 minute_action(false, _Now) -> false;
 minute_action(_True, Now) ->
     Latest = lib_player_rw:get_last_minute_tick(),
     case Now - Latest >= ?ONE_MINUTE_MS of
         true ->
             lib_player_rw:set_last_minute_tick(Now),
-            hook_player:on_minute(),
+            ?TRY_CATCH(hook_player:on_minute()),
             true;
         _ -> false
     end.
@@ -66,11 +69,12 @@ hour_action(_True, Now) ->
     case Now - Latest >= ?ONT_HOUR_MS of
         true ->
             lib_player_rw:set_last_hour_tick(Now),
-            hook_player:on_hour(),
+            ?TRY_CATCH(hook_player:on_hour()),
             true;
         _ -> false
     end.
 
+%%-------------------------------------------------------------------
 sharp_action(false, _Now) -> false;
 sharp_action(_True, _Now) ->
     {{_,_,_}, {H,M,_S}} = calendar:local_time(),

@@ -6,7 +6,7 @@
 %%% @end
 %%% Created : 30. 五月 2018 19:31
 %%%-------------------------------------------------------------------
--module(lib_mem).
+-module(lib_cache).
 -author("mawenhong").
 -include("logger.hrl").
 -include("pub_common.hrl").

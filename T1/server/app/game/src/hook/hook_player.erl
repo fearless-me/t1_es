@@ -74,7 +74,7 @@ on_sharp(Hour) ->
 %%不要在调用lib_player_rw:set_xxx
 on_rw_update(level, Level) ->
     Uid = lib_player_rw:get_uid(),
-    lib_mem:player_update(Uid, {#m_player.level, Level}),
+    lib_cache:player_update(Uid, {#m_player.level, Level}),
     ok;
 on_rw_update(_Key, _Value) ->
 %%    ?DEBUG("player ~p key ~p  value ~p", [lib_player_rw:get_uid(), Key, Value]),

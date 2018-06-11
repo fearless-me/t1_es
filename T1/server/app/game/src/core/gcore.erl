@@ -47,7 +47,7 @@ kick_account(Aid, Reason) ->
 send_net_msg(Pid, NetMsg) when is_pid(Pid) ->
     ps:send(Pid, net_msg, NetMsg);
 send_net_msg(Uid, NetMsg) when is_number(Uid) ->
-    Pid = lib_mem:get_ppid(Uid),
+    Pid = lib_cache:get_ppid(Uid),
     ps:send(Pid, net_msg, NetMsg).
 %%-------------------------------------------------------------------
 broadcast_net_msg(NetMsg) ->
