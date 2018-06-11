@@ -1,0 +1,8 @@
+.erl
+.hrl
+.h
+.exe
+.bat
+.cs
+
+
