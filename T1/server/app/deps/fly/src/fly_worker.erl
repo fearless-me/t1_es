@@ -204,8 +204,8 @@ process_src_files_incs(SrcFiles) ->
                 end),
             wait_pid_go_die(is_process_alive(Pid), Pid),
             Diff = os:system_time(milli_seconds) - Now,
-            ?WARN("~p src file(s), parse hrl include use time ~p(ms)",
-                [erlang:length(SrcFiles), Diff]),
+            ?WARN("~p src file(s), ~p hrl file(s) use time ~p(ms)",
+                [erlang:length(SrcFiles), ets:info(?INC_REF_SRC_ETS, size), Diff]),
             ok;
         _ ->
             skip

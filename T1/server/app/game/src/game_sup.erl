@@ -41,8 +41,6 @@ start() ->
         wrapper({"watchdog",                    ?Wrap(start_watchdog(SupPid))}),
         wrapper({"config init",                 ?Wrap(start_conf(SupPid, "game.ini"))}),
         wrapper({"monitor/gc/vms",              ?Wrap(start_gc_vm(SupPid, 0.5))}),
-        wrapper({"test network 15555",          ?Wrap(start_listener_15555(SupPid))}),
-        wrapper({"test network 25555",          ?Wrap(start_listener_25555(SupPid))}),
         wrapper({"map root supervisor",         ?Wrap(start_map_root_supervisor(SupPid))}),
         wrapper({"login window",                ?Wrap(start_login(SupPid))}),
         wrapper({"serv_cache",                  ?Wrap(start_serv_cache(SupPid))}),
@@ -52,6 +50,9 @@ start() ->
         wrapper({"auto compile and load",       ?Wrap(start_auto_reload(SupPid))}),
 
         watchdog:wait(),
+            
+        wrapper({"test network 15555",          ?Wrap(start_listener_15555(SupPid))}),
+        wrapper({"test network 25555",          ?Wrap(start_listener_25555(SupPid))}),
         ok
     catch _ : Err : ST ->
            gcore:halt("start app error ~p, stacktrace ~p", [Err, ST])
