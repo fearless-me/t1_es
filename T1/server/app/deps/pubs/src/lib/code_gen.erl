@@ -41,7 +41,7 @@
 init(AreaID, ServerID,CodeTypeList)->
     ?INFO("CodeMgr init"),
     ets:new(?CodeEts,
-        [public, named_table, {keypos, #rec_code.type},?ETSRC, ?ETSWC]),
+        [public, named_table, {keypos, #rec_code.type},?ETS_RC, ?ETS_WC]),
     lists:foreach(
         fun(CodeType) ->
             init_1(AreaID, ServerID,CodeType)

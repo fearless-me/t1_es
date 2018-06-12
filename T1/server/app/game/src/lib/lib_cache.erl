@@ -15,17 +15,18 @@
 -include("db_record.hrl").
 
 %% API
--export([new_player/3]).
+-export([new_player/1]).
 -export([del_player/1]).
--export([offline/1]).
+-export([offline/2]).
 -export([get_player/1]).
 -export([player_update/2]).
-
 -export([get_ppid/1]).
--export([add_sock/4, get_sock/1, del_sock/1]).
+-export([add_socket/4, get_socket/1, del_socket/1]).
+-export([get_account_ppid/1]).
+-export([add_account_socket/3, get_account_socket/1, del_account_socket/1]).
 
 %%-------------------------------------------------------------------
-new_player(Pid, Sock, PPlayer) ->
+new_player(PPlayer) ->
     #p_player{
         aid = Aid, uid = Uid, sid = Sid, name = Name,
         level = Lv, sex = Sex, camp = Camp, race = Race, career = Career, head = Head,
@@ -35,7 +36,7 @@ new_player(Pid, Sock, PPlayer) ->
         uid =Uid, aid= Aid, sid= Sid,
         name= Name, sex = Sex, camp = Camp,
         career= Career, race = Race,
-        level= Lv, pid= Pid, sock = Sock,
+        level= Lv,
         mid= Mid, line = 0, pos = vector3:new(X, 0, Y),
         old_mid= OMid, old_line = 1, old_pos = vector3:new(Ox, 0, Oy)
     },
@@ -48,16 +49,10 @@ del_player(Uid) ->
     ets:delete(?ETS_PLAYER_PUB, Uid).
 
 %%-------------------------------------------------------------------
-offline(Uid) ->
-    ?INFO("player ~w offline", [Uid]),
-    ets:update_element(
-        ?ETS_PLAYER_PUB,
-        Uid,
-        [
-            {#m_player.pid, 0},
-            {#m_player.sock, undefined}
-        ]
-    ),
+offline(Aid, Uid) ->
+    ?INFO("player ~w of account ~p offline", [Uid, Aid]),
+    lib_cache:del_socket(Uid),
+    lib_cache:del_account_socket(Aid),
     ok.
 %%-------------------------------------------------------------------
 get_player(Uid) ->
@@ -71,14 +66,14 @@ player_update(Uid, Elements)->
     ok.
 
 %%-------------------------------------------------------------------
-add_sock(Aid, Uid, Pid, Socket) ->
+add_socket(Aid, Uid, Pid, Socket) ->
     ets:insert(?ETS_PLAYER_PSOCK,
         #m_player_pid_sock{aid = Aid, uid = Uid, pid = Pid, sock = Socket}).
 
-del_sock(Uid) ->
+del_socket(Uid) ->
     ets:delete(?ETS_PLAYER_PSOCK,Uid).
 
-get_sock(Uid) ->
+get_socket(Uid) ->
     case ets:lookup(?ETS_PLAYER_PSOCK, Uid) of
         [#m_player_pid_sock{sock = Sock}] -> Sock;
         _ -> undefined
@@ -87,6 +82,26 @@ get_sock(Uid) ->
 get_ppid(Uid) ->
     case ets:lookup(?ETS_PLAYER_PSOCK, Uid) of
         [#m_player_pid_sock{pid = Pid}] -> Pid;
+        _ -> undefined
+    end.
+
+%%-------------------------------------------------------------------
+add_account_socket(Aid, Pid, Socket) ->
+    ets:insert(?ETS_PLAYER_PSOCK,
+        #m_account_pid_sock{aid = Aid, pid = Pid, sock = Socket}).
+
+del_account_socket(Uid) ->
+    ets:delete(?ETS_PLAYER_PSOCK,Uid).
+
+get_account_socket(Uid) ->
+    case ets:lookup(?ETS_PLAYER_PSOCK, Uid) of
+        [#m_account_pid_sock{sock = Sock}] -> Sock;
+        _ -> undefined
+    end.
+
+get_account_ppid(Uid) ->
+    case ets:lookup(?ETS_PLAYER_PSOCK, Uid) of
+        [#m_account_pid_sock{pid = Pid}] -> Pid;
         _ -> undefined
     end.
 

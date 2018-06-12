@@ -46,10 +46,10 @@ init(S) ->
 %%%-------------------------------------------------------------------
 init_1(State) ->
     State#m_map_state{
-        npc     = ets:new(npc,      [protected, {keypos, #m_map_obj.uid}, ?ETSRC]),
-        pet     = ets:new(pet,      [protected, {keypos, #m_map_obj.uid}, ?ETSRC]),
-        player  = ets:new(player,   [protected, {keypos, #m_map_obj.uid}, ?ETSRC]),
-        monster = ets:new(monster,  [protected, {keypos, #m_map_obj.uid}, ?ETSRC])
+        npc     = ets:new(npc,      [protected, {keypos, #m_map_obj.uid}, ?ETS_RC]),
+        pet     = ets:new(pet,      [protected, {keypos, #m_map_obj.uid}, ?ETS_RC]),
+        player  = ets:new(player,   [protected, {keypos, #m_map_obj.uid}, ?ETS_RC]),
+        monster = ets:new(monster,  [protected, {keypos, #m_map_obj.uid}, ?ETS_RC])
     }.
 
 %%%-------------------------------------------------------------------
@@ -59,8 +59,8 @@ player_exit(S, #r_exit_map_req{
     uid = Uid
 }) ->
     Obj = lib_map_rw:get_player(Uid),
-    do_player_exit(Uid, Obj),
-    {ok, S}.
+    Ret = do_player_exit(Uid, Obj),
+    {Ret, S}.
 
 do_player_exit(Uid, #m_map_obj{} = Obj) ->
     ?INFO("user ~p exit map ~p:~p:~p",
@@ -68,10 +68,11 @@ do_player_exit(Uid, #m_map_obj{} = Obj) ->
 
     lib_map_rw:del_obj_to_ets(Obj),
     lib_map_view:sync_player_exit_map(Obj),
-    ok;
+    lib_obj_rw:to_record(Uid);
 do_player_exit(Uid, _Obj) ->
     ?ERROR("~w req exit map ~w ~w, but obj not exists!",
-        [Uid, self(), misc:register_name()]).
+        [Uid, self(), misc:register_name()]),
+    ok.
 
 %%%-------------------------------------------------------------------
 %% WARNING!!! WARNING!!! WARNING!!!
@@ -118,7 +119,7 @@ init_monster( #recGameMapCfg{
     ok.
 
 init_all_monster_1(Mdata)->
-    Obj = lib_monster:create(Mdata),
+    Obj = lib_obj:new_monster(Mdata),
     ok = init_all_monster_2(Obj).
 
 init_all_monster_2(Obj) ->

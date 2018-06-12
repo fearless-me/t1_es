@@ -54,7 +54,7 @@ mod_init([MapID]) ->
     true = erlang:register(ProcessName, self()),
     erlang:process_flag(trap_exit, true),
     erlang:process_flag(priority, high),
-    Ets = ets:new(?MAP_LINES, [{keypos, #m_map_line.line_id}, ?ETSRC]),
+    Ets = ets:new(?MAP_LINES, [{keypos, #m_map_line.line_id}, ?ETS_RC]),
     ?INFO("mapMgr ~p started, line ets:~p,mapID:~p", [ProcessName, Ets, MapID]),
     {ok, #state{ets = Ets, map_id = MapID}}.
 

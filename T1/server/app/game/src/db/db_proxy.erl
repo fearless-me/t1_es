@@ -62,9 +62,9 @@ start_link() ->
 %%% Internal functions
 %%%===================================================================	
 mod_init(_Args) ->
-    ets:new(?ETS_PLAYER_DB_POOL, [protected, set, named_table, {keypos, #r_db_pool.id}, ?ETSRC]),
-    ets:new(?ETS_ACCOUNT_DB_POOL, [protected, set, named_table, {keypos, #r_db_pool.id}, ?ETSRC]),
-    ets:new(?ETS_PUBLIC_DB_POOL, [protected, set, named_table, {keypos, #r_db_pool.id}, ?ETSRC]),
+    ets:new(?ETS_PLAYER_DB_POOL, [protected, set, named_table, {keypos, #r_db_pool.id}, ?ETS_RC]),
+    ets:new(?ETS_ACCOUNT_DB_POOL, [protected, set, named_table, {keypos, #r_db_pool.id}, ?ETS_RC]),
+    ets:new(?ETS_PUBLIC_DB_POOL, [protected, set, named_table, {keypos, #r_db_pool.id}, ?ETS_RC]),
 %%    ets:new(?ETS_PLAYER_DB_INS, [protected, set, named_table, {keypos, #r_player_db_ins.id}, ?ETSRC]),
     erlang:process_flag(trap_exit, true),
     erlang:process_flag(priority, high),

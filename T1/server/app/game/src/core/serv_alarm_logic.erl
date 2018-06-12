@@ -19,8 +19,8 @@
 -define(ETS_ALARM_PLAYER, ets_alarm_player).
 
 init() ->
-    ets:new(?ETS_ALARM_POLICY, [protected, set, named_table, {keypos, #m_alarm_policy.id}, ?ETSRC, ?ETSWC]),
-    ets:new(?ETS_ALARM_PLAYER, [protected, set, named_table, {keypos, #m_alarm_player.uid}, ?ETSRC, ?ETSWC]),
+    ets:new(?ETS_ALARM_POLICY, [protected, set, named_table, {keypos, #m_alarm_policy.id}, ?ETS_RC, ?ETS_WC]),
+    ets:new(?ETS_ALARM_PLAYER, [protected, set, named_table, {keypos, #m_alarm_player.uid}, ?ETS_RC, ?ETS_WC]),
     ok.
 
 

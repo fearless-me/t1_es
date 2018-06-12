@@ -10,8 +10,8 @@
 
 -include_lib("stdlib/include/ms_transform.hrl").
 
--define(ETSRC,{read_concurrency,true}).
--define(ETSWC,{write_concurrency,true}).
+-define(ETS_RC,{read_concurrency,true}).
+-define(ETS_WC,{write_concurrency,true}).
 
 -define(ONS_SECOND_MS, 1000).
 -define(ONE_MINUTE_MS, 60*1000).

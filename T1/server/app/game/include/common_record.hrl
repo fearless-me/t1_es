@@ -16,8 +16,6 @@
 %%
 -record(r_login_ack, {error = 0, account_info = undefined}).
 %%
--record(r_account_info, {account_id = 0, account_name = ""}).
-%%
 -record(r_create_player_req, {sid, name, camp, career, race, sex, head, x, y, mid}).
 %%
 -record(r_create_player_ack, {error = 0, uid = 0, acc_id = 0, name = "", camp = 0, career = 0, race = 0, sex = 0, head = 0}).

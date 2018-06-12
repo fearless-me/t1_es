@@ -19,6 +19,8 @@
     mid, line, mpid, old_mid, old_line, old_pos,
     pos, state=0, hp=0
 }).
+%%
+-record(m_player_map,{map_id, line_id, map_pid}).
 
 %% 在线玩家的socket列表
 -record(m_player_pid_sock,{uid, aid, pid, sock}).

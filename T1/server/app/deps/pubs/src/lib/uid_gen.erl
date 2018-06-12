@@ -105,7 +105,7 @@ init_1(IsCenterServer) ->
                 {1, 1, gconf:get_run_no()}
         end,
 
-    ets:new(?UIDEts, [public, named_table, {keypos, #recUID.type}, ?ETSWC, ?ETSRC]),
+    ets:new(?UIDEts, [public, named_table, {keypos, #recUID.type}, ?ETS_WC, ?ETS_RC]),
     List = lists:seq(?UID_TYPE_START, ?UID_TYPE_END),
     Fun =
         fun(UIDType) ->

@@ -143,7 +143,7 @@ mod_init(_Args) ->
     erlang:process_flag(trap_exit, true),
     erlang:process_flag(priority, high),
 
-    ets:new(?MAP_MGR_ETS, [protected, named_table, {keypos, #map_mgr_r.map_id}, ?ETSRC]),
+    ets:new(?MAP_MGR_ETS, [protected, named_table, {keypos, #map_mgr_r.map_id}, ?ETS_RC]),
 
     load_all_map(),
 

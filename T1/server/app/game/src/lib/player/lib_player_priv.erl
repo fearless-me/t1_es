@@ -20,12 +20,6 @@
 -include("vector3.hrl").
 -include("pub_common.hrl").
 
-%% 玩家进程其他模块可调用的接口
--export([shutdown/1]).
--export([stop/1, direct_stop/0, send/1]).
--export([socket/0]).
--export([teleport_/1]).
-
 %% 逻辑层不要调用这些接口
 -export([init/0]).
 -export([login_ack/1]).
@@ -44,31 +38,13 @@ init() ->
     ok.
 
 %%-------------------------------------------------------------------
--spec shutdown(How) -> ok when
-    How :: read | write | read_write.
-shutdown(How) -> mod_player:shutdown(socket(), How).
-stop(Reason)-> mod_player:active_stop(Reason).
-direct_stop()-> mod_player:direct_stop().
-%%-------------------------------------------------------------------
-
--spec send(Msg :: list() | tuple()) -> ok.
-send(Msg) -> mod_player:send(Msg).
-socket()-> mod_player:socket().
-
-%%-------------------------------------------------------------------
-init_on_create() -> ok.
-
-
-
-
-%%-------------------------------------------------------------------
 login_ack(#r_login_ack{error = 0, account_info = AccountIfo}) ->
     #p_account{aid = AccId} = AccountIfo,
     Ret = gcore:register_ppid(self(), AccId),
     login_ack_success(Ret, AccountIfo),
     ok;
 login_ack(#r_login_ack{error = Error}) ->
-    lib_player_priv:send(#pk_GS2U_LoginResult{
+    lib_player_pub:send(#pk_GS2U_LoginResult{
         result = Error,
         msg = io_lib:format("ErrorCode:~p", [Error])
     }),
@@ -77,7 +53,7 @@ login_ack(#r_login_ack{error = Error}) ->
 %%-------------------------------------------------------------------
 login_ack_success(sucess, AccountIfo) ->
     Aid = AccountIfo#p_account.aid,
-    lib_player_priv:send(#pk_GS2U_LoginResult{
+    lib_player_pub:send(#pk_GS2U_LoginResult{
         aid = Aid,
         identity = "",
         result = 0,
@@ -85,25 +61,26 @@ login_ack_success(sucess, AccountIfo) ->
     }),
     lib_player_rw:set_aid(Aid),
     lib_player_rw:set_status(?PS_WAIT_LIST),
+    lib_cache:add_account_socket(Aid, self(), lib_player_pub:socket()),
     lib_db:action_p_(Aid, load_player_list, Aid),
     ok;
 login_ack_success(Reason, AccountIfo) ->
     #p_account{aid = Aid} = AccountIfo,
     ?WARN("acc ~w register process ~p faild with ~w",
         [Aid, self(), Reason]),
-    lib_player_priv:send(#pk_GS2U_LoginResult{
+    lib_player_pub:send(#pk_GS2U_LoginResult{
         result = -1,
         msg = io_lib:format("ErrorCode:~p", [Reason])
     }),
     lib_player_rw:set_status(?PS_ERROR),
-    mod_player:shutdown(read),
+    lib_player_pub:shutdown(read),
     gcore:kick_account(Aid, Reason),
     ok.
 
 %%-------------------------------------------------------------------
 loaded_player_list([]) ->
     lib_player_rw:set_status(?PS_WAIT_SELECT_CREATE),
-    lib_player_priv:send(#pk_GS2U_UserPlayerList{}),
+    lib_player_pub:send(#pk_GS2U_UserPlayerList{}),
     ok;
 loaded_player_list(RoleList) ->
     lib_player_rw:set_status(?PS_WAIT_SELECT_CREATE),
@@ -129,7 +106,7 @@ loaded_player_list(RoleList) ->
                 mapID = MapId, oldMapID = OldMapId
             }
         end, RoleList),
-    lib_player_priv:send(#pk_GS2U_UserPlayerList{info = Info}),
+    lib_player_pub:send(#pk_GS2U_UserPlayerList{info = Info}),
     ok.
 
 %%-------------------------------------------------------------------
@@ -143,12 +120,12 @@ create_player_(Req) ->
 create_player_ack(#r_create_player_ack{error = 0, uid = Uid}) ->
     lib_player_rw:set_status(?PS_WAIT_SELECT_CREATE),
     hook_player:on_create(Uid),
-    lib_player_priv:send(#pk_GS2U_CreatePlayerResult{
+    lib_player_pub:send(#pk_GS2U_CreatePlayerResult{
         errorCode = 0, uid = Uid
     });
 create_player_ack(#r_create_player_ack{error = Err}) ->
     lib_player_rw:set_status(?PS_WAIT_SELECT_CREATE),
-    lib_player_priv:send(#pk_GS2U_CreatePlayerResult{errorCode = Err}).
+    lib_player_pub:send(#pk_GS2U_CreatePlayerResult{errorCode = Err}).
 
 %%-------------------------------------------------------------------
 select_player(Uid) ->
@@ -169,8 +146,8 @@ loaded_player(Player) ->
     #p_player{uid = Uid, aid = Aid} = Player,
     lib_player_base:init(Player),
     lib_player_rw:set_status(?PS_WAIT_ENTER),
-    lib_cache:new_player(self(), mod_player:socket(), Player),
-    lib_cache:add_sock(Aid, Uid, self(), mod_player:socket()),
+    lib_cache:new_player(Player),
+    lib_cache:add_socket(Aid, Uid, self(), lib_player_pub:socket()),
     add_to_world(Player),
     hook_player:on_login(),
     ok.
@@ -192,11 +169,8 @@ add_to_world(Player) ->
         }
     ),
 
-    do_change_map_ack(OldMid, OldLine, vector3:new(OX, 0, OY), Ack),
+    do_change_map_ack(OldMid, OldLine, vector3:new(OX, 0, OY), Ack, login),
     ok.
-
-%%-------------------------------------------------------------------
-teleport_(NewPos) -> ps:send(self(), teleport, NewPos).
 
 %%-------------------------------------------------------------------
 teleport_call(NewPos) ->
@@ -208,7 +182,7 @@ do_teleport(undefined, _NewPos) ->
     ?ERROR("");
 do_teleport(MapPid, NewPos) ->
     Uid = lib_player_rw:get_uid(),
-    mod_map:player_teleport(
+    ok  = mod_map:player_teleport(
         MapPid,
         #r_teleport_req{uid = Uid, tar_pos = NewPos}
     ),
@@ -232,7 +206,7 @@ do_goto_new_map(DestMapID, TarPos) ->
         }
     ),
 
-    do_change_map_ack(Mid, Line, Pos, Ack),
+    do_change_map_ack(Mid, Line, Pos, Ack, online),
     ok.
 
 
@@ -240,9 +214,9 @@ do_change_map_ack(
     OldMid, OldLineId, OldPos,
     #r_change_map_ack{
         error = 0,
-        map_id = Mid, line_id = Line,
+        map_id = Mid, line_id = LineId,
         map_pid = MPid , pos = Pos
-}) ->
+}, _Flag) ->
     Uid = lib_player_rw:get_uid(),
     lib_cache:player_update(
         Uid,
@@ -251,12 +225,15 @@ do_change_map_ack(
             {#m_player.old_line, OldLineId},
             {#m_player.old_pos, OldPos},
             {#m_player.mid, Mid},
-            {#m_player.line, Line},
+            {#m_player.line, LineId},
             {#m_player.mpid, MPid},
             {#m_player.pos, Pos}
         ]
     ),
-    ?WARN("player ~p enter map ~p line ~p",[Uid, Mid, Line]),
+    lib_player_rw:set_map(
+        #m_player_map{map_id = Mid, line_id = LineId, map_pid = MPid}
+    ),
+    ?WARN("player ~p enter map_~p_~p",[Uid, Mid, LineId]),
     hook_player:on_change_map(Mid, Mid),
 
     lib_player_rw:set_status(?PS_GAME),
@@ -268,8 +245,12 @@ do_change_map_ack(
     ok;
 do_change_map_ack(
     OldMid, OldLineId, _OldPos,
-    #r_change_map_ack{error = Err, map_id = Mid}
+    #r_change_map_ack{error = Err, map_id = Mid}, Flag
 )->
+    case Flag of
+        online -> lib_player_rw:set_status(?PS_GAME);
+        _Flag  -> error
+    end,
     ?ERROR("player ~p change from map ~p:~p to map ~p failed with ~p",
         [lib_player_rw:get_uid(), OldMid, OldLineId, Mid, Err]),
     ok.
@@ -286,14 +267,14 @@ goto_to_pre_map() ->
 %%%-------------------------------------------------------------------
 offline(Reason) ->
     ?TRY_CATCH(offline_1(lib_player_rw:get_status()), Err0, St0),
-    ?TRY_CATCH(lib_cache:del_sock(lib_player_rw:get_uid()), Err1, St1),
-    ?TRY_CATCH(flush_cache(Reason), Err2, St2),
+    ?TRY_CATCH(flush_cache(Reason), Err1, St1),
     ok.
 
 offline_1(Status)
     when Status =:= ?PS_GAME; Status =:= ?PS_CHANGE_MAP ->
     lib_player_rw:set_status(?PS_OFFLINE),
     Uid = lib_player_rw:get_uid(),
+    Aid = lib_player_rw:get_aid(),
     #m_player{
         mid = Mid, mpid = MPid, line = LineId
     } = Player = lib_cache:get_player(Uid),
@@ -301,15 +282,18 @@ offline_1(Status)
     hook_player:on_offline(),
     mod_map_creator:player_offline(Uid, Mid, LineId, MPid),
     lib_player_save:save(Player),
-    lib_cache:offline(Uid),
+    lib_cache:offline(Aid, Uid),
     ?INFO("player ~p pid ~p sock ~p player ~w offline status ~p",
-        [Uid, self(), socket(), Uid, Status]),
+        [Uid, self(), lib_player_pub:socket(), Uid, Status]),
     ok;
 offline_1(Status) ->
-    Uid = lib_player_rw:get_uid(),
+    Uid = lib_player_rw:get_uid_def(0),
+    Aid = lib_player_rw:get_aid_def(0),
     lib_player_rw:set_status(?PS_OFFLINE),
+    lib_cache:offline(Aid, Uid),
     ?INFO("player ~p pid ~p sock ~p player ~w offline status ~p",
-        [Uid, self(), socket(), Uid, Status]),
+        [Uid, self(), lib_player_pub:socket(), Uid, Status]),
+
     ok.
 
 %%%-------------------------------------------------------------------

@@ -15,8 +15,6 @@
 %% API
 -export([run/0]).
 
-
-
 -define(HEADER_SEC,
     "%%% This File Is AUTO GENERATED, Don't Modify it MANUALLY!!!\n"
     "%%% This File Is AUTO GENERATED, Don't Modify it MANUALLY!!!\n"
@@ -28,7 +26,7 @@
 run() ->
     try
         multi_to_code(
-            "..\\src\\lib\\lib_obj_rw.erl",
+            "..\\src\\lib\\map\\lib_obj_rw.erl",
             lib_obj_rw,
             [
                 ["logger.hrl", "rw_record.hrl"],
@@ -38,7 +36,7 @@ run() ->
             ]
         ),
         multi_to_code(
-            "..\\src\\lib\\lib_player_rw.erl",
+            "..\\src\\lib\\player\\lib_player_rw.erl",
             lib_player_rw,
             [
                 ["logger.hrl", "player_status.hrl", "rw_record.hrl", "vector3.hrl"],

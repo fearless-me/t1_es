@@ -18,9 +18,9 @@
 
 %%-------------------------------------------------------------------
 init() ->
-    ets:new(?ETS_PLAYER_PUB,   [named_table, public, {keypos, #m_player.uid},           ?ETSRC, ?ETSWC]),
-    ets:new(?ETS_PLAYER_PSOCK, [named_table, public, {keypos, #m_player_pid_sock.uid},  ?ETSRC, ?ETSWC]),
-    ets:new(?ETS_ACCOUNT_PSOCK,[named_table, public, {keypos, #m_account_pid_sock.aid},  ?ETSRC, ?ETSWC]),
+    ets:new(?ETS_PLAYER_PUB,   [named_table, public, {keypos, #m_player.uid},           ?ETS_RC, ?ETS_WC]),
+    ets:new(?ETS_PLAYER_PSOCK, [named_table, public, {keypos, #m_player_pid_sock.uid},  ?ETS_RC, ?ETS_WC]),
+    ets:new(?ETS_ACCOUNT_PSOCK,[named_table, public, {keypos, #m_account_pid_sock.aid},  ?ETS_RC, ?ETS_WC]),
     ok.
 
 

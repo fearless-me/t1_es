@@ -23,18 +23,17 @@
     stopped, path_list = [],
 
 %%  战斗相关
-    hp = 1, max_hp = 1,
-    attr= [], buff_list = []
-
+    hp = 1, max_hp = 1, attr= [], buff_list = []
 }).
 
 -record(m_player_rw, {
+%%  这些信息将由基础代码来维护
     aid, uid, sid,
     name, level, sex, head,
-    race, career,
-    map_id, line, 
+    race, career, map = undefined, % m_player_map
     last_second_tick, last_minute_tick, last_hour_tick,
     status
+%%  逻辑代码的放在这之后（比如背包，技能等等）
 }).
 
 -endif.

@@ -11,6 +11,7 @@
 -include("logger.hrl").
 -include("netmsg.hrl").
 -include("db_record.hrl").
+-include("mem_record.hrl").
 
 %% API
 -export([init/1]).
@@ -21,7 +22,7 @@ init(Player) ->
         uid = Uid, sid = Sid,
         name = Name, level = Level, sex = Sex,
         race = Race, career=Career, head = Head,
-        map_id = Mid, line = Lid, x = X, y = Y
+        map_id = Mid, line = LineId
     } = Player,
     lib_player_rw:set_uid(Uid),
     lib_player_rw:set_sid(Sid),
@@ -31,16 +32,16 @@ init(Player) ->
     lib_player_rw:set_race(Race),
     lib_player_rw:set_career(Career),
     lib_player_rw:set_head(Head),
-    lib_player_rw:set_map_id(Mid),
-    lib_player_rw:set_line(Lid),
+    lib_player_rw:set_map(#m_player_map{map_id = Mid, line_id = LineId}),
     ok.
 %%-------------------------------------------------------------------
 send_init_data() ->
     send_base_info(),
-    lib_player_priv:send(#pk_GS2U_GetPlayerInitDataEnd{}),
+    lib_player_pub:send(#pk_GS2U_GetPlayerInitDataEnd{}),
     ok.
 
 send_base_info() ->
+    #m_player_map{map_id = Mid} = lib_player_rw:get_map(),
     Msg = #pk_GS2U_PlayerInitBase{
         %% UInt64 角色
         uid = lib_player_rw:get_uid(),
@@ -59,7 +60,7 @@ send_base_info() ->
 %% Int32 头
         head = lib_player_rw:get_head(),
 %% UInt16 角色
-        mapID = lib_player_rw:get_map_id()
+        mapID = Mid
     },
-    lib_player_priv:send(Msg),
+    lib_player_pub:send(Msg),
     ok.

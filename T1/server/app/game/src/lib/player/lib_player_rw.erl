@@ -21,8 +21,7 @@
 -export([get_head/0, get_head_def/1, set_head/1]).
 -export([get_race/0, get_race_def/1, set_race/1]).
 -export([get_career/0, get_career_def/1, set_career/1]).
--export([get_map_id/0, get_map_id_def/1, set_map_id/1]).
--export([get_line/0, get_line_def/1, set_line/1]).
+-export([get_map/0, get_map_def/1, set_map/1]).
 -export([get_last_second_tick/0, get_last_second_tick_def/1, set_last_second_tick/1]).
 -export([get_last_minute_tick/0, get_last_minute_tick_def/1, set_last_minute_tick/1]).
 -export([get_last_hour_tick/0, get_last_hour_tick_def/1, set_last_hour_tick/1]).
@@ -122,24 +121,14 @@ get_career_def(Def)->
 set_career(V)-> put(career, V), hook_player:on_rw_update(career, V).
 
 %%-------------------------------------------------------------------
-%% #m_player_rw.map_id
-get_map_id()-> get(map_id).
-get_map_id_def(Def)->
-	case get(map_id) of
+%% #m_player_rw.map
+get_map()-> get(map).
+get_map_def(Def)->
+	case get(map) of
 		undefined -> Def;
 		V -> V
 	end.
-set_map_id(V)-> put(map_id, V), hook_player:on_rw_update(map_id, V).
-
-%%-------------------------------------------------------------------
-%% #m_player_rw.line
-get_line()-> get(line).
-get_line_def(Def)->
-	case get(line) of
-		undefined -> Def;
-		V -> V
-	end.
-set_line(V)-> put(line, V), hook_player:on_rw_update(line, V).
+set_map(V)-> put(map, V), hook_player:on_rw_update(map, V).
 
 %%-------------------------------------------------------------------
 %% #m_player_rw.last_second_tick
@@ -191,8 +180,7 @@ del()->
 	erase(head),
 	erase(race),
 	erase(career),
-	erase(map_id),
-	erase(line),
+	erase(map),
 	erase(last_second_tick),
 	erase(last_minute_tick),
 	erase(last_hour_tick),
@@ -209,8 +197,7 @@ to_record()->
 		head = get_head(),
 		race = get_race(),
 		career = get_career(),
-		map_id = get_map_id(),
-		line = get_line(),
+		map = get_map(),
 		last_second_tick = get_last_second_tick(),
 		last_minute_tick = get_last_minute_tick(),
 		last_hour_tick = get_last_hour_tick(),
