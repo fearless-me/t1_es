@@ -77,11 +77,20 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="tcp_codec.erl" pinned="false" current-in-tab="true">
+      <file leaf-file-name="tcp_codec.erl" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/deps/pubs/src/net/tcp_codec.erl">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="630">
-              <caret line="66" column="33" selection-start-line="66" selection-start-column="33" selection-end-line="66" selection-end-column="33" />
+            <state relative-caret-position="609">
+              <caret line="35" column="9" lean-forward="true" selection-start-line="35" selection-start-column="9" selection-end-line="35" selection-end-column="9" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="tcp_client.erl" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/app/deps/pubs/src/net/tcp_client.erl">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="588">
+              <caret line="82" column="30" selection-start-line="82" selection-start-column="30" selection-end-line="82" selection-end-column="30" />
             </state>
           </provider>
         </entry>
@@ -98,8 +107,8 @@
       <file leaf-file-name="netconf.hrl" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/deps/pubs/include/netconf.hrl">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="294">
-              <caret line="14" column="24" selection-start-line="14" selection-start-column="24" selection-end-line="14" selection-end-column="24" />
+            <state relative-caret-position="315">
+              <caret line="15" column="111" lean-forward="true" selection-start-line="15" selection-start-column="111" selection-end-line="15" selection-end-column="111" />
             </state>
           </provider>
         </entry>
@@ -117,15 +126,6 @@
         <entry file="file://$PROJECT_DIR$/app/game/src/core/serv_loader.erl">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="-496" />
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="lib_player_pub.erl" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/game/src/lib/player/lib_player_pub.erl">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="659">
-              <caret line="37" selection-start-line="37" selection-end-line="37" />
-            </state>
           </provider>
         </entry>
       </file>
@@ -210,7 +210,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/app/game/src/game_sup.erl" />
         <option value="$PROJECT_DIR$/app/game/src/lib/player/lib_player_netmsg.erl" />
         <option value="$PROJECT_DIR$/app/game/src/mod_gen/gen_login.erl" />
         <option value="$PROJECT_DIR$/app/game/src/mod_gen/mod_map.erl" />
@@ -257,10 +256,11 @@
         <option value="$PROJECT_DIR$/app/game/src/mod/map_mgr.erl" />
         <option value="$PROJECT_DIR$/app/game/src/hook/hook_map.erl" />
         <option value="$PROJECT_DIR$/app/game/src/mod/map.erl" />
-        <option value="$PROJECT_DIR$/app/deps/pubs/include/netconf.hrl" />
         <option value="$PROJECT_DIR$/app/game/src/lib/player/lib_player_priv.erl" />
         <option value="$PROJECT_DIR$/app/game/src/lib/lib_cache.erl" />
         <option value="$PROJECT_DIR$/app/deps/pubs/src/net/tcp_codec.erl" />
+        <option value="$PROJECT_DIR$/app/deps/pubs/include/netconf.hrl" />
+        <option value="$PROJECT_DIR$/app/deps/pubs/src/net/tcp_client.erl" />
       </list>
     </option>
   </component>
@@ -1084,12 +1084,12 @@
       <workItem from="1528714893973" duration="16179000" />
       <workItem from="1528782533651" duration="10145000" />
       <workItem from="1528802645318" duration="11794000" />
-      <workItem from="1528868851269" duration="10397000" />
+      <workItem from="1528868851269" duration="11118000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="713304000" />
+    <option name="totallyTimeSpent" value="714025000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -1194,13 +1194,6 @@
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/app/game/include/db_record.hrl">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="336">
-          <caret line="16" column="8" selection-start-line="16" selection-start-column="8" selection-end-line="16" selection-end-column="8" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/game/src/mod_lib/player/lib_player_priv.erl">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="3108">
@@ -1463,13 +1456,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/deps/pubs/include/netconf.hrl">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="294">
-          <caret line="14" column="24" selection-start-line="14" selection-start-column="24" selection-end-line="14" selection-end-column="24" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/game/src/core/serv_loader_logic.erl">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="407">
@@ -1500,8 +1486,22 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/app/deps/pubs/src/net/tcp_codec.erl">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="630">
-          <caret line="66" column="33" selection-start-line="66" selection-start-column="33" selection-end-line="66" selection-end-column="33" />
+        <state relative-caret-position="609">
+          <caret line="35" column="9" lean-forward="true" selection-start-line="35" selection-start-column="9" selection-end-line="35" selection-end-column="9" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/deps/pubs/include/netconf.hrl">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="315">
+          <caret line="15" column="111" lean-forward="true" selection-start-line="15" selection-start-column="111" selection-end-line="15" selection-end-column="111" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/deps/pubs/src/net/tcp_client.erl">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="588">
+          <caret line="82" column="30" selection-start-line="82" selection-start-column="30" selection-end-line="82" selection-end-column="30" />
         </state>
       </provider>
     </entry>

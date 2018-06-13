@@ -81,7 +81,6 @@ recv_msg(Socket) ->
             {Msg, LeftBin} = netmsg:decode(Cmd, MsgBin),
             tcp_client:handle(Msg),
             set_buff(LeftBin),
-            io:format("~n######~n~n ~p ~n#######~n~n",[LeftBin]),
             ok;
         _ ->
             skip
