@@ -4,12 +4,13 @@
 %%% @doc
 %%%
 %%% @end
-%%% Created : 13. 六月 2018 9:57
+%%% Created : 13. 六月 2018 15:25
 %%%-------------------------------------------------------------------
--module(lib_login).
+-module(lib_attr_calc).
 -author("mawenhong").
 
--export([login_/1, logout_/1]).
+%% API
+-export([calc/5]).
 
-login_(Req)         -> ps:send(gen_login, login_req,Req).
-logout_(AccountID)  -> ps:send(gen_login, logout, AccountID).
+calc(_PropList, _AddList, _MultiList, _AddList_Del, _MultiList_Del) ->
+    ok.

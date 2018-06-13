@@ -6,7 +6,7 @@
 %%% @end
 %%% Created : 10. 五月 2018 11:06
 %%%-------------------------------------------------------------------
--module(mod_map_mgr).
+-module(gen_map_mgr).
 -author("mawenhong").
 
 -behaviour(gen_serverw).
@@ -14,29 +14,11 @@
 -include("logger.hrl").
 -include("map.hrl").
 -include("map_obj.hrl").
--define(MAP_LINES, map_line_ets__).
--define(LINE_LIFETIME, 3 * 60 * 1000).
--define(DEAD_LINE_PROTECT, 15 * 1000).
-
-%%--------------------------------
-%% WARNING!!! WARNING!!! WARNING!!!
-%% call
--export([player_join_map/2]).
--export([player_exit_map/2]).
-%%--------------------------------
 
 %% API
 -export([start_link/1]).
 -export([mod_init/1, do_handle_call/3, do_handle_info/2, do_handle_cast/2]).
 
-%%--------------------------------
-%% WARNING!!! WARNING!!! WARNING!!!
-%% call
-player_join_map(MgrPid, Req) ->
-    gen_server:call(MgrPid, {join_map, Req}, ?MAP_CALL_TIMEOUT).
-player_exit_map(MgrPid, Req) ->
-    gen_server:call(MgrPid, {exit_map, Req}, ?MAP_CALL_TIMEOUT).
-%%--------------------------------
 
 %%%===================================================================
 %%% public functions
@@ -48,9 +30,10 @@ start_link(MapID) ->
 
 %%%===================================================================
 %%% Internal functions
-%%%===================================================================	
+%%%===================================================================
+-define(MAP_LINES, map_line_ets__).
 mod_init([MapID]) ->
-    ProcessName = misc:create_atom(mod_map_mgr, [MapID]),
+    ProcessName = misc:create_atom(gen_map_mgr, [MapID]),
     true = erlang:register(ProcessName, self()),
     erlang:process_flag(trap_exit, true),
     erlang:process_flag(priority, high),
@@ -106,7 +89,7 @@ do_player_join_map(S, Req) ->
     #m_map_line{pid = MapPid, map_id = MapID, line_id = LineID} = Line,
 
     %3. 加入
-    mod_map:player_join(MapPid, Req),
+    map:player_join(MapPid, Req),
 
     %4. 更新
     ets:update_counter(S#state.ets, LineID, {#m_map_line.in, 1}),
@@ -125,7 +108,7 @@ do_player_exit_map(S, Req) ->
     case ets:lookup(S#state.ets, LineID) of
         [#m_map_line{pid = Mpid}] ->
             ets:update_counter(S#state.ets, LineID, {#m_map_line.in, -1}),
-            mod_map:player_exit(Mpid, Req);
+            map:player_exit(Mpid, Req);
         _ -> skip
     end,
 
@@ -133,7 +116,7 @@ do_player_exit_map(S, Req) ->
 
 %%--------------------------------------------------------------------
 create_new_line(S, MapID, LineID) ->
-    {ok, Pid} = mod_map_supervisor:start_child([MapID, LineID]),
+    {ok, Pid} = map_supervisor:start_child([MapID, LineID]),
     Line = #m_map_line{
         map_id = MapID, line_id = LineID, pid = Pid,
         dead_line = time:milli_seconds() + ?LINE_LIFETIME

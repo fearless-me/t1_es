@@ -61,7 +61,7 @@ login_ack_success(sucess, AccountIfo) ->
     }),
     lib_player_rw:set_aid(Aid),
     lib_player_rw:set_status(?PS_WAIT_LIST),
-    lib_cache:add_account_socket(Aid, self(), lib_player_pub:socket()),
+    hook_player:on_account_login(Aid, self(), lib_player_pub:socket()),
     lib_db:action_p_(Aid, load_player_list, Aid),
     ok;
 login_ack_success(Reason, AccountIfo) ->
@@ -144,9 +144,9 @@ loaded_player(undefined) ->
     ok;
 loaded_player(Player) ->
     #p_player{uid = Uid, aid = Aid} = Player,
-    lib_player_base:init(Player),
     lib_player_rw:set_status(?PS_WAIT_ENTER),
-    lib_cache:new_player(Player),
+    lib_player_base:init(Player),
+    lib_cache:add_player_pub(Player),
     lib_cache:add_socket(Aid, Uid, self(), lib_player_pub:socket()),
     add_to_world(Player),
     hook_player:on_login(),
@@ -159,7 +159,7 @@ add_to_world(Player) ->
         old_map_id = OldMid, old_line = OldLine, old_x = OX, old_y = OY
     } = Player,
     
-    Ack = mod_map_creator:player_online(
+    Ack = map_creator:player_online(
         Mid,
         #r_change_map_req{
             uid = Uid,
@@ -175,14 +175,14 @@ add_to_world(Player) ->
 %%-------------------------------------------------------------------
 teleport_call(NewPos) ->
     Uid = lib_player_rw:get_uid(),
-    #m_player{mpid = MPid} = lib_cache:get_player(Uid),
+    #m_player_pub{mpid = MPid} = lib_cache:get_player_pub(Uid),
     do_teleport(MPid, NewPos).
 
 do_teleport(undefined, _NewPos) ->
     ?ERROR("");
 do_teleport(MapPid, NewPos) ->
     Uid = lib_player_rw:get_uid(),
-    ok  = mod_map:player_teleport(
+    ok  = map:player_teleport(
         MapPid,
         #r_teleport_req{uid = Uid, tar_pos = NewPos}
     ),
@@ -197,8 +197,8 @@ goto_new_map(DestMapID, Pos) ->
 do_goto_new_map(DestMapID, TarPos) ->
     lib_player_rw:set_status(?PS_CHANGE_MAP),
     Uid = lib_player_rw:get_uid(),
-    #m_player{mid = Mid, line = Line, mpid = MPid, pos = Pos} = lib_cache:get_player(Uid),
-    Ack = mod_map_creator:player_change_map(
+    #m_player_pub{mid = Mid, line = Line, mpid = MPid, pos = Pos} = lib_cache:get_player_pub(Uid),
+    Ack = map_creator:player_change_map(
         #r_change_map_req{
             uid = Uid, pid = self(),
             map_id = Mid, line_id = Line, map_pid = MPid,
@@ -218,16 +218,16 @@ do_change_map_ack(
         map_pid = MPid , pos = Pos
 }, _Flag) ->
     Uid = lib_player_rw:get_uid(),
-    lib_cache:player_update(
+    lib_cache:update_player_pub(
         Uid,
         [
-            {#m_player.old_mid, OldMid},
-            {#m_player.old_line, OldLineId},
-            {#m_player.old_pos, OldPos},
-            {#m_player.mid, Mid},
-            {#m_player.line, LineId},
-            {#m_player.mpid, MPid},
-            {#m_player.pos, Pos}
+            {#m_player_pub.old_mid, OldMid},
+            {#m_player_pub.old_line, OldLineId},
+            {#m_player_pub.old_pos, OldPos},
+            {#m_player_pub.mid, Mid},
+            {#m_player_pub.line, LineId},
+            {#m_player_pub.mpid, MPid},
+            {#m_player_pub.pos, Pos}
         ]
     ),
     lib_player_rw:set_map(
@@ -258,7 +258,7 @@ do_change_map_ack(
 %%%-------------------------------------------------------------------
 goto_to_pre_map() ->
     Uid = lib_player_rw:get_uid(),
-    #m_player{mpid = Mid, old_mid = OMid, old_pos = OPos} = lib_cache:get_player(Uid),
+    #m_player_pub{mpid = Mid, old_mid = OMid, old_pos = OPos} = lib_cache:get_player_pub(Uid),
     ?DEBUG("player ~p return_to_pre_map from ~p to ~p", [Uid, Mid, OMid]),
     do_goto_new_map(OMid, OPos),
     ok.
@@ -275,12 +275,12 @@ offline_1(Status)
     lib_player_rw:set_status(?PS_OFFLINE),
     Uid = lib_player_rw:get_uid(),
     Aid = lib_player_rw:get_aid(),
-    #m_player{
+    #m_player_pub{
         mid = Mid, mpid = MPid, line = LineId
-    } = Player = lib_cache:get_player(Uid),
-    ?WARN("player ~p exit map ~p line ~p",[Uid, Mid, LineId]),
+    } = Player = lib_cache:get_player_pub(Uid),
+    ?WARN("player ~p exit map_~p_~p",[Uid, Mid, LineId]),
     hook_player:on_offline(),
-    mod_map_creator:player_offline(Uid, Mid, LineId, MPid),
+    map_creator:player_offline(Uid, Mid, LineId, MPid),
     lib_player_save:save(Player),
     lib_cache:offline(Aid, Uid),
     ?INFO("player ~p pid ~p sock ~p player ~w offline status ~p",

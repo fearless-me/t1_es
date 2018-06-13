@@ -232,7 +232,7 @@ on_player_pos_change(Uid, Src, Tar) ->
     lib_obj_rw:set_cur_pos(Uid, Tar),
     OldVisIndex = lib_map_view:pos_to_vis_index(Src),
     NewVisIndex = lib_map_view:pos_to_vis_index(Tar),
-    lib_cache:player_update(Uid, {#m_player.pos, Tar}),
+    lib_cache:update_player_pub(Uid, {#m_player_pub.pos, Tar}),
     lib_map_view:sync_change_pos_visual_tile(Obj, OldVisIndex, NewVisIndex),
     ok.
 

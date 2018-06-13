@@ -15,15 +15,15 @@
 -module(lib_db).
 -author("mawenhong").
 
+
+-export([
 %% 玩家数据库
--export([action_p_/3]).
--export([action_p_/4]).
+    action_p_/3, action_p_/4,
 %% 账号库
--export([action_a_/3]).
--export([action_a_/4]).
+    action_a_/3, action_a_/4,
 %% 公共库
--export([action_pub_/3]).
--export([action_pub_/4]).
+    action_pub_/3, action_pub_/4
+]).
 
 %% 玩家数据库
 action_p_(HashKey, MsgId, Msg) ->

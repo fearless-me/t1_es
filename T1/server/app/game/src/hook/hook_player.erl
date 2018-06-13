@@ -12,12 +12,14 @@
 -include("mem_record.hrl").
 
 %% API
--export([on_create/1]).
--export([on_login/0]).
--export([on_offline/0]).
--export([on_change_map/2]).
+-export([on_account_login/3, on_create/1,on_login/0,on_offline/0]).
 -export([on_tick/0, on_second/0, on_minute/0, on_hour/0, on_sharp/1]).
--export([on_rw_update/2]).
+-export([on_change_map/2, on_rw_update/2]).
+
+%%-------------------------------------------------------------------
+on_account_login(Aid, Pid, Sock) ->
+    lib_cache:add_account_socket(Aid, Pid, Sock),
+    ok.
 
 %%-------------------------------------------------------------------
 on_create(Uid) ->
@@ -74,7 +76,7 @@ on_sharp(Hour) ->
 %%不要在调用lib_player_rw:set_xxx
 on_rw_update(level, Level) ->
     Uid = lib_player_rw:get_uid(),
-    lib_cache:player_update(Uid, {#m_player.level, Level}),
+    lib_cache:update_player_pub(Uid, {#m_player_pub.level, Level}),
     ok;
 on_rw_update(_Key, _Value) ->
 %%    ?DEBUG("player ~p key ~p  value ~p", [lib_player_rw:get_uid(), Key, Value]),

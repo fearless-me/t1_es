@@ -9,6 +9,7 @@
 -module(serv_loader_logic).
 -author("mawenhong").
 -include("logger.hrl").
+-include("mem_record.hrl").
 
 %% API
 -export([task_list/0]).
@@ -18,11 +19,12 @@
 
 %%-------------------------------------------------------------------
 task_list() ->
-    [serv_start].
+    [serv_start, load_all_role_info].
 
 %%-------------------------------------------------------------------
 start_all_task() ->
-    lib_db:action_pub_(1, serv_start, gconf:get_sid()).
+    lib_db:action_pub_(1, serv_start, gconf:get_sid()),
+    lib_db:action_p_(2, load_all_role_info, gconf:get_sid()).
 
 %%-------------------------------------------------------------------
 on_info_msg({serv_start, RunNo}) ->
@@ -34,7 +36,12 @@ on_info_msg({serv_start, RunNo}) ->
         gcore:halt("save serv_start failed, error ~p, current stack ~p", [Err, ST])
     end,
     ok;
-on_info_msg({loal_all_role_info, xx}) ->
+on_info_msg({load_all_role_info_ack, List}) ->
+    lists:foreach(
+        fun(Player)-> lib_cache:add_player_pub(Player) end, List),
+    ok;
+on_info_msg(load_all_role_info_ack_end) ->
+    task_done(load_all_role_info),
     ok;
 on_info_msg(Info) ->
     ?ERROR("undeal info ~w", [Info]).

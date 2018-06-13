@@ -12,13 +12,21 @@
 -define(MEM_RECORD_HRL, true).
 
 %% 玩家部分数据的一个快照
--record(m_player,{
+-record(m_player_pub,{
     % 玩家进程上线是初始化、运行时更新
     uid, aid, sid, name, sex, career, race, camp, level, pid, sock,
     % 进入地图进程同步更新
-    mid, line, mpid, old_mid, old_line, old_pos,
-    pos, state=0, hp=0
+    mid, line, pos, mpid,
+    old_mid, old_line, old_pos,
+    state=0, hp=0
 }).
+
+%%一些核心模块用的东西
+-record(m_player_private,{
+    uid, aid,
+    priv_attrs=[], priv_buffs=[]
+}).
+
 %%
 -record(m_player_map,{map_id, line_id, map_pid}).
 

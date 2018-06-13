@@ -6,46 +6,17 @@
 %%% @end
 %%% Created : 10. 五月 2018 11:09
 %%%-------------------------------------------------------------------
--module(mod_map).
+-module(gen_map).
 -author("mawenhong").
 
 -behaviour(gen_serverw).
 -include("logger.hrl").
 -include("map.hrl").
 
-%%--------------------------------
-%% WARNING!!! WARNING!!! WARNING!!!
-%% call
--export([player_join/2]).
--export([player_exit/2]).
--export([player_teleport/2]).
-%%--------------------------------
-%%
--export([status_/1]).
--export([player_move_/2]).
 
 %% API
 -export([start_link/1]).
 -export([mod_init/1, do_handle_call/3, do_handle_info/2, do_handle_cast/2]).
-
-%%--------------------------------
-%% WARNING!!! WARNING!!! WARNING!!!
-%% call
-player_exit(MapPid, Req) ->
-    gen_server:call(MapPid, {player_exit, Req}, ?MAP_CALL_TIMEOUT).
-%%
-player_join(MapPid, Obj) ->
-    gen_server:call(MapPid, {player_join, Obj}, ?MAP_CALL_TIMEOUT).
-%%
-player_teleport(MapPid, Req) ->
-    gen_server:call(MapPid, {player_teleport, Req}, ?MAP_CALL_TIMEOUT).
-%%--------------------------------
-
-%%
-player_move_(MapPid, Req) ->
-    ps:send(MapPid, start_move, Req).
-
-status_(MapPid) -> ps:send(MapPid, status).
 
 %%%===================================================================
 %%% public functions
@@ -59,7 +30,7 @@ start_link(Params) ->
 mod_init([MapID, MapLine]) ->
      erlang:process_flag(trap_exit, true),
     %% erlang:process_flag(priority, high),
-    ProcessName = misc:create_atom(mod_map, [MapID,MapLine]),
+    ProcessName = misc:create_atom(gen_map, [MapID,MapLine]),
     true = erlang:register(ProcessName, self()),
     ?INFO("map ~p:~p started",[ProcessName, self()]),
     {ok, lib_map_priv:init(#m_map_state{map_id = MapID, line_id = MapLine})}.
@@ -78,8 +49,8 @@ do_handle_call({player_teleport, Req}, _From, State) ->
     {Ret, NewState} = lib_map_priv:force_teleport(State, Req),
     {reply, Ret, NewState};
 do_handle_call(Request, From, State) ->
-    ?ERROR("undeal call ~w from ~w", [Request, From]),
-    {reply, ok, State}.
+    Ret = lib_map:on_call_msg(Request, From),
+    {reply, Ret, State}.
 
 %%--------------------------------------------------------------------
 do_handle_info(status, State) ->
@@ -95,12 +66,12 @@ do_handle_info({start_move, Req}, State) ->
 do_handle_info(stop_immediately, State) ->
     {stop, normal, State};
 do_handle_info(Info, State) ->
-    ?ERROR("undeal info ~w", [Info]),
+    lib_map:on_info_msg(Info),
     {noreply, State}.
 
 %%--------------------------------------------------------------------
 do_handle_cast(Request, State) ->
-    ?ERROR("undeal cast ~w", [Request]),
+    lib_map:on_cast_msg(Request),
     {noreply, State}.
 
 show_status() ->

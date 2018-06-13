@@ -31,7 +31,7 @@ run() ->
             [
                 ["logger.hrl", "rw_record.hrl"],
                 [
-                    {m_map_obj_rw, record_info(fields, m_map_obj_rw), none, ["Uid"], ""}
+                    {m_map_obj_rw, record_info(fields, m_map_obj_rw), none, ["Uid"], "hook_map:on_rw_update"}
                 ]
             ]
         ),

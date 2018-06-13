@@ -6,7 +6,7 @@
 %%% @end
 %%% Created : 10. 五月 2018 11:10
 %%%-------------------------------------------------------------------
--module(mod_map_supervisor).
+-module(map_supervisor).
 -author("mawenhong").
 
 -behaviour(supervisor).
@@ -50,7 +50,7 @@ init([]) ->
             {simple_one_for_one, 5, 10},
             [
                 {   undefind,                               	% Id       = internal id
-                    {mod_map, start_link, []},             % StartFun = {M, F, A}
+                    {gen_map, start_link, []},             % StartFun = {M, F, A}
                     temporary,                               	% Restart  = permanent | transient | temporary (不会重启)
                     2000,                                    	% Shutdown = brutal_kill | int() >= 0 | infinity
                     worker,                                  	% Type     = worker | supervisor

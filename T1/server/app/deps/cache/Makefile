@@ -39,7 +39,7 @@ ADDR   = $(shell ifconfig ${NET} | sed -En 's/^${NET}:.*inet (addr:)?(([0-9]*\.)
 EFLAGS = \
 	-name ${APP}@${ADDR} \
 	-setcookie ${COOKIE} \
-	-pa ${ROOT}/_build/default/lib/*/ebin \
+	-pa ${ROOT}/_build/default/mod_lib/*/ebin \
 	-pa ${ROOT}/rel \
 	-kernel inet_dist_listen_min 32100 \
 	-kernel inet_dist_listen_max 32199 \
@@ -92,7 +92,7 @@ unit: all
 	@./rebar3 skip_deps=true eunit
 
 ##
-## execute lib test and terminate node
+## execute mod_lib test and terminate node
 test: _build/test.beam
 	@mkdir -p /tmp/test/${APP} ;\
 	erl ${EFLAGS} -pa _build/ -pa test/ -run test run test/${TEST}.config

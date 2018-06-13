@@ -46,9 +46,9 @@ init([]) ->
         {
             {one_for_one, 5, 10},
             [
-                ?CHILD(mod_map_mgr_supervisor, supervisor),
-                ?CHILD(mod_map_supervisor, supervisor),
-                ?CHILD(mod_map_creator, worker)
+                ?CHILD(map_mgr_supervisor, supervisor),
+                ?CHILD(map_supervisor, supervisor),
+                ?CHILD(gen_map_creator, worker)
             ]
         }
     }.

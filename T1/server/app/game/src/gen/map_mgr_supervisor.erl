@@ -1,19 +1,20 @@
+
 %%%-------------------------------------------------------------------
 %%% @author mawenhong
 %%% @copyright (C) 2018, <COMPANY>
 %%% @doc
 %%%
 %%% @end
-%%% Created : 11. 五月 2018 14:27
+%%% Created : 10. 五月 2018 11:10
 %%%-------------------------------------------------------------------
--module(mod_player_supervisor).
+-module(map_mgr_supervisor).
 -author("mawenhong").
 
 -behaviour(supervisor).
 
 %% API
--export([start_link/0]).
 -export([start_child/1]).
+-export([start_link/0]).
 
 %% Supervisor callbacks
 -export([init/1]).
@@ -37,8 +38,8 @@
 start_link() ->
     supervisor:start_link({local, ?MODULE}, ?MODULE, []).
 
-start_child(CreateMapArg) ->
-    supervisor:start_child(?MODULE, [CreateMapArg]).
+start_child(MapID) ->
+    supervisor:start_child(?MODULE, [MapID]).
 
 %%%===================================================================
 %%% Supervisor callbacks
@@ -49,19 +50,17 @@ init([]) ->
         {
             {simple_one_for_one, 5, 10},
             [
-%%                {   undefind,                               	% Id       = internal id
-%%                    {mod_player, start_link, []},             % StartFun = {M, F, A}
-%%                    temporary,                               	% Restart  = permanent | transient | temporary (不会重启)
-%%                    2000,                                    	% Shutdown = brutal_kill | int() >= 0 | infinity
-%%                    worker,                                  	% Type     = worker | supervisor
-%%                    []                                       	% Modules  = [Module] | dynamic
-%%                }
+                {   undefind,                               	% Id       = internal id
+                    {gen_map_mgr, start_link, []},             % StartFun = {M, F, A}
+                    temporary,                               	% Restart  = permanent | transient | temporary (不会重启)
+                    2000,                                    	% Shutdown = brutal_kill | int() >= 0 | infinity
+                    worker,                                  	% Type     = worker | supervisor
+                    []                                       	% Modules  = [Module] | dynamic
+                }
             ]
         }
     }.
 
-
 %%%===================================================================
 %%% Internal functions
 %%%===================================================================
-

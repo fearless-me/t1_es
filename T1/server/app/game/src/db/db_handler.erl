@@ -18,12 +18,40 @@
 
 %% API
 -export([do_handle_info/4]).
+
+%%-------------------------------------------------------------------
 do_handle_info(serv_start, Sid, FromPid, PoolId) ->
     Sql = db_sql:sql(load_serv_start),
     Res = db:query(PoolId, Sql, [Sid], infinity),
     check_res(Res, Sql, [Sid]),
     RunNo = db:scalar(Res),
     ps:send(FromPid, serv_start, RunNo),
+    ok;
+do_handle_info(load_all_role_info, Sid, FromPid, PoolId) ->
+    Sql = db_sql:sql(load_all_role_info_cnt),
+    Res = db:query(PoolId, Sql, [Sid], infinity),
+    check_res(Res, Sql, [Sid]),
+    Load  = 100,
+    Count = db:scalar(Res),
+    SeqNo =
+        case Count rem Load of
+            0 when Count > Load -> Count div Load;
+            _ -> (Count div Load) + 1
+        end,
+
+    lists:foreach(
+        fun(Batch) ->
+            Start = (Batch - 1) * Load,
+            End   = Batch * Load,
+            SqlLoad = db_sql:sql(load_all_role_info),
+            ResLoad = db:query(PoolId, SqlLoad, [Start, End], infinity),
+            check_res(ResLoad, SqlLoad, [Start, End]),
+            ResList0 = db:as_record(ResLoad, p_player, record_info(fields, p_player)),
+            ResList1 = [ Player#p_player{name = binary_to_list(Player#p_player.name)} || Player <- ResList0],
+            ps:send(FromPid, load_all_role_info_ack, ResList1)
+        end, lists:seq(1, SeqNo)),
+
+    ps:send(FromPid, load_all_role_info_ack_end),
     ok;
 do_handle_info(account_login, Req, _FromPid, PoolId) ->
     ?DEBUG("account_login ~p pool ~p",[Req, PoolId]),
@@ -104,7 +132,7 @@ do_handle_info(create_player, {AccId, Req}, FromPid, PoolId) ->
     ),
     ok;
 do_handle_info(save_player, Player, _FromPid, PoolId) ->
-    #m_player{
+    #m_player_pub{
         uid = Uid, career = Career, level = Lv,
         mid = Mid, line = Line, pos = Pos,
         old_mid = OMid, old_line = OLine, old_pos = OPos

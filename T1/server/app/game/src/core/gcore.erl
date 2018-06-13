@@ -51,10 +51,10 @@ send_net_msg(Uid, NetMsg) when is_number(Uid) ->
     ps:send(Pid, net_msg, NetMsg).
 %%-------------------------------------------------------------------
 broadcast_net_msg(NetMsg) ->
-    ps:send(mod_broadcast, broadcast_net, NetMsg).
+    ps:send(serv_broadcast, broadcast_net, NetMsg).
 %%-------------------------------------------------------------------
 broadcast_msg(MsgId, Msg) ->
-    ps:send(mod_broadcast, broadcast, {MsgId, Msg}).
+    ps:send(serv_broadcast, broadcast, {MsgId, Msg}).
 
 %%-------------------------------------------------------------------
 merge_plat_acc_name(PlatName, PlatAcc) ->

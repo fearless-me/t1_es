@@ -32,7 +32,17 @@
 -define(MAP_READY_EXIT, 2).
 -define(MAP_EXIT,       3).
 
+-define(LINE_LIFETIME, 3 * 60 * 1000).
+-define(DEAD_LINE_PROTECT, 15 * 1000).
+
 -define(MAP_CALL_TIMEOUT, 5000).
+
+
+-record(map_mgr_r, {
+    map_id = 0,
+    mgr = undefined
+}).
+-define(MAP_MGR_ETS, map_mgr_ets__).
 
 
 %%

@@ -57,11 +57,11 @@
      ```db_sql.erl ```     sql语句集中营  
      ```db_sup.erl ```  
 
-* hook  
+* mod_hook  
     >```hook_map.erl ```  地图事件拦截 map otp调用  
     ```hook_player.erl ``` 玩家事件拦截  player otp
 
-* lib  
+* mod_lib  
      >```lib_battle.erl ``` 战斗模块 map otp调用   
      ```lib_db.erl ```      数据库对外接口，任何逻辑模块可调用    
      ```lib_login.erl ```   登录逻辑 login otp调用  

@@ -2114,7 +2114,7 @@ pkg_ibrowse_commit = master
 
 PACKAGES += idna
 pkg_idna_name = idna
-pkg_idna_description = Erlang IDNA lib
+pkg_idna_description = Erlang IDNA mod_lib
 pkg_idna_homepage = https://github.com/benoitc/erlang-idna
 pkg_idna_fetch = git
 pkg_idna_repo = https://github.com/benoitc/erlang-idna
@@ -3410,7 +3410,7 @@ pkg_riakhttpc_commit = master
 
 PACKAGES += riaknostic
 pkg_riaknostic_name = riaknostic
-pkg_riaknostic_description = A diagnostic tool for Riak installations, to find lib errors asap
+pkg_riaknostic_description = A diagnostic tool for Riak installations, to find mod_lib errors asap
 pkg_riaknostic_homepage = https://github.com/basho/riaknostic
 pkg_riaknostic_fetch = git
 pkg_riaknostic_repo = https://github.com/basho/riaknostic
@@ -4588,7 +4588,7 @@ define dep_autopatch_rebar.erl
 			PortSpecWrite(io_lib:format("ERL_CFLAGS ?= -finline-functions -Wall -fPIC -I \\"~s/erts-~s/include\\" -I \\"~s\\"\n",
 				[code:root_dir(), erlang:system_info(version), code:lib_dir(erl_interface, include)])),
 			PortSpecWrite(io_lib:format("ERL_LDFLAGS ?= -L \\"~s\\" -lerl_interface -lei\n",
-				[code:lib_dir(erl_interface, lib)])),
+				[code:lib_dir(erl_interface, mod_lib)])),
 			[PortSpecWrite(["\n", E, "\n"]) || E <- OsEnv],
 			FilterEnv = fun(Env) ->
 				lists:flatten([case E of
@@ -5394,7 +5394,7 @@ endif
 # Copyright (c) 2014-2016, Loïc Hoguin <essen@ninenines.eu>
 # This file is part of erlang.mk and subject to the terms of the ISC License.
 
-.PHONY: bootstrap bootstrap-lib bootstrap-rel new list-templates
+.PHONY: bootstrap bootstrap-mod_lib bootstrap-rel new list-templates
 
 # Core targets.
 
@@ -5402,10 +5402,10 @@ help::
 	$(verbose) printf "%s\n" "" \
 		"Bootstrap targets:" \
 		"  bootstrap          Generate a skeleton of an OTP application" \
-		"  bootstrap-lib      Generate a skeleton of an OTP library" \
+		"  bootstrap-mod_lib      Generate a skeleton of an OTP library" \
 		"  bootstrap-rel      Generate the files needed to build a release" \
 		"  new-app in=NAME    Create a new local OTP application NAME" \
-		"  new-lib in=NAME    Create a new local OTP library NAME" \
+		"  new-mod_lib in=NAME    Create a new local OTP library NAME" \
 		"  new t=TPL n=NAME   Generate a module NAME based on the template TPL" \
 		"  new t=T n=N in=APP Generate a module NAME based on the template TPL in APP" \
 		"  list-templates     List available templates"
@@ -5774,7 +5774,7 @@ endif
 	$(call render_template,bs_app,src/$(PROJECT)_app.erl)
 	$(call render_template,tpl_supervisor,src/$(PROJECT)_sup.erl)
 
-bootstrap-lib:
+bootstrap-mod_lib:
 ifneq ($(wildcard src/),)
 	$(error Error: src/ directory already exists)
 endif
@@ -5816,9 +5816,9 @@ endif
 	$(call render_template,bs_app,$(APPS_DIR)/$p/src/$p_app.erl)
 	$(call render_template,tpl_supervisor,$(APPS_DIR)/$p/src/$p_sup.erl)
 
-new-lib:
+new-mod_lib:
 ifndef in
-	$(error Usage: $(MAKE) new-lib in=APP)
+	$(error Usage: $(MAKE) new-mod_lib in=APP)
 endif
 ifneq ($(wildcard $(APPS_DIR)/$in),)
 	$(error Error: Application $in already exists)
@@ -5982,7 +5982,7 @@ $(C_SRC_ENV):
 			\"ERL_INTERFACE_LIB_DIR ?= ~s~n\", \
 			[code:root_dir(), erlang:system_info(version), \
 			code:lib_dir(erl_interface, include), \
-			code:lib_dir(erl_interface, lib)])), \
+			code:lib_dir(erl_interface, mod_lib)])), \
 		halt()."
 
 distclean:: distclean-c_src-env

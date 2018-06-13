@@ -14,6 +14,7 @@
 -export([get_did/1, get_did_def/2, set_did/2]).
 -export([get_group/1, get_group_def/2, set_group/2]).
 -export([get_owner/1, get_owner_def/2, set_owner/2]).
+-export([get_type/1, get_type_def/2, set_type/2]).
 -export([get_move_speed/1, get_move_speed_def/2, set_move_speed/2]).
 -export([get_cur_move/1, get_cur_move_def/2, set_cur_move/2]).
 -export([get_next_move/1, get_next_move_def/2, set_next_move/2]).
@@ -43,7 +44,7 @@ get_pid_def(Uid, Def)->
 		undefined -> Def;
 		V -> V
 	end.
-set_pid(Uid, V)-> put({pid,Uid}, V).
+set_pid(Uid, V)-> put({pid,Uid}, V), hook_map:on_rw_update(Uid, pid, V).
 
 %%-------------------------------------------------------------------
 %% #m_map_obj_rw.did
@@ -53,7 +54,7 @@ get_did_def(Uid, Def)->
 		undefined -> Def;
 		V -> V
 	end.
-set_did(Uid, V)-> put({did,Uid}, V).
+set_did(Uid, V)-> put({did,Uid}, V), hook_map:on_rw_update(Uid, did, V).
 
 %%-------------------------------------------------------------------
 %% #m_map_obj_rw.group
@@ -63,7 +64,7 @@ get_group_def(Uid, Def)->
 		undefined -> Def;
 		V -> V
 	end.
-set_group(Uid, V)-> put({group,Uid}, V).
+set_group(Uid, V)-> put({group,Uid}, V), hook_map:on_rw_update(Uid, group, V).
 
 %%-------------------------------------------------------------------
 %% #m_map_obj_rw.owner
@@ -73,7 +74,17 @@ get_owner_def(Uid, Def)->
 		undefined -> Def;
 		V -> V
 	end.
-set_owner(Uid, V)-> put({owner,Uid}, V).
+set_owner(Uid, V)-> put({owner,Uid}, V), hook_map:on_rw_update(Uid, owner, V).
+
+%%-------------------------------------------------------------------
+%% #m_map_obj_rw.type
+get_type(Uid)-> get({type,Uid}).
+get_type_def(Uid, Def)->
+	case get({type,Uid}) of
+		undefined -> Def;
+		V -> V
+	end.
+set_type(Uid, V)-> put({type,Uid}, V), hook_map:on_rw_update(Uid, type, V).
 
 %%-------------------------------------------------------------------
 %% #m_map_obj_rw.move_speed
@@ -83,7 +94,7 @@ get_move_speed_def(Uid, Def)->
 		undefined -> Def;
 		V -> V
 	end.
-set_move_speed(Uid, V)-> put({move_speed,Uid}, V).
+set_move_speed(Uid, V)-> put({move_speed,Uid}, V), hook_map:on_rw_update(Uid, move_speed, V).
 
 %%-------------------------------------------------------------------
 %% #m_map_obj_rw.cur_move
@@ -93,7 +104,7 @@ get_cur_move_def(Uid, Def)->
 		undefined -> Def;
 		V -> V
 	end.
-set_cur_move(Uid, V)-> put({cur_move,Uid}, V).
+set_cur_move(Uid, V)-> put({cur_move,Uid}, V), hook_map:on_rw_update(Uid, cur_move, V).
 
 %%-------------------------------------------------------------------
 %% #m_map_obj_rw.next_move
@@ -103,7 +114,7 @@ get_next_move_def(Uid, Def)->
 		undefined -> Def;
 		V -> V
 	end.
-set_next_move(Uid, V)-> put({next_move,Uid}, V).
+set_next_move(Uid, V)-> put({next_move,Uid}, V), hook_map:on_rw_update(Uid, next_move, V).
 
 %%-------------------------------------------------------------------
 %% #m_map_obj_rw.vis_tile_idx
@@ -113,7 +124,7 @@ get_vis_tile_idx_def(Uid, Def)->
 		undefined -> Def;
 		V -> V
 	end.
-set_vis_tile_idx(Uid, V)-> put({vis_tile_idx,Uid}, V).
+set_vis_tile_idx(Uid, V)-> put({vis_tile_idx,Uid}, V), hook_map:on_rw_update(Uid, vis_tile_idx, V).
 
 %%-------------------------------------------------------------------
 %% #m_map_obj_rw.cur_pos
@@ -123,7 +134,7 @@ get_cur_pos_def(Uid, Def)->
 		undefined -> Def;
 		V -> V
 	end.
-set_cur_pos(Uid, V)-> put({cur_pos,Uid}, V).
+set_cur_pos(Uid, V)-> put({cur_pos,Uid}, V), hook_map:on_rw_update(Uid, cur_pos, V).
 
 %%-------------------------------------------------------------------
 %% #m_map_obj_rw.start_pos
@@ -133,7 +144,7 @@ get_start_pos_def(Uid, Def)->
 		undefined -> Def;
 		V -> V
 	end.
-set_start_pos(Uid, V)-> put({start_pos,Uid}, V).
+set_start_pos(Uid, V)-> put({start_pos,Uid}, V), hook_map:on_rw_update(Uid, start_pos, V).
 
 %%-------------------------------------------------------------------
 %% #m_map_obj_rw.dest_pos
@@ -143,7 +154,7 @@ get_dest_pos_def(Uid, Def)->
 		undefined -> Def;
 		V -> V
 	end.
-set_dest_pos(Uid, V)-> put({dest_pos,Uid}, V).
+set_dest_pos(Uid, V)-> put({dest_pos,Uid}, V), hook_map:on_rw_update(Uid, dest_pos, V).
 
 %%-------------------------------------------------------------------
 %% #m_map_obj_rw.face
@@ -153,7 +164,7 @@ get_face_def(Uid, Def)->
 		undefined -> Def;
 		V -> V
 	end.
-set_face(Uid, V)-> put({face,Uid}, V).
+set_face(Uid, V)-> put({face,Uid}, V), hook_map:on_rw_update(Uid, face, V).
 
 %%-------------------------------------------------------------------
 %% #m_map_obj_rw.dir
@@ -163,7 +174,7 @@ get_dir_def(Uid, Def)->
 		undefined -> Def;
 		V -> V
 	end.
-set_dir(Uid, V)-> put({dir,Uid}, V).
+set_dir(Uid, V)-> put({dir,Uid}, V), hook_map:on_rw_update(Uid, dir, V).
 
 %%-------------------------------------------------------------------
 %% #m_map_obj_rw.start_time
@@ -173,7 +184,7 @@ get_start_time_def(Uid, Def)->
 		undefined -> Def;
 		V -> V
 	end.
-set_start_time(Uid, V)-> put({start_time,Uid}, V).
+set_start_time(Uid, V)-> put({start_time,Uid}, V), hook_map:on_rw_update(Uid, start_time, V).
 
 %%-------------------------------------------------------------------
 %% #m_map_obj_rw.seg_move_time
@@ -183,7 +194,7 @@ get_seg_move_time_def(Uid, Def)->
 		undefined -> Def;
 		V -> V
 	end.
-set_seg_move_time(Uid, V)-> put({seg_move_time,Uid}, V).
+set_seg_move_time(Uid, V)-> put({seg_move_time,Uid}, V), hook_map:on_rw_update(Uid, seg_move_time, V).
 
 %%-------------------------------------------------------------------
 %% #m_map_obj_rw.stopped
@@ -193,7 +204,7 @@ get_stopped_def(Uid, Def)->
 		undefined -> Def;
 		V -> V
 	end.
-set_stopped(Uid, V)-> put({stopped,Uid}, V).
+set_stopped(Uid, V)-> put({stopped,Uid}, V), hook_map:on_rw_update(Uid, stopped, V).
 
 %%-------------------------------------------------------------------
 %% #m_map_obj_rw.path_list
@@ -203,7 +214,7 @@ get_path_list_def(Uid, Def)->
 		undefined -> Def;
 		V -> V
 	end.
-set_path_list(Uid, V)-> put({path_list,Uid}, V).
+set_path_list(Uid, V)-> put({path_list,Uid}, V), hook_map:on_rw_update(Uid, path_list, V).
 
 %%-------------------------------------------------------------------
 %% #m_map_obj_rw.hp
@@ -213,7 +224,7 @@ get_hp_def(Uid, Def)->
 		undefined -> Def;
 		V -> V
 	end.
-set_hp(Uid, V)-> put({hp,Uid}, V).
+set_hp(Uid, V)-> put({hp,Uid}, V), hook_map:on_rw_update(Uid, hp, V).
 
 %%-------------------------------------------------------------------
 %% #m_map_obj_rw.max_hp
@@ -223,7 +234,7 @@ get_max_hp_def(Uid, Def)->
 		undefined -> Def;
 		V -> V
 	end.
-set_max_hp(Uid, V)-> put({max_hp,Uid}, V).
+set_max_hp(Uid, V)-> put({max_hp,Uid}, V), hook_map:on_rw_update(Uid, max_hp, V).
 
 %%-------------------------------------------------------------------
 %% #m_map_obj_rw.attr
@@ -233,7 +244,7 @@ get_attr_def(Uid, Def)->
 		undefined -> Def;
 		V -> V
 	end.
-set_attr(Uid, V)-> put({attr,Uid}, V).
+set_attr(Uid, V)-> put({attr,Uid}, V), hook_map:on_rw_update(Uid, attr, V).
 
 %%-------------------------------------------------------------------
 %% #m_map_obj_rw.buff_list
@@ -243,13 +254,14 @@ get_buff_list_def(Uid, Def)->
 		undefined -> Def;
 		V -> V
 	end.
-set_buff_list(Uid, V)-> put({buff_list,Uid}, V).
+set_buff_list(Uid, V)-> put({buff_list,Uid}, V), hook_map:on_rw_update(Uid, buff_list, V).
 
 del(Uid)->
 	erase({pid, Uid}),
 	erase({did, Uid}),
 	erase({group, Uid}),
 	erase({owner, Uid}),
+	erase({type, Uid}),
 	erase({move_speed, Uid}),
 	erase({cur_move, Uid}),
 	erase({next_move, Uid}),
@@ -274,6 +286,7 @@ to_record(Uid)->
 		did = get_did(Uid),
 		group = get_group(Uid),
 		owner = get_owner(Uid),
+		type = get_type(Uid),
 		move_speed = get_move_speed(Uid),
 		cur_move = get_cur_move(Uid),
 		next_move = get_next_move(Uid),

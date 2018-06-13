@@ -34,7 +34,7 @@
 
 %%%-------------------------------------------------------------------
 init(S) ->
-    Conf = mod_map_creator:map_conf(S#m_map_state.map_id),
+    Conf = map_creator:map_conf(S#m_map_state.map_id),
     S1 = init_1(S),
     ok = lib_map_rw:init_ets(S1),
     ok = lib_map_view:init_vis_tile(Conf),
@@ -81,6 +81,7 @@ player_join(
     S,
     #r_change_map_req{uid = Uid, name = _Name, pid = Pid, group = Group, tar_pos = Pos}
 ) ->
+    ?DEBUG("player ~p to ~p",[Uid, Pos]),
     Obj = lib_obj:new_player(Pid, Uid, Group, Pos, vector3:new(0.1, 0, 0.5)),
     send_goto_map_msg(Uid, Pos),
     lib_map_rw:add_obj_to_ets(Obj),

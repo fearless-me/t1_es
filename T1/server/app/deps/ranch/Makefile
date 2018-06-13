@@ -43,4 +43,4 @@ DIALYZER_OPTS += --src -r test
 # we are fine using the most recent version from OTP-20.
 
 ci-setup:: $(DEPS_DIR)/ct_helper
-	$(gen_verbose) cp ~/.kerl/builds/$(CI_OTP_RELEASE)/otp_src_git/lib/ssl/test/erl_make_certs.erl deps/ct_helper/src/ || true
+	$(gen_verbose) cp ~/.kerl/builds/$(CI_OTP_RELEASE)/otp_src_git/mod_lib/ssl/test/erl_make_certs.erl deps/ct_helper/src/ || true

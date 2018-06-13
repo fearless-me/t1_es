@@ -14,7 +14,7 @@
 %% 进入地图后会动态变
 %% 通过自动生成代码lib_obj_rw
 -record(m_map_obj_rw,{
-    pid = 0, did = 0, group = 0, owner = 0,
+    pid = 0, did = 0, group = 0, owner = 0, type,
 %%  移动相关
     move_speed = 20,
     cur_move, next_move,  vis_tile_idx,

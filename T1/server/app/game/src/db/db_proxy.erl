@@ -14,20 +14,18 @@
 -include("pub_common.hrl").
 
 %%
--export([checkout_ppool/1]).
--export([checkout_ppool_/1]).
--export([checkout_apool/1]).
--export([checkout_apool_/1]).
--export([checkout_pubpool/1]).
--export([checkout_pubpool_/1]).
+-export([
+    checkout_ppool/1, checkout_ppool_/1,
+    checkout_apool/1, checkout_apool_/1,
+    checkout_pubpool/1, checkout_pubpool_/1
+]).
 %%
--export([start_db_pool/0]).
--export([start_db_pool/1]).
+-export([start_db_pool/0,start_db_pool/1]).
 %%
 -export([start_link/0]).
 -export([mod_init/1, do_handle_call/3, do_handle_info/2, do_handle_cast/2]).
 
--record(r_db_conf, {id , host, port, user, password, database, conn, max_conn, worker}).
+-record(r_db_conf, {id, host, port, user, password, database, conn, max_conn, worker}).
 -record(r_db_pool, {id = 0, pool, mgr, conf}).
 
 -define(ETS_PLAYER_DB_POOL, playerMysqlPoolEts_).
@@ -123,17 +121,17 @@ init_pool() ->
     db_pool_init(Pid, get_public_db_conf, pubdb_pool, ?ETS_PUBLIC_DB_POOL),
     ?INFO("init public db pool done"),
     ?INFO("#"),
-    
+
     erlang:exit(Pid, normal),
     ok.
 
 %%--------------------------------------------------------------------
 db_pool_init(Pid, StmtRef, PoolRef, Ets) ->
-    ?INFO("\t~p",[StmtRef]),
+    ?INFO("\t~p", [StmtRef]),
 
     L1 = load_conf_from_db(
         Pid, StmtRef, r_db_conf, record_info(fields, r_db_conf)),
-    
+
     _ = [start_db_pool(PoolRef, Ets, Instance) || Instance <- L1],
 
     ok.
