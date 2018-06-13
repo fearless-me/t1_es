@@ -143,11 +143,9 @@ loaded_player(undefined) ->
     lib_player_rw:set_uid(0),
     ok;
 loaded_player(Player) ->
-    #p_player{uid = Uid, aid = Aid} = Player,
     lib_player_rw:set_status(?PS_WAIT_ENTER),
     lib_player_base:init(Player),
-    lib_cache:add_player_pub(Player),
-    lib_cache:add_socket(Aid, Uid, self(), lib_player_pub:socket()),
+    lib_cache:online(Player, self(), lib_player_pub:socket()),
     add_to_world(Player),
     hook_player:on_login(),
     ok.

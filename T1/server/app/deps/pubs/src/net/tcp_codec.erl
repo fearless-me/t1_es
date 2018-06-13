@@ -49,7 +49,7 @@ compress(ComBytes, IoListBytes, IoList, HeaderSize) when ComBytes =< 0; ComBytes
     add_header(IoList, IoListBytes, HeaderSize);
 compress(_ComBytes, IoListBytes, IoList, HeaderSize) ->
     Bin0 = iolist_to_binary(IoList),
-    Bin1 = zlib:compress(Bin0),
+    Bin1 = zlib:gzip(Bin0),
     Bytes = erlang:byte_size(Bin1),
     ?WARN("msg compressed ~p -> ~p = ~p%",
         [IoListBytes, Bytes, trunc(Bytes / IoListBytes * 10000)/100]),
@@ -64,7 +64,7 @@ decode(Handler, Socket, Bin) ->
     ok.
 
 uncompress(0, Bin) -> Bin;
-uncompress(_, Bin) -> zlib:uncompress(Bin).
+uncompress(_, Bin) -> zlib:gunzip(Bin).
 
 real_msg_len(Len) ->  Len band (bnot (1 bsl ?COMPRESS_FLAG)).
 marshal_msg_len(Len) -> (Len bsr ?COMPRESS_FLAG) bor 0.

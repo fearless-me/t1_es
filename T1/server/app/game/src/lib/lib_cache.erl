@@ -16,7 +16,7 @@
 
 %% API
 -export([
-    offline/2,
+    online/3, offline/2,
 %% ETS_PLAYER_PUB
     add_player_pub/1, del_player_pub/1, get_player_pub/1, update_player_pub/2,
 %% ETS_PLAYER_PRIV
@@ -26,6 +26,13 @@
 %% ETS_ACCOUNT_PSOCK
     get_account_ppid/1,add_account_socket/3, get_account_socket/1, del_account_socket/1
 ]).
+
+online(Player, Pid, Sock) ->
+    #p_player{aid = Aid, uid = Uid} = Player,
+    lib_cache:add_player_pub(Player),
+    lib_cache:add_player_priv(Aid, Uid),
+    lib_cache:add_socket(Aid, Uid, Pid, Sock),
+    ok.
 
 %%-------------------------------------------------------------------
 add_player_pub(PPlayer) ->
