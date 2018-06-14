@@ -210,7 +210,7 @@ start_stop_now(S) ->
 kick_all_player(#m_map_state{player = Ets}) ->
     ets:foldl(
         fun(#m_map_obj{pid = Pid}, _) ->
-            ps:send(Pid, return_to_pre_map_ack)
+            ps:send(Pid, return_to_pre_map_req)
         end, 0, Ets),
     ok.
 

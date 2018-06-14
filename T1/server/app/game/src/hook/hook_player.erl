@@ -13,7 +13,7 @@
 -include("netmsg.hrl").
 
 %% API
--export([on_account_login/3, on_create/1,on_login/1,on_offline/0]).
+-export([on_account_login/3, on_create/1,on_login/1,on_offline/1]).
 -export([on_tick/0, on_second/0, on_minute/0, on_hour/0, on_sharp/1]).
 -export([on_change_map/2, on_rw_update/2]).
 
@@ -32,8 +32,8 @@ on_create(Uid) ->
 
 %%-------------------------------------------------------------------
 on_login(Player) ->
-    lib_player_base:init(Player),
     lib_cache:online(Player, self(), lib_player_pub:socket()),
+    lib_player_base:init(Player),
     lib_player_map_priv:online_call(Player),
     lib_player_alarm:init(),
     lib_player_sub:tick_go(),
@@ -42,14 +42,12 @@ on_login(Player) ->
     ok.
 
 %%-------------------------------------------------------------------
-on_offline() ->
-    Uid = lib_player_rw:get_uid(),
-    Aid = lib_player_rw:get_aid(),
+on_offline(Player) ->
     #m_player_pub{
+        uid = Uid, aid = Aid,
         mid = Mid, mpid = MPid, line = LineId
-    } = Player = lib_cache:get_player_pub(Uid),
+    } = Player,
     lib_player_map_priv:offline_call(Uid, Mid, LineId, MPid),
-    lib_player_save:save(Player),
     lib_cache:offline(Aid, Uid),
     lib_player_alarm:save(),
     ?WARN("player ~p exit map_~p_~p",[Uid, Mid, LineId]),
@@ -86,11 +84,31 @@ on_sharp(Hour) ->
     ok.
 
 %%-------------------------------------------------------------------
+-define(lock(X), lock_transcation(X)).
+-define(unlock(), unlock_transcation()).
+
 %%不要在调用lib_player_rw:set_xxx
 on_rw_update(level, Level) ->
+    ?lock(level),
     Uid = lib_player_rw:get_uid(),
     lib_cache:update_player_pub(Uid, {#m_player_pub.level, Level}),
+    ?unlock(),
     ok;
 on_rw_update(_Key, _Value) ->
 %%    ?DEBUG("player ~p key ~p  value ~p", [lib_player_rw:get_uid(), Key, Value]),
     ok.
+
+
+
+
+%%-------------------------------------------------------------------
+lock_transcation(Key)->
+    case get(player_lock_transcation) of
+        Key -> throw("recursive call");
+        _ -> skip
+    end,
+    ok.
+
+unlock_transcation()->
+    erase(player_lock_transcation).
+

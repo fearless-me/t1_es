@@ -151,7 +151,9 @@ offline_1(Status)
     when Status =:= ?PS_GAME; Status =:= ?PS_CHANGE_MAP ->
     Uid = lib_player_rw:get_uid_def(0),
     lib_player_rw:set_status(?PS_OFFLINE),
-    hook_player:on_offline(),
+    Player = lib_cache:get_player_pub(Uid),
+    ?TRY_CATCH(hook_player:on_offline(Player)),
+    lib_player_save:save(Player),
     ?INFO("player ~p pid ~p sock ~p player ~w offline status ~p",
         [Uid, self(), lib_player_pub:socket(), Uid, Status]),
     ok;
