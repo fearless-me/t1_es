@@ -110,7 +110,10 @@ handle_1(#pk_GS2U_UserPlayerList{info = Info}) ->
     end,
     ok;
 handle_1(#pk_GS2U_GotoNewMap{}) ->
-    send_msg(socket(), #pk_U2GS_GetPlayerInitData{}),
+    case get_aid() of
+        undefined -> send_msg(socket(), #pk_U2GS_GetPlayerInitData{});
+        _ -> skip
+    end,
     ok;
 handle_1(Msg) ->
     io:format("~w~n", [Msg]).

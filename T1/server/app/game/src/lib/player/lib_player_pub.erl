@@ -30,8 +30,8 @@
 %%-------------------------------------------------------------------
 -spec shutdown(How) -> ok when
     How :: read | write | read_write.
-shutdown(How) -> mod_player:shutdown(socket(), How).
-stop(Reason) -> mod_player:active_stop(Reason).
+shutdown(How) -> mod_player:shutdown(How).
+stop(Reason) -> mod_player:stop(Reason).
 direct_stop() -> mod_player:direct_stop().
 %%-------------------------------------------------------------------
 

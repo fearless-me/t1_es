@@ -86,7 +86,7 @@ do_decode(Handler, Socket, Bin) ->
             set_buffer(HalfMsg);
         {error, DataSize, Why} ->
             {IP, Port} = misc:peername(Socket),
-            ?ERROR("recv socket[~p] IP:~ts Port:~p, DataSize[~p] error[~s]", [Socket, IP, Port, DataSize, Why]),
+            ?ERROR("recv socket[~p] IP:~ts Port:~p, DataSize[~p] error[~ts]", [Socket, IP, Port, DataSize, Why]),
             %%收到异常消息，断开连接
             %%直接close，由throw后，exception去处理
             throw(Ret)
