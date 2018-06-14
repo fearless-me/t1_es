@@ -82,7 +82,6 @@ recv_msg(Socket) ->
 handle(_Cmd, Msg)-> handle(Msg).
 
 handle(Msg) ->
-    ?INFO("~p ~p", [get_aid(), Msg]),
     handle_1(Msg),
     ok.
 
@@ -114,7 +113,7 @@ handle_1(#pk_GS2U_GotoNewMap{}) ->
     send_msg(socket(), #pk_U2GS_GetPlayerInitData{}),
     ok;
 handle_1(Msg) ->
-    io:format("recv:~p~n", [Msg]).
+    io:format("~w~n", [Msg]).
 
 -define(SocketKey, socketRef___).
 socket(Socket) -> put(?SocketKey, Socket).

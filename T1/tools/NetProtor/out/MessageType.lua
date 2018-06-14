@@ -25,7 +25,7 @@ local MSG_login = require "Net.MSG_login"
 --BEGIN table for msgs description
 return
 {
-	__VERSION__ = 630,
+	__VERSION__ = 631,
 --BEGIN message id define
 
 
@@ -40,6 +40,7 @@ return
 	MSG_GS2U_PlayerInitBase = 32262,
 	MSG_GS2U_RemoveRemote = 31994,
 	MSG_GS2U_SelPlayerResult = 42464,
+	MSG_GS2U_SyncStand = 30047,
 	MSG_GS2U_SyncWalk = 3436,
 	MSG_GS2U_SyncWalkMany = 27691,
 	MSG_GS2U_UserPlayerList = 18582,
@@ -64,6 +65,7 @@ return
 	[32262] = MSG_login.GS2U_PlayerInitBase,
 	[31994] = MSG_login.GS2U_RemoveRemote,
 	[42464] = MSG_login.GS2U_SelPlayerResult,
+	[30047] = MSG_login.GS2U_SyncStand,
 	[3436] = MSG_login.GS2U_SyncWalk,
 	[27691] = MSG_login.GS2U_SyncWalkMany,
 	[18582] = MSG_login.GS2U_UserPlayerList,

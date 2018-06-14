@@ -58,7 +58,7 @@ direct_stop()->
 send(IoList) when is_list(IoList)->
     tcp_handler:direct_send_net_msg(socket(), IoList);
 send(Msg) ->
-    ?INFO("~p ~p",[lib_player_rw:get_aid(), Msg]),
+    ?INFO("~p ~w",[lib_player_rw:get_aid(), Msg]),
     {_Bytes1, IoList} = tcp_codec:encode(Msg),
     tcp_handler:direct_send_net_msg(socket(), IoList),
     ok.

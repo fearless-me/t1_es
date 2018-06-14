@@ -1189,5 +1189,45 @@ namespace Network.Messages
 		#endregion
 	}
 
+	
+// 移动
+	public class GS2U_SyncStand : BaseMessage
+	{
+		static new public BaseMessage Create( BinaryReader s ) {
+			var ret = new GS2U_SyncStand();
+			ret.Deserialize( s );
+			return ret;
+		}
+		override public MessageType GetId() {
+			return ID;
+		}
+		public const MessageType ID = MessageType.MSG_GS2U_SyncStand;
+
+		#region members
+		/// <summary>
+		/// 
+		/// </summary>
+		public UInt64 m_uid = 0;
+		/// <summary>
+		/// 坐标X
+		/// </summary>
+		public Single m_cur_x = 0.0f;
+		/// <summary>
+		/// 坐标Y
+		/// </summary>
+		public Single m_cur_y = 0.0f;
+		#endregion
+
+		#region methods
+		public override int Deserialize( BinaryReader reader ) {
+			long pos = reader.BaseStream.Position;
+			m_uid = MessageSerializer.Read_UInt64( reader );
+			m_cur_x = MessageSerializer.Read_Single( reader );
+			m_cur_y = MessageSerializer.Read_Single( reader );
+			return (int)( reader.BaseStream.Position - pos );
+		}
+		#endregion
+	}
+
 }
 //EOF

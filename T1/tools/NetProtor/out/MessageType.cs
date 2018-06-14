@@ -20,6 +20,7 @@ namespace Network.Messages
          MSG_GS2U_LoginResult = 22162,
          MSG_U2GS_RequestDeletePlayer = 23657,
          MSG_GS2U_SyncWalkMany = 27691,
+         MSG_GS2U_SyncStand = 30047,
          MSG_GS2U_RemoveRemote = 31994,
          MSG_GS2U_PlayerInitBase = 32262,
          MSG_GS2U_MonsterList = 32656,
@@ -40,6 +41,7 @@ namespace Network.Messages
             RegisterMessageId( MessageType.MSG_GS2U_UserPlayerList, GS2U_UserPlayerList.Create );
             RegisterMessageId( MessageType.MSG_GS2U_LoginResult, GS2U_LoginResult.Create );
             RegisterMessageId( MessageType.MSG_GS2U_SyncWalkMany, GS2U_SyncWalkMany.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_SyncStand, GS2U_SyncStand.Create );
             RegisterMessageId( MessageType.MSG_GS2U_RemoveRemote, GS2U_RemoveRemote.Create );
             RegisterMessageId( MessageType.MSG_GS2U_PlayerInitBase, GS2U_PlayerInitBase.Create );
             RegisterMessageId( MessageType.MSG_GS2U_MonsterList, GS2U_MonsterList.Create );

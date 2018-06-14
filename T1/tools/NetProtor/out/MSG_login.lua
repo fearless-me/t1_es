@@ -54,6 +54,11 @@ return {
 		fields = "result,i",
 	},
 
+	GS2U_SyncStand = 
+	{
+		fields = "uid,cur_x,cur_y,Lff",
+	},
+
 	GS2U_SyncWalk = 
 	{
 		fields = "walk,u",

@@ -206,4 +206,12 @@ struct GS2U_SyncWalkMany <-
 	vector<ObjWalk> walks;
 };
 
+// 移动
+struct GS2U_SyncStand <-
+{
+	uint64  uid;
+	float	cur_x;	 //坐标X
+	float	cur_y;	 //坐标Y
+};
+
 

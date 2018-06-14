@@ -149,6 +149,18 @@ decode(?GS2U_SelPlayerResult,Bin0) ->
 		},
 	Bin1 };
 
+%GENERATED from file:login.h => GS2U_SyncStand
+decode(?GS2U_SyncStand,Bin0) ->
+	{ V_uid, Bin1 } = read_uint64( Bin0 ),
+	{ V_cur_x, Bin2 } = read_float( Bin1 ),
+	{ V_cur_y, Bin3 } = read_float( Bin2 ),
+	{ #pk_GS2U_SyncStand {
+		uid = V_uid,
+		cur_x = V_cur_x,
+		cur_y = V_cur_y
+		},
+	Bin3 };
+
 %GENERATED from file:login.h => GS2U_SyncWalk
 decode(?GS2U_SyncWalk,Bin0) ->
 	{ V_walk, Bin1 } = decode_ObjWalk( Bin0 ),
@@ -491,6 +503,18 @@ encode(#pk_GS2U_SelPlayerResult{} = P) ->
 		Bin_result
 	];
 
+%GENERATED from file:login.h => GS2U_SyncStand
+encode(#pk_GS2U_SyncStand{} = P) ->
+	Bin_uid = write_uint64( P#pk_GS2U_SyncStand.uid ),
+	Bin_cur_x = write_float( P#pk_GS2U_SyncStand.cur_x ),
+	Bin_cur_y = write_float( P#pk_GS2U_SyncStand.cur_y ),
+	[
+		<<?GS2U_SyncStand:?U16>>,
+		Bin_uid,
+		Bin_cur_x,
+		Bin_cur_y
+	];
+
 %GENERATED from file:login.h => GS2U_SyncWalk
 encode(#pk_GS2U_SyncWalk{} = P) ->
 	Bin_walk = encode_ObjWalk( P#pk_GS2U_SyncWalk.walk ),
@@ -721,6 +745,7 @@ name(?GS2U_MonsterList) -> "GS2U_MonsterList";
 name(?GS2U_PlayerInitBase) -> "GS2U_PlayerInitBase";
 name(?GS2U_RemoveRemote) -> "GS2U_RemoveRemote";
 name(?GS2U_SelPlayerResult) -> "GS2U_SelPlayerResult";
+name(?GS2U_SyncStand) -> "GS2U_SyncStand";
 name(?GS2U_SyncWalk) -> "GS2U_SyncWalk";
 name(?GS2U_SyncWalkMany) -> "GS2U_SyncWalkMany";
 name(?GS2U_UserPlayerList) -> "GS2U_UserPlayerList";
