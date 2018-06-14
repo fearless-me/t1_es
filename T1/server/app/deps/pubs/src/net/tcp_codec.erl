@@ -60,7 +60,7 @@ compress(_ComBytes, IoListBytes, IoList, HeaderSize) ->
 decode(Handler, Socket, Bin) ->
     {NewMsg, _NewMsgSize} = merge_binary(Bin),
     set_buffer(<<>>),
-    decode1(Handler, Socket, NewMsg),
+    do_decode(Handler, Socket, NewMsg),
     ok.
 
 uncompress(0, Bin) -> Bin;
@@ -74,14 +74,14 @@ is_compressed(Len) -> Len band (1 bsl ?COMPRESS_FLAG ).
 %%%-------------------------------------------------------------------
 %%%-------------------------------------------------------------------
 %%解析网络消息
-decode1(_Handler, _Socket, <<>>) ->
+do_decode(_Handler, _Socket, <<>>) ->
     ok;
-decode1(Handler, Socket, Bin) ->
+do_decode(Handler, Socket, Bin) ->
     Ret = parse_msg(get_conf(), Bin),
     case Ret of
         {ok, Cmd, Pk, RemainBin} ->
             catch Handler(Cmd, Pk),
-            decode1(Handler, Socket, RemainBin);
+            do_decode(Handler, Socket, RemainBin);
         {halfMsg, HalfMsg} ->
             set_buffer(HalfMsg);
         {error, DataSize, Why} ->

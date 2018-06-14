@@ -2,7 +2,7 @@
 -ifndef(netmsg).
 -define(netmsg,1).
 
--define(ProtoVersion,630).
+-define(ProtoVersion,631).
 
 %% 
 -define(GS2U_CreatePlayerResult,45054).
@@ -105,6 +105,18 @@
 -record(pk_GS2U_SelPlayerResult,{
 	%% Int32
 	result = 0
+}).
+
+%% 
+%% // 移动
+-define(GS2U_SyncStand,30047).
+-record(pk_GS2U_SyncStand,{
+	%% UInt64
+	uid = 0,
+	%% Single坐标X
+	cur_x = 0.0,
+	%% Single坐标Y
+	cur_y = 0.0
 }).
 
 %% 

@@ -45,7 +45,7 @@
       <excludeFolder url="file://$MODULE_DIR$/deps_1" />
       <excludeFolder url="file://$MODULE_DIR$/repo_priv" />
     </content>
-    <orderEntry type="jdk" jdkName="Erlang 18" jdkType="Erlang SDK" />
+    <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
   </component>
 </module>

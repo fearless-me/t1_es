@@ -247,27 +247,47 @@ do_sync_big_vis_tile_to_me(?OBJ_USR, Uid, VisTileList, del_all) ->
     ok;
 do_sync_big_vis_tile_to_me(?OBJ_USR, TarUid, VisTileList, add_all) ->
     FC =
-        fun(_Ets, Uid, Acc) ->
-            MoveState = lib_obj_rw:get_cur_move(Uid),
-            Info = lib_move:cal_move_msg_info(MoveState, Uid),
+        fun(Uid) ->
+            Msg = lib_move:cal_move_msg(Uid),
             if
-                Info =/= undefined -> [Info | Acc];
-                true -> Acc
+                Msg =:= undefined -> skip;
+                true -> gcore:send_net_msg(TarUid, Msg)
             end
         end,
     FV =
-        fun(#m_vis_tile{player = PL, monster = ML, npc = NL, pet = Pets}, Acc0) ->
-            Acc1 = lists:foldl(fun(Uid, Acc) -> FC(lib_map_rw:get_player_ets(),   Uid, Acc) end, Acc0, PL),
-            Acc2 = lists:foldl(fun(Uid, Acc) -> FC(lib_map_rw:get_monster_ets(),  Uid, Acc) end, Acc1, ML),
-            Acc3 = lists:foldl(fun(Uid, Acc) -> FC(lib_map_rw:get_npc_ets(),      Uid, Acc) end, Acc2, NL),
-                   lists:foldl(fun(Uid, Acc) -> FC(lib_map_rw:get_pet_ets(),      Uid, Acc) end, Acc3, Pets)
+        fun(#m_vis_tile{player = PL, monster = ML, npc = NL, pet = Pets}) ->
+            lists:foreach(FC, PL),
+            lists:foreach(FC, ML),
+            lists:foreach(FC, NL),
+            lists:foreach(FC, Pets)
         end,
-    InfoList = lists:foldl(FV, [], VisTileList),
-    case InfoList of
-        [] -> skip;
-        _ -> gcore:send_net_msg(TarUid, #pk_GS2U_SyncWalkMany{walks = InfoList})
-    end,
+    lists:foreach(FV, VisTileList),
     ok;
+%%do_sync_big_vis_tile_to_me(?OBJ_USR, TarUid, VisTileList, add_all) ->
+%%    FC =
+%%        fun(_Ets, Uid, Acc) ->
+%%            MoveState = lib_obj_rw:get_cur_move(Uid),
+%%            Info = lib_move:cal_move_msg_info(MoveState, Uid),
+%%            if
+%%                Info =/= undefined -> [Info | Acc];
+%%                true ->
+%%                    ?DEBUG("Uid ~p",[Uid]),
+%%                    Acc
+%%            end
+%%        end,
+%%    FV =
+%%        fun(#m_vis_tile{player = PL, monster = ML, npc = NL, pet = Pets}, Acc0) ->
+%%            Acc1 = lists:foldl(fun(Uid, Acc) -> FC(lib_map_rw:get_player_ets(),   Uid, Acc) end, Acc0, PL),
+%%            Acc2 = lists:foldl(fun(Uid, Acc) -> FC(lib_map_rw:get_monster_ets(),  Uid, Acc) end, Acc1, ML),
+%%            Acc3 = lists:foldl(fun(Uid, Acc) -> FC(lib_map_rw:get_npc_ets(),      Uid, Acc) end, Acc2, NL),
+%%                   lists:foldl(fun(Uid, Acc) -> FC(lib_map_rw:get_pet_ets(),      Uid, Acc) end, Acc3, Pets)
+%%        end,
+%%    InfoList = lists:foldl(FV, [], VisTileList),
+%%    case InfoList of
+%%        [] -> skip;
+%%        _ -> gcore:send_net_msg(TarUid, #pk_GS2U_SyncWalkMany{walks = InfoList})
+%%    end,
+%%    ok;
 do_sync_big_vis_tile_to_me(_Type, _Uid, _VisTileList, _Msg) -> skip.
 
 %%-------------------------------------------------------------------

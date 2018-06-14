@@ -163,7 +163,7 @@ update_role_walk(Uid, CurPos, PathList, MoveTime) ->
 
 %%    ?DEBUG("mapid ~p ~w from ~w to ~w move time ~p",
 %%        [self(), Obj#m_map_obj.uid, CurPos, NewPos, MoveTime]),
-    ?DEBUG("# ~p,~p", [NewPos#vector3.x, NewPos#vector3.z]),
+%%    ?DEBUG("# ~p,~p", [NewPos#vector3.x, NewPos#vector3.z]),
     on_player_pos_change(Uid, CurPos, NewPos),
 
     case NewPathList of
@@ -243,6 +243,9 @@ cal_move_msg(Uid) ->
 do_cal_move_msg(?EMS_WALK, Uid) ->
     Walk = cal_move_msg_info(?EMS_WALK, Uid),
     #pk_GS2U_SyncWalk{walk = Walk};
+do_cal_move_msg(?EMS_STAND, Uid) ->
+    Pos = lib_obj_rw:get_start_pos(Uid),
+    #pk_GS2U_SyncStand{uid = Uid, cur_x = vector3:x(Pos), cur_y = vector3:z(Pos)};
 do_cal_move_msg(_S, _Uid) ->
     undefined.
 
@@ -258,5 +261,5 @@ cal_move_msg_info(?EMS_WALK, Uid) ->
         dst_x = vector3:x(Dst), dst_y = vector3:z(Dst),
         speed = Speed
     };
-cal_move_msg_info(_S, _Uid) ->
+cal_move_msg_info(_Any, _Uid) ->
     undefined.

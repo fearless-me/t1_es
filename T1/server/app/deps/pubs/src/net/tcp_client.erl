@@ -9,7 +9,7 @@
 -export([c/2]).
 -export([nc/3]).
 -export([connect/2]).
--export([handle/1]).
+-export([handle/1,handle/2]).
 
 
 c(Port) ->
@@ -21,12 +21,12 @@ nc(N, Port, MapId) ->
     lists:foreach(fun(_) -> tcp_client:c(Port, MapId), timer:sleep(1) end, lists:seq(1, N)).
 
 set_buff(Bin) -> put('fak_buf', Bin).
-get_bufff(  ) -> get('fak_buf').
+get_bufff() -> get('fak_buf').
 
 connect(Port, MapID) ->
     tcp_codec:init(#net_conf{}),
 
-     set_buff(<<>>),
+    set_buff(<<>>),
     {ok, Socket} = ranch_tcp:connect({127, 0, 0, 1}, Port, [{active, false}]),
     socket(Socket),
     Msg1 = #pk_U2GS_Login_Normal{
@@ -71,33 +71,32 @@ send_msg(Socket, Msg) ->
 
 
 recv_msg(Socket) ->
-    case ranch_tcp:recv(Socket, 6, 15000) of
+    case ranch_tcp:recv(Socket, 0, 15000) of
         {ok, Any0} ->
-            B1 = get_bufff(),
-            Any = <<B1/binary, Any0/binary>>,
-            {Size, Left} = binary_lib:read_uint32(Any),
-            {Cmd, _} = binary_lib:read_uint16(Left),
-            {ok, MsgBin} = ranch_tcp:recv(Socket, Size - 6, 15000),
-            {Msg, LeftBin} = netmsg:decode(Cmd, MsgBin),
-            tcp_client:handle(Msg),
-            set_buff(LeftBin),
+            tcp_codec:decode(fun tcp_client:handle/2, Socket, Any0),
             ok;
         _ ->
             skip
     end.
 
+handle(_Cmd, Msg)-> handle(Msg).
 
-handle(#pk_GS2U_LoginResult{result = Ret, aid = Aid, msg = Msg}) ->
-    io:format("LoginResult ~p acc ~p msg ~ts~n", [Ret, Aid, Msg]),
+handle(Msg) ->
+    ?INFO("~p ~p", [get_aid(), Msg]),
+    handle_1(Msg),
+    ok.
+
+
+handle_1(#pk_GS2U_LoginResult{aid = Aid}) ->
+    set_aid(Aid),
     ok;
-handle(#pk_GS2U_CreatePlayerResult{errorCode = ErrCode, uid = Uid}) ->
+handle_1(#pk_GS2U_CreatePlayerResult{errorCode = ErrCode, uid = Uid}) ->
     case ErrCode of
         0 -> send_msg(socket(), #pk_U2GS_SelPlayerEnterGame{uid = Uid});
         _ -> io:format("create role failed ~p~n", [ErrCode])
     end,
     ok;
-handle(#pk_GS2U_UserPlayerList{info = Info}) ->
-    io:format("PlayerList ~w~n", [Info]),
+handle_1(#pk_GS2U_UserPlayerList{info = Info}) ->
     case Info of
         [] ->
             send_msg(socket(), #pk_U2GS_RequestCreatePlayer{
@@ -111,12 +110,15 @@ handle(#pk_GS2U_UserPlayerList{info = Info}) ->
             recv_msg(socket())
     end,
     ok;
-handle(#pk_GS2U_GotoNewMap{}) ->
+handle_1(#pk_GS2U_GotoNewMap{}) ->
     send_msg(socket(), #pk_U2GS_GetPlayerInitData{}),
     ok;
-handle(Msg) ->
+handle_1(Msg) ->
     io:format("recv:~p~n", [Msg]).
 
 -define(SocketKey, socketRef___).
 socket(Socket) -> put(?SocketKey, Socket).
 socket() -> get(?SocketKey).
+
+set_aid(Aid) -> put('AID', Aid).
+get_aid() -> get('AID').
