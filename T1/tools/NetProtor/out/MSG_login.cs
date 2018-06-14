@@ -20,6 +20,12 @@ namespace Network.Messages
 //不用使用int uint long 
 //
 /////////////////////////////////////////////////////////////////////////
+//不用使用int uint long 
+//不用使用int uint long 
+//不用使用int uint long 
+//不用使用int uint long 
+//不用使用int uint long 
+//不用使用int uint long 
 	public class U2GS_Login_Normal : BaseMessage
 	{
 		override public MessageType GetId() {
@@ -1222,6 +1228,178 @@ namespace Network.Messages
 		public override int Deserialize( BinaryReader reader ) {
 			long pos = reader.BaseStream.Position;
 			m_uid = MessageSerializer.Read_UInt64( reader );
+			m_cur_x = MessageSerializer.Read_Single( reader );
+			m_cur_y = MessageSerializer.Read_Single( reader );
+			return (int)( reader.BaseStream.Position - pos );
+		}
+		#endregion
+	}
+
+	
+//
+	public class U2GS_GetRemotePlayer : BaseMessage
+	{
+		override public MessageType GetId() {
+			return ID;
+		}
+		public const MessageType ID = MessageType.MSG_U2GS_GetRemotePlayer;
+
+		#region members
+		/// <summary>
+		/// 
+		/// </summary>
+		public List<UInt64> m_uids = null;
+		#endregion
+
+		#region methods
+		public override int Serialize( BinaryWriter writer ) {
+			long pos = writer.BaseStream.Position;
+			MessageSerializer.WriteList_UInt64( writer, m_uids );
+			return (int)( writer.BaseStream.Position - pos );
+		}
+		#endregion
+	}
+
+	
+	public class GS2U_RemotePlayer : BaseMessage
+	{
+		static new public BaseMessage Create( BinaryReader s ) {
+			var ret = new GS2U_RemotePlayer();
+			ret.Deserialize( s );
+			return ret;
+		}
+		override public MessageType GetId() {
+			return ID;
+		}
+		public const MessageType ID = MessageType.MSG_GS2U_RemotePlayer;
+
+		#region members
+		/// <summary>
+		/// 
+		/// </summary>
+		public UInt64 m_uid = 0;
+		/// <summary>
+		/// 
+		/// </summary>
+		public Int32 m_level = 0;
+		/// <summary>
+		/// 坐标X
+		/// </summary>
+		public Single m_cur_x = 0.0f;
+		/// <summary>
+		/// 坐标Y
+		/// </summary>
+		public Single m_cur_y = 0.0f;
+		#endregion
+
+		#region methods
+		public override int Deserialize( BinaryReader reader ) {
+			long pos = reader.BaseStream.Position;
+			m_uid = MessageSerializer.Read_UInt64( reader );
+			m_level = MessageSerializer.Read_Int32( reader );
+			m_cur_x = MessageSerializer.Read_Single( reader );
+			m_cur_y = MessageSerializer.Read_Single( reader );
+			return (int)( reader.BaseStream.Position - pos );
+		}
+		#endregion
+	}
+
+	
+	public class GS2U_RemoteMonster : BaseMessage
+	{
+		static new public BaseMessage Create( BinaryReader s ) {
+			var ret = new GS2U_RemoteMonster();
+			ret.Deserialize( s );
+			return ret;
+		}
+		override public MessageType GetId() {
+			return ID;
+		}
+		public const MessageType ID = MessageType.MSG_GS2U_RemoteMonster;
+
+		#region members
+		/// <summary>
+		/// 
+		/// </summary>
+		public UInt64 m_uid = 0;
+		/// <summary>
+		/// 
+		/// </summary>
+		public UInt32 m_did = 0;
+		/// <summary>
+		/// 
+		/// </summary>
+		public Int32 m_level = 0;
+		/// <summary>
+		/// 坐标X
+		/// </summary>
+		public Single m_cur_x = 0.0f;
+		/// <summary>
+		/// 坐标Y
+		/// </summary>
+		public Single m_cur_y = 0.0f;
+		#endregion
+
+		#region methods
+		public override int Deserialize( BinaryReader reader ) {
+			long pos = reader.BaseStream.Position;
+			m_uid = MessageSerializer.Read_UInt64( reader );
+			m_did = MessageSerializer.Read_UInt32( reader );
+			m_level = MessageSerializer.Read_Int32( reader );
+			m_cur_x = MessageSerializer.Read_Single( reader );
+			m_cur_y = MessageSerializer.Read_Single( reader );
+			return (int)( reader.BaseStream.Position - pos );
+		}
+		#endregion
+	}
+
+	
+	public class GS2U_RemotePet : BaseMessage
+	{
+		static new public BaseMessage Create( BinaryReader s ) {
+			var ret = new GS2U_RemotePet();
+			ret.Deserialize( s );
+			return ret;
+		}
+		override public MessageType GetId() {
+			return ID;
+		}
+		public const MessageType ID = MessageType.MSG_GS2U_RemotePet;
+
+		#region members
+		/// <summary>
+		/// 
+		/// </summary>
+		public UInt64 m_uid = 0;
+		/// <summary>
+		/// 
+		/// </summary>
+		public UInt64 m_owner = 0;
+		/// <summary>
+		/// 
+		/// </summary>
+		public UInt32 m_did = 0;
+		/// <summary>
+		/// 
+		/// </summary>
+		public Int32 m_level = 0;
+		/// <summary>
+		/// 坐标X
+		/// </summary>
+		public Single m_cur_x = 0.0f;
+		/// <summary>
+		/// 坐标Y
+		/// </summary>
+		public Single m_cur_y = 0.0f;
+		#endregion
+
+		#region methods
+		public override int Deserialize( BinaryReader reader ) {
+			long pos = reader.BaseStream.Position;
+			m_uid = MessageSerializer.Read_UInt64( reader );
+			m_owner = MessageSerializer.Read_UInt64( reader );
+			m_did = MessageSerializer.Read_UInt32( reader );
+			m_level = MessageSerializer.Read_Int32( reader );
 			m_cur_x = MessageSerializer.Read_Single( reader );
 			m_cur_y = MessageSerializer.Read_Single( reader );
 			return (int)( reader.BaseStream.Position - pos );

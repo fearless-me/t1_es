@@ -3,7 +3,12 @@
 //不用使用int uint long 
 //
 /////////////////////////////////////////////////////////////////////////
-
+//不用使用int uint long 
+//不用使用int uint long 
+//不用使用int uint long 
+//不用使用int uint long 
+//不用使用int uint long 
+//不用使用int uint long 
 struct U2GS_Login_Normal ->
 {
 	string	platformAccount;		// 平台帐号（游戏内帐号用平台id来绑定创建）
@@ -33,9 +38,9 @@ struct GS2U_LoginResult <-
 
 struct UserPlayerData
 {
-uint64	uid;			// 角色ID
+    uint64	uid;			// 角色ID
 	string	name;			// 角色名
-	int		level;			// 等级
+	int32		level;			// 等级
 	int32	wingLevel;		// 翅膀等级
 	int8	camp;			// 阵营
 	int8	race;			// 种族
@@ -63,7 +68,7 @@ struct U2GS_RequestCreatePlayer ->
 
 struct GS2U_CreatePlayerResult <-
 {
-	int		errorCode;
+	int32		errorCode;
 	uint64  uid;
 };
 
@@ -74,7 +79,7 @@ struct U2GS_SelPlayerEnterGame ->
 
 struct GS2U_SelPlayerResult <-
 {
-	int result;
+	int32 result;
 };
 
 struct U2GS_RequestDeletePlayer ->
@@ -85,13 +90,13 @@ struct U2GS_RequestDeletePlayer ->
 struct GS2U_DeletePlayerResult <-
 {
 	uint64	uid;
-	int		errorCode;
+	int32		errorCode;
 };
 
 struct LookInfoMonster
 {
 	uint64	uid;
-	uint	did;					// 怪物 ID	
+	uint32	did;				// 怪物 ID	
 	float	x;					// 怪物坐标
 	float	y;
 	float	rotW;				//旋转坐标W
@@ -167,7 +172,7 @@ struct GS2U_PlayerInitBase <-
 {
 	uint64	uid;	// 角色ID
 	string	name;	// 角色名
-	int		level;	// 等级
+	int32	level;	// 等级
 	int8	camp;	// 阵营
 	int8	race;	// 种族
 	uint32	career;	// 职业
@@ -214,4 +219,43 @@ struct GS2U_SyncStand <-
 	float	cur_y;	 //坐标Y
 };
 
+//
+struct U2GS_GetRemotePlayer ->
+{
+	vector<uint64> uids;
+};
+
+struct GS2U_RemotePlayer <-
+{
+	uint64  uid;
+	int32   level;
+	float	cur_x;	 //坐标X
+	float	cur_y;	 //坐标Y
+};
+
+struct GS2U_RemoteMonster <-
+{
+	uint64  uid;
+	uint32	did;
+	int32   level;
+	float	cur_x;	 //坐标X
+	float	cur_y;	 //坐标Y
+};
+
+struct GS2U_RemotePet <-
+{
+	uint64  uid;
+	uint64 	owner;
+	uint32	did;
+	int32   level;
+	float	cur_x;	 //坐标X
+	float	cur_y;	 //坐标Y
+};
+
+//不用使用int uint long 
+//不用使用int uint long 
+//不用使用int uint long 
+//不用使用int uint long 
+//不用使用int uint long 
+//不用使用int uint long 
 

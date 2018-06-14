@@ -133,6 +133,54 @@ decode(?GS2U_PlayerInitBase,Bin0) ->
 		},
 	Bin9 };
 
+%GENERATED from file:login.h => GS2U_RemoteMonster
+decode(?GS2U_RemoteMonster,Bin0) ->
+	{ V_uid, Bin1 } = read_uint64( Bin0 ),
+	{ V_did, Bin2 } = read_uint32( Bin1 ),
+	{ V_level, Bin3 } = read_int32( Bin2 ),
+	{ V_cur_x, Bin4 } = read_float( Bin3 ),
+	{ V_cur_y, Bin5 } = read_float( Bin4 ),
+	{ #pk_GS2U_RemoteMonster {
+		uid = V_uid,
+		did = V_did,
+		level = V_level,
+		cur_x = V_cur_x,
+		cur_y = V_cur_y
+		},
+	Bin5 };
+
+%GENERATED from file:login.h => GS2U_RemotePet
+decode(?GS2U_RemotePet,Bin0) ->
+	{ V_uid, Bin1 } = read_uint64( Bin0 ),
+	{ V_owner, Bin2 } = read_uint64( Bin1 ),
+	{ V_did, Bin3 } = read_uint32( Bin2 ),
+	{ V_level, Bin4 } = read_int32( Bin3 ),
+	{ V_cur_x, Bin5 } = read_float( Bin4 ),
+	{ V_cur_y, Bin6 } = read_float( Bin5 ),
+	{ #pk_GS2U_RemotePet {
+		uid = V_uid,
+		owner = V_owner,
+		did = V_did,
+		level = V_level,
+		cur_x = V_cur_x,
+		cur_y = V_cur_y
+		},
+	Bin6 };
+
+%GENERATED from file:login.h => GS2U_RemotePlayer
+decode(?GS2U_RemotePlayer,Bin0) ->
+	{ V_uid, Bin1 } = read_uint64( Bin0 ),
+	{ V_level, Bin2 } = read_int32( Bin1 ),
+	{ V_cur_x, Bin3 } = read_float( Bin2 ),
+	{ V_cur_y, Bin4 } = read_float( Bin3 ),
+	{ #pk_GS2U_RemotePlayer {
+		uid = V_uid,
+		level = V_level,
+		cur_x = V_cur_x,
+		cur_y = V_cur_y
+		},
+	Bin4 };
+
 %GENERATED from file:login.h => GS2U_RemoveRemote
 decode(?GS2U_RemoveRemote,Bin0) ->
 	{ V_uid_list, Bin1 } = read_array(Bin0, fun(X) -> read_uint64( X ) end),
@@ -203,6 +251,14 @@ decode(?U2GS_GetPlayerInitData,Bin0) ->
 
 		},
 	Bin0 };
+
+%GENERATED from file:login.h => U2GS_GetRemotePlayer
+decode(?U2GS_GetRemotePlayer,Bin0) ->
+	{ V_uids, Bin1 } = read_array(Bin0, fun(X) -> read_uint64( X ) end),
+	{ #pk_U2GS_GetRemotePlayer {
+		uids = V_uids
+		},
+	Bin1 };
 
 %GENERATED from file:login.h => U2GS_Login_Normal
 decode(?U2GS_Login_Normal,Bin0) ->
@@ -487,6 +543,54 @@ encode(#pk_GS2U_PlayerInitBase{} = P) ->
 		Bin_mapID
 	];
 
+%GENERATED from file:login.h => GS2U_RemoteMonster
+encode(#pk_GS2U_RemoteMonster{} = P) ->
+	Bin_uid = write_uint64( P#pk_GS2U_RemoteMonster.uid ),
+	Bin_did = write_uint32( P#pk_GS2U_RemoteMonster.did ),
+	Bin_level = write_int32( P#pk_GS2U_RemoteMonster.level ),
+	Bin_cur_x = write_float( P#pk_GS2U_RemoteMonster.cur_x ),
+	Bin_cur_y = write_float( P#pk_GS2U_RemoteMonster.cur_y ),
+	[
+		<<?GS2U_RemoteMonster:?U16>>,
+		Bin_uid,
+		Bin_did,
+		Bin_level,
+		Bin_cur_x,
+		Bin_cur_y
+	];
+
+%GENERATED from file:login.h => GS2U_RemotePet
+encode(#pk_GS2U_RemotePet{} = P) ->
+	Bin_uid = write_uint64( P#pk_GS2U_RemotePet.uid ),
+	Bin_owner = write_uint64( P#pk_GS2U_RemotePet.owner ),
+	Bin_did = write_uint32( P#pk_GS2U_RemotePet.did ),
+	Bin_level = write_int32( P#pk_GS2U_RemotePet.level ),
+	Bin_cur_x = write_float( P#pk_GS2U_RemotePet.cur_x ),
+	Bin_cur_y = write_float( P#pk_GS2U_RemotePet.cur_y ),
+	[
+		<<?GS2U_RemotePet:?U16>>,
+		Bin_uid,
+		Bin_owner,
+		Bin_did,
+		Bin_level,
+		Bin_cur_x,
+		Bin_cur_y
+	];
+
+%GENERATED from file:login.h => GS2U_RemotePlayer
+encode(#pk_GS2U_RemotePlayer{} = P) ->
+	Bin_uid = write_uint64( P#pk_GS2U_RemotePlayer.uid ),
+	Bin_level = write_int32( P#pk_GS2U_RemotePlayer.level ),
+	Bin_cur_x = write_float( P#pk_GS2U_RemotePlayer.cur_x ),
+	Bin_cur_y = write_float( P#pk_GS2U_RemotePlayer.cur_y ),
+	[
+		<<?GS2U_RemotePlayer:?U16>>,
+		Bin_uid,
+		Bin_level,
+		Bin_cur_x,
+		Bin_cur_y
+	];
+
 %GENERATED from file:login.h => GS2U_RemoveRemote
 encode(#pk_GS2U_RemoveRemote{} = P) ->
 	Bin_uid_list = write_array(P#pk_GS2U_RemoveRemote.uid_list, fun(X) -> write_uint64( X ) end),
@@ -556,6 +660,14 @@ encode(#pk_U2GS_GetPlayerInitData{}) ->
 	[
 		<<?U2GS_GetPlayerInitData:?U16>>
 
+	];
+
+%GENERATED from file:login.h => U2GS_GetRemotePlayer
+encode(#pk_U2GS_GetRemotePlayer{} = P) ->
+	Bin_uids = write_array(P#pk_U2GS_GetRemotePlayer.uids, fun(X) -> write_uint64( X ) end),
+	[
+		<<?U2GS_GetRemotePlayer:?U16>>,
+		Bin_uids
 	];
 
 %GENERATED from file:login.h => U2GS_Login_Normal
@@ -743,6 +855,9 @@ name(?GS2U_LoginResult) -> "GS2U_LoginResult";
 name(?GS2U_LookInfoPlayer) -> "GS2U_LookInfoPlayer";
 name(?GS2U_MonsterList) -> "GS2U_MonsterList";
 name(?GS2U_PlayerInitBase) -> "GS2U_PlayerInitBase";
+name(?GS2U_RemoteMonster) -> "GS2U_RemoteMonster";
+name(?GS2U_RemotePet) -> "GS2U_RemotePet";
+name(?GS2U_RemotePlayer) -> "GS2U_RemotePlayer";
 name(?GS2U_RemoveRemote) -> "GS2U_RemoveRemote";
 name(?GS2U_SelPlayerResult) -> "GS2U_SelPlayerResult";
 name(?GS2U_SyncStand) -> "GS2U_SyncStand";
@@ -751,6 +866,7 @@ name(?GS2U_SyncWalkMany) -> "GS2U_SyncWalkMany";
 name(?GS2U_UserPlayerList) -> "GS2U_UserPlayerList";
 name(?U2GS_ChangeMap) -> "U2GS_ChangeMap";
 name(?U2GS_GetPlayerInitData) -> "U2GS_GetPlayerInitData";
+name(?U2GS_GetRemotePlayer) -> "U2GS_GetRemotePlayer";
 name(?U2GS_Login_Normal) -> "U2GS_Login_Normal";
 name(?U2GS_RequestCreatePlayer) -> "U2GS_RequestCreatePlayer";
 name(?U2GS_RequestDeletePlayer) -> "U2GS_RequestDeletePlayer";

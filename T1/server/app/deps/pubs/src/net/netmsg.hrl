@@ -2,7 +2,7 @@
 -ifndef(netmsg).
 -define(netmsg,1).
 
--define(ProtoVersion,631).
+-define(ProtoVersion,632).
 
 %% 
 -define(GS2U_CreatePlayerResult,45054).
@@ -90,6 +90,51 @@
 	head = 0,
 	%% UInt16 角色所在当前地图ID
 	mapID = 0
+}).
+
+%% 
+-define(GS2U_RemoteMonster,57060).
+-record(pk_GS2U_RemoteMonster,{
+	%% UInt64
+	uid = 0,
+	%% UInt32
+	did = 0,
+	%% Int32
+	level = 0,
+	%% Single坐标X
+	cur_x = 0.0,
+	%% Single坐标Y
+	cur_y = 0.0
+}).
+
+%% 
+-define(GS2U_RemotePet,31693).
+-record(pk_GS2U_RemotePet,{
+	%% UInt64
+	uid = 0,
+	%% UInt64
+	owner = 0,
+	%% UInt32
+	did = 0,
+	%% Int32
+	level = 0,
+	%% Single坐标X
+	cur_x = 0.0,
+	%% Single坐标Y
+	cur_y = 0.0
+}).
+
+%% 
+-define(GS2U_RemotePlayer,15687).
+-record(pk_GS2U_RemotePlayer,{
+	%% UInt64
+	uid = 0,
+	%% Int32
+	level = 0,
+	%% Single坐标X
+	cur_x = 0.0,
+	%% Single坐标Y
+	cur_y = 0.0
 }).
 
 %% 
@@ -238,11 +283,25 @@
 }).
 
 %% 
+%% //
+-define(U2GS_GetRemotePlayer,52743).
+-record(pk_U2GS_GetRemotePlayer,{
+	%% UInt64
+	uids = []
+}).
+
+%% 
 %% //////////////////////////////////////////////////////////////////////////
 %% //<-发出去     ;      ->收消息
 %% //不用使用int uint long 
 %% //
 %% /////////////////////////////////////////////////////////////////////////
+%% //不用使用int uint long 
+%% //不用使用int uint long 
+%% //不用使用int uint long 
+%% //不用使用int uint long 
+%% //不用使用int uint long 
+%% //不用使用int uint long 
 -define(U2GS_Login_Normal,58883).
 -record(pk_U2GS_Login_Normal,{
 	%% String 平台帐号（游戏内帐号用平台id来绑定创建）

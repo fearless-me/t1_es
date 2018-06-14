@@ -25,7 +25,7 @@ local MSG_login = require "Net.MSG_login"
 --BEGIN table for msgs description
 return
 {
-	__VERSION__ = 631,
+	__VERSION__ = 632,
 --BEGIN message id define
 
 
@@ -38,6 +38,9 @@ return
 	MSG_GS2U_LookInfoPlayer = 18166,
 	MSG_GS2U_MonsterList = 32656,
 	MSG_GS2U_PlayerInitBase = 32262,
+	MSG_GS2U_RemoteMonster = 57060,
+	MSG_GS2U_RemotePet = 31693,
+	MSG_GS2U_RemotePlayer = 15687,
 	MSG_GS2U_RemoveRemote = 31994,
 	MSG_GS2U_SelPlayerResult = 42464,
 	MSG_GS2U_SyncStand = 30047,
@@ -46,6 +49,7 @@ return
 	MSG_GS2U_UserPlayerList = 18582,
 	MSG_U2GS_ChangeMap = 4914,
 	MSG_U2GS_GetPlayerInitData = 5543,
+	MSG_U2GS_GetRemotePlayer = 52743,
 	MSG_U2GS_Login_Normal = 58883,
 	MSG_U2GS_RequestCreatePlayer = 4022,
 	MSG_U2GS_RequestDeletePlayer = 23657,
@@ -63,6 +67,9 @@ return
 	[18166] = MSG_login.GS2U_LookInfoPlayer,
 	[32656] = MSG_login.GS2U_MonsterList,
 	[32262] = MSG_login.GS2U_PlayerInitBase,
+	[57060] = MSG_login.GS2U_RemoteMonster,
+	[31693] = MSG_login.GS2U_RemotePet,
+	[15687] = MSG_login.GS2U_RemotePlayer,
 	[31994] = MSG_login.GS2U_RemoveRemote,
 	[42464] = MSG_login.GS2U_SelPlayerResult,
 	[30047] = MSG_login.GS2U_SyncStand,
@@ -71,6 +78,7 @@ return
 	[18582] = MSG_login.GS2U_UserPlayerList,
 	[4914] = MSG_login.U2GS_ChangeMap,
 	[5543] = MSG_login.U2GS_GetPlayerInitData,
+	[52743] = MSG_login.U2GS_GetRemotePlayer,
 	[58883] = MSG_login.U2GS_Login_Normal,
 	[4022] = MSG_login.U2GS_RequestCreatePlayer,
 	[23657] = MSG_login.U2GS_RequestDeletePlayer,

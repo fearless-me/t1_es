@@ -75,8 +75,8 @@ init_vis_tile(#recGameMapCfg{
     rowCellNum = Row,
     cellSize = CellSize
 }) ->
-    VisW = (Col + ?VIS_DIST ) div ?VIS_DIST ,
-    VisH = (Row + ?VIS_DIST ) div ?VIS_DIST ,
+    VisW = (Col div ?VIS_DIST) + 1,
+    VisH = (Row div ?VIS_DIST) + 1 ,
     VisT = VisW * VisH,
 
     ?assert(VisT > 1),

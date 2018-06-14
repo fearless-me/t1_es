@@ -44,6 +44,21 @@ return {
 		fields = "uid,name,level,camp,race,career,sex,head,mapID,LzibbIbiS",
 	},
 
+	GS2U_RemoteMonster = 
+	{
+		fields = "uid,did,level,cur_x,cur_y,LIiff",
+	},
+
+	GS2U_RemotePet = 
+	{
+		fields = "uid,owner,did,level,cur_x,cur_y,LLIiff",
+	},
+
+	GS2U_RemotePlayer = 
+	{
+		fields = "uid,level,cur_x,cur_y,Liff",
+	},
+
 	GS2U_RemoveRemote = 
 	{
 		fields = "$uid_list,1",
@@ -90,6 +105,11 @@ return {
 
 	U2GS_GetPlayerInitData = 
 	{
+	},
+
+	U2GS_GetRemotePlayer = 
+	{
+		fields = "$uids,1",
 	},
 
 	U2GS_Login_Normal = 

@@ -15,12 +15,14 @@ namespace Network.Messages
          MSG_U2GS_ChangeMap = 4914,
          MSG_U2GS_GetPlayerInitData = 5543,
          MSG_GS2U_GetPlayerInitDataEnd = 11674,
+         MSG_GS2U_RemotePlayer = 15687,
          MSG_GS2U_LookInfoPlayer = 18166,
          MSG_GS2U_UserPlayerList = 18582,
          MSG_GS2U_LoginResult = 22162,
          MSG_U2GS_RequestDeletePlayer = 23657,
          MSG_GS2U_SyncWalkMany = 27691,
          MSG_GS2U_SyncStand = 30047,
+         MSG_GS2U_RemotePet = 31693,
          MSG_GS2U_RemoveRemote = 31994,
          MSG_GS2U_PlayerInitBase = 32262,
          MSG_GS2U_MonsterList = 32656,
@@ -28,7 +30,9 @@ namespace Network.Messages
          MSG_GS2U_SelPlayerResult = 42464,
          MSG_GS2U_CreatePlayerResult = 45054,
          MSG_GS2U_GotoNewMap = 47351,
+         MSG_U2GS_GetRemotePlayer = 52743,
          MSG_U2GS_SelPlayerEnterGame = 56497,
+         MSG_GS2U_RemoteMonster = 57060,
          MSG_U2GS_Login_Normal = 58883,
          //login end
     }
@@ -37,11 +41,13 @@ namespace Network.Messages
         static public void Initialize() {
             RegisterMessageId( MessageType.MSG_GS2U_SyncWalk, GS2U_SyncWalk.Create );
             RegisterMessageId( MessageType.MSG_GS2U_GetPlayerInitDataEnd, GS2U_GetPlayerInitDataEnd.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_RemotePlayer, GS2U_RemotePlayer.Create );
             RegisterMessageId( MessageType.MSG_GS2U_LookInfoPlayer, GS2U_LookInfoPlayer.Create );
             RegisterMessageId( MessageType.MSG_GS2U_UserPlayerList, GS2U_UserPlayerList.Create );
             RegisterMessageId( MessageType.MSG_GS2U_LoginResult, GS2U_LoginResult.Create );
             RegisterMessageId( MessageType.MSG_GS2U_SyncWalkMany, GS2U_SyncWalkMany.Create );
             RegisterMessageId( MessageType.MSG_GS2U_SyncStand, GS2U_SyncStand.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_RemotePet, GS2U_RemotePet.Create );
             RegisterMessageId( MessageType.MSG_GS2U_RemoveRemote, GS2U_RemoveRemote.Create );
             RegisterMessageId( MessageType.MSG_GS2U_PlayerInitBase, GS2U_PlayerInitBase.Create );
             RegisterMessageId( MessageType.MSG_GS2U_MonsterList, GS2U_MonsterList.Create );
@@ -49,6 +55,7 @@ namespace Network.Messages
             RegisterMessageId( MessageType.MSG_GS2U_SelPlayerResult, GS2U_SelPlayerResult.Create );
             RegisterMessageId( MessageType.MSG_GS2U_CreatePlayerResult, GS2U_CreatePlayerResult.Create );
             RegisterMessageId( MessageType.MSG_GS2U_GotoNewMap, GS2U_GotoNewMap.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_RemoteMonster, GS2U_RemoteMonster.Create );
         }
     }
 }
