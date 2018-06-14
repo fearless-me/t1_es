@@ -9,14 +9,16 @@
 -module(lib_player_pub).
 -author("mawenhong").
 -include("logger.hrl").
+-include("map.hrl").
+-include("pub_common.hrl").
+-include("vector3.hrl").
 
 
 %% API
 %% 玩家进程其他模块可调用的接口
 -export([
-    shutdown/1,
-    stop/1, direct_stop/0, send/1,
-    socket/0, teleport_/1
+    shutdown/1, socket/0,
+    stop/1, direct_stop/0, send/1, teleport_/1
 ]).
 
 
@@ -32,10 +34,8 @@ direct_stop() -> mod_player:direct_stop().
 send(Msg) -> mod_player:send(Msg).
 socket() -> mod_player:socket().
 
-
 %%-------------------------------------------------------------------
 teleport_(NewPos) -> ps:send(self(), teleport, NewPos).
 
 
-%%-------------------------------------------------------------------
 

@@ -10,25 +10,31 @@
 -author("mawenhong").
 -include("logger.hrl").
 -include("mem_record.hrl").
+-include("netmsg.hrl").
 
 %% API
--export([on_account_login/3, on_create/1,on_login/0,on_offline/0]).
+-export([on_account_login/3, on_create/1,on_login/1,on_offline/0]).
 -export([on_tick/0, on_second/0, on_minute/0, on_hour/0, on_sharp/1]).
 -export([on_change_map/2, on_rw_update/2]).
 
 %%-------------------------------------------------------------------
 on_account_login(Aid, Pid, Sock) ->
     lib_cache:add_account_socket(Aid, Pid, Sock),
+    lib_db:action_p_(Aid, load_player_list, Aid),
     ok.
 
 %%-------------------------------------------------------------------
 on_create(Uid) ->
+    lib_player_pub:send(#pk_GS2U_CreatePlayerResult{uid = Uid}),
     ?DEBUG("[hook]Aid ~p create new player ~w",
         [lib_player_rw:get_aid(), Uid]),
     ok.
 
 %%-------------------------------------------------------------------
-on_login() ->
+on_login(Player) ->
+    lib_player_base:init(Player),
+    lib_cache:online(Player, self(), lib_player_pub:socket()),
+    lib_player_map_priv:online_call(Player),
     lib_player_alarm:init(),
     lib_player_sub:tick_go(),
     ?DEBUG("[hook]Aid ~p player login ~w",
@@ -37,9 +43,16 @@ on_login() ->
 
 %%-------------------------------------------------------------------
 on_offline() ->
+    Uid = lib_player_rw:get_uid(),
+    Aid = lib_player_rw:get_aid(),
+    #m_player_pub{
+        mid = Mid, mpid = MPid, line = LineId
+    } = Player = lib_cache:get_player_pub(Uid),
+    lib_player_map_priv:offline_call(Uid, Mid, LineId, MPid),
+    lib_player_save:save(Player),
+    lib_cache:offline(Aid, Uid),
     lib_player_alarm:save(),
-    ?DEBUG("[hook]Aid ~p player offline ~w",
-        [lib_player_rw:get_aid(), lib_player_rw:get_uid()]),
+    ?WARN("player ~p exit map_~p_~p",[Uid, Mid, LineId]),
     ok.
 
 %%-------------------------------------------------------------------

@@ -28,9 +28,6 @@
 -export([select_player/1]).
 -export([loaded_player/1]).
 -export([offline/1]).
--export([goto_new_map/2, goto_to_pre_map/0]).
-%% 逻辑层调用 teleport_/1, 不要調用teleport_call
--export([teleport_call/1]).
 
 %%-------------------------------------------------------------------
 init() ->
@@ -62,7 +59,6 @@ login_ack_success(sucess, AccountIfo) ->
     lib_player_rw:set_aid(Aid),
     lib_player_rw:set_status(?PS_WAIT_LIST),
     hook_player:on_account_login(Aid, self(), lib_player_pub:socket()),
-    lib_db:action_p_(Aid, load_player_list, Aid),
     ok;
 login_ack_success(Reason, AccountIfo) ->
     #p_account{aid = Aid} = AccountIfo,
@@ -120,9 +116,7 @@ create_player_(Req) ->
 create_player_ack(#r_create_player_ack{error = 0, uid = Uid}) ->
     lib_player_rw:set_status(?PS_WAIT_SELECT_CREATE),
     hook_player:on_create(Uid),
-    lib_player_pub:send(#pk_GS2U_CreatePlayerResult{
-        errorCode = 0, uid = Uid
-    });
+    ok;
 create_player_ack(#r_create_player_ack{error = Err}) ->
     lib_player_rw:set_status(?PS_WAIT_SELECT_CREATE),
     lib_player_pub:send(#pk_GS2U_CreatePlayerResult{errorCode = Err}).
@@ -144,123 +138,8 @@ loaded_player(undefined) ->
     ok;
 loaded_player(Player) ->
     lib_player_rw:set_status(?PS_WAIT_ENTER),
-    lib_player_base:init(Player),
-    lib_cache:online(Player, self(), lib_player_pub:socket()),
-    add_to_world(Player),
-    hook_player:on_login(),
+    hook_player:on_login(Player),
     ok.
-
-%%-------------------------------------------------------------------
-add_to_world(Player) ->
-    #p_player{
-        uid = Uid, map_id = Mid, x = X, y = Y,
-        old_map_id = OldMid, old_line = OldLine, old_x = OX, old_y = OY
-    } = Player,
-    
-    Ack = map_creator:player_online(
-        Mid,
-        #r_change_map_req{
-            uid = Uid,
-            pid = self(),
-            tar_map_id = Mid,
-            tar_pos = vector3:new(X, 0, Y)
-        }
-    ),
-
-    do_change_map_ack(OldMid, OldLine, vector3:new(OX, 0, OY), Ack, login),
-    ok.
-
-%%-------------------------------------------------------------------
-teleport_call(NewPos) ->
-    Uid = lib_player_rw:get_uid(),
-    #m_player_pub{mpid = MPid} = lib_cache:get_player_pub(Uid),
-    do_teleport(MPid, NewPos).
-
-do_teleport(undefined, _NewPos) ->
-    ?ERROR("");
-do_teleport(MapPid, NewPos) ->
-    Uid = lib_player_rw:get_uid(),
-    ok  = map:player_teleport(
-        MapPid,
-        #r_teleport_req{uid = Uid, tar_pos = NewPos}
-    ),
-    ok.
-
-%%-------------------------------------------------------------------
-goto_new_map(DestMapID, Pos) ->
-    do_goto_new_map(DestMapID, Pos),
-    ok.
-
-%%-------------------------------------------------------------------
-do_goto_new_map(DestMapID, TarPos) ->
-    lib_player_rw:set_status(?PS_CHANGE_MAP),
-    Uid = lib_player_rw:get_uid(),
-    #m_player_pub{mid = Mid, line = Line, mpid = MPid, pos = Pos} = lib_cache:get_player_pub(Uid),
-    Ack = map_creator:player_change_map(
-        #r_change_map_req{
-            uid = Uid, pid = self(),
-            map_id = Mid, line_id = Line, map_pid = MPid,
-            tar_map_id = DestMapID, tar_pos = TarPos
-        }
-    ),
-
-    do_change_map_ack(Mid, Line, Pos, Ack, online),
-    ok.
-
-
-do_change_map_ack(
-    OldMid, OldLineId, OldPos,
-    #r_change_map_ack{
-        error = 0,
-        map_id = Mid, line_id = LineId,
-        map_pid = MPid , pos = Pos
-}, _Flag) ->
-    Uid = lib_player_rw:get_uid(),
-    lib_cache:update_player_pub(
-        Uid,
-        [
-            {#m_player_pub.old_mid, OldMid},
-            {#m_player_pub.old_line, OldLineId},
-            {#m_player_pub.old_pos, OldPos},
-            {#m_player_pub.mid, Mid},
-            {#m_player_pub.line, LineId},
-            {#m_player_pub.mpid, MPid},
-            {#m_player_pub.pos, Pos}
-        ]
-    ),
-    lib_player_rw:set_map(
-        #m_player_map{map_id = Mid, line_id = LineId, map_pid = MPid}
-    ),
-    ?WARN("player ~p enter map_~p_~p",[Uid, Mid, LineId]),
-    hook_player:on_change_map(Mid, Mid),
-
-    lib_player_rw:set_status(?PS_GAME),
-
-    map:player_move_(
-        MPid,
-        #r_player_start_move_req{uid = Uid, tar_pos = vector3:new(400.6, 0, 358.9)}
-    ),
-    ok;
-do_change_map_ack(
-    OldMid, OldLineId, _OldPos,
-    #r_change_map_ack{error = Err, map_id = Mid}, Flag
-)->
-    case Flag of
-        online -> lib_player_rw:set_status(?PS_GAME);
-        _Flag  -> error
-    end,
-    ?ERROR("player ~p change from map ~p:~p to map ~p failed with ~p",
-        [lib_player_rw:get_uid(), OldMid, OldLineId, Mid, Err]),
-    ok.
-
-%%%-------------------------------------------------------------------
-goto_to_pre_map() ->
-    Uid = lib_player_rw:get_uid(),
-    #m_player_pub{mpid = Mid, old_mid = OMid, old_pos = OPos} = lib_cache:get_player_pub(Uid),
-    ?DEBUG("player ~p return_to_pre_map from ~p to ~p", [Uid, Mid, OMid]),
-    do_goto_new_map(OMid, OPos),
-    ok.
-
 
 %%%-------------------------------------------------------------------
 offline(Reason) ->
@@ -270,17 +149,9 @@ offline(Reason) ->
 
 offline_1(Status)
     when Status =:= ?PS_GAME; Status =:= ?PS_CHANGE_MAP ->
+    Uid = lib_player_rw:get_uid_def(0),
     lib_player_rw:set_status(?PS_OFFLINE),
-    Uid = lib_player_rw:get_uid(),
-    Aid = lib_player_rw:get_aid(),
-    #m_player_pub{
-        mid = Mid, mpid = MPid, line = LineId
-    } = Player = lib_cache:get_player_pub(Uid),
-    ?WARN("player ~p exit map_~p_~p",[Uid, Mid, LineId]),
     hook_player:on_offline(),
-    map_creator:player_offline(Uid, Mid, LineId, MPid),
-    lib_player_save:save(Player),
-    lib_cache:offline(Aid, Uid),
     ?INFO("player ~p pid ~p sock ~p player ~w offline status ~p",
         [Uid, self(), lib_player_pub:socket(), Uid, Status]),
     ok;
