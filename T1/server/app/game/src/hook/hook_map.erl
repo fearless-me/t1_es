@@ -62,7 +62,7 @@ on_rw_update_priv_action(_ObjType, _Uid, _Element) ->
 lock_transcation(Key)->
     case get(map_obj_lock_transcation) of
         Key -> throw("recursive call");
-        _ -> skip
+        _ -> put(map_obj_lock_transcation, Key)
     end,
     ok.
 

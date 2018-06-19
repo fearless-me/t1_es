@@ -105,7 +105,7 @@ on_rw_update(_Key, _Value) ->
 lock_transcation(Key)->
     case get(player_lock_transcation) of
         Key -> throw("recursive call");
-        _ -> skip
+        _ -> put(player_lock_transcation, Key)
     end,
     ok.
 
