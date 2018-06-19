@@ -41,9 +41,9 @@ do_handle_call(Request, From, State) ->
 
 %%--------------------------------------------------------------------
 do_handle_info({login_req, Req}, State) ->
-    {noreply, login:login_1(Req, State)};
+    {noreply, mod_login:login_1(Req, State)};
 do_handle_info({logout, AccountID}, State) ->
-    {noreply, login:logout_1(AccountID, State)};
+    {noreply, mod_login:logout_1(AccountID, State)};
 do_handle_info(Info, State) ->
     ?ERROR("undeal info ~w", [Info]),
     {noreply, State}.

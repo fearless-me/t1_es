@@ -14,9 +14,8 @@
 -include("logger.hrl").
 
 %% API
--export([init/1, encode/1, decode/3]).
--export([get_conf/0]).
--export([get_buffer/0]).
+-export([init/1, encode/1, encode/2, decode/3, decode/4]).
+-export([get_conf/0, get_buffer/0]).
 -define(COMPRESS_FLAG, 30).
 
 
@@ -33,10 +32,15 @@ init(#net_conf{} = Conf) ->
 -spec encode(Msg :: any()) -> {Len, IoList}
     when Len :: integer(), IoList :: iolist().
 encode(Msg) ->
+    encode(Msg, get_conf()).
+
+-spec encode(Msg :: any(), Conf :: #net_conf{}) -> {Len, IoList}
+    when Len :: integer(), IoList :: iolist().
+encode(Msg, Conf) ->
     #net_conf{
         compress_bytes = ComBytes,
         hdr_size_bytes = HeaderSize
-    } = get_conf(),
+    } = Conf,
     try
         MsgDataList = netmsg:encode(Msg),
         IoListBytes = erlang:iolist_size(MsgDataList),
@@ -44,6 +48,7 @@ encode(Msg) ->
     catch _ : Err : ST ->
         ?ERROR("encode msg ~p, error ~p stack ~p",[Msg, Err, ST])
     end.
+
 
 compress(ComBytes, IoListBytes, IoList, HeaderSize) when ComBytes =< 0; ComBytes > IoListBytes->
     add_header(IoList, IoListBytes, HeaderSize);
@@ -58,9 +63,12 @@ compress(_ComBytes, IoListBytes, IoList, HeaderSize) ->
 
 %%%-------------------------------------------------------------------
 decode(Handler, Socket, Bin) ->
+    decode(get_conf(), Handler, Socket, Bin).
+
+decode(Conf, Handler, Socket, Bin) ->
     {NewMsg, _NewMsgSize} = merge_binary(Bin),
     set_buffer(<<>>),
-    do_decode(Handler, Socket, NewMsg),
+    do_decode(Conf, Handler, Socket, NewMsg),
     ok.
 
 uncompress(0, Bin) -> Bin;
@@ -74,14 +82,14 @@ is_compressed(Len) -> Len band (1 bsl ?COMPRESS_FLAG ).
 %%%-------------------------------------------------------------------
 %%%-------------------------------------------------------------------
 %%解析网络消息
-do_decode(_Handler, _Socket, <<>>) ->
+do_decode(_Conf, _Handler, _Socket, <<>>) ->
     ok;
-do_decode(Handler, Socket, Bin) ->
-    Ret = parse_msg(get_conf(), Bin),
+do_decode(Conf, Handler, Socket, Bin) ->
+    Ret = parse_msg(Conf, Bin),
     case Ret of
         {ok, Cmd, Pk, RemainBin} ->
             catch Handler(Cmd, Pk),
-            do_decode(Handler, Socket, RemainBin);
+            do_decode(Conf, Handler, Socket, RemainBin);
         {halfMsg, HalfMsg} ->
             set_buffer(HalfMsg);
         {error, DataSize, Why} ->

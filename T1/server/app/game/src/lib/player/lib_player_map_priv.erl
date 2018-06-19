@@ -70,7 +70,7 @@ do_online_call(MapID, Req) ->
 do_online_call_1(undefined, Req) ->
     goto_born_map(Req);
 do_online_call_1(Mgr, Req) ->
-    case map_mgr:player_join_map(Mgr, Req) of
+    case map_mgr:player_join_map_call(Mgr, Req) of
         #r_change_map_ack{} = Ack -> Ack;
         _ -> goto_born_map(Req)
     end.
@@ -106,7 +106,7 @@ do_change_map_call(Req) ->
         undefined ->
             ?FATAL("player[~p] cur map[~p] not exists", [Uid, Mid]);
         _ ->
-            map_mgr:player_exit_map(CurMgr,
+            map_mgr:player_exit_map_call(CurMgr,
                 #r_exit_map_req{map_id = Mid, line_id = LineId, map_pid = Mpid, uid = Uid})
     end,
     case TarMgr of
@@ -114,7 +114,7 @@ do_change_map_call(Req) ->
             ?ERROR("player[~p] tar map[~p] not exists", [Uid, TMid]),
             goto_born_map(Req);
         _ ->
-            case map_mgr:player_join_map(TarMgr, Req) of
+            case map_mgr:player_join_map_call(TarMgr, Req) of
                 #r_change_map_ack{} = Ack -> Ack;
                 _ -> goto_born_map(Req)
             end
@@ -175,7 +175,7 @@ return_to_old_map_call() ->
 %%%-------------------------------------------------------------------
 offline_call(Uid, MapID, LineId, MapPid) ->
     Mgr = map_creator:map_mgr(MapID),
-    map_mgr:player_exit_map(
+    map_mgr:player_exit_map_call(
         Mgr,
         #r_exit_map_req{map_id = MapID, line_id = LineId,  map_pid = MapPid, uid = Uid}
     ),
@@ -189,7 +189,7 @@ goto_born_map(Req) ->
     ?WARN("kick player[~p] to born map",
         [Req#r_change_map_req.uid]),
 
-    case map_mgr:player_join_map(
+    case map_mgr:player_join_map_call(
         Mgr,
         Req#r_change_map_req{
             tar_map_id = Mid,
