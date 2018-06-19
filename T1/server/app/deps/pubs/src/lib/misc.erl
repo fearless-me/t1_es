@@ -10,24 +10,20 @@
 -author("mawenhong").
 
 %% API
--export([start_app/1, start_all_app/1]).
--export([make_atom/2,atom_to_binary/1]).
--export([interval_operation/5]).
--export([b2i/1, i2b/1]).
--export([ntoa/1, ntoab/1]).
--export([to_atom/1]).
--export([list_to_string_suffix/2]).
--export([ip/0, peername/1, ip_string/1]).
--export([crc32/1]).
--export([ceil/1,mod_1/2, floor/1, clamp/3, rand/2]).
--export([get_value/3]).
--export([callstack/0]).
--export([parse_information_unit/1]).
--export([register_process/3]).
--export([create_atom/2]).
--export([register_name/0, register_name/1]).
--export([is_palive/1, is_palive_g/1, is_palive_lg/1]).
--export([get_pdict/2]).
+-export([
+    start_app/1, start_all_app/1,
+    make_atom/2,atom_to_binary/1,
+    b2i/1, i2b/1, ntoa/1, ntoab/1,
+    to_atom/1, create_atom/2, list_to_string_suffix/2,
+    register_process/3, register_name/0, register_name/1,
+    is_palive/1, is_palive_g/1, is_palive_lg/1,
+    ip/0, peername/1, ip_string/1,
+    crc32/1, ceil/1,mod_1/2, floor/1, clamp/3, rand/2,
+    get_value/3, callstack/0,
+    interval_operation/5, parse_information_unit/1,
+    get_pdict/2
+]).
+
 %%%-------------------------------------------------------------------
 get_pdict(Key, Def) ->
     case get(Key) of

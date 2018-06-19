@@ -15,8 +15,7 @@
 
 %% API
 -export([
-    map_conf/1,map_mgr/1,
-    born_map_id/0, born_map_pos/0,
+    map_conf/1,map_mgr/1, born_map_id/0, born_map_pos/0,
     broadcast_all/0, broadcast_map/1
 ]).
 

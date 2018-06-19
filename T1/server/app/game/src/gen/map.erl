@@ -16,10 +16,7 @@
 %% call
 -export([player_join_call/2, player_exit_call/2, player_teleport_call/2]).
 %%--------------------------------
-%%
--export([
-    player_move_/2, player_change_attr/2
-]).
+-export([player_move_/2, player_change_attr_/2]).
 -export([status_/1]).
 
 
@@ -36,17 +33,18 @@ player_join_call(MapPid, Obj) ->
 player_teleport_call(MapPid, Req) ->
     gen_server:call(MapPid, {player_teleport, Req}, ?MAP_CALL_TIMEOUT).
 %%--------------------------------
+
+
+
 %%--------------------------------
-
-
-player_change_attr(MapPid, Req) ->
+player_change_attr_(MapPid, Req) ->
     ps:send(MapPid, player_change_attr, Req),
     ok.
 
-
 %%--------------------------------
 player_move_(MapPid, Req) ->
-    ps:send(MapPid, start_move, Req).
+    ps:send(MapPid, start_move, Req),
+    ok.
 
 %%--------------------------------
 status_(MapPid) -> ps:send(MapPid, status).
