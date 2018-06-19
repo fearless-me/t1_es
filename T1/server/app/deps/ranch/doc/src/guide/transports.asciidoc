@@ -151,7 +151,7 @@ It defines a certain number of callbacks that must be written in order to
 allow transparent usage of the transport handler.
 
 The behavior doesn't define the socket options available when opening a
-socket. These do not need to be mod_lib to all transports as it's easy enough
+socket. These do not need to be common to all transports as it's easy enough
 to write different initialization functions for the different transports that
 will be used. With one exception though. The `setopts/2` function *must*
 implement the `{active, once}` and the `{active, true}` options.

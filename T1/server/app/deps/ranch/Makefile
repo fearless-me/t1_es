@@ -2,7 +2,7 @@
 
 PROJECT = ranch
 PROJECT_DESCRIPTION = Socket acceptor pool for TCP protocols.
-PROJECT_VERSION = 1.4.0
+PROJECT_VERSION = 1.5.0
 PROJECT_REGISTERED = ranch_server
 
 # Options.
@@ -16,7 +16,7 @@ LOCAL_DEPS = ssl
 
 DOC_DEPS = asciideck
 
-TEST_DEPS = ci.erlang.mk ct_helper
+TEST_DEPS = $(if $(CI_ERLANG_MK),ci.erlang.mk) ct_helper
 dep_ct_helper = git https://github.com/ninenines/ct_helper master
 
 # CI configuration.
@@ -43,4 +43,4 @@ DIALYZER_OPTS += --src -r test
 # we are fine using the most recent version from OTP-20.
 
 ci-setup:: $(DEPS_DIR)/ct_helper
-	$(gen_verbose) cp ~/.kerl/builds/$(CI_OTP_RELEASE)/otp_src_git/mod_lib/ssl/test/erl_make_certs.erl deps/ct_helper/src/ || true
+	$(gen_verbose) cp ~/.kerl/builds/$(CI_OTP_RELEASE)/otp_src_git/lib/ssl/test/erl_make_certs.erl deps/ct_helper/src/ || true

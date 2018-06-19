@@ -1,5 +1,11 @@
 = CHANGELOG
 
+== 1.5.0
+
+* Add transport functions getopts/2, getstat/1 and getstat/2
+* Fix ranch:info/0 and ranch:procs/2 in embedded mode
+* Prevent ranch_conns_sup from stopping on unexpected messages
+
 == 1.4.0
 
 * Add new transport option num_acceptor
@@ -21,7 +27,7 @@ do not include code changes.
 * Add many transport options typespecs and documentation
 * Don't silently drop the accept rate when running out of fds
 * Prevent a race condition when stopping listeners
-* Improve reporting for mod_lib errors, for example eaddrinuse
+* Improve reporting for common errors, for example eaddrinuse
 * Fix double removal of connections bug
 ** The number of active connections should now be exact
 * Fix stuck acceptor bug when controlling_socket returned errors
@@ -33,7 +39,6 @@ do not include code changes.
 * Tune restart intensity in all supervisors
 
 == 1.2.0
-
 
 * Allow the supervised process and the process owning the socket to be different
 * Add many transport options (please refer to the documentation)

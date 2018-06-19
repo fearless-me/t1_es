@@ -1,4 +1,4 @@
-%% Copyright (c) 2011-2017, Loïc Hoguin <essen@ninenines.eu>
+%% Copyright (c) 2011-2018, Loïc Hoguin <essen@ninenines.eu>
 %%
 %% Permission to use, copy, modify, and/or distribute this software for any
 %% purpose with or without fee is hereby granted, provided that the above
@@ -14,6 +14,9 @@
 
 -module(acceptor_SUITE).
 -compile(export_all).
+-compile(nowarn_export_all).
+
+-dialyzer({nowarn_function, misc_wait_for_connections/1}).
 
 -import(ct_helper, [doc/1]).
 -import(ct_helper, [name/0]).
@@ -28,6 +31,7 @@ groups() ->
 		tcp_accept_socket,
 		tcp_active_echo,
 		tcp_echo,
+		tcp_graceful,
 		tcp_inherit_options,
 		tcp_max_connections,
 		tcp_max_connections_and_beyond,
@@ -35,6 +39,8 @@ groups() ->
 		tcp_remove_connections,
 		tcp_set_max_connections,
 		tcp_set_max_connections_clean,
+		tcp_getopts_capability,
+		tcp_getstat_capability,
 		tcp_upgrade,
 		tcp_error_eaddrinuse,
 		tcp_error_eacces
@@ -43,24 +49,31 @@ groups() ->
 		ssl_accept_socket,
 		ssl_active_echo,
 		ssl_echo,
+		ssl_graceful,
 		ssl_sni_echo,
 		ssl_sni_fail,
+		ssl_getopts_capability,
+		ssl_getstat_capability,
 		ssl_error_eaddrinuse,
 		ssl_error_no_cert,
 		ssl_error_eacces
 	]}, {misc, [
 		misc_bad_transport,
 		misc_bad_transport_options,
-		misc_info
+		misc_info,
+		misc_info_embedded,
+		misc_wait_for_connections
 	]}, {supervisor, [
 		connection_type_supervisor,
 		connection_type_supervisor_separate_from_connection,
+		supervisor_changed_options_restart,
 		supervisor_clean_child_restart,
 		supervisor_clean_conns_sup_restart,
 		supervisor_clean_restart,
 		supervisor_conns_alive,
 		supervisor_protocol_start_link_crash,
-		supervisor_server_recover_state
+		supervisor_server_recover_state,
+		supervisor_unexpected_message
 	]}].
 
 %% misc.
@@ -107,6 +120,7 @@ misc_info(_) ->
 	[
 		{{misc_info, act}, [
 			{pid, Pid2},
+			{status, _},
 			{ip, _},
 			{port, Port2},
 			{num_acceptors, 2},
@@ -120,6 +134,7 @@ misc_info(_) ->
 		]},
 		{{misc_info, ssl}, [
 			{pid, Pid3},
+			{status, _},
 			{ip, _},
 			{port, Port3},
 			{num_acceptors, 3},
@@ -133,6 +148,7 @@ misc_info(_) ->
 		]},
 		{{misc_info, tcp}, [
 			{pid, Pid1},
+			{status, _},
 			{ip, _},
 			{port, Port1},
 			{num_acceptors, 1},
@@ -144,7 +160,7 @@ misc_info(_) ->
 			{protocol, remove_conn_and_wait_protocol},
 			{protocol_options, [{remove, false, 2500}]} %% Option was modified.
 		]}
-	] = lists:sort([L || L={{misc_info, _}, _} <- ranch:info()]),
+	] = do_get_listener_info(misc_info),
 	%% Get acceptors.
 	[_] = ranch:procs({misc_info, tcp}, acceptors),
 	[_, _] = ranch:procs({misc_info, act}, acceptors),
@@ -154,6 +170,177 @@ misc_info(_) ->
 	[] = ranch:procs({misc_info, act}, connections),
 	[] = ranch:procs({misc_info, ssl}, connections),
 	ok.
+
+misc_info_embedded(_) ->
+	doc("Information about listeners in embedded mode."),
+	{ok, SupPid} = embedded_sup:start_link(),
+	%% Open a listener with a few connections.
+	{ok, Pid1} = embedded_sup:start_listener(SupPid, {misc_info_embedded, tcp}, ranch_tcp, [{num_acceptors, 1}], remove_conn_and_wait_protocol, [{remove, true, 2500}]),
+	Port1 = ranch:get_port({misc_info_embedded, tcp}),
+	%% Open a few more listeners with different arguments.
+	{ok, Pid2} = embedded_sup:start_listener(SupPid, {misc_info_embedded, act}, ranch_tcp, [{num_acceptors, 2}], active_echo_protocol, {}),
+	Port2 = ranch:get_port({misc_info_embedded, act}),
+	ranch:set_max_connections({misc_info_embedded, act}, infinity),
+	Opts = ct_helper:get_certs_from_ets(),
+	{ok, Pid3} = embedded_sup:start_listener(SupPid, {misc_info_embedded, ssl},
+		ranch_ssl, [{num_acceptors, 3}|Opts], echo_protocol, [{}]),
+	Port3 = ranch:get_port({misc_info_embedded, ssl}),
+	%% Open 5 connections, 3 removed from the count.
+	{ok, _} = gen_tcp:connect("localhost", Port1, [binary, {active, false}, {packet, raw}]),
+	{ok, _} = gen_tcp:connect("localhost", Port1, [binary, {active, false}, {packet, raw}]),
+	{ok, _} = gen_tcp:connect("localhost", Port1, [binary, {active, false}, {packet, raw}]),
+	receive after 250 -> ok end,
+	ranch:set_protocol_options({misc_info_embedded, tcp}, [{remove, false, 2500}]),
+	receive after 250 -> ok end,
+	{ok, _} = gen_tcp:connect("localhost", Port1, [binary, {active, false}, {packet, raw}]),
+	{ok, _} = gen_tcp:connect("localhost", Port1, [binary, {active, false}, {packet, raw}]),
+	receive after 250 -> ok end,
+	%% Confirm the info returned by Ranch is correct.
+	[
+		{{misc_info_embedded, act}, [
+			{pid, Pid2},
+			{status, _},
+			{ip, _},
+			{port, Port2},
+			{num_acceptors, 2},
+			{max_connections, infinity}, %% Option was modified.
+			{active_connections, 0},
+			{all_connections, 0},
+			{transport, ranch_tcp},
+			{transport_options, [{num_acceptors, 2}]},
+			{protocol, active_echo_protocol},
+			{protocol_options, {}}
+		]},
+		{{misc_info_embedded, ssl}, [
+			{pid, Pid3},
+			{status, _},
+			{ip, _},
+			{port, Port3},
+			{num_acceptors, 3},
+			{max_connections, 1024},
+			{active_connections, 0},
+			{all_connections, 0},
+			{transport, ranch_ssl},
+			{transport_options, [{num_acceptors, 3}|Opts]},
+			{protocol, echo_protocol},
+			{protocol_options, [{}]}
+		]},
+		{{misc_info_embedded, tcp}, [
+			{pid, Pid1},
+			{status, _},
+			{ip, _},
+			{port, Port1},
+			{num_acceptors, 1},
+			{max_connections, 1024},
+			{active_connections, 2},
+			{all_connections, 5},
+			{transport, ranch_tcp},
+			{transport_options, [{num_acceptors, 1}]},
+			{protocol, remove_conn_and_wait_protocol},
+			{protocol_options, [{remove, false, 2500}]} %% Option was modified.
+		]}
+	] = do_get_listener_info(misc_info_embedded),
+	%% Get acceptors.
+	[_] = ranch:procs({misc_info_embedded, tcp}, acceptors),
+	[_, _] = ranch:procs({misc_info_embedded, act}, acceptors),
+	[_, _, _] = ranch:procs({misc_info_embedded, ssl}, acceptors),
+	%% Get connections.
+	[_, _, _, _, _] = ranch:procs({misc_info_embedded, tcp}, connections),
+	[] = ranch:procs({misc_info_embedded, act}, connections),
+	[] = ranch:procs({misc_info_embedded, ssl}, connections),
+	%% Stop embedded tcp listener and ensure it is gone.
+	ok = embedded_sup:stop_listener(SupPid, {misc_info_embedded, tcp}),
+	timer:sleep(500),
+	[{{misc_info_embedded, act}, _}, {{misc_info_embedded, ssl}, _}] =
+		do_get_listener_info(misc_info_embedded),
+	%% Stop embedded act listener and ensure it is gone.
+	ok = embedded_sup:stop_listener(SupPid, {misc_info_embedded, act}),
+	timer:sleep(500),
+	[{{misc_info_embedded, ssl}, _}] =
+		do_get_listener_info(misc_info_embedded),
+	%% Stop embedded ssl listener and ensure it is gone.
+	ok = embedded_sup:stop_listener(SupPid, {misc_info_embedded, ssl}),
+	timer:sleep(500),
+	[] = do_get_listener_info(misc_info_embedded),
+	%% Stop embedded supervisor.
+	embedded_sup:stop(SupPid),
+	ok.
+
+do_get_listener_info(ListenerGroup) ->
+	lists:sort([L || L={{G, _}, _} <- ranch:info(), G=:=ListenerGroup]).
+
+misc_wait_for_connections(_) ->
+	doc("Ensure wait for connections works."),
+	Name = name(),
+	Self = self(),
+	%% Ensure invalid arguments are rejected.
+	{'EXIT', {badarg, _}} = begin catch ranch:wait_for_connections(Name, 'foo', 0) end,
+	{'EXIT', {badarg, _}} = begin catch ranch:wait_for_connections(Name, '==', -1) end,
+	{'EXIT', {badarg, _}} = begin catch ranch:wait_for_connections(Name, '==', 0, -1) end,
+	{'EXIT', {badarg, _}} = begin catch ranch:wait_for_connections(Name, '<', 0) end,
+	%% Create waiters for increasing number of connections.
+	Pid1GT = do_create_waiter(Self, Name, '>', 0),
+	Pid1GE = do_create_waiter(Self, Name, '>=', 1),
+	Pid1EQ = do_create_waiter(Self, Name, '==', 1),
+	Pid2GT = do_create_waiter(Self, Name, '>', 1),
+	Pid2GE = do_create_waiter(Self, Name, '>=', 2),
+	Pid2EQ = do_create_waiter(Self, Name, '==', 2),
+	{ok, _} = ranch:start_listener(Name,
+		ranch_tcp, [{num_acceptors, 1}],
+		echo_protocol, []),
+	Port = ranch:get_port(Name),
+	%% Create some connections, ensure that waiters respond.
+	{ok, Sock1} = gen_tcp:connect("localhost", Port, []),
+	ok = do_expect_waiter(Pid1GT),
+	ok = do_expect_waiter(Pid1GE),
+	ok = do_expect_waiter(Pid1EQ),
+	ok = do_expect_waiter(undefined),
+	{ok, Sock2} = gen_tcp:connect("localhost", Port, []),
+	ok = do_expect_waiter(Pid2GT),
+	ok = do_expect_waiter(Pid2GE),
+	ok = do_expect_waiter(Pid2EQ),
+	ok = do_expect_waiter(undefined),
+	%% Create waiters for decreasing number of connections.
+	Pid3LT = do_create_waiter(Self, Name, '<', 2),
+	Pid3LE = do_create_waiter(Self, Name, '=<', 1),
+	Pid3EQ = do_create_waiter(Self, Name, '==', 1),
+	Pid4LT = do_create_waiter(Self, Name, '<', 1),
+	Pid4LE = do_create_waiter(Self, Name, '=<', 0),
+	Pid4EQ = do_create_waiter(Self, Name, '==', 0),
+	%% Close connections, ensure that waiters respond.
+	ok = gen_tcp:close(Sock1),
+	ok = do_expect_waiter(Pid3LT),
+	ok = do_expect_waiter(Pid3LE),
+	ok = do_expect_waiter(Pid3EQ),
+	ok = do_expect_waiter(undefined),
+	ok = gen_tcp:close(Sock2),
+	ok = do_expect_waiter(Pid4LT),
+	ok = do_expect_waiter(Pid4LE),
+	ok = do_expect_waiter(Pid4EQ),
+	ok = do_expect_waiter(undefined),
+	ok = ranch:stop_listener(Name),
+	%% Make sure the listener stopped.
+	{'EXIT', _} = begin catch ranch:get_port(Name) end,
+	ok.
+
+do_create_waiter(ReplyTo, Ref, Op, NumConns) ->
+	spawn(fun () -> ok = ranch:wait_for_connections(Ref, Op, NumConns, 100),
+		ReplyTo ! {wait_connections, self()} end).
+
+do_expect_waiter(WaiterPid) ->
+	receive
+		{wait_connections, _} when WaiterPid=:=undefined ->
+			error;
+		{wait_connections, Pid} when Pid=:=WaiterPid ->
+			ok
+	after 1000 ->
+			case WaiterPid of
+				undefined ->
+					ok;
+				_ ->
+					timeout
+			end
+	end.
 
 %% ssl.
 
@@ -263,6 +450,83 @@ do_ssl_sni_fail() ->
 	{'EXIT', _} = begin catch ranch:get_port(Name) end,
 	ok.
 
+ssl_graceful(_) ->
+	doc("Ensure suspending and resuming of listeners does not kill active connections."),
+	Name = name(),
+	Opts = ct_helper:get_certs_from_ets(),
+	{ok, _} = ranch:start_listener(Name, ranch_ssl, Opts, echo_protocol, []),
+	Port = ranch:get_port(Name),
+	%% Make sure connections with a fresh listener work.
+	running = ranch:get_status(Name),
+	{ok, Socket1} = ssl:connect("localhost", Port,
+		[binary, {active, false}, {packet, raw}]),
+	ok = ssl:send(Socket1, <<"SSL with fresh listener">>),
+	{ok, <<"SSL with fresh listener">>} = ssl:recv(Socket1, 23, 1000),
+	%% Make sure transport options cannot be changed on a running listener.
+	{error, running} = ranch:set_transport_options(Name, [{port, Port}|Opts]),
+	%% Suspend listener, make sure established connections keep running.
+	ok = ranch:suspend_listener(Name),
+	suspended = ranch:get_status(Name),
+	ok = ssl:send(Socket1, <<"SSL with suspended listener">>),
+	{ok, <<"SSL with suspended listener">>} = ssl:recv(Socket1, 27, 1000),
+	%% Make sure new connections are refused on the suspended listener.
+	{error, econnrefused} = ssl:connect("localhost", Port,
+		[binary, {active, false}, {packet, raw}]),
+	%% Make sure transport options can be changed when listener is suspended.
+	ok = ranch:set_transport_options(Name, [{port, Port}|Opts]),
+	%% Resume listener, make sure connections can be established again.
+	ok = ranch:resume_listener(Name),
+	running = ranch:get_status(Name),
+	{ok, Socket2} = ssl:connect("localhost", Port,
+		[binary, {active, false}, {packet, raw}]),
+	ok = ssl:send(Socket2, <<"SSL with resumed listener">>),
+	{ok, <<"SSL with resumed listener">>} = ssl:recv(Socket2, 25, 1000),
+	%% Make sure transport options cannot be changed on resumed listener.
+	{error, running} = ranch:set_transport_options(Name, [{port, Port}|Opts]),
+	ok = ranch:stop_listener(Name),
+	{error, closed} = ssl:recv(Socket1, 0, 1000),
+	{error, closed} = ssl:recv(Socket2, 0, 1000),
+	{'EXIT', _} = begin catch ranch:get_port(Name) end,
+	ok.
+
+ssl_getopts_capability(_) ->
+	doc("Ensure getopts/2 capability."),
+	Name=name(),
+	Opts=ct_helper:get_certs_from_ets(),
+	{ok, _}=ranch:start_listener(Name, ranch_ssl, Opts, transport_capabilities_protocol, []),
+	Port=ranch:get_port(Name),
+	{ok, Socket}=ssl:connect("localhost", Port, [binary, {active, false}, {packet, raw}]),
+	ok=ssl:send(Socket, <<"getopts/2">>),
+	{ok, <<"OK">>}=ssl:recv(Socket, 0, 1000),
+	ok=ranch:stop_listener(Name),
+	{error, closed}=ssl:recv(Socket, 0, 1000),
+	{'EXIT', _}=begin catch ranch:get_port(Name) end,
+	ok.
+
+ssl_getstat_capability(_) ->
+	case application:get_key(ssl, vsn) of
+		{ok, Vsn} when Vsn>="8.0" ->
+			do_ssl_getstat_capability();
+		_ ->
+			{skip, "No getstat/{1,2} support."}
+	end.
+
+do_ssl_getstat_capability() ->
+	doc("Ensure getstat/{1,2} capability."),
+	Name=name(),
+	Opts=ct_helper:get_certs_from_ets(),
+	{ok, _}=ranch:start_listener(Name, ranch_ssl, Opts, transport_capabilities_protocol, []),
+	Port=ranch:get_port(Name),
+	{ok, Socket}=ssl:connect("localhost", Port, [binary, {active, false}, {packet, raw}]),
+	ok=ssl:send(Socket, <<"getstat/1">>),
+	{ok, <<"OK">>}=ssl:recv(Socket, 0, 1000),
+	ok=ssl:send(Socket, <<"getstat/2">>),
+	{ok, <<"OK">>}=ssl:recv(Socket, 0, 1000),
+	ok=ranch:stop_listener(Name),
+	{error, closed}=ssl:recv(Socket, 0, 1000),
+	{'EXIT', _}=begin catch ranch:get_port(Name) end,
+	ok.
+
 ssl_error_eaddrinuse(_) ->
 	doc("Ensure that failure due to an eaddrinuse returns a compact readable error."),
 	Name = name(),
@@ -336,6 +600,44 @@ tcp_echo(_) ->
 	ok = ranch:stop_listener(Name),
 	{error, closed} = gen_tcp:recv(Socket, 0, 1000),
 	%% Make sure the listener stopped.
+	{'EXIT', _} = begin catch ranch:get_port(Name) end,
+	ok.
+
+tcp_graceful(_) ->
+	doc("Ensure suspending and resuming of listeners does not kill active connections."),
+	Name = name(),
+	{ok, _} = ranch:start_listener(Name, ranch_tcp, [], echo_protocol, []),
+	Port = ranch:get_port(Name),
+	%% Make sure connections with a fresh listener work.
+	running = ranch:get_status(Name),
+	{ok, Socket1} = gen_tcp:connect("localhost", Port,
+		[binary, {active, false}, {packet, raw}]),
+	ok = gen_tcp:send(Socket1, <<"TCP with fresh listener">>),
+	{ok, <<"TCP with fresh listener">>} = gen_tcp:recv(Socket1, 23, 1000),
+	%% Make sure transport options cannot be changed on a running listener.
+	{error, running} = ranch:set_transport_options(Name, [{port, Port}]),
+	%% Suspend listener, make sure established connections keep running.
+	ok = ranch:suspend_listener(Name),
+	suspended = ranch:get_status(Name),
+	ok = gen_tcp:send(Socket1, <<"TCP with suspended listener">>),
+	{ok, <<"TCP with suspended listener">>} = gen_tcp:recv(Socket1, 27, 1000),
+	%% Make sure new connections are refused on the suspended listener.
+	{error, econnrefused} = gen_tcp:connect("localhost", Port,
+		[binary, {active, false}, {packet, raw}]),
+	%% Make sure transport options can be changed when listener is suspended.
+	ok = ranch:set_transport_options(Name, [{port, Port}]),
+	%% Resume listener, make sure connections can be established again.
+	ok = ranch:resume_listener(Name),
+	running = ranch:get_status(Name),
+	{ok, Socket2} = gen_tcp:connect("localhost", Port,
+		[binary, {active, false}, {packet, raw}]),
+	ok = gen_tcp:send(Socket2, <<"TCP with resumed listener">>),
+	{ok, <<"TCP with resumed listener">>} = gen_tcp:recv(Socket2, 25, 1000),
+	%% Make sure transport options cannot be changed on resumed listener.
+	{error, running} = ranch:set_transport_options(Name, [{port, Port}]),
+	ok = ranch:stop_listener(Name),
+	{error, closed} = gen_tcp:recv(Socket1, 0, 1000),
+	{error, closed} = gen_tcp:recv(Socket2, 0, 1000),
 	{'EXIT', _} = begin catch ranch:get_port(Name) end,
 	ok.
 
@@ -471,6 +773,34 @@ do_tcp_set_max_connections_clean(_) ->
 	ok = clean_traces(),
 	ok = ranch:stop_listener(Name).
 
+tcp_getopts_capability(_) ->
+	doc("Ensure getopts/2 capability."),
+	Name=name(),
+	{ok, _}=ranch:start_listener(Name, ranch_tcp, [], transport_capabilities_protocol, []),
+	Port=ranch:get_port(Name),
+	{ok, Socket}=gen_tcp:connect("localhost", Port, [binary, {active, false}, {packet, raw}]),
+	ok=gen_tcp:send(Socket, <<"getopts/2">>),
+	{ok, <<"OK">>}=gen_tcp:recv(Socket, 0, 1000),
+	ok=ranch:stop_listener(Name),
+	{error, closed}=gen_tcp:recv(Socket, 0, 1000),
+	{'EXIT', _}=begin catch ranch:get_port(Name) end,
+	ok.
+
+tcp_getstat_capability(_) ->
+	doc("Ensure getstat/{1,2} capability."),
+	Name=name(),
+	{ok, _}=ranch:start_listener(Name, ranch_tcp, [], transport_capabilities_protocol, []),
+	Port=ranch:get_port(Name),
+	{ok, Socket}=gen_tcp:connect("localhost", Port, [binary, {active, false}, {packet, raw}]),
+	ok=gen_tcp:send(Socket, <<"getstat/1">>),
+	{ok, <<"OK">>}=gen_tcp:recv(Socket, 0, 1000),
+	ok=gen_tcp:send(Socket, <<"getstat/2">>),
+	{ok, <<"OK">>}=gen_tcp:recv(Socket, 0, 1000),
+	ok=ranch:stop_listener(Name),
+	{error, closed}=gen_tcp:recv(Socket, 0, 1000),
+	{'EXIT', _}=begin catch ranch:get_port(Name) end,
+	ok.
+
 tcp_upgrade(_) ->
 	doc("Ensure that protocol options can be updated."),
 	Name = name(),
@@ -544,6 +874,36 @@ connection_type_supervisor_separate_from_connection(_) ->
 	ok = ranch:stop_listener(Name),
 	{error, closed} = gen_tcp:recv(Socket, 0, 1000),
 	%% Make sure the listener stopped.
+	{'EXIT', _} = begin catch ranch:get_port(Name) end,
+	ok.
+
+supervisor_changed_options_restart(_) ->
+	doc("Ensure that a listener is restarted with changed transport options."),
+	Name = name(),
+	%% Start a listener using send_timeout as option change marker.
+	{ok, ListenerSupPid1} = ranch:start_listener(Name,
+		ranch_tcp, [{send_timeout, 300000}],
+		echo_protocol, []),
+	%% Ensure send_timeout is really set to initial value.
+	{ok, [{send_timeout, 300000}]}
+		= inet:getopts(do_get_listener_socket(ListenerSupPid1), [send_timeout]),
+	%% Change send_timeout option.
+	ok = ranch:suspend_listener(Name),
+	ok = ranch:set_transport_options(Name, [{send_timeout, 300001}]),
+	ok = ranch:resume_listener(Name),
+	%% Ensure send_timeout is really set to the changed value.
+	{ok, [{send_timeout, 300001}]}
+		= inet:getopts(do_get_listener_socket(ListenerSupPid1), [send_timeout]),
+	%% Crash the listener_sup process, allow a short time for restart to succeed.
+	exit(ListenerSupPid1, kill),
+	timer:sleep(1000),
+	%% Obtain pid of restarted listener_sup process.
+	[ListenerSupPid2] = [Pid || {{ranch_listener_sup, Ref}, Pid, supervisor, _}
+		<- supervisor:which_children(ranch_sup), Ref =:= Name],
+	%% Ensure send_timeout is still set to the changed value.
+	{ok, [{send_timeout, 300001}]}
+		= inet:getopts(do_get_listener_socket(ListenerSupPid2), [send_timeout]),
+	ok = ranch:stop_listener(Name),
 	{'EXIT', _} = begin catch ranch:get_port(Name) end,
 	ok.
 
@@ -732,6 +1092,28 @@ do_supervisor_server_recover_state(_) ->
 	_ = erlang:trace(all, false, [all]),
 	ok = clean_traces().
 
+supervisor_unexpected_message(_) ->
+	doc("Ensure the connections supervisor stays alive when it receives "
+		"an unexpected message."),
+	Name = name(),
+	{ok, ListenerPid} = ranch:start_listener(Name, ranch_tcp, [], echo_protocol, []),
+	Port = ranch:get_port(Name),
+	{ok, Socket} = gen_tcp:connect("localhost", Port, [binary, {active, false}, {packet, raw}]),
+	ok = gen_tcp:send(Socket, <<"TCP Ranch is working!">>),
+	{ok, <<"TCP Ranch is working!">>} = gen_tcp:recv(Socket, 21, 1000),
+	%% Send the unexpected message to ranch_conns_sup.
+	Procs = supervisor:which_children(ListenerPid),
+	{_, ConnsSup, _, _} = lists:keyfind(ranch_conns_sup, 1, Procs),
+	ConnsSup ! hello,
+	%% Connection is still up.
+	ok = gen_tcp:send(Socket, <<"TCP Ranch is working!">>),
+	{ok, <<"TCP Ranch is working!">>} = gen_tcp:recv(Socket, 21, 1000),
+	ok = ranch:stop_listener(Name),
+	{error, closed} = gen_tcp:recv(Socket, 0, 1000),
+	%% Make sure the listener stopped.
+	{'EXIT', _} = begin catch ranch:get_port(Name) end,
+	ok.
+
 %% Utility functions.
 
 connect_loop(_, 0, _) ->
@@ -760,3 +1142,10 @@ clean_traces() ->
 	after 0 ->
 		ok
 	end.
+
+do_get_listener_socket(ListenerSupPid) ->
+	[AcceptorsSupPid] = [Pid || {ranch_acceptors_sup, Pid, supervisor, _}
+		<- supervisor:which_children(ListenerSupPid)],
+	{links, Links} = erlang:process_info(AcceptorsSupPid, links),
+	[LSocket] = [P || P <- Links, is_port(P)],
+	LSocket.
