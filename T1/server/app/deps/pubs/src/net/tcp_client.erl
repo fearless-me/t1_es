@@ -44,8 +44,6 @@ connect(Port, MapID) ->
 
     timer:sleep(15000),
 
-    send_msg(Socket, #pk_GS2U_GotoNewMap{map_id = misc:rand(1, 4), x = misc:rand(500, 5000) / 10, y = misc:rand(500, 3000) / 10}),
-
     timer:sleep(50),
     erlang:send_after(100 * 60 * 1000, self(), exit),
     loop_recv(),
@@ -86,8 +84,8 @@ handle(Msg) ->
     ok.
 
 
-handle_1(#pk_GS2U_LoginResult{aid = Aid}) ->
-    set_aid(Aid),
+handle_1(#pk_GS2U_LoginResult{}) ->
+%%    set_aid(Aid),
     ok;
 handle_1(#pk_GS2U_CreatePlayerResult{errorCode = ErrCode, uid = Uid}) ->
     case ErrCode of
@@ -111,9 +109,13 @@ handle_1(#pk_GS2U_UserPlayerList{info = Info}) ->
     ok;
 handle_1(#pk_GS2U_GotoNewMap{}) ->
     case get_aid() of
-        undefined -> send_msg(socket(), #pk_U2GS_GetPlayerInitData{});
+        undefined ->
+            send_msg(socket(), #pk_U2GS_GetPlayerInitData{});
         _ -> skip
     end,
+    ok;
+handle_1(#pk_GS2U_PlayerInitBase{uid = Uid}) ->
+    set_aid(Uid),
     ok;
 handle_1(#pk_GS2U_GetPlayerInitDataEnd{}) ->
     send_msg(socket(), #pk_U2GS_PlayerWalk{dst_x = 289.1, dst_y = 260.8}),

@@ -79,13 +79,15 @@ test_dir() ->
     E = vector3:new(200.0, 0, 150.0),
     vector3:subtract(E, S).
 
-start_player_walk_1(Uid, Start, _End) ->
+start_player_walk_1(Uid, Start, End) ->
 
     Speed = lib_obj_rw:get_move_speed(Uid),
     Now = lib_map_rw:get_move_timer_now(),
-    Dir = test_dir(),
-    Way = test_path(),
+%%    Dir = test_dir(),
+%%    Way = test_path(),
 
+    Way = [End],
+    Dir = vector3:subtract(End, Start),
     PathList = make_path_list([], Start, Way, Speed),
 
     %%
