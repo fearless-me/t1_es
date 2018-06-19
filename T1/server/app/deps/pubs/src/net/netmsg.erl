@@ -211,19 +211,23 @@ decode(?GS2U_SyncStand,Bin0) ->
 
 %GENERATED from file:login.h => GS2U_SyncWalk
 decode(?GS2U_SyncWalk,Bin0) ->
-	{ V_walk, Bin1 } = decode_ObjWalk( Bin0 ),
+	{ V_uid, Bin1 } = read_uint64( Bin0 ),
+	{ V_src_x, Bin2 } = read_float( Bin1 ),
+	{ V_src_y, Bin3 } = read_float( Bin2 ),
+	{ V_dst_x, Bin4 } = read_float( Bin3 ),
+	{ V_dst_y, Bin5 } = read_float( Bin4 ),
+	{ V_move_time, Bin6 } = read_int32( Bin5 ),
+	{ V_speed, Bin7 } = read_float( Bin6 ),
 	{ #pk_GS2U_SyncWalk {
-		walk = V_walk
+		uid = V_uid,
+		src_x = V_src_x,
+		src_y = V_src_y,
+		dst_x = V_dst_x,
+		dst_y = V_dst_y,
+		move_time = V_move_time,
+		speed = V_speed
 		},
-	Bin1 };
-
-%GENERATED from file:login.h => GS2U_SyncWalkMany
-decode(?GS2U_SyncWalkMany,Bin0) ->
-	{ V_walks, Bin1 } = read_array(Bin0, fun(X) -> decode_ObjWalk( X ) end),
-	{ #pk_GS2U_SyncWalkMany {
-		walks = V_walks
-		},
-	Bin1 };
+	Bin7 };
 
 %GENERATED from file:login.h => GS2U_UserPlayerList
 decode(?GS2U_UserPlayerList,Bin0) ->
@@ -293,6 +297,30 @@ decode(?U2GS_Login_Normal,Bin0) ->
 		versionPro = V_versionPro
 		},
 	Bin14 };
+
+%GENERATED from file:login.h => U2GS_PlayerStopWalk
+decode(?U2GS_PlayerStopWalk,Bin0) ->
+	{ V_cur_x, Bin1 } = read_float( Bin0 ),
+	{ V_cur_y, Bin2 } = read_float( Bin1 ),
+	{ #pk_U2GS_PlayerStopWalk {
+		cur_x = V_cur_x,
+		cur_y = V_cur_y
+		},
+	Bin2 };
+
+%GENERATED from file:login.h => U2GS_PlayerWalk
+decode(?U2GS_PlayerWalk,Bin0) ->
+	{ V_src_x, Bin1 } = read_float( Bin0 ),
+	{ V_src_y, Bin2 } = read_float( Bin1 ),
+	{ V_dst_x, Bin3 } = read_float( Bin2 ),
+	{ V_dst_y, Bin4 } = read_float( Bin3 ),
+	{ #pk_U2GS_PlayerWalk {
+		src_x = V_src_x,
+		src_y = V_src_y,
+		dst_x = V_dst_x,
+		dst_y = V_dst_y
+		},
+	Bin4 };
 
 %GENERATED from file:login.h => U2GS_RequestCreatePlayer
 decode(?U2GS_RequestCreatePlayer,Bin0) ->
@@ -397,28 +425,6 @@ decode_LookInfoPlayer(Bin0) ->
 		hp_per = V_hp_per
 		},
 	Bin12 }.
-
-%GENERATED from file:login.h => ObjWalk
--spec decode_ObjWalk(Bin0) -> { #pk_ObjWalk{},LeftBin }
-	when Bin0 :: binary(), LeftBin :: binary().
-decode_ObjWalk(Bin0) ->
-	{ V_uid, Bin1 } = read_uint64( Bin0 ),
-	{ V_src_x, Bin2 } = read_float( Bin1 ),
-	{ V_src_y, Bin3 } = read_float( Bin2 ),
-	{ V_dst_x, Bin4 } = read_float( Bin3 ),
-	{ V_dst_y, Bin5 } = read_float( Bin4 ),
-	{ V_move_time, Bin6 } = read_int32( Bin5 ),
-	{ V_speed, Bin7 } = read_float( Bin6 ),
-	{ #pk_ObjWalk {
-		uid = V_uid,
-		src_x = V_src_x,
-		src_y = V_src_y,
-		dst_x = V_dst_x,
-		dst_y = V_dst_y,
-		move_time = V_move_time,
-		speed = V_speed
-		},
-	Bin7 }.
 
 %GENERATED from file:login.h => UserPlayerData
 -spec decode_UserPlayerData(Bin0) -> { #pk_UserPlayerData{},LeftBin }
@@ -621,18 +627,22 @@ encode(#pk_GS2U_SyncStand{} = P) ->
 
 %GENERATED from file:login.h => GS2U_SyncWalk
 encode(#pk_GS2U_SyncWalk{} = P) ->
-	Bin_walk = encode_ObjWalk( P#pk_GS2U_SyncWalk.walk ),
+	Bin_uid = write_uint64( P#pk_GS2U_SyncWalk.uid ),
+	Bin_src_x = write_float( P#pk_GS2U_SyncWalk.src_x ),
+	Bin_src_y = write_float( P#pk_GS2U_SyncWalk.src_y ),
+	Bin_dst_x = write_float( P#pk_GS2U_SyncWalk.dst_x ),
+	Bin_dst_y = write_float( P#pk_GS2U_SyncWalk.dst_y ),
+	Bin_move_time = write_int32( P#pk_GS2U_SyncWalk.move_time ),
+	Bin_speed = write_float( P#pk_GS2U_SyncWalk.speed ),
 	[
 		<<?GS2U_SyncWalk:?U16>>,
-		Bin_walk
-	];
-
-%GENERATED from file:login.h => GS2U_SyncWalkMany
-encode(#pk_GS2U_SyncWalkMany{} = P) ->
-	Bin_walks = write_array(P#pk_GS2U_SyncWalkMany.walks, fun(X) -> encode_ObjWalk( X ) end),
-	[
-		<<?GS2U_SyncWalkMany:?U16>>,
-		Bin_walks
+		Bin_uid,
+		Bin_src_x,
+		Bin_src_y,
+		Bin_dst_x,
+		Bin_dst_y,
+		Bin_move_time,
+		Bin_speed
 	];
 
 %GENERATED from file:login.h => GS2U_UserPlayerList
@@ -702,6 +712,30 @@ encode(#pk_U2GS_Login_Normal{} = P) ->
 		Bin_versionExe,
 		Bin_versionGame,
 		Bin_versionPro
+	];
+
+%GENERATED from file:login.h => U2GS_PlayerStopWalk
+encode(#pk_U2GS_PlayerStopWalk{} = P) ->
+	Bin_cur_x = write_float( P#pk_U2GS_PlayerStopWalk.cur_x ),
+	Bin_cur_y = write_float( P#pk_U2GS_PlayerStopWalk.cur_y ),
+	[
+		<<?U2GS_PlayerStopWalk:?U16>>,
+		Bin_cur_x,
+		Bin_cur_y
+	];
+
+%GENERATED from file:login.h => U2GS_PlayerWalk
+encode(#pk_U2GS_PlayerWalk{} = P) ->
+	Bin_src_x = write_float( P#pk_U2GS_PlayerWalk.src_x ),
+	Bin_src_y = write_float( P#pk_U2GS_PlayerWalk.src_y ),
+	Bin_dst_x = write_float( P#pk_U2GS_PlayerWalk.dst_x ),
+	Bin_dst_y = write_float( P#pk_U2GS_PlayerWalk.dst_y ),
+	[
+		<<?U2GS_PlayerWalk:?U16>>,
+		Bin_src_x,
+		Bin_src_y,
+		Bin_dst_x,
+		Bin_dst_y
 	];
 
 %GENERATED from file:login.h => U2GS_RequestCreatePlayer
@@ -802,24 +836,6 @@ encode_LookInfoPlayer( #pk_LookInfoPlayer{} = P ) ->
 		Bin_level,
 		Bin_hp_per	].
 
-%GENERATED from file:login.h => ObjWalk
-encode_ObjWalk( #pk_ObjWalk{} = P ) ->
-	Bin_uid = write_uint64( P#pk_ObjWalk.uid ),
-	Bin_src_x = write_float( P#pk_ObjWalk.src_x ),
-	Bin_src_y = write_float( P#pk_ObjWalk.src_y ),
-	Bin_dst_x = write_float( P#pk_ObjWalk.dst_x ),
-	Bin_dst_y = write_float( P#pk_ObjWalk.dst_y ),
-	Bin_move_time = write_int32( P#pk_ObjWalk.move_time ),
-	Bin_speed = write_float( P#pk_ObjWalk.speed ),
-	[
-		Bin_uid,
-		Bin_src_x,
-		Bin_src_y,
-		Bin_dst_x,
-		Bin_dst_y,
-		Bin_move_time,
-		Bin_speed	].
-
 %GENERATED from file:login.h => UserPlayerData
 encode_UserPlayerData( #pk_UserPlayerData{} = P ) ->
 	Bin_uid = write_uint64( P#pk_UserPlayerData.uid ),
@@ -862,12 +878,13 @@ name(?GS2U_RemoveRemote) -> "GS2U_RemoveRemote";
 name(?GS2U_SelPlayerResult) -> "GS2U_SelPlayerResult";
 name(?GS2U_SyncStand) -> "GS2U_SyncStand";
 name(?GS2U_SyncWalk) -> "GS2U_SyncWalk";
-name(?GS2U_SyncWalkMany) -> "GS2U_SyncWalkMany";
 name(?GS2U_UserPlayerList) -> "GS2U_UserPlayerList";
 name(?U2GS_ChangeMap) -> "U2GS_ChangeMap";
 name(?U2GS_GetPlayerInitData) -> "U2GS_GetPlayerInitData";
 name(?U2GS_GetRemotePlayer) -> "U2GS_GetRemotePlayer";
 name(?U2GS_Login_Normal) -> "U2GS_Login_Normal";
+name(?U2GS_PlayerStopWalk) -> "U2GS_PlayerStopWalk";
+name(?U2GS_PlayerWalk) -> "U2GS_PlayerWalk";
 name(?U2GS_RequestCreatePlayer) -> "U2GS_RequestCreatePlayer";
 name(?U2GS_RequestDeletePlayer) -> "U2GS_RequestDeletePlayer";
 name(?U2GS_SelPlayerEnterGame) -> "U2GS_SelPlayerEnterGame";

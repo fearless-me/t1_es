@@ -2,7 +2,7 @@
 -ifndef(netmsg).
 -define(netmsg,1).
 
--define(ProtoVersion,632).
+-define(ProtoVersion,635).
 
 %% 
 -define(GS2U_CreatePlayerResult,45054).
@@ -168,16 +168,20 @@
 %% // 移动
 -define(GS2U_SyncWalk,3436).
 -record(pk_GS2U_SyncWalk,{
-	%% ObjWalk
-	walk
-}).
-
-%% 
-%% // 同步周围对象的移动信息
--define(GS2U_SyncWalkMany,27691).
--record(pk_GS2U_SyncWalkMany,{
-	%% ObjWalk
-	walks = []
+	%% UInt64
+	uid = 0,
+	%% Single坐标X
+	src_x = 0.0,
+	%% Single坐标Y
+	src_y = 0.0,
+	%% Single坐标X
+	dst_x = 0.0,
+	%% Single坐标Y
+	dst_y = 0.0,
+	%% Int32移动时间（毫秒）  
+	move_time = 0,
+	%% Single移动速度
+	speed = 0.0
 }).
 
 %% 
@@ -245,23 +249,6 @@
 	level = 0,
 	%% Byte当前血量百分比
 	hp_per = 0
-}).
-
--record(pk_ObjWalk,{
-	%% UInt64
-	uid = 0,
-	%% Single坐标X
-	src_x = 0.0,
-	%% Single坐标Y
-	src_y = 0.0,
-	%% Single坐标X
-	dst_x = 0.0,
-	%% Single坐标Y
-	dst_y = 0.0,
-	%% Int32移动时间（毫秒）  
-	move_time = 0,
-	%% Single移动速度
-	speed = 0.0
 }).
 
 %% 
@@ -332,6 +319,28 @@
 	versionGame = 0,
 	%% Int32 协议版本
 	versionPro = 0
+}).
+
+%% 
+-define(U2GS_PlayerStopWalk,29978).
+-record(pk_U2GS_PlayerStopWalk,{
+	%% Single坐标X
+	cur_x = 0.0,
+	%% Single坐标Y
+	cur_y = 0.0
+}).
+
+%% 
+-define(U2GS_PlayerWalk,56544).
+-record(pk_U2GS_PlayerWalk,{
+	%% Single坐标X
+	src_x = 0.0,
+	%% Single坐标Y
+	src_y = 0.0,
+	%% Single坐标X
+	dst_x = 0.0,
+	%% Single坐标Y
+	dst_y = 0.0
 }).
 
 %% 

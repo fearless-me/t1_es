@@ -100,7 +100,7 @@ player_join(S, Any) ->
 %% call
 force_teleport(S, #r_teleport_req{
     uid = Uid,
-    tar_pos = TarPos
+    tar = TarPos
 }) ->
     Cur = lib_obj_rw:get_cur_pos(Uid),
     lib_move:on_player_pos_change(Uid, Cur, TarPos),
@@ -216,7 +216,7 @@ kick_all_player(#m_map_state{player = Ets}) ->
 
 %%-------------------------------------------------------------------
 player_start_move(Req) ->
-    #r_player_start_move_req{uid = Uid, tar_pos = Dst} = Req,
+    #r_player_start_move_req{uid = Uid, tar = Dst} = Req,
     lib_move:start_player_walk(Uid, lib_obj_rw:get_cur_pos(Uid), Dst).
 
 %%-------------------------------------------------------------------

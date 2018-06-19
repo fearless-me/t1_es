@@ -62,7 +62,7 @@ login_ack_success(sucess, AccountIfo) ->
     ok;
 login_ack_success(Reason, AccountIfo) ->
     #p_account{aid = Aid} = AccountIfo,
-    ?WARN("acc ~w register process ~p faild with ~w",
+    ?ERROR("acc ~w register process ~p faild with ~w",
         [Aid, self(), Reason]),
     lib_player_pub:send(#pk_GS2U_LoginResult{
         result = -1,

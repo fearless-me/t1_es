@@ -43,10 +43,10 @@ mod_init([MapID]) ->
 
 %%--------------------------------------------------------------------
 do_handle_call({join_map, Req}, _From, State) ->
-    Ret = do_player_join_map(State, Req),
+    Ret = do_player_join_map_call(State, Req),
     {reply, Ret, State};
 do_handle_call({exit_map, Req}, _From, State) ->
-    Ret = do_player_exit_map(State, Req),
+    Ret = do_player_exit_map_call(State, Req),
     {reply, Ret, State};
 do_handle_call(Request, From, State) ->
     ?ERROR("undeal call ~w from ~w", [Request, From]),
@@ -68,7 +68,7 @@ do_handle_cast(Request, State) ->
     {noreply, State}.
 
 %%--------------------------------------------------------------------
-do_player_join_map(S, Req) ->
+do_player_join_map_call(S, Req) ->
     %1. 选线
     Now = time:milli_seconds(),
     MS = ets:fun2ms(
@@ -89,7 +89,7 @@ do_player_join_map(S, Req) ->
     #m_map_line{pid = MapPid, map_id = MapID, line_id = LineID} = Line,
 
     %3. 加入
-    map:player_join(MapPid, Req),
+    map:player_join_call(MapPid, Req),
 
     %4. 更新
     ets:update_counter(S#state.ets, LineID, {#m_map_line.in, 1}),
@@ -98,7 +98,7 @@ do_player_join_map(S, Req) ->
     #r_change_map_ack{map_id = MapID, line_id = LineID,  map_pid = MapPid, pos = Pos}.
 
 %%--------------------------------------------------------------------
-do_player_exit_map(S, Req) ->
+do_player_exit_map_call(S, Req) ->
     %%1.
     #r_exit_map_req{uid = Uid, line_id = LineID} = Req,
 
@@ -108,7 +108,7 @@ do_player_exit_map(S, Req) ->
     case ets:lookup(S#state.ets, LineID) of
         [#m_map_line{pid = Mpid}] ->
             ets:update_counter(S#state.ets, LineID, {#m_map_line.in, -1}),
-            map:player_exit(Mpid, Req);
+            map:player_exit_call(Mpid, Req);
         _ -> skip
     end,
 

@@ -14,7 +14,7 @@
 %%--------------------------------
 %% WARNING!!! WARNING!!! WARNING!!!
 %% call
--export([player_join/2, player_exit/2, player_teleport/2]).
+-export([player_join_call/2, player_exit_call/2, player_teleport_call/2]).
 %%--------------------------------
 %%
 -export([
@@ -27,13 +27,13 @@
 %%--------------------------------
 %% WARNING!!! WARNING!!! WARNING!!!
 %% call
-player_exit(MapPid, Req) ->
+player_exit_call(MapPid, Req) ->
     gen_server:call(MapPid, {player_exit, Req}, ?MAP_CALL_TIMEOUT).
 %%--------------------------------
-player_join(MapPid, Obj) ->
+player_join_call(MapPid, Obj) ->
     gen_server:call(MapPid, {player_join, Obj}, ?MAP_CALL_TIMEOUT).
 %%--------------------------------
-player_teleport(MapPid, Req) ->
+player_teleport_call(MapPid, Req) ->
     gen_server:call(MapPid, {player_teleport, Req}, ?MAP_CALL_TIMEOUT).
 %%--------------------------------
 %%--------------------------------

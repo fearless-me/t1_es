@@ -25,7 +25,7 @@ local MSG_login = require "Net.MSG_login"
 --BEGIN table for msgs description
 return
 {
-	__VERSION__ = 632,
+	__VERSION__ = 635,
 --BEGIN message id define
 
 
@@ -45,12 +45,13 @@ return
 	MSG_GS2U_SelPlayerResult = 42464,
 	MSG_GS2U_SyncStand = 30047,
 	MSG_GS2U_SyncWalk = 3436,
-	MSG_GS2U_SyncWalkMany = 27691,
 	MSG_GS2U_UserPlayerList = 18582,
 	MSG_U2GS_ChangeMap = 4914,
 	MSG_U2GS_GetPlayerInitData = 5543,
 	MSG_U2GS_GetRemotePlayer = 52743,
 	MSG_U2GS_Login_Normal = 58883,
+	MSG_U2GS_PlayerStopWalk = 29978,
+	MSG_U2GS_PlayerWalk = 56544,
 	MSG_U2GS_RequestCreatePlayer = 4022,
 	MSG_U2GS_RequestDeletePlayer = 23657,
 	MSG_U2GS_SelPlayerEnterGame = 56497,
@@ -74,12 +75,13 @@ return
 	[42464] = MSG_login.GS2U_SelPlayerResult,
 	[30047] = MSG_login.GS2U_SyncStand,
 	[3436] = MSG_login.GS2U_SyncWalk,
-	[27691] = MSG_login.GS2U_SyncWalkMany,
 	[18582] = MSG_login.GS2U_UserPlayerList,
 	[4914] = MSG_login.U2GS_ChangeMap,
 	[5543] = MSG_login.U2GS_GetPlayerInitData,
 	[52743] = MSG_login.U2GS_GetRemotePlayer,
 	[58883] = MSG_login.U2GS_Login_Normal,
+	[29978] = MSG_login.U2GS_PlayerStopWalk,
+	[56544] = MSG_login.U2GS_PlayerWalk,
 	[4022] = MSG_login.U2GS_RequestCreatePlayer,
 	[23657] = MSG_login.U2GS_RequestDeletePlayer,
 	[56497] = MSG_login.U2GS_SelPlayerEnterGame,

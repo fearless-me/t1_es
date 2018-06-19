@@ -20,7 +20,7 @@ namespace Network.Messages
          MSG_GS2U_UserPlayerList = 18582,
          MSG_GS2U_LoginResult = 22162,
          MSG_U2GS_RequestDeletePlayer = 23657,
-         MSG_GS2U_SyncWalkMany = 27691,
+         MSG_U2GS_PlayerStopWalk = 29978,
          MSG_GS2U_SyncStand = 30047,
          MSG_GS2U_RemotePet = 31693,
          MSG_GS2U_RemoveRemote = 31994,
@@ -32,6 +32,7 @@ namespace Network.Messages
          MSG_GS2U_GotoNewMap = 47351,
          MSG_U2GS_GetRemotePlayer = 52743,
          MSG_U2GS_SelPlayerEnterGame = 56497,
+         MSG_U2GS_PlayerWalk = 56544,
          MSG_GS2U_RemoteMonster = 57060,
          MSG_U2GS_Login_Normal = 58883,
          //login end
@@ -45,7 +46,6 @@ namespace Network.Messages
             RegisterMessageId( MessageType.MSG_GS2U_LookInfoPlayer, GS2U_LookInfoPlayer.Create );
             RegisterMessageId( MessageType.MSG_GS2U_UserPlayerList, GS2U_UserPlayerList.Create );
             RegisterMessageId( MessageType.MSG_GS2U_LoginResult, GS2U_LoginResult.Create );
-            RegisterMessageId( MessageType.MSG_GS2U_SyncWalkMany, GS2U_SyncWalkMany.Create );
             RegisterMessageId( MessageType.MSG_GS2U_SyncStand, GS2U_SyncStand.Create );
             RegisterMessageId( MessageType.MSG_GS2U_RemotePet, GS2U_RemotePet.Create );
             RegisterMessageId( MessageType.MSG_GS2U_RemoveRemote, GS2U_RemoveRemote.Create );

@@ -125,11 +125,11 @@ parse_msg(#net_conf{
                 false -> %错误
                     try
                         {Cmd, _} = read_msg_id(CmdIDBytes, RemainBin),
-                        ErrorMsg = io_lib:format("Error Msg[~p][~ts] Len:~p",
-                            [Cmd, netmsgCmdStr:getNetMsgCmdStr(Cmd), Len]),
+                        ErrorMsg = io_lib:format(
+                            "Error Msg[~p][~ts] Len:~p,~p", [Cmd, netmsg:name(Cmd), Len, MsgBuff]),
                         {error, MsgByteSize, ErrorMsg}
-                    catch _:_:_ ->
-                            ErrorMsg1 = io_lib:format("Error Msg Len:~p", [Len]),
+                    catch _:Err:_ ->
+                            ErrorMsg1 = io_lib:format("~p, Error Msg Len:~p", [Err, Len]),
                             {error, MsgByteSize, ErrorMsg1}
                     end
             end;
@@ -143,14 +143,14 @@ parse_msg(#net_conf{
 merge_binary(DataBin) ->
     HalfMsg = get_buffer(),
     MsgSize = erlang:byte_size(DataBin),
-    HalfMsgSize = erlang:byte_size(HalfMsg),
-    case HalfMsgSize > 0 of
-        true ->
-            %%有半包未处理，拼接起来，size加上
-            {<<HalfMsg/binary, DataBin/binary>>, HalfMsgSize + MsgSize};
-        false ->
+    case HalfMsg  of
+        <<>> ->
             %%没有半包
-            {DataBin, MsgSize}
+            {DataBin, MsgSize};
+        _ ->
+            %%有半包未处理，拼接起来，size加上
+            HalfMsgSize = erlang:byte_size(HalfMsg),
+            {<<HalfMsg/binary, DataBin/binary>>, HalfMsgSize + MsgSize}
     end.
 
 

@@ -22,7 +22,7 @@
 -export([start_player_walk/3]).
 -export([on_player_pos_change/3]).
 -export([cal_move_msg/1]).
--export([cal_move_msg_info/2]).
+%%-export([cal_move_msg_info/2]).
 
 %%%-------------------------------------------------------------------
 init(Uid, Pos, Face) ->
@@ -241,25 +241,20 @@ cal_move_msg(Uid) ->
     do_cal_move_msg(lib_obj_rw:get_cur_move(Uid), Uid).
 
 do_cal_move_msg(?EMS_WALK, Uid) ->
-    Walk = cal_move_msg_info(?EMS_WALK, Uid),
-    #pk_GS2U_SyncWalk{walk = Walk};
-do_cal_move_msg(?EMS_STAND, Uid) ->
-    Pos = lib_obj_rw:get_start_pos(Uid),
-    #pk_GS2U_SyncStand{uid = Uid, cur_x = vector3:x(Pos), cur_y = vector3:z(Pos)};
-do_cal_move_msg(_S, _Uid) ->
-    undefined.
-
-cal_move_msg_info(?EMS_WALK, Uid) ->
     Src         = lib_obj_rw:get_start_pos(Uid),
     Dst         = lib_obj_rw:get_dest_pos(Uid),
     Speed       = lib_obj_rw:get_move_speed(Uid),
     StartTime   = lib_obj_rw:get_start_time(Uid),
-    #pk_ObjWalk{
+    #pk_GS2U_SyncWalk{
         uid = Uid,
         move_time = lib_map_rw:get_move_timer_pass_time(StartTime),
         src_x = vector3:x(Src), src_y = vector3:z(Src),
         dst_x = vector3:x(Dst), dst_y = vector3:z(Dst),
         speed = Speed
     };
-cal_move_msg_info(_Any, _Uid) ->
+do_cal_move_msg(?EMS_STAND, Uid) ->
+    Pos = lib_obj_rw:get_start_pos(Uid),
+    #pk_GS2U_SyncStand{uid = Uid, cur_x = vector3:x(Pos), cur_y = vector3:z(Pos)};
+do_cal_move_msg(_S, _Uid) ->
     undefined.
+

@@ -14,6 +14,7 @@
 -include("vector3.hrl").
 -include("player_status.hrl").
 -include("common_record.hrl").
+-include("mem_record.hrl").
 
 
 %% API
@@ -55,6 +56,12 @@ handle(#pk_GS2U_GotoNewMap{ map_id = DestMapID, x = X, y = Y} = Msg) ->
     ok;
 handle(#pk_U2GS_GetPlayerInitData{}) ->
     lib_player_base:send_init_data(),
+    ok;
+handle(#pk_U2GS_PlayerWalk{dst_x = DX, dst_y = DY}) ->
+    #m_player_map{map_pid = Mpid} = lib_player_rw:get_map(),
+    Uid = lib_player_rw:get_uid(),
+    Req = #r_player_start_move_req{uid = Uid, tar = vector3:new(DX, 0, DY)},
+    lib_player_pub:start_move_(Mpid, Req),
     ok;
 handle(Msg) ->
     ?DEBUG("~p", [Msg]),

@@ -36,9 +36,9 @@ do_teleport_call(undefined, _NewPos) ->
     ?ERROR("");
 do_teleport_call(MapPid, NewPos) ->
     Uid = lib_player_rw:get_uid(),
-    ok  = map:player_teleport(
+    ok  = map:player_teleport_call(
         MapPid,
-        #r_teleport_req{uid = Uid, tar_pos = NewPos}
+        #r_teleport_req{uid = Uid, tar = NewPos}
     ),
     ok.
 
@@ -146,11 +146,6 @@ do_change_map_call_ret(
     hook_player:on_change_map(Mid, Mid),
 
     lib_player_rw:set_status(?PS_GAME),
-
-    map:player_move_(
-        MPid,
-        #r_player_start_move_req{uid = Uid, tar_pos = vector3:new(400.6, 0, 358.9)}
-    ),
     ok;
 do_change_map_call_ret(
     OldMid, OldLineId, _OldPos,

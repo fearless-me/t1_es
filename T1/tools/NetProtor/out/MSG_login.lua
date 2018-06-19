@@ -76,18 +76,7 @@ return {
 
 	GS2U_SyncWalk = 
 	{
-		fields = "walk,u",
-		[1] = {
-			fields = "uid,src_x,src_y,dst_x,dst_y,move_time,speed,Lffffif",
-		},
-	},
-
-	GS2U_SyncWalkMany = 
-	{
-		fields = "$walks,1",
-		[1] = {
-			fields = "uid,src_x,src_y,dst_x,dst_y,move_time,speed,Lffffif",
-		},
+		fields = "uid,src_x,src_y,dst_x,dst_y,move_time,speed,Lffffif",
 	},
 
 	GS2U_UserPlayerList = 
@@ -115,6 +104,16 @@ return {
 	U2GS_Login_Normal = 
 	{
 		fields = "platformAccount,platformName,platformNickName,time,sign,deviceId,imei,idfa,mac,extParam,versionRes,versionExe,versionGame,versionPro,zzzlzzzzzziiii",
+	},
+
+	U2GS_PlayerStopWalk = 
+	{
+		fields = "cur_x,cur_y,ff",
+	},
+
+	U2GS_PlayerWalk = 
+	{
+		fields = "src_x,src_y,dst_x,dst_y,ffff",
 	},
 
 	U2GS_RequestCreatePlayer = 

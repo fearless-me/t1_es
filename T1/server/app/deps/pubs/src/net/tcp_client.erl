@@ -115,8 +115,11 @@ handle_1(#pk_GS2U_GotoNewMap{}) ->
         _ -> skip
     end,
     ok;
+handle_1(#pk_GS2U_GetPlayerInitDataEnd{}) ->
+    send_msg(socket(), #pk_U2GS_PlayerWalk{dst_x = 289.1, dst_y = 260.8}),
+    ok;
 handle_1(Msg) ->
-    io:format("~w~n", [Msg]).
+    io:format("~p~n", [Msg]).
 
 -define(SocketKey, socketRef___).
 socket(Socket) -> put(?SocketKey, Socket).

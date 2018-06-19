@@ -187,8 +187,9 @@ struct GS2U_GetPlayerInitDataEnd <-
 	
 };
 
-// 行走信息
-struct ObjWalk
+
+// 移动
+struct GS2U_SyncWalk <-
 {
 	uint64	uid;
 	float	src_x;	 //坐标X
@@ -199,17 +200,6 @@ struct ObjWalk
 	float	speed; //移动速度
 };
 
-// 移动
-struct GS2U_SyncWalk <-
-{
-	ObjWalk walk;
-};
-
-// 同步周围对象的移动信息
-struct GS2U_SyncWalkMany <-
-{
-	vector<ObjWalk> walks;
-};
 
 // 移动
 struct GS2U_SyncStand <-
@@ -248,6 +238,20 @@ struct GS2U_RemotePet <-
 	uint64 	owner;
 	uint32	did;
 	int32   level;
+	float	cur_x;	 //坐标X
+	float	cur_y;	 //坐标Y
+};
+
+struct U2GS_PlayerWalk ->
+{
+	float	src_x;	 //坐标X
+	float	src_y;	 //坐标Y
+	float	dst_x;	 //坐标X
+	float	dst_y;	 //坐标Y
+};
+
+struct U2GS_PlayerStopWalk ->
+{
 	float	cur_x;	 //坐标X
 	float	cur_y;	 //坐标Y
 };

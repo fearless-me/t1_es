@@ -1042,9 +1042,19 @@ namespace Network.Messages
 	}
 
 	
-// 行走信息
-	public class ObjWalk : SerializeAble
+// 移动
+	public class GS2U_SyncWalk : BaseMessage
 	{
+		static new public BaseMessage Create( BinaryReader s ) {
+			var ret = new GS2U_SyncWalk();
+			ret.Deserialize( s );
+			return ret;
+		}
+		override public MessageType GetId() {
+			return ID;
+		}
+		public const MessageType ID = MessageType.MSG_GS2U_SyncWalk;
+
 		#region members
 		/// <summary>
 		/// 
@@ -1077,17 +1087,6 @@ namespace Network.Messages
 		#endregion
 
 		#region methods
-		public override int Serialize( BinaryWriter writer ) {
-			long pos = writer.BaseStream.Position;
-			MessageSerializer.Write_UInt64( writer, m_uid );
-			MessageSerializer.Write_Single( writer, m_src_x );
-			MessageSerializer.Write_Single( writer, m_src_y );
-			MessageSerializer.Write_Single( writer, m_dst_x );
-			MessageSerializer.Write_Single( writer, m_dst_y );
-			MessageSerializer.Write_Int32( writer, m_move_time );
-			MessageSerializer.Write_Single( writer, m_speed );
-			return (int)( writer.BaseStream.Position - pos );
-		}
 		public override int Deserialize( BinaryReader reader ) {
 			long pos = reader.BaseStream.Position;
 			m_uid = MessageSerializer.Read_UInt64( reader );
@@ -1097,99 +1096,6 @@ namespace Network.Messages
 			m_dst_y = MessageSerializer.Read_Single( reader );
 			m_move_time = MessageSerializer.Read_Int32( reader );
 			m_speed = MessageSerializer.Read_Single( reader );
-			return (int)( reader.BaseStream.Position - pos );
-		}
-		#endregion
-	}
-
-	public partial class MessageSerializer
-	{
-		static public ObjWalk Read_ObjWalk( BinaryReader s ) {
-			var ret = new ObjWalk();
-			ret.Deserialize( s );
-			return ret;
-		}
-		static public List<ObjWalk> ReadList_ObjWalk( BinaryReader s ) {
-			Int16 count = s.ReadInt16();
-			if ( count <= 0 ) {
-				return null;
-			}
-			var ret = new List<ObjWalk>( count );
-			for ( int i = 0; i < count; ++i ) {
-				ret.Add( Read_ObjWalk( s ) );
-			}
-			return ret;
-		}
-		static public void Write_ObjWalk( BinaryWriter s, ObjWalk value ) {
-			value.Serialize( s );
-		}
-		static public void WriteList_ObjWalk( BinaryWriter s, List<ObjWalk> value ) {
-			if ( value != null ) {
-				Write_Int16( s, (Int16)value.Count );
-				for ( int i = 0; i < value.Count; ++i ) {
-					value[i].Serialize( s );
-				}
-			} else {
-				Write_Int16( s, 0 );
-			}
-		}
-	}
-
-	
-// 移动
-	public class GS2U_SyncWalk : BaseMessage
-	{
-		static new public BaseMessage Create( BinaryReader s ) {
-			var ret = new GS2U_SyncWalk();
-			ret.Deserialize( s );
-			return ret;
-		}
-		override public MessageType GetId() {
-			return ID;
-		}
-		public const MessageType ID = MessageType.MSG_GS2U_SyncWalk;
-
-		#region members
-		/// <summary>
-		/// 
-		/// </summary>
-		 public ObjWalk m_walk = null;
-		#endregion
-
-		#region methods
-		public override int Deserialize( BinaryReader reader ) {
-			long pos = reader.BaseStream.Position;
-			m_walk = MessageSerializer.Read_ObjWalk( reader );
-			return (int)( reader.BaseStream.Position - pos );
-		}
-		#endregion
-	}
-
-	
-// 同步周围对象的移动信息
-	public class GS2U_SyncWalkMany : BaseMessage
-	{
-		static new public BaseMessage Create( BinaryReader s ) {
-			var ret = new GS2U_SyncWalkMany();
-			ret.Deserialize( s );
-			return ret;
-		}
-		override public MessageType GetId() {
-			return ID;
-		}
-		public const MessageType ID = MessageType.MSG_GS2U_SyncWalkMany;
-
-		#region members
-		/// <summary>
-		/// 
-		/// </summary>
-		public List<ObjWalk> m_walks = null;
-		#endregion
-
-		#region methods
-		public override int Deserialize( BinaryReader reader ) {
-			long pos = reader.BaseStream.Position;
-			m_walks = MessageSerializer.ReadList_ObjWalk( reader );
 			return (int)( reader.BaseStream.Position - pos );
 		}
 		#endregion
@@ -1403,6 +1309,74 @@ namespace Network.Messages
 			m_cur_x = MessageSerializer.Read_Single( reader );
 			m_cur_y = MessageSerializer.Read_Single( reader );
 			return (int)( reader.BaseStream.Position - pos );
+		}
+		#endregion
+	}
+
+	
+	public class U2GS_PlayerWalk : BaseMessage
+	{
+		override public MessageType GetId() {
+			return ID;
+		}
+		public const MessageType ID = MessageType.MSG_U2GS_PlayerWalk;
+
+		#region members
+		/// <summary>
+		/// 坐标X
+		/// </summary>
+		public Single m_src_x = 0.0f;
+		/// <summary>
+		/// 坐标Y
+		/// </summary>
+		public Single m_src_y = 0.0f;
+		/// <summary>
+		/// 坐标X
+		/// </summary>
+		public Single m_dst_x = 0.0f;
+		/// <summary>
+		/// 坐标Y
+		/// </summary>
+		public Single m_dst_y = 0.0f;
+		#endregion
+
+		#region methods
+		public override int Serialize( BinaryWriter writer ) {
+			long pos = writer.BaseStream.Position;
+			MessageSerializer.Write_Single( writer, m_src_x );
+			MessageSerializer.Write_Single( writer, m_src_y );
+			MessageSerializer.Write_Single( writer, m_dst_x );
+			MessageSerializer.Write_Single( writer, m_dst_y );
+			return (int)( writer.BaseStream.Position - pos );
+		}
+		#endregion
+	}
+
+	
+	public class U2GS_PlayerStopWalk : BaseMessage
+	{
+		override public MessageType GetId() {
+			return ID;
+		}
+		public const MessageType ID = MessageType.MSG_U2GS_PlayerStopWalk;
+
+		#region members
+		/// <summary>
+		/// 坐标X
+		/// </summary>
+		public Single m_cur_x = 0.0f;
+		/// <summary>
+		/// 坐标Y
+		/// </summary>
+		public Single m_cur_y = 0.0f;
+		#endregion
+
+		#region methods
+		public override int Serialize( BinaryWriter writer ) {
+			long pos = writer.BaseStream.Position;
+			MessageSerializer.Write_Single( writer, m_cur_x );
+			MessageSerializer.Write_Single( writer, m_cur_y );
+			return (int)( writer.BaseStream.Position - pos );
 		}
 		#endregion
 	}
