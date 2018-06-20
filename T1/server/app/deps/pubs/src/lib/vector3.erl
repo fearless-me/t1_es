@@ -44,7 +44,7 @@ z(V) -> V#vector3.z.
 valid(V) ->
     #vector3{x = X,  z = Z} = V,
     R1 = erlang:is_number(X) andalso erlang:is_number(Z),
-    R2 = erlang:trunc(X) > 0 andalso erlang:trunc(Z) > 0,
+    R2 = X > 0 andalso Z > 0,
     R1 andalso R2.
 
 %%

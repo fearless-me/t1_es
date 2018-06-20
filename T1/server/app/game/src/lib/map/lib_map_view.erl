@@ -38,12 +38,8 @@
 sync_player_join_map(Obj) ->
     %1.
     Uid = lib_obj:get_uid(Obj),
-    Index =
-        pos_to_vis_index(
-            lib_obj_rw:get_cur_pos(Uid),
-            get(?VIS_W),
-            ?VIS_DIST
-        ),
+    Pos = lib_obj_rw:get_cur_pos(Uid),
+    Index = pos_to_vis_index(Pos, get(?VIS_W), ?VIS_DIST),
     Tiles = get_vis_tile_around(Index),
 
     %2.

@@ -144,7 +144,7 @@ on_net_msg(Cmd, Msg)->
 
 route_msg(Cmd, Msg) ->
     %%1. hook
-    ?DEBUG("route(~p)",[Msg]),
+    ?DEBUG("route(~w)",[Msg]),
     Status = lib_player_rw:get_status(),
     filter_msg(Status, Cmd, Msg),
     ok.

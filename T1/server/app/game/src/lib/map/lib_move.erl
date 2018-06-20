@@ -134,12 +134,12 @@ is_player_can_walk(_Uid, _Pos, _End) -> true.
 
 is_player_can_stop(Uid, Pos) ->
     R1 = is_pos_valid(Pos),
-    is_too_far_away(R1, Uid, Pos).
+    is_distance_safe(R1, Uid, Pos).
 
-is_too_far_away(true, _Uid, _Pos)-> ok;
-is_too_far_away(False, _Uid, _Pos) -> False.
+is_distance_safe(true, _Uid, _Pos)-> true;
+is_distance_safe(False, _Uid, _Pos) -> False.
 
-is_pos_valid(Pos) -> true.
+is_pos_valid(_Pos) -> true.
 
 %%%-------------------------------------------------------------------
 make_path_list(Acc, _Start, [], _Speed) -> lists:reverse(Acc);
@@ -262,7 +262,8 @@ on_player_pos_change(Uid, Tar) ->
     Obj = lib_map_rw:get_player(Uid),
     OldVisIndex = lib_map_view:pos_to_vis_index(Src),
     NewVisIndex = lib_map_view:pos_to_vis_index(Tar),
-    ?DEBUG("player ~p pos change from ~p, ~p",[Uid, Src, Tar]),
+    ?DEBUG("in map ~p player ~p ~ts pos change from ~w, ~w",
+        [lib_map_rw:get_map_id(), Uid, Obj#m_map_obj.name, Src, Tar]),
     ?assert(OldVisIndex > 0 andalso NewVisIndex > 0),
     lib_obj_rw:set_cur_pos(Uid, Tar),
     lib_cache:update_player_pub(Uid, {#m_player_pub.pos, Tar}),

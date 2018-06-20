@@ -3,6 +3,7 @@
 -include("netmsg.hrl").
 -include("netconf.hrl").
 -include("logger.hrl").
+-include("pub_common.hrl").
 
 %% API
 -export([c/1]).
@@ -10,14 +11,28 @@
 -export([nc/3]).
 -export([connect/2]).
 -export([handle/1,handle/2]).
+-export([move/2]).
+
+move(X, Y) ->
+    tcp_codec:init(#net_conf{}),
+    case ets:first(tcpc) of
+        '$end_of_table' -> skip;
+        Uid ->
+            case ets:lookup(tcpc, Uid) of
+                [{_, Socket}] ->
+                    send_msg(Socket, #pk_U2GS_PlayerWalk{dst_x = X, dst_y = Y});
+                _ -> skip
+            end
+    end,
+    ok.
 
 
-c(Port) ->
-    spawn(fun() -> tcp_client:connect(Port, 3) end).
-c(Port, MapID) ->
-    spawn(fun() -> tcp_client:connect(Port, MapID) end).
+c(Port) -> c(Port, 3).
+
+c(Port, MapID) -> spawn(fun() -> tcp_client:connect(Port, MapID) end).
 
 nc(N, Port, MapId) ->
+    catch ets:new(tcpc, [named_table, public, {keypos, 1},  ?ETS_RC, ?ETS_WC]),
     lists:foreach(fun(_) -> tcp_client:c(Port, MapId), timer:sleep(1) end, lists:seq(1, N)).
 
 set_buff(Bin) -> put('fak_buf', Bin).
@@ -47,7 +62,6 @@ connect(Port, MapID) ->
     timer:sleep(50),
     erlang:send_after(100 * 60 * 1000, self(), exit),
     loop_recv(),
-%%    send_msg(Socket, #pk_GS2U_GoNewMap{tarMapID = MapID, fX = misc:rand(500, 5000) / 10, fY = misc:rand(500, 3000) / 10}),
 
     ok.
 
@@ -116,6 +130,7 @@ handle_1(#pk_GS2U_GotoNewMap{}) ->
     ok;
 handle_1(#pk_GS2U_PlayerInitBase{uid = Uid}) ->
     set_aid(Uid),
+    ets:insert(tcpc, {Uid, socket()}),
     ok;
 handle_1(#pk_GS2U_GetPlayerInitDataEnd{}) ->
     send_msg(socket(), #pk_U2GS_PlayerWalk{dst_x = 289.1, dst_y = 260.8}),
