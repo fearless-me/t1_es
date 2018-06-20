@@ -15,7 +15,13 @@
 -export([save/1]).
 
 save(Player) ->
-    #m_player_pub{aid = Aid, uid = Uid} = Player,
+    #m_player_pub{aid = Aid, uid = Uid, pos = Pos, mid = Mid} = Player,
     ?DEBUG("save player aid ~w uid ~w",[Aid, Uid]),
-    lib_db:action_p_(Aid, save_player, Player),
+    NewPlayer = case vector3:valid(Pos) of
+                    true -> Player;
+                    _ ->
+                        NewPos = map_creator:map_init_pos(Mid),
+                        Player#m_player_pub{pos = NewPos}
+                end,
+    lib_db:action_p_(Aid, save_player, NewPlayer),
     ok.

@@ -53,7 +53,6 @@ teleport_(NewPos) -> ps:send(self(), teleport, NewPos).
 %%-------------------------------------------------------------------
 start_move_(MapPid, Req) -> map:player_move_(MapPid, Req).
 
-
 %%-------------------------------------------------------------------
 stop_move_(MapPid, Req) -> map:player_stop_move_(MapPid, Req).
 

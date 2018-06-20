@@ -54,13 +54,13 @@ stop(Reason)->
 
 direct_stop()->
     erlang:exit(self(), normal).
+
 %%-------------------------------------------------------------------
 send(IoList) when is_list(IoList)->
     tcp_handler:direct_send_net_msg(socket(), IoList);
 send(Msg) ->
-
     {Bytes1, IoList} = tcp_codec:encode(Msg),
-    ?INFO("~p ~p ~w",[lib_player_rw:get_uid(), Bytes1, Msg]),
+    ?INFO("~p send ~p bytes, msg ~w",[lib_player_rw:get_uid(), Bytes1, Msg]),
     tcp_handler:direct_send_net_msg(socket(), IoList),
     ok.
 
@@ -138,7 +138,7 @@ on_cast_msg(Request, S) ->
 
 %%-------------------------------------------------------------------
 on_net_msg(Cmd, Msg)->
-    ?DEBUG("net msg ~p:~p",[Cmd, Msg]),
+    ?DEBUG("route_msg id ~p msg ~w",[Cmd, Msg]),
     ?TRY_CATCH( route_msg(Cmd, Msg) ),
     ok.
 

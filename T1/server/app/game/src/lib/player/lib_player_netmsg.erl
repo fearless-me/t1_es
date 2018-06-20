@@ -58,20 +58,12 @@ handle(#pk_U2GS_GetPlayerInitData{}) ->
     lib_player_base:send_init_data(),
     ok;
 handle(#pk_U2GS_PlayerWalk{dst_x = DX, dst_y = DY}) ->
-    #m_player_map{map_pid = Mpid} = lib_player_rw:get_map(),
-    Uid = lib_player_rw:get_uid(),
-    Req = #r_player_start_move_req{uid = Uid, tar = vector3:new(DX, 0, DY)},
-    lib_player_pub:start_move_(Mpid, Req),
-    ?WARN("player ~p mapid ~p move to ~p",
-        [lib_player_rw:get_uid(), Mpid, Req#r_player_start_move_req.tar]),
+    Tar = vector3:new(DX, 0, DY),
+    lib_player_base:start_walk(Tar),
     ok;
 handle(#pk_U2GS_PlayerStopWalk{cur_x = X, cur_y = Y}) ->
-    #m_player_map{map_pid = Mpid} = lib_player_rw:get_map(),
-    Uid = lib_player_rw:get_uid(),
-    Req = #r_player_stop_move_req{uid = Uid, pos = vector3:new(X, 0, Y)},
-    lib_player_pub:stop_move_(Mpid, Req),
-    ?WARN("player ~p mapid ~p stop on ~p",
-        [lib_player_rw:get_uid(), Mpid, Req#r_player_stop_move_req.pos]),
+    Pos = vector3:new(X, 0, Y),
+    lib_player_base:stop_move(Pos),
     ok;
 handle(Msg) ->
     ?DEBUG("~p", [Msg]),

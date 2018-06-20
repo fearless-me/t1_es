@@ -12,10 +12,12 @@
 -include("netmsg.hrl").
 -include("db_record.hrl").
 -include("mem_record.hrl").
+-include("common_record.hrl").
 
 %% API
 -export([init/1]).
 -export([send_init_data/0]).
+-export([start_walk/1, stop_move/1]).
 %%-------------------------------------------------------------------
 init(Player) ->
     #p_player{
@@ -63,4 +65,32 @@ send_base_info() ->
         mapID = Mid
     },
     lib_player_pub:send(Msg),
+    ok.
+
+start_walk(Tar) ->
+    #m_player_map{map_pid = Mpid} = lib_player_rw:get_map(),
+    Uid = lib_player_rw:get_uid(),
+    case vector3:valid(Tar) of
+        true ->
+            Req = #r_player_start_move_req{uid = Uid, tar = Tar},
+            lib_player_pub:start_move_(Mpid, Req),
+            ?WARN("player ~p mapid ~p move to ~p", [Uid, Mpid, Tar]),
+            ok;
+        _ ->
+            ?DEBUG("error walk dst pos ~p",[Tar])
+    end,
+    ok.
+
+stop_move(Pos) ->
+    #m_player_map{map_pid = Mpid} = lib_player_rw:get_map(),
+    Uid = lib_player_rw:get_uid(),
+    case vector3:valid(Pos) of
+        true ->
+            Req = #r_player_stop_move_req{uid = Uid, pos = Pos},
+            lib_player_pub:stop_move_(Mpid, Req),
+            ?WARN("player ~p mapid ~p stop on ~p", [Uid, Mpid, Pos]),
+            ok;
+        _ ->
+            ?DEBUG("error stop pos ~p",[Pos])
+    end,
     ok.
