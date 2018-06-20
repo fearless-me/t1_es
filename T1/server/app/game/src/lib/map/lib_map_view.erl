@@ -18,7 +18,7 @@
 
 %% API
 -export([init_vis_tile/1]).
--export([sync_movement_to_big_visual_tile/2]).
+-export([sync_movement_to_big_visual_tile/1]).
 -export([sync_change_pos_visual_tile/3]).
 -export([pos_to_vis_index/1]).
 -export([sync_del_pet/1]).
@@ -75,8 +75,8 @@ init_vis_tile(#recGameMapCfg{
     rowCellNum = Row,
     cellSize = CellSize
 }) ->
-    VisW = (Col div ?VIS_DIST) + 1,
-    VisH = (Row div ?VIS_DIST) + 1,
+    VisW = (erlang:trunc(Col * CellSize) div ?VIS_DIST) + 1,
+    VisH = (erlang:trunc(Row * CellSize) div ?VIS_DIST) + 1,
     VisT = VisW * VisH,
 
     ?assert(VisT > 1),
@@ -98,6 +98,12 @@ init_vis_tile_1(X) ->
 
 %%%-------------------------------------------------------------------
 %% 开始移动广播
+sync_movement_to_big_visual_tile(Uid) ->
+    Msg = lib_move:cal_move_msg(Uid),
+    VisTileIndex = lib_obj_rw:get_vis_tile_idx(Uid),
+    sync_movement_to_big_visual_tile(VisTileIndex, Msg),
+    ok.
+    
 sync_movement_to_big_visual_tile(_VisTileIndex, undefined) ->
     skip;
 sync_movement_to_big_visual_tile(VisTileIndex, Msg) ->

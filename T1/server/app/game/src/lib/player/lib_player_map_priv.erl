@@ -14,6 +14,7 @@
 -include("vector3.hrl").
 -include("mem_record.hrl").
 -include("db_record.hrl").
+-include("common_record.hrl").
 -include("player_status.hrl").
 %% API
 

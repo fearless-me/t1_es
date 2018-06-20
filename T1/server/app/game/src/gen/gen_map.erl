@@ -63,6 +63,9 @@ do_handle_info(start_stop_now, State) ->
 do_handle_info({start_move, Req}, State) ->
     lib_map_priv:player_start_move(Req),
     {noreply, State};
+do_handle_info({stop_move, Req}, State) ->
+    lib_map_priv:player_stop_move(Req),
+    {noreply, State};
 do_handle_info(stop_immediately, State) ->
     {stop, normal, State};
 do_handle_info(Info, State) ->

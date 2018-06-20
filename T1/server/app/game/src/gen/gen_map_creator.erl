@@ -32,7 +32,7 @@ mod_init(_Args) ->
     erlang:process_flag(trap_exit, true),
     erlang:process_flag(priority, high),
 
-    ets:new(?MAP_MGR_ETS, [protected, named_table, {keypos, #map_mgr_r.map_id}, ?ETS_RC]),
+    ets:new(?MAP_MGR_ETS, [protected, named_table, {keypos, #m_map_mgr.map_id}, ?ETS_RC]),
 
     load_all_map(),
 
@@ -64,7 +64,7 @@ load_one_map(MapID) ->
     {ok, Pid} = map_mgr_supervisor:start_child(MapID),
     ets:insert(
         ?MAP_MGR_ETS,
-        #map_mgr_r{
+        #m_map_mgr{
             map_id = MapID,
             mgr = Pid
         }),

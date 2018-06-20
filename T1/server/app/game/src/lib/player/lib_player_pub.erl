@@ -23,7 +23,7 @@
 
 -export([
     change_map_/2, change_map_pre_/0,
-    teleport_/1, start_move_/2
+    teleport_/1, start_move_/2, stop_move_/2
 ]).
 
 
@@ -52,6 +52,12 @@ teleport_(NewPos) -> ps:send(self(), teleport, NewPos).
 
 %%-------------------------------------------------------------------
 start_move_(MapPid, Req) -> map:player_move_(MapPid, Req).
+
+
+%%-------------------------------------------------------------------
+stop_move_(MapPid, Req) -> map:player_stop_move_(MapPid, Req).
+
+
 
 
 

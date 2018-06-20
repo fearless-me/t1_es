@@ -1,5 +1,5 @@
 namespace Network.Messages {
 	public partial class MessageFactory {
-		public const System.Int32 ProtocolVersion = 635;
+		public const System.Int32 ProtocolVersion = 637;
 	}
 }

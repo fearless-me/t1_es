@@ -30,7 +30,7 @@ broadcast_map(_MapID) ->
 %%%-------------------------------------------------------------------
 map_mgr(MapID) ->
     case ets:lookup(?MAP_MGR_ETS, MapID) of
-        [#map_mgr_r{mgr = Mgr} | _] -> Mgr;
+        [#m_map_mgr{mgr = Mgr} | _] -> Mgr;
         _ -> undefined
     end.
 

@@ -32,18 +32,14 @@
 -define(MAP_READY_EXIT, 2).
 -define(MAP_EXIT,       3).
 
--define(LINE_LIFETIME, 10 * 60 * 1000).
+-define(LINE_LIFETIME, 30 * 60 * 1000).
 -define(DEAD_LINE_PROTECT, 15 * 1000).
 
 -define(MAP_CALL_TIMEOUT, 5000).
 
 
--record(map_mgr_r, {
-    map_id = 0,
-    mgr = undefined
-}).
+-record(m_map_mgr, {map_id = 0, mgr = undefined}).
 -define(MAP_MGR_ETS, map_mgr_ets__).
-
 
 %%
 -record(m_vis_tile,{index = 0, player = [], monster = [], npc = [], pet = []}).
@@ -52,19 +48,6 @@
     npc, pet, respawn = [], hook_mod, status = ?MAP_NORMAL}).
 %%
 -record(m_map_line,{map_id = 0, line_id = 0, pid, limits = 50, in = 0, dead_line = 0}).
-
-%%
--record(r_exit_map_req,{uid = 0, map_id = 0, line_id=0, map_pid}).
-%%
--record(r_change_map_req,{
-    uid = 0, name, group =0, pid,
-    map_id = 0, line_id = 0, map_pid, tar_map_id = 0, tar_pos, tar_map_pid}).
-%%
--record(r_change_map_ack,{map_id = 0, line_id = 0, pos, map_pid, error = 0}).
-%%
--record(r_teleport_req,{uid = 0, map_pid, tar}).
-%%
--record(r_player_start_move_req,{uid = 0, tar}).
 
 
 %地图中的复活点

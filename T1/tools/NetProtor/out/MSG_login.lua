@@ -56,7 +56,7 @@ return {
 
 	GS2U_RemotePlayer = 
 	{
-		fields = "uid,level,cur_x,cur_y,Liff",
+		fields = "uid,level,name,career,race,cur_x,cur_y,Lizssff",
 	},
 
 	GS2U_RemoveRemote = 
@@ -71,12 +71,12 @@ return {
 
 	GS2U_SyncStand = 
 	{
-		fields = "uid,cur_x,cur_y,Lff",
+		fields = "uid,type,cur_x,cur_y,LSff",
 	},
 
 	GS2U_SyncWalk = 
 	{
-		fields = "uid,src_x,src_y,dst_x,dst_y,move_time,speed,Lffffif",
+		fields = "uid,type,src_x,src_y,dst_x,dst_y,move_time,speed,LSffffif",
 	},
 
 	GS2U_UserPlayerList = 
@@ -96,7 +96,7 @@ return {
 	{
 	},
 
-	U2GS_GetRemotePlayer = 
+	U2GS_GetRemoteUnitInfo = 
 	{
 		fields = "$uids,1",
 	},

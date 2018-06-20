@@ -191,7 +191,8 @@ struct GS2U_GetPlayerInitDataEnd <-
 // 移动
 struct GS2U_SyncWalk <-
 {
-	uint64	uid;
+	uint64	uid;	 // 唯一ID
+	uint16  type;	 //1 怪物；2 NPC 3 宠物 4 玩家
 	float	src_x;	 //坐标X
 	float	src_y;	 //坐标Y
 	float	dst_x;	 //坐标X
@@ -204,40 +205,44 @@ struct GS2U_SyncWalk <-
 // 移动
 struct GS2U_SyncStand <-
 {
-	uint64  uid;
+	uint64  uid;	 //唯一ID
+	uint16  type;	 //1 怪物；2 NPC 3 宠物 4 玩家
 	float	cur_x;	 //坐标X
 	float	cur_y;	 //坐标Y
 };
 
 //
-struct U2GS_GetRemotePlayer ->
+struct U2GS_GetRemoteUnitInfo ->
 {
-	vector<uint64> uids;
+	vector<uint64> uids; // 唯一ID列表
 };
 
 struct GS2U_RemotePlayer <-
 {
-	uint64  uid;
-	int32   level;
+	uint64  uid;	 //唯一ID
+	int32   level; 	 //等级
+	string  name;	 //名字
+	int16	career;	 //职业
+	int16	race;	 //种族
 	float	cur_x;	 //坐标X
 	float	cur_y;	 //坐标Y
 };
 
 struct GS2U_RemoteMonster <-
 {
-	uint64  uid;
-	uint32	did;
-	int32   level;
+	uint64  uid;	 //唯一ID
+	uint32	did;	 //配置表ID
+	int32   level;	 //等级	
 	float	cur_x;	 //坐标X
 	float	cur_y;	 //坐标Y
 };
 
 struct GS2U_RemotePet <-
 {
-	uint64  uid;
-	uint64 	owner;
-	uint32	did;
-	int32   level;
+	uint64  uid;	 //唯一ID
+	uint64 	owner;   //主人
+	uint32	did;     //配置表ID
+	int32   level;   //等级
 	float	cur_x;	 //坐标X
 	float	cur_y;	 //坐标Y
 };

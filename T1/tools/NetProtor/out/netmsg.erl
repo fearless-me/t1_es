@@ -171,15 +171,21 @@ decode(?GS2U_RemotePet,Bin0) ->
 decode(?GS2U_RemotePlayer,Bin0) ->
 	{ V_uid, Bin1 } = read_uint64( Bin0 ),
 	{ V_level, Bin2 } = read_int32( Bin1 ),
-	{ V_cur_x, Bin3 } = read_float( Bin2 ),
-	{ V_cur_y, Bin4 } = read_float( Bin3 ),
+	{ V_name, Bin3 } = read_string( Bin2 ),
+	{ V_career, Bin4 } = read_int16( Bin3 ),
+	{ V_race, Bin5 } = read_int16( Bin4 ),
+	{ V_cur_x, Bin6 } = read_float( Bin5 ),
+	{ V_cur_y, Bin7 } = read_float( Bin6 ),
 	{ #pk_GS2U_RemotePlayer {
 		uid = V_uid,
 		level = V_level,
+		name = V_name,
+		career = V_career,
+		race = V_race,
 		cur_x = V_cur_x,
 		cur_y = V_cur_y
 		},
-	Bin4 };
+	Bin7 };
 
 %GENERATED from file:login.h => GS2U_RemoveRemote
 decode(?GS2U_RemoveRemote,Bin0) ->
@@ -200,26 +206,30 @@ decode(?GS2U_SelPlayerResult,Bin0) ->
 %GENERATED from file:login.h => GS2U_SyncStand
 decode(?GS2U_SyncStand,Bin0) ->
 	{ V_uid, Bin1 } = read_uint64( Bin0 ),
-	{ V_cur_x, Bin2 } = read_float( Bin1 ),
-	{ V_cur_y, Bin3 } = read_float( Bin2 ),
+	{ V_type, Bin2 } = read_uint16( Bin1 ),
+	{ V_cur_x, Bin3 } = read_float( Bin2 ),
+	{ V_cur_y, Bin4 } = read_float( Bin3 ),
 	{ #pk_GS2U_SyncStand {
 		uid = V_uid,
+		type = V_type,
 		cur_x = V_cur_x,
 		cur_y = V_cur_y
 		},
-	Bin3 };
+	Bin4 };
 
 %GENERATED from file:login.h => GS2U_SyncWalk
 decode(?GS2U_SyncWalk,Bin0) ->
 	{ V_uid, Bin1 } = read_uint64( Bin0 ),
-	{ V_src_x, Bin2 } = read_float( Bin1 ),
-	{ V_src_y, Bin3 } = read_float( Bin2 ),
-	{ V_dst_x, Bin4 } = read_float( Bin3 ),
-	{ V_dst_y, Bin5 } = read_float( Bin4 ),
-	{ V_move_time, Bin6 } = read_int32( Bin5 ),
-	{ V_speed, Bin7 } = read_float( Bin6 ),
+	{ V_type, Bin2 } = read_uint16( Bin1 ),
+	{ V_src_x, Bin3 } = read_float( Bin2 ),
+	{ V_src_y, Bin4 } = read_float( Bin3 ),
+	{ V_dst_x, Bin5 } = read_float( Bin4 ),
+	{ V_dst_y, Bin6 } = read_float( Bin5 ),
+	{ V_move_time, Bin7 } = read_int32( Bin6 ),
+	{ V_speed, Bin8 } = read_float( Bin7 ),
 	{ #pk_GS2U_SyncWalk {
 		uid = V_uid,
+		type = V_type,
 		src_x = V_src_x,
 		src_y = V_src_y,
 		dst_x = V_dst_x,
@@ -227,7 +237,7 @@ decode(?GS2U_SyncWalk,Bin0) ->
 		move_time = V_move_time,
 		speed = V_speed
 		},
-	Bin7 };
+	Bin8 };
 
 %GENERATED from file:login.h => GS2U_UserPlayerList
 decode(?GS2U_UserPlayerList,Bin0) ->
@@ -256,10 +266,10 @@ decode(?U2GS_GetPlayerInitData,Bin0) ->
 		},
 	Bin0 };
 
-%GENERATED from file:login.h => U2GS_GetRemotePlayer
-decode(?U2GS_GetRemotePlayer,Bin0) ->
+%GENERATED from file:login.h => U2GS_GetRemoteUnitInfo
+decode(?U2GS_GetRemoteUnitInfo,Bin0) ->
 	{ V_uids, Bin1 } = read_array(Bin0, fun(X) -> read_uint64( X ) end),
-	{ #pk_U2GS_GetRemotePlayer {
+	{ #pk_U2GS_GetRemoteUnitInfo {
 		uids = V_uids
 		},
 	Bin1 };
@@ -587,12 +597,18 @@ encode(#pk_GS2U_RemotePet{} = P) ->
 encode(#pk_GS2U_RemotePlayer{} = P) ->
 	Bin_uid = write_uint64( P#pk_GS2U_RemotePlayer.uid ),
 	Bin_level = write_int32( P#pk_GS2U_RemotePlayer.level ),
+	Bin_name = write_string( P#pk_GS2U_RemotePlayer.name ),
+	Bin_career = write_int16( P#pk_GS2U_RemotePlayer.career ),
+	Bin_race = write_int16( P#pk_GS2U_RemotePlayer.race ),
 	Bin_cur_x = write_float( P#pk_GS2U_RemotePlayer.cur_x ),
 	Bin_cur_y = write_float( P#pk_GS2U_RemotePlayer.cur_y ),
 	[
 		<<?GS2U_RemotePlayer:?U16>>,
 		Bin_uid,
 		Bin_level,
+		Bin_name,
+		Bin_career,
+		Bin_race,
 		Bin_cur_x,
 		Bin_cur_y
 	];
@@ -616,11 +632,13 @@ encode(#pk_GS2U_SelPlayerResult{} = P) ->
 %GENERATED from file:login.h => GS2U_SyncStand
 encode(#pk_GS2U_SyncStand{} = P) ->
 	Bin_uid = write_uint64( P#pk_GS2U_SyncStand.uid ),
+	Bin_type = write_uint16( P#pk_GS2U_SyncStand.type ),
 	Bin_cur_x = write_float( P#pk_GS2U_SyncStand.cur_x ),
 	Bin_cur_y = write_float( P#pk_GS2U_SyncStand.cur_y ),
 	[
 		<<?GS2U_SyncStand:?U16>>,
 		Bin_uid,
+		Bin_type,
 		Bin_cur_x,
 		Bin_cur_y
 	];
@@ -628,6 +646,7 @@ encode(#pk_GS2U_SyncStand{} = P) ->
 %GENERATED from file:login.h => GS2U_SyncWalk
 encode(#pk_GS2U_SyncWalk{} = P) ->
 	Bin_uid = write_uint64( P#pk_GS2U_SyncWalk.uid ),
+	Bin_type = write_uint16( P#pk_GS2U_SyncWalk.type ),
 	Bin_src_x = write_float( P#pk_GS2U_SyncWalk.src_x ),
 	Bin_src_y = write_float( P#pk_GS2U_SyncWalk.src_y ),
 	Bin_dst_x = write_float( P#pk_GS2U_SyncWalk.dst_x ),
@@ -637,6 +656,7 @@ encode(#pk_GS2U_SyncWalk{} = P) ->
 	[
 		<<?GS2U_SyncWalk:?U16>>,
 		Bin_uid,
+		Bin_type,
 		Bin_src_x,
 		Bin_src_y,
 		Bin_dst_x,
@@ -672,11 +692,11 @@ encode(#pk_U2GS_GetPlayerInitData{}) ->
 
 	];
 
-%GENERATED from file:login.h => U2GS_GetRemotePlayer
-encode(#pk_U2GS_GetRemotePlayer{} = P) ->
-	Bin_uids = write_array(P#pk_U2GS_GetRemotePlayer.uids, fun(X) -> write_uint64( X ) end),
+%GENERATED from file:login.h => U2GS_GetRemoteUnitInfo
+encode(#pk_U2GS_GetRemoteUnitInfo{} = P) ->
+	Bin_uids = write_array(P#pk_U2GS_GetRemoteUnitInfo.uids, fun(X) -> write_uint64( X ) end),
 	[
-		<<?U2GS_GetRemotePlayer:?U16>>,
+		<<?U2GS_GetRemoteUnitInfo:?U16>>,
 		Bin_uids
 	];
 
@@ -881,7 +901,7 @@ name(?GS2U_SyncWalk) -> "GS2U_SyncWalk";
 name(?GS2U_UserPlayerList) -> "GS2U_UserPlayerList";
 name(?U2GS_ChangeMap) -> "U2GS_ChangeMap";
 name(?U2GS_GetPlayerInitData) -> "U2GS_GetPlayerInitData";
-name(?U2GS_GetRemotePlayer) -> "U2GS_GetRemotePlayer";
+name(?U2GS_GetRemoteUnitInfo) -> "U2GS_GetRemoteUnitInfo";
 name(?U2GS_Login_Normal) -> "U2GS_Login_Normal";
 name(?U2GS_PlayerStopWalk) -> "U2GS_PlayerStopWalk";
 name(?U2GS_PlayerWalk) -> "U2GS_PlayerWalk";

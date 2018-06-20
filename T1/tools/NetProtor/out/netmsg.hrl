@@ -2,7 +2,7 @@
 -ifndef(netmsg).
 -define(netmsg,1).
 
--define(ProtoVersion,635).
+-define(ProtoVersion,637).
 
 %% 
 -define(GS2U_CreatePlayerResult,45054).
@@ -95,11 +95,11 @@
 %% 
 -define(GS2U_RemoteMonster,57060).
 -record(pk_GS2U_RemoteMonster,{
-	%% UInt64
+	%% UInt64唯一ID
 	uid = 0,
-	%% UInt32
+	%% UInt32配置表ID
 	did = 0,
-	%% Int32
+	%% Int32等级	
 	level = 0,
 	%% Single坐标X
 	cur_x = 0.0,
@@ -110,13 +110,13 @@
 %% 
 -define(GS2U_RemotePet,31693).
 -record(pk_GS2U_RemotePet,{
-	%% UInt64
+	%% UInt64唯一ID
 	uid = 0,
-	%% UInt64
+	%% UInt64主人
 	owner = 0,
-	%% UInt32
+	%% UInt32配置表ID
 	did = 0,
-	%% Int32
+	%% Int32等级
 	level = 0,
 	%% Single坐标X
 	cur_x = 0.0,
@@ -127,10 +127,16 @@
 %% 
 -define(GS2U_RemotePlayer,15687).
 -record(pk_GS2U_RemotePlayer,{
-	%% UInt64
+	%% UInt64唯一ID
 	uid = 0,
-	%% Int32
+	%% Int32等级
 	level = 0,
+	%% String名字
+	name = "",
+	%% Int16职业
+	career = 0,
+	%% Int16种族
+	race = 0,
 	%% Single坐标X
 	cur_x = 0.0,
 	%% Single坐标Y
@@ -156,8 +162,10 @@
 %% // 移动
 -define(GS2U_SyncStand,30047).
 -record(pk_GS2U_SyncStand,{
-	%% UInt64
+	%% UInt64唯一ID
 	uid = 0,
+	%% UInt161 怪物；2 NPC 3 宠物 4 玩家
+	type = 0,
 	%% Single坐标X
 	cur_x = 0.0,
 	%% Single坐标Y
@@ -168,8 +176,10 @@
 %% // 移动
 -define(GS2U_SyncWalk,3436).
 -record(pk_GS2U_SyncWalk,{
-	%% UInt64
+	%% UInt64 唯一ID
 	uid = 0,
+	%% UInt161 怪物；2 NPC 3 宠物 4 玩家
+	type = 0,
 	%% Single坐标X
 	src_x = 0.0,
 	%% Single坐标Y
@@ -271,9 +281,9 @@
 
 %% 
 %% //
--define(U2GS_GetRemotePlayer,52743).
--record(pk_U2GS_GetRemotePlayer,{
-	%% UInt64
+-define(U2GS_GetRemoteUnitInfo,52192).
+-record(pk_U2GS_GetRemoteUnitInfo,{
+	%% UInt64 唯一ID列表
 	uids = []
 }).
 

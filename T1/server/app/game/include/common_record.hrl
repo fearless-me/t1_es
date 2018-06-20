@@ -22,7 +22,18 @@
 %%
 -record(r_player_change_prop_req, {uid, add, multi, add_del, multi_del}).
 %%
-%%-record(r_gs_db_info,{node = '', pid = 0, req_no = 0, status = 0}).
+-record(r_player_stop_move_req, {uid, pos}).
+%%
+-record(r_exit_map_req,{uid = 0, map_id = 0, line_id=0, map_pid}).
+%%
+-record(r_change_map_req,{
+    uid = 0, name, group =0, pid, map_id = 0, line_id = 0, map_pid, tar_map_id = 0, tar_pos, tar_map_pid}).
+%%
+-record(r_change_map_ack,{map_id = 0, line_id = 0, pos, map_pid, error = 0}).
+%%
+-record(r_teleport_req,{uid = 0, map_pid, tar}).
+%%
+-record(r_player_start_move_req,{uid = 0, tar}).
 %%
 
 

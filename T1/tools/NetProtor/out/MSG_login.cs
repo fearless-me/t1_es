@@ -1057,9 +1057,13 @@ namespace Network.Messages
 
 		#region members
 		/// <summary>
-		/// 
+		///  唯一ID
 		/// </summary>
 		public UInt64 m_uid = 0;
+		/// <summary>
+		/// 1 怪物；2 NPC 3 宠物 4 玩家
+		/// </summary>
+		public UInt16 m_type = 0;
 		/// <summary>
 		/// 坐标X
 		/// </summary>
@@ -1090,6 +1094,7 @@ namespace Network.Messages
 		public override int Deserialize( BinaryReader reader ) {
 			long pos = reader.BaseStream.Position;
 			m_uid = MessageSerializer.Read_UInt64( reader );
+			m_type = MessageSerializer.Read_UInt16( reader );
 			m_src_x = MessageSerializer.Read_Single( reader );
 			m_src_y = MessageSerializer.Read_Single( reader );
 			m_dst_x = MessageSerializer.Read_Single( reader );
@@ -1117,9 +1122,13 @@ namespace Network.Messages
 
 		#region members
 		/// <summary>
-		/// 
+		/// 唯一ID
 		/// </summary>
 		public UInt64 m_uid = 0;
+		/// <summary>
+		/// 1 怪物；2 NPC 3 宠物 4 玩家
+		/// </summary>
+		public UInt16 m_type = 0;
 		/// <summary>
 		/// 坐标X
 		/// </summary>
@@ -1134,6 +1143,7 @@ namespace Network.Messages
 		public override int Deserialize( BinaryReader reader ) {
 			long pos = reader.BaseStream.Position;
 			m_uid = MessageSerializer.Read_UInt64( reader );
+			m_type = MessageSerializer.Read_UInt16( reader );
 			m_cur_x = MessageSerializer.Read_Single( reader );
 			m_cur_y = MessageSerializer.Read_Single( reader );
 			return (int)( reader.BaseStream.Position - pos );
@@ -1143,16 +1153,16 @@ namespace Network.Messages
 
 	
 //
-	public class U2GS_GetRemotePlayer : BaseMessage
+	public class U2GS_GetRemoteUnitInfo : BaseMessage
 	{
 		override public MessageType GetId() {
 			return ID;
 		}
-		public const MessageType ID = MessageType.MSG_U2GS_GetRemotePlayer;
+		public const MessageType ID = MessageType.MSG_U2GS_GetRemoteUnitInfo;
 
 		#region members
 		/// <summary>
-		/// 
+		///  唯一ID列表
 		/// </summary>
 		public List<UInt64> m_uids = null;
 		#endregion
@@ -1181,13 +1191,25 @@ namespace Network.Messages
 
 		#region members
 		/// <summary>
-		/// 
+		/// 唯一ID
 		/// </summary>
 		public UInt64 m_uid = 0;
 		/// <summary>
-		/// 
+		/// 等级
 		/// </summary>
 		public Int32 m_level = 0;
+		/// <summary>
+		/// 名字
+		/// </summary>
+		 public String m_name = String.Empty;
+		/// <summary>
+		/// 职业
+		/// </summary>
+		public Int16 m_career = 0;
+		/// <summary>
+		/// 种族
+		/// </summary>
+		public Int16 m_race = 0;
 		/// <summary>
 		/// 坐标X
 		/// </summary>
@@ -1203,6 +1225,9 @@ namespace Network.Messages
 			long pos = reader.BaseStream.Position;
 			m_uid = MessageSerializer.Read_UInt64( reader );
 			m_level = MessageSerializer.Read_Int32( reader );
+			m_name = MessageSerializer.Read_String( reader );
+			m_career = MessageSerializer.Read_Int16( reader );
+			m_race = MessageSerializer.Read_Int16( reader );
 			m_cur_x = MessageSerializer.Read_Single( reader );
 			m_cur_y = MessageSerializer.Read_Single( reader );
 			return (int)( reader.BaseStream.Position - pos );
@@ -1225,15 +1250,15 @@ namespace Network.Messages
 
 		#region members
 		/// <summary>
-		/// 
+		/// 唯一ID
 		/// </summary>
 		public UInt64 m_uid = 0;
 		/// <summary>
-		/// 
+		/// 配置表ID
 		/// </summary>
 		public UInt32 m_did = 0;
 		/// <summary>
-		/// 
+		/// 等级	
 		/// </summary>
 		public Int32 m_level = 0;
 		/// <summary>
@@ -1274,19 +1299,19 @@ namespace Network.Messages
 
 		#region members
 		/// <summary>
-		/// 
+		/// 唯一ID
 		/// </summary>
 		public UInt64 m_uid = 0;
 		/// <summary>
-		/// 
+		/// 主人
 		/// </summary>
 		public UInt64 m_owner = 0;
 		/// <summary>
-		/// 
+		/// 配置表ID
 		/// </summary>
 		public UInt32 m_did = 0;
 		/// <summary>
-		/// 
+		/// 等级
 		/// </summary>
 		public Int32 m_level = 0;
 		/// <summary>

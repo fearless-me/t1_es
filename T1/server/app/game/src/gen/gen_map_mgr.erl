@@ -13,6 +13,7 @@
 -include("pub_common.hrl").
 -include("logger.hrl").
 -include("map.hrl").
+-include("common_record.hrl").
 -include("map_obj.hrl").
 
 %% API

@@ -14,13 +14,14 @@
 -include("map_obj.hrl").
 -include("pub_common.hrl").
 -include("cfg_mapsetting.hrl").
+-include("common_record.hrl").
 -include("netmsg.hrl").
 
 %% API
 -export([init/1]).
 -export([tick/1]).
 -export([start_stop_now/1]).
--export([player_start_move/1]).
+-export([player_start_move/1, player_stop_move/1]).
 
 %%--------------------------------
 %% WARNING!!! WARNING!!! WARNING!!!
@@ -103,9 +104,9 @@ force_teleport(S, #r_teleport_req{
     tar = TarPos
 }) ->
     Cur = lib_obj_rw:get_cur_pos(Uid),
-    lib_move:on_player_pos_change(Uid, Cur, TarPos),
+    lib_move:on_player_pos_change(Uid, TarPos),
     ?DEBUG("player ~p teleport from ~w to ~w in map ~p_~p",
-        [Uid, lib_Cur, TarPos, lib_map_rw:get_map_id(), lib_map_rw:get_line_id()]),
+        [Uid, Cur, TarPos, lib_map_rw:get_map_id(), lib_map_rw:get_line_id()]),
     {ok, S}.
 
 
@@ -218,6 +219,11 @@ kick_all_player(#m_map_state{player = Ets}) ->
 player_start_move(Req) ->
     #r_player_start_move_req{uid = Uid, tar = Dst} = Req,
     lib_move:start_player_walk(Uid, lib_obj_rw:get_cur_pos(Uid), Dst).
+
+%%-------------------------------------------------------------------
+player_stop_move(Req) ->
+    #r_player_stop_move_req{uid = Uid, pos = Pos} = Req,
+    lib_move:stop_player_move(Uid, Pos).
 
 %%-------------------------------------------------------------------
 send_goto_map_msg(Uid, Pos)->

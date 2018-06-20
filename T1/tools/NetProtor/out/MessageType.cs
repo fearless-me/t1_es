@@ -30,7 +30,7 @@ namespace Network.Messages
          MSG_GS2U_SelPlayerResult = 42464,
          MSG_GS2U_CreatePlayerResult = 45054,
          MSG_GS2U_GotoNewMap = 47351,
-         MSG_U2GS_GetRemotePlayer = 52743,
+         MSG_U2GS_GetRemoteUnitInfo = 52192,
          MSG_U2GS_SelPlayerEnterGame = 56497,
          MSG_U2GS_PlayerWalk = 56544,
          MSG_GS2U_RemoteMonster = 57060,
