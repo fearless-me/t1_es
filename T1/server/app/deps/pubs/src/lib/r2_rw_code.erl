@@ -76,17 +76,17 @@ multi_to_code(Fname, ModName, [IncFiles, Cfgs]) ->
     write_file(Fname, "~ts~n", [?SPLIT_LINE]),
 
     lists:foreach(
-        fun({_Record, FieldList, Suffix, ExParams, _HookUpdate}) ->
+        fun({_Record, FieldList, Suffix, ExParams, HookUpdate}) ->
             ExParamN = erlang:length(ExParams),
             lists:foreach(
                 fun(Field) ->
-                    field_fun_export(Fname, Field, Suffix, ExParamN, ExParamN + 1)
+                    field_fun_export(Fname, Field, Suffix, ExParamN, ExParamN + 1, HookUpdate)
                 end, FieldList),
 
             field_fun_export_del(Fname, del, Suffix, ExParamN),
             field_fun_export_to(Fname, to, Suffix, ExParamN),
-            field_fun_export_init_from(Fname, init_from, Suffix, ExParamN+1),
-            
+            field_fun_export_init_from(Fname, init_from, Suffix, ExParamN + 1),
+
             write_file(Fname, "~ts", [?SPLIT_LINE]),
             ok
         end, Cfgs),
@@ -107,9 +107,9 @@ multi_to_code(Fname, ModName, [IncFiles, Cfgs]) ->
 
             write_file(Fname, "~ts", [?SPLIT_LINE]),
             to_record(Fname, Suffix, to, Record, FieldList, ExParamS),
-            
+
             write_file(Fname, "~ts", [?SPLIT_LINE]),
-            init_from_fun(Fname, Suffix, init_from, Record, FieldList, ExParamS),
+            init_from_fun(Fname, Suffix, init_from, Record, FieldList, ExParamS, HookUpdate),
 
             write_file(Fname, "~ts", [?SPLIT_LINE]),
             ok
@@ -128,14 +128,30 @@ inc_files(Fd, Incs) ->
 %%-----------------------------------------------------------------------
 
 %%-----------------------------------------------------------------------
-field_fun_export(Fd, Field, none, GetN, SetN) ->
-    S = io_lib:format("-export([get_~p/~p, get_~p_def/~p, set_~p/~p, set_~p_direct/~p]).",
-        [Field,  GetN, Field,  GetN+1, Field, SetN, Field, SetN]),
+field_fun_export(Fd, Field, none, GetN, SetN, HookUpdate) ->
+    S =
+        case HookUpdate of
+            [] ->
+                io_lib:format("-export([get_~p/~p, get_~p_def/~p, set_~p/~p]).",
+                    [Field, GetN, Field, GetN + 1, Field, SetN]);
+            _ ->
+                io_lib:format("-export([get_~p/~p, get_~p_def/~p, set_~p/~p, set_~p_direct/~p]).",
+                    [Field, GetN, Field, GetN + 1, Field, SetN, Field, SetN])
+        end,
+
     write_file(Fd, "~ts~n", [S]),
     ok;
-field_fun_export(Fd, Field, Suffix, GetN, SetN) ->
-    S = io_lib:format("-export([get_~p_~p/~p, get_~p_~p_def/~p, set_~p_~p/~p, set_~p_~p_direct/~p]).",
-        [Suffix, Field, GetN, Suffix, Field, GetN+1, Suffix, Field, SetN, Suffix, Field, SetN]),
+field_fun_export(Fd, Field, Suffix, GetN, SetN, HookUpdate) ->
+    S =
+        case HookUpdate of
+            [] ->
+                io_lib:format("-export([get_~p_~p/~p, get_~p_~p_def/~p, set_~p_~p/~p]).",
+                    [Suffix, Field, GetN, Suffix, Field, GetN + 1, Suffix, Field, SetN]);
+            _ ->
+                io_lib:format("-export([get_~p_~p/~p, get_~p_~p_def/~p, set_~p_~p/~p, set_~p_~p_direct/~p]).",
+                    [Suffix, Field, GetN, Suffix, Field, GetN + 1, Suffix, Field, SetN, Suffix, Field, SetN])
+        end,
+
     write_file(Fd, "~ts~n", [S]),
     ok.
 
@@ -178,7 +194,7 @@ field_fun(Fd, Field, Suffix, [], HookUpdate) ->
             case HookUpdate of
                 [] ->
                     write_file(Fd, "set_~p(V)-> put(~p, V).~n~n", [Field, Field]),
-                    write_file(Fd, "set_~p_direct(V)-> put(~p, V).~n~n", [Field, Field]),
+%%                    write_file(Fd, "set_~p_direct(V)-> put(~p, V).~n~n", [Field, Field]),
                     ok;
                 _ ->
                     write_file(Fd, "set_~p(V)->\n\tput(~p, V),\n\t~ts(~p, V).~n~n", [Field, Field, HookUpdate, Field]),
@@ -193,7 +209,7 @@ field_fun(Fd, Field, Suffix, [], HookUpdate) ->
             case HookUpdate of
                 [] ->
                     write_file(Fd, "set_~p_~p(V)-> put(~p, V).~n~n", [Suffix, Field, Field]),
-                    write_file(Fd, "set_~p_~p_direct(V)-> put(~p, V).~n~n", [Suffix, Field, Field]),
+%%                    write_file(Fd, "set_~p_~p_direct(V)-> put(~p, V).~n~n", [Suffix, Field, Field]),
                     ok;
                 _ ->
                     write_file(Fd, "set_~p_~p(V)->\n\tput(~p, V),\n\t~ts(~p, V).~n~n", [Suffix, Field, Field, HookUpdate, Field]),
@@ -211,27 +227,27 @@ field_fun(Fd, Field, Suffix, ExParam, HookUpdate) ->
             case HookUpdate of
                 [] ->
                     write_file(Fd, "set_~p(~ts, V)-> put({~p,~ts}, V).~n~n", [Field, ExParam, Field, ExParam]),
-                    write_file(Fd, "set_~p_direct(~ts, V)-> put({~p,~ts}, V).~n~n", [Field, ExParam, Field, ExParam]),
-                ok;
+%%                    write_file(Fd, "set_~p_direct(~ts, V)-> put({~p,~ts}, V).~n~n", [Field, ExParam, Field, ExParam]),
+                    ok;
                 _ ->
                     write_file(Fd, "set_~p(~ts, V)->\n\tput({~p,~ts}, V),\n\t~ts(~ts, ~p, V).~n~n",
-                        [Field, ExParam, Field, ExParam,  HookUpdate, ExParam, Field]),
+                        [Field, ExParam, Field, ExParam, HookUpdate, ExParam, Field]),
                     write_file(Fd, "set_~p_direct(~ts, V)-> put({~p,~ts}, V).~n~n",
                         [Field, ExParam, Field, ExParam]),
                     ok
             end,
             ok;
         _ ->
-            write_file(Fd, "get_~p_~p(~ts)-> get({~p,~ts}).~n~n", [ Suffix, Field, ExParam, Field, ExParam]),
-            write_file(Fd, "get_~p_~p_def(~ts)->\n\tcase get({~p,~ts}) of\n\t\tundefined -> Def;\n\t\tV -> V\n\tend.~n~n", [ Suffix, Field, ExParam, Field, ExParam]),
+            write_file(Fd, "get_~p_~p(~ts)-> get({~p,~ts}).~n~n", [Suffix, Field, ExParam, Field, ExParam]),
+            write_file(Fd, "get_~p_~p_def(~ts)->\n\tcase get({~p,~ts}) of\n\t\tundefined -> Def;\n\t\tV -> V\n\tend.~n~n", [Suffix, Field, ExParam, Field, ExParam]),
             case HookUpdate of
                 [] ->
                     write_file(Fd, "set_~p_~p(~ts, V)-> put({~p,~ts}, V).~n~n", [Suffix, Field, ExParam, Field, ExParam]),
-                    write_file(Fd, "set_~p_~p_direct(~ts, V)-> put({~p,~ts}, V).~n~n", [Suffix, Field, ExParam, Field, ExParam]),
+%%                    write_file(Fd, "set_~p_~p_direct(~ts, V)-> put({~p,~ts}, V).~n~n", [Suffix, Field, ExParam, Field, ExParam]),
                     ok;
                 _ ->
                     write_file(Fd, "set_~p_~p(~ts, V)->\n\tput({~p,~ts}, V),\n\t~ts(~ts, ~p, V).~n~n",
-                        [Suffix, Field, ExParam, Field, ExParam,  HookUpdate, ExParam, Field]),
+                        [Suffix, Field, ExParam, Field, ExParam, HookUpdate, ExParam, Field]),
                     write_file(Fd, "set_~p_~p_direct(~ts, V)-> put({~p,~ts}, V).~n~n",
                         [Suffix, Field, ExParam, Field, ExParam]),
                     ok
@@ -244,7 +260,7 @@ field_fun(Fd, Field, Suffix, ExParam, HookUpdate) ->
 del_fun(Fd, Suffix, FuncName, FieldList, []) ->
     case Suffix of
         none -> write_file(Fd, "~p()->\n", [FuncName]);
-        _ ->   write_file(Fd, "~p_~p()->\n", [FuncName, Suffix])
+        _ -> write_file(Fd, "~p_~p()->\n", [FuncName, Suffix])
     end,
     lists:foreach(
         fun(Field) ->
@@ -252,10 +268,10 @@ del_fun(Fd, Suffix, FuncName, FieldList, []) ->
         end, FieldList),
     write_file(Fd, "\tok.\n"),
     ok;
-del_fun(Fd, Suffix, FuncName,  FieldList, ExParam) ->
+del_fun(Fd, Suffix, FuncName, FieldList, ExParam) ->
     case Suffix of
         none -> write_file(Fd, "~p(~ts)->\n", [FuncName, ExParam]);
-        _ ->    write_file(Fd, "~p_~p(~ts)->\n", [FuncName, Suffix, ExParam])
+        _ -> write_file(Fd, "~p_~p(~ts)->\n", [FuncName, Suffix, ExParam])
     end,
     lists:foreach(
         fun(Field) ->
@@ -269,7 +285,7 @@ del_fun(Fd, Suffix, FuncName,  FieldList, ExParam) ->
 to_record(Fd, Suffix, FuncName, Record, FieldList, []) ->
     case Suffix of
         none -> write_file(Fd, "~p_record()->\n", [FuncName]);
-        _ ->   write_file(Fd, "~p_~p_record()->\n", [FuncName, Suffix])
+        _ -> write_file(Fd, "~p_~p_record()->\n", [FuncName, Suffix])
     end,
     write_file(Fd, "\t#~p{\n", [Record]),
 
@@ -282,7 +298,7 @@ to_record(Fd, Suffix, FuncName, Record, FieldList, []) ->
 to_record(Fd, Suffix, FuncName, Record, FieldList, ExParam) ->
     case Suffix of
         none -> write_file(Fd, "~p_record(~ts)->\n", [FuncName, ExParam]);
-        _ ->   write_file(Fd, "~p_~p_record(~ts)->\n", [FuncName, Suffix, ExParam])
+        _ -> write_file(Fd, "~p_~p_record(~ts)->\n", [FuncName, Suffix, ExParam])
     end,
     write_file(Fd, "\t#~p{\n", [Record]),
 
@@ -298,38 +314,54 @@ to_record(Fd, Suffix, FuncName, Record, FieldList, ExParam) ->
     ok.
 
 
-init_from_fun(Fd, Suffix, FuncName, Record, FieldList, []) ->
+init_from_fun(Fd, Suffix, FuncName, Record, FieldList, [], HookUpdate) ->
     case Suffix of
         none -> write_file(Fd, "~p(Rec)->\n", [FuncName]);
-        _ ->   write_file(Fd, "~p_~p(Rec)->\n", [FuncName, Suffix])
+        _ -> write_file(Fd, "~p_~p(Rec)->\n", [FuncName, Suffix])
     end,
     lists:foreach(
         fun(Field) ->
             case Suffix of
                 none ->
-                    write_file(Fd, "\tset_~p_direct(Rec#~p.~p),~n",
-                        [Field, Record, Field]);
-               _ ->
-                   write_file(Fd, "\tset_~p_~p_direct(Rec#~p.~p),~n",
-                       [Suffix, Field, Record, Field])
+                    case HookUpdate of
+                        [] ->
+                            write_file(Fd, "\tset_~p(Rec#~p.~p),~n", [Field, Record, Field]);
+                        _ ->
+                            write_file(Fd, "\tset_~p_direct(Rec#~p.~p),~n", [Field, Record, Field])
+                    end;
+                _ ->
+                    case HookUpdate of
+                        [] ->
+                            write_file(Fd, "\tset_~p_~p(Rec#~p.~p),~n", [Suffix, Field, Record, Field]);
+                        _ ->
+                            write_file(Fd, "\tset_~p_~p_direct(Rec#~p.~p),~n", [Suffix, Field, Record, Field])
+                    end
             end
         end, FieldList),
     write_file(Fd, "\tok.\n"),
     ok;
-init_from_fun(Fd, Suffix, FuncName, Record, FieldList, ExParam) ->
+init_from_fun(Fd, Suffix, FuncName, Record, FieldList, ExParam, HookUpdate) ->
     case Suffix of
         none -> write_file(Fd, "~p(~ts, Rec)->\n", [FuncName, ExParam]);
-        _ ->    write_file(Fd, "~p_~p(~ts, Rec)->\n", [FuncName, Suffix, ExParam])
+        _ -> write_file(Fd, "~p_~p(~ts, Rec)->\n", [FuncName, Suffix, ExParam])
     end,
     lists:foreach(
         fun(Field) ->
             case Suffix of
                 none ->
-                    write_file(Fd, "\tset_~p_direct(~ts, Rec#~p.~p),~n",
-                        [Field, ExParam, Record, Field]);
+                    case HookUpdate of
+                        [] ->
+                            write_file(Fd, "\tset_~p(~ts, Rec#~p.~p),~n", [Field, ExParam, Record, Field]);
+                        _ ->
+                            write_file(Fd, "\tset_~p_direct(~ts, Rec#~p.~p),~n", [Field, ExParam, Record, Field])
+                    end;
                 _ ->
-                    write_file(Fd, "\tset_~p_~p_direct(~ts, Rec#~p.~p),~n",
-                        [Suffix, Field, ExParam, Record, Field])
+                    case HookUpdate of
+                        [] ->
+                            write_file(Fd, "\tset_~p_~p(~ts, Rec#~p.~p),~n", [Suffix, Field, ExParam, Record, Field]);
+                        _ ->
+                            write_file(Fd, "\tset_~p_~p_direct(~ts, Rec#~p.~p),~n", [Suffix, Field, ExParam, Record, Field])
+                    end
             end
         end, FieldList),
     write_file(Fd, "\tok.\n"),
