@@ -32,8 +32,9 @@ on_create(Uid) ->
 
 %%-------------------------------------------------------------------
 on_login(Player) ->
-    lib_cache:online(Player, self(), lib_player_pub:socket()),
     lib_player_base:init(Player),
+    lib_player_base:send_init_data(),
+    lib_cache:online(Player, self(), lib_player_pub:socket()),
     lib_player_map_priv:online_call(Player),
     lib_player_alarm:init(),
     lib_player_sub:tick_go(),

@@ -17,15 +17,16 @@
 -include_lib("stdlib/include/assert.hrl").
 
 %% API
--export([init_vis_tile/1]).
--export([sync_movement_to_big_visual_tile/1]).
--export([sync_change_pos_visual_tile/3]).
--export([pos_to_vis_index/1]).
--export([sync_del_pet/1]).
--export([sync_player_join_map/1]).
--export([sync_player_exit_map/1]).
-
--export([add_obj_to_vis_tile/2]).
+-export([
+    init_vis_tile/1,
+    sync_movement_to_big_visual_tile/1,
+    sync_change_pos_visual_tile/3,
+    pos_to_vis_index/1,
+    sync_del_pet/1,
+    sync_player_join_map/1,
+    sync_player_exit_map/1,
+    add_obj_to_vis_tile/2
+]).
 
 
 
@@ -99,7 +100,7 @@ sync_movement_to_big_visual_tile(Uid) ->
     VisTileIndex = lib_obj_rw:get_vis_tile_idx(Uid),
     sync_movement_to_big_visual_tile(VisTileIndex, Msg),
     ok.
-    
+
 sync_movement_to_big_visual_tile(_VisTileIndex, undefined) ->
     skip;
 sync_movement_to_big_visual_tile(VisTileIndex, Msg) ->
@@ -164,7 +165,7 @@ add_obj_to_vis_tile(Obj, VisTileIndex) ->
 add_to_vis_tile_1(Type, Uid, VisTileIndex, undefined) ->
     W = get(?VIS_W), H = get(?VIS_H),
     ?ERROR("map ~p add t ~p  code ~p to visIdx ~p invalid ~p, W ~p H ~p",
-        [lib_map_rw:get_map_id(), Type, Uid, VisTileIndex, W *H,  W, H]);
+        [lib_map_rw:get_map_id(), Type, Uid, VisTileIndex, W * H, W, H]);
 add_to_vis_tile_1(?OBJ_USR, Uid, VisTileIndex, VisTile) ->
     set_vis_tile(
         VisTileIndex,
@@ -202,7 +203,7 @@ del_obj_from_vis_tile(Obj, VisTileIndex) ->
 del_from_vis_tile_1(Type, Uid, VisTileIndex, undefined) ->
     W = get(?VIS_W), H = get(?VIS_H),
     ?ERROR("del t ~p, code ~p to visIdx ~p invalid ~p, W ~p H ~p",
-        [Type, Uid, VisTileIndex, W *H,  W, H]);
+        [Type, Uid, VisTileIndex, W * H, W, H]);
 del_from_vis_tile_1(?OBJ_USR, Uid, VisTileIndex, VisTile) ->
     set_vis_tile(
         VisTileIndex,
@@ -229,7 +230,7 @@ del_from_vis_tile_1(_Type, _Uid, _VisTileIndex, _VisTile) ->
 %%-------------------------------------------------------------------
 %%-------------------------------------------------------------------
 %% 同步周围Obj给我
-sync_big_vis_tile_to_me(Obj, VisTileList, Msg)->
+sync_big_vis_tile_to_me(Obj, VisTileList, Msg) ->
     Uid = lib_obj:get_uid(Obj),
     Type = lib_obj:get_type(Obj),
     do_sync_big_vis_tile_to_me(Type, Uid, VisTileList, Msg),

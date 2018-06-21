@@ -33,6 +33,9 @@
 %%
 -export([halt/1, halt/2]).
 
+
+-export([nnl/0]).
+
 %%-------------------------------------------------------------------
 register_ppid(Pid, Aid) ->
     try  misc:register_process(Pid, player, [Aid] ) of
@@ -76,6 +79,10 @@ halt(Msg) ->
 %%
 fix_pos(MapId, Pos) ->
     ok.
+
+nnl()->
+    S = lists:duplicate(15, "\n"),
+    ?DEBUG("~ts",[lists:flatten(S)]).
 
 
 %%

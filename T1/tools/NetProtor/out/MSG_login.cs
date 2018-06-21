@@ -8,10 +8,7 @@ using System;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Collections.Generic;
-#if !NOT_USE_FAST_STREAM
-using BinaryReader = Common.FastestBinaryReader;
-using BinaryWriter = Common.FastestBinaryWriter;
-#endif
+
 namespace Network.Messages
 {
 	
@@ -28,6 +25,13 @@ namespace Network.Messages
 //不用使用int uint long 
 	public class U2GS_Login_Normal : BaseMessage
 	{
+		//forbid new this class outside.
+		private U2GS_Login_Normal() { }
+		static private U2GS_Login_Normal _inst;
+		static public U2GS_Login_Normal GetInstance() {
+			if(_inst == null) _inst = new U2GS_Login_Normal();
+			return _inst;
+		}
 		override public MessageType GetId() {
 			return ID;
 		}
@@ -117,10 +121,11 @@ namespace Network.Messages
 	
 	public class GS2U_LoginResult : BaseMessage
 	{
+		static private GS2U_LoginResult _inst;
 		static new public BaseMessage Create( BinaryReader s ) {
-			var ret = new GS2U_LoginResult();
-			ret.Deserialize( s );
-			return ret;
+			if(_inst == null) _inst = new GS2U_LoginResult();
+			_inst.Deserialize( s );
+			return _inst;
 		}
 		override public MessageType GetId() {
 			return ID;
@@ -278,10 +283,11 @@ namespace Network.Messages
 	
 	public class GS2U_UserPlayerList : BaseMessage
 	{
+		static private GS2U_UserPlayerList _inst;
 		static new public BaseMessage Create( BinaryReader s ) {
-			var ret = new GS2U_UserPlayerList();
-			ret.Deserialize( s );
-			return ret;
+			if(_inst == null) _inst = new GS2U_UserPlayerList();
+			_inst.Deserialize( s );
+			return _inst;
 		}
 		override public MessageType GetId() {
 			return ID;
@@ -307,6 +313,13 @@ namespace Network.Messages
 	
 	public class U2GS_RequestCreatePlayer : BaseMessage
 	{
+		//forbid new this class outside.
+		private U2GS_RequestCreatePlayer() { }
+		static private U2GS_RequestCreatePlayer _inst;
+		static public U2GS_RequestCreatePlayer GetInstance() {
+			if(_inst == null) _inst = new U2GS_RequestCreatePlayer();
+			return _inst;
+		}
 		override public MessageType GetId() {
 			return ID;
 		}
@@ -356,10 +369,11 @@ namespace Network.Messages
 	
 	public class GS2U_CreatePlayerResult : BaseMessage
 	{
+		static private GS2U_CreatePlayerResult _inst;
 		static new public BaseMessage Create( BinaryReader s ) {
-			var ret = new GS2U_CreatePlayerResult();
-			ret.Deserialize( s );
-			return ret;
+			if(_inst == null) _inst = new GS2U_CreatePlayerResult();
+			_inst.Deserialize( s );
+			return _inst;
 		}
 		override public MessageType GetId() {
 			return ID;
@@ -390,6 +404,13 @@ namespace Network.Messages
 	
 	public class U2GS_SelPlayerEnterGame : BaseMessage
 	{
+		//forbid new this class outside.
+		private U2GS_SelPlayerEnterGame() { }
+		static private U2GS_SelPlayerEnterGame _inst;
+		static public U2GS_SelPlayerEnterGame GetInstance() {
+			if(_inst == null) _inst = new U2GS_SelPlayerEnterGame();
+			return _inst;
+		}
 		override public MessageType GetId() {
 			return ID;
 		}
@@ -414,10 +435,11 @@ namespace Network.Messages
 	
 	public class GS2U_SelPlayerResult : BaseMessage
 	{
+		static private GS2U_SelPlayerResult _inst;
 		static new public BaseMessage Create( BinaryReader s ) {
-			var ret = new GS2U_SelPlayerResult();
-			ret.Deserialize( s );
-			return ret;
+			if(_inst == null) _inst = new GS2U_SelPlayerResult();
+			_inst.Deserialize( s );
+			return _inst;
 		}
 		override public MessageType GetId() {
 			return ID;
@@ -443,6 +465,13 @@ namespace Network.Messages
 	
 	public class U2GS_RequestDeletePlayer : BaseMessage
 	{
+		//forbid new this class outside.
+		private U2GS_RequestDeletePlayer() { }
+		static private U2GS_RequestDeletePlayer _inst;
+		static public U2GS_RequestDeletePlayer GetInstance() {
+			if(_inst == null) _inst = new U2GS_RequestDeletePlayer();
+			return _inst;
+		}
 		override public MessageType GetId() {
 			return ID;
 		}
@@ -467,10 +496,11 @@ namespace Network.Messages
 	
 	public class GS2U_DeletePlayerResult : BaseMessage
 	{
+		static private GS2U_DeletePlayerResult _inst;
 		static new public BaseMessage Create( BinaryReader s ) {
-			var ret = new GS2U_DeletePlayerResult();
-			ret.Deserialize( s );
-			return ret;
+			if(_inst == null) _inst = new GS2U_DeletePlayerResult();
+			_inst.Deserialize( s );
+			return _inst;
 		}
 		override public MessageType GetId() {
 			return ID;
@@ -642,10 +672,11 @@ namespace Network.Messages
 	
 	public class GS2U_MonsterList : BaseMessage
 	{
+		static private GS2U_MonsterList _inst;
 		static new public BaseMessage Create( BinaryReader s ) {
-			var ret = new GS2U_MonsterList();
-			ret.Deserialize( s );
-			return ret;
+			if(_inst == null) _inst = new GS2U_MonsterList();
+			_inst.Deserialize( s );
+			return _inst;
 		}
 		override public MessageType GetId() {
 			return ID;
@@ -795,10 +826,11 @@ namespace Network.Messages
 // 玩家外观信息
 	public class GS2U_LookInfoPlayer : BaseMessage
 	{
+		static private GS2U_LookInfoPlayer _inst;
 		static new public BaseMessage Create( BinaryReader s ) {
-			var ret = new GS2U_LookInfoPlayer();
-			ret.Deserialize( s );
-			return ret;
+			if(_inst == null) _inst = new GS2U_LookInfoPlayer();
+			_inst.Deserialize( s );
+			return _inst;
 		}
 		override public MessageType GetId() {
 			return ID;
@@ -825,10 +857,11 @@ namespace Network.Messages
 //
 	public class GS2U_RemoveRemote : BaseMessage
 	{
+		static private GS2U_RemoveRemote _inst;
 		static new public BaseMessage Create( BinaryReader s ) {
-			var ret = new GS2U_RemoveRemote();
-			ret.Deserialize( s );
-			return ret;
+			if(_inst == null) _inst = new GS2U_RemoveRemote();
+			_inst.Deserialize( s );
+			return _inst;
 		}
 		override public MessageType GetId() {
 			return ID;
@@ -855,6 +888,13 @@ namespace Network.Messages
 // 切地图
 	public class U2GS_ChangeMap : BaseMessage
 	{
+		//forbid new this class outside.
+		private U2GS_ChangeMap() { }
+		static private U2GS_ChangeMap _inst;
+		static public U2GS_ChangeMap GetInstance() {
+			if(_inst == null) _inst = new U2GS_ChangeMap();
+			return _inst;
+		}
 		override public MessageType GetId() {
 			return ID;
 		}
@@ -890,10 +930,11 @@ namespace Network.Messages
 // 进入地图信息
 	public class GS2U_GotoNewMap : BaseMessage
 	{
+		static private GS2U_GotoNewMap _inst;
 		static new public BaseMessage Create( BinaryReader s ) {
-			var ret = new GS2U_GotoNewMap();
-			ret.Deserialize( s );
-			return ret;
+			if(_inst == null) _inst = new GS2U_GotoNewMap();
+			_inst.Deserialize( s );
+			return _inst;
 		}
 		override public MessageType GetId() {
 			return ID;
@@ -930,6 +971,13 @@ namespace Network.Messages
 // 请求发送初始化数据
 	public class U2GS_GetPlayerInitData : BaseMessage
 	{
+		//forbid new this class outside.
+		private U2GS_GetPlayerInitData() { }
+		static private U2GS_GetPlayerInitData _inst;
+		static public U2GS_GetPlayerInitData GetInstance() {
+			if(_inst == null) _inst = new U2GS_GetPlayerInitData();
+			return _inst;
+		}
 		override public MessageType GetId() {
 			return ID;
 		}
@@ -950,10 +998,11 @@ namespace Network.Messages
 // 测试用
 	public class GS2U_PlayerInitBase : BaseMessage
 	{
+		static private GS2U_PlayerInitBase _inst;
 		static new public BaseMessage Create( BinaryReader s ) {
-			var ret = new GS2U_PlayerInitBase();
-			ret.Deserialize( s );
-			return ret;
+			if(_inst == null) _inst = new GS2U_PlayerInitBase();
+			_inst.Deserialize( s );
+			return _inst;
 		}
 		override public MessageType GetId() {
 			return ID;
@@ -1020,10 +1069,11 @@ namespace Network.Messages
 // 初始化数据发送完毕
 	public class GS2U_GetPlayerInitDataEnd : BaseMessage
 	{
+		static private GS2U_GetPlayerInitDataEnd _inst;
 		static new public BaseMessage Create( BinaryReader s ) {
-			var ret = new GS2U_GetPlayerInitDataEnd();
-			ret.Deserialize( s );
-			return ret;
+			if(_inst == null) _inst = new GS2U_GetPlayerInitDataEnd();
+			_inst.Deserialize( s );
+			return _inst;
 		}
 		override public MessageType GetId() {
 			return ID;
@@ -1045,10 +1095,11 @@ namespace Network.Messages
 // 移动
 	public class GS2U_SyncWalk : BaseMessage
 	{
+		static private GS2U_SyncWalk _inst;
 		static new public BaseMessage Create( BinaryReader s ) {
-			var ret = new GS2U_SyncWalk();
-			ret.Deserialize( s );
-			return ret;
+			if(_inst == null) _inst = new GS2U_SyncWalk();
+			_inst.Deserialize( s );
+			return _inst;
 		}
 		override public MessageType GetId() {
 			return ID;
@@ -1110,10 +1161,11 @@ namespace Network.Messages
 // 移动
 	public class GS2U_SyncStand : BaseMessage
 	{
+		static private GS2U_SyncStand _inst;
 		static new public BaseMessage Create( BinaryReader s ) {
-			var ret = new GS2U_SyncStand();
-			ret.Deserialize( s );
-			return ret;
+			if(_inst == null) _inst = new GS2U_SyncStand();
+			_inst.Deserialize( s );
+			return _inst;
 		}
 		override public MessageType GetId() {
 			return ID;
@@ -1155,6 +1207,13 @@ namespace Network.Messages
 //
 	public class U2GS_GetRemoteUnitInfo : BaseMessage
 	{
+		//forbid new this class outside.
+		private U2GS_GetRemoteUnitInfo() { }
+		static private U2GS_GetRemoteUnitInfo _inst;
+		static public U2GS_GetRemoteUnitInfo GetInstance() {
+			if(_inst == null) _inst = new U2GS_GetRemoteUnitInfo();
+			return _inst;
+		}
 		override public MessageType GetId() {
 			return ID;
 		}
@@ -1179,10 +1238,11 @@ namespace Network.Messages
 	
 	public class GS2U_RemotePlayer : BaseMessage
 	{
+		static private GS2U_RemotePlayer _inst;
 		static new public BaseMessage Create( BinaryReader s ) {
-			var ret = new GS2U_RemotePlayer();
-			ret.Deserialize( s );
-			return ret;
+			if(_inst == null) _inst = new GS2U_RemotePlayer();
+			_inst.Deserialize( s );
+			return _inst;
 		}
 		override public MessageType GetId() {
 			return ID;
@@ -1238,10 +1298,11 @@ namespace Network.Messages
 	
 	public class GS2U_RemoteMonster : BaseMessage
 	{
+		static private GS2U_RemoteMonster _inst;
 		static new public BaseMessage Create( BinaryReader s ) {
-			var ret = new GS2U_RemoteMonster();
-			ret.Deserialize( s );
-			return ret;
+			if(_inst == null) _inst = new GS2U_RemoteMonster();
+			_inst.Deserialize( s );
+			return _inst;
 		}
 		override public MessageType GetId() {
 			return ID;
@@ -1287,10 +1348,11 @@ namespace Network.Messages
 	
 	public class GS2U_RemotePet : BaseMessage
 	{
+		static private GS2U_RemotePet _inst;
 		static new public BaseMessage Create( BinaryReader s ) {
-			var ret = new GS2U_RemotePet();
-			ret.Deserialize( s );
-			return ret;
+			if(_inst == null) _inst = new GS2U_RemotePet();
+			_inst.Deserialize( s );
+			return _inst;
 		}
 		override public MessageType GetId() {
 			return ID;
@@ -1341,6 +1403,13 @@ namespace Network.Messages
 	
 	public class U2GS_PlayerWalk : BaseMessage
 	{
+		//forbid new this class outside.
+		private U2GS_PlayerWalk() { }
+		static private U2GS_PlayerWalk _inst;
+		static public U2GS_PlayerWalk GetInstance() {
+			if(_inst == null) _inst = new U2GS_PlayerWalk();
+			return _inst;
+		}
 		override public MessageType GetId() {
 			return ID;
 		}
@@ -1380,6 +1449,13 @@ namespace Network.Messages
 	
 	public class U2GS_PlayerStopWalk : BaseMessage
 	{
+		//forbid new this class outside.
+		private U2GS_PlayerStopWalk() { }
+		static private U2GS_PlayerStopWalk _inst;
+		static public U2GS_PlayerStopWalk GetInstance() {
+			if(_inst == null) _inst = new U2GS_PlayerStopWalk();
+			return _inst;
+		}
 		override public MessageType GetId() {
 			return ID;
 		}

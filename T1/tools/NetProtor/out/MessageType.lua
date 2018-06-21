@@ -25,7 +25,7 @@ local MSG_login = require "Net.MSG_login"
 --BEGIN table for msgs description
 return
 {
-	__VERSION__ = 637,
+	__VERSION__ = 638,
 --BEGIN message id define
 
 

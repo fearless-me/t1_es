@@ -34,6 +34,7 @@ init(Player) ->
     lib_player_rw:set_race(Race),
     lib_player_rw:set_career(Career),
     lib_player_rw:set_head(Head),
+    ?WARN("~p mapid ~p",[Uid, Mid]),
     lib_player_rw:set_map(#m_player_map{map_id = Mid, line_id = LineId}),
     ok.
 %%-------------------------------------------------------------------
@@ -74,7 +75,7 @@ start_walk(Tar) ->
         true ->
             Req = #r_player_start_move_req{uid = Uid, tar = Tar},
             lib_player_pub:start_move_(Mpid, Req),
-            ?WARN("player ~p mapid ~p move to ~w", [Uid, Mpid, Tar]),
+            ?WARN("player start walk at ~p mapid ~p move to ~w", [Uid, Mpid, Tar]),
             ok;
         _ ->
             ?DEBUG("### error walk pos ~w",[Tar])

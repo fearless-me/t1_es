@@ -157,7 +157,7 @@ handle_call(Request, From, State) ->
     try
         do_handle_call(Request, From, State)
     catch
-        T : E : ST->
+        T : E : ST ->
             ?ERROR("call ~w:~w,stack:~p", [T, E, ST]),
             {reply, ok, State}
     end.
@@ -177,8 +177,7 @@ handle_cast(Request, State) ->
         do_handle_cast(Request, State)
     catch
         T : E : ST ->
-            ?ERROR("cast ~w:~w,stack:~p",
-                [T, E, ST]),
+            ?ERROR("cast ~w:~w,stack:~p", [T, E, ST]),
             {noreply, State}
     end.
 
@@ -196,8 +195,7 @@ handle_info(Info, State) ->
         do_handle_info(Info, State)
     catch
         T : E : ST ->
-            ?ERROR("info ~w:~w,stack:~p",
-                [T, E, ST]),
+            ?ERROR("info ~w:~w,stack:~p", [T, E, ST]),
             {noreply, State}
     end.
 

@@ -50,12 +50,12 @@ handle(#pk_U2GS_RequestCreatePlayer{
 handle(#pk_U2GS_SelPlayerEnterGame{uid = Uid}) ->
     lib_player_priv:select_player(Uid),
     ok;
-handle(#pk_GS2U_GotoNewMap{ map_id = DestMapID, x = X, y = Y} = Msg) ->
-    ?DEBUG("~p",[Msg]),
-    lib_player_map_priv:change_map_call(DestMapID, vector3:new(X, 0, Y)),
-    ok;
+%%handle(#pk_GS2U_GotoNewMap{ map_id = DestMapID, x = X, y = Y} = Msg) ->
+%%    ?DEBUG("~p",[Msg]),
+%%    lib_player_map_priv:change_map_call(DestMapID, vector3:new(X, 0, Y)),
+%%    ok;
 handle(#pk_U2GS_GetPlayerInitData{}) ->
-    lib_player_base:send_init_data(),
+%%    lib_player_base:send_init_data(),
     ok;
 handle(#pk_U2GS_PlayerWalk{dst_x = DX, dst_y = DY}) ->
     Tar = vector3:new(DX, 0, DY),

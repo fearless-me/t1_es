@@ -8,7 +8,7 @@
 %% API
 -export([c/1]).
 -export([c/2]).
--export([nc/3]).
+-export([nc/2]).
 -export([connect/2]).
 -export([handle/1,handle/2]).
 -export([move/2]).
@@ -27,18 +27,18 @@ move(X, Y) ->
     ok.
 
 
-c(Port) -> c(Port, 3).
+c(Port) -> c(Port, 1).
 
 c(Port, MapID) -> spawn(fun() -> tcp_client:connect(Port, MapID) end).
 
-nc(N, Port, MapId) ->
+nc(N, Port) ->
     catch ets:new(tcpc, [named_table, public, {keypos, 1},  ?ETS_RC, ?ETS_WC]),
-    lists:foreach(fun(_) -> tcp_client:c(Port, MapId), timer:sleep(1) end, lists:seq(1, N)).
+    lists:foreach(fun(_) -> tcp_client:c(Port, 1), timer:sleep(1) end, lists:seq(1, N)).
 
 set_buff(Bin) -> put('fak_buf', Bin).
 get_bufff() -> get('fak_buf').
 
-connect(Port, MapID) ->
+connect(Port, _MapID) ->
     tcp_codec:init(#net_conf{}),
 
     set_buff(<<>>),
@@ -133,7 +133,7 @@ handle_1(#pk_GS2U_PlayerInitBase{uid = Uid}) ->
     ets:insert(tcpc, {Uid, socket()}),
     ok;
 handle_1(#pk_GS2U_GetPlayerInitDataEnd{}) ->
-    send_msg(socket(), #pk_U2GS_PlayerWalk{dst_x = 289.1, dst_y = 260.8}),
+    send_msg(socket(), #pk_U2GS_PlayerWalk{dst_x = 15.1, dst_y = 4.8}),
     ok;
 handle_1(Msg) ->
     io:format("~p~n", [Msg]).

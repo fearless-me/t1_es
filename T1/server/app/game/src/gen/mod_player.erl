@@ -38,7 +38,7 @@
 
 %%-------------------------------------------------------------------
 -define(SocketKey,socketRef___).
--define(NET_IDLE_TIME, 10*60*1000).
+-define(NET_IDLE_TIME, 3*60*1000).
 -record(r_player_state,{}).
 
 
@@ -49,7 +49,8 @@ shutdown(How) ->
     tcp_handler:shutdown(socket(), How).
 
 stop(Reason)->
-    ?INFO("~p stopped with reason ~p",[self(), Reason]),
+    ?INFO("aid ~p uid ~p pid ~p stopped with reason ~p",
+        [lib_player_rw:get_aid(), lib_player_rw:get_uid(), self(), Reason]),
     tcp_handler:active_stop(Reason).
 
 direct_stop()->
@@ -60,7 +61,7 @@ send(IoList) when is_list(IoList)->
     tcp_handler:direct_send_net_msg(socket(), IoList);
 send(Msg) ->
     {Bytes1, IoList} = tcp_codec:encode(Msg),
-    ?INFO("~p send ~p bytes, msg ~w",[lib_player_rw:get_uid(), Bytes1, Msg]),
+    ?DEBUG("~p send ~p bytes, msg ~w",[lib_player_rw:get_uid(), Bytes1, Msg]),
     tcp_handler:direct_send_net_msg(socket(), IoList),
     ok.
 
@@ -138,13 +139,13 @@ on_cast_msg(Request, S) ->
 
 %%-------------------------------------------------------------------
 on_net_msg(Cmd, Msg)->
-    ?DEBUG("route_msg id ~p msg ~w",[Cmd, Msg]),
+%%    ?DEBUG("route_msg id ~p msg ~w",[Cmd, Msg]),
     ?TRY_CATCH( route_msg(Cmd, Msg) ),
     ok.
 
 route_msg(Cmd, Msg) ->
     %%1. hook
-    ?DEBUG("route(~w)",[Msg]),
+%%    ?DEBUG("route(~w)",[Msg]),
     Status = lib_player_rw:get_status(),
     filter_msg(Status, Cmd, Msg),
     ok.

@@ -143,7 +143,7 @@ do_change_map_call_ret(
     lib_player_rw:set_map(
         #m_player_map{map_id = Mid, line_id = LineId, map_pid = MPid}
     ),
-    ?WARN("player ~p enter map_~p_~p",[Uid, Mid, LineId]),
+    ?WARN("player ~p enter map_~p_~p map_pid ~p",[Uid, Mid, LineId, MPid]),
     hook_player:on_change_map(Mid, Mid),
 
     lib_player_rw:set_status(?PS_GAME),

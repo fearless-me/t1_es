@@ -2,7 +2,7 @@
 -ifndef(netmsg).
 -define(netmsg,1).
 
--define(ProtoVersion,637).
+-define(ProtoVersion,638).
 
 %% 
 -define(GS2U_CreatePlayerResult,45054).
