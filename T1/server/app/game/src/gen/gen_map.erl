@@ -22,7 +22,7 @@
 %%% public functions
 %%%===================================================================
 start_link(Params) ->
-    gen_serverw:start_link(?MODULE, Params, []).
+    gen_serverw:start_link(?MODULE, Params, [{timeout, ?MAP_INIT_TIMEOUT}]).
 
 %%%===================================================================
 %%% Internal functions
@@ -36,17 +36,14 @@ mod_init([MapID, MapLine]) ->
     {ok, lib_map_priv:init(#m_map_state{map_id = MapID, line_id = MapLine})}.
 
 %%--------------------------------------------------------------------
-do_handle_call({init}, _From, State) ->
-    NewState = lib_map_priv:init(State),
-    {reply, ok, NewState};
 do_handle_call({player_join, Obj}, _From, State) ->
-    {Ret, NewState} = lib_map_priv:player_join(State, Obj),
+    {Ret, NewState} = lib_map_priv:player_join_call(State, Obj),
     {reply, Ret, NewState};
 do_handle_call({player_exit, Req}, _From, State) ->
-    {Ret, NewState} = lib_map_priv:player_exit(State, Req),
+    {Ret, NewState} = lib_map_priv:player_exit_call(State, Req),
     {reply, Ret, NewState};
 do_handle_call({player_teleport, Req}, _From, State) ->
-    {Ret, NewState} = lib_map_priv:force_teleport(State, Req),
+    {Ret, NewState} = lib_map_priv:force_teleport_call(State, Req),
     {reply, Ret, NewState};
 do_handle_call(Request, From, State) ->
     Ret = lib_map:on_call_msg(Request, From),

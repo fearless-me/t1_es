@@ -26,9 +26,9 @@
 %%--------------------------------
 %% WARNING!!! WARNING!!! WARNING!!!
 %% call
--export([player_join/2]).
--export([player_exit/2]).
--export([force_teleport/2]).
+-export([player_join_call/2]).
+-export([player_exit_call/2]).
+-export([force_teleport_call/2]).
 %%--------------------------------
 
 -define(MAP_TICK, 200).
@@ -56,14 +56,14 @@ init_1(State) ->
 %%%-------------------------------------------------------------------
 %% WARNING!!! WARNING!!! WARNING!!!
 %% call
-player_exit(S, #r_exit_map_req{
+player_exit_call(S, #r_exit_map_req{
     uid = Uid
 }) ->
     Obj = lib_map_rw:get_player(Uid),
-    Ret = do_player_exit(Uid, Obj),
+    Ret = do_player_exit_call(Uid, Obj),
     {Ret, S}.
 
-do_player_exit(Uid, #m_map_obj{} = Obj) ->
+do_player_exit_call(Uid, #m_map_obj{} = Obj) ->
     ?INFO("user ~p exit map ~p:~p:~p",
         [Uid, lib_map_rw:get_map_id(), lib_map_rw:get_line_id(), self()]),
 
@@ -72,7 +72,7 @@ do_player_exit(Uid, #m_map_obj{} = Obj) ->
     Data = lib_obj_rw:to_record(Uid),
     hook_map:on_player_exit(Uid),
     Data;
-do_player_exit(Uid, _Obj) ->
+do_player_exit_call(Uid, _Obj) ->
     ?ERROR("~w req exit map ~w ~w, but obj not exists!",
         [Uid, self(), misc:register_name()]),
     ok.
@@ -80,7 +80,7 @@ do_player_exit(Uid, _Obj) ->
 %%%-------------------------------------------------------------------
 %% WARNING!!! WARNING!!! WARNING!!!
 %% call
-player_join(
+player_join_call(
     S,
     #r_change_map_req{uid = Uid, name = _Name, pid = Pid, group = Group, tar_pos = Pos}
 ) ->
@@ -93,7 +93,7 @@ player_join(
     ?DEBUG("uid ~p, join map ~w, name ~p",
         [lib_obj:get_uid(Obj), self(), misc:register_name()]),
     {ok, S};
-player_join(S, Any) ->
+player_join_call(S, Any) ->
     ?ERROR("player join map ~w, name ~p, error obj data ~w",
         [ self(), misc:register_name(), Any]),
     {error, S}.
@@ -102,7 +102,7 @@ player_join(S, Any) ->
 %%%-------------------------------------------------------------------
 %% WARNING!!! WARNING!!! WARNING!!!
 %% call
-force_teleport(S, #r_teleport_req{
+force_teleport_call(S, #r_teleport_req{
     uid = Uid,
     tar = TarPos
 }) ->

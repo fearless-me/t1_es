@@ -26,7 +26,8 @@
 new_player(Pid, Uid, Group, Pos, Face) ->
     new(?OBJ_USR, Pid, Uid, 0, 0, Group, Pos, Face).
 
-del_player(_Uid) ->
+del_player(Uid) ->
+    lib_obj_rw:del(Uid),
     ok.
 
 %%-------------------------------------------------------------------

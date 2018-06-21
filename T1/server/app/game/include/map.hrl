@@ -36,6 +36,7 @@
 -define(DEAD_LINE_PROTECT, 15 * 1000).
 
 -define(MAP_CALL_TIMEOUT, 5000).
+-define(MAP_INIT_TIMEOUT, 60000).
 
 
 -record(m_map_mgr, {map_id = 0, mgr = undefined}).
