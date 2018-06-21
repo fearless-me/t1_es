@@ -18,7 +18,7 @@
 %% 玩家进程其他模块可调用的接口
 -export([
     shutdown/1, socket/0,
-    stop/1, direct_stop/0, send/1
+    stop/1, send/1
 ]).
 
 -export([
@@ -32,7 +32,6 @@
     How :: read | write | read_write.
 shutdown(How) -> mod_player:shutdown(How).
 stop(Reason) -> mod_player:stop(Reason).
-direct_stop() -> mod_player:direct_stop().
 %%-------------------------------------------------------------------
 
 -spec send(Msg :: list() | tuple()) -> ok.

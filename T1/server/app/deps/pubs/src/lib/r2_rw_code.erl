@@ -45,6 +45,16 @@ run() ->
                 ]
             ]
         ),
+        multi_to_code(
+            "..\\src\\lib\\map\\lib_ai_rw.erl",
+            lib_ai_rw,
+            [
+                ["logger.hrl", "ai_def.hrl", "rw_record.hrl", "vector3.hrl"],
+                [
+                    {m_map_obj_ai, record_info(fields, m_map_obj_ai), none, [], ""}
+                ]
+            ]
+        ),
         ok
     catch _:Err:ST ->
         io:format("~p,~p~n", [Err, ST])

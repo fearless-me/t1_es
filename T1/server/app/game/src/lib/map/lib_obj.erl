@@ -14,6 +14,7 @@
 -include("map_obj.hrl").
 -include("vector3.hrl").
 -include("cfg_monster.hrl").
+-include("ai_def.hrl").
 
 %% API
 -export([new_player/5]).
@@ -44,6 +45,7 @@ new_monster(#recMapObjData{
     Pid = self(),
     Uid = uid_gen:mon_uid(),
     Pos = vector3:new(X, 0.0, Y),
+    lib_ai:init(Uid, ?AIAT_Active),
     new(?OBJ_MON, Pid, Uid, Mid, 0, Group, Pos, vector3:new(0.1, 0, 0.5)).
 
 

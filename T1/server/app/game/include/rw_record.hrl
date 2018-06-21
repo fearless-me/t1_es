@@ -26,6 +26,11 @@
     hp = 1, max_hp = 1, attr= [], buff_list = []
 }).
 
+-record(m_map_obj_ai,{
+    ai_state, pre_ai_state, ai_transcation,
+    triggers, pause
+}).
+
 -record(m_player_rw, {
 %%  这些信息将由基础代码来维护
     aid, uid, sid,
