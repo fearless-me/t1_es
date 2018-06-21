@@ -12,99 +12,99 @@
 -include("vector3.hrl").
 %%-------------------------------------------------------------------
 
--export([get_ai_state/0, get_ai_state_def/1, set_ai_state/1]).
--export([get_pre_ai_state/0, get_pre_ai_state_def/1, set_pre_ai_state/1]).
--export([get_ai_transcation/0, get_ai_transcation_def/1, set_ai_transcation/1]).
--export([get_triggers/0, get_triggers_def/1, set_triggers/1]).
--export([get_pause/0, get_pause_def/1, set_pause/1]).
--export([del/0]).
--export([to_record/0]).
--export([init_from/1]).
+-export([get_ai_state/1, get_ai_state_def/2, set_ai_state/2]).
+-export([get_pre_ai_state/1, get_pre_ai_state_def/2, set_pre_ai_state/2]).
+-export([get_ai_transition/1, get_ai_transition_def/2, set_ai_transition/2]).
+-export([get_triggers/1, get_triggers_def/2, set_triggers/2]).
+-export([get_pause/1, get_pause_def/2, set_pause/2]).
+-export([del/1]).
+-export([to_record/1]).
+-export([init_from/2]).
 %%-------------------------------------------------------------------
 %%-------------------------------------------------------------------
 %%-------------------------------------------------------------------
 %% #m_map_obj_ai.ai_state
-get_ai_state()-> get(ai_state).
+get_ai_state(Uid)-> get({ai_state,Uid}).
 
-get_ai_state_def(Def)->
-	case get(ai_state) of
+get_ai_state_def(Uid, Def)->
+	case get({ai_state,Uid}) of
 		undefined -> Def;
 		V -> V
 	end.
 
-set_ai_state(V)-> put(ai_state, V).
+set_ai_state(Uid, V)-> put({ai_state,Uid}, V).
 
 %%-------------------------------------------------------------------
 %% #m_map_obj_ai.pre_ai_state
-get_pre_ai_state()-> get(pre_ai_state).
+get_pre_ai_state(Uid)-> get({pre_ai_state,Uid}).
 
-get_pre_ai_state_def(Def)->
-	case get(pre_ai_state) of
+get_pre_ai_state_def(Uid, Def)->
+	case get({pre_ai_state,Uid}) of
 		undefined -> Def;
 		V -> V
 	end.
 
-set_pre_ai_state(V)-> put(pre_ai_state, V).
+set_pre_ai_state(Uid, V)-> put({pre_ai_state,Uid}, V).
 
 %%-------------------------------------------------------------------
-%% #m_map_obj_ai.ai_transcation
-get_ai_transcation()-> get(ai_transcation).
+%% #m_map_obj_ai.ai_transition
+get_ai_transition(Uid)-> get({ai_transition,Uid}).
 
-get_ai_transcation_def(Def)->
-	case get(ai_transcation) of
+get_ai_transition_def(Uid, Def)->
+	case get({ai_transition,Uid}) of
 		undefined -> Def;
 		V -> V
 	end.
 
-set_ai_transcation(V)-> put(ai_transcation, V).
+set_ai_transition(Uid, V)-> put({ai_transition,Uid}, V).
 
 %%-------------------------------------------------------------------
 %% #m_map_obj_ai.triggers
-get_triggers()-> get(triggers).
+get_triggers(Uid)-> get({triggers,Uid}).
 
-get_triggers_def(Def)->
-	case get(triggers) of
+get_triggers_def(Uid, Def)->
+	case get({triggers,Uid}) of
 		undefined -> Def;
 		V -> V
 	end.
 
-set_triggers(V)-> put(triggers, V).
+set_triggers(Uid, V)-> put({triggers,Uid}, V).
 
 %%-------------------------------------------------------------------
 %% #m_map_obj_ai.pause
-get_pause()-> get(pause).
+get_pause(Uid)-> get({pause,Uid}).
 
-get_pause_def(Def)->
-	case get(pause) of
+get_pause_def(Uid, Def)->
+	case get({pause,Uid}) of
 		undefined -> Def;
 		V -> V
 	end.
 
-set_pause(V)-> put(pause, V).
+set_pause(Uid, V)-> put({pause,Uid}, V).
 
 %%-------------------------------------------------------------------
-del()->
-	erase(ai_state),
-	erase(pre_ai_state),
-	erase(ai_transcation),
-	erase(triggers),
-	erase(pause),
+del(Uid)->
+	erase({ai_state, Uid}),
+	erase({pre_ai_state, Uid}),
+	erase({ai_transition, Uid}),
+	erase({triggers, Uid}),
+	erase({pause, Uid}),
 	ok.
 %%-------------------------------------------------------------------
-to_record()->
+to_record(Uid)->
 	#m_map_obj_ai{
-		ai_state = get_ai_state(),
-		pre_ai_state = get_pre_ai_state(),
-		ai_transcation = get_ai_transcation(),
-		triggers = get_triggers(),
-		pause = get_pause()
+		ai_state = get_ai_state(Uid),
+		pre_ai_state = get_pre_ai_state(Uid),
+		ai_transition = get_ai_transition(Uid),
+		triggers = get_triggers(Uid),
+		pause = get_pause(Uid)
 	}.
 %%-------------------------------------------------------------------
-init_from(Rec)->
-	set_ai_state(Rec#m_map_obj_ai.ai_state),
-	set_pre_ai_state(Rec#m_map_obj_ai.pre_ai_state),
-	set_ai_transcation(Rec#m_map_obj_ai.ai_transcation),
-	set_triggers(Rec#m_map_obj_ai.triggers),
-	set_pause(Rec#m_map_obj_ai.pause),
+init_from(Uid, Rec)->
+	set_ai_state(Uid, Rec#m_map_obj_ai.ai_state),
+	set_pre_ai_state(Uid, Rec#m_map_obj_ai.pre_ai_state),
+	set_ai_transition(Uid, Rec#m_map_obj_ai.ai_transition),
+	set_triggers(Uid, Rec#m_map_obj_ai.triggers),
+	set_pause(Uid, Rec#m_map_obj_ai.pause),
 	ok.
 %%-------------------------------------------------------------------

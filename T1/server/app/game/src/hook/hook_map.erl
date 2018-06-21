@@ -12,9 +12,28 @@
 -include("mem_record.hrl").
 -include("map_obj.hrl").
 
--export([on_rw_update/3]).
+-export([
+    on_player_join/1, on_player_exit/1,
+    on_monster_create/1, on_monster_dead/1,
+    on_rw_update/3
+]).
 
 %% API
+
+on_player_join(_Uid) ->
+    ok.
+
+on_player_exit(Uid) ->
+    lib_obj:del_player(Uid),
+    ok.
+
+on_monster_create(_Uid) ->
+    ok.
+
+on_monster_dead(Uid) ->
+    lib_obj:del_monster(Uid),
+    ok.
+
 %%-------------------------------------------------------------------
 %%不要在调用lib_obj_rw:set_xxx
 %%-------------------------------------------------------------------

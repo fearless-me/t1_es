@@ -4,9 +4,9 @@
 %%% @doc
 %%%
 %%% @end
-%%% Created : 21. 六月 2018 16:26
+%%% Created : 21. 六月 2018 16:20
 %%%-------------------------------------------------------------------
--module(ai_transcation_barbett).
+-module(ai_transition).
 -author("mawenhong").
 
 %% API

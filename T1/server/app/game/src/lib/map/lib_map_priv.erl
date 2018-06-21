@@ -69,7 +69,9 @@ do_player_exit(Uid, #m_map_obj{} = Obj) ->
 
     lib_map_rw:del_obj_to_ets(Obj),
     lib_map_view:sync_player_exit_map(Obj),
-    lib_obj_rw:to_record(Uid);
+    Data = lib_obj_rw:to_record(Uid),
+    hook_map:on_player_exit(Uid),
+    Data;
 do_player_exit(Uid, _Obj) ->
     ?ERROR("~w req exit map ~w ~w, but obj not exists!",
         [Uid, self(), misc:register_name()]),
@@ -87,6 +89,7 @@ player_join(
     send_goto_map_msg(Uid, Pos),
     lib_map_rw:add_obj_to_ets(Obj),
     lib_map_view:sync_player_join_map(Obj),
+    hook_map:on_player_join(Uid),
     ?DEBUG("uid ~p, join map ~w, name ~p",
         [lib_obj:get_uid(Obj), self(), misc:register_name()]),
     {ok, S};
@@ -129,6 +132,7 @@ init_all_monster_2(Obj) ->
     VisIndex = lib_map_view:pos_to_vis_index(lib_obj_rw:get_cur_pos(Uid)),
     lib_map_rw:add_obj_to_ets(Obj),
     lib_map_view:add_obj_to_vis_tile(Obj, VisIndex),
+    hook_map:on_monster_create(Uid),
     ?DEBUG("map ~p:~p create monster ~p, uid ~p, visIndex ~p",
         [lib_map_rw:get_map_id(), lib_map_rw:get_line_id(), lib_obj:get_did(Obj), Uid, VisIndex]),
     ok.

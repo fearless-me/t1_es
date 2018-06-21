@@ -17,18 +17,17 @@
 -include("ai_def.hrl").
 
 %% API
--export([new_player/5]).
--export([new_monster/1]).
+-export([new_player/5, del_player/1]).
+-export([new_monster/1, del_monster/1]).
 %%
--export([get_uid/1]).
--export([get_pid/1]).
--export([get_did/1]).
--export([get_owner/1]).
--export([get_type/1]).
+-export([get_uid/1, get_pid/1, get_did/1, get_owner/1, get_type/1]).
 
 %%-------------------------------------------------------------------
 new_player(Pid, Uid, Group, Pos, Face) ->
     new(?OBJ_USR, Pid, Uid, 0, 0, Group, Pos, Face).
+
+del_player(_Uid) ->
+    ok.
 
 %%-------------------------------------------------------------------
 new_monster(#recMapObjData{
@@ -48,6 +47,11 @@ new_monster(#recMapObjData{
     lib_ai:init(Uid, ?AIAT_Active),
     new(?OBJ_MON, Pid, Uid, Mid, 0, Group, Pos, vector3:new(0.1, 0, 0.5)).
 
+
+del_monster(Uid) ->
+    lib_ai_rw:del(Uid),
+    lib_obj_rw:del(Uid),
+    ok.
 
 
 %%-------------------------------------------------------------------

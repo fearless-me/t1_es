@@ -27,7 +27,7 @@
 }).
 
 -record(m_map_obj_ai,{
-    ai_state, pre_ai_state, ai_transcation,
+    ai_state, pre_ai_state, ai_transition,
     triggers, pause
 }).
 

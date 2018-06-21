@@ -36,22 +36,22 @@ run() ->
             ]
         ),
         multi_to_code(
+            "..\\src\\lib\\map\\lib_ai_rw.erl",
+            lib_ai_rw,
+            [
+                ["logger.hrl", "ai_def.hrl", "rw_record.hrl", "vector3.hrl"],
+                [
+                    {m_map_obj_ai, record_info(fields, m_map_obj_ai), none, ["Uid"], ""}
+                ]
+            ]
+        ),
+        multi_to_code(
             "..\\src\\lib\\player\\lib_player_rw.erl",
             lib_player_rw,
             [
                 ["logger.hrl", "player_status.hrl", "rw_record.hrl", "vector3.hrl"],
                 [
                     {m_player_rw, record_info(fields, m_player_rw), none, [], "hook_player:on_rw_update"}
-                ]
-            ]
-        ),
-        multi_to_code(
-            "..\\src\\lib\\map\\lib_ai_rw.erl",
-            lib_ai_rw,
-            [
-                ["logger.hrl", "ai_def.hrl", "rw_record.hrl", "vector3.hrl"],
-                [
-                    {m_map_obj_ai, record_info(fields, m_map_obj_ai), none, [], ""}
                 ]
             ]
         ),

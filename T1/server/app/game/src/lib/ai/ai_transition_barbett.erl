@@ -6,7 +6,7 @@
 %%% @end
 %%% Created : 21. 六月 2018 16:26
 %%%-------------------------------------------------------------------
--module(ai_transcation_lamster).
+-module(ai_transition_barbett).
 -author("mawenhong").
 
 %% API

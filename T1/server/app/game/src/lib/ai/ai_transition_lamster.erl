@@ -4,9 +4,9 @@
 %%% @doc
 %%%
 %%% @end
-%%% Created : 21. 六月 2018 16:20
+%%% Created : 21. 六月 2018 16:26
 %%%-------------------------------------------------------------------
--module(ai_transcation).
+-module(ai_transition_lamster).
 -author("mawenhong").
 
 %% API
