@@ -128,30 +128,8 @@ inc_files(Fd, Incs) ->
 %%-----------------------------------------------------------------------
 
 %%-----------------------------------------------------------------------
-field_fun_export(Fd, Field, none, GetN, SetN, HookUpdate) ->
-    S =
-        case HookUpdate of
-            [] ->
-                io_lib:format("-export([get_~p/~p, get_~p_def/~p, set_~p/~p]).",
-                    [Field, GetN, Field, GetN + 1, Field, SetN]);
-            _ ->
-                io_lib:format("-export([get_~p/~p, get_~p_def/~p, set_~p/~p, set_~p_direct/~p]).",
-                    [Field, GetN, Field, GetN + 1, Field, SetN, Field, SetN])
-        end,
-
-    write_file(Fd, "~ts~n", [S]),
-    ok;
 field_fun_export(Fd, Field, Suffix, GetN, SetN, HookUpdate) ->
-    S =
-        case HookUpdate of
-            [] ->
-                io_lib:format("-export([get_~p_~p/~p, get_~p_~p_def/~p, set_~p_~p/~p]).",
-                    [Suffix, Field, GetN, Suffix, Field, GetN + 1, Suffix, Field, SetN]);
-            _ ->
-                io_lib:format("-export([get_~p_~p/~p, get_~p_~p_def/~p, set_~p_~p/~p, set_~p_~p_direct/~p]).",
-                    [Suffix, Field, GetN, Suffix, Field, GetN + 1, Suffix, Field, SetN, Suffix, Field, SetN])
-        end,
-
+    S = field_set_get_signature(Field, Suffix, GetN, SetN, HookUpdate),
     write_file(Fd, "~ts~n", [S]),
     ok.
 
@@ -182,6 +160,27 @@ field_fun_export_init_from(Fd, F, Suffix, N) ->
     S = io_lib:format("-export([~p_~p/~p]).", [F, Suffix, N]),
     write_file(Fd, "~ts~n", [S]),
     ok.
+
+
+field_set_get_signature(Field, none, GetN, SetN, HookUpdate) ->
+    case HookUpdate of
+        [] ->
+            io_lib:format("-export([get_~p/~p, get_~p_def/~p, set_~p/~p]).",
+                [Field, GetN, Field, GetN + 1, Field, SetN]);
+        _ ->
+            io_lib:format("-export([get_~p/~p, get_~p_def/~p, set_~p/~p, set_~p_direct/~p]).",
+                [Field, GetN, Field, GetN + 1, Field, SetN, Field, SetN])
+    end;
+field_set_get_signature(Field, Suffix, GetN, SetN, HookUpdate) ->
+    case HookUpdate of
+        [] ->
+            io_lib:format("-export([get_~p_~p/~p, get_~p_~p_def/~p, set_~p_~p/~p]).",
+                [Suffix, Field, GetN, Suffix, Field, GetN + 1, Suffix, Field, SetN]);
+        _ ->
+            io_lib:format("-export([get_~p_~p/~p, get_~p_~p_def/~p, set_~p_~p/~p, set_~p_~p_direct/~p]).",
+                [Suffix, Field, GetN, Suffix, Field, GetN + 1, Suffix, Field, SetN, Suffix, Field, SetN])
+    end.
+
 
 
 %%-----------------------------------------------------------------------
