@@ -75,6 +75,22 @@ decode(?GS2U_GotoNewMap,Bin0) ->
 		},
 	Bin3 };
 
+%GENERATED from file:login.h => GS2U_HearBeat
+decode(?GS2U_HearBeat,Bin0) ->
+	{ V_now, Bin1 } = read_uint32( Bin0 ),
+	{ #pk_GS2U_HearBeat {
+		now = V_now
+		},
+	Bin1 };
+
+%GENERATED from file:login.h => GS2U_KickByServer
+decode(?GS2U_KickByServer,Bin0) ->
+	{ V_reason, Bin1 } = read_string( Bin0 ),
+	{ #pk_GS2U_KickByServer {
+		reason = V_reason
+		},
+	Bin1 };
+
 %GENERATED from file:login.h => GS2U_LoginResult
 decode(?GS2U_LoginResult,Bin0) ->
 	{ V_result, Bin1 } = read_int8( Bin0 ),
@@ -270,6 +286,13 @@ decode(?U2GS_GetRemoteUnitInfo,Bin0) ->
 		},
 	Bin1 };
 
+%GENERATED from file:login.h => U2GS_HearBeat
+decode(?U2GS_HearBeat,Bin0) ->
+	{ #pk_U2GS_HearBeat {
+
+		},
+	Bin0 };
+
 %GENERATED from file:login.h => U2GS_Login_Normal
 decode(?U2GS_Login_Normal,Bin0) ->
 	{ V_platformAccount, Bin1 } = read_string( Bin0 ),
@@ -432,6 +455,15 @@ decode_LookInfoPlayer(Bin0) ->
 		},
 	Bin12 }.
 
+%GENERATED from file:login.h => U2GS_ExitGame
+-spec decode_U2GS_ExitGame(Bin0) -> { #pk_U2GS_ExitGame{},LeftBin }
+	when Bin0 :: binary(), LeftBin :: binary().
+decode_U2GS_ExitGame(Bin0) ->
+	{ #pk_U2GS_ExitGame {
+
+		},
+	Bin0 }.
+
 %GENERATED from file:login.h => UserPlayerData
 -spec decode_UserPlayerData(Bin0) -> { #pk_UserPlayerData{},LeftBin }
 	when Bin0 :: binary(), LeftBin :: binary().
@@ -499,6 +531,22 @@ encode(#pk_GS2U_GotoNewMap{} = P) ->
 		Bin_map_id,
 		Bin_x,
 		Bin_y
+	];
+
+%GENERATED from file:login.h => GS2U_HearBeat
+encode(#pk_GS2U_HearBeat{} = P) ->
+	Bin_now = write_uint32( P#pk_GS2U_HearBeat.now ),
+	[
+		<<?GS2U_HearBeat:?U16>>,
+		Bin_now
+	];
+
+%GENERATED from file:login.h => GS2U_KickByServer
+encode(#pk_GS2U_KickByServer{} = P) ->
+	Bin_reason = write_string( P#pk_GS2U_KickByServer.reason ),
+	[
+		<<?GS2U_KickByServer:?U16>>,
+		Bin_reason
 	];
 
 %GENERATED from file:login.h => GS2U_LoginResult
@@ -696,6 +744,13 @@ encode(#pk_U2GS_GetRemoteUnitInfo{} = P) ->
 		Bin_uids
 	];
 
+%GENERATED from file:login.h => U2GS_HearBeat
+encode(#pk_U2GS_HearBeat{}) ->
+	[
+		<<?U2GS_HearBeat:?U16>>
+
+	];
+
 %GENERATED from file:login.h => U2GS_Login_Normal
 encode(#pk_U2GS_Login_Normal{} = P) ->
 	Bin_platformAccount = write_string( P#pk_U2GS_Login_Normal.platformAccount ),
@@ -854,6 +909,12 @@ encode_LookInfoPlayer( #pk_LookInfoPlayer{} = P ) ->
 		Bin_hp_per	
 ].
 
+%GENERATED from file:login.h => U2GS_ExitGame
+encode_U2GS_ExitGame( #pk_U2GS_ExitGame{} ) ->
+	[
+	
+].
+
 %GENERATED from file:login.h => UserPlayerData
 encode_UserPlayerData( #pk_UserPlayerData{} = P ) ->
 	Bin_uid = write_uint64( P#pk_UserPlayerData.uid ),
@@ -886,6 +947,8 @@ name(?GS2U_CreatePlayerResult) -> "GS2U_CreatePlayerResult";
 name(?GS2U_DeletePlayerResult) -> "GS2U_DeletePlayerResult";
 name(?GS2U_GetPlayerInitDataEnd) -> "GS2U_GetPlayerInitDataEnd";
 name(?GS2U_GotoNewMap) -> "GS2U_GotoNewMap";
+name(?GS2U_HearBeat) -> "GS2U_HearBeat";
+name(?GS2U_KickByServer) -> "GS2U_KickByServer";
 name(?GS2U_LoginResult) -> "GS2U_LoginResult";
 name(?GS2U_LookInfoPlayer) -> "GS2U_LookInfoPlayer";
 name(?GS2U_MonsterList) -> "GS2U_MonsterList";
@@ -901,6 +964,7 @@ name(?GS2U_UserPlayerList) -> "GS2U_UserPlayerList";
 name(?U2GS_ChangeMap) -> "U2GS_ChangeMap";
 name(?U2GS_GetPlayerInitData) -> "U2GS_GetPlayerInitData";
 name(?U2GS_GetRemoteUnitInfo) -> "U2GS_GetRemoteUnitInfo";
+name(?U2GS_HearBeat) -> "U2GS_HearBeat";
 name(?U2GS_Login_Normal) -> "U2GS_Login_Normal";
 name(?U2GS_PlayerStopWalk) -> "U2GS_PlayerStopWalk";
 name(?U2GS_PlayerWalk) -> "U2GS_PlayerWalk";
@@ -916,6 +980,8 @@ cmd_list()->
 		,?GS2U_DeletePlayerResult
 		,?GS2U_GetPlayerInitDataEnd
 		,?GS2U_GotoNewMap
+		,?GS2U_HearBeat
+		,?GS2U_KickByServer
 		,?GS2U_LoginResult
 		,?GS2U_LookInfoPlayer
 		,?GS2U_MonsterList
@@ -931,6 +997,7 @@ cmd_list()->
 		,?U2GS_ChangeMap
 		,?U2GS_GetPlayerInitData
 		,?U2GS_GetRemoteUnitInfo
+		,?U2GS_HearBeat
 		,?U2GS_Login_Normal
 		,?U2GS_PlayerStopWalk
 		,?U2GS_PlayerWalk

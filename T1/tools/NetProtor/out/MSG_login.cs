@@ -1482,5 +1482,142 @@ namespace Network.Messages
 		#endregion
 	}
 
+	
+	public class U2GS_HearBeat : BaseMessage
+	{
+		//forbid new this class outside.
+		private U2GS_HearBeat() { }
+		static private U2GS_HearBeat _inst;
+		static public U2GS_HearBeat GetInstance() {
+			if(_inst == null) _inst = new U2GS_HearBeat();
+			return _inst;
+		}
+		override public MessageType GetId() {
+			return ID;
+		}
+		public const MessageType ID = MessageType.MSG_U2GS_HearBeat;
+
+		#region members
+		#endregion
+
+		#region methods
+		public override int Serialize( BinaryWriter writer ) {
+			long pos = writer.BaseStream.Position;
+			return (int)( writer.BaseStream.Position - pos );
+		}
+		#endregion
+	}
+
+	
+	public class GS2U_HearBeat : BaseMessage
+	{
+		static private GS2U_HearBeat _inst;
+		static new public BaseMessage Create( BinaryReader s ) {
+			if(_inst == null) _inst = new GS2U_HearBeat();
+			_inst.Deserialize( s );
+			return _inst;
+		}
+		override public MessageType GetId() {
+			return ID;
+		}
+		public const MessageType ID = MessageType.MSG_GS2U_HearBeat;
+
+		#region members
+		/// <summary>
+		/// 
+		/// </summary>
+		public UInt32 m_now = 0;
+		#endregion
+
+		#region methods
+		public override int Deserialize( BinaryReader reader ) {
+			long pos = reader.BaseStream.Position;
+			m_now = MessageSerializer.Read_UInt32( reader );
+			return (int)( reader.BaseStream.Position - pos );
+		}
+		#endregion
+	}
+
+	
+	public class GS2U_KickByServer : BaseMessage
+	{
+		static private GS2U_KickByServer _inst;
+		static new public BaseMessage Create( BinaryReader s ) {
+			if(_inst == null) _inst = new GS2U_KickByServer();
+			_inst.Deserialize( s );
+			return _inst;
+		}
+		override public MessageType GetId() {
+			return ID;
+		}
+		public const MessageType ID = MessageType.MSG_GS2U_KickByServer;
+
+		#region members
+		/// <summary>
+		///  1 心跳超时 (后面换成ErrorCode)
+		/// </summary>
+		 public String m_reason = String.Empty;
+		#endregion
+
+		#region methods
+		public override int Deserialize( BinaryReader reader ) {
+			long pos = reader.BaseStream.Position;
+			m_reason = MessageSerializer.Read_String( reader );
+			return (int)( reader.BaseStream.Position - pos );
+		}
+		#endregion
+	}
+
+	
+	public class U2GS_ExitGame : SerializeAble
+	{
+		#region members
+		#endregion
+
+		#region methods
+		public override int Serialize( BinaryWriter writer ) {
+			long pos = writer.BaseStream.Position;
+			return (int)( writer.BaseStream.Position - pos );
+		}
+		public override int Deserialize( BinaryReader reader ) {
+			long pos = reader.BaseStream.Position;
+			return (int)( reader.BaseStream.Position - pos );
+		}
+		#endregion
+	}
+
+	public partial class MessageSerializer
+	{
+		static public U2GS_ExitGame Read_U2GS_ExitGame( BinaryReader s ) {
+			var ret = new U2GS_ExitGame();
+			ret.Deserialize( s );
+			return ret;
+		}
+		static public List<U2GS_ExitGame> ReadList_U2GS_ExitGame( BinaryReader s ) {
+			Int16 count = s.ReadInt16();
+			if ( count <= 0 ) {
+				return null;
+			}
+			var ret = new List<U2GS_ExitGame>( count );
+			for ( int i = 0; i < count; ++i ) {
+				ret.Add( Read_U2GS_ExitGame( s ) );
+			}
+			return ret;
+		}
+		static public void Write_U2GS_ExitGame( BinaryWriter s, U2GS_ExitGame value ) {
+			value.Serialize( s );
+		}
+		static public void WriteList_U2GS_ExitGame( BinaryWriter s, List<U2GS_ExitGame> value ) {
+			if ( value != null ) {
+				Write_Int16( s, (Int16)value.Count );
+				for ( int i = 0; i < value.Count; ++i ) {
+					value[i].Serialize( s );
+				}
+			} else {
+				Write_Int16( s, 0 );
+			}
+		}
+	}
+
 }
 //EOF

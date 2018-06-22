@@ -261,6 +261,24 @@ struct U2GS_PlayerStopWalk ->
 	float	cur_y;	 //坐标Y
 };
 
+struct U2GS_HearBeat ->
+{
+};
+
+struct GS2U_HearBeat <-
+{
+	uint32 now;
+};
+
+struct GS2U_KickByServer <-
+{
+	string reason; // 1 心跳超时 (后面换成ErrorCode)
+};
+
+struct U2GS_ExitGame
+{
+};
+
 //不用使用int uint long 
 //不用使用int uint long 
 //不用使用int uint long 

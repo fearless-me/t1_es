@@ -18,6 +18,16 @@ return {
 		fields = "map_id,x,y,Sff",
 	},
 
+	GS2U_HearBeat = 
+	{
+		fields = "now,I",
+	},
+
+	GS2U_KickByServer = 
+	{
+		fields = "reason,z",
+	},
+
 	GS2U_LoginResult = 
 	{
 		fields = "result,aid,identity,msg,bLzz",
@@ -99,6 +109,10 @@ return {
 	U2GS_GetRemoteUnitInfo = 
 	{
 		fields = "$uids,1",
+	},
+
+	U2GS_HearBeat = 
+	{
 	},
 
 	U2GS_Login_Normal = 

@@ -2,7 +2,7 @@
 -ifndef(netmsg).
 -define(netmsg,1).
 
--define(ProtoVersion,639).
+-define(ProtoVersion,641).
 
 %% 
 -define(GS2U_CreatePlayerResult,45054).
@@ -38,6 +38,20 @@
 	x = 0.0,
 	%% Single坐标Y
 	y = 0.0
+}).
+
+%% 
+-define(GS2U_HearBeat,444).
+-record(pk_GS2U_HearBeat,{
+	%% UInt32
+	now = 0
+}).
+
+%% 
+-define(GS2U_KickByServer,17208).
+-record(pk_GS2U_KickByServer,{
+	%% String 1 心跳超时 (后面换成ErrorCode)
+	reason = ""
 }).
 
 %% 
@@ -273,6 +287,9 @@
 	y = 0.0
 }).
 
+-record(pk_U2GS_ExitGame,{
+}).
+
 %% 
 %% // 请求发送初始化数据
 -define(U2GS_GetPlayerInitData,5543).
@@ -285,6 +302,11 @@
 -record(pk_U2GS_GetRemoteUnitInfo,{
 	%% UInt64 唯一ID列表
 	uids = []
+}).
+
+%% 
+-define(U2GS_HearBeat,7246).
+-record(pk_U2GS_HearBeat,{
 }).
 
 %% 

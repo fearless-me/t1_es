@@ -25,7 +25,7 @@ local MSG_login = require "Net.MSG_login"
 --BEGIN table for msgs description
 return
 {
-	__VERSION__ = 639,
+	__VERSION__ = 641,
 --BEGIN message id define
 
 
@@ -34,6 +34,8 @@ return
 	MSG_GS2U_DeletePlayerResult = 39385,
 	MSG_GS2U_GetPlayerInitDataEnd = 11674,
 	MSG_GS2U_GotoNewMap = 47351,
+	MSG_GS2U_HearBeat = 444,
+	MSG_GS2U_KickByServer = 17208,
 	MSG_GS2U_LoginResult = 22162,
 	MSG_GS2U_LookInfoPlayer = 18166,
 	MSG_GS2U_MonsterList = 32656,
@@ -49,6 +51,7 @@ return
 	MSG_U2GS_ChangeMap = 4914,
 	MSG_U2GS_GetPlayerInitData = 5543,
 	MSG_U2GS_GetRemoteUnitInfo = 52192,
+	MSG_U2GS_HearBeat = 7246,
 	MSG_U2GS_Login_Normal = 58883,
 	MSG_U2GS_PlayerStopWalk = 29978,
 	MSG_U2GS_PlayerWalk = 56544,
@@ -64,6 +67,8 @@ return
 	[39385] = MSG_login.GS2U_DeletePlayerResult,
 	[11674] = MSG_login.GS2U_GetPlayerInitDataEnd,
 	[47351] = MSG_login.GS2U_GotoNewMap,
+	[444] = MSG_login.GS2U_HearBeat,
+	[17208] = MSG_login.GS2U_KickByServer,
 	[22162] = MSG_login.GS2U_LoginResult,
 	[18166] = MSG_login.GS2U_LookInfoPlayer,
 	[32656] = MSG_login.GS2U_MonsterList,
@@ -79,6 +84,7 @@ return
 	[4914] = MSG_login.U2GS_ChangeMap,
 	[5543] = MSG_login.U2GS_GetPlayerInitData,
 	[52192] = MSG_login.U2GS_GetRemoteUnitInfo,
+	[7246] = MSG_login.U2GS_HearBeat,
 	[58883] = MSG_login.U2GS_Login_Normal,
 	[29978] = MSG_login.U2GS_PlayerStopWalk,
 	[56544] = MSG_login.U2GS_PlayerWalk,

@@ -10,12 +10,15 @@ namespace Network.Messages
     {
          MSG_Undefined = 0,
          //login begin
+         MSG_GS2U_HearBeat = 444,
          MSG_GS2U_SyncWalk = 3436,
          MSG_U2GS_RequestCreatePlayer = 4022,
          MSG_U2GS_ChangeMap = 4914,
          MSG_U2GS_GetPlayerInitData = 5543,
+         MSG_U2GS_HearBeat = 7246,
          MSG_GS2U_GetPlayerInitDataEnd = 11674,
          MSG_GS2U_RemotePlayer = 15687,
+         MSG_GS2U_KickByServer = 17208,
          MSG_GS2U_LookInfoPlayer = 18166,
          MSG_GS2U_UserPlayerList = 18582,
          MSG_GS2U_LoginResult = 22162,
@@ -40,9 +43,11 @@ namespace Network.Messages
     public partial class MessageFactory
     {
         static public void Initialize() {
+            RegisterMessageId( MessageType.MSG_GS2U_HearBeat, GS2U_HearBeat.Create );
             RegisterMessageId( MessageType.MSG_GS2U_SyncWalk, GS2U_SyncWalk.Create );
             RegisterMessageId( MessageType.MSG_GS2U_GetPlayerInitDataEnd, GS2U_GetPlayerInitDataEnd.Create );
             RegisterMessageId( MessageType.MSG_GS2U_RemotePlayer, GS2U_RemotePlayer.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_KickByServer, GS2U_KickByServer.Create );
             RegisterMessageId( MessageType.MSG_GS2U_LookInfoPlayer, GS2U_LookInfoPlayer.Create );
             RegisterMessageId( MessageType.MSG_GS2U_UserPlayerList, GS2U_UserPlayerList.Create );
             RegisterMessageId( MessageType.MSG_GS2U_LoginResult, GS2U_LoginResult.Create );
