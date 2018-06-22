@@ -34,11 +34,7 @@
 	write_array/2
 ]).
 
--export([
-	decode/2,
-	encode/1,
-	name/1
-]).
+-export([decode/2, encode/1, name/1, cmd_list/0]).
 
 %GENERATED from file:login.h => GS2U_CreatePlayerResult
 decode(?GS2U_CreatePlayerResult,Bin0) ->
@@ -826,7 +822,8 @@ encode_LookInfoMonster( #pk_LookInfoMonster{} = P ) ->
 		Bin_groupID,
 		Bin_guildID,
 		Bin_name,
-		Bin_level	].
+		Bin_level	
+].
 
 %GENERATED from file:login.h => LookInfoPlayer
 encode_LookInfoPlayer( #pk_LookInfoPlayer{} = P ) ->
@@ -854,7 +851,8 @@ encode_LookInfoPlayer( #pk_LookInfoPlayer{} = P ) ->
 		Bin_head,
 		Bin_move_speed,
 		Bin_level,
-		Bin_hp_per	].
+		Bin_hp_per	
+].
 
 %GENERATED from file:login.h => UserPlayerData
 encode_UserPlayerData( #pk_UserPlayerData{} = P ) ->
@@ -880,7 +878,8 @@ encode_UserPlayerData( #pk_UserPlayerData{} = P ) ->
 		Bin_sex,
 		Bin_head,
 		Bin_mapID,
-		Bin_oldMapID	].
+		Bin_oldMapID	
+].
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 name(?GS2U_CreatePlayerResult) -> "GS2U_CreatePlayerResult";
@@ -910,3 +909,33 @@ name(?U2GS_RequestDeletePlayer) -> "U2GS_RequestDeletePlayer";
 name(?U2GS_SelPlayerEnterGame) -> "U2GS_SelPlayerEnterGame";
 name(MsgID) -> "ErrorNetMsg_" ++ erlang:integer_to_list(MsgID).
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+cmd_list()->
+	[
+		?GS2U_CreatePlayerResult
+		,?GS2U_DeletePlayerResult
+		,?GS2U_GetPlayerInitDataEnd
+		,?GS2U_GotoNewMap
+		,?GS2U_LoginResult
+		,?GS2U_LookInfoPlayer
+		,?GS2U_MonsterList
+		,?GS2U_PlayerInitBase
+		,?GS2U_RemoteMonster
+		,?GS2U_RemotePet
+		,?GS2U_RemotePlayer
+		,?GS2U_RemoveRemote
+		,?GS2U_SelPlayerResult
+		,?GS2U_SyncStand
+		,?GS2U_SyncWalk
+		,?GS2U_UserPlayerList
+		,?U2GS_ChangeMap
+		,?U2GS_GetPlayerInitData
+		,?U2GS_GetRemoteUnitInfo
+		,?U2GS_Login_Normal
+		,?U2GS_PlayerStopWalk
+		,?U2GS_PlayerWalk
+		,?U2GS_RequestCreatePlayer
+		,?U2GS_RequestDeletePlayer
+		,?U2GS_SelPlayerEnterGame
+
+	].

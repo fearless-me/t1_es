@@ -82,6 +82,7 @@ void CGen2Erlang::make(const std::string& outFilePath,const std::vector<SourceGe
 	string outPath;
 	string filePath;
 	vector<string> vctNetCmdStr;
+	string cmdListStr;
 
 	if ( outFilePath.empty() )
 	{
@@ -121,7 +122,7 @@ void CGen2Erlang::make(const std::string& outFilePath,const std::vector<SourceGe
 		char Buffer[1024];
 		int Len = sprintf_s(Buffer,ProtoVer,m_ProtoVer);
 		fwrite(Buffer,Len,1,fp);
-		makeRecord(fp,vctSGI,vctNetCmdStr);
+		makeRecord(fp,vctSGI,vctNetCmdStr, cmdListStr);
 		fwrite(FileTail,sizeof(FileTail) - 1,1,fp);
 
 		fclose(fp);
@@ -164,17 +165,17 @@ void CGen2Erlang::make(const std::string& outFilePath,const std::vector<SourceGe
 			"\twrite_string/1,\n"\
 			"\twrite_array/2\n]).\n\n"\
 
-			"-export([\n\tdecode/2,\n\tencode/1,\n\tname/1\n]).\n\n";
+			"-export([decode/2, encode/1, name/1, cmd_list/0]).\n\n";
 
 		fwrite(FileHead,sizeof(FileHead) - 1,1,fp);
 		makeRead(fp,vctSGI);
 		makeWrite(fp, vctSGI);
 
 
+		string split = "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%\n";
 		auto Size = vctNetCmdStr.size();
 		if (Size > 0)
 		{
-			string split = "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%\n";
 			fwrite(split.c_str(), split.size(), 1, fp);
 			int n = strlen(";\n");
 			for (auto i = 0ul; i < Size; ++i)
@@ -188,31 +189,48 @@ void CGen2Erlang::make(const std::string& outFilePath,const std::vector<SourceGe
 		const char* Str = "name(MsgID) -> \"ErrorNetMsg_\" ++ erlang:integer_to_list(MsgID).\n\n";
 		fwrite(Str, strlen(Str), 1, fp);
 
+		fwrite(split.c_str(), split.size(), 1, fp);
+		fwrite(cmdListStr.c_str(), cmdListStr.size(), 1, fp);
+
 		fclose(fp);
 	}
 }
 
 
-void CGen2Erlang::makeRecord(FILE* fp, const std::vector<SourceGenInfo>& vctSGI, vector<string>& vctNetCmdStr)
+void CGen2Erlang::makeRecord(FILE* fp, const std::vector<SourceGenInfo>& vctSGI, vector<string>& vctNetCmdStr, string& cmdListStr)
 {
 	string Record;
 	string CmdStr;
 	char Buffer[1024];
 	char CmdBuffer[1024];
+	cmdListStr = "cmd_list()->\n\t[\n";
 
+
+	auto lastFileIter = (--vctSGI.end());
 	for (auto it = vctSGI.begin(); it != vctSGI.end(); it++)
 	{
 		const SourceGenInfo& SGI = *it;
+		auto isFirst = true;
 		for (auto iter = SGI.meta.cachedMsgDefine.begin(); iter != SGI.meta.cachedMsgDefine.end(); ++iter)
 		{
 			const MsgDefine& Info = iter->second;
 			const char* InfoName = Info.name.c_str();
+			auto isLastField = iter == (--SGI.meta.cachedMsgDefine.end());
 			if (Info.type != MT_None)
 			{
 				sprintf_s(Buffer, "%s-define(%s,%d).\n", makeErlangComment(Info.comment).c_str(), InfoName, Info.msgId);
 				Record += Buffer;
 
 				sprintf_s(CmdBuffer, "name(?%s) -> \"%s\"", InfoName, InfoName);
+
+				
+				if (isFirst) {
+					isFirst = false;
+					cmdListStr.append("\t\t?").append(InfoName).append("\n");
+				}
+				else {
+					cmdListStr.append("\t\t,?").append(InfoName).append("\n");
+				}
 				vctNetCmdStr.push_back(CmdBuffer);
 			}
 
@@ -246,7 +264,7 @@ void CGen2Erlang::makeRecord(FILE* fp, const std::vector<SourceGenInfo>& vctSGI,
 			Record += "\n}).\n\n";
 		}
 	}
-
+	cmdListStr.append("\n\t].");
 	fwrite(Record.c_str(), Record.size(), 1, fp);
 }
 
@@ -259,7 +277,7 @@ void CGen2Erlang::makeRead(FILE* fp,const std::vector<SourceGenInfo>& vctSGI)
 	for(auto it = vctSGI.begin(); it != vctSGI.end(); it++)
 	{
 		const SourceGenInfo& SGI = *it;
-		// Ò»¸öº¯Êý
+		// Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 		for (auto iter = SGI.meta.cachedMsgDefine.begin(); iter != SGI.meta.cachedMsgDefine.end(); ++iter)
 		{
 			const MsgDefine& Info = iter->second;
@@ -289,7 +307,7 @@ void CGen2Erlang::makeRead(FILE* fp,const std::vector<SourceGenInfo>& vctSGI)
 			else
 				PrivateFun += Buffer;
 
-			// º¯ÊýÖÐµÄËùÓÐ×Ö¶Î
+			// ï¿½ï¿½ï¿½ï¿½ï¿½Ðµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö¶ï¿½
 			const size_t size = Info.fields.size();
 			for (size_t i = 0; i < size; ++i)
 			{
@@ -341,7 +359,7 @@ void CGen2Erlang::makeRead(FILE* fp,const std::vector<SourceGenInfo>& vctSGI)
 			else
 				PrivateFun += Buffer;
 
-			// ½«×Ö¶ÎÄÚÈÝ¸³Öµ¸ø¼ÇÂ¼
+			// ï¿½ï¿½ï¿½Ö¶ï¿½ï¿½ï¿½ï¿½Ý¸ï¿½Öµï¿½ï¿½ï¿½ï¿½Â¼
 			for (size_t i = 0; i < size; ++i)
 			{
 				const Field& fd = Info.fields[i];
@@ -387,7 +405,7 @@ void CGen2Erlang::makeWrite(FILE* fp,const std::vector<SourceGenInfo>& vctSGI)
 	for(auto it = vctSGI.begin(); it != vctSGI.end(); it++)
 	{
 		const SourceGenInfo& SGI = *it;
-		// Ò»¸öº¯Êý
+		// Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 		for (auto iter = SGI.meta.cachedMsgDefine.begin(); iter != SGI.meta.cachedMsgDefine.end(); ++iter)
 		{
 			const MsgDefine& Info = iter->second;
@@ -422,7 +440,7 @@ void CGen2Erlang::makeWrite(FILE* fp,const std::vector<SourceGenInfo>& vctSGI)
 			else
 				PrivateFun += Buffer;
 
-			// º¯ÊýÖÐµÄËùÓÐ×Ö¶Î
+			// ï¿½ï¿½ï¿½ï¿½ï¿½Ðµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö¶ï¿½
 			for (size_t i = 0; i < size; ++i)
 			{
 				const Field& fd = Info.fields[i];
@@ -502,7 +520,7 @@ void CGen2Erlang::makeWrite(FILE* fp,const std::vector<SourceGenInfo>& vctSGI)
 			}
 			else
 			{
-				sprintf_s(Buffer,"\t].\n\n");
+				sprintf_s(Buffer,"\t\n].\n\n");
 				PrivateFun += Buffer;
 			}
 		}

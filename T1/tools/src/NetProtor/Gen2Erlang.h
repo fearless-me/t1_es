@@ -9,7 +9,7 @@ public:
 	void	make(const std::string& outFilePath,const std::vector<SourceGenInfo>& vctSGI);
 
 protected:
-	void	makeRecord(FILE* fp,const std::vector<SourceGenInfo>& vctSGI,std::vector<std::string>& vctNetCmdStr);
+	void	makeRecord(FILE* fp,const std::vector<SourceGenInfo>& vctSGI,std::vector<std::string>& vctNetCmdStr, std::string& cmdListStr);
 	void	makeRead(FILE* fp,const std::vector<SourceGenInfo>& vctSGI);
 	void	makeWrite(FILE* fp,const std::vector<SourceGenInfo>& vctSGI);
 

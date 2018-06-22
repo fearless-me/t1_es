@@ -210,7 +210,7 @@ bool Misc::readFileListFileFromMemory( const Misc::ByteBuffer& buf, FileList* fi
 				if ( params.size() >= 2 ) {
 					sscanf( params[0].c_str(), "%d", &fileList->fileNum );
 					typedef char test_long_long_size[ sizeof( long long ) == 8 ];
-					sscanf( params[1].c_str(), "%d{I64}", &fileList->totalSize );		
+					sscanf( params[1].c_str(), "%I64d", &fileList->totalSize );		
 					lines.reserve( fileList->fileNum );
 				}
 			} else {

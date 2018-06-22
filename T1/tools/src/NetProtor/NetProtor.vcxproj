@@ -120,7 +120,9 @@
       <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">4996;4018;4047;</DisableSpecificWarnings>
       <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='ReleaseStatic|Win32'">4996;4018;4047;</DisableSpecificWarnings>
     </ClCompile>
-    <ClCompile Include="Gen2Erlang.cpp" />
+    <ClCompile Include="Gen2Erlang.cpp">
+      <UseUnicodeForAssemblerListing Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</UseUnicodeForAssemblerListing>
+    </ClCompile>
     <ClCompile Include="GenLuaDescTable.cpp" />
     <ClCompile Include="Helper.cpp" />
     <ClCompile Include="main.cpp" />

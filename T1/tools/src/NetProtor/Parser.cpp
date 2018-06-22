@@ -371,10 +371,10 @@ FileScanner::~FileScanner()
 							fprintf( fp, "using System.IO;\n" );
 							fprintf( fp, "using System.Runtime.InteropServices;\n" );
 							fprintf( fp, "using System.Collections.Generic;\n" );
-							fprintf( fp, "#if !NOT_USE_FAST_STREAM\n" );
-							fprintf( fp, "using BinaryReader = Common.FastestBinaryReader;\n" );
-							fprintf( fp, "using BinaryWriter = Common.FastestBinaryWriter;\n" );
-							fprintf( fp, "#endif" );
+							//fprintf( fp, "#if !NOT_USE_FAST_STREAM\n" );
+							//fprintf( fp, "using BinaryReader = Common.FastestBinaryReader;\n" );
+							//fprintf( fp, "using BinaryWriter = Common.FastestBinaryWriter;\n" );
+							//fprintf( fp, "#endif" );
 							fprintf( fp, "\n" );
 							fprintf( fp, "namespace Network.Messages\n" );
 							fprintf( fp, "{\n" );
@@ -416,11 +416,24 @@ FileScanner::~FileScanner()
 										{
 											if ( m->type != MT_None ) {
 												if ( dirTag & MT_ServerToClient ) {
+													INDENT_FPRINT, "static private %s _inst;\n", m->name.c_str() );
 													INDENT_FPRINT, "static new public BaseMessage Create( BinaryReader s ) {\n" );
 													if ( indent() ) {
-														INDENT_FPRINT, "var ret = new %s();\n", m->name.c_str() );
-														INDENT_FPRINT, "ret.Deserialize( s );\n" );
-														INDENT_FPRINT, "return ret;\n" );
+														INDENT_FPRINT, "if(_inst == null) _inst = new %s();\n", m->name.c_str() );
+														INDENT_FPRINT, "_inst.Deserialize( s );\n" );
+														INDENT_FPRINT, "return _inst;\n" );
+														outdent();
+													}
+													INDENT_FPRINT, "}\n" );
+												}
+												else if (dirTag & MT_ClientToServer) {
+													INDENT_FPRINT, "//forbid new this class outside.\n" );
+													INDENT_FPRINT, "private %s() { }\n", m->name.c_str() );
+													INDENT_FPRINT, "static private %s _inst;\n", m->name.c_str() );
+													INDENT_FPRINT, "static public %s GetInstance() {\n", m->name.c_str() );
+													if (indent()) {
+														INDENT_FPRINT, "if(_inst == null) _inst = new %s();\n", m->name.c_str() );
+														INDENT_FPRINT, "return _inst;\n" );
 														outdent();
 													}
 													INDENT_FPRINT, "}\n" );
