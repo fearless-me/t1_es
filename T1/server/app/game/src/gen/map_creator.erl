@@ -47,4 +47,4 @@ map_init_pos(MapID) ->
 
 
 born_map_id()   -> 1.
-born_map_pos()  -> vector3:new(323.19, 0, 255.8).
+born_map_pos()  -> vector3:new(321, 0, 235).

@@ -20,6 +20,12 @@
 %% API
 -export([handle/1]).
 
+handle(#pk_U2GS_ExitGame{}) ->
+    lib_player_pub:stop(client_req_exit),
+    ok;
+handle(#pk_U2GS_HearBeat{}) ->
+    lib_player_pub:send(#pk_GS2U_HearBeat{now = time:localtime_seconds()}),
+    ok;
 handle(#pk_U2GS_Login_Normal{
     platformName = PlatName,
     platformAccount = PlatAccount,
@@ -50,10 +56,6 @@ handle(#pk_U2GS_RequestCreatePlayer{
 handle(#pk_U2GS_SelPlayerEnterGame{uid = Uid}) ->
     lib_player_priv:select_player(Uid),
     ok;
-%%handle(#pk_GS2U_GotoNewMap{ map_id = DestMapID, x = X, y = Y} = Msg) ->
-%%    ?DEBUG("~p",[Msg]),
-%%    lib_player_map_priv:change_map_call(DestMapID, vector3:new(X, 0, Y)),
-%%    ok;
 handle(#pk_U2GS_GetPlayerInitData{}) ->
 %%    lib_player_base:send_init_data(),
     ok;

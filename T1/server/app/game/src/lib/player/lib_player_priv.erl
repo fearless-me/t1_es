@@ -37,6 +37,10 @@ init() ->
 %%-------------------------------------------------------------------
 login_ack(#r_login_ack{error = 0, account_info = AccountIfo}) ->
     #p_account{aid = AccId} = AccountIfo,
+    %%% fixme errorrororororor
+    PsName =  misc:create_atom(player, [AccId]),
+    loop_check(misc:is_palive(PsName), erlang:whereis(PsName), 5),
+    %%% fixme errorrororororor
     Ret = gcore:register_ppid(self(), AccId),
     login_ack_success(Ret, AccountIfo),
     ok;
@@ -45,6 +49,14 @@ login_ack(#r_login_ack{error = Error}) ->
         result = Error,
         msg = io_lib:format("ErrorCode:~p", [Error])
     }),
+    ok.
+
+
+loop_check(true, Pid, N) when N > 0, is_pid(Pid)->
+    ps:send(Pid, active_stop, repeat_login),
+    timer:sleep(2000),
+    loop_check(misc:is_palive(Pid), Pid, N - 1);
+loop_check(_, _Pid, _N) ->
     ok.
 
 %%-------------------------------------------------------------------

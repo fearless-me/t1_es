@@ -38,7 +38,7 @@
 
 %%-------------------------------------------------------------------
 -define(SocketKey,socketRef___).
--define(NET_IDLE_TIME, 3*60*1000).
+-define(NET_IDLE_TIME, 30*1000).
 -record(r_player_state,{}).
 
 
@@ -51,10 +51,8 @@ shutdown(How) ->
 stop(Reason)->
     ?INFO("aid ~p uid ~p pid ~p stopped with reason ~p",
         [lib_player_rw:get_aid(), lib_player_rw:get_uid(), self(), Reason]),
+    catch lib_player_pub:send(#pk_GS2U_KickByServer{reason = io_lib:format("~p", [Reason])}),
     tcp_handler:active_stop(Reason).
-
-direct_stop()->
-    erlang:exit(self(), normal).
 
 %%-------------------------------------------------------------------
 send(IoList) when is_list(IoList)->
@@ -91,7 +89,7 @@ on_close(Socket, Reason, S) ->
 on_info_msg(check_net, S) ->
     check_idle_action(),
     S;
-on_info_msg({kick, Reason}, S) ->
+on_info_msg({kick_role, Reason}, S) ->
     mod_player:stop(Reason),
     S;
 on_info_msg({net_msg, NetMsg}, S) ->

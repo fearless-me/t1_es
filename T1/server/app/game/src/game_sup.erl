@@ -107,7 +107,7 @@ start_listener_15555(_SupPid) ->
     tcp_listener:start_listener(
         test_tcp_15555,
         10,
-        [{port, 15555}, {max_connections, 1000}],
+        [{port, 15555}, {max_connections, 1000},{linger, {false, 0}}],
         mod_player
     ).
 
