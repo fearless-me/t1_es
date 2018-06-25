@@ -14,3 +14,10 @@ log
 /T1/server/app/game/scripts/compile_cht_gsD.txt
 /T1/server/app/game/scripts/compileListDEtsFile.data
 _gsdata_
+/T1/tools/src/NetProtor/.vscode
+/T1/tools/src/NetProtor/.vs/NetProtor/v15/*.suo
+/T1/tools/src/NetProtor/.vs/NetProtor/v15/*.db
+/T1/tools/src/NetProtor/.vs/NetProtor/v15/ipch/AutoPCH/b01d7bb04d25c2fe/*.ipch
+/T1/tools/src/NetProtor/.vs/NetProtor/v15/ipch/AutoPCH/d851daeb49012d8/*.ipch
+/T1/tools/src/NetProtor/.vs/NetProtor/v15/ipch/AutoPCH/e15d81e427e6b90e/*.ipch
+/T1/tools/src/NetProtor/*.htm

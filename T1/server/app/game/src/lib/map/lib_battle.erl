@@ -56,7 +56,7 @@ change_attr(Uid, AddList, MultiList, AddList_Del, MultiList_Del) ->
     ok.
 
 change_attr_action(Uid, AddList, MultiList, AddList_Del, MultiList_Del) ->
-    PropList = lib_obj_rw:get_attr(Uid),
+    PropList = lib_map_obj_rw:get_attr(Uid),
     lib_attr_calc:calc(PropList, AddList, MultiList, AddList_Del, MultiList_Del),
     ok.
 

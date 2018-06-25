@@ -69,7 +69,7 @@ do_player_exit_call(Uid, #m_map_obj{} = Obj) ->
 
     lib_map_rw:del_obj_to_ets(Obj),
     lib_map_view:sync_player_exit_map(Obj),
-    Data = lib_obj_rw:to_record(Uid),
+    Data = lib_map_obj_rw:to_record(Uid),
     hook_map:on_player_exit(Uid),
     Data;
 do_player_exit_call(Uid, _Obj) ->
@@ -85,13 +85,13 @@ player_join_call(
     #r_change_map_req{uid = Uid, name = _Name, pid = Pid, group = Group, tar_pos = Pos}
 ) ->
     ?DEBUG("player ~p to ~p",[Uid, Pos]),
-    Obj = lib_obj:new_player(Pid, Uid, Group, Pos, vector3:new(0.1, 0, 0.5)),
+    Obj = lib_map_obj:new_player(Pid, Uid, Group, Pos, vector3:new(0.1, 0, 0.5)),
     send_goto_map_msg(Uid, Pos),
     lib_map_rw:add_obj_to_ets(Obj),
     lib_map_view:sync_player_join_map(Obj),
     hook_map:on_player_join(Uid),
     ?DEBUG("uid ~p, join map ~w, name ~p",
-        [lib_obj:get_uid(Obj), self(), misc:register_name()]),
+        [lib_map_obj:get_uid(Obj), self(), misc:register_name()]),
     {ok, S};
 player_join_call(S, Any) ->
     ?ERROR("player join map ~w, name ~p, error obj data ~w",
@@ -106,7 +106,7 @@ force_teleport_call(S, #r_teleport_req{
     uid = Uid,
     tar = TarPos
 }) ->
-    Cur = lib_obj_rw:get_cur_pos(Uid),
+    Cur = lib_map_obj_rw:get_cur_pos(Uid),
     lib_move:on_player_pos_change(Uid, TarPos),
     ?DEBUG("player ~p teleport from ~w to ~w in map ~p_~p",
         [Uid, Cur, TarPos, lib_map_rw:get_map_id(), lib_map_rw:get_line_id()]),
@@ -124,17 +124,17 @@ init_monster( #recGameMapCfg{
     ok.
 
 init_all_monster_1(Mdata)->
-    Obj = lib_obj:new_monster(Mdata),
+    Obj = lib_map_obj:new_monster(Mdata),
     ok = init_all_monster_2(Obj).
 
 init_all_monster_2(Obj) ->
-    Uid = lib_obj:get_uid(Obj),
-    VisIndex = lib_map_view:pos_to_vis_index(lib_obj_rw:get_cur_pos(Uid)),
+    Uid = lib_map_obj:get_uid(Obj),
+    VisIndex = lib_map_view:pos_to_vis_index(lib_map_obj_rw:get_cur_pos(Uid)),
     lib_map_rw:add_obj_to_ets(Obj),
     lib_map_view:add_obj_to_vis_tile(Obj, VisIndex),
     hook_map:on_monster_create(Uid),
     ?DEBUG("map ~p:~p create monster ~p, uid ~p, visIndex ~p",
-        [lib_map_rw:get_map_id(), lib_map_rw:get_line_id(), lib_obj:get_did(Obj), Uid, VisIndex]),
+        [lib_map_rw:get_map_id(), lib_map_rw:get_line_id(), lib_map_obj:get_did(Obj), Uid, VisIndex]),
     ok.
 
 %%%-------------------------------------------------------------------
@@ -222,7 +222,7 @@ kick_all_player(#m_map_state{player = Ets}) ->
 %%-------------------------------------------------------------------
 player_start_move(Req) ->
     #r_player_start_move_req{uid = Uid, tar = Dst} = Req,
-    lib_move:start_player_walk(Uid, lib_obj_rw:get_cur_pos(Uid), Dst).
+    lib_move:start_player_walk(Uid, lib_map_obj_rw:get_cur_pos(Uid), Dst).
 
 %%-------------------------------------------------------------------
 player_stop_move(Req) ->

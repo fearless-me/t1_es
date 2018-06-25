@@ -24,14 +24,14 @@ on_player_join(_Uid) ->
     ok.
 
 on_player_exit(Uid) ->
-    lib_obj:del_player(Uid),
+    lib_map_obj:del_player(Uid),
     ok.
 
 on_monster_create(_Uid) ->
     ok.
 
 on_monster_dead(Uid) ->
-    lib_obj:del_monster(Uid),
+    lib_map_obj:del_monster(Uid),
     ok.
 
 %%-------------------------------------------------------------------
@@ -42,19 +42,19 @@ on_monster_dead(Uid) ->
 
 on_rw_update(Uid, hp, Hp) ->
     ?lock({Uid, hp}),
-    Type = lib_obj_rw:get_type(Uid),
+    Type = lib_map_obj_rw:get_type(Uid),
     on_rw_update_pub_action(Type, Uid, {#m_player_pub.hp, Hp}),
     ?unlock(),
     ok;
 on_rw_update(Uid, attr, Attrs) ->
     ?lock({Uid, attr}),
-    Type = lib_obj_rw:get_type(Uid),
+    Type = lib_map_obj_rw:get_type(Uid),
     on_rw_update_priv_action(Type, Uid, {#m_player_private.priv_attrs, Attrs}),
     ?unlock(),
     ok;
 on_rw_update(Uid, buff_list, BuffList) ->
     ?lock({Uid, buff_list}),
-    Type = lib_obj_rw:get_type(Uid),
+    Type = lib_map_obj_rw:get_type(Uid),
     on_rw_update_priv_action(Type, Uid, {#m_player_private.priv_buffs, BuffList}),
     ?unlock(),
     ok;

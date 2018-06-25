@@ -3,7 +3,7 @@
 %%% This File Is AUTO GENERATED, Don't Modify it MANUALLY!!!
 %%% This File Is AUTO GENERATED, Don't Modify it MANUALLY!!!
 %%-------------------------------------------------------------------
--module(lib_obj_rw).
+-module(lib_map_obj_rw).
 
 %%-------------------------------------------------------------------
 -include("logger.hrl").

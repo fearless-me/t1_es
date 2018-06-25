@@ -26,8 +26,8 @@
 run() ->
     try
         multi_to_code(
-            "..\\src\\lib\\map\\lib_obj_rw.erl",
-            lib_obj_rw,
+            "..\\src\\lib\\map\\lib_map_obj_rw.erl",
+            lib_map_obj_rw,
             [
                 ["logger.hrl", "rw_record.hrl"],
                 [
