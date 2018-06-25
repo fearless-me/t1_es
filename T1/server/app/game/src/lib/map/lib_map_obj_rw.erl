@@ -10,31 +10,32 @@
 -include("rw_record.hrl").
 %%-------------------------------------------------------------------
 
--export([get_pid/1, get_pid_def/2, set_pid/2, set_pid_direct/2]).
--export([get_did/1, get_did_def/2, set_did/2, set_did_direct/2]).
--export([get_group/1, get_group_def/2, set_group/2, set_group_direct/2]).
--export([get_owner/1, get_owner_def/2, set_owner/2, set_owner_direct/2]).
--export([get_type/1, get_type_def/2, set_type/2, set_type_direct/2]).
--export([get_move_speed/1, get_move_speed_def/2, set_move_speed/2, set_move_speed_direct/2]).
--export([get_cur_move/1, get_cur_move_def/2, set_cur_move/2, set_cur_move_direct/2]).
--export([get_next_move/1, get_next_move_def/2, set_next_move/2, set_next_move_direct/2]).
--export([get_vis_tile_idx/1, get_vis_tile_idx_def/2, set_vis_tile_idx/2, set_vis_tile_idx_direct/2]).
--export([get_cur_pos/1, get_cur_pos_def/2, set_cur_pos/2, set_cur_pos_direct/2]).
--export([get_start_pos/1, get_start_pos_def/2, set_start_pos/2, set_start_pos_direct/2]).
--export([get_dest_pos/1, get_dest_pos_def/2, set_dest_pos/2, set_dest_pos_direct/2]).
--export([get_face/1, get_face_def/2, set_face/2, set_face_direct/2]).
--export([get_dir/1, get_dir_def/2, set_dir/2, set_dir_direct/2]).
--export([get_start_time/1, get_start_time_def/2, set_start_time/2, set_start_time_direct/2]).
--export([get_seg_move_time/1, get_seg_move_time_def/2, set_seg_move_time/2, set_seg_move_time_direct/2]).
--export([get_stopped/1, get_stopped_def/2, set_stopped/2, set_stopped_direct/2]).
--export([get_path_list/1, get_path_list_def/2, set_path_list/2, set_path_list_direct/2]).
--export([get_hp/1, get_hp_def/2, set_hp/2, set_hp_direct/2]).
--export([get_max_hp/1, get_max_hp_def/2, set_max_hp/2, set_max_hp_direct/2]).
--export([get_attr/1, get_attr_def/2, set_attr/2, set_attr_direct/2]).
--export([get_buff_list/1, get_buff_list_def/2, set_buff_list/2, set_buff_list_direct/2]).
--export([del/1]).
--export([to_record/1]).
--export([init_from/2]).
+-export([
+	get_pid/1, get_pid_def/2, set_pid/2, set_pid_direct/2, % #m_map_obj_rw.pid
+	get_did/1, get_did_def/2, set_did/2, set_did_direct/2, % #m_map_obj_rw.did
+	get_group/1, get_group_def/2, set_group/2, set_group_direct/2, % #m_map_obj_rw.group
+	get_owner/1, get_owner_def/2, set_owner/2, set_owner_direct/2, % #m_map_obj_rw.owner
+	get_type/1, get_type_def/2, set_type/2, set_type_direct/2, % #m_map_obj_rw.type
+	get_move_speed/1, get_move_speed_def/2, set_move_speed/2, set_move_speed_direct/2, % #m_map_obj_rw.move_speed
+	get_cur_move/1, get_cur_move_def/2, set_cur_move/2, set_cur_move_direct/2, % #m_map_obj_rw.cur_move
+	get_next_move/1, get_next_move_def/2, set_next_move/2, set_next_move_direct/2, % #m_map_obj_rw.next_move
+	get_vis_tile_idx/1, get_vis_tile_idx_def/2, set_vis_tile_idx/2, set_vis_tile_idx_direct/2, % #m_map_obj_rw.vis_tile_idx
+	get_cur_pos/1, get_cur_pos_def/2, set_cur_pos/2, set_cur_pos_direct/2, % #m_map_obj_rw.cur_pos
+	get_start_pos/1, get_start_pos_def/2, set_start_pos/2, set_start_pos_direct/2, % #m_map_obj_rw.start_pos
+	get_dest_pos/1, get_dest_pos_def/2, set_dest_pos/2, set_dest_pos_direct/2, % #m_map_obj_rw.dest_pos
+	get_face/1, get_face_def/2, set_face/2, set_face_direct/2, % #m_map_obj_rw.face
+	get_dir/1, get_dir_def/2, set_dir/2, set_dir_direct/2, % #m_map_obj_rw.dir
+	get_start_time/1, get_start_time_def/2, set_start_time/2, set_start_time_direct/2, % #m_map_obj_rw.start_time
+	get_seg_move_time/1, get_seg_move_time_def/2, set_seg_move_time/2, set_seg_move_time_direct/2, % #m_map_obj_rw.seg_move_time
+	get_stopped/1, get_stopped_def/2, set_stopped/2, set_stopped_direct/2, % #m_map_obj_rw.stopped
+	get_path_list/1, get_path_list_def/2, set_path_list/2, set_path_list_direct/2, % #m_map_obj_rw.path_list
+	get_hp/1, get_hp_def/2, set_hp/2, set_hp_direct/2, % #m_map_obj_rw.hp
+	get_max_hp/1, get_max_hp_def/2, set_max_hp/2, set_max_hp_direct/2, % #m_map_obj_rw.max_hp
+	get_attr/1, get_attr_def/2, set_attr/2, set_attr_direct/2, % #m_map_obj_rw.attr
+	get_buff_list/1, get_buff_list_def/2, set_buff_list/2, set_buff_list_direct/2, % #m_map_obj_rw.buff_list
+	% common function 
+	del/1 ,to_record/1 ,init_from/2 ,init_default/1
+]).
 %%-------------------------------------------------------------------
 %%-------------------------------------------------------------------
 %%-------------------------------------------------------------------
@@ -442,6 +443,32 @@ to_record(Uid)->
 	}.
 %%-------------------------------------------------------------------
 init_from(Uid, Rec)->
+	set_pid_direct(Uid, Rec#m_map_obj_rw.pid),
+	set_did_direct(Uid, Rec#m_map_obj_rw.did),
+	set_group_direct(Uid, Rec#m_map_obj_rw.group),
+	set_owner_direct(Uid, Rec#m_map_obj_rw.owner),
+	set_type_direct(Uid, Rec#m_map_obj_rw.type),
+	set_move_speed_direct(Uid, Rec#m_map_obj_rw.move_speed),
+	set_cur_move_direct(Uid, Rec#m_map_obj_rw.cur_move),
+	set_next_move_direct(Uid, Rec#m_map_obj_rw.next_move),
+	set_vis_tile_idx_direct(Uid, Rec#m_map_obj_rw.vis_tile_idx),
+	set_cur_pos_direct(Uid, Rec#m_map_obj_rw.cur_pos),
+	set_start_pos_direct(Uid, Rec#m_map_obj_rw.start_pos),
+	set_dest_pos_direct(Uid, Rec#m_map_obj_rw.dest_pos),
+	set_face_direct(Uid, Rec#m_map_obj_rw.face),
+	set_dir_direct(Uid, Rec#m_map_obj_rw.dir),
+	set_start_time_direct(Uid, Rec#m_map_obj_rw.start_time),
+	set_seg_move_time_direct(Uid, Rec#m_map_obj_rw.seg_move_time),
+	set_stopped_direct(Uid, Rec#m_map_obj_rw.stopped),
+	set_path_list_direct(Uid, Rec#m_map_obj_rw.path_list),
+	set_hp_direct(Uid, Rec#m_map_obj_rw.hp),
+	set_max_hp_direct(Uid, Rec#m_map_obj_rw.max_hp),
+	set_attr_direct(Uid, Rec#m_map_obj_rw.attr),
+	set_buff_list_direct(Uid, Rec#m_map_obj_rw.buff_list),
+	ok.
+%%-------------------------------------------------------------------
+init_default(Uid)->
+	Rec = #m_map_obj_rw{},
 	set_pid_direct(Uid, Rec#m_map_obj_rw.pid),
 	set_did_direct(Uid, Rec#m_map_obj_rw.did),
 	set_group_direct(Uid, Rec#m_map_obj_rw.group),

@@ -12,14 +12,15 @@
 -include("vector3.hrl").
 %%-------------------------------------------------------------------
 
--export([get_ai_state/1, get_ai_state_def/2, set_ai_state/2]).
--export([get_pre_ai_state/1, get_pre_ai_state_def/2, set_pre_ai_state/2]).
--export([get_ai_transition/1, get_ai_transition_def/2, set_ai_transition/2]).
--export([get_triggers/1, get_triggers_def/2, set_triggers/2]).
--export([get_pause/1, get_pause_def/2, set_pause/2]).
--export([del/1]).
--export([to_record/1]).
--export([init_from/2]).
+-export([
+	get_ai_state/1, get_ai_state_def/2, set_ai_state/2, % #m_map_obj_ai.ai_state
+	get_pre_ai_state/1, get_pre_ai_state_def/2, set_pre_ai_state/2, % #m_map_obj_ai.pre_ai_state
+	get_ai_transition/1, get_ai_transition_def/2, set_ai_transition/2, % #m_map_obj_ai.ai_transition
+	get_triggers/1, get_triggers_def/2, set_triggers/2, % #m_map_obj_ai.triggers
+	get_pause/1, get_pause_def/2, set_pause/2, % #m_map_obj_ai.pause
+	% common function 
+	del/1 ,to_record/1 ,init_from/2 ,init_default/1
+]).
 %%-------------------------------------------------------------------
 %%-------------------------------------------------------------------
 %%-------------------------------------------------------------------
@@ -101,6 +102,15 @@ to_record(Uid)->
 	}.
 %%-------------------------------------------------------------------
 init_from(Uid, Rec)->
+	set_ai_state(Uid, Rec#m_map_obj_ai.ai_state),
+	set_pre_ai_state(Uid, Rec#m_map_obj_ai.pre_ai_state),
+	set_ai_transition(Uid, Rec#m_map_obj_ai.ai_transition),
+	set_triggers(Uid, Rec#m_map_obj_ai.triggers),
+	set_pause(Uid, Rec#m_map_obj_ai.pause),
+	ok.
+%%-------------------------------------------------------------------
+init_default(Uid)->
+	Rec = #m_map_obj_ai{},
 	set_ai_state(Uid, Rec#m_map_obj_ai.ai_state),
 	set_pre_ai_state(Uid, Rec#m_map_obj_ai.pre_ai_state),
 	set_ai_transition(Uid, Rec#m_map_obj_ai.ai_transition),

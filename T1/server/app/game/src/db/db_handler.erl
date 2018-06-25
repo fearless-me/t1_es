@@ -25,7 +25,7 @@ do_handle_info(serv_start, Sid, FromPid, PoolId) ->
     Res = db:query(PoolId, Sql, [Sid], infinity),
     check_res(Res, Sql, [Sid]),
     RunNo = db:scalar(Res),
-    ps:send(FromPid, serv_start, RunNo),
+    ps:send(FromPid, serv_start_ack, RunNo),
     ok;
 do_handle_info(load_all_role_info, Sid, FromPid, PoolId) ->
     Sql = db_sql:sql(load_all_role_info_cnt),

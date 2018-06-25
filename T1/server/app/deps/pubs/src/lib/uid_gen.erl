@@ -85,6 +85,8 @@ mail_uid() -> gen_1(?UID_TYPE_MAIL).
 -define(BIT_INDX,	13).	% DBID:0~8191
 -define(BIT_ACCU,	31).	% ID累加值:0~2147483647
 
+-define(INDEX_MAX, ((1 bsl ?BIT_INDX) - 1)).
+
 
 %%%-------------------------------------------------------------------
 init()-> init(false).
@@ -96,7 +98,6 @@ init(IsCenterServer) ->
 
 -spec init_1(IsCenterServer::boolean()) -> ok.
 init_1(IsCenterServer) ->
-    %% fixme 此时中心服UID仅内存处理
     {ADBID, DBID, UIDIndex} =
         case IsCenterServer of
             true ->
@@ -104,6 +105,13 @@ init_1(IsCenterServer) ->
             _ ->
                 {1, 1, gconf:get_run_no()}
         end,
+
+     case UIDIndex >= 0 andalso UIDIndex =< ?INDEX_MAX  of
+         true -> skip;
+         _ ->
+             ?FATAL("run no must between ~p and ~p", [0, ?INDEX_MAX]),
+             throw(fatal_error)
+     end,
 
     ets:new(?UIDEts, [public, named_table, {keypos, #recUID.type}, ?ETS_WC, ?ETS_RC]),
     List = lists:seq(?UID_TYPE_START, ?UID_TYPE_END),

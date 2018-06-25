@@ -14,7 +14,7 @@
 %% 进入地图后会动态变
 %% 通过自动生成代码lib_obj_rw
 -record(m_map_obj_rw,{
-    pid = 0, did = 0, group = 0, owner = 0, type,
+    pid = 0, did = 0, group = 0, owner = 0, type=-1,
 %%  移动相关
     move_speed = 20,
     cur_move, next_move,  vis_tile_idx,
@@ -33,9 +33,9 @@
 
 -record(m_player_rw, {
 %%  这些信息将由基础代码来维护
-    aid, uid, sid,
-    name, level, sex, head,
-    race, career, map = undefined, % m_player_map
+    aid=0, uid=0, sid=0,
+    name="", level=1, sex=0, head=1,
+    race=0, career=0, map, % m_player_map
     last_second_tick, last_minute_tick, last_hour_tick,
     status
 %%  逻辑代码的放在这之后（比如背包，技能等等）

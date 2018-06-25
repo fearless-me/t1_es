@@ -27,7 +27,7 @@ start_all_task() ->
     lib_db:action_p_(2, load_all_role_info, gconf:get_sid()).
 
 %%-------------------------------------------------------------------
-on_info_msg({serv_start, RunNo}) ->
+on_info_msg({serv_start_ack, RunNo}) ->
     try
         gconf:set_run_no(RunNo),
         uid_gen:init(),

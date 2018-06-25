@@ -31,6 +31,7 @@
 
 %%-------------------------------------------------------------------
 init() ->
+    lib_player_rw:init_default(),
     lib_player_rw:set_status(?PS_INIT),
     ok.
 
