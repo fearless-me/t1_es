@@ -83,7 +83,7 @@ reset_look_for_target_tick(_Uid) ->
     ok.
 
 %%-------------------------------------------------------------------
-can_update_ai(_Uid) -> false.
+can_update_ai(_Uid) -> true.
 
 %%-------------------------------------------------------------------
 update(Uid) ->
@@ -125,8 +125,8 @@ update_transition(Uid, AiAction) ->
 %%-------------------------------------------------------------------
 update_state(_Uid, ?AIST_Null) ->
     ok;
-update_state(Uid, State) ->
-    ai_state:update(Uid, State),
+update_state(Uid, AiState) ->
+    ai_state:update(Uid, AiState),
     ok.
 
 %%-------------------------------------------------------------------
@@ -180,6 +180,7 @@ update_patrol_action(Uid, _IsPatrol, _ResetTick) ->
     ok.
 %%-------------------------------------------------------------------
 start_patrol(Uid) ->
+    % todo 根据怪物的配置来启动
     PatrolType = ?ECPT_Wood,
     start_patrol_action(Uid, PatrolType),
     ok.
@@ -201,19 +202,28 @@ start_patrol_action(Uid, ?ECPT_Path) ->
     WPList = lib_ai_rw:get_wp_list(Uid),
     TarPos = lists:nth(NewWPIdx, WPList),
 
-    %% move to     
-
+    % 怪物开始跑路
+    started_patrol_action_1(Uid, TarPos),
     ok;
 start_patrol_action(Uid, ?ECPT_Range) ->
-    Range = ?CREATURE_PATROL_RADIUS * 2,
+    Diameter = ?CREATURE_PATROL_RADIUS * 2,
     NowPos = lib_map_obj_rw:get_cur_pos(Uid),
-    X = vector3:x(NowPos) + ((rand_tool:rand() rem Range) - ?CREATURE_PATROL_RADIUS),
-    Z = vector3:z(NowPos) + ((rand_tool:rand() rem Range) - ?CREATURE_PATROL_RADIUS),
+    X = vector3:x(NowPos) + ((rand_tool:rand() rem Diameter) - ?CREATURE_PATROL_RADIUS),
+    Z = vector3:z(NowPos) + ((rand_tool:rand() rem Diameter) - ?CREATURE_PATROL_RADIUS),
     TarPos = vector3:new(X, 0, Z),
 
-    % todo 怪物开始跑路
-
+    % 怪物开始跑路
+    started_patrol_action_1(Uid, TarPos),
     ok;
 start_patrol_action(_Uid, _AnyType) ->
+    ok.
+
+%%
+started_patrol_action_1(Uid, TarPos) ->
+    Ret = lib_move:start_monster_walk(Uid, TarPos, ?EMS_MONSTER_PATROL, true),
+    case Ret of
+        true -> lib_ai_rw:set_is_patrol(Uid, true);
+        _ -> skip
+    end,
     ok.
 

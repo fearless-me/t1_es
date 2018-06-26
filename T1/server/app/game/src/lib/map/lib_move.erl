@@ -271,16 +271,16 @@ on_obj_pos_change(Uid, Tar) ->
     Obj = lib_map_rw:get_obj(Uid),
     OldVisIndex = lib_map_view:pos_to_vis_index(Src),
     NewVisIndex = lib_map_view:pos_to_vis_index(Tar),
-%%    ?DEBUG("in map ~p player ~p ~ts pos change from ~w, ~w",
+%%    ?DEBUG("in map ~p obj ~p ~ts pos change from ~w, ~w",
 %%        [lib_map_rw:get_map_id(), Uid, Obj#m_map_obj.name, Src, Tar]),
     ?assert(OldVisIndex > 0 andalso NewVisIndex > 0),
     lib_map_obj_rw:set_cur_pos(Uid, Tar),
     lib_map_view:sync_change_pos_visual_tile(Obj, OldVisIndex, NewVisIndex),
     lib_map_obj_rw:set_vis_tile_idx(Uid, NewVisIndex),
-    on_pos_changed(lib_map_obj:get_type(Uid), Uid, Tar),
+    on_obj_pos_changed(lib_map_obj:get_type(Uid), Uid, Tar),
     ok.
 
-on_pos_changed(?OBJ_USR, Uid, Tar) ->
+on_obj_pos_changed(?OBJ_USR, Uid, Tar) ->
     lib_cache:update_player_pub(Uid, {#m_player_pub.pos, Tar}),
     ok.
 
@@ -312,9 +312,8 @@ do_cal_move_msg(_S, _Uid) ->
 start_monster_walk(Uid, Dst, MoveState, NeedCheck) ->
     case is_can_monster_walk(Uid, Dst, MoveState, NeedCheck) of
         true -> start_monster_walk_action(Uid, Dst, MoveState);
-        _ -> skip
-    end,
-    ok.
+        _ -> false
+    end.
 
 start_monster_walk_action(Uid, Dst, MoveState) ->
     Way = [Dst],
@@ -335,7 +334,7 @@ start_monster_walk_action(Uid, Dst, MoveState) ->
     start_walk_set(Uid, MoveState, ?EMS_STAND, Start, Dst, Dir, Dir, Now, PathList),
     lib_map_view:sync_movement_to_big_visual_tile(Uid),
     hook_map:on_start_move(Uid),
-    ok.
+    true.
 
 
 is_can_monster_walk(_Uid, _Dst, _MoveState, _NeedCheck) ->
