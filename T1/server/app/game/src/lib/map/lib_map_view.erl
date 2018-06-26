@@ -266,6 +266,7 @@ do_sync_big_vis_tile_to_me(?OBJ_USR, TarUid, VisTileList, add_all) ->
         end,
     lists:foreach(FV, VisTileList),
     ok;
+do_sync_big_vis_tile_to_me(_Type, _Uid, _VisTileList, _Msg) -> skip.
 %%do_sync_big_vis_tile_to_me(?OBJ_USR, TarUid, VisTileList, add_all) ->
 %%    FC =
 %%        fun(_Ets, Uid, Acc) ->
@@ -291,7 +292,7 @@ do_sync_big_vis_tile_to_me(?OBJ_USR, TarUid, VisTileList, add_all) ->
 %%        _ -> gcore:send_net_msg(TarUid, #pk_GS2U_SyncWalkMany{walks = InfoList})
 %%    end,
 %%    ok;
-do_sync_big_vis_tile_to_me(_Type, _Uid, _VisTileList, _Msg) -> skip.
+
 
 %%-------------------------------------------------------------------
 %% 把Obj信息广播到九宫格中

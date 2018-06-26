@@ -1569,8 +1569,20 @@ namespace Network.Messages
 	}
 
 	
-	public class U2GS_ExitGame : SerializeAble
+	public class U2GS_ExitGame : BaseMessage
 	{
+		//forbid new this class outside.
+		private U2GS_ExitGame() { }
+		static private U2GS_ExitGame _inst;
+		static public U2GS_ExitGame GetInstance() {
+			if(_inst == null) _inst = new U2GS_ExitGame();
+			return _inst;
+		}
+		override public MessageType GetId() {
+			return ID;
+		}
+		public const MessageType ID = MessageType.MSG_U2GS_ExitGame;
+
 		#region members
 		#endregion
 
@@ -1579,44 +1591,7 @@ namespace Network.Messages
 			long pos = writer.BaseStream.Position;
 			return (int)( writer.BaseStream.Position - pos );
 		}
-		public override int Deserialize( BinaryReader reader ) {
-			long pos = reader.BaseStream.Position;
-			return (int)( reader.BaseStream.Position - pos );
-		}
 		#endregion
-	}
-
-	public partial class MessageSerializer
-	{
-		static public U2GS_ExitGame Read_U2GS_ExitGame( BinaryReader s ) {
-			var ret = new U2GS_ExitGame();
-			ret.Deserialize( s );
-			return ret;
-		}
-		static public List<U2GS_ExitGame> ReadList_U2GS_ExitGame( BinaryReader s ) {
-			Int16 count = s.ReadInt16();
-			if ( count <= 0 ) {
-				return null;
-			}
-			var ret = new List<U2GS_ExitGame>( count );
-			for ( int i = 0; i < count; ++i ) {
-				ret.Add( Read_U2GS_ExitGame( s ) );
-			}
-			return ret;
-		}
-		static public void Write_U2GS_ExitGame( BinaryWriter s, U2GS_ExitGame value ) {
-			value.Serialize( s );
-		}
-		static public void WriteList_U2GS_ExitGame( BinaryWriter s, List<U2GS_ExitGame> value ) {
-			if ( value != null ) {
-				Write_Int16( s, (Int16)value.Count );
-				for ( int i = 0; i < value.Count; ++i ) {
-					value[i].Serialize( s );
-				}
-			} else {
-				Write_Int16( s, 0 );
-			}
-		}
 	}
 
 }

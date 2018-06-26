@@ -16,7 +16,7 @@
 -define(EMS_WALK,           1).		    %% 行走
 -define(EMS_MONSTER_PATROL, 2).			%% 怪物巡逻
 -define(EMS_MONSTER_WALK,   3).			%% 怪物行走
--define(EMS_MONSTER_FLEE,   4).		%% 怪物逃跑
+-define(EMS_MONSTER_FLEE,   4).		    %% 怪物逃跑
 -type move_state() :: ?EMS_STAND .. ?EMS_MONSTER_FLEE.
 
 

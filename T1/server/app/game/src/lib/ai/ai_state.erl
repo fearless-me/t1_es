@@ -10,4 +10,11 @@
 -author("mawenhong").
 
 %% API
--export([]).
+-export([
+    on_enter/2, on_exit/2, update/2, on_event/2
+]).
+
+on_enter(_Uid, _Type) -> ok.
+on_exit(_Uid, _Type) -> ok.
+update(_Uid, _Type) -> ok.
+on_event(_Uid, _Type) -> ok.

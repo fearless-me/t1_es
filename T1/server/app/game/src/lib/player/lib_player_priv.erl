@@ -39,7 +39,7 @@ init() ->
 login_ack(#r_login_ack{error = 0, account_info = AccountIfo}) ->
     #p_account{aid = AccId} = AccountIfo,
     %%% fixme errorrororororor
-    PsName =  misc:create_atom(player, [AccId]),
+    PsName =  gcore:ppid_name(AccId),
     loop_check(misc:is_palive(PsName), erlang:whereis(PsName), 5),
     %%% fixme errorrororororor
     Ret = gcore:register_ppid(self(), AccId),

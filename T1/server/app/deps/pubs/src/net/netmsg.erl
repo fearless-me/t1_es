@@ -271,6 +271,13 @@ decode(?U2GS_ChangeMap,Bin0) ->
 		},
 	Bin3 };
 
+%GENERATED from file:login.h => U2GS_ExitGame
+decode(?U2GS_ExitGame,Bin0) ->
+	{ #pk_U2GS_ExitGame {
+
+		},
+	Bin0 };
+
 %GENERATED from file:login.h => U2GS_GetPlayerInitData
 decode(?U2GS_GetPlayerInitData,Bin0) ->
 	{ #pk_U2GS_GetPlayerInitData {
@@ -454,15 +461,6 @@ decode_LookInfoPlayer(Bin0) ->
 		hp_per = V_hp_per
 		},
 	Bin12 }.
-
-%GENERATED from file:login.h => U2GS_ExitGame
--spec decode_U2GS_ExitGame(Bin0) -> { #pk_U2GS_ExitGame{},LeftBin }
-	when Bin0 :: binary(), LeftBin :: binary().
-decode_U2GS_ExitGame(Bin0) ->
-	{ #pk_U2GS_ExitGame {
-
-		},
-	Bin0 }.
 
 %GENERATED from file:login.h => UserPlayerData
 -spec decode_UserPlayerData(Bin0) -> { #pk_UserPlayerData{},LeftBin }
@@ -729,6 +727,13 @@ encode(#pk_U2GS_ChangeMap{} = P) ->
 		Bin_y
 	];
 
+%GENERATED from file:login.h => U2GS_ExitGame
+encode(#pk_U2GS_ExitGame{}) ->
+	[
+		<<?U2GS_ExitGame:?U16>>
+
+	];
+
 %GENERATED from file:login.h => U2GS_GetPlayerInitData
 encode(#pk_U2GS_GetPlayerInitData{}) ->
 	[
@@ -909,12 +914,6 @@ encode_LookInfoPlayer( #pk_LookInfoPlayer{} = P ) ->
 		Bin_hp_per	
 ].
 
-%GENERATED from file:login.h => U2GS_ExitGame
-encode_U2GS_ExitGame( #pk_U2GS_ExitGame{} ) ->
-	[
-	
-].
-
 %GENERATED from file:login.h => UserPlayerData
 encode_UserPlayerData( #pk_UserPlayerData{} = P ) ->
 	Bin_uid = write_uint64( P#pk_UserPlayerData.uid ),
@@ -962,6 +961,7 @@ name(?GS2U_SyncStand) -> "GS2U_SyncStand";
 name(?GS2U_SyncWalk) -> "GS2U_SyncWalk";
 name(?GS2U_UserPlayerList) -> "GS2U_UserPlayerList";
 name(?U2GS_ChangeMap) -> "U2GS_ChangeMap";
+name(?U2GS_ExitGame) -> "U2GS_ExitGame";
 name(?U2GS_GetPlayerInitData) -> "U2GS_GetPlayerInitData";
 name(?U2GS_GetRemoteUnitInfo) -> "U2GS_GetRemoteUnitInfo";
 name(?U2GS_HearBeat) -> "U2GS_HearBeat";
@@ -995,6 +995,7 @@ cmd_list()->
 		,?GS2U_SyncWalk
 		,?GS2U_UserPlayerList
 		,?U2GS_ChangeMap
+		,?U2GS_ExitGame
 		,?U2GS_GetPlayerInitData
 		,?U2GS_GetRemoteUnitInfo
 		,?U2GS_HearBeat

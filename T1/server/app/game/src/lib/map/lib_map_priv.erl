@@ -42,6 +42,7 @@ init(S) ->
     ok = init_npc(Conf),
     ok = init_monster(Conf),
     tick_msg(),
+    catch hook_map:on_map_create(),
     S1.
 
 %%%-------------------------------------------------------------------
@@ -107,7 +108,7 @@ force_teleport_call(S, #r_teleport_req{
     tar = TarPos
 }) ->
     Cur = lib_map_obj_rw:get_cur_pos(Uid),
-    lib_move:on_player_pos_change(Uid, TarPos),
+    lib_move:on_obj_pos_change(Uid, TarPos),
     ?DEBUG("player ~p teleport from ~w to ~w in map ~p_~p",
         [Uid, Cur, TarPos, lib_map_rw:get_map_id(), lib_map_rw:get_line_id()]),
     {ok, S}.
@@ -208,7 +209,7 @@ real_stop_now(_Players) ->
 start_stop_now(S) ->
     ?INFO("~p ~p start stop now, kick all player(s)",
         [misc:register_name(), self()]),
-
+    catch hook_map:on_map_destroy(),
     kick_all_player(S),
     S#m_map_state{status = ?MAP_READY_EXIT}.
 

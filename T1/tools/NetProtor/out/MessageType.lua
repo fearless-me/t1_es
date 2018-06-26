@@ -25,7 +25,7 @@ local MSG_login = require "Net.MSG_login"
 --BEGIN table for msgs description
 return
 {
-	__VERSION__ = 641,
+	__VERSION__ = 642,
 --BEGIN message id define
 
 
@@ -49,6 +49,7 @@ return
 	MSG_GS2U_SyncWalk = 3436,
 	MSG_GS2U_UserPlayerList = 18582,
 	MSG_U2GS_ChangeMap = 4914,
+	MSG_U2GS_ExitGame = 62410,
 	MSG_U2GS_GetPlayerInitData = 5543,
 	MSG_U2GS_GetRemoteUnitInfo = 52192,
 	MSG_U2GS_HearBeat = 7246,
@@ -82,6 +83,7 @@ return
 	[3436] = MSG_login.GS2U_SyncWalk,
 	[18582] = MSG_login.GS2U_UserPlayerList,
 	[4914] = MSG_login.U2GS_ChangeMap,
+	[62410] = MSG_login.U2GS_ExitGame,
 	[5543] = MSG_login.U2GS_GetPlayerInitData,
 	[52192] = MSG_login.U2GS_GetRemoteUnitInfo,
 	[7246] = MSG_login.U2GS_HearBeat,

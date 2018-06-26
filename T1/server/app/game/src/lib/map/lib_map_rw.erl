@@ -14,19 +14,22 @@
 
 %%
 -export([init_ets/1]).
--export([add_obj_to_ets/1]).
--export([del_obj_to_ets/1]).
--export([get_player/1, get_player_size/0]).
--export([get_monster/1, get_monster_size/0]).
--export([get_npc/1, get_pets/1]).
--export([get_npc_ets/0, get_monster_ets/0]).
--export([get_pet_ets/0, get_player_ets/0]).
--export([get_map_id/0, get_line_id/0]).
--export([get_map_hook/0]).
--export([update_move_timer/0]).
--export([get_move_timer_delta/0]).
--export([get_move_timer_now/0]).
--export([get_move_timer_pass_time/1]).
+-export([add_obj_to_ets/1, del_obj_to_ets/1]).
+-export([
+    get_obj/1,
+    get_player/1, get_player_size/0,
+    get_monster/1, get_monster_size/0,
+    get_npc/1, get_pet/1,
+    get_npc_ets/0, get_monster_ets/0,
+    get_pet_ets/0, get_player_ets/0
+]).
+-export([
+    get_map_id/0, get_line_id/0,get_map_hook/0,
+    update_move_timer/0,
+    get_move_timer_delta/0,
+    get_move_timer_now/0,
+    get_move_timer_pass_time/1
+]).
 
 
 %% define
@@ -63,6 +66,16 @@ get_pet_ets()       -> get(?MAP_PET_ETS).
 get_player_ets()    -> get(?MAP_USR_ETS).
 get_monster_ets()   -> get(?MAP_MON_ETS).
 
+%%-------------------------------------------------------------------
+get_obj(Uid) ->
+    Type = lib_map_obj_rw:get_type(Uid),
+    case Type of
+        ?OBJ_USR -> get_player(Uid);
+        ?OBJ_MON -> get_monster(Uid);
+        ?OBJ_PET -> get_pet(Uid);
+        ?OBJ_NPC -> get_npc(Uid);
+        _ -> undefined
+    end.
 %%-------------------------------------------------------------------
 get_player(Uid) ->
     case ets:lookup(lib_map_rw:get_player_ets(), Uid) of
@@ -104,7 +117,7 @@ get_npc(Uid) ->
     end.
 
 %%-------------------------------------------------------------------
-get_pets(Uid) ->
+get_pet(Uid) ->
     case ets:lookup(lib_map_rw:get_pet_ets(), Uid) of
         [#m_map_obj{} = Obj | _] -> Obj;
         _ -> undefined

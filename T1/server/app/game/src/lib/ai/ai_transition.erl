@@ -10,4 +10,7 @@
 -author("mawenhong").
 
 %% API
--export([]).
+-export([transition/2]).
+
+transition(_Uid, _Type) ->
+    ok.

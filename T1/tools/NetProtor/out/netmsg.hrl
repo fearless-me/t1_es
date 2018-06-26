@@ -2,7 +2,7 @@
 -ifndef(netmsg).
 -define(netmsg,1).
 
--define(ProtoVersion,641).
+-define(ProtoVersion,642).
 
 %% 
 -define(GS2U_CreatePlayerResult,45054).
@@ -287,6 +287,8 @@
 	y = 0.0
 }).
 
+%% 
+-define(U2GS_ExitGame,62410).
 -record(pk_U2GS_ExitGame,{
 }).
 

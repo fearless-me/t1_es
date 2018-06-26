@@ -10,6 +10,7 @@
 
 -ifndef(RW_RECORD_HRL).
 -define(RW_RECORD_HRL, true).
+-include("ai_def.hrl").
 
 %% 进入地图后会动态变
 %% 通过自动生成代码lib_obj_rw
@@ -17,18 +18,26 @@
     pid = 0, did = 0, group = 0, owner = 0, type=-1,
 %%  移动相关
     move_speed = 20,
-    cur_move, next_move,  vis_tile_idx,
+    cur_move=0, next_move=0,  vis_tile_idx=-1,
     cur_pos, start_pos, dest_pos, face, dir,
     start_time = 0, seg_move_time = 0,  % 分段已经移动时间
-    stopped, path_list = [],
+    stopped=false, path_list = [],
 
 %%  战斗相关
     hp = 1, max_hp = 1, attr= [], buff_list = []
 }).
 
 -record(m_map_obj_ai,{
-    ai_state, pre_ai_state, ai_transition,
-    triggers, pause
+    ai_state=0, pre_ai_state=0, ai_transition=1,
+    triggers=[], pause=false,
+    %
+    ai_id=0,
+    %idle
+    % 巡逻路径， 路径点数， 当前点索引， 是否反向巡逻 ，是否正在巡逻
+    wp_list=[],wp_num=0,wp_idx=1, is_reverse_patrol=false, is_patrol=false,
+    % 开始巡逻等待tick 、索敌等待tick
+    patrol_rest_tick=0, look_for_target_tick=0
+    
 }).
 
 -record(m_player_rw, {

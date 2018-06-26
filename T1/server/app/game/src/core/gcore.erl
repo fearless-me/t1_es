@@ -15,6 +15,7 @@
 
 -export([
     %% 注册玩家进程
+    ppid_name/1,
     register_ppid/2,
     %% 踢人
     kick_account/2,
@@ -43,8 +44,12 @@
 ]).
 
 %%-------------------------------------------------------------------
+ppid_name(Aid) ->
+    misc:create_atom(player, [Aid]).
+
 register_ppid(Pid, Aid) ->
-    try misc:register_process(Pid, player, [Aid]) of
+    PsName = ppid_name(Aid),
+    try  erlang:register(PsName, Pid) of
         true -> sucess
     catch _:_:_ -> repeat_login end.
 

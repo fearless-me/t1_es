@@ -275,7 +275,7 @@ struct GS2U_KickByServer <-
 	string reason; // 1 心跳超时 (后面换成ErrorCode)
 };
 
-struct U2GS_ExitGame
+struct U2GS_ExitGame ->
 {
 };
 

@@ -102,6 +102,10 @@ return {
 		fields = "map_id,x,y,Sff",
 	},
 
+	U2GS_ExitGame = 
+	{
+	},
+
 	U2GS_GetPlayerInitData = 
 	{
 	},

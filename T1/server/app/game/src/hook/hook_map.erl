@@ -13,20 +13,31 @@
 -include("map_obj.hrl").
 
 -export([
+    on_map_create/0, on_map_destroy/0,
     on_player_join/1, on_player_exit/1,
     on_monster_create/1, on_monster_dead/1,
-    on_rw_update/3
+    on_rw_update/3, on_start_move/1
 ]).
 
-%% API
+%% 要注意在
+%% on_map_create 、  on_player_join  、on_player_exit
+%% 这三个接口不要处理过于复杂的逻辑，因为这个是 call调用,如果要处理的逻辑比较耗时
+%% 发个消息给相应的进程来异步处理
+%%
+%%-------------------------------------------------------------------
+on_map_create() ->
+    ok.
 
+on_map_destroy() ->
+    ok.
+%%-------------------------------------------------------------------
 on_player_join(_Uid) ->
     ok.
 
 on_player_exit(Uid) ->
     lib_map_obj:del_player(Uid),
     ok.
-
+%%-------------------------------------------------------------------
 on_monster_create(_Uid) ->
     ok.
 
@@ -34,8 +45,12 @@ on_monster_dead(Uid) ->
     lib_map_obj:del_monster(Uid),
     ok.
 
+on_start_move(_Uid) ->
+    ok.
+
 %%-------------------------------------------------------------------
-%%不要在调用lib_obj_rw:set_xxx
+%% 不要在调用lib_obj_rw:set_xxx
+%% 逻辑代码必须要喊在 ?lock() 与 ?unlock 之间
 %%-------------------------------------------------------------------
 -define(lock(X), lock_transcation(X)).
 -define(unlock(), unlock_transcation()).

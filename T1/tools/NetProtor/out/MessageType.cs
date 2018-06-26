@@ -38,6 +38,7 @@ namespace Network.Messages
          MSG_U2GS_PlayerWalk = 56544,
          MSG_GS2U_RemoteMonster = 57060,
          MSG_U2GS_Login_Normal = 58883,
+         MSG_U2GS_ExitGame = 62410,
          //login end
     }
     public partial class MessageFactory
