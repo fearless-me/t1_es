@@ -22,7 +22,7 @@
 %% WARNING!!! WARNING!!! WARNING!!!
 %% call
 -export([
-    online_call/1, offline_call/4, sevr_change_map_call/2,
+    online_call/1, offline_call/4, sevr_change_map_call/3,
     teleport_call/1, return_to_old_map_call/0
 ]).
 
@@ -50,14 +50,10 @@ online_call(Player) ->
         old_map_id = OldMid, old_line = OldLine, old_x = OX, old_y = OY
     } = Player,
 
+    Tar = vector3:new(X, 0, Y),
     Ack = do_online_call(
         Mid,
-        #r_change_map_req{
-            uid = Uid,
-            pid = self(),
-            tar_map_id = Mid,
-            tar_pos = vector3:new(X, 0, Y)
-        }
+        #r_change_map_req{uid = Uid, pid = self(), tar_map_id = Mid, tar_pos = Tar}
     ),
 
     do_change_map_call_ret(OldMid, OldLine, vector3:new(OX, 0, OY), Ack, login),
@@ -78,7 +74,7 @@ do_online_call_1(Mgr, Req) ->
 
 
 %%-------------------------------------------------------------------
-sevr_change_map_call(DestMapID, TarPos) ->
+sevr_change_map_call(DestMapID, DestLineId, TarPos) ->
     lib_player_rw:set_status(?PS_CHANGE_MAP),
     Uid = lib_player_rw:get_uid(),
     #m_player_pub{mid = Mid, line = Line, mpid = MPid, pos = Pos} = lib_cache:get_player_pub(Uid),
@@ -86,7 +82,7 @@ sevr_change_map_call(DestMapID, TarPos) ->
         #r_change_map_req{
             uid = Uid, pid = self(),
             map_id = Mid, line_id = Line, map_pid = MPid,
-            tar_map_id = DestMapID, tar_pos = TarPos
+            tar_map_id = DestMapID, tar_line_id = DestLineId, tar_pos = TarPos
         }
     ),
 
