@@ -8,7 +8,7 @@
 %%%-------------------------------------------------------------------
 -module(lib_move).
 -author("mawenhong").
--include("map_obj.hrl").
+-include("map_unit.hrl").
 -include("movement.hrl").
 -include("logger.hrl").
 -include("vector3.hrl").
@@ -17,10 +17,11 @@
 -include_lib("stdlib/include/assert.hrl").
 
 %% API
--export([init/3]).
--export([update/1]).
--export([start_player_walk/3, on_obj_pos_change/2, stop_player_move/2]).
--export([start_monster_walk/4]).
+-export([init/3, update/1]).
+-export([
+    stop_move/2, stop_move_force/2,
+    start_player_walk/3, on_obj_pos_change/2, stop_player_move/2,
+    start_monster_walk/4]).
 -export([cal_move_msg/1]).
 %%-export([cal_move_msg_info/2]).
 
@@ -155,18 +156,18 @@ make_move_r(Start, End, Speed) ->
     }.
 
 %%%-------------------------------------------------------------------
-update(Obj) -> update_dispatcher(Obj).
+update(Unit) -> update_dispatcher(Unit).
 
 %%%-------------------------------------------------------------------
-update_dispatcher(#m_map_obj{type = ?OBJ_USR, uid = Uid} = Obj) ->
-    update_player_move(Obj, lib_move_rw:get_cur_move(Uid));
-update_dispatcher(#m_map_obj{type = ?OBJ_MON, uid = Uid} = Obj) ->
-    update_monster_move(Obj, lib_move_rw:get_cur_move(Uid));
+update_dispatcher(#m_map_unit{type = ?OBJ_USR, uid = Uid} = Unit) ->
+    update_player_move(Unit, lib_move_rw:get_cur_move(Uid));
+update_dispatcher(#m_map_unit{type = ?OBJ_MON, uid = Uid} = Unit) ->
+    update_monster_move(Unit, lib_move_rw:get_cur_move(Uid));
 update_dispatcher(_Obj) -> skip.
 
 %%%-------------------------------------------------------------------
-update_player_move(Obj, ?EMS_WALK) ->
-    #m_map_obj{uid = Uid} = Obj,
+update_player_move(Unit, ?EMS_WALK) ->
+    #m_map_unit{uid = Uid} = Unit,
 
     CurPos = lib_move_rw:get_cur_pos(Uid),
     PathList = lib_move_rw:get_path_list(Uid),
@@ -177,8 +178,8 @@ update_player_move(Obj, ?EMS_WALK) ->
 update_player_move(_Obj, _Move) -> skip.
 
 %%%-------------------------------------------------------------------
-update_monster_move(Obj, ?EMS_WALK) ->
-    #m_map_obj{uid = Uid} = Obj,
+update_monster_move(Unit, ?EMS_WALK) ->
+    #m_map_unit{uid = Uid} = Unit,
 
     CurPos = lib_move_rw:get_cur_pos(Uid),
     PathList = lib_move_rw:get_path_list(Uid),
@@ -202,7 +203,7 @@ update_role_walk(Uid, _CurPos, PathList, MoveTime) ->
     {NewPos, NewPathList, MoreTime} = linear_pos(PathList, MoveTime, keep),
 
 %%    ?DEBUG("mapid ~p ~w from ~w to ~w move time ~p",
-%%        [self(), Obj#m_map_obj.uid, CurPos, NewPos, MoveTime]),
+%%        [self(), Unit#m_map_obj.uid, CurPos, NewPos, MoveTime]),
 %%    ?DEBUG("# ~p,~p", [NewPos#vector3.x, NewPos#vector3.z]),
     on_obj_pos_change(Uid, NewPos),
 
@@ -268,16 +269,16 @@ on_obj_pos_change(Uid, Tar) ->
     %
     %% ?DEBUG("~w pos change ~w", [Uid, Tar]),
     Src = lib_move_rw:get_cur_pos(Uid),
-    Obj = lib_map_rw:get_obj(Uid),
+    Unit = lib_map_rw:get_obj(Uid),
     OldVisIndex = lib_map_view:pos_to_vis_index(Src),
     NewVisIndex = lib_map_view:pos_to_vis_index(Tar),
 %%    ?DEBUG("in map ~p obj ~p ~ts pos change from ~w, ~w",
-%%        [lib_map_rw:get_map_id(), Uid, Obj#m_map_obj.name, Src, Tar]),
+%%        [lib_map_rw:get_map_id(), Uid, Unit#m_map_obj.name, Src, Tar]),
     ?assert(OldVisIndex > 0 andalso NewVisIndex > 0),
     lib_move_rw:set_cur_pos(Uid, Tar),
-    lib_map_view:sync_change_pos_visual_tile(Obj, OldVisIndex, NewVisIndex),
+    lib_map_view:sync_change_pos_visual_tile(Unit, OldVisIndex, NewVisIndex),
     lib_move_rw:set_vis_tile_idx(Uid, NewVisIndex),
-    on_obj_pos_changed(lib_map_obj_rw:get_type(Uid), Uid, Tar),
+    on_obj_pos_changed(lib_unit_rw:get_type(Uid), Uid, Tar),
     ok.
 
 on_obj_pos_changed(?OBJ_USR, Uid, Tar) ->
@@ -291,7 +292,7 @@ cal_move_msg(Uid) ->
 do_cal_move_msg(?EMS_WALK, Uid) ->
     Src = lib_move_rw:get_start_pos(Uid),
     Dst = lib_move_rw:get_dest_pos(Uid),
-    Type = lib_map_obj_rw:get_type(Uid),
+    Type = lib_unit_rw:get_type(Uid),
     Speed = lib_move_rw:get_move_speed(Uid),
     StartTime = lib_move_rw:get_start_time(Uid),
     #pk_GS2U_SyncWalk{
@@ -303,7 +304,7 @@ do_cal_move_msg(?EMS_WALK, Uid) ->
     };
 do_cal_move_msg(?EMS_STAND, Uid) ->
     Pos = lib_move_rw:get_start_pos(Uid),
-    Type = lib_map_obj_rw:get_type(Uid),
+    Type = lib_unit_rw:get_type(Uid),
     #pk_GS2U_SyncStand{uid = Uid, type = Type, cur_x = vector3:x(Pos), cur_y = vector3:z(Pos)};
 do_cal_move_msg(_S, _Uid) ->
     undefined.
@@ -396,7 +397,7 @@ stop_move(Uid, NeedBroadcast) ->
     end,
     ok.
 
-stop_move_fore(Uid, NeedBroadcast) ->
+stop_move_force(Uid, NeedBroadcast) ->
     CurMove = lib_move_rw:get_cur_move(Uid),
     if
         CurMove =:= ?EMS_WALK,

@@ -21,3 +21,5 @@ _gsdata_
 /T1/tools/src/NetProtor/.vs/NetProtor/v15/ipch/AutoPCH/d851daeb49012d8/*.ipch
 /T1/tools/src/NetProtor/.vs/NetProtor/v15/ipch/AutoPCH/e15d81e427e6b90e/*.ipch
 /T1/tools/src/NetProtor/*.htm
+/T1/server/.idea/markdown-doclet.xml
+/T1/server/app/.vscode/settings.json

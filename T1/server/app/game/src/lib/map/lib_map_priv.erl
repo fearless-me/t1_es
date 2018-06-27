@@ -11,7 +11,7 @@
 
 -include("logger.hrl").
 -include("map.hrl").
--include("map_obj.hrl").
+-include("map_unit.hrl").
 -include("pub_common.hrl").
 -include("cfg_mapsetting.hrl").
 -include("common_record.hrl").
@@ -48,10 +48,10 @@ init(S) ->
 %%%-------------------------------------------------------------------
 init_1(State) ->
     State#m_map_state{
-        npc     = ets:new(npc,      [protected, {keypos, #m_map_obj.uid}, ?ETS_RC]),
-        pet     = ets:new(pet,      [protected, {keypos, #m_map_obj.uid}, ?ETS_RC]),
-        player  = ets:new(player,   [protected, {keypos, #m_map_obj.uid}, ?ETS_RC]),
-        monster = ets:new(monster,  [protected, {keypos, #m_map_obj.uid}, ?ETS_RC])
+        npc     = ets:new(npc,      [protected, {keypos, #m_map_unit.uid}, ?ETS_RC]),
+        pet     = ets:new(pet,      [protected, {keypos, #m_map_unit.uid}, ?ETS_RC]),
+        player  = ets:new(player,   [protected, {keypos, #m_map_unit.uid}, ?ETS_RC]),
+        monster = ets:new(monster,  [protected, {keypos, #m_map_unit.uid}, ?ETS_RC])
     }.
 
 %%%-------------------------------------------------------------------
@@ -60,23 +60,23 @@ init_1(State) ->
 player_exit_call(S, #r_exit_map_req{
     uid = Uid
 }) ->
-    Obj = lib_map_rw:get_player(Uid),
-    Ret = do_player_exit_call(Uid, Obj),
+    Unit = lib_map_rw:get_player(Uid),
+    Ret = ?TRY_CATCH_RET(do_player_exit_call(Uid, Unit), error),
     {Ret, S}.
 
-do_player_exit_call(Uid, #m_map_obj{} = Obj) ->
+do_player_exit_call(Uid, #m_map_unit{} = Unit) ->
     ?INFO("user ~p exit map ~p:~p:~p",
         [Uid, lib_map_rw:get_map_id(), lib_map_rw:get_line_id(), self()]),
 
-    lib_map_rw:del_obj_to_ets(Obj),
-    lib_map_view:sync_player_exit_map(Obj),
-    Data = lib_map_obj_rw:to_record(Uid),
+    lib_map_rw:del_obj_to_ets(Unit),
+    lib_map_view:sync_player_exit_map(Unit),
+    Data = lib_unit_rw:to_record(Uid),
     hook_map:on_player_exit(Uid),
     Data;
 do_player_exit_call(Uid, _Obj) ->
     ?ERROR("~w req exit map ~w ~w, but obj not exists!",
         [Uid, self(), misc:register_name()]),
-    ok.
+    error.
 
 %%%-------------------------------------------------------------------
 %% WARNING!!! WARNING!!! WARNING!!!
@@ -86,13 +86,13 @@ player_join_call(
     #r_change_map_req{uid = Uid, name = _Name, pid = Pid, group = Group, tar_pos = Pos}
 ) ->
     ?DEBUG("player ~p to ~p",[Uid, Pos]),
-    Obj = lib_map_obj:new_player(Pid, Uid, Group, Pos, vector3:new(0.1, 0, 0.5)),
+    Unit = lib_unit:new_player(Pid, Uid, Group, Pos, vector3:new(0.1, 0, 0.5)),
     send_goto_map_msg(Uid, Pos),
-    lib_map_rw:add_obj_to_ets(Obj),
-    lib_map_view:sync_player_join_map(Obj),
+    lib_map_rw:add_obj_to_ets(Unit),
+    lib_map_view:sync_player_join_map(Unit),
     hook_map:on_player_join(Uid),
     ?DEBUG("uid ~p, join map ~w, name ~p",
-        [lib_map_obj:get_uid(Obj), self(), misc:register_name()]),
+        [lib_unit:get_uid(Unit), self(), misc:register_name()]),
     {ok, S};
 player_join_call(S, Any) ->
     ?ERROR("player join map ~w, name ~p, error obj data ~w",
@@ -125,17 +125,17 @@ init_monster( #recGameMapCfg{
     ok.
 
 init_all_monster_1(Mdata)->
-    Obj = lib_map_obj:new_monster(Mdata),
-    ok = init_all_monster_2(Obj).
+    Unit = lib_unit:new_monster(Mdata),
+    ok = init_all_monster_2(Unit).
 
-init_all_monster_2(Obj) ->
-    Uid = lib_map_obj:get_uid(Obj),
+init_all_monster_2(Unit) ->
+    Uid = lib_unit:get_uid(Unit),
     VisIndex = lib_map_view:pos_to_vis_index(lib_move_rw:get_cur_pos(Uid)),
-    lib_map_rw:add_obj_to_ets(Obj),
-    lib_map_view:add_obj_to_vis_tile(Obj, VisIndex),
+    lib_map_rw:add_obj_to_ets(Unit),
+    lib_map_view:add_obj_to_vis_tile(Unit, VisIndex),
     hook_map:on_monster_create(Uid),
     ?DEBUG("map ~p:~p create monster ~p, uid ~p, visIndex ~p",
-        [lib_map_rw:get_map_id(), lib_map_rw:get_line_id(), lib_map_obj:get_did(Obj), Uid, VisIndex]),
+        [lib_map_rw:get_map_id(), lib_map_rw:get_line_id(), lib_unit:get_did(Unit), Uid, VisIndex]),
     ok.
 
 %%%-------------------------------------------------------------------
@@ -153,17 +153,22 @@ tick_msg() -> erlang:send_after(?MAP_TICK, self(), tick_now).
 
 tick(S) ->
     lib_map_rw:update_move_timer(),
-    tick_1(S),
-    S.
+    tick_1(S).
 
-tick_1(#m_map_state{status = ?MAP_READY_EXIT}) ->
+tick_1(#m_map_state{status = ?MAP_READY_EXIT, protect_tick = Tick} = S) when Tick =< 0 ->
     PlayerSize = lib_map_rw:get_player_size(),
-    real_stop_now(PlayerSize),
-    ok;
-tick_1(_S) ->
-    tick_msg(),
-    tick_obj(),
-    ok.
+    ?FATAL("map_~p_~p destroy error, player size ~p, force stop now",
+        [lib_map_rw:get_map_id(), lib_map_rw:get_line_id(), PlayerSize]),
+    real_stop_now(0),
+    S;
+tick_1(#m_map_state{status = ?MAP_READY_EXIT, protect_tick = TickMax} = S) ->
+    PlayerSize = lib_map_rw:get_player_size(),
+    ?TRY_CATCH(real_stop_now(PlayerSize)),
+    S#m_map_state{protect_tick = TickMax - 1};
+tick_1(S) ->
+    ?TRY_CATCH(tick_msg(), Err1, Stk1),
+    ?TRY_CATCH(tick_obj(), Err2, Stk2),
+    S.
 
 tick_obj()->
     tick_update_before(),
@@ -174,22 +179,22 @@ tick_obj()->
 
 tick_player() ->
     ets:foldl(
-        fun(Obj, _) -> tick_player_1(Obj) end,
+        fun(Unit, _) -> tick_player_1(Unit) end,
         0, lib_map_rw:get_player_ets()
     ).
 
-tick_player_1(Obj) ->
-    ?TRY_CATCH(lib_move:update(Obj)),
+tick_player_1(Unit) ->
+    ?TRY_CATCH(lib_move:update(Unit)),
     ok.
 
 tick_monster() ->
     ets:foldl(
-        fun(Obj, _) -> tick_monster_1(Obj) end,
+        fun(Unit, _) -> tick_monster_1(Unit) end,
         0, lib_map_rw:get_monster_ets()
     ).
 
-tick_monster_1(Obj) ->
-    ?TRY_CATCH(lib_move:update(Obj)),
+tick_monster_1(Unit) ->
+    ?TRY_CATCH(lib_move:update(Unit)),
     ok.
 
 %%%-------------------------------------------------------------------
@@ -209,13 +214,13 @@ real_stop_now(_Players) ->
 start_stop_now(S) ->
     ?INFO("~p ~p start stop now, kick all player(s)",
         [misc:register_name(), self()]),
-    catch hook_map:on_map_destroy(),
-    kick_all_player(S),
+    ?TRY_CATCH( hook_map:on_map_destroy(), Err1, Stk1),
+    ?TRY_CATCH( kick_all_player(S), Err2, Stk2),
     S#m_map_state{status = ?MAP_READY_EXIT}.
 
 kick_all_player(#m_map_state{player = Ets}) ->
     ets:foldl(
-        fun(#m_map_obj{pid = Pid}, _) ->
+        fun(#m_map_unit{pid = Pid}, _) ->
             ps:send(Pid, return_to_pre_map_req)
         end, 0, Ets),
     ok.

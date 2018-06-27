@@ -22,7 +22,7 @@
 %% WARNING!!! WARNING!!! WARNING!!!
 %% call
 -export([
-    online_call/1, offline_call/4, change_map_call/2,
+    online_call/1, offline_call/4, sevr_change_map_call/2,
     teleport_call/1, return_to_old_map_call/0
 ]).
 
@@ -37,7 +37,7 @@ do_teleport_call(undefined, _NewPos) ->
     ?ERROR("");
 do_teleport_call(MapPid, NewPos) ->
     Uid = lib_player_rw:get_uid(),
-    ok  = map:player_teleport_call(
+    ok = map:player_teleport_call(
         MapPid,
         #r_teleport_req{uid = Uid, tar = NewPos}
     ),
@@ -78,7 +78,7 @@ do_online_call_1(Mgr, Req) ->
 
 
 %%-------------------------------------------------------------------
-change_map_call(DestMapID, TarPos) ->
+sevr_change_map_call(DestMapID, TarPos) ->
     lib_player_rw:set_status(?PS_CHANGE_MAP),
     Uid = lib_player_rw:get_uid(),
     #m_player_pub{mid = Mid, line = Line, mpid = MPid, pos = Pos} = lib_cache:get_player_pub(Uid),
@@ -90,10 +90,10 @@ change_map_call(DestMapID, TarPos) ->
         }
     ),
 
-    do_change_map_call_ret(Mid, Line, Pos, Ack, online),
+    do_change_map_call_ret(Mid, Line, Pos, Ack, gameing),
     ok.
 
-%%%-------------------------------------------------------------------
+%%-------------------------------------------------------------------
 do_change_map_call(Req) ->
     #r_change_map_req{
         uid = Uid, tar_map_id = TMid,
@@ -103,29 +103,39 @@ do_change_map_call(Req) ->
     TarMgr = map_creator:map_mgr(TMid),
     ?INFO("player ~p, changeMap mgr ~p:~p:~p -> mgr ~p:~p",
         [Uid, Mid, LineId, CurMgr, TMid, TarMgr]),
-    case CurMgr of
-        undefined ->
-            ?FATAL("player[~p] cur map[~p] not exists", [Uid, Mid]);
+    ExitRet =
+        case CurMgr of
+            undefined ->
+                ?FATAL("player[~p] cur map[~p] not exists", [Uid, Mid]),
+                error;
+            _ ->
+                map_mgr:player_exit_map_call(CurMgr,
+                    #r_exit_map_req{map_id = Mid, line_id = LineId, map_pid = Mpid, uid = Uid})
+        end,
+    case ExitRet of
+        error ->
+            #r_change_map_ack{error = -1, map_id = Mid};
         _ ->
-            map_mgr:player_exit_map_call(CurMgr,
-                #r_exit_map_req{map_id = Mid, line_id = LineId, map_pid = Mpid, uid = Uid})
-    end,
-    case TarMgr of
-        undefined ->
-            ?ERROR("player[~p] tar map[~p] not exists", [Uid, TMid]),
-            goto_born_map(Req);
-        _ ->
-            case map_mgr:player_join_map_call(TarMgr, Req) of
-                #r_change_map_ack{} = Ack -> Ack;
-                _ -> goto_born_map(Req)
+            case TarMgr of
+                undefined ->
+                    ?ERROR("player[~p] tar map[~p] not exists", [Uid, TMid]),
+                    goto_born_map(Req);
+                _ ->
+                    case map_mgr:player_join_map_call(TarMgr, Req) of
+                        #r_change_map_ack{} = Ack -> Ack;
+                        _ -> goto_born_map(Req)
+                    end
             end
     end.
+
+
+%%-------------------------------------------------------------------
 do_change_map_call_ret(
     OldMid, OldLineId, OldPos,
     #r_change_map_ack{
         error = 0,
         map_id = Mid, line_id = LineId,
-        map_pid = MPid , pos = Pos
+        map_pid = MPid, pos = Pos
     }, _Flag) ->
     Uid = lib_player_rw:get_uid(),
     lib_cache:update_player_pub(
@@ -143,7 +153,7 @@ do_change_map_call_ret(
     lib_player_rw:set_map(
         #m_player_map{map_id = Mid, line_id = LineId, map_pid = MPid}
     ),
-    ?WARN("player ~p enter map_~p_~p map_pid ~p",[Uid, Mid, LineId, MPid]),
+    ?WARN("player ~p enter map_~p_~p map_pid ~p", [Uid, Mid, LineId, MPid]),
     hook_player:on_change_map(Mid, Mid),
 
     lib_player_rw:set_status(?PS_GAME),
@@ -151,10 +161,10 @@ do_change_map_call_ret(
 do_change_map_call_ret(
     OldMid, OldLineId, _OldPos,
     #r_change_map_ack{error = Err, map_id = Mid}, Flag
-)->
+) ->
     case Flag of
-        online -> lib_player_rw:set_status(?PS_GAME);
-        _Flag  -> error
+        gameing -> lib_player_rw:set_status(?PS_GAME);
+        _Flag -> error
     end,
     ?ERROR("player ~p change from map ~p:~p to map ~p failed with ~p",
         [lib_player_rw:get_uid(), OldMid, OldLineId, Mid, Err]),
@@ -165,7 +175,7 @@ return_to_old_map_call() ->
     Uid = lib_player_rw:get_uid(),
     #m_player_pub{mpid = Mid, old_mid = OMid, old_pos = OPos} = lib_cache:get_player_pub(Uid),
     ?DEBUG("player ~p return_to_pre_map from ~p to ~p", [Uid, Mid, OMid]),
-    change_map_call(OMid, OPos),
+    sevr_change_map_call(OMid, OPos),
     ok.
 
 %%%-------------------------------------------------------------------
@@ -173,7 +183,7 @@ offline_call(Uid, MapID, LineId, MapPid) ->
     Mgr = map_creator:map_mgr(MapID),
     map_mgr:player_exit_map_call(
         Mgr,
-        #r_exit_map_req{map_id = MapID, line_id = LineId,  map_pid = MapPid, uid = Uid}
+        #r_exit_map_req{map_id = MapID, line_id = LineId, map_pid = MapPid, uid = Uid}
     ),
     ok.
 
@@ -181,7 +191,7 @@ offline_call(Uid, MapID, LineId, MapPid) ->
 goto_born_map(Req) ->
     Mid = map_creator:born_map_id(),
     Pos = map_creator:born_map_pos(),
-    Mgr = map_creator:map_mgr( Mid ),
+    Mgr = map_creator:map_mgr(Mid),
     ?WARN("kick player[~p] to born map",
         [Req#r_change_map_req.uid]),
 
@@ -193,6 +203,7 @@ goto_born_map(Req) ->
         }
     ) of
         #r_change_map_ack{} = Ack -> Ack;
-        _ -> ?FATAL("fatal error, player[~p]can not enter the born map",
-            [Req#r_change_map_req.uid])
+        _ ->
+            ?FATAL("fatal error, player[~p]can not enter the born map", [Req#r_change_map_req.uid]),
+            #r_change_map_ack{error = -9999, map_id = Mid}
     end.

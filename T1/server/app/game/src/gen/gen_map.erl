@@ -36,8 +36,8 @@ mod_init([MapID, MapLine]) ->
     {ok, lib_map_priv:init(#m_map_state{map_id = MapID, line_id = MapLine})}.
 
 %%--------------------------------------------------------------------
-do_handle_call({player_join, Obj}, _From, State) ->
-    {Ret, NewState} = lib_map_priv:player_join_call(State, Obj),
+do_handle_call({player_join, Unit}, _From, State) ->
+    {Ret, NewState} = lib_map_priv:player_join_call(State, Unit),
     {reply, Ret, NewState};
 do_handle_call({player_exit, Req}, _From, State) ->
     {Ret, NewState} = lib_map_priv:player_exit_call(State, Req),

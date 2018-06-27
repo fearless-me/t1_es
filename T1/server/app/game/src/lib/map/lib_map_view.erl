@@ -12,7 +12,7 @@
 -include("logger.hrl").
 -include("vector3.hrl").
 -include("map.hrl").
--include("map_obj.hrl").
+-include("map_unit.hrl").
 -include("netmsg.hrl").
 -include_lib("stdlib/include/assert.hrl").
 
@@ -36,30 +36,30 @@
 -define(CELL_SIZE, map_cell_size__).
 
 %%%-------------------------------------------------------------------
-sync_player_join_map(Obj) ->
+sync_player_join_map(Unit) ->
     %1.
-    Uid = lib_map_obj:get_uid(Obj),
+    Uid = lib_unit:get_uid(Unit),
     Pos = lib_move_rw:get_cur_pos(Uid),
     Index = pos_to_vis_index(Pos, get(?VIS_W), ?VIS_DIST),
     Tiles = get_vis_tile_around(Index),
 
     %2.
-    sync_add_obj(Obj, Tiles),
-    add_obj_to_vis_tile(Obj, Index),
+    sync_add_obj(Unit, Tiles),
+    add_obj_to_vis_tile(Unit, Index),
     ok.
 
 %%%-------------------------------------------------------------------
-sync_player_exit_map(Obj) ->
+sync_player_exit_map(Unit) ->
     %1.
-    Uid = lib_map_obj:get_uid(Obj),
+    Uid = lib_unit:get_uid(Unit),
     Index = pos_to_vis_index(lib_move_rw:get_cur_pos(Uid), get(?VIS_W), ?VIS_DIST),
 
     %2.
-    del_obj_from_vis_tile(Obj, Index),
+    del_obj_from_vis_tile(Unit, Index),
 
     %3.
     Tiles = get_vis_tile_around(Index),
-    sync_del_obj(Obj, Tiles),
+    sync_del_obj(Unit, Tiles),
     ok.
 
 %%%-------------------------------------------------------------------
@@ -72,8 +72,8 @@ init_vis_tile(#recGameMapCfg{
     rowCellNum = Row,
     cellSize = CellSize
 }) ->
-    VisW = (erlang:trunc(Col * CellSize) div ?VIS_DIST) + 1,
-    VisH = (erlang:trunc(Row * CellSize) div ?VIS_DIST) + 1,
+    VisW = (erlang:trunc(Col * 1) div ?VIS_DIST) + 1,
+    VisH = (erlang:trunc(Row * 1) div ?VIS_DIST) + 1,
     VisT = VisW * VisH,
 
     ?assert(VisT > 1),
@@ -124,41 +124,41 @@ sync_change_pos_visual_tile(_Obj, OldVisTileIndex, OldVisTileIndex) ->
     ok;
 sync_change_pos_visual_tile(undefined, OldVisTileIndex, OldVisTileIndex) ->
     error;
-sync_change_pos_visual_tile(Obj, OldVisTileIndex, NewVisTileIndex) ->
+sync_change_pos_visual_tile(Unit, OldVisTileIndex, NewVisTileIndex) ->
 %%    ?DEBUG("uid ~w vis_tile_index from ~w to ~w",
-%%        [Obj#m_map_obj.uid, OldVisTileIndex, NewVisTileIndex]),
+%%        [Unit#m_map_obj.uid, OldVisTileIndex, NewVisTileIndex]),
 
-    del_obj_from_vis_tile(Obj, OldVisTileIndex),
+    del_obj_from_vis_tile(Unit, OldVisTileIndex),
     {VisTileLeave, VisTileEnter} = vis_tile_intersection(OldVisTileIndex, NewVisTileIndex),
-    sync_del_obj(Obj, VisTileLeave),
-    sync_add_obj(Obj, VisTileEnter),
-    add_obj_to_vis_tile(Obj, NewVisTileIndex),
+    sync_del_obj(Unit, VisTileLeave),
+    sync_add_obj(Unit, VisTileEnter),
+    add_obj_to_vis_tile(Unit, NewVisTileIndex),
     ok.
 
 %%%-------------------------------------------------------------------
 %% 删除广播
-sync_del_obj(Obj, VisTiles) ->
-    sync_me_to_big_vis_tile(Obj, VisTiles, del_me),
-    sync_big_vis_tile_to_me(Obj, VisTiles, del_all),
+sync_del_obj(Unit, VisTiles) ->
+    sync_me_to_big_vis_tile(Unit, VisTiles, del_me),
+    sync_big_vis_tile_to_me(Unit, VisTiles, del_all),
     ok.
 
 %%%-------------------------------------------------------------------
 %% 添加广播                           
-sync_add_obj(Obj, VisTiles) ->
-    sync_me_to_big_vis_tile(Obj, VisTiles, add_me),
-    sync_big_vis_tile_to_me(Obj, VisTiles, add_all),
+sync_add_obj(Unit, VisTiles) ->
+    sync_me_to_big_vis_tile(Unit, VisTiles, add_me),
+    sync_big_vis_tile_to_me(Unit, VisTiles, add_all),
     ok.
 
 %%%-------------------------------------------------------------------
 %% 加入格子
-add_obj_to_vis_tile(Obj, VisTileIndex) ->
+add_obj_to_vis_tile(Unit, VisTileIndex) ->
     ?assert(is_number(VisTileIndex) andalso VisTileIndex > 0),
 
-%%    ?DEBUG("add ~p to vis index ~p", [Obj#m_map_obj.uid, VisTileIndex]),
+%%    ?DEBUG("add ~p to vis index ~p", [Unit#m_map_obj.uid, VisTileIndex]),
 
     VisTile = get_vis_tile(VisTileIndex),
     add_to_vis_tile_1(
-        lib_map_obj:get_type(Obj), lib_map_obj:get_uid(Obj), VisTileIndex, VisTile),
+        lib_unit:get_type(Unit), lib_unit:get_uid(Unit), VisTileIndex, VisTile),
     ok.
 
 %%
@@ -191,12 +191,12 @@ add_to_vis_tile_1(_Type, _Uid, _VisTileIndex, _VisTile) ->
 
 %%%-------------------------------------------------------------------
 %% 移除格子
-del_obj_from_vis_tile(Obj, VisTileIndex) ->
+del_obj_from_vis_tile(Unit, VisTileIndex) ->
     ?assert(is_number(VisTileIndex) andalso VisTileIndex > 0),
 
-%%    ?DEBUG("del ~p from vis index ~p", [Obj#m_map_obj.uid, VisTileIndex]),
+%%    ?DEBUG("del ~p from vis index ~p", [Unit#m_map_obj.uid, VisTileIndex]),
     VisTile = get_vis_tile(VisTileIndex),
-    del_from_vis_tile_1(lib_map_obj:get_type(Obj), lib_map_obj:get_uid(Obj), VisTileIndex, VisTile),
+    del_from_vis_tile_1(lib_unit:get_type(Unit), lib_unit:get_uid(Unit), VisTileIndex, VisTile),
     ok.
 
 %%
@@ -230,9 +230,9 @@ del_from_vis_tile_1(_Type, _Uid, _VisTileIndex, _VisTile) ->
 %%-------------------------------------------------------------------
 %%-------------------------------------------------------------------
 %% 同步周围Obj给我
-sync_big_vis_tile_to_me(Obj, VisTileList, Msg) ->
-    Uid = lib_map_obj:get_uid(Obj),
-    Type = lib_map_obj:get_type(Obj),
+sync_big_vis_tile_to_me(Unit, VisTileList, Msg) ->
+    Uid = lib_unit:get_uid(Unit),
+    Type = lib_unit:get_type(Unit),
     do_sync_big_vis_tile_to_me(Type, Uid, VisTileList, Msg),
     ok.
 
@@ -296,13 +296,13 @@ do_sync_big_vis_tile_to_me(_Type, _Uid, _VisTileList, _Msg) -> skip.
 
 %%-------------------------------------------------------------------
 %% 把Obj信息广播到九宫格中
-sync_me_to_big_vis_tile(Obj, VisTileList, del_me) ->
-    Uid = lib_map_obj:get_uid(Obj),
+sync_me_to_big_vis_tile(Unit, VisTileList, del_me) ->
+    Uid = lib_unit:get_uid(Unit),
     Msg = #pk_GS2U_RemoveRemote{uid_list = [Uid]},
     sync_msg_to_big_vis_tile_1(VisTileList, Msg),
     ok;
-sync_me_to_big_vis_tile(Obj, VisTileList, add_me) ->
-    Uid = lib_map_obj:get_uid(Obj),
+sync_me_to_big_vis_tile(Unit, VisTileList, add_me) ->
+    Uid = lib_unit:get_uid(Unit),
     Msg = lib_move:cal_move_msg(Uid),
     sync_msg_to_big_vis_tile_1(VisTileList, Msg),
     ok.

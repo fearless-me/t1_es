@@ -2,7 +2,8 @@
 %%% @author mawenhong
 %%% @copyright (C) 2018, <COMPANY>
 %%% @doc
-%%%
+%%%  ai 使用有限状态机外加一些触发器的机制实现，如果是特殊的BOSS
+%%%  单独处理或挂很多触发器
 %%% @end
 %%% Created : 15. 六月 2018 14:49
 %%%-------------------------------------------------------------------
@@ -31,7 +32,7 @@ init(Uid, AiType) ->
 %%-------------------------------------------------------------------
 init_patrol(Uid, PathList) ->
     % todo 根据怪物巡逻的配置
-    _Did = lib_map_obj_rw:get_did(Uid),
+    _Did = lib_unit_rw:get_did(Uid),
     PatrolType = ?ECPT_Path,
     case PatrolType of
         ?ECPT_Path ->
@@ -45,7 +46,7 @@ init_patrol(Uid, PathList) ->
     ok.
 
 init_ai(Uid) ->
-    _Did = lib_map_obj_rw:get_did(Uid),
+    _Did = lib_unit_rw:get_did(Uid),
     CreateType = ?EACT_Indicate,
     case CreateType of
         ?EACT_NoAI ->
@@ -151,7 +152,7 @@ change_state(Uid, OldState, NewState) ->
 %% 巡逻
 %%-------------------------------------------------------------------
 update_patrol(Uid) ->
-    _Did = lib_map_obj_rw:get_did(Uid),
+    _Did = lib_unit_rw:get_did(Uid),
     PatrolType = ?ECPT_Wood,
     case PatrolType of
         ?ECPT_Wood -> skip;
@@ -164,7 +165,7 @@ update_patrol(Uid) ->
 
 %% 巡逻结束
 update_patrol_action(Uid, true, _ResetTick) ->
-    CurMove = lib_map_obj_rw:get_cur_move(Uid),
+    CurMove = lib_unit_rw:get_cur_move(Uid),
     case CurMove of
         ?EMS_STAND ->
             lib_ai_rw:set_is_patrol(Uid, false),

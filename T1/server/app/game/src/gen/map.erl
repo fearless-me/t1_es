@@ -27,8 +27,8 @@
 player_exit_call(MapPid, Req) ->
     gen_server:call(MapPid, {player_exit, Req}, ?MAP_CALL_TIMEOUT).
 %%--------------------------------
-player_join_call(MapPid, Obj) ->
-    gen_server:call(MapPid, {player_join, Obj}, ?MAP_CALL_TIMEOUT).
+player_join_call(MapPid, Unit) ->
+    gen_server:call(MapPid, {player_join, Unit}, ?MAP_CALL_TIMEOUT).
 %%--------------------------------
 player_teleport_call(MapPid, Req) ->
     gen_server:call(MapPid, {player_teleport, Req}, ?MAP_CALL_TIMEOUT).

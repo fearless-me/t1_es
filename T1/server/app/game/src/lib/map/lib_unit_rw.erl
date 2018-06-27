@@ -3,7 +3,7 @@
 %%% This File Is AUTO GENERATED, Don't Modify it MANUALLY!!!
 %%% This File Is AUTO GENERATED, Don't Modify it MANUALLY!!!
 %%-------------------------------------------------------------------
--module(lib_map_obj_rw).
+-module(lib_unit_rw).
 
 %%-------------------------------------------------------------------
 -include("logger.hrl").
@@ -11,22 +11,22 @@
 %%-------------------------------------------------------------------
 
 -export([
-	get_pid/1, get_pid_def/2, set_pid/2, set_pid_direct/2, % #m_map_obj_rw.pid
-	get_did/1, get_did_def/2, set_did/2, set_did_direct/2, % #m_map_obj_rw.did
-	get_group/1, get_group_def/2, set_group/2, set_group_direct/2, % #m_map_obj_rw.group
-	get_owner/1, get_owner_def/2, set_owner/2, set_owner_direct/2, % #m_map_obj_rw.owner
-	get_type/1, get_type_def/2, set_type/2, set_type_direct/2, % #m_map_obj_rw.type
-	get_hp/1, get_hp_def/2, set_hp/2, set_hp_direct/2, % #m_map_obj_rw.hp
-	get_max_hp/1, get_max_hp_def/2, set_max_hp/2, set_max_hp_direct/2, % #m_map_obj_rw.max_hp
-	get_attr/1, get_attr_def/2, set_attr/2, set_attr_direct/2, % #m_map_obj_rw.attr
-	get_buff_list/1, get_buff_list_def/2, set_buff_list/2, set_buff_list_direct/2, % #m_map_obj_rw.buff_list
+	get_pid/1, get_pid_def/2, set_pid/2, set_pid_direct/2, % #m_map_unit_rw.pid
+	get_did/1, get_did_def/2, set_did/2, set_did_direct/2, % #m_map_unit_rw.did
+	get_group/1, get_group_def/2, set_group/2, set_group_direct/2, % #m_map_unit_rw.group
+	get_owner/1, get_owner_def/2, set_owner/2, set_owner_direct/2, % #m_map_unit_rw.owner
+	get_type/1, get_type_def/2, set_type/2, set_type_direct/2, % #m_map_unit_rw.type
+	get_hp/1, get_hp_def/2, set_hp/2, set_hp_direct/2, % #m_map_unit_rw.hp
+	get_max_hp/1, get_max_hp_def/2, set_max_hp/2, set_max_hp_direct/2, % #m_map_unit_rw.max_hp
+	get_attr/1, get_attr_def/2, set_attr/2, set_attr_direct/2, % #m_map_unit_rw.attr
+	get_buff_list/1, get_buff_list_def/2, set_buff_list/2, set_buff_list_direct/2, % #m_map_unit_rw.buff_list
 	% common function 
 	del/1 ,to_record/1 ,init_from/2 ,init_default/1
 ]).
 %%-------------------------------------------------------------------
 %%-------------------------------------------------------------------
 %%-------------------------------------------------------------------
-%% #m_map_obj_rw.pid
+%% #m_map_unit_rw.pid
 get_pid(Uid)-> get({pid,Uid}).
 
 get_pid_def(Uid, Def)->
@@ -42,7 +42,7 @@ set_pid(Uid, V)->
 set_pid_direct(Uid, V)-> put({pid,Uid}, V).
 
 %%-------------------------------------------------------------------
-%% #m_map_obj_rw.did
+%% #m_map_unit_rw.did
 get_did(Uid)-> get({did,Uid}).
 
 get_did_def(Uid, Def)->
@@ -58,7 +58,7 @@ set_did(Uid, V)->
 set_did_direct(Uid, V)-> put({did,Uid}, V).
 
 %%-------------------------------------------------------------------
-%% #m_map_obj_rw.group
+%% #m_map_unit_rw.group
 get_group(Uid)-> get({group,Uid}).
 
 get_group_def(Uid, Def)->
@@ -74,7 +74,7 @@ set_group(Uid, V)->
 set_group_direct(Uid, V)-> put({group,Uid}, V).
 
 %%-------------------------------------------------------------------
-%% #m_map_obj_rw.owner
+%% #m_map_unit_rw.owner
 get_owner(Uid)-> get({owner,Uid}).
 
 get_owner_def(Uid, Def)->
@@ -90,7 +90,7 @@ set_owner(Uid, V)->
 set_owner_direct(Uid, V)-> put({owner,Uid}, V).
 
 %%-------------------------------------------------------------------
-%% #m_map_obj_rw.type
+%% #m_map_unit_rw.type
 get_type(Uid)-> get({type,Uid}).
 
 get_type_def(Uid, Def)->
@@ -106,7 +106,7 @@ set_type(Uid, V)->
 set_type_direct(Uid, V)-> put({type,Uid}, V).
 
 %%-------------------------------------------------------------------
-%% #m_map_obj_rw.hp
+%% #m_map_unit_rw.hp
 get_hp(Uid)-> get({hp,Uid}).
 
 get_hp_def(Uid, Def)->
@@ -122,7 +122,7 @@ set_hp(Uid, V)->
 set_hp_direct(Uid, V)-> put({hp,Uid}, V).
 
 %%-------------------------------------------------------------------
-%% #m_map_obj_rw.max_hp
+%% #m_map_unit_rw.max_hp
 get_max_hp(Uid)-> get({max_hp,Uid}).
 
 get_max_hp_def(Uid, Def)->
@@ -138,7 +138,7 @@ set_max_hp(Uid, V)->
 set_max_hp_direct(Uid, V)-> put({max_hp,Uid}, V).
 
 %%-------------------------------------------------------------------
-%% #m_map_obj_rw.attr
+%% #m_map_unit_rw.attr
 get_attr(Uid)-> get({attr,Uid}).
 
 get_attr_def(Uid, Def)->
@@ -154,7 +154,7 @@ set_attr(Uid, V)->
 set_attr_direct(Uid, V)-> put({attr,Uid}, V).
 
 %%-------------------------------------------------------------------
-%% #m_map_obj_rw.buff_list
+%% #m_map_unit_rw.buff_list
 get_buff_list(Uid)-> get({buff_list,Uid}).
 
 get_buff_list_def(Uid, Def)->
@@ -183,7 +183,7 @@ del(Uid)->
 	ok.
 %%-------------------------------------------------------------------
 to_record(Uid)->
-	#m_map_obj_rw{
+	#m_map_unit_rw{
 		pid = get_pid(Uid),
 		did = get_did(Uid),
 		group = get_group(Uid),
@@ -196,27 +196,27 @@ to_record(Uid)->
 	}.
 %%-------------------------------------------------------------------
 init_from(Uid, Rec)->
-	set_pid_direct(Uid, Rec#m_map_obj_rw.pid),
-	set_did_direct(Uid, Rec#m_map_obj_rw.did),
-	set_group_direct(Uid, Rec#m_map_obj_rw.group),
-	set_owner_direct(Uid, Rec#m_map_obj_rw.owner),
-	set_type_direct(Uid, Rec#m_map_obj_rw.type),
-	set_hp_direct(Uid, Rec#m_map_obj_rw.hp),
-	set_max_hp_direct(Uid, Rec#m_map_obj_rw.max_hp),
-	set_attr_direct(Uid, Rec#m_map_obj_rw.attr),
-	set_buff_list_direct(Uid, Rec#m_map_obj_rw.buff_list),
+	set_pid_direct(Uid, Rec#m_map_unit_rw.pid),
+	set_did_direct(Uid, Rec#m_map_unit_rw.did),
+	set_group_direct(Uid, Rec#m_map_unit_rw.group),
+	set_owner_direct(Uid, Rec#m_map_unit_rw.owner),
+	set_type_direct(Uid, Rec#m_map_unit_rw.type),
+	set_hp_direct(Uid, Rec#m_map_unit_rw.hp),
+	set_max_hp_direct(Uid, Rec#m_map_unit_rw.max_hp),
+	set_attr_direct(Uid, Rec#m_map_unit_rw.attr),
+	set_buff_list_direct(Uid, Rec#m_map_unit_rw.buff_list),
 	ok.
 %%-------------------------------------------------------------------
 init_default(Uid)->
-	Rec = #m_map_obj_rw{},
-	set_pid_direct(Uid, Rec#m_map_obj_rw.pid),
-	set_did_direct(Uid, Rec#m_map_obj_rw.did),
-	set_group_direct(Uid, Rec#m_map_obj_rw.group),
-	set_owner_direct(Uid, Rec#m_map_obj_rw.owner),
-	set_type_direct(Uid, Rec#m_map_obj_rw.type),
-	set_hp_direct(Uid, Rec#m_map_obj_rw.hp),
-	set_max_hp_direct(Uid, Rec#m_map_obj_rw.max_hp),
-	set_attr_direct(Uid, Rec#m_map_obj_rw.attr),
-	set_buff_list_direct(Uid, Rec#m_map_obj_rw.buff_list),
+	Rec = #m_map_unit_rw{},
+	set_pid_direct(Uid, Rec#m_map_unit_rw.pid),
+	set_did_direct(Uid, Rec#m_map_unit_rw.did),
+	set_group_direct(Uid, Rec#m_map_unit_rw.group),
+	set_owner_direct(Uid, Rec#m_map_unit_rw.owner),
+	set_type_direct(Uid, Rec#m_map_unit_rw.type),
+	set_hp_direct(Uid, Rec#m_map_unit_rw.hp),
+	set_max_hp_direct(Uid, Rec#m_map_unit_rw.max_hp),
+	set_attr_direct(Uid, Rec#m_map_unit_rw.attr),
+	set_buff_list_direct(Uid, Rec#m_map_unit_rw.buff_list),
 	ok.
 %%-------------------------------------------------------------------

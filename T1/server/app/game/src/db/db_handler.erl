@@ -13,7 +13,7 @@
 -include("mem_record.hrl").
 -include("common_record.hrl").
 -include("db_record.hrl").
-%%-include("map_obj.hrl").
+%%-include("map_unit.hrl").
 -include("vector3.hrl").
 
 %% API

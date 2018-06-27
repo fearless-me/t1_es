@@ -11,26 +11,26 @@
 %%-------------------------------------------------------------------
 
 -export([
-	get_move_speed/1, get_move_speed_def/2, set_move_speed/2, set_move_speed_direct/2, % #m_map_obj_move_rw.move_speed
-	get_cur_move/1, get_cur_move_def/2, set_cur_move/2, set_cur_move_direct/2, % #m_map_obj_move_rw.cur_move
-	get_next_move/1, get_next_move_def/2, set_next_move/2, set_next_move_direct/2, % #m_map_obj_move_rw.next_move
-	get_vis_tile_idx/1, get_vis_tile_idx_def/2, set_vis_tile_idx/2, set_vis_tile_idx_direct/2, % #m_map_obj_move_rw.vis_tile_idx
-	get_cur_pos/1, get_cur_pos_def/2, set_cur_pos/2, set_cur_pos_direct/2, % #m_map_obj_move_rw.cur_pos
-	get_start_pos/1, get_start_pos_def/2, set_start_pos/2, set_start_pos_direct/2, % #m_map_obj_move_rw.start_pos
-	get_dest_pos/1, get_dest_pos_def/2, set_dest_pos/2, set_dest_pos_direct/2, % #m_map_obj_move_rw.dest_pos
-	get_face/1, get_face_def/2, set_face/2, set_face_direct/2, % #m_map_obj_move_rw.face
-	get_dir/1, get_dir_def/2, set_dir/2, set_dir_direct/2, % #m_map_obj_move_rw.dir
-	get_start_time/1, get_start_time_def/2, set_start_time/2, set_start_time_direct/2, % #m_map_obj_move_rw.start_time
-	get_seg_move_time/1, get_seg_move_time_def/2, set_seg_move_time/2, set_seg_move_time_direct/2, % #m_map_obj_move_rw.seg_move_time
-	get_stopped/1, get_stopped_def/2, set_stopped/2, set_stopped_direct/2, % #m_map_obj_move_rw.stopped
-	get_path_list/1, get_path_list_def/2, set_path_list/2, set_path_list_direct/2, % #m_map_obj_move_rw.path_list
+	get_move_speed/1, get_move_speed_def/2, set_move_speed/2, set_move_speed_direct/2, % #m_map_unit_move_rw.move_speed
+	get_cur_move/1, get_cur_move_def/2, set_cur_move/2, set_cur_move_direct/2, % #m_map_unit_move_rw.cur_move
+	get_next_move/1, get_next_move_def/2, set_next_move/2, set_next_move_direct/2, % #m_map_unit_move_rw.next_move
+	get_vis_tile_idx/1, get_vis_tile_idx_def/2, set_vis_tile_idx/2, set_vis_tile_idx_direct/2, % #m_map_unit_move_rw.vis_tile_idx
+	get_cur_pos/1, get_cur_pos_def/2, set_cur_pos/2, set_cur_pos_direct/2, % #m_map_unit_move_rw.cur_pos
+	get_start_pos/1, get_start_pos_def/2, set_start_pos/2, set_start_pos_direct/2, % #m_map_unit_move_rw.start_pos
+	get_dest_pos/1, get_dest_pos_def/2, set_dest_pos/2, set_dest_pos_direct/2, % #m_map_unit_move_rw.dest_pos
+	get_face/1, get_face_def/2, set_face/2, set_face_direct/2, % #m_map_unit_move_rw.face
+	get_dir/1, get_dir_def/2, set_dir/2, set_dir_direct/2, % #m_map_unit_move_rw.dir
+	get_start_time/1, get_start_time_def/2, set_start_time/2, set_start_time_direct/2, % #m_map_unit_move_rw.start_time
+	get_seg_move_time/1, get_seg_move_time_def/2, set_seg_move_time/2, set_seg_move_time_direct/2, % #m_map_unit_move_rw.seg_move_time
+	get_stopped/1, get_stopped_def/2, set_stopped/2, set_stopped_direct/2, % #m_map_unit_move_rw.stopped
+	get_path_list/1, get_path_list_def/2, set_path_list/2, set_path_list_direct/2, % #m_map_unit_move_rw.path_list
 	% common function 
 	del/1 ,to_record/1 ,init_from/2 ,init_default/1
 ]).
 %%-------------------------------------------------------------------
 %%-------------------------------------------------------------------
 %%-------------------------------------------------------------------
-%% #m_map_obj_move_rw.move_speed
+%% #m_map_unit_move_rw.move_speed
 get_move_speed(Uid)-> get({move_speed,Uid}).
 
 get_move_speed_def(Uid, Def)->
@@ -46,7 +46,7 @@ set_move_speed(Uid, V)->
 set_move_speed_direct(Uid, V)-> put({move_speed,Uid}, V).
 
 %%-------------------------------------------------------------------
-%% #m_map_obj_move_rw.cur_move
+%% #m_map_unit_move_rw.cur_move
 get_cur_move(Uid)-> get({cur_move,Uid}).
 
 get_cur_move_def(Uid, Def)->
@@ -62,7 +62,7 @@ set_cur_move(Uid, V)->
 set_cur_move_direct(Uid, V)-> put({cur_move,Uid}, V).
 
 %%-------------------------------------------------------------------
-%% #m_map_obj_move_rw.next_move
+%% #m_map_unit_move_rw.next_move
 get_next_move(Uid)-> get({next_move,Uid}).
 
 get_next_move_def(Uid, Def)->
@@ -78,7 +78,7 @@ set_next_move(Uid, V)->
 set_next_move_direct(Uid, V)-> put({next_move,Uid}, V).
 
 %%-------------------------------------------------------------------
-%% #m_map_obj_move_rw.vis_tile_idx
+%% #m_map_unit_move_rw.vis_tile_idx
 get_vis_tile_idx(Uid)-> get({vis_tile_idx,Uid}).
 
 get_vis_tile_idx_def(Uid, Def)->
@@ -94,7 +94,7 @@ set_vis_tile_idx(Uid, V)->
 set_vis_tile_idx_direct(Uid, V)-> put({vis_tile_idx,Uid}, V).
 
 %%-------------------------------------------------------------------
-%% #m_map_obj_move_rw.cur_pos
+%% #m_map_unit_move_rw.cur_pos
 get_cur_pos(Uid)-> get({cur_pos,Uid}).
 
 get_cur_pos_def(Uid, Def)->
@@ -110,7 +110,7 @@ set_cur_pos(Uid, V)->
 set_cur_pos_direct(Uid, V)-> put({cur_pos,Uid}, V).
 
 %%-------------------------------------------------------------------
-%% #m_map_obj_move_rw.start_pos
+%% #m_map_unit_move_rw.start_pos
 get_start_pos(Uid)-> get({start_pos,Uid}).
 
 get_start_pos_def(Uid, Def)->
@@ -126,7 +126,7 @@ set_start_pos(Uid, V)->
 set_start_pos_direct(Uid, V)-> put({start_pos,Uid}, V).
 
 %%-------------------------------------------------------------------
-%% #m_map_obj_move_rw.dest_pos
+%% #m_map_unit_move_rw.dest_pos
 get_dest_pos(Uid)-> get({dest_pos,Uid}).
 
 get_dest_pos_def(Uid, Def)->
@@ -142,7 +142,7 @@ set_dest_pos(Uid, V)->
 set_dest_pos_direct(Uid, V)-> put({dest_pos,Uid}, V).
 
 %%-------------------------------------------------------------------
-%% #m_map_obj_move_rw.face
+%% #m_map_unit_move_rw.face
 get_face(Uid)-> get({face,Uid}).
 
 get_face_def(Uid, Def)->
@@ -158,7 +158,7 @@ set_face(Uid, V)->
 set_face_direct(Uid, V)-> put({face,Uid}, V).
 
 %%-------------------------------------------------------------------
-%% #m_map_obj_move_rw.dir
+%% #m_map_unit_move_rw.dir
 get_dir(Uid)-> get({dir,Uid}).
 
 get_dir_def(Uid, Def)->
@@ -174,7 +174,7 @@ set_dir(Uid, V)->
 set_dir_direct(Uid, V)-> put({dir,Uid}, V).
 
 %%-------------------------------------------------------------------
-%% #m_map_obj_move_rw.start_time
+%% #m_map_unit_move_rw.start_time
 get_start_time(Uid)-> get({start_time,Uid}).
 
 get_start_time_def(Uid, Def)->
@@ -190,7 +190,7 @@ set_start_time(Uid, V)->
 set_start_time_direct(Uid, V)-> put({start_time,Uid}, V).
 
 %%-------------------------------------------------------------------
-%% #m_map_obj_move_rw.seg_move_time
+%% #m_map_unit_move_rw.seg_move_time
 get_seg_move_time(Uid)-> get({seg_move_time,Uid}).
 
 get_seg_move_time_def(Uid, Def)->
@@ -206,7 +206,7 @@ set_seg_move_time(Uid, V)->
 set_seg_move_time_direct(Uid, V)-> put({seg_move_time,Uid}, V).
 
 %%-------------------------------------------------------------------
-%% #m_map_obj_move_rw.stopped
+%% #m_map_unit_move_rw.stopped
 get_stopped(Uid)-> get({stopped,Uid}).
 
 get_stopped_def(Uid, Def)->
@@ -222,7 +222,7 @@ set_stopped(Uid, V)->
 set_stopped_direct(Uid, V)-> put({stopped,Uid}, V).
 
 %%-------------------------------------------------------------------
-%% #m_map_obj_move_rw.path_list
+%% #m_map_unit_move_rw.path_list
 get_path_list(Uid)-> get({path_list,Uid}).
 
 get_path_list_def(Uid, Def)->
@@ -255,7 +255,7 @@ del(Uid)->
 	ok.
 %%-------------------------------------------------------------------
 to_record(Uid)->
-	#m_map_obj_move_rw{
+	#m_map_unit_move_rw{
 		move_speed = get_move_speed(Uid),
 		cur_move = get_cur_move(Uid),
 		next_move = get_next_move(Uid),
@@ -272,35 +272,35 @@ to_record(Uid)->
 	}.
 %%-------------------------------------------------------------------
 init_from(Uid, Rec)->
-	set_move_speed_direct(Uid, Rec#m_map_obj_move_rw.move_speed),
-	set_cur_move_direct(Uid, Rec#m_map_obj_move_rw.cur_move),
-	set_next_move_direct(Uid, Rec#m_map_obj_move_rw.next_move),
-	set_vis_tile_idx_direct(Uid, Rec#m_map_obj_move_rw.vis_tile_idx),
-	set_cur_pos_direct(Uid, Rec#m_map_obj_move_rw.cur_pos),
-	set_start_pos_direct(Uid, Rec#m_map_obj_move_rw.start_pos),
-	set_dest_pos_direct(Uid, Rec#m_map_obj_move_rw.dest_pos),
-	set_face_direct(Uid, Rec#m_map_obj_move_rw.face),
-	set_dir_direct(Uid, Rec#m_map_obj_move_rw.dir),
-	set_start_time_direct(Uid, Rec#m_map_obj_move_rw.start_time),
-	set_seg_move_time_direct(Uid, Rec#m_map_obj_move_rw.seg_move_time),
-	set_stopped_direct(Uid, Rec#m_map_obj_move_rw.stopped),
-	set_path_list_direct(Uid, Rec#m_map_obj_move_rw.path_list),
+	set_move_speed_direct(Uid, Rec#m_map_unit_move_rw.move_speed),
+	set_cur_move_direct(Uid, Rec#m_map_unit_move_rw.cur_move),
+	set_next_move_direct(Uid, Rec#m_map_unit_move_rw.next_move),
+	set_vis_tile_idx_direct(Uid, Rec#m_map_unit_move_rw.vis_tile_idx),
+	set_cur_pos_direct(Uid, Rec#m_map_unit_move_rw.cur_pos),
+	set_start_pos_direct(Uid, Rec#m_map_unit_move_rw.start_pos),
+	set_dest_pos_direct(Uid, Rec#m_map_unit_move_rw.dest_pos),
+	set_face_direct(Uid, Rec#m_map_unit_move_rw.face),
+	set_dir_direct(Uid, Rec#m_map_unit_move_rw.dir),
+	set_start_time_direct(Uid, Rec#m_map_unit_move_rw.start_time),
+	set_seg_move_time_direct(Uid, Rec#m_map_unit_move_rw.seg_move_time),
+	set_stopped_direct(Uid, Rec#m_map_unit_move_rw.stopped),
+	set_path_list_direct(Uid, Rec#m_map_unit_move_rw.path_list),
 	ok.
 %%-------------------------------------------------------------------
 init_default(Uid)->
-	Rec = #m_map_obj_move_rw{},
-	set_move_speed_direct(Uid, Rec#m_map_obj_move_rw.move_speed),
-	set_cur_move_direct(Uid, Rec#m_map_obj_move_rw.cur_move),
-	set_next_move_direct(Uid, Rec#m_map_obj_move_rw.next_move),
-	set_vis_tile_idx_direct(Uid, Rec#m_map_obj_move_rw.vis_tile_idx),
-	set_cur_pos_direct(Uid, Rec#m_map_obj_move_rw.cur_pos),
-	set_start_pos_direct(Uid, Rec#m_map_obj_move_rw.start_pos),
-	set_dest_pos_direct(Uid, Rec#m_map_obj_move_rw.dest_pos),
-	set_face_direct(Uid, Rec#m_map_obj_move_rw.face),
-	set_dir_direct(Uid, Rec#m_map_obj_move_rw.dir),
-	set_start_time_direct(Uid, Rec#m_map_obj_move_rw.start_time),
-	set_seg_move_time_direct(Uid, Rec#m_map_obj_move_rw.seg_move_time),
-	set_stopped_direct(Uid, Rec#m_map_obj_move_rw.stopped),
-	set_path_list_direct(Uid, Rec#m_map_obj_move_rw.path_list),
+	Rec = #m_map_unit_move_rw{},
+	set_move_speed_direct(Uid, Rec#m_map_unit_move_rw.move_speed),
+	set_cur_move_direct(Uid, Rec#m_map_unit_move_rw.cur_move),
+	set_next_move_direct(Uid, Rec#m_map_unit_move_rw.next_move),
+	set_vis_tile_idx_direct(Uid, Rec#m_map_unit_move_rw.vis_tile_idx),
+	set_cur_pos_direct(Uid, Rec#m_map_unit_move_rw.cur_pos),
+	set_start_pos_direct(Uid, Rec#m_map_unit_move_rw.start_pos),
+	set_dest_pos_direct(Uid, Rec#m_map_unit_move_rw.dest_pos),
+	set_face_direct(Uid, Rec#m_map_unit_move_rw.face),
+	set_dir_direct(Uid, Rec#m_map_unit_move_rw.dir),
+	set_start_time_direct(Uid, Rec#m_map_unit_move_rw.start_time),
+	set_seg_move_time_direct(Uid, Rec#m_map_unit_move_rw.seg_move_time),
+	set_stopped_direct(Uid, Rec#m_map_unit_move_rw.stopped),
+	set_path_list_direct(Uid, Rec#m_map_unit_move_rw.path_list),
 	ok.
 %%-------------------------------------------------------------------

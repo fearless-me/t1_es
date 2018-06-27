@@ -14,7 +14,7 @@
 -include("map.hrl").
 -include("player_status.hrl").
 -include("common_record.hrl").
--include("map_obj.hrl").
+-include("map_unit.hrl").
 -include("db_record.hrl").
 -include("mem_record.hrl").
 -include("vector3.hrl").
@@ -156,27 +156,27 @@ loaded_player(Player) ->
 
 %%%-------------------------------------------------------------------
 offline(Reason) ->
-    ?TRY_CATCH(offline_1(lib_player_rw:get_status()), Err0, St0),
+    ?TRY_CATCH(offline_1(lib_player_rw:get_status(), Reason), Err0, St0),
     ?TRY_CATCH(flush_cache(Reason), Err1, St1),
     ok.
 
-offline_1(Status)
+offline_1(Status, Reason)
     when Status =:= ?PS_GAME; Status =:= ?PS_CHANGE_MAP ->
     Uid = lib_player_rw:get_uid_def(0),
     lib_player_rw:set_status(?PS_OFFLINE),
     Player = lib_cache:get_player_pub(Uid),
     ?TRY_CATCH(hook_player:on_offline(Player)),
     lib_player_save:save(Player),
-    ?INFO("player ~p pid ~p sock ~p player ~w offline status ~p",
-        [Uid, self(), lib_player_pub:socket(), Uid, Status]),
+    ?INFO("player ~p pid ~p sock ~p player ~w offline status ~p reason ~p",
+        [Uid, self(), lib_player_pub:socket(), Uid, Status, Reason]),
     ok;
-offline_1(Status) ->
+offline_1(Status, Reason) ->
     Uid = lib_player_rw:get_uid_def(0),
     Aid = lib_player_rw:get_aid_def(0),
     lib_player_rw:set_status(?PS_OFFLINE),
     lib_cache:offline(Aid, Uid),
-    ?INFO("player ~p pid ~p sock ~p player ~w offline status ~p",
-        [Uid, self(), lib_player_pub:socket(), Uid, Status]),
+    ?INFO("player ~p pid ~p sock ~p player ~w offline status ~p reason ~p",
+        [Uid, self(), lib_player_pub:socket(), Uid, Status, Reason]),
 
     ok.
 

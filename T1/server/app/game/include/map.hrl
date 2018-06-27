@@ -14,7 +14,7 @@
 -include("type.hrl").
 
 -define(TILE_SCALE, 1).
--define(VIS_DIST, 32).
+-define(VIS_DIST, 16).
 
 -define(ED_Center, 0).
 -define(ED_Top, 1).
@@ -35,7 +35,7 @@
 -define(LINE_LIFETIME, 30 * 60 * 1000).
 -define(DEAD_LINE_PROTECT, 15 * 1000).
 
--define(MAP_CALL_TIMEOUT, 5000).
+-define(MAP_CALL_TIMEOUT, 15000).
 -define(MAP_INIT_TIMEOUT, 60000).
 
 
@@ -46,7 +46,7 @@
 -record(m_vis_tile,{index = 0, player = [], monster = [], npc = [], pet = []}).
 %%
 -record(m_map_state,{map_id = 0, line_id = 0, player, monster,
-    npc, pet, respawn = [], hook_mod, status = ?MAP_NORMAL}).
+    npc, pet, respawn = [], hook_mod, status = ?MAP_NORMAL, protect_tick=1000}).
 %%
 -record(m_map_line,{map_id = 0, line_id = 0, pid, limits = 50, in = 0, dead_line = 0}).
 

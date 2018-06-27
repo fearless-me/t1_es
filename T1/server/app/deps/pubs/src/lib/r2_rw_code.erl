@@ -8,7 +8,7 @@
 %%%-------------------------------------------------------------------
 -module(r2_rw_code).
 -author("mawenhong").
--include("map_obj.hrl").
+-include("map_unit.hrl").
 -include("db_record.hrl").
 -include("rw_record.hrl").
 -define(LogFileOptions, [exclusive, append, raw, binary]).
@@ -39,12 +39,12 @@
 run() ->
     try
         multi_to_code(
-            "..\\src\\lib\\map\\lib_map_obj_rw.erl",
-            lib_map_obj_rw,
+            "..\\src\\lib\\map\\lib_unit_rw.erl",
+            lib_unit_rw,
             [
                 ["logger.hrl", "rw_record.hrl"],
                 [
-                    {m_map_obj_rw, record_info(fields, m_map_obj_rw), none, ["Uid"], "hook_map:on_rw_update"}
+                    {m_map_unit_rw, record_info(fields, m_map_unit_rw), none, ["Uid"], "hook_map:on_rw_update"}
                 ]
             ]
         ),
@@ -54,7 +54,7 @@ run() ->
             [
                 ["logger.hrl", "rw_record.hrl"],
                 [
-                    {m_map_obj_move_rw, record_info(fields, m_map_obj_move_rw), none, ["Uid"], "hook_map:on_rw_update"}
+                    {m_map_unit_move_rw, record_info(fields, m_map_unit_move_rw), none, ["Uid"], "hook_map:on_rw_update"}
                 ]
             ]
         ),
@@ -64,7 +64,7 @@ run() ->
             [
                 ["logger.hrl", "ai_def.hrl", "rw_record.hrl", "vector3.hrl"],
                 [
-                    {m_map_obj_ai_rw, record_info(fields, m_map_obj_ai_rw), none, ["Uid"], ""}
+                    {m_map_unit_ai_rw, record_info(fields, m_map_unit_ai_rw), none, ["Uid"], ""}
                 ]
             ]
         ),

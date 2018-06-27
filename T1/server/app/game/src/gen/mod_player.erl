@@ -115,7 +115,7 @@ on_info_msg(return_to_pre_map_req, S) ->
     lib_player_map_priv:return_to_old_map_call(),
     S;
 on_info_msg({passive_change_req, DestMapID, TarPos}, S) ->
-    lib_player_map_priv:change_map_call(DestMapID, TarPos),
+    lib_player_map_priv:sevr_change_map_call(DestMapID, TarPos),
     S;
 on_info_msg({teleport, NewPos}, S) ->
     lib_player_map_priv:teleport_call(NewPos),

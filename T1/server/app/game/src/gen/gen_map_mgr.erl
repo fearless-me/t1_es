@@ -14,7 +14,7 @@
 -include("logger.hrl").
 -include("map.hrl").
 -include("common_record.hrl").
--include("map_obj.hrl").
+-include("map_unit.hrl").
 
 %% API
 -export([start_link/1]).

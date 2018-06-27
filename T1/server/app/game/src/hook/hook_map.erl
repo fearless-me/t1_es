@@ -10,7 +10,7 @@
 -author("mawenhong").
 -include("logger.hrl").
 -include("mem_record.hrl").
--include("map_obj.hrl").
+-include("map_unit.hrl").
 
 -export([
     on_map_create/0, on_map_destroy/0,
@@ -35,14 +35,14 @@ on_player_join(_Uid) ->
     ok.
 
 on_player_exit(Uid) ->
-    lib_map_obj:del_player(Uid),
+    lib_unit:del_player(Uid),
     ok.
 %%-------------------------------------------------------------------
 on_monster_create(_Uid) ->
     ok.
 
 on_monster_dead(Uid) ->
-    lib_map_obj:del_monster(Uid),
+    lib_unit:del_monster(Uid),
     ok.
 
 on_start_move(_Uid) ->
@@ -57,19 +57,19 @@ on_start_move(_Uid) ->
 
 on_rw_update(Uid, hp, Hp) ->
     ?lock({Uid, hp}),
-    Type = lib_map_obj_rw:get_type(Uid),
+    Type = lib_unit_rw:get_type(Uid),
     on_rw_update_pub_action(Type, Uid, {#m_player_pub.hp, Hp}),
     ?unlock(),
     ok;
 on_rw_update(Uid, attr, Attrs) ->
     ?lock({Uid, attr}),
-    Type = lib_map_obj_rw:get_type(Uid),
+    Type = lib_unit_rw:get_type(Uid),
     on_rw_update_priv_action(Type, Uid, {#m_player_private.priv_attrs, Attrs}),
     ?unlock(),
     ok;
 on_rw_update(Uid, buff_list, BuffList) ->
     ?lock({Uid, buff_list}),
-    Type = lib_map_obj_rw:get_type(Uid),
+    Type = lib_unit_rw:get_type(Uid),
     on_rw_update_priv_action(Type, Uid, {#m_player_private.priv_buffs, BuffList}),
     ?unlock(),
     ok;
