@@ -169,9 +169,9 @@ serv_change_map_call_ret(
 %%%-------------------------------------------------------------------
 return_to_old_map_call() ->
     Uid = lib_player_rw:get_uid(),
-    #m_player_pub{mpid = Mid, old_mid = OMid, old_pos = OPos} = lib_cache:get_player_pub(Uid),
+    #m_player_pub{mpid = Mid, old_mid = OMid, old_line = OLineId, old_pos = OPos} = lib_cache:get_player_pub(Uid),
     ?DEBUG("player ~p return_to_pre_map from ~p to ~p", [Uid, Mid, OMid]),
-    sevr_change_map_call(OMid, OPos),
+    serv_change_map_call(OMid, OLineId, OPos),
     ok.
 
 %%%-------------------------------------------------------------------
