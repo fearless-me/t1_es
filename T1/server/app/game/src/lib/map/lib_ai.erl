@@ -55,6 +55,8 @@ init_ai(Uid) ->
         ?EACT_Random ->
             lib_ai_rw:set_ai_id(Uid, 0);
         ?EACT_GroupRandom ->
+            lib_ai_rw:set_ai_id(Uid, 0);
+        _ ->
             lib_ai_rw:set_ai_id(Uid, 0)
     end,
     % todo 添加buff、技能等等
@@ -83,7 +85,9 @@ reset_look_for_target_tick(_Uid) ->
     ok.
 
 %%-------------------------------------------------------------------
-can_update_ai(_Uid) -> true.
+can_update_ai(Uid) ->
+    AiId = lib_ai_rw:get_ai_id(Uid),
+    AiId > 0.
 
 %%-------------------------------------------------------------------
 update(Uid) ->
@@ -207,7 +211,7 @@ start_patrol_action(Uid, ?ECPT_Path) ->
     ok;
 start_patrol_action(Uid, ?ECPT_Range) ->
     Diameter = ?CREATURE_PATROL_RADIUS * 2,
-    NowPos = lib_map_obj_rw:get_cur_pos(Uid),
+    NowPos = lib_move_rw:get_cur_pos(Uid),
     X = vector3:x(NowPos) + ((rand_tool:rand() rem Diameter) - ?CREATURE_PATROL_RADIUS),
     Z = vector3:z(NowPos) + ((rand_tool:rand() rem Diameter) - ?CREATURE_PATROL_RADIUS),
     TarPos = vector3:new(X, 0, Z),

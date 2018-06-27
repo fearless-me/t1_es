@@ -133,7 +133,8 @@ handle_1(#pk_GS2U_PlayerInitBase{uid = Uid}) ->
     ets:insert(tcpc, {Uid, socket()}),
     ok;
 handle_1(#pk_GS2U_GetPlayerInitDataEnd{}) ->
-    send_msg(socket(), #pk_U2GS_PlayerWalk{dst_x = 15.1, dst_y = 4.8}),
+    Delta = misc:rand(5, 15)/1.0,
+    send_msg(socket(), #pk_U2GS_PlayerWalk{dst_x = 234.1 + Delta, dst_y = 250.1 + Delta}),
     ok;
 handle_1(Msg) ->
     io:format("~p~n", [Msg]).

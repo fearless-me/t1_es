@@ -39,7 +39,7 @@
 sync_player_join_map(Obj) ->
     %1.
     Uid = lib_map_obj:get_uid(Obj),
-    Pos = lib_map_obj_rw:get_cur_pos(Uid),
+    Pos = lib_move_rw:get_cur_pos(Uid),
     Index = pos_to_vis_index(Pos, get(?VIS_W), ?VIS_DIST),
     Tiles = get_vis_tile_around(Index),
 
@@ -52,7 +52,7 @@ sync_player_join_map(Obj) ->
 sync_player_exit_map(Obj) ->
     %1.
     Uid = lib_map_obj:get_uid(Obj),
-    Index = pos_to_vis_index(lib_map_obj_rw:get_cur_pos(Uid), get(?VIS_W), ?VIS_DIST),
+    Index = pos_to_vis_index(lib_move_rw:get_cur_pos(Uid), get(?VIS_W), ?VIS_DIST),
 
     %2.
     del_obj_from_vis_tile(Obj, Index),
@@ -97,7 +97,7 @@ init_vis_tile_1(X) ->
 %% 开始移动广播
 sync_movement_to_big_visual_tile(Uid) ->
     Msg = lib_move:cal_move_msg(Uid),
-    VisTileIndex = lib_map_obj_rw:get_vis_tile_idx(Uid),
+    VisTileIndex = lib_move_rw:get_vis_tile_idx(Uid),
     sync_movement_to_big_visual_tile(VisTileIndex, Msg),
     ok.
 

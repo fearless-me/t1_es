@@ -16,18 +16,20 @@
 %% 通过自动生成代码lib_obj_rw
 -record(m_map_obj_rw,{
     pid = 0, did = 0, group = 0, owner = 0, type=-1,
+%%  战斗相关
+    hp = 1, max_hp = 1, attr= [], buff_list = []
+}).
+
+-record(m_map_obj_move_rw,{
 %%  移动相关
     move_speed = 20,
     cur_move=0, next_move=0,  vis_tile_idx=-1,
     cur_pos, start_pos, dest_pos, face, dir,
     start_time = 0, seg_move_time = 0,  % 分段已经移动时间
-    stopped=false, path_list = [],
-
-%%  战斗相关
-    hp = 1, max_hp = 1, attr= [], buff_list = []
+    stopped=false, path_list = []
 }).
 
--record(m_map_obj_ai,{
+-record(m_map_obj_ai_rw,{
     ai_state=0, pre_ai_state=0, ai_transition=1,
     triggers=[], pause=false,
     %

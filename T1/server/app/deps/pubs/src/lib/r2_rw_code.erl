@@ -49,12 +49,22 @@ run() ->
             ]
         ),
         multi_to_code(
+            "..\\src\\lib\\map\\lib_move_rw.erl",
+            lib_move_rw,
+            [
+                ["logger.hrl", "rw_record.hrl"],
+                [
+                    {m_map_obj_move_rw, record_info(fields, m_map_obj_move_rw), none, ["Uid"], "hook_map:on_rw_update"}
+                ]
+            ]
+        ),
+        multi_to_code(
             "..\\src\\lib\\map\\lib_ai_rw.erl",
             lib_ai_rw,
             [
                 ["logger.hrl", "ai_def.hrl", "rw_record.hrl", "vector3.hrl"],
                 [
-                    {m_map_obj_ai, record_info(fields, m_map_obj_ai), none, ["Uid"], ""}
+                    {m_map_obj_ai_rw, record_info(fields, m_map_obj_ai_rw), none, ["Uid"], ""}
                 ]
             ]
         ),

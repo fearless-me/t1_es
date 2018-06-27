@@ -107,7 +107,7 @@ force_teleport_call(S, #r_teleport_req{
     uid = Uid,
     tar = TarPos
 }) ->
-    Cur = lib_map_obj_rw:get_cur_pos(Uid),
+    Cur = lib_move_rw:get_cur_pos(Uid),
     lib_move:on_obj_pos_change(Uid, TarPos),
     ?DEBUG("player ~p teleport from ~w to ~w in map ~p_~p",
         [Uid, Cur, TarPos, lib_map_rw:get_map_id(), lib_map_rw:get_line_id()]),
@@ -130,7 +130,7 @@ init_all_monster_1(Mdata)->
 
 init_all_monster_2(Obj) ->
     Uid = lib_map_obj:get_uid(Obj),
-    VisIndex = lib_map_view:pos_to_vis_index(lib_map_obj_rw:get_cur_pos(Uid)),
+    VisIndex = lib_map_view:pos_to_vis_index(lib_move_rw:get_cur_pos(Uid)),
     lib_map_rw:add_obj_to_ets(Obj),
     lib_map_view:add_obj_to_vis_tile(Obj, VisIndex),
     hook_map:on_monster_create(Uid),
@@ -223,7 +223,7 @@ kick_all_player(#m_map_state{player = Ets}) ->
 %%-------------------------------------------------------------------
 player_start_move(Req) ->
     #r_player_start_move_req{uid = Uid, tar = Dst} = Req,
-    lib_move:start_player_walk(Uid, lib_map_obj_rw:get_cur_pos(Uid), Dst).
+    lib_move:start_player_walk(Uid, lib_move_rw:get_cur_pos(Uid), Dst).
 
 %%-------------------------------------------------------------------
 player_stop_move(Req) ->

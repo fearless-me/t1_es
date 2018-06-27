@@ -25,10 +25,13 @@
 %%-------------------------------------------------------------------
 new_player(Pid, Uid, Group, Pos, Face) ->
     lib_ai_rw:init_default(Uid),
+    lib_move_rw:init_default(Uid),
     lib_map_obj_rw:init_default(Uid),
     new(?OBJ_USR, Pid, Uid, 0, 0, Group, Pos, Face).
 
 del_player(Uid) ->
+    lib_ai_rw:del(Uid),
+    lib_move_rw:del(Uid),
     lib_map_obj_rw:del(Uid),
     ok.
 
@@ -48,6 +51,7 @@ new_monster(#recMapObjData{
     Uid = uid_gen:mon_uid(),
     Pos = vector3:new(X, 0.0, Y),
     lib_ai_rw:init_default(Uid),
+    lib_move_rw:init_default(Uid),
     lib_map_obj_rw:init_default(Uid),
     lib_ai:init(Uid, ?AIAT_Active),
     new(?OBJ_MON, Pid, Uid, Mid, 0, Group, Pos, vector3:new(0.1, 0, 0.5)).
@@ -55,6 +59,7 @@ new_monster(#recMapObjData{
 
 del_monster(Uid) ->
     lib_ai_rw:del(Uid),
+    lib_move_rw:del(Uid),
     lib_map_obj_rw:del(Uid),
     ok.
 
