@@ -26,7 +26,7 @@ CREATE TABLE `player` (
   `aid` bigint(20) DEFAULT NULL,
   `uid` bigint(20) DEFAULT NULL,
   `sid` int(11) DEFAULT NULL,
-  `name` varchar(192) DEFAULT NULL,
+  `name` varchar(192) CHARACTER SET utf8mb4 DEFAULT NULL,
   `level` int(11) DEFAULT '1',
   `wing_level` int(11) DEFAULT '0',
   `sex` tinyint(4) DEFAULT NULL,
@@ -44,7 +44,7 @@ CREATE TABLE `player` (
   `old_y` float DEFAULT NULL,
   `data` blob,
   `version` bigint(20) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -56,4 +56,4 @@ CREATE TABLE `player` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-06-09 16:47:32
+-- Dump completed on 2018-06-28 10:48:33

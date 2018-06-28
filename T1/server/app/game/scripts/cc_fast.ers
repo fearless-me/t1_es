@@ -241,20 +241,19 @@ getCompileServer(24) -> gsD;
 getCompileServer(_) -> gsD.
 
 jump_package() ->
-	os:cmd(" cd ../../tools/ && start ps_gs.ers"),
+	os:cmd(" cd ../../scripts/ && start ps_gs.ers"),
 	ok.
 
 compile(Lang, 1) ->
-	warnLog("now path:~p~n", [file:get_cwd()]),
+	warnLog("now path:~p", [file:get_cwd()]),
 	%% 先生成版本文件
-	os:cmd("svn update ../src/version/version.erl"),
-	waitATime(2000),
-	os:cmd("start version.ers"),
-	waitATime(1000),
-	os:cmd("svn commit -m \"auto generate version\" ../src/version/version.erl"),
+
+	Ret=os:cmd("start /B escript.exe version.ers"),
+	io:format("~ts~n",[Ret]),
 	waitATime(5000),
 
 	%% 用于Release编译打包
+	warnLog("make ~p ~p", [Lang, getCompileServer(1)]),
 	Target = getCompileServer(1),
 	FileName = io_lib:format("compile_~p_~p.txt", [Lang, Target]),
 	file:write_file(FileName, ""),
