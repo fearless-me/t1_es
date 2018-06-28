@@ -10,6 +10,7 @@
       <change beforePath="$PROJECT_DIR$/app/game/include/rw_record.hrl" beforeDir="false" afterPath="$PROJECT_DIR$/app/game/include/rw_record.hrl" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/game/src/lib/map/lib_ai.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/game/src/lib/map/lib_ai.erl" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/game/src/lib/map/lib_map_priv.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/game/src/lib/map/lib_map_priv.erl" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/readme_todo.md" beforeDir="false" afterPath="$PROJECT_DIR$/app/readme_todo.md" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -85,11 +86,23 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="lib_map_priv.erl" pinned="false" current-in-tab="true">
+      <file leaf-file-name="lib_map_priv.erl" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/game/src/lib/map/lib_map_priv.erl">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="161">
               <caret line="174" column="12" selection-start-line="174" selection-start-column="12" selection-end-line="174" selection-end-column="12" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="readme_todo.md" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/app/readme_todo.md">
+          <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+            <state split_layout="SPLIT">
+              <first_editor relative-caret-position="312">
+                <caret line="13" column="10" selection-start-line="13" selection-start-column="10" selection-end-line="13" selection-end-column="10" />
+              </first_editor>
+              <second_editor />
             </state>
           </provider>
         </entry>
@@ -108,15 +121,6 @@
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="289">
               <caret line="33" selection-start-line="33" selection-end-line="33" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="lib_unit_rw.erl" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/game/src/lib/map/lib_unit_rw.erl">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="461">
-              <caret line="211" column="44" selection-start-line="211" selection-start-column="44" selection-end-line="211" selection-end-column="44" />
             </state>
           </provider>
         </entry>
@@ -219,7 +223,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/app/game/src/lib/ai/ai_transition.erl" />
         <option value="$PROJECT_DIR$/app/game/src/lib/ai/ai_state_attck.erl" />
         <option value="$PROJECT_DIR$/app/game/src/lib/ai/ai_state_flee.erl" />
         <option value="$PROJECT_DIR$/app/game/src/lib/ai/ai_state_idle.erl" />
@@ -270,6 +273,7 @@
         <option value="$PROJECT_DIR$/app/game/include/rw_record.hrl" />
         <option value="$PROJECT_DIR$/app/game/src/lib/map/lib_ai.erl" />
         <option value="$PROJECT_DIR$/app/game/src/lib/map/lib_map_priv.erl" />
+        <option value="$PROJECT_DIR$/app/readme_todo.md" />
       </list>
     </option>
   </component>
@@ -1037,12 +1041,12 @@
       <workItem from="1529992183834" duration="11652000" />
       <workItem from="1530005317635" duration="22003000" />
       <workItem from="1530097900551" duration="18436000" />
-      <workItem from="1530184455762" duration="4234000" />
+      <workItem from="1530184455762" duration="4478000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="929424000" />
+    <option name="totallyTimeSpent" value="929668000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -1070,7 +1074,7 @@
       <window_info anchor="bottom" id="Terminal" order="9" weight="0.32960895" />
       <window_info id="Capture Tool" order="6" />
       <window_info id="Designer" order="3" />
-      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.49944136" visible="true" weight="0.20415778" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.49944136" visible="true" weight="0.09381663" />
       <window_info anchor="right" id="Database" order="6" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.32960895" />
       <window_info id="Structure" order="1" sideWeight="0.5005587" side_tool="true" weight="0.2196162" />
@@ -1094,16 +1098,6 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/app/readme_todo.md">
-      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
-        <state split_layout="SPLIT">
-          <first_editor relative-caret-position="120">
-            <caret line="5" selection-start-line="5" selection-end-line="5" selection-end-column="32" />
-          </first_editor>
-          <second_editor />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/deps/pubs/src/net/binary_lib.erl">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="191">
@@ -1414,6 +1408,16 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="161">
           <caret line="174" column="12" selection-start-line="174" selection-start-column="12" selection-end-line="174" selection-end-column="12" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/readme_todo.md">
+      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+        <state split_layout="SPLIT">
+          <first_editor relative-caret-position="312">
+            <caret line="13" column="10" selection-start-line="13" selection-start-column="10" selection-end-line="13" selection-end-column="10" />
+          </first_editor>
+          <second_editor />
         </state>
       </provider>
     </entry>
