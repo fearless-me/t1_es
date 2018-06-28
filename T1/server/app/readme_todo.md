@@ -87,7 +87,7 @@
 ## 代码目录结构
 
  ```                                                                                
-|   GS_启动.bat                                                                  
+|   GS_启动.bat                                                                   
 |   GS_编译.bat                                                                  
 |   readme_todo.md                                                               
 |   发布版本.bat                                                                 
@@ -97,71 +97,71 @@
 +---center                                                                                                                                                    
 +---dbs                                                                                                                                                         
 +---deps                                                                         
-|   +---cache                                                                                                                                             
-|   +---dynamic_compile                                                                                                                                    
-|   +---econfig                                                                                                                                            
+|   +---cache   内存数据库（废弃）                                                                                                                                         
+|   +---dynamic_compile 动态编译                                                                                                                                   
+|   +---econfig    ini配置读取                                                                                                                                        
 |   +---eep                                                                                                                                                 
-|   +---fastlog                                                                                                                                             
-|   +---fly                                                                                                                                                 
-|   +---mysql-otp                                                                                                                                           
+|   +---fastlog   日志                                                                                                                                          
+|   +---fly     自动编译                                                                                                                                            
+|   +---mysql-otp    mysql                                                                                                                                       
 |   +---mysql-otp-poolboy                                                                                                                                    
-|   +---poolboy                                                                                                                                              
-|   +---pubs                                                                     
+|   +---poolboy     worker pool                                                                                                                                         
+|   +---pubs         公共依赖                                                            
 |   |   |   rebar.config                                                                                                                               
 |   |   +---include                                                              
-|   |   |       local_lang.hrl                                                   
-|   |   |       logger.hrl                                                       
-|   |   |       netconf.hrl                                                      
+|   |   |       local_lang.hrl     多语言版本控制                                              
+|   |   |       logger.hrl         日志                                              
+|   |   |       netconf.hrl        网络配置                                              
 |   |   |       pack.hrl                                                         
-|   |   |       pub_common.hrl                                                   
-|   |   |       type.hrl                                                         
-|   |   |       vector3.hrl                                                                                                                             
+|   |   |       pub_common.hrl    一些通用的定义                                                
+|   |   |       type.hrl          基本类型定义                                               
+|   |   |       vector3.hrl       三维坐标                                                                                                                      
 |   |   \---src                                                                  
 |   |       |   pubs.app.src                                                     
 |   |       |   pubs_app.erl                                                     
 |   |       |   pubs_sup.erl                                                                                                                       
 |   |       +---lib                                                              
-|   |       |       background_gc.erl                                            
+|   |       |       background_gc.erl        gc                                    
 |   |       |       code_gen.erl                                                 
 |   |       |       color.erl                                                    
-|   |       |       common_error_logger.erl                                      
-|   |       |       common_error_logger_h.erl                                    
-|   |       |       file_ex.erl                                                  
+|   |       |       common_error_logger.erl     error_log                                 
+|   |       |       common_error_logger_h.erl      error_log                              
+|   |       |       file_ex.erl              file api                                    
 |   |       |       gen_server2.erl                                              
-|   |       |       gen_serverw.erl                                              
+|   |       |       gen_serverw.erl        对gen_server/gen_server2的包装                                      
 |   |       |       getCfg.erl                                                   
-|   |       |       grpc.erl                                                     
+|   |       |       grpc.erl              对rpc的包装                                       
 |   |       |       llist.erl                                                    
 |   |       |       lqueue.erl                                                   
-|   |       |       misc.erl                                                     
+|   |       |       misc.erl            一些有用的方法集合                                         
 |   |       |       pack_byte.erl                                                
-|   |       |       pg_local.erl                                                 
+|   |       |       pg_local.erl         本地进程组                                        
 |   |       |       priority_queue.erl                                           
-|   |       |       ps.erl                                                       
-|   |       |       r2_rw_code.erl                                               
+|   |       |       ps.erl              进程之间发消息的封装                                        
+|   |       |       r2_rw_code.erl      用于自动生成 *_rw.erl                                         
 |   |       |       ral.erl                                                      
-|   |       |       rand_tool.erl                                                
+|   |       |       rand_tool.erl      伪随机，种子确定，随机数序列不变                                          
 |   |       |       task.erl                                                     
-|   |       |       time.erl                                                     
-|   |       |       uid_gen.erl                                                  
-|   |       |       vector3.erl                                                  
-|   |       |       vm_memory_monitor.erl                                                                                                           
+|   |       |       time.erl           时间的封装                                           
+|   |       |       uid_gen.erl         uid                                         
+|   |       |       vector3.erl       三维坐标操作方法                                           
+|   |       |       vm_memory_monitor.erl      内存监控                                                                                                     
 |   |       +---log                                                              
-|   |       |       loggerS.erl                                                  
+|   |       |       loggerS.erl          日志封装，避免和erlang底层自带冲突                                       
 |   |       |       log_test.erl                                                                                                                    
 |   |       +---net                                                              
 |   |       |       behaviour_example.erl                                        
-|   |       |       binary_lib.erl                                               
-|   |       |       netmsg.erl                                                   
+|   |       |       binary_lib.erl       基本类型binary操作                                        
+|   |       |       netmsg.erl           网络消息解码、编码、名字、id                                        
 |   |       |       netmsg.hrl                                                   
-|   |       |       tcp_behaviour.erl                                            
+|   |       |       tcp_behaviour.erl   tcp逻辑模块的实例模块                                          
 |   |       |       tcp_client.erl                                               
-|   |       |       tcp_codec.erl                                                
-|   |       |       tcp_handler.erl                                              
-|   |       |       tcp_listener.erl                                                                                                               
+|   |       |       tcp_codec.erl      解码器                                          
+|   |       |       tcp_handler.erl    tcp 处理                                           
+|   |       |       tcp_listener.erl    listener                                                                                                           
 |   |       +---persistent                                                       
-|   |       |       db.erl                                                       
-|   |       |       db_pool.erl                                                  
+|   |       |       db.erl            对数据库操作的封装                                           
+|   |       |       db_pool.erl         数据库连接池                                         
 |   |       |       mnesia_dynamic.erl                                           
 |   |       |       mnesia_starter.erl                                           
 |   |       |       mnesia_utils.erl                                             
@@ -173,32 +173,32 @@
 |   |       |   |       player.hrl                                                                                                             
 |   |       |   \---protocol                                                     
 |   |       \---version                                                          
-|   |               version.erl                                                                                                                    
+|   |               version.erl       发布外网版本的版本号管理                                                                                                             
 |   +---ranch                                                                                                                                             
 |   \---recon                                                                    
 |                                                                                
 +---game                                                                         
 |   |   Emakefile                                                                
-|   |   Makefile                                                                 
-|   |   rebar.config                                                                                                                                      
+|   |   Makefile                  make                                               
+|   |   rebar.config              rebar                                                                                                                        
 |   +---data                                                                                                                                           
-|   |   +---elog                                                                                                                                       
-|   |   \---log                                                                                                                                            
+|   |   +---elog               elog  out dir                                                                                                                    
+|   |   \---log                log  out dir                                                                                                                         
 |   +---ebin                                                                                                                                              
 |   +---include                                                                  
-|   |       ai_def.hrl                                                           
-|   |       common_record.hrl                                                    
-|   |       db_record.hrl                                                        
-|   |       gdef.hrl                                                             
-|   |       map.hrl                                                              
+|   |       ai_def.hrl           ai定义                                                 
+|   |       common_record.hrl    通用record                                                
+|   |       db_record.hrl         数据库record                                               
+|   |       gdef.hrl              游戏服定义                                               
+|   |       map.hrl                地图定义                                              
 |   |       mapCfgPrivate.hrl                                                    
-|   |       map_unit.hrl                                                         
-|   |       mem_record.hrl                                                       
-|   |       movement.hrl                                                         
-|   |       player_status.hrl                                                    
-|   |       rw_record.hrl                                                                                                                                  
+|   |       map_unit.hrl          地图上对象的定义                                               
+|   |       mem_record.hrl        内存数据库定义                                               
+|   |       movement.hrl           移动定义                                              
+|   |       player_status.hrl       玩家逻辑状态                                             
+|   |       rw_record.hrl          定义自动生成代码的record                                                                                                                 
 |   +---scripts                                                                  
-|   |       cc_fast.ers                                                          
+|   |       cc_fast.ers      编译脚本                                                    
 |   |       cc_game.bat                                                          
 |   |       mm.config                                                            
 |   |       reload.bat                                                           
@@ -214,104 +214,95 @@
 |       |   game.app.src                                                         
 |       |   game.erl                                                             
 |       |   game_sup.erl                                                                                                                                
-|       +---bak                                                                  
+|       +---bak   废弃                                                               
 |       |       gs_db_manager.erl                                                
 |       |       gs_db_supervisor.erl                                             
 |       |       gs_db_worker.erl                                                                                                                       
-|       +---config                                                               
-|       |   |   cfg_mapsetting.hrl                                               
-|       |   |   cfg_monster.hrl                                                                                                                 
-|       |   +---cfg                                                              
-|       |   |       cfg.erl                                                      
-|       |   |       cfg_chs.erl                                                  
-|       |   |       cfg_cht.erl                                                                                                                   
-|       |   \---cht                                                              
-|       |           cfg_mapsetting_cht.erl                                       
-|       |           cfg_monster_cht.erl                                                                                                                
-|       +---core                                                                 
-|       |       gconf.erl                                                        
-|       |       gcore.erl                                                        
+|       +---config  配置表代码目录                                                                                                                                                                          
+|       +---core  核心代码                                                               
+|       |       gconf.erl    server配置的读写                                                    
+|       |       gcore.erl    一些基础功能比如发网络消息、广播、踢人、注册玩家进程等、关闭虚拟机等等                                                     
 |       |       mapReader.erl                                                    
-|       |       map_root_supervisor.erl                                          
-|       |       serv_alarm.erl                                                   
-|       |       serv_alarm_logic.erl                                             
-|       |       serv_broadcast.erl                                               
-|       |       serv_cache.erl                                                   
+|       |       map_root_supervisor.erl    地图所有进程挂到这下面                                      
+|       |       serv_alarm.erl            全局数据报警                                       
+|       |       serv_alarm_logic.erl      ,,,                                       
+|       |       serv_broadcast.erl        全局广播进程                                       
+|       |       serv_cache.erl        全局内存缓存                                           
 |       |       serv_cache_logic.erl                                             
-|       |       serv_loader.erl                                                  
+|       |       serv_loader.erl       全局数据加载器                                           
 |       |       serv_loader_logic.erl                                            
-|       |       watchdog.erl                                                                                                                          
+|       |       watchdog.erl         看门狗                                                                                                                 
 |       +---db                                                                   
-|       |       db_handler.erl                                                   
-|       |       db_mgr.erl                                                       
-|       |       db_mgr_sup.erl                                                   
-|       |       db_proxy.erl                                                     
-|       |       db_son.erl                                                       
-|       |       db_sql.erl                                                       
-|       |       db_sup.erl                                                                                                                              
+|       |       db_handler.erl     数据库逻辑代码                                              
+|       |       db_mgr.erl       一个库一个mgr                                                
+|       |       db_mgr_sup.erl      ,,,                                             
+|       |       db_proxy.erl        ,,,                                             
+|       |       db_son.erl       数据库工作进程                                                
+|       |       db_sql.erl      sql语句集中营                                                 
+|       |       db_sup.erl    ,,,                                                                                                                         
 |       +---gen                                                                  
-|       |       gen_mod_login.erl                                                
-|       |       gen_mod_map.erl                                                  
-|       |       gen_mod_map_creator.erl                                          
-|       |       gen_mod_map_mgr.erl                                              
-|       |       map_creator_pub.erl                                              
-|       |       map_mgr_pub.erl                                                  
-|       |       map_mgr_supervisor.erl                                           
-|       |       map_pub.erl                                                      
-|       |       map_supervisor.erl                                               
-|       |       mod_login.erl                                                    
-|       |       mod_player.erl                                                   
+|       |       gen_mod_login.erl   全局登录otp                                             
+|       |       gen_mod_map.erl     地图otp                                             
+|       |       gen_mod_map_creator.erl    地图数据初始化otp                                      
+|       |       gen_mod_map_mgr.erl     一个地图对应一个mgr                                         
+|       |       map_creator_pub.erl    全局地图数据接口                                          
+|       |       map_mgr_pub.erl       某个地图管理器接口                                           
+|       |       map_mgr_supervisor.erl  ,,,                                         
+|       |       map_pub.erl    地图接口                                                  
+|       |       map_supervisor.erl  ,,,                                             
+|       |       mod_login.erl    login逻辑代码                                                
+|       |       mod_player.erl     玩家进程                                              
 |       |       player_supervisor.erl                                                                                                                  
 |       +---hook                                                                 
-|       |       hook_copy.erl                                                    
-|       |       hook_map.erl                                                     
-|       |       hook_player.erl                                                                                                                       
+|       |       hook_copy.erl       副本事件拦截器                                            
+|       |       hook_map.erl       地图事拦截器                                              
+|       |       hook_player.erl   玩家事件拦截器                                                                                                                    
 |       +---lib                                                                  
-|       |   |   lib_cache.erl                                                    
-|       |   |   lib_db.erl                                                       
-|       |   |   lib_login.erl                                                                                                                                                                             
-|       |   +---ai                                                               
-|       |   |       ai_state.erl                                                 
-|       |   |       ai_state_attck.erl                                           
-|       |   |       ai_state_flee.erl                                            
-|       |   |       ai_state_idle.erl                                            
-|       |   |       ai_state_pursue.erl                                          
-|       |   |       ai_transition.erl                                            
-|       |   |       ai_transition_active.erl                                     
-|       |   |       ai_transition_barbett.erl                                    
-|       |   |       ai_transition_lamster.erl                                    
-|       |   |       ai_transition_passive.erl                                    
+|       |   |   lib_cache.erl    所有内存数据接口                                                
+|       |   |   lib_db.erl        db接口                                               
+|       |   |   lib_login.erl      登录接口                                                                                                                                                                       
+|       |   +---ai 怪物AI                                                              
+|       |   |       ai_state.erl         ai 状态分发器                                        
+|       |   |       ai_state_attck.erl     攻击                                      
+|       |   |       ai_state_flee.erl       逃跑                                   
+|       |   |       ai_state_idle.erl       发呆                                     
+|       |   |       ai_state_pursue.erl     追击                                     
+|       |   |       ai_transition.erl     ai状态转换分发器                                       
+|       |   |       ai_transition_active.erl       主动                              
+|       |   |       ai_transition_barbett.erl    炮台                                
+|       |   |       ai_transition_lamster.erl    逃跑                                
+|       |   |       ai_transition_passive.erl     被动                               
 |       |   |       ai_trigger.erl                                                                                                                  
 |       |   +---map                                                              
-|       |   |       lib_ai.erl                                                   
-|       |   |       lib_ai_rw.erl                                                
-|       |   |       lib_attr_calc.erl                                            
-|       |   |       lib_battle.erl                                               
-|       |   |       lib_buff.erl                                                 
-|       |   |       lib_copy.erl                                                 
-|       |   |       lib_map.erl                                                  
-|       |   |       lib_map_priv.erl                                             
-|       |   |       lib_map_rw.erl                                               
-|       |   |       lib_map_view.erl                                             
-|       |   |       lib_move.erl                                                 
-|       |   |       lib_move_rw.erl                                              
-|       |   |       lib_pet.erl                                                  
-|       |   |       lib_unit.erl                                                 
-|       |   |       lib_unit_rw.erl                                                                                                                
+|       |   |       lib_ai.erl          ai接口                                         
+|       |   |       lib_ai_rw.erl      ai私有数据操作（自动生成）                                          
+|       |   |       lib_attr_calc.erl     属性计算                                      
+|       |   |       lib_battle.erl       战斗                                       
+|       |   |       lib_buff.erl        buff                                         
+|       |   |       lib_copy.erl         副本                                        
+|       |   |       lib_map.erl       地图otp的消息处理                                           
+|       |   |       lib_map_priv.erl   地图底层操作                                          
+|       |   |       lib_map_rw.erl   地图私有数据操作                                            
+|       |   |       lib_map_view.erl  视野管理                                           
+|       |   |       lib_move.erl    移动管理                                             
+|       |   |       lib_move_rw.erl  移动私有数据操作 （自动生成）                                           
+|       |   |       lib_pet.erl   宠物                                               
+|       |   |       lib_unit.erl  地图上对象接口                                               
+|       |   |       lib_unit_rw.erl 地图上对象私有数据操作类（自动生成）                                                                                                                     
 |       |   \---player                                                           
-|       |           lib_player.erl                                               
-|       |           lib_player_alarm.erl                                         
-|       |           lib_player_bag.erl                                           
-|       |           lib_player_base.erl                                          
-|       |           lib_player_battle.erl                                        
-|       |           lib_player_map_priv.erl                                      
-|       |           lib_player_netmsg.erl                                        
-|       |           lib_player_priv.erl                                          
-|       |           lib_player_pub.erl                                           
-|       |           lib_player_rw.erl                                            
-|       |           lib_player_save.erl                                          
-|       |           lib_player_skill.erl                                         
-|       |           lib_player_sub.erl                                                                                                            
+|       |           lib_player.erl      角色otp的消息处理                                           
+|       |           lib_player_alarm.erl   角色数据报警逻辑                                      
+|       |           lib_player_bag.erl      背包                                     
+|       |           lib_player_base.erl    基础逻辑 （初始化、移动....）                                    
+|       |           lib_player_battle.erl  战斗                                      
+|       |           lib_player_map_priv.erl  玩家地图基础逻辑（上线、下线、切地图、瞬移、返回之前的地图）                                    
+|       |           lib_player_netmsg.erl   网络消息处理                                     
+|       |           lib_player_priv.erl     玩家私有逻辑（初始化，登录，加载角色列表，创角，选角，删角，下线）                                     
+|       |           lib_player_pub.erl      玩家进程其他逻辑模块可调用的接口                                   
+|       |           lib_player_rw.erl      玩家私有数据操作类（自动生成）                                         
+|       |           lib_player_save.erl    持久化                                  
+|       |           lib_player_skill.erl   技能                                      
+|       |           lib_player_sub.erl   周期性触发逻辑（tick, 每秒，每分钟，每小时，每个整点）                                                                                                         
 |       +---mapcfgs                                                                                                                                                                                   
 |       \---test                                                                                                                                                                                      
 +---scripts                                                                                                                                                     
