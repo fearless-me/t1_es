@@ -48,10 +48,10 @@ init(S) ->
 %%%-------------------------------------------------------------------
 init_1(State) ->
     State#m_map_state{
-        npc     = ets:new(npc,      [protected, {keypos, #m_map_unit.uid}, ?ETS_RC]),
-        pet     = ets:new(pet,      [protected, {keypos, #m_map_unit.uid}, ?ETS_RC]),
-        player  = ets:new(player,   [protected, {keypos, #m_map_unit.uid}, ?ETS_RC]),
-        monster = ets:new(monster,  [protected, {keypos, #m_map_unit.uid}, ?ETS_RC])
+        npc = ets:new(npc, [protected, {keypos, #m_map_unit.uid}, ?ETS_RC]),
+        pet = ets:new(pet, [protected, {keypos, #m_map_unit.uid}, ?ETS_RC]),
+        player = ets:new(player, [protected, {keypos, #m_map_unit.uid}, ?ETS_RC]),
+        monster = ets:new(monster, [protected, {keypos, #m_map_unit.uid}, ?ETS_RC])
     }.
 
 %%%-------------------------------------------------------------------
@@ -85,7 +85,7 @@ player_join_call(
     S,
     #r_change_map_req{uid = Uid, name = _Name, pid = Pid, group = Group, tar_pos = Pos}
 ) ->
-    ?DEBUG("player ~p to ~p",[Uid, Pos]),
+    ?DEBUG("player ~p to ~p", [Uid, Pos]),
     Unit = lib_unit:new_player(Pid, Uid, Group, Pos, vector3:new(0.1, 0, 0.5)),
     send_goto_map_msg(Uid, Pos),
     lib_map_rw:add_obj_to_ets(Unit),
@@ -96,7 +96,7 @@ player_join_call(
     {ok, S};
 player_join_call(S, Any) ->
     ?ERROR("player join map ~w, name ~p, error obj data ~w",
-        [ self(), misc:register_name(), Any]),
+        [self(), misc:register_name(), Any]),
     {error, S}.
 
 
@@ -115,16 +115,16 @@ force_teleport_call(S, #r_teleport_req{
 
 
 %%%-------------------------------------------------------------------
-init_monster( #recGameMapCfg{
+init_monster(#recGameMapCfg{
     mapMonster = MonsterList
 }) ->
     lists:foreach(
         fun(MData) ->
             ok = init_all_monster_1(MData)
-        end , MonsterList),
+        end, MonsterList),
     ok.
 
-init_all_monster_1(Mdata)->
+init_all_monster_1(Mdata) ->
     Unit = lib_unit:new_monster(Mdata),
     ok = init_all_monster_2(Unit).
 
@@ -139,7 +139,7 @@ init_all_monster_2(Unit) ->
     ok.
 
 %%%-------------------------------------------------------------------
-init_npc( #recGameMapCfg{
+init_npc(#recGameMapCfg{
     mapNpc = NpcList
 }) ->
     init_all_npc(NpcList),
@@ -170,13 +170,19 @@ tick_1(S) ->
     ?TRY_CATCH(tick_obj(), Err2, Stk2),
     S.
 
-tick_obj()->
-    tick_update_before(),
-    tick_player(),
-    tick_monster(),
-    tick_update_after(),
+tick_obj() ->
+    ?TRY_CATCH(tick_update_before(), Err1, Stk1),
+    % 更新各个对象
+    %------------------
+    ?TRY_CATCH(tick_player(),        Err2, Stk2),
+    ?TRY_CATCH(tick_monster(),       Err3, Stk3),
+    ?TRY_CATCH(tick_pet(),           Err4, Stk4),
+    %------------------
+    
+    ?TRY_CATCH(tick_update_after(),  Err5, Stk5),
     ok.
 
+%%%-------------------------------------------------------------------
 tick_player() ->
     ets:foldl(
         fun(Unit, _) -> tick_player_1(Unit) end,
@@ -187,6 +193,7 @@ tick_player_1(Unit) ->
     ?TRY_CATCH(lib_move:update(Unit)),
     ok.
 
+%%%-------------------------------------------------------------------
 tick_monster() ->
     ets:foldl(
         fun(Unit, _) -> tick_monster_1(Unit) end,
@@ -195,16 +202,28 @@ tick_monster() ->
 
 tick_monster_1(Unit) ->
     ?TRY_CATCH(lib_move:update(Unit)),
+    ?TRY_CATCH(lib_ai:update(Unit)),
     ok.
 
 %%%-------------------------------------------------------------------
-tick_update_before() ->  ok.
+tick_pet() ->
+    ets:foldl(
+        fun(Unit, _) -> tick_pet_1(Unit) end,
+        0, lib_map_rw:get_pet_ets()
+    ).
+
+tick_pet_1(Unit) ->
+    ?TRY_CATCH(lib_move:update(Unit)),
+    ok.
+
+%%%-------------------------------------------------------------------
+tick_update_before() -> ok.
 
 tick_update_after() -> ok.
 
 %%%-------------------------------------------------------------------
 real_stop_now(0) ->
-    ?INFO("~p ~p stop now",[misc:register_name(), self()]),
+    ?INFO("~p ~p stop now", [misc:register_name(), self()]),
     ps:send(self(), stop_immediately);
 real_stop_now(_Players) ->
     tick_msg(),
@@ -214,8 +233,8 @@ real_stop_now(_Players) ->
 start_stop_now(S) ->
     ?INFO("~p ~p start stop now, kick all player(s)",
         [misc:register_name(), self()]),
-    ?TRY_CATCH( hook_map:on_map_destroy(), Err1, Stk1),
-    ?TRY_CATCH( kick_all_player(S), Err2, Stk2),
+    ?TRY_CATCH(hook_map:on_map_destroy(), Err1, Stk1),
+    ?TRY_CATCH(kick_all_player(S), Err2, Stk2),
     S#m_map_state{status = ?MAP_READY_EXIT}.
 
 kick_all_player(#m_map_state{player = Ets}) ->
@@ -236,7 +255,7 @@ player_stop_move(Req) ->
     lib_move:stop_player_move(Uid, Pos).
 
 %%-------------------------------------------------------------------
-send_goto_map_msg(Uid, Pos)->
+send_goto_map_msg(Uid, Pos) ->
     Msg = #pk_GS2U_GotoNewMap{
         map_id = lib_map_rw:get_map_id(),
         x = vector3:x(Pos), y = vector3:z(Pos)

@@ -13,28 +13,33 @@
 -include("ai_def.hrl").
 
 %% 进入地图后会动态变
-%% 通过自动生成代码lib_map_unit_rw
+%% 通过自动生成代码lib_unit_rw
 -record(m_map_unit_rw,{
     pid = 0, did = 0, group = 0, owner = 0, type=-1,
 %%  战斗相关
     hp = 1, max_hp = 1, attr= [], buff_list = []
 }).
 
+%% 移动相关
+%% 通过自动生成代码lib_move_rw
 -record(m_map_unit_move_rw,{
-%%  移动相关
+
     move_speed = 20,
     cur_move=0, next_move=0,  vis_tile_idx=-1,
     cur_pos, start_pos, dest_pos, face, dir,
     start_time = 0, seg_move_time = 0,  % 分段已经移动时间
-    stopped=false, path_list = []
+   %% stopped 是否被强制停下，比如在追击，巡逻过程中等等
+    force_stopped=false, path_list = []
 }).
 
+%% AI相关
+%% 通过自动生成代码lib_ai_rw
 -record(m_map_unit_ai_rw,{
     ai_state=0, pre_ai_state=0, ai_transition=1,
     triggers=[], pause=false,
     %
     ai_id=0,
-    %idle
+    %idle & 巡逻
     % 巡逻路径， 路径点数， 当前点索引， 是否反向巡逻 ，是否正在巡逻
     wp_list=[],wp_num=0,wp_idx=1, is_reverse_patrol=false, is_patrol=false,
     % 开始巡逻等待tick 、索敌等待tick
@@ -42,6 +47,8 @@
     
 }).
 
+%% player
+%% 通过自动生成代码lib_player_rw
 -record(m_player_rw, {
 %%  这些信息将由基础代码来维护
     aid=0, uid=0, sid=0,

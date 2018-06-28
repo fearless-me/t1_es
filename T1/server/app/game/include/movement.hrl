@@ -11,7 +11,8 @@
 -ifndef(MOVEMENT_HRL).
 -define(MOVEMENT_HRL, true).
 
-
+% @doc 怪物三种移动状态主要用来设置不同的速度
+% 
 -define(EMS_STAND,          0).		    %% 站立
 -define(EMS_WALK,           1).		    %% 行走
 -define(EMS_MONSTER_PATROL, 2).			%% 怪物巡逻

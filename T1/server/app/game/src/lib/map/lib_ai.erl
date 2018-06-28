@@ -13,6 +13,7 @@
 -include("ai_def.hrl").
 -include("movement.hrl").
 -include("pub_common.hrl").
+-include("map_unit.hrl").
 
 %% API
 -export([
@@ -87,13 +88,16 @@ reset_look_for_target_tick(_Uid) ->
 
 %%-------------------------------------------------------------------
 can_update_ai(Uid) ->
+    %% todo 检查是否有AI，是否死亡，以及其他限制状态
     AiId = lib_ai_rw:get_ai_id(Uid),
     AiId > 0.
 
 %%-------------------------------------------------------------------
-update(Uid) ->
+update(#m_map_unit{uid = Uid}) ->
     NeedUpdate = can_update_ai(Uid),
     update_action(Uid, NeedUpdate),
+    ok;
+update(_Any) ->
     ok.
 
 %%-------------------------------------------------------------------

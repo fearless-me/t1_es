@@ -35,7 +35,7 @@ init(Uid, Pos, Face) ->
     lib_move_rw:set_start_pos(Uid, Pos),
     lib_move_rw:set_dest_pos(Uid, Pos),
     lib_move_rw:set_vis_tile_idx(Uid, 0),
-    lib_move_rw:set_stopped(Uid, false),
+    lib_move_rw:set_force_stopped(Uid, false),
     lib_move_rw:set_move_speed(Uid, 20),
     ok.
 
@@ -48,7 +48,7 @@ start_walk_set(Uid, CurMove, NextMove, Src, Dst, Face, Dir, Now, PathList) ->
     lib_move_rw:set_dest_pos(Uid, Dst),
     lib_move_rw:set_seg_move_time(Uid, 0),
     lib_move_rw:set_start_time(Uid, Now),
-    lib_move_rw:set_stopped(Uid, false),
+    lib_move_rw:set_force_stopped(Uid, false),
     lib_move_rw:set_path_list(Uid, PathList),
     ok.
 
@@ -58,7 +58,7 @@ stop_move_set(Uid, Pos) ->
     lib_move_rw:set_start_pos(Uid, Pos),
     lib_move_rw:set_dest_pos(Uid, Pos),
     lib_move_rw:set_seg_move_time(Uid, 0),
-    lib_move_rw:set_stopped(Uid, false),
+    lib_move_rw:set_force_stopped(Uid, false),
     lib_move_rw:set_path_list(Uid, []),
     ok.
 
@@ -96,7 +96,7 @@ start_player_walk_1(Uid, Start, End) ->
 
     Way = [End],
     Dir = vector3:subtract(End, Start),
-    Speed = lib_move_rw:get_move_speed(Uid),
+    Speed = get_move_speed_by_state(Uid, ?EMS_WALK),
     PathList = make_path_list([], Start, Way, Speed),
     Now = lib_map_rw:get_move_timer_now(),
     %% 调试日志
@@ -293,7 +293,7 @@ do_cal_move_msg(?EMS_WALK, Uid) ->
     Src = lib_move_rw:get_start_pos(Uid),
     Dst = lib_move_rw:get_dest_pos(Uid),
     Type = lib_unit_rw:get_type(Uid),
-    Speed = lib_move_rw:get_move_speed(Uid),
+    Speed = get_move_speed_by_state(Uid, ?EMS_WALK),
     StartTime = lib_move_rw:get_start_time(Uid),
     #pk_GS2U_SyncWalk{
         uid = Uid, type = Type,
@@ -305,7 +305,27 @@ do_cal_move_msg(?EMS_WALK, Uid) ->
 do_cal_move_msg(?EMS_STAND, Uid) ->
     Pos = lib_move_rw:get_start_pos(Uid),
     Type = lib_unit_rw:get_type(Uid),
-    #pk_GS2U_SyncStand{uid = Uid, type = Type, cur_x = vector3:x(Pos), cur_y = vector3:z(Pos)};
+    #pk_GS2U_SyncStand{
+        uid = Uid,
+        type = Type,
+        cur_x = vector3:x(Pos),
+        cur_y = vector3:z(Pos)
+    };
+do_cal_move_msg(
+    S, Uid
+) when S =:= ?EMS_MONSTER_PATROL;S =:= ?EMS_MONSTER_WALK;S =:= ?EMS_MONSTER_FLEE ->
+    Src = lib_move_rw:get_start_pos(Uid),
+    Dst = lib_move_rw:get_dest_pos(Uid),
+    Type = lib_unit_rw:get_type(Uid),
+    Speed = get_move_speed_by_state(Uid, S),
+    StartTime = lib_move_rw:get_start_time(Uid),
+    #pk_GS2U_SyncWalk{
+        uid = Uid, type = Type,
+        move_time = lib_map_rw:get_move_timer_pass_time(StartTime),
+        src_x = vector3:x(Src), src_y = vector3:z(Src),
+        dst_x = vector3:x(Dst), dst_y = vector3:z(Dst),
+        speed = Speed
+    };
 do_cal_move_msg(_S, _Uid) ->
     undefined.
 
@@ -385,7 +405,7 @@ stop_move(Uid, NeedBroadcast) ->
         CurMove =:= ?EMS_MONSTER_WALK ->
             CurPos = lib_move_rw:get_cur_pos(Uid),
             stop_move_set(Uid, CurPos),
-            lib_move_rw:set_stopped(Uid, true),
+            lib_move_rw:set_force_stopped(Uid, true),
             case NeedBroadcast of
                 true ->
                     lib_map_view:sync_movement_to_big_visual_tile(Uid);
@@ -416,3 +436,12 @@ stop_move_force(Uid, NeedBroadcast) ->
             skip
     end,
     ok.
+
+get_move_speed_by_state(Uid, ?EMS_MONSTER_PATROL) ->
+    lib_move_rw:get_move_speed(Uid) * 0.5;
+get_move_speed_by_state(Uid, ?EMS_MONSTER_FLEE) ->
+    lib_move_rw:get_move_speed(Uid) * 1.1;
+get_move_speed_by_state(Uid, ?EMS_MONSTER_WALK) ->
+    lib_move_rw:get_move_speed(Uid);
+get_move_speed_by_state(Uid, _) ->
+    lib_move_rw:get_move_speed(Uid).

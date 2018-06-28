@@ -22,7 +22,7 @@
 	get_dir/1, get_dir_def/2, set_dir/2, set_dir_direct/2, % #m_map_unit_move_rw.dir
 	get_start_time/1, get_start_time_def/2, set_start_time/2, set_start_time_direct/2, % #m_map_unit_move_rw.start_time
 	get_seg_move_time/1, get_seg_move_time_def/2, set_seg_move_time/2, set_seg_move_time_direct/2, % #m_map_unit_move_rw.seg_move_time
-	get_stopped/1, get_stopped_def/2, set_stopped/2, set_stopped_direct/2, % #m_map_unit_move_rw.stopped
+	get_force_stopped/1, get_force_stopped_def/2, set_force_stopped/2, set_force_stopped_direct/2, % #m_map_unit_move_rw.force_stopped
 	get_path_list/1, get_path_list_def/2, set_path_list/2, set_path_list_direct/2, % #m_map_unit_move_rw.path_list
 	% common function 
 	del/1 ,to_record/1 ,init_from/2 ,init_default/1
@@ -206,20 +206,20 @@ set_seg_move_time(Uid, V)->
 set_seg_move_time_direct(Uid, V)-> put({seg_move_time,Uid}, V).
 
 %%-------------------------------------------------------------------
-%% #m_map_unit_move_rw.stopped
-get_stopped(Uid)-> get({stopped,Uid}).
+%% #m_map_unit_move_rw.force_stopped
+get_force_stopped(Uid)-> get({force_stopped,Uid}).
 
-get_stopped_def(Uid, Def)->
-	case get({stopped,Uid}) of
+get_force_stopped_def(Uid, Def)->
+	case get({force_stopped,Uid}) of
 		undefined -> Def;
 		V -> V
 	end.
 
-set_stopped(Uid, V)->
-	put({stopped,Uid}, V),
-	hook_map:on_rw_update(Uid, stopped, V).
+set_force_stopped(Uid, V)->
+	put({force_stopped,Uid}, V),
+	hook_map:on_rw_update(Uid, force_stopped, V).
 
-set_stopped_direct(Uid, V)-> put({stopped,Uid}, V).
+set_force_stopped_direct(Uid, V)-> put({force_stopped,Uid}, V).
 
 %%-------------------------------------------------------------------
 %% #m_map_unit_move_rw.path_list
@@ -250,7 +250,7 @@ del(Uid)->
 	erase({dir, Uid}),
 	erase({start_time, Uid}),
 	erase({seg_move_time, Uid}),
-	erase({stopped, Uid}),
+	erase({force_stopped, Uid}),
 	erase({path_list, Uid}),
 	ok.
 %%-------------------------------------------------------------------
@@ -267,7 +267,7 @@ to_record(Uid)->
 		dir = get_dir(Uid),
 		start_time = get_start_time(Uid),
 		seg_move_time = get_seg_move_time(Uid),
-		stopped = get_stopped(Uid),
+		force_stopped = get_force_stopped(Uid),
 		path_list = get_path_list(Uid)
 	}.
 %%-------------------------------------------------------------------
@@ -283,7 +283,7 @@ init_from(Uid, Rec)->
 	set_dir_direct(Uid, Rec#m_map_unit_move_rw.dir),
 	set_start_time_direct(Uid, Rec#m_map_unit_move_rw.start_time),
 	set_seg_move_time_direct(Uid, Rec#m_map_unit_move_rw.seg_move_time),
-	set_stopped_direct(Uid, Rec#m_map_unit_move_rw.stopped),
+	set_force_stopped_direct(Uid, Rec#m_map_unit_move_rw.force_stopped),
 	set_path_list_direct(Uid, Rec#m_map_unit_move_rw.path_list),
 	ok.
 %%-------------------------------------------------------------------
@@ -300,7 +300,7 @@ init_default(Uid)->
 	set_dir_direct(Uid, Rec#m_map_unit_move_rw.dir),
 	set_start_time_direct(Uid, Rec#m_map_unit_move_rw.start_time),
 	set_seg_move_time_direct(Uid, Rec#m_map_unit_move_rw.seg_move_time),
-	set_stopped_direct(Uid, Rec#m_map_unit_move_rw.stopped),
+	set_force_stopped_direct(Uid, Rec#m_map_unit_move_rw.force_stopped),
 	set_path_list_direct(Uid, Rec#m_map_unit_move_rw.path_list),
 	ok.
 %%-------------------------------------------------------------------
