@@ -20,7 +20,7 @@ save(Player) ->
     NewPlayer = case vector3:valid(Pos) of
                     true -> Player;
                     _ ->
-                        NewPos = map_creator:map_init_pos(Mid),
+                        NewPos = map_creator_pub:map_init_pos(Mid),
                         Player#m_player_pub{pos = NewPos}
                 end,
     lib_db:action_p_(Aid, save_player, NewPlayer),

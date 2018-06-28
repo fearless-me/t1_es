@@ -48,7 +48,11 @@
 -record(m_map_state,{map_id = 0, line_id = 0, player, monster,
     npc, pet, respawn = [], hook_mod, status = ?MAP_NORMAL, protect_tick=1000}).
 %%
--record(m_map_line,{map_id = 0, line_id = 0, pid, limits = 50, in = 0, dead_line = 0, status = ?MAP_NORMAL}).
+-record(m_map_line,{
+    map_id = 0, line_id = 0, pid,
+    limits = 50, in = 0, reserve = 10,
+    dead_line = 0, status = ?MAP_NORMAL
+}).
 
 
 %地图中的复活点

@@ -12,10 +12,12 @@
 -include("mem_record.hrl").
 
 %% API
--export([task_list/0]).
--export([start_all_task/0]).
--export([task_done/1, is_task_all_done/0]).
--export([on_info_msg/1]).
+-export([
+    task_list/0,
+    start_all_task/0,
+    is_task_all_done/0,
+    on_info_msg/1
+]).
 
 %%-------------------------------------------------------------------
 task_list() ->
@@ -31,23 +33,25 @@ on_info_msg({serv_start_ack, RunNo}) ->
     try
         gconf:set_run_no(RunNo),
         uid_gen:init(),
-        task_done(serv_start)
+        task_done_action(serv_start)
     catch _:Err:ST ->
         gcore:halt("save serv_start failed, error ~p, current stack ~p", [Err, ST])
     end,
     ok;
+%%-------------------------------------------------------------------
 on_info_msg({load_all_role_info_ack, List}) ->
     lists:foreach(
         fun(Player)-> lib_cache:add_player_pub(Player) end, List),
     ok;
 on_info_msg(load_all_role_info_ack_end) ->
-    task_done(load_all_role_info),
+    task_done_action(load_all_role_info),
     ok;
+%%-------------------------------------------------------------------
 on_info_msg(Info) ->
     ?ERROR("undeal info ~w", [Info]).
 
 %%-------------------------------------------------------------------
-task_done(Task) ->
+task_done_action(Task) ->
     ps:send(serv_loader, task_done, Task).
 
 %%-------------------------------------------------------------------

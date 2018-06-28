@@ -119,7 +119,7 @@ start_serv_cache(SupPid) ->
     ok.
 
 start_login(SupPid) ->
-    {ok, _} = ?CHILD(SupPid, gen_login, worker),
+    {ok, _} = ?CHILD(SupPid, gen_mod_login, worker),
     ok.
 
 start_map_root_supervisor(SupPid) ->

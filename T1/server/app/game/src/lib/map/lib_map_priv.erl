@@ -35,7 +35,7 @@
 
 %%%-------------------------------------------------------------------
 init(S) ->
-    Conf = map_creator:map_conf(S#m_map_state.map_id),
+    Conf = map_creator_pub:map_conf(S#m_map_state.map_id),
     S1 = init_1(S),
     ok = lib_map_rw:init_ets(S1),
     ok = lib_map_view:init_vis_tile(Conf),

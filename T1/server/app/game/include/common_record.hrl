@@ -27,7 +27,10 @@
 -record(r_exit_map_req,{uid = 0, map_id = 0, line_id=0, map_pid}).
 %%
 -record(r_change_map_req,{
-    uid = 0, name, group =0, pid, map_id = 0, line_id = 0, map_pid, tar_map_id = 0, tar_line_id = 0, tar_pos, tar_map_pid}).
+    uid = 0, name, group =0, pid,
+    map_id = 0, line_id = 0, map_pid,
+    tar_map_id = 0, tar_line_id = 0, tar_pos, force=false
+}).
 %%
 -record(r_change_map_ack,{map_id = 0, line_id = 0, pos, map_pid, error = 0}).
 %%

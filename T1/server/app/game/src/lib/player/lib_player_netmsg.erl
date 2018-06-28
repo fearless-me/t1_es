@@ -46,8 +46,8 @@ handle(#pk_U2GS_RequestCreatePlayer{
     sex = Sex,
     head = Head
 }) ->
-    BornMid = map_creator:born_map_id(),
-    #vector3{x = X, z = Z} = map_creator:born_map_pos(),
+    BornMid = map_creator_pub:born_map_id(),
+    #vector3{x = X, z = Z} = map_creator_pub:born_map_pos(),
     lib_player_priv:create_player_(#r_create_player_req{
        name = Name, camp = Camp, career = Career, race = Race, sex = Sex,
         head = Head, mid = BornMid, x = X, y = Z, sid = gconf:get_sid()

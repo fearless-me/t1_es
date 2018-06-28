@@ -48,7 +48,7 @@ init([]) ->
             [
                 ?CHILD(map_mgr_supervisor, supervisor),
                 ?CHILD(map_supervisor, supervisor),
-                ?CHILD(gen_map_creator, worker)
+                ?CHILD(gen_mod_map_creator, worker)
             ]
         }
     }.

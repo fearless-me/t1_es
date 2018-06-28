@@ -23,7 +23,7 @@ change_attr(AddList, MultiList) ->
 change_attr(AddList, MultiList, AddList_Del, MultiList_Del) ->
     Uid = lib_player_rw:get_uid(),
     #m_player_map{map_pid = Pid} =lib_player_rw:get_map(),
-    map:player_change_attr_(
+    map_pub:player_change_attr_(
         Pid,
         #r_player_change_prop_req{
             uid = Uid,

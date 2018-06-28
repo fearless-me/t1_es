@@ -50,10 +50,10 @@ change_map_(DestMapID, LineId, TarPos) ->
 teleport_(NewPos) -> ps:send(self(), teleport, NewPos).
 
 %%-------------------------------------------------------------------
-start_move_(MapPid, Req) -> map:player_move_(MapPid, Req).
+start_move_(MapPid, Req) -> map_pub:player_move_(MapPid, Req).
 
 %%-------------------------------------------------------------------
-stop_move_(MapPid, Req) -> map:player_stop_move_(MapPid, Req).
+stop_move_(MapPid, Req) -> map_pub:player_stop_move_(MapPid, Req).
 
 
 
