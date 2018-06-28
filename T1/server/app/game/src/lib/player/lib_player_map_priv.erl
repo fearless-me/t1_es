@@ -97,8 +97,8 @@ serv_change_map_call_cation(Req) ->
     } = Req,
     CurMgr = map_creator:map_mgr(Mid),
     TarMgr = map_creator:map_mgr(TMid),
-    ?INFO("player ~p, changeMap mgr ~p:~p:~p -> mgr ~p:~p",
-        [Uid, Mid, LineId, CurMgr, TMid, TarMgr]),
+    ?INFO("player ~p, changeMap map_~p_~p:~p -> map ~p",
+        [Uid, Mid, LineId, Mpid, TMid]),
     ExitRet =
         case CurMgr of
             undefined ->

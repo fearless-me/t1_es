@@ -57,6 +57,9 @@ do_handle_call(Request, From, State) ->
 do_handle_info({stop_line, Line}, State) ->
     stop_map_line(State, Line),
     {noreply, State};
+do_handle_info({force_del_line_now, Line}, State) ->
+    force_del_line(State, Line),
+    {noreply, State};
 do_handle_info(broadcast, State) ->
     {noreply, State};
 do_handle_info(Info, State) ->
@@ -74,7 +77,8 @@ do_player_join_map_call(S, Req) ->
     Now = time:milli_seconds(),
     MS = ets:fun2ms(
         fun(T) when T#m_map_line.limits > T#m_map_line.in,
-                    T#m_map_line.dead_line > Now + ?DEAD_LINE_PROTECT
+                    T#m_map_line.dead_line > Now + ?DEAD_LINE_PROTECT,
+                    T#m_map_line.status =:= ?MAP_NORMAL
             -> T
         end),
     Line =
@@ -110,10 +114,11 @@ do_player_exit_map_call(S, Req) ->
         [#m_map_line{pid = Mpid}] ->
             ets:update_counter(S#state.ets, LineID, {#m_map_line.in, -1}),
             map:player_exit_call(Mpid, Req);
-        _ -> skip
-    end,
-
-    ok.
+        _ ->
+            ?ERROR("player ~p exit map_~p_~p but line ~p not exists",
+                [Uid, S#state.map_id, LineID, LineID]),
+            error
+    end.
 
 %%--------------------------------------------------------------------
 create_new_line(S, MapID, LineID) ->
@@ -124,7 +129,7 @@ create_new_line(S, MapID, LineID) ->
     },
     erlang:send_after(?LINE_LIFETIME, self(), {stop_line, Line}),
     ets:insert(S#state.ets, Line),
-    ?WARN("map_~p_~p ~p start",[MapID, LineID, Pid]),
+    ?WARN("map_~p_~p ~p start, mgr ets ~p",[MapID, LineID, Pid, S#state.ets]),
     Line.
 
 
@@ -140,6 +145,14 @@ next_line_id() ->
 stop_map_line(S, Line) ->
     #m_map_line{map_id = Mid, line_id = LineId, pid = Pid} = Line,
     ?WARN("map_~p_~p ~p will be stopped", [Mid, LineId, Pid]),
-    ets:delete(S#state.ets, LineId),
+    % 预留保护时间让玩家退出
+    erlang:send_after(?DEAD_LINE_PROTECT, self(), {force_del_line_now, Line}),
+    ets:update_element(S#state.ets, LineId, {#m_map_line.status, ?MAP_READY_EXIT}),
     ps:send(Pid, start_stop_now),
+    ok.
+
+force_del_line(S, Line) ->
+    #m_map_line{line_id = LineId, pid = Pid} = Line,
+    catch erlang:exit(Pid, normal),
+    ets:delete(S#state.ets, LineId),
     ok.
