@@ -201,8 +201,8 @@ tick_monster() ->
     ).
 
 tick_monster_1(Unit) ->
-    ?TRY_CATCH(lib_move:update(Unit)),
-    ?TRY_CATCH(lib_ai:update(Unit)),
+    ?TRY_CATCH(lib_move:update(Unit), Err1, Stk1),
+    ?TRY_CATCH(lib_ai:update(Unit), Err2, Stk2),
     ok.
 
 %%%-------------------------------------------------------------------

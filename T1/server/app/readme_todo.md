@@ -233,8 +233,8 @@
 |       |       serv_loader_logic.erl                                            
 |       |       watchdog.erl         看门狗                                                                                                                 
 |       +---db                                                                   
-|       |       db_handler.erl     数据库逻辑代码                                              
-|       |       db_mgr.erl       一个库一个mgr                                                
+|       |       db_handler.erl     数据库逻辑代码   (db otp)                                           
+|       |       db_mgr.erl       一个mysql连接池一个mgr                                                
 |       |       db_mgr_sup.erl      ,,,                                             
 |       |       db_proxy.erl        ,,,                                             
 |       |       db_son.erl       数据库工作进程                                                
@@ -242,26 +242,26 @@
 |       |       db_sup.erl    ,,,                                                                                                                         
 |       +---gen                                                                  
 |       |       gen_mod_login.erl   全局登录otp                                             
-|       |       gen_mod_map.erl     地图otp                                             
+|       |       gen_mod_map.erl     地图otp (map otp)                                            
 |       |       gen_mod_map_creator.erl    地图数据初始化otp                                      
 |       |       gen_mod_map_mgr.erl     一个地图对应一个mgr                                         
-|       |       map_creator_pub.erl    全局地图数据接口                                          
-|       |       map_mgr_pub.erl       某个地图管理器接口                                           
+|       |       map_creator_pub.erl    全局地图数据接口   （任意otp）                                       
+|       |       map_mgr_pub.erl       某个地图管理器接口    （玩家otp）                                       
 |       |       map_mgr_supervisor.erl  ,,,                                         
-|       |       map_pub.erl    地图接口                                                  
+|       |       map_pub.erl    地图接口       （ _结束的方法玩家otp; _call 地图otp）                                             
 |       |       map_supervisor.erl  ,,,                                             
-|       |       mod_login.erl    login逻辑代码                                                
+|       |       mod_login.erl    login逻辑代码   （logint otp）                                             
 |       |       mod_player.erl     玩家进程                                              
 |       |       player_supervisor.erl                                                                                                                  
 |       +---hook                                                                 
-|       |       hook_copy.erl       副本事件拦截器                                            
-|       |       hook_map.erl       地图事拦截器                                              
-|       |       hook_player.erl   玩家事件拦截器                                                                                                                    
+|       |       hook_copy.erl       副本事件拦截器     (地图otp)                                       
+|       |       hook_map.erl       地图事拦截器     (地图otp)                                           
+|       |       hook_player.erl   玩家事件拦截器      (玩家otp)                                                                                                                
 |       +---lib                                                                  
-|       |   |   lib_cache.erl    所有内存数据接口                                                
-|       |   |   lib_db.erl        db接口                                               
-|       |   |   lib_login.erl      登录接口                                                                                                                                                                       
-|       |   +---ai 怪物AI                                                              
+|       |   |   lib_cache.erl    所有内存数据接口     （任意otp）                                           
+|       |   |   lib_db.erl        db接口          （任意otp）                                     
+|       |   |   lib_login.erl      登录接口        （任意otp）                                                                                                                                                               
+|       |   +---ai 怪物AI （地图otp）                                                             
 |       |   |       ai_state.erl         ai 状态分发器                                        
 |       |   |       ai_state_attck.erl     攻击                                      
 |       |   |       ai_state_flee.erl       逃跑                                   
@@ -273,7 +273,7 @@
 |       |   |       ai_transition_lamster.erl    逃跑                                
 |       |   |       ai_transition_passive.erl     被动                               
 |       |   |       ai_trigger.erl                                                                                                                  
-|       |   +---map                                                              
+|       |   +---map   （地图otp）                                                           
 |       |   |       lib_ai.erl          ai接口                                         
 |       |   |       lib_ai_rw.erl      ai私有数据操作（自动生成）                                          
 |       |   |       lib_attr_calc.erl     属性计算                                      
@@ -289,7 +289,7 @@
 |       |   |       lib_pet.erl   宠物                                               
 |       |   |       lib_unit.erl  地图上对象接口                                               
 |       |   |       lib_unit_rw.erl 地图上对象私有数据操作类（自动生成）                                                                                                                     
-|       |   \---player                                                           
+|       |   \---player （玩家otp）                                                           
 |       |           lib_player.erl      角色otp的消息处理                                           
 |       |           lib_player_alarm.erl   角色数据报警逻辑                                      
 |       |           lib_player_bag.erl      背包                                     
