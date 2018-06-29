@@ -246,7 +246,14 @@ started_patrol_action_1(Uid, TarPos) ->
 %%-------------------------------------------------------------------
 %%-------------------------------------------------------------------
 %%
-clear_all_enmity(_Uid) ->
+clear_all_enmity(Uid) ->
+    List = lib_ai_rw:get_enmity_list(Uid),
+    lists:foreach(
+        fun(#m_unit_enmity{uid = TarUid}) ->
+            clear_enmity(TarUid, Uid, false)
+        end, List),
+    lib_ai_rw:set_enmity_list(Uid, []),
+    lib_ai_rw:set_max_enmity_uid(Uid, 0),
     ok.
 
 %% todo 优化仇恨列表的计算
@@ -323,9 +330,9 @@ update_look_for_enemy_action(Uid, true) ->
     start_look_for_enemy(Uid);
 update_look_for_enemy_action(_Uid, _) -> skip.
 
-can_look_for_enemy(_Uid, 0) -> true;
-can_look_for_enemy(_Uid, V) when V < 0 -> true;
-can_look_for_enemy(Uid, V) when V > 0 ->
+%%-------------------------------------------------------------------
+can_look_for_enemy(_Uid, V) when V =< 0 -> true;
+can_look_for_enemy(Uid,  V) when V > 0 ->
     lib_ai_rw:set_look_for_target_tick(Uid, V - 1),
     false;
 can_look_for_enemy(_Uid, _V) ->
@@ -333,38 +340,34 @@ can_look_for_enemy(_Uid, _V) ->
 
 %%-------------------------------------------------------------------
 start_look_for_enemy(Uid) ->
-    % todo 在视野范围内寻目标，可以简化有限在当前所在的格子里找
+    % todo 在视野范围内寻目标，可以优先在当前所在的格子里找
     reset_look_for_target_tick(Uid),
     ok.
 
 %%-------------------------------------------------------------------
 update_lock_target(Uid) ->
-    Changed =
-        find_lock_target(
-            Uid,
-            lib_ai_rw:get_target_uid(Uid),
-            false
-        ),
+    Current = lib_ai_rw:get_target_uid(Uid),
+    Changed = find_lock_target(Uid, Current, false),
+    changed_lock_target(Uid, Changed).
 
-    case Changed of
-        false ->
-            LockTick = lib_ai_rw:get_lock_target_tick(Uid),
-            case LockTick > 0 of
+changed_lock_target(_Uid, true) -> true;
+changed_lock_target(Uid, _False) ->
+    LockTick = lib_ai_rw:get_lock_target_tick(Uid),
+    case LockTick > 0 of
+        true ->
+            lib_ai_rw:set_look_for_target_tick(Uid, LockTick - 1),
+            false;
+        _ ->
+            TarUid = lib_ai_rw:get_target_uid(Uid),
+            MaxUid = get_max_enmity_uid(Uid),
+            reset_lock_target_time(Uid),
+            case TarUid =:= MaxUid of
                 true ->
-                    lib_ai_rw:set_look_for_target_tick(Uid, LockTick - 1),
                     false;
                 _ ->
-                    TarUid = lib_ai_rw:get_target_uid(Uid),
-                    MaxUid = get_max_enmity_uid(Uid),
-                    reset_lock_target_time(Uid),
-                    case TarUid =:= MaxUid of
-                        true -> false;
-                        _ ->
-                            lib_ai_rw:set_target_uid(Uid, MaxUid),
-                            true
-                    end
-            end;
-        _ -> Changed
+                    lib_ai_rw:set_target_uid(Uid, MaxUid),
+                    true
+            end
     end.
 
 %%-------------------------------------------------------------------
