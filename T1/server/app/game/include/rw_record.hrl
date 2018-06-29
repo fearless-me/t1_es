@@ -43,7 +43,16 @@
     % 巡逻路径， 路径点数， 当前点索引， 是否反向巡逻 ，是否正在巡逻
     wp_list=[],wp_num=0,wp_idx=1, is_reverse_patrol=false, is_patrol=false,
     % 开始巡逻等待tick 、索敌等待tick
-    patrol_rest_tick=0, look_for_target_tick=0
+    patrol_rest_tick=0, look_for_target_tick=0,
+    % pursue & attack
+    % 追击目标点 、追击失败 、不能追击、检查追击tick
+    pursue_tar_pos, pursue_failed=false, cant_pursue=false, check_pursue_tick=10,
+    % 当前目标  、进入战斗的时间、进入战斗的坐标、当前使用的技能、下次攻击等待tick， 攻击序列号
+    target_uid=0, enter_combat_time=0, enter_combat_pos, use_skill_id=0, attack_wait_tick=10, skill_serial=0,
+
+    % 仇恨
+    % 仇恨列表  最大仇恨id 锁定目标tick、 没有增加仇恨的tick
+    enmity_list=[], max_enmity_uid=0, lock_target_tick=0, no_inc_enmity_tick=0
     
 }).
 

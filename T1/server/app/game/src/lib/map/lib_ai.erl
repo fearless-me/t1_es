@@ -14,10 +14,15 @@
 -include("movement.hrl").
 -include("pub_common.hrl").
 -include("map_unit.hrl").
+-include("movement.hrl").
 
 %% API
 -export([
-    init/2, update/1, update_patrol/1
+    init/2, update/1, update_patrol/1,
+    clear_all_enmity/1, reset_patrol_tick/1, reset_look_for_target_tick/1,
+    update_look_for_enemy/1, reset_lock_target_time/1, update_lock_target/1,
+    get_pursue_unit/1, start_pursue/2, update_pursue/2, count_down_attack_tick/1,
+    add_enmity/3, clear_enmity/3
 ]).
 
 %%-------------------------------------------------------------------
@@ -30,6 +35,7 @@ init(Uid, AiType) ->
     reset_look_for_target_tick(Uid),
     reset_patrol_tick(Uid),
     ok.
+
 %%-------------------------------------------------------------------
 init_patrol(Uid, PathList) ->
     % todo 根据怪物巡逻的配置
@@ -46,6 +52,7 @@ init_patrol(Uid, PathList) ->
     end,
     ok.
 
+%%-------------------------------------------------------------------
 init_ai(Uid) ->
     _Did = lib_unit_rw:get_did(Uid),
     CreateType = ?EACT_Indicate,
@@ -64,10 +71,12 @@ init_ai(Uid) ->
     % todo 添加buff、技能等等
     ok.
 
+%%-------------------------------------------------------------------
 init_trigger(_Uid) ->
     % todo 根据AI配置添加触发器等等
     ok.
 
+%%-------------------------------------------------------------------
 init_transition(Uid) ->
     % todo 根据怪物配置添加AI类型
     case lib_ai_rw:get_ai_id(Uid) of
@@ -79,11 +88,8 @@ init_transition(Uid) ->
 %%-------------------------------------------------------------------
 %%-------------------------------------------------------------------
 reset_patrol_tick(Uid) ->
-    ResetTick = rand_tool:rand() div ?CREATURE_PATROL_REST_TICK_INTERVAL + ?CREATURE_PATROL_REST_TICK_MIN,
+    ResetTick = rand_tool:rand() div ?AI_PATROL_REST_TICK_INTERVAL + ?AI_PATROL_REST_TICK_MIN,
     lib_ai_rw:set_patrol_rest_tick(Uid, ResetTick),
-    ok.
-
-reset_look_for_target_tick(_Uid) ->
     ok.
 
 %%-------------------------------------------------------------------
@@ -200,7 +206,8 @@ start_patrol_action(Uid, ?ECPT_Path) ->
 
     %
     IsReversePatrol1 = lib_ai_rw:get_is_reverse_patrol(Uid),
-    IsReversePatrol2 = if not IsReversePatrol1 andalso (WPIdx == WPNum) -> not IsReversePatrol1; true -> IsReversePatrol1 end,
+    IsReversePatrol2 = if not IsReversePatrol1 andalso (WPIdx == WPNum) -> not IsReversePatrol1; true ->
+        IsReversePatrol1 end,
     IsReversePatrol3 = if IsReversePatrol1 andalso (WPIdx == 1) -> not IsReversePatrol1; true -> IsReversePatrol2 end,
 
     NewWPIdx = if IsReversePatrol3 -> WPIdx - 1; true -> WPIdx + 1 end,
@@ -215,10 +222,10 @@ start_patrol_action(Uid, ?ECPT_Path) ->
     started_patrol_action_1(Uid, TarPos),
     ok;
 start_patrol_action(Uid, ?ECPT_Range) ->
-    Diameter = ?CREATURE_PATROL_RADIUS * 2,
+    Diameter = ?AI_PATROL_RADIUS * 2,
     NowPos = lib_move_rw:get_cur_pos(Uid),
-    X = vector3:x(NowPos) + ((rand_tool:rand() rem Diameter) - ?CREATURE_PATROL_RADIUS),
-    Z = vector3:z(NowPos) + ((rand_tool:rand() rem Diameter) - ?CREATURE_PATROL_RADIUS),
+    X = vector3:x(NowPos) + ((rand_tool:rand() rem Diameter) - ?AI_PATROL_RADIUS),
+    Z = vector3:z(NowPos) + ((rand_tool:rand() rem Diameter) - ?AI_PATROL_RADIUS),
     TarPos = vector3:new(X, 0, Z),
 
     % 怪物开始跑路
@@ -236,3 +243,268 @@ started_patrol_action_1(Uid, TarPos) ->
     end,
     ok.
 
+%%-------------------------------------------------------------------
+%%-------------------------------------------------------------------
+%%
+clear_all_enmity(_Uid) ->
+    ok.
+
+%% todo 优化仇恨列表的计算
+add_enmity(Uid, TarUid, Val) ->
+    EnList0 = lib_ai_rw:get_enmity_list(Uid),
+    EnList1 =
+        case lists:keyfind(TarUid, #m_unit_enmity.uid, EnList0) of
+            #m_unit_enmity{enmity = EnmityVal} = Enmity ->
+                lists:keystore(
+                    TarUid,
+                    #m_unit_enmity.uid,
+                    EnList0,
+                    Enmity#m_unit_enmity{enmity = EnmityVal + Val}
+                );
+            _ ->
+                [#m_unit_enmity{uid = TarUid, enmity = Val} | EnList0]
+        end,
+    lib_ai_rw:set_enmity_list(Uid, EnList1),
+    lib_ai_rw:set_no_inc_enmity_tick(Uid, 0),
+    sort_max_enmity(Uid),
+    ok.
+
+%%-------------------------------------------------------------------
+sort_max_enmity(Uid) ->
+    lib_ai_rw:set_max_enmity_uid(Uid, 0),
+    ok;
+sort_max_enmity(Uid) ->
+    EnList0 = lib_ai_rw:get_enmity_list(Uid),
+    EnList1 = filter_enmity_list(EnList0, []),
+    TarUid = sort_max_enmity_action(EnList1, 0, 0),
+    lib_ai_rw:set_enmity_list(Uid, EnList1),
+    lib_ai_rw:set_max_enmity_uid(Uid, TarUid),
+    ok.
+
+filter_enmity_list([], Acc) ->
+    Acc;
+filter_enmity_list([#m_unit_enmity{uid = Uid} = Enmity | EnList], Acc) ->
+    case is_target_valid(Uid) of
+        true ->
+            filter_enmity_list(EnList, [Enmity | Acc]);
+        _ ->
+            filter_enmity_list(EnList, [Enmity#m_unit_enmity{active = false} | Acc])
+    end.
+
+sort_max_enmity_action([], TarUid, _TarEnVal) ->
+    TarUid;
+sort_max_enmity_action(
+    [#m_unit_enmity{uid = Uid, enmity = EnVal, active = true} | EnList],
+    _TarUid, TarEnVal
+) when EnVal > TarEnVal ->
+    sort_max_enmity_action(EnList, Uid, EnVal);
+sort_max_enmity_action([_H | EnList], TarUid, TarEnVal) ->
+    sort_max_enmity_action(EnList, TarUid, TarEnVal).
+
+
+%%-------------------------------------------------------------------
+clear_enmity(Uid, TarUid, false) ->
+    EnList0 = lib_ai_rw:get_enmity_list(Uid),
+    EnList1 = lists:keydelete(TarUid, #m_unit_enmity.uid, EnList0),
+    lib_ai_rw:set_enmity_list(Uid, EnList1),
+    ok;
+clear_enmity(Uid, TarUid, _SetMaxEnmity) ->
+    clear_enmity(Uid, TarUid, false),
+    sort_max_enmity(Uid),
+    ok.
+
+%%-------------------------------------------------------------------
+update_look_for_enemy(Uid) ->
+    T = lib_ai_rw:get_look_for_target_tick(Uid),
+    R = can_look_for_enemy(Uid, T),
+    update_look_for_enemy_action(Uid, R).
+
+update_look_for_enemy_action(Uid, true) ->
+    reset_look_for_target_tick(Uid),
+    start_look_for_enemy(Uid);
+update_look_for_enemy_action(_Uid, _) -> skip.
+
+can_look_for_enemy(_Uid, 0) -> true;
+can_look_for_enemy(_Uid, V) when V < 0 -> true;
+can_look_for_enemy(Uid, V) when V > 0 ->
+    lib_ai_rw:set_look_for_target_tick(Uid, V - 1),
+    false;
+can_look_for_enemy(_Uid, _V) ->
+    true.
+
+%%-------------------------------------------------------------------
+start_look_for_enemy(Uid) ->
+    % todo 在视野范围内寻目标，可以简化有限在当前所在的格子里找
+    reset_look_for_target_tick(Uid),
+    ok.
+
+%%-------------------------------------------------------------------
+update_lock_target(Uid) ->
+    Changed =
+        find_lock_target(
+            Uid,
+            lib_ai_rw:get_target_uid(Uid),
+            false
+        ),
+
+    case Changed of
+        false ->
+            LockTick = lib_ai_rw:get_lock_target_tick(Uid),
+            case LockTick > 0 of
+                true ->
+                    lib_ai_rw:set_look_for_target_tick(Uid, LockTick - 1),
+                    false;
+                _ ->
+                    TarUid = lib_ai_rw:get_target_uid(Uid),
+                    MaxUid = get_max_enmity_uid(Uid),
+                    reset_lock_target_time(Uid),
+                    case TarUid =:= MaxUid of
+                        true -> false;
+                        _ ->
+                            lib_ai_rw:set_target_uid(Uid, MaxUid),
+                            true
+                    end
+            end;
+        _ -> Changed
+    end.
+
+%%-------------------------------------------------------------------
+find_lock_target(_Uid, 0, Changed) ->
+    Changed;
+find_lock_target(Uid, TargetUid, Changed) ->
+    case is_target_valid(TargetUid) of
+        true -> Changed;
+        _ ->
+            % todo 目标存在清除仇恨
+            NewTar = get_max_enmity_uid(Uid),
+            lib_ai_rw:set_target_uid(Uid, NewTar),
+            reset_lock_target_time(Uid),
+            find_lock_target(Uid, NewTar, true)
+    end.
+
+%%-------------------------------------------------------------------
+is_target_valid(_TargetUid) ->
+    true.
+
+%%-------------------------------------------------------------------
+reset_look_for_target_tick(Uid) ->
+    ResetTick = rand_tool:rand() div ?AI_LOOK_FOR_ENEMY_TICK_INTERVAL + ?AI_LOOK_FOR_ENEMY_TICK_MIN,
+    lib_ai_rw:set_look_for_target_tick(Uid, ResetTick),
+    ok.
+
+%%-------------------------------------------------------------------
+%%-------------------------------------------------------------------
+reset_lock_target_time(Uid) ->
+    ResetTick = rand_tool:rand() div ?AI_LOCK_TARGET_TICK_INTERVAL + ?AI_LOCK_TARGET_MIN_TICK,
+    lib_ai_rw:set_look_for_target_tick(Uid, ResetTick),
+    ok.
+
+%%-------------------------------------------------------------------
+reset_check_pursue_tick(Uid) ->
+    lib_ai_rw:set_check_pursue_tick(Uid, rand_tool:rand() rem 6 + 5),
+    ok.
+
+%%-------------------------------------------------------------------
+count_down_attack_tick(Uid) ->
+    Tick = lib_ai_rw:get_attack_wait_tick(Uid),
+    lib_ai_rw:set_attack_wait_tick(Uid, Tick - 1),
+    ok.
+
+%%-------------------------------------------------------------------
+get_pursue_unit(Uid) ->
+    TarUid = lib_ai_rw:get_target_uid(Uid),
+    lib_map_rw:get_obj(TarUid).
+
+%%-------------------------------------------------------------------
+start_pursue(Uid, TarUid) when is_integer(TarUid), TarUid > 0 ->
+    lib_ai_rw:set_pursue_failed(Uid, false),
+    lib_ai_rw:set_cant_pursue(Uid, false),
+    reset_check_pursue_tick(Uid),
+
+    Pos = lib_move_rw:get_cur_pos(TarUid),
+    Ret = lib_move:is_can_monster_walk(Uid, Pos, ?EMS_MONSTER_WALK, true),
+    case Ret of
+        true ->
+            lib_ai_rw:set_pursue_tar_pos(Uid, Pos),
+            lib_move:start_monster_walk(Uid, Pos, ?EMS_MONSTER_WALK, false);
+        _ ->
+            lib_ai_rw:set_pursue_failed(Uid, true)
+    end,
+    ok;
+start_pursue(_Uid, _TarUid) -> ok.
+
+%%-------------------------------------------------------------------
+update_pursue(Uid, TarUid) when is_integer(TarUid), TarUid > 0 ->
+    CheckTick = lib_ai_rw:get_check_pursue_tick(Uid),
+    NoEnmityTick = lib_ai_rw:get_no_inc_enmity_tick(Uid),
+    IsPursueFailed = lib_ai_rw:get_pursue_failed(Uid),
+    IsCantPursue = lib_ai_rw:get_cant_pursue(Uid),
+    lib_ai_rw:set_check_pursue_tick(Uid, CheckTick - 1),
+    lib_ai_rw:set_no_inc_enmity_tick(Uid, NoEnmityTick - 1),
+    update_pursue_1(Uid, TarUid, IsPursueFailed, IsCantPursue),
+    ok;
+update_pursue(_Uid, _TarUid) -> ok.
+
+%%-------------------------------------------------------------------
+update_pursue_1(Uid, _TarUid, true, _Cant) ->
+    % todo 目标从仇恨列表删除
+    MaxUid = get_max_enmity_uid(Uid),
+    start_pursue(Uid, MaxUid),
+    ok;
+update_pursue_1(Uid, TarUid, _Failed, true) ->
+    % todo 检查目标能否移动
+    CanMove = true,
+    case CanMove of
+        true -> start_pursue(Uid, TarUid);
+        _ -> skip
+    end;
+update_pursue_1(Uid, TarUid, _Failed, _Cant) ->
+    % todo 检查目标能否移动
+    CanMove = true,
+    case CanMove of
+        falae -> lib_ai_rw:set_cant_pursue(Uid, true);
+        _ ->
+            NoEnmityTick = lib_ai_rw:get_no_inc_enmity_tick(Uid),
+            update_pursue_2(Uid, TarUid, NoEnmityTick)
+    end,
+    ok.
+
+%%-------------------------------------------------------------------
+update_pursue_2(Uid, _TarUid, NoEnmityTick) when NoEnmityTick > ?AI_RETURN_TICK ->
+    lib_ai_rw:set_pursue_failed(Uid, true),
+    ok;
+update_pursue_2(Uid, TarUid, _NoEnmityTick) ->
+    CurMove = lib_move_rw:get_cur_move(Uid),
+    IsStop = lib_move_rw:get_force_stopped(Uid),
+    case CurMove of
+        ?EMS_STAND when IsStop ->
+            start_pursue(Uid, TarUid);
+        ?EMS_STAND when IsStop =:= false ->
+            start_pursue(Uid, TarUid);
+        _ ->
+            update_pursue_3(Uid, TarUid, lib_ai_rw:get_check_pursue_tick(Uid))
+    end,
+    ok.
+
+%%-------------------------------------------------------------------
+update_pursue_3(Uid, TarUid, CheckTick) when CheckTick =< 0 ->
+    reset_check_pursue_tick(Uid),
+    CurPos = lib_move_rw:get_cur_pos(Uid),
+    TarPos = lib_move_rw:get_cur_pos(TarUid),
+    Diff_X = vector3:x(CurPos) - vector3:x(TarPos),
+    Diff_Z = vector3:z(CurPos) - vector3:z(TarPos),
+    if
+        erlang:abs(Diff_X) > ?AI_PURSUE_XZ_MAX;
+        erlang:abs(Diff_Z) > ?AI_PURSUE_XZ_MAX ->
+            start_pursue(Uid, TarUid);
+        true ->
+            skip
+    end,
+    ok;
+update_pursue_3(_Uid, _TarUid, _CheckTick) ->
+    skip.
+
+%%-------------------------------------------------------------------
+get_max_enmity_uid(_Uid) ->
+    % todo 从仇恨列表中找一个最大的
+    0.

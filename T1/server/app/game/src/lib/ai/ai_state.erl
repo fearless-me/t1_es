@@ -13,7 +13,7 @@
 
 %% API
 -export([
-    on_enter/2, on_exit/2, update/2, on_event/2
+    on_enter/2, on_exit/2, update/2, on_event/3
 ]).
 
 %%-------------------------------------------------------------------
@@ -57,15 +57,15 @@ update(_Uid, _AiState) ->
     ok.
 
 %%-------------------------------------------------------------------
--spec on_event(Uid :: integer(), AiState :: ai_state_type()) -> ok.
-on_event(Uid, ?AIST_Idle) ->
-    ai_state_idle:on_event(Uid);
-on_event(Uid, ?AIST_Pursue) ->
-    ai_state_pursue:on_event(Uid);
-on_event(Uid, ?AIST_Attack) ->
-    ai_state_attck:on_event(Uid);
-on_event(Uid, ?AIST_Flee) ->
-    ai_state_flee:on_event(Uid);
-on_event(_Uid, _AiState) ->
+-spec on_event(Uid :: integer(), AiState :: ai_state_type(), Event::integer()) -> ok.
+on_event(Uid, ?AIST_Idle, Event) ->
+    ai_state_idle:on_event(Uid, Event);
+on_event(Uid, ?AIST_Pursue, Event) ->
+    ai_state_pursue:on_event(Uid, Event);
+on_event(Uid, ?AIST_Attack, Event) ->
+    ai_state_attck:on_event(Uid, Event);
+on_event(Uid, ?AIST_Flee, Event) ->
+    ai_state_flee:on_event(Uid, Event);
+on_event(_Uid, _AiState, _Event) ->
     ok.
 

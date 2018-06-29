@@ -21,7 +21,8 @@
 -export([
     stop_move/2, stop_move_force/2,
     start_player_walk/3, on_obj_pos_change/2, stop_player_move/2,
-    start_monster_walk/4]).
+    start_monster_walk/4, is_can_monster_walk/4
+]).
 -export([cal_move_msg/1]).
 %%-export([cal_move_msg_info/2]).
 
@@ -407,13 +408,10 @@ stop_move(Uid, NeedBroadcast) ->
             stop_move_set(Uid, CurPos),
             lib_move_rw:set_force_stopped(Uid, true),
             case NeedBroadcast of
-                true ->
-                    lib_map_view:sync_movement_to_big_visual_tile(Uid);
+                true -> lib_map_view:sync_movement_to_big_visual_tile(Uid);
                 _ -> skip
-            end,
-            ok;
-        true ->
-            skip
+            end;
+        true -> skip
     end,
     ok.
 
@@ -427,13 +425,10 @@ stop_move_force(Uid, NeedBroadcast) ->
             CurPos = lib_move_rw:get_cur_pos(Uid),
             stop_move_set(Uid, CurPos),
             case NeedBroadcast of
-                true ->
-                    lib_map_view:sync_movement_to_big_visual_tile(Uid);
+                true -> lib_map_view:sync_movement_to_big_visual_tile(Uid);
                 _ -> skip
-            end,
-            ok;
-        true ->
-            skip
+            end;
+        true -> skip
     end,
     ok.
 

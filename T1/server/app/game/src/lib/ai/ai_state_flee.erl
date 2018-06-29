@@ -10,9 +10,9 @@
 -author("mawenhong").
 
 %% API
--export([on_enter/1, on_exit/1, update/1, on_event/1]).
+-export([on_enter/1, on_exit/1, update/1, on_event/2]).
 
 on_enter(_Uid) -> ok.
 on_exit(_Uid) -> ok.
 update(_Uid) -> ok.
-on_event(_Uid) -> ok.
+on_event(_Uid, _Event) -> ok.

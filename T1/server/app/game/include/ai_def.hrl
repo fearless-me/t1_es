@@ -47,9 +47,16 @@
 
 -define(TICK_TIME, 200).
 -define(TICK_PER_SECOND, 1000 div ?TICK_TIME).
--define(CREATURE_PATROL_REST_TICK_MIN,      5 *  ?TICK_PER_SECOND).		%% 生物巡逻过程中休息的最小时间——5秒
--define(CREATURE_PATROL_REST_TICK_INTERVAL, 10 * ?TICK_PER_SECOND).		%% 生物巡逻过程中休息的最大差——10秒
+-define(AI_PATROL_REST_TICK_MIN,      5 *  ?TICK_PER_SECOND).		%% 生物巡逻过程中休息的最小时间——5秒
+-define(AI_PATROL_REST_TICK_INTERVAL, 10 * ?TICK_PER_SECOND).		%% 生物巡逻过程中休息的最大差——10秒
+-define(AI_LOOK_FOR_ENEMY_TICK_MIN,		1 * ?TICK_PER_SECOND).		%% 生物锁敌的间隔的最小时间——1秒
+-define(AI_LOOK_FOR_ENEMY_TICK_INTERVAL,	2 * ?TICK_PER_SECOND).		%%		 生物索敌的间隔的最大时间差——2秒
+-define(AI_LOCK_TARGET_MIN_TICK,	    6 * ?TICK_PER_SECOND).		%%  生物攻击时锁定目标的最小时间——6秒
+-define(AI_LOCK_TARGET_TICK_INTERVAL,	4 * ?TICK_PER_SECOND).		%%  生物攻击时锁定目标的最大时间——4秒
 
--define(CREATURE_PATROL_RADIUS, 50).    %% 生物巡逻半径 todo 怪物配置表
+-define(AI_RETURN_TICK, 10 * ?TICK_PER_SECOND).		%%  生物在多少秒仇恨没有改变的情况下返回——10秒
+-define(AI_PURSUE_XZ_MAX, 50.0).
+
+-define(AI_PATROL_RADIUS, 50).    %% 生物巡逻半径 todo 怪物配置表
 
 -endif.

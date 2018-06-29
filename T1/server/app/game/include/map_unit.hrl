@@ -27,5 +27,7 @@
     uid = 0, pid = 0, did = 0, name = "", owner = 0, type = ?OBJ_ERR :: obj_type()
 }).
 
+%% 仇恨数据：仇恨目标UID， 仇恨值， 是否激活
+-record(m_unit_enmity,{uid=0,enmity=0,active=true}).
 
 -endif.

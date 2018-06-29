@@ -26,6 +26,20 @@
 	get_is_patrol/1, get_is_patrol_def/2, set_is_patrol/2, % #m_map_unit_ai_rw.is_patrol
 	get_patrol_rest_tick/1, get_patrol_rest_tick_def/2, set_patrol_rest_tick/2, % #m_map_unit_ai_rw.patrol_rest_tick
 	get_look_for_target_tick/1, get_look_for_target_tick_def/2, set_look_for_target_tick/2, % #m_map_unit_ai_rw.look_for_target_tick
+	get_pursue_tar_pos/1, get_pursue_tar_pos_def/2, set_pursue_tar_pos/2, % #m_map_unit_ai_rw.pursue_tar_pos
+	get_pursue_failed/1, get_pursue_failed_def/2, set_pursue_failed/2, % #m_map_unit_ai_rw.pursue_failed
+	get_cant_pursue/1, get_cant_pursue_def/2, set_cant_pursue/2, % #m_map_unit_ai_rw.cant_pursue
+	get_check_pursue_tick/1, get_check_pursue_tick_def/2, set_check_pursue_tick/2, % #m_map_unit_ai_rw.check_pursue_tick
+	get_target_uid/1, get_target_uid_def/2, set_target_uid/2, % #m_map_unit_ai_rw.target_uid
+	get_enter_combat_time/1, get_enter_combat_time_def/2, set_enter_combat_time/2, % #m_map_unit_ai_rw.enter_combat_time
+	get_enter_combat_pos/1, get_enter_combat_pos_def/2, set_enter_combat_pos/2, % #m_map_unit_ai_rw.enter_combat_pos
+	get_use_skill_id/1, get_use_skill_id_def/2, set_use_skill_id/2, % #m_map_unit_ai_rw.use_skill_id
+	get_attack_wait_tick/1, get_attack_wait_tick_def/2, set_attack_wait_tick/2, % #m_map_unit_ai_rw.attack_wait_tick
+	get_skill_serial/1, get_skill_serial_def/2, set_skill_serial/2, % #m_map_unit_ai_rw.skill_serial
+	get_enmity_list/1, get_enmity_list_def/2, set_enmity_list/2, % #m_map_unit_ai_rw.enmity_list
+	get_max_enmity_uid/1, get_max_enmity_uid_def/2, set_max_enmity_uid/2, % #m_map_unit_ai_rw.max_enmity_uid
+	get_lock_target_tick/1, get_lock_target_tick_def/2, set_lock_target_tick/2, % #m_map_unit_ai_rw.lock_target_tick
+	get_no_inc_enmity_tick/1, get_no_inc_enmity_tick_def/2, set_no_inc_enmity_tick/2, % #m_map_unit_ai_rw.no_inc_enmity_tick
 	% common function 
 	del/1 ,to_record/1 ,init_from/2 ,init_default/1
 ]).
@@ -188,6 +202,174 @@ get_look_for_target_tick_def(Uid, Def)->
 set_look_for_target_tick(Uid, V)-> put({look_for_target_tick,Uid}, V).
 
 %%-------------------------------------------------------------------
+%% #m_map_unit_ai_rw.pursue_tar_pos
+get_pursue_tar_pos(Uid)-> get({pursue_tar_pos,Uid}).
+
+get_pursue_tar_pos_def(Uid, Def)->
+	case get({pursue_tar_pos,Uid}) of
+		undefined -> Def;
+		V -> V
+	end.
+
+set_pursue_tar_pos(Uid, V)-> put({pursue_tar_pos,Uid}, V).
+
+%%-------------------------------------------------------------------
+%% #m_map_unit_ai_rw.pursue_failed
+get_pursue_failed(Uid)-> get({pursue_failed,Uid}).
+
+get_pursue_failed_def(Uid, Def)->
+	case get({pursue_failed,Uid}) of
+		undefined -> Def;
+		V -> V
+	end.
+
+set_pursue_failed(Uid, V)-> put({pursue_failed,Uid}, V).
+
+%%-------------------------------------------------------------------
+%% #m_map_unit_ai_rw.cant_pursue
+get_cant_pursue(Uid)-> get({cant_pursue,Uid}).
+
+get_cant_pursue_def(Uid, Def)->
+	case get({cant_pursue,Uid}) of
+		undefined -> Def;
+		V -> V
+	end.
+
+set_cant_pursue(Uid, V)-> put({cant_pursue,Uid}, V).
+
+%%-------------------------------------------------------------------
+%% #m_map_unit_ai_rw.check_pursue_tick
+get_check_pursue_tick(Uid)-> get({check_pursue_tick,Uid}).
+
+get_check_pursue_tick_def(Uid, Def)->
+	case get({check_pursue_tick,Uid}) of
+		undefined -> Def;
+		V -> V
+	end.
+
+set_check_pursue_tick(Uid, V)-> put({check_pursue_tick,Uid}, V).
+
+%%-------------------------------------------------------------------
+%% #m_map_unit_ai_rw.target_uid
+get_target_uid(Uid)-> get({target_uid,Uid}).
+
+get_target_uid_def(Uid, Def)->
+	case get({target_uid,Uid}) of
+		undefined -> Def;
+		V -> V
+	end.
+
+set_target_uid(Uid, V)-> put({target_uid,Uid}, V).
+
+%%-------------------------------------------------------------------
+%% #m_map_unit_ai_rw.enter_combat_time
+get_enter_combat_time(Uid)-> get({enter_combat_time,Uid}).
+
+get_enter_combat_time_def(Uid, Def)->
+	case get({enter_combat_time,Uid}) of
+		undefined -> Def;
+		V -> V
+	end.
+
+set_enter_combat_time(Uid, V)-> put({enter_combat_time,Uid}, V).
+
+%%-------------------------------------------------------------------
+%% #m_map_unit_ai_rw.enter_combat_pos
+get_enter_combat_pos(Uid)-> get({enter_combat_pos,Uid}).
+
+get_enter_combat_pos_def(Uid, Def)->
+	case get({enter_combat_pos,Uid}) of
+		undefined -> Def;
+		V -> V
+	end.
+
+set_enter_combat_pos(Uid, V)-> put({enter_combat_pos,Uid}, V).
+
+%%-------------------------------------------------------------------
+%% #m_map_unit_ai_rw.use_skill_id
+get_use_skill_id(Uid)-> get({use_skill_id,Uid}).
+
+get_use_skill_id_def(Uid, Def)->
+	case get({use_skill_id,Uid}) of
+		undefined -> Def;
+		V -> V
+	end.
+
+set_use_skill_id(Uid, V)-> put({use_skill_id,Uid}, V).
+
+%%-------------------------------------------------------------------
+%% #m_map_unit_ai_rw.attack_wait_tick
+get_attack_wait_tick(Uid)-> get({attack_wait_tick,Uid}).
+
+get_attack_wait_tick_def(Uid, Def)->
+	case get({attack_wait_tick,Uid}) of
+		undefined -> Def;
+		V -> V
+	end.
+
+set_attack_wait_tick(Uid, V)-> put({attack_wait_tick,Uid}, V).
+
+%%-------------------------------------------------------------------
+%% #m_map_unit_ai_rw.skill_serial
+get_skill_serial(Uid)-> get({skill_serial,Uid}).
+
+get_skill_serial_def(Uid, Def)->
+	case get({skill_serial,Uid}) of
+		undefined -> Def;
+		V -> V
+	end.
+
+set_skill_serial(Uid, V)-> put({skill_serial,Uid}, V).
+
+%%-------------------------------------------------------------------
+%% #m_map_unit_ai_rw.enmity_list
+get_enmity_list(Uid)-> get({enmity_list,Uid}).
+
+get_enmity_list_def(Uid, Def)->
+	case get({enmity_list,Uid}) of
+		undefined -> Def;
+		V -> V
+	end.
+
+set_enmity_list(Uid, V)-> put({enmity_list,Uid}, V).
+
+%%-------------------------------------------------------------------
+%% #m_map_unit_ai_rw.max_enmity_uid
+get_max_enmity_uid(Uid)-> get({max_enmity_uid,Uid}).
+
+get_max_enmity_uid_def(Uid, Def)->
+	case get({max_enmity_uid,Uid}) of
+		undefined -> Def;
+		V -> V
+	end.
+
+set_max_enmity_uid(Uid, V)-> put({max_enmity_uid,Uid}, V).
+
+%%-------------------------------------------------------------------
+%% #m_map_unit_ai_rw.lock_target_tick
+get_lock_target_tick(Uid)-> get({lock_target_tick,Uid}).
+
+get_lock_target_tick_def(Uid, Def)->
+	case get({lock_target_tick,Uid}) of
+		undefined -> Def;
+		V -> V
+	end.
+
+set_lock_target_tick(Uid, V)-> put({lock_target_tick,Uid}, V).
+
+%%-------------------------------------------------------------------
+%% #m_map_unit_ai_rw.no_inc_enmity_tick
+get_no_inc_enmity_tick(Uid)-> get({no_inc_enmity_tick,Uid}).
+
+get_no_inc_enmity_tick_def(Uid, Def)->
+	case get({no_inc_enmity_tick,Uid}) of
+		undefined -> Def;
+		V -> V
+	end.
+
+set_no_inc_enmity_tick(Uid, V)-> put({no_inc_enmity_tick,Uid}, V).
+
+%%-------------------------------------------------------------------
 del(Uid)->
 	erase({ai_state, Uid}),
 	erase({pre_ai_state, Uid}),
@@ -202,6 +384,20 @@ del(Uid)->
 	erase({is_patrol, Uid}),
 	erase({patrol_rest_tick, Uid}),
 	erase({look_for_target_tick, Uid}),
+	erase({pursue_tar_pos, Uid}),
+	erase({pursue_failed, Uid}),
+	erase({cant_pursue, Uid}),
+	erase({check_pursue_tick, Uid}),
+	erase({target_uid, Uid}),
+	erase({enter_combat_time, Uid}),
+	erase({enter_combat_pos, Uid}),
+	erase({use_skill_id, Uid}),
+	erase({attack_wait_tick, Uid}),
+	erase({skill_serial, Uid}),
+	erase({enmity_list, Uid}),
+	erase({max_enmity_uid, Uid}),
+	erase({lock_target_tick, Uid}),
+	erase({no_inc_enmity_tick, Uid}),
 	ok.
 %%-------------------------------------------------------------------
 to_record(Uid)->
@@ -218,7 +414,21 @@ to_record(Uid)->
 		is_reverse_patrol = get_is_reverse_patrol(Uid),
 		is_patrol = get_is_patrol(Uid),
 		patrol_rest_tick = get_patrol_rest_tick(Uid),
-		look_for_target_tick = get_look_for_target_tick(Uid)
+		look_for_target_tick = get_look_for_target_tick(Uid),
+		pursue_tar_pos = get_pursue_tar_pos(Uid),
+		pursue_failed = get_pursue_failed(Uid),
+		cant_pursue = get_cant_pursue(Uid),
+		check_pursue_tick = get_check_pursue_tick(Uid),
+		target_uid = get_target_uid(Uid),
+		enter_combat_time = get_enter_combat_time(Uid),
+		enter_combat_pos = get_enter_combat_pos(Uid),
+		use_skill_id = get_use_skill_id(Uid),
+		attack_wait_tick = get_attack_wait_tick(Uid),
+		skill_serial = get_skill_serial(Uid),
+		enmity_list = get_enmity_list(Uid),
+		max_enmity_uid = get_max_enmity_uid(Uid),
+		lock_target_tick = get_lock_target_tick(Uid),
+		no_inc_enmity_tick = get_no_inc_enmity_tick(Uid)
 	}.
 %%-------------------------------------------------------------------
 init_from(Uid, Rec)->
@@ -235,6 +445,20 @@ init_from(Uid, Rec)->
 	set_is_patrol(Uid, Rec#m_map_unit_ai_rw.is_patrol),
 	set_patrol_rest_tick(Uid, Rec#m_map_unit_ai_rw.patrol_rest_tick),
 	set_look_for_target_tick(Uid, Rec#m_map_unit_ai_rw.look_for_target_tick),
+	set_pursue_tar_pos(Uid, Rec#m_map_unit_ai_rw.pursue_tar_pos),
+	set_pursue_failed(Uid, Rec#m_map_unit_ai_rw.pursue_failed),
+	set_cant_pursue(Uid, Rec#m_map_unit_ai_rw.cant_pursue),
+	set_check_pursue_tick(Uid, Rec#m_map_unit_ai_rw.check_pursue_tick),
+	set_target_uid(Uid, Rec#m_map_unit_ai_rw.target_uid),
+	set_enter_combat_time(Uid, Rec#m_map_unit_ai_rw.enter_combat_time),
+	set_enter_combat_pos(Uid, Rec#m_map_unit_ai_rw.enter_combat_pos),
+	set_use_skill_id(Uid, Rec#m_map_unit_ai_rw.use_skill_id),
+	set_attack_wait_tick(Uid, Rec#m_map_unit_ai_rw.attack_wait_tick),
+	set_skill_serial(Uid, Rec#m_map_unit_ai_rw.skill_serial),
+	set_enmity_list(Uid, Rec#m_map_unit_ai_rw.enmity_list),
+	set_max_enmity_uid(Uid, Rec#m_map_unit_ai_rw.max_enmity_uid),
+	set_lock_target_tick(Uid, Rec#m_map_unit_ai_rw.lock_target_tick),
+	set_no_inc_enmity_tick(Uid, Rec#m_map_unit_ai_rw.no_inc_enmity_tick),
 	ok.
 %%-------------------------------------------------------------------
 init_default(Uid)->
@@ -252,5 +476,19 @@ init_default(Uid)->
 	set_is_patrol(Uid, Rec#m_map_unit_ai_rw.is_patrol),
 	set_patrol_rest_tick(Uid, Rec#m_map_unit_ai_rw.patrol_rest_tick),
 	set_look_for_target_tick(Uid, Rec#m_map_unit_ai_rw.look_for_target_tick),
+	set_pursue_tar_pos(Uid, Rec#m_map_unit_ai_rw.pursue_tar_pos),
+	set_pursue_failed(Uid, Rec#m_map_unit_ai_rw.pursue_failed),
+	set_cant_pursue(Uid, Rec#m_map_unit_ai_rw.cant_pursue),
+	set_check_pursue_tick(Uid, Rec#m_map_unit_ai_rw.check_pursue_tick),
+	set_target_uid(Uid, Rec#m_map_unit_ai_rw.target_uid),
+	set_enter_combat_time(Uid, Rec#m_map_unit_ai_rw.enter_combat_time),
+	set_enter_combat_pos(Uid, Rec#m_map_unit_ai_rw.enter_combat_pos),
+	set_use_skill_id(Uid, Rec#m_map_unit_ai_rw.use_skill_id),
+	set_attack_wait_tick(Uid, Rec#m_map_unit_ai_rw.attack_wait_tick),
+	set_skill_serial(Uid, Rec#m_map_unit_ai_rw.skill_serial),
+	set_enmity_list(Uid, Rec#m_map_unit_ai_rw.enmity_list),
+	set_max_enmity_uid(Uid, Rec#m_map_unit_ai_rw.max_enmity_uid),
+	set_lock_target_tick(Uid, Rec#m_map_unit_ai_rw.lock_target_tick),
+	set_no_inc_enmity_tick(Uid, Rec#m_map_unit_ai_rw.no_inc_enmity_tick),
 	ok.
 %%-------------------------------------------------------------------
