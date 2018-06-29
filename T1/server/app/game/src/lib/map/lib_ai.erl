@@ -266,15 +266,14 @@ add_enmity(Uid, TarUid, Val) ->
         end,
     lib_ai_rw:set_enmity_list(Uid, EnList1),
     lib_ai_rw:set_no_inc_enmity_tick(Uid, 0),
-    sort_max_enmity(Uid),
+    sort_max_enmity(Uid, EnList1),
     ok.
 
 %%-------------------------------------------------------------------
-sort_max_enmity(Uid) ->
+sort_max_enmity(Uid, []) ->
     lib_ai_rw:set_max_enmity_uid(Uid, 0),
     ok;
-sort_max_enmity(Uid) ->
-    EnList0 = lib_ai_rw:get_enmity_list(Uid),
+sort_max_enmity(Uid, EnList0) ->
     EnList1 = filter_enmity_list(EnList0, []),
     TarUid = sort_max_enmity_action(EnList1, 0, 0),
     lib_ai_rw:set_enmity_list(Uid, EnList1),
@@ -307,10 +306,10 @@ clear_enmity(Uid, TarUid, false) ->
     EnList0 = lib_ai_rw:get_enmity_list(Uid),
     EnList1 = lists:keydelete(TarUid, #m_unit_enmity.uid, EnList0),
     lib_ai_rw:set_enmity_list(Uid, EnList1),
-    ok;
+    EnList1;
 clear_enmity(Uid, TarUid, _SetMaxEnmity) ->
-    clear_enmity(Uid, TarUid, false),
-    sort_max_enmity(Uid),
+    EnList1 = clear_enmity(Uid, TarUid, false),
+    sort_max_enmity(Uid, EnList1),
     ok.
 
 %%-------------------------------------------------------------------
@@ -376,6 +375,7 @@ find_lock_target(Uid, TargetUid, Changed) ->
         true -> Changed;
         _ ->
             % todo 目标存在清除仇恨
+            clear_enmity(Uid, TargetUid, true),
             NewTar = get_max_enmity_uid(Uid),
             lib_ai_rw:set_target_uid(Uid, NewTar),
             reset_lock_target_time(Uid),
