@@ -175,7 +175,7 @@ update_patrol(Uid) ->
 
 %% 巡逻结束
 update_patrol_action(Uid, true, _ResetTick) ->
-    CurMove = lib_unit_rw:get_cur_move(Uid),
+    CurMove = lib_move_rw:get_cur_move(Uid),
     case CurMove of
         ?EMS_STAND ->
             lib_ai_rw:set_is_patrol(Uid, false),
@@ -206,9 +206,20 @@ start_patrol_action(Uid, ?ECPT_Path) ->
 
     %
     IsReversePatrol1 = lib_ai_rw:get_is_reverse_patrol(Uid),
-    IsReversePatrol2 = if not IsReversePatrol1 andalso (WPIdx == WPNum) -> not IsReversePatrol1; true ->
-        IsReversePatrol1 end,
-    IsReversePatrol3 = if IsReversePatrol1 andalso (WPIdx == 1) -> not IsReversePatrol1; true -> IsReversePatrol2 end,
+    IsReversePatrol2 =
+        if
+            not IsReversePatrol1 andalso (WPIdx == WPNum) ->
+                not IsReversePatrol1;
+            true ->
+                IsReversePatrol1
+        end,
+    IsReversePatrol3 =
+        if
+            IsReversePatrol1 andalso (WPIdx == 1) ->
+                not IsReversePatrol1;
+            true ->
+                IsReversePatrol2
+        end,
 
     NewWPIdx = if IsReversePatrol3 -> WPIdx - 1; true -> WPIdx + 1 end,
 
