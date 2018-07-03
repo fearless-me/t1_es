@@ -20,13 +20,38 @@
 ]).
 
 %%-------------------------------------------------------------------
+-define(TASK_SINGLE, 1).
+-define(TASK_MULTI,  2).
 task_list() ->
-    [serv_start, load_all_role_info].
+    lists:map(
+        fun({_,Task,_,_,_})->
+            Task
+        end, task_list_inner()
+    ).
+
+task_list_inner() ->
+    [
+        {?TASK_SINGLE, serv_start,          1, gconf:get_sid(), fun lib_db:action_pub_/3},
+        {?TASK_MULTI , load_all_role_info,  0, gconf:get_sid(), fun lib_db:action_p_all_/2}
+    ].
 
 %%-------------------------------------------------------------------
 start_all_task() ->
-    lib_db:action_pub_(1, serv_start, gconf:get_sid()),
-    lib_db:action_p_(2, load_all_role_info, gconf:get_sid()).
+    L = task_list_inner(),
+    lists:foreach(
+        fun(Task)->
+            start_on_task(Task)
+        end, L),
+    ok.
+
+start_on_task({?TASK_MULTI, Task, _Key, Params, F}) ->
+    N = F(Task, Params),
+    put(Task, N),
+    ok;
+start_on_task({?TASK_SINGLE, Task, HashKey, Params, F}) ->
+    _ = F(HashKey, Task, Params),
+    put(Task, 1),
+    ok.
 
 %%-------------------------------------------------------------------
 on_info_msg({serv_start_ack, RunNo}) ->
@@ -52,7 +77,12 @@ on_info_msg(Info) ->
 
 %%-------------------------------------------------------------------
 task_done_action(Task) ->
-    ps:send(serv_loader, task_done, Task).
+    case misc:get_pdict(Task, 1) of
+        1 ->
+            ps:send(serv_loader, task_done, Task);
+        V ->
+            put(Task, V - 1)
+    end.
 
 %%-------------------------------------------------------------------
 is_task_all_done() ->
