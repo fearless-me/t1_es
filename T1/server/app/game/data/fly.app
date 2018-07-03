@@ -14,6 +14,7 @@
                                 "../../deps/fastlog",
                                 "../../deps/fly",
                                 "../../deps/ranch",
+								"../../deps/recon",
 								"../../deps/mysql-otp",
 								"../../deps/mysql-otp-poolboy",
 								"../../deps/poolboy"
@@ -39,6 +40,7 @@
 									"../../deps/fastlog",
 									"../../deps/fly",
 									"../../deps/ranch",
+									"../../deps/recon",
 									"../../deps/mysql-otp",
 									"../../deps/mysql-otp-poolboy",
 									"../../deps/poolboy"								

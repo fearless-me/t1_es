@@ -15,9 +15,9 @@
 sql(load_serv_start) ->
     "call get_serv_start(?)";
 sql(load_all_role_info) ->
-    "select * from player limit ?,?";
+    <<"select * from player limit ?,?">>;
 sql(load_all_role_info_cnt) ->
-    "select count(*) from player";
+    <<"select count(*) from player where sid=?">>;
 sql(load_acount) ->
     "select * from account where account_crc = ?";
 sql(insert_acount) ->

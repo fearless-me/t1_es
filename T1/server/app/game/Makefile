@@ -13,6 +13,7 @@ SOURCE_DIR += ../deps/eep
 SOURCE_DIR += ../deps/fastlog
 SOURCE_DIR += ../deps/fly
 SOURCE_DIR += ../deps/ranch
+SOURCE_DIR += ../deps/recon
 SOURCE_DIR += ../deps/pubs
 SOURCE_DIR += ../deps/mysql-otp
 SOURCE_DIR += ../deps/mysql-otp-poolboy
