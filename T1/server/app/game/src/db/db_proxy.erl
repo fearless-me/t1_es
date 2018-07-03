@@ -19,6 +19,8 @@
     checkout_apool/1, checkout_apool_/1,
     checkout_pubpool/1, checkout_pubpool_/1
 ]).
+
+-export([ ppool_pg/0, apool_pg/0, pubpool_pg/0]).
 %%
 -export([start_db_pool/0,start_db_pool/1]).
 %%
@@ -28,6 +30,10 @@
 -record(r_db_conf, {id, host, port, user, password, database, conn, max_conn, worker}).
 -record(r_db_pool, {id = 0, pool, mgr, conf}).
 
+-define(PLAYER_DB_POOL_NAME, pdb_pool).
+-define(ACCOUNT_DB_POOL_NAME, adb_pool).
+-define(PUBLIC_DB_POOL_NAME, pubdb_pool).
+
 -define(ETS_PLAYER_DB_POOL, playerMysqlPoolEts_).
 -define(ETS_ACCOUNT_DB_POOL, accountMysqlPoolEts_).
 -define(ETS_PUBLIC_DB_POOL, publicMysqlPoolEts_).
@@ -36,12 +42,15 @@
 %%
 checkout_ppool(AccId) -> gen_server:call(?MODULE, {give_ppool, AccId}, ?CALL_TIMEOUT).
 checkout_ppool_(AccId) -> hash_to_pool(?ETS_PLAYER_DB_POOL, AccId).
+ppool_pg() -> ?PLAYER_DB_POOL_NAME.
 
 checkout_apool(AccId) -> gen_server:call(?MODULE, {give_apool, AccId}, ?CALL_TIMEOUT).
 checkout_apool_(AccId) -> hash_to_pool(?ETS_ACCOUNT_DB_POOL, AccId).
+apool_pg() ->  ?ACCOUNT_DB_POOL_NAME.
 
 checkout_pubpool(AccId) -> gen_server:call(?MODULE, {give_pubpool, AccId}, ?CALL_TIMEOUT).
 checkout_pubpool_(AccId) -> hash_to_pool(?ETS_PUBLIC_DB_POOL, AccId).
+pubpool_pg() -> ?PUBLIC_DB_POOL_NAME.
 
 %% API
 start_db_pool() ->
@@ -108,17 +117,17 @@ init_pool() ->
     {ok, Pid} = mysql:start_link(MySqlOptions),
 
     ?INFO("init player db pool ..."),
-    db_pool_init(Pid, get_player_db_conf, pdb_pool, ?ETS_PLAYER_DB_POOL),
+    db_pool_init(Pid, get_player_db_conf, ?PLAYER_DB_POOL_NAME, ?ETS_PLAYER_DB_POOL),
     ?INFO("init player db pool done"),
     ?INFO("#"),
 
     ?INFO("init account db pool ..."),
-    db_pool_init(Pid, get_account_db_conf, adb_pool, ?ETS_ACCOUNT_DB_POOL),
+    db_pool_init(Pid, get_account_db_conf, ?ACCOUNT_DB_POOL_NAME, ?ETS_ACCOUNT_DB_POOL),
     ?INFO("init account db pool done"),
     ?INFO("#"),
 
     ?INFO("init public db pool ..."),
-    db_pool_init(Pid, get_public_db_conf, pubdb_pool, ?ETS_PUBLIC_DB_POOL),
+    db_pool_init(Pid, get_public_db_conf, ?PUBLIC_DB_POOL_NAME, ?ETS_PUBLIC_DB_POOL),
     ?INFO("init public db pool done"),
     ?INFO("#"),
 
@@ -198,6 +207,7 @@ start_db_pool(PoolRef, Ets, Conf) ->
     {ok, Pid} = db_mgr_sup:start_child([Id, PoolId, WorkerNo]),
     ?INFO("\t~p", [misc:register_name(Pid)]),
 
+    pg_local:join(PoolRef, Pid),
     db_mgr:start_worker(Pid),
 
     ets:insert(Ets, #r_db_pool{id = Id, pool = PoolId, mgr = Pid, conf = Conf}),
