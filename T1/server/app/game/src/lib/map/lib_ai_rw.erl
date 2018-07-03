@@ -36,6 +36,10 @@
 	get_use_skill_id/1, get_use_skill_id_def/2, set_use_skill_id/2, % #m_map_unit_ai_rw.use_skill_id
 	get_attack_wait_tick/1, get_attack_wait_tick_def/2, set_attack_wait_tick/2, % #m_map_unit_ai_rw.attack_wait_tick
 	get_skill_serial/1, get_skill_serial_def/2, set_skill_serial/2, % #m_map_unit_ai_rw.skill_serial
+	get_flee_dst/1, get_flee_dst_def/2, set_flee_dst/2, % #m_map_unit_ai_rw.flee_dst
+	get_flee_dir/1, get_flee_dir_def/2, set_flee_dir/2, % #m_map_unit_ai_rw.flee_dir
+	get_flee_tick/1, get_flee_tick_def/2, set_flee_tick/2, % #m_map_unit_ai_rw.flee_tick
+	get_is_arrived_flee_pos/1, get_is_arrived_flee_pos_def/2, set_is_arrived_flee_pos/2, % #m_map_unit_ai_rw.is_arrived_flee_pos
 	get_enmity_list/1, get_enmity_list_def/2, set_enmity_list/2, % #m_map_unit_ai_rw.enmity_list
 	get_max_enmity_uid/1, get_max_enmity_uid_def/2, set_max_enmity_uid/2, % #m_map_unit_ai_rw.max_enmity_uid
 	get_lock_target_tick/1, get_lock_target_tick_def/2, set_lock_target_tick/2, % #m_map_unit_ai_rw.lock_target_tick
@@ -322,6 +326,54 @@ get_skill_serial_def(Uid, Def)->
 set_skill_serial(Uid, V)-> put({skill_serial,Uid}, V).
 
 %%-------------------------------------------------------------------
+%% #m_map_unit_ai_rw.flee_dst
+get_flee_dst(Uid)-> get({flee_dst,Uid}).
+
+get_flee_dst_def(Uid, Def)->
+	case get({flee_dst,Uid}) of
+		undefined -> Def;
+		V -> V
+	end.
+
+set_flee_dst(Uid, V)-> put({flee_dst,Uid}, V).
+
+%%-------------------------------------------------------------------
+%% #m_map_unit_ai_rw.flee_dir
+get_flee_dir(Uid)-> get({flee_dir,Uid}).
+
+get_flee_dir_def(Uid, Def)->
+	case get({flee_dir,Uid}) of
+		undefined -> Def;
+		V -> V
+	end.
+
+set_flee_dir(Uid, V)-> put({flee_dir,Uid}, V).
+
+%%-------------------------------------------------------------------
+%% #m_map_unit_ai_rw.flee_tick
+get_flee_tick(Uid)-> get({flee_tick,Uid}).
+
+get_flee_tick_def(Uid, Def)->
+	case get({flee_tick,Uid}) of
+		undefined -> Def;
+		V -> V
+	end.
+
+set_flee_tick(Uid, V)-> put({flee_tick,Uid}, V).
+
+%%-------------------------------------------------------------------
+%% #m_map_unit_ai_rw.is_arrived_flee_pos
+get_is_arrived_flee_pos(Uid)-> get({is_arrived_flee_pos,Uid}).
+
+get_is_arrived_flee_pos_def(Uid, Def)->
+	case get({is_arrived_flee_pos,Uid}) of
+		undefined -> Def;
+		V -> V
+	end.
+
+set_is_arrived_flee_pos(Uid, V)-> put({is_arrived_flee_pos,Uid}, V).
+
+%%-------------------------------------------------------------------
 %% #m_map_unit_ai_rw.enmity_list
 get_enmity_list(Uid)-> get({enmity_list,Uid}).
 
@@ -394,6 +446,10 @@ del(Uid)->
 	erase({use_skill_id, Uid}),
 	erase({attack_wait_tick, Uid}),
 	erase({skill_serial, Uid}),
+	erase({flee_dst, Uid}),
+	erase({flee_dir, Uid}),
+	erase({flee_tick, Uid}),
+	erase({is_arrived_flee_pos, Uid}),
 	erase({enmity_list, Uid}),
 	erase({max_enmity_uid, Uid}),
 	erase({lock_target_tick, Uid}),
@@ -425,6 +481,10 @@ to_record(Uid)->
 		use_skill_id = get_use_skill_id(Uid),
 		attack_wait_tick = get_attack_wait_tick(Uid),
 		skill_serial = get_skill_serial(Uid),
+		flee_dst = get_flee_dst(Uid),
+		flee_dir = get_flee_dir(Uid),
+		flee_tick = get_flee_tick(Uid),
+		is_arrived_flee_pos = get_is_arrived_flee_pos(Uid),
 		enmity_list = get_enmity_list(Uid),
 		max_enmity_uid = get_max_enmity_uid(Uid),
 		lock_target_tick = get_lock_target_tick(Uid),
@@ -455,6 +515,10 @@ init_from(Uid, Rec)->
 	set_use_skill_id(Uid, Rec#m_map_unit_ai_rw.use_skill_id),
 	set_attack_wait_tick(Uid, Rec#m_map_unit_ai_rw.attack_wait_tick),
 	set_skill_serial(Uid, Rec#m_map_unit_ai_rw.skill_serial),
+	set_flee_dst(Uid, Rec#m_map_unit_ai_rw.flee_dst),
+	set_flee_dir(Uid, Rec#m_map_unit_ai_rw.flee_dir),
+	set_flee_tick(Uid, Rec#m_map_unit_ai_rw.flee_tick),
+	set_is_arrived_flee_pos(Uid, Rec#m_map_unit_ai_rw.is_arrived_flee_pos),
 	set_enmity_list(Uid, Rec#m_map_unit_ai_rw.enmity_list),
 	set_max_enmity_uid(Uid, Rec#m_map_unit_ai_rw.max_enmity_uid),
 	set_lock_target_tick(Uid, Rec#m_map_unit_ai_rw.lock_target_tick),
@@ -486,6 +550,10 @@ init_default(Uid)->
 	set_use_skill_id(Uid, Rec#m_map_unit_ai_rw.use_skill_id),
 	set_attack_wait_tick(Uid, Rec#m_map_unit_ai_rw.attack_wait_tick),
 	set_skill_serial(Uid, Rec#m_map_unit_ai_rw.skill_serial),
+	set_flee_dst(Uid, Rec#m_map_unit_ai_rw.flee_dst),
+	set_flee_dir(Uid, Rec#m_map_unit_ai_rw.flee_dir),
+	set_flee_tick(Uid, Rec#m_map_unit_ai_rw.flee_tick),
+	set_is_arrived_flee_pos(Uid, Rec#m_map_unit_ai_rw.is_arrived_flee_pos),
 	set_enmity_list(Uid, Rec#m_map_unit_ai_rw.enmity_list),
 	set_max_enmity_uid(Uid, Rec#m_map_unit_ai_rw.max_enmity_uid),
 	set_lock_target_tick(Uid, Rec#m_map_unit_ai_rw.lock_target_tick),

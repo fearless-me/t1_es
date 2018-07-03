@@ -17,10 +17,21 @@
 -include("ai_def.hrl").
 
 %% API
--export([new_player/5, del_player/1]).
--export([new_monster/1, del_monster/1]).
-%%
+-export([new_player/5, del_player/1,new_monster/1, del_monster/1]).
 -export([get_uid/1, get_pid/1, get_did/1, get_owner/1, get_type/1]).
+-export([
+    is_unit_cant_move_state/1, is_dead/1
+]).
+
+
+is_unit_cant_move_state(_Uid) ->
+    %% todo 检查目标是否处于死亡，定身，眩晕等等或者在释放技能等等
+    ok.
+
+
+is_dead(Uid) ->
+    lib_unit_rw:get_hp(Uid) =< 0.
+
 
 %%-------------------------------------------------------------------
 new_player(Pid, Uid, Group, Pos, Face) ->

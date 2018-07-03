@@ -9,11 +9,22 @@
 -module(test).
 -author("mawenhong").
 -include("vector3.hrl").
+-include("pub_common.hrl").
 
 %% API
 -export([tv3/0]).
 
 tv3()->
+
+    Dir1 = vector3:new(10,0,0),
+    Dir2 = vector3:rotate_around_origin_2d(Dir1, 90),
+    io:format("~w rotate 90 ~w~n",[Dir1, Dir2]),
+
+    Pos0 = vector3:new(100, 0, 100),
+    Pos1 = vector3:add(Pos0, Dir2),
+    io:format("~w rotate 45 ~w~n",[Pos0, Pos1]),
+
+    
     V1 = vector3:new(150.1, 0, 100.1),
     V2 = vector3:new(100.1, 0, 50.1),
     P3 = vector3:new(100.1, 0, 150.1),

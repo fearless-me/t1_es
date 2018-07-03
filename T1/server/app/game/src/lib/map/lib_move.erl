@@ -359,9 +359,9 @@ start_monster_walk_action(Uid, Dst, MoveState) ->
     true.
 
 
-is_can_monster_walk(_Uid, _Dst, _MoveState, _NeedCheck) ->
+is_can_monster_walk(Uid, _Dst, _MoveState, _NeedCheck) ->
     % todo 检查怪物状态、检查目标点等等
-    true.
+    lib_unit:is_unit_cant_move_state(Uid).
 
 
 %%%-------------------------------------------------------------------

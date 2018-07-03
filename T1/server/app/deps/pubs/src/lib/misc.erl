@@ -21,7 +21,7 @@
     crc32/1, ceil/1,mod_1/2, floor/1, clamp/3, rand/2,
     get_value/3, callstack/0,
     interval_operation/5, parse_information_unit/1,
-    get_pdict/2
+    get_pdict/2, lists_rand_get/1
 ]).
 
 %%%-------------------------------------------------------------------
@@ -109,6 +109,16 @@ list_to_atom2(List) when is_list(List) ->
 
 list_to_string_suffix([], SuffixStr)-> SuffixStr;
 list_to_string_suffix(List, SuffixStr)-> string:join(List, SuffixStr).
+
+%%
+lists_rand_get([]) ->
+    undefined;
+lists_rand_get([X]) ->
+    X;
+lists_rand_get(List) ->
+    N = erlang:length(List),
+    X = rand_tool:rand() rem N,
+    lists:nth(X, List).
 
 %%
 rand(Min, Min)-> Min;

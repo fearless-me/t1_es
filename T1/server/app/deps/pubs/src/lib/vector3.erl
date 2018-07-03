@@ -11,7 +11,7 @@
 
 -include("vector3.hrl").
 %% API
--export([new/3]).
+-export([new/0, new/3]).
 -export([zero/0]).
 -export([valid/1]).
 -export([x/1,y/1,z/1]).
@@ -27,11 +27,13 @@
 -export([dist/1, dist_sq/1]).
 -export([dist/2, dist_sq/2]).
 -export([linear_lerp/3]).
+-export([rotate_around_origin_2d/2]). %% 围绕远点的2d旋转,传入的是角度
 
 %%
 zero()-> #vector3{}.
 
 %%
+new() -> #vector3{x = 0.0, y = 0.0, z =0.0}.
 new(X, Y, Z) ->
     #vector3{x = float(X), y = float(Y), z = float(Z)}.
 
@@ -147,4 +149,13 @@ linear_lerp(Src, Dst, Factor) ->
         x = X1 * (1 - Factor) + X2 * Factor,
         y = Y1 * (1 - Factor) + Y2 * Factor,
         z = Z1 * (1 - Factor) + Z2 * Factor
+    }.
+
+rotate_around_origin_2d(V, Ang0) ->
+    Ang = Ang0*math:pi()/180,
+    Matrix_00 = Matrix_11 = 0 + math:cos(Ang),
+    Matrix_01 = math:sin(Ang), Matrix_10 = 0 - Matrix_01,
+    #vector3{
+        x = Matrix_00 * vector3:x(V) + Matrix_01 * vector3:z(V),
+        z = Matrix_10 * vector3:x(V) + Matrix_11 * vector3:z(V)
     }.

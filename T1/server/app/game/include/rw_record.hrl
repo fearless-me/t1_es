@@ -50,6 +50,9 @@
     % 当前目标  、进入战斗的时间、进入战斗的坐标、当前使用的技能、下次攻击等待tick， 攻击序列号
     target_uid=0, enter_combat_time=0, enter_combat_pos, use_skill_id=0, attack_wait_tick=10, skill_serial=0,
 
+    %flee
+    flee_dst, flee_dir, flee_tick=0, is_arrived_flee_pos=false,
+
     % 仇恨
     % 仇恨列表  最大仇恨id 锁定目标tick、 没有增加仇恨的tick
     enmity_list=[], max_enmity_uid=0, lock_target_tick=0, no_inc_enmity_tick=0

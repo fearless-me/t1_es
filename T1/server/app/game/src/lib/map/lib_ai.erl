@@ -15,14 +15,22 @@
 -include("pub_common.hrl").
 -include("map_unit.hrl").
 -include("movement.hrl").
+-include("trigger_def.hrl").
 
 %% API
 -export([
-    init/2, update/1, update_patrol/1,
+    init/2, update/1,
+    %% patrol
+    update_patrol/1,
     clear_all_enmity/1, reset_patrol_tick/1, reset_look_for_target_tick/1,
     update_look_for_enemy/1, reset_lock_target_time/1, update_lock_target/1,
+    %% pursue
     get_pursue_unit/1, start_pursue/2, update_pursue/2, count_down_attack_tick/1,
-    add_enmity/3, clear_enmity/3
+    %% skill&combat
+    add_enmity/3, clear_enmity/3, on_ai_event/2,is_in_attack_dist/2, ai_use_skill/3,
+    %% flee
+    count_down_flee_tick/1, rand_flee_pos/1, start_flee/2, update_flee/1,
+    get_target_by_type/2
 ]).
 
 %%-------------------------------------------------------------------
@@ -72,8 +80,9 @@ init_ai(Uid) ->
     ok.
 
 %%-------------------------------------------------------------------
-init_trigger(_Uid) ->
+init_trigger(Uid) ->
     % todo 根据AI配置添加触发器等等
+    ai_trigger:init(Uid),
     ok.
 
 %%-------------------------------------------------------------------
@@ -522,3 +531,124 @@ update_pursue_3(_Uid, _TarUid, _CheckTick) ->
 get_max_enmity_uid(_Uid) ->
     % todo 从仇恨列表中找一个最大的
     0.
+
+%%-------------------------------------------------------------------
+on_ai_event(_Uid, _Event) ->
+    ok.
+
+%%-------------------------------------------------------------------
+is_in_attack_dist(_Uid, TarUid) when TarUid =< 0 ->
+    false;
+is_in_attack_dist(Uid, TarUid) when is_number(TarUid) ->
+    Unit = lib_map_rw:get_obj(TarUid),
+    is_in_attack_dist(Uid, Unit);
+is_in_attack_dist(_Uid, undefined)->
+    false;
+is_in_attack_dist(Uid, #m_map_unit{uid = TarUid}) ->
+    VSrc = lib_move_rw:get_cur_pos(Uid),
+    VDst = lib_move_rw:get_cur_pos(TarUid),
+    Dist_SQ = vector3:dist_sq(VSrc, VDst),
+    %% todo 根据普攻来检查距离， AI使用的技能可能需要动态选择
+    Dist_SQ >= 100;
+is_in_attack_dist(_Uid, _Any) ->
+    false.
+
+ai_use_skill(Uid, SkillId, TarUid)->
+    AerType = lib_unit_rw:get_type(Uid),
+    DerType = lib_unit_rw:get_type(TarUid),
+    Ret = lib_battle:dispatcher(AerType, DerType, Uid, TarUid, SkillId),
+    case Ret =:= ok of
+        true ->
+            Serial = lib_ai_rw:get_skill_serial(Uid),
+            lib_ai_rw:set_skill_serial(Uid, Serial + 1);
+        _ -> skip
+    end,
+    Ret =:= ok.
+
+
+%%-------------------------------------------------------------------
+%%-------------------------------------------------------------------
+count_down_flee_tick(Uid) ->
+    Tick = lib_ai_rw:get_flee_tick(Uid),
+    lib_ai_rw:set_flee_tick(Uid, Tick - 1),
+    ok.
+
+rand_flee_pos(Uid) ->
+    V_X  = (rand_tool:rand() rem ?AI_RANGE_FLEE_RADIUS) + ?AI_RANGE_FLEE_RADIUS,
+    Ang  = (rand_tool:rand() rem 360)/1.0,
+    Dir1 = vector3:new(V_X, 0, 0),
+    Dir2 = vector3:rotate_around_origin_2d(Dir1, Ang),
+    Pos1 = lib_move_rw:get_cur_pos(Uid),
+    Pos2 = vector3:add(Pos1, Dir2),
+    % todo 检查目标是否可以走，不可走多随机几次
+    lib_ai_rw:set_flee_dir(Uid, Dir2),
+    lib_ai_rw:set_flee_dst(Uid, Pos2),
+    ok.
+
+start_flee(Uid, Dst) ->
+    lib_ai_rw:set_is_arrived_flee_pos(Uid, false),
+    lib_ai_rw:set_pursue_failed(Uid, false),
+    lib_ai_rw:set_cant_pursue(Uid, false),
+    
+    Ret = lib_move:is_can_monster_walk(Uid, Dst, ?EMS_MONSTER_FLEE, true),
+    case Ret of
+        true ->
+            lib_ai_rw:set_flee_dst(Uid, Dst),
+            lib_move:start_monster_walk(Uid, Dst, ?EMS_MONSTER_FLEE, false);
+        _ ->
+            lib_ai_rw:set_pursue_failed(Uid, true)
+    end,
+    
+    ok.
+
+update_flee(Uid) ->
+    IsFailed = lib_ai_rw:get_pursue_failed(Uid),
+    IsCantPursue = lib_ai_rw:get_cant_pursue(Uid),
+    update_flee_action(Uid, IsFailed, IsCantPursue),
+    ok.
+
+%% 巡逻结束
+update_flee_action(Uid, true, _Cant) ->
+    rand_flee_pos(Uid),
+    start_flee(Uid, lib_ai_rw:get_flee_dst(Uid)),
+    ok;
+%% 等待重启
+update_flee_action(Uid, _Failed, true)  ->
+    case lib_unit:is_unit_cant_move_state(Uid) of
+        false -> start_flee(Uid, lib_ai_rw:get_flee_dst(Uid));
+        _ -> skip
+    end,
+    ok;
+%% 更新巡逻
+update_flee_action(Uid, _Failed, _Cant) ->
+    case lib_unit:is_unit_cant_move_state(Uid) of
+        true ->
+            lib_ai_rw:set_cant_pursue(Uid, true);
+        _ ->
+            CurMove = lib_move_rw:get_cur_move(Uid),
+            IsStop = lib_move_rw:get_force_stopped(Uid),
+            case CurMove of
+                ?EMS_STAND when IsStop ->
+                    start_flee(Uid, lib_ai_rw:get_flee_dst(Uid));
+                ?EMS_STAND when IsStop =:= false ->
+                    lib_ai_rw:set_is_arrived_flee_pos(Uid, true);
+                _ ->
+                    start_flee(Uid, lib_ai_rw:get_flee_dst(Uid))
+            end
+    end,
+    ok.
+ -spec get_target_by_type(Uid :: integer(), Type :: trigger_target()) -> integer().
+get_target_by_type(_Uid, ?CFE_NULL) ->
+    0;
+get_target_by_type(Uid, ?CFE_Self) ->
+    Uid;
+get_target_by_type(Uid, ?CFE_CurPlayer) ->
+    lib_ai_rw:get_target_uid(Uid);
+get_target_by_type(Uid, ?CFE_RandPlayer) ->
+    L = lib_ai_rw:get_enmity_list(Uid),
+    case misc:lists_rand_get(L) of
+        undefined -> 0;
+        R -> R#m_unit_enmity.uid
+    end;
+get_target_by_type(Uid, ?CFE_MinEnimty) ->
+    get_max_enmity_uid(Uid).

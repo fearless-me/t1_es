@@ -10,13 +10,25 @@
 -author("mawenhong").
 -include("logger.hrl").
 -include("common_record.hrl").
+-include("map_unit.hrl").
 
 %% API
 -export([
+    dispatcher/5,
     player_vs_player/3, player_vs_mon/3, mon_vs_player/3,
     change_attr/1, change_attr/3, change_attr/5,
-    add_buff/3
+    add_buff/3, can_ai_use_skill/1
 ]).
+
+dispatcher(?OBJ_USR, ?OBJ_USR, Aer, Der, SkillId)->
+    player_vs_player(Aer, Der, SkillId);
+dispatcher(?OBJ_USR, ?OBJ_MON, Aer, Der, SkillId)->
+    player_vs_mon(Aer, Der, SkillId);
+dispatcher(?OBJ_MON, ?OBJ_USR, Aer, Der, SkillId)->
+    mon_vs_player(Aer, Der, SkillId);
+dispatcher(AType, DType, Aer, Der, SkillId)->
+    ?WARN("~p(~p) vs ~p(~p) skill",[Aer, AType, Der, DType, SkillId]).
+
 
 %%-------------------------------------------------------------------
 player_vs_player(Aer, Der, SkillId) ->
@@ -31,6 +43,10 @@ player_vs_mon(Aer, Der, SkillId) ->
 %%-------------------------------------------------------------------
 mon_vs_player(Aer, Der, SkillId) ->
     ?INFO("~w vs ~w skill ~p", [Aer, Der, SkillId]),
+    ok.
+
+
+can_ai_use_skill(_Aer) ->
     ok.
 
 %%-------------------------------------------------------------------

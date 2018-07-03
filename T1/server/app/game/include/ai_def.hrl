@@ -54,8 +54,13 @@
 -define(AI_LOCK_TARGET_MIN_TICK,	    6 * ?TICK_PER_SECOND).		%%  生物攻击时锁定目标的最小时间——6秒
 -define(AI_LOCK_TARGET_TICK_INTERVAL,	4 * ?TICK_PER_SECOND).		%%  生物攻击时锁定目标的最大时间——4秒
 
+-define(AI_MIN_FLEE_RADIUS, 100).    %% 逃跑最小半径
+-define(AI_MAX_FLEE_RADIUS, 200).    %% 逃跑最大半径
+-define(AI_RANGE_FLEE_RADIUS, ?AI_MAX_FLEE_RADIUS - ?AI_MIN_FLEE_RADIUS).
+
 -define(AI_RETURN_TICK, 10 * ?TICK_PER_SECOND).		%%  生物在多少秒仇恨没有改变的情况下返回——10秒
 -define(AI_PURSUE_XZ_MAX, 50.0).
+
 
 -define(AI_PATROL_RADIUS, 50).    %% 生物巡逻半径 todo 怪物配置表
 
