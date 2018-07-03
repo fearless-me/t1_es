@@ -81,6 +81,7 @@ task_done_action(Task) ->
         1 ->
             ps:send(serv_loader, task_done, Task);
         V ->
+            ?WARN("task ~p needs ~p ",[Task, V - 1]),
             put(Task, V - 1)
     end.
 

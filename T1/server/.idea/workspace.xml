@@ -77,11 +77,6 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="db_mgr_sup.erl" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/game/src/db/db_mgr_sup.erl">
-          <provider selected="true" editor-type-id="text-editor" />
-        </entry>
-      </file>
       <file leaf-file-name="db_proxy.erl" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/game/src/db/db_proxy.erl">
           <provider selected="true" editor-type-id="text-editor">
@@ -103,9 +98,16 @@
       <file leaf-file-name="serv_loader_logic.erl" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app/game/src/core/serv_loader_logic.erl">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="668">
-              <caret line="52" column="15" selection-start-line="52" selection-start-column="15" selection-end-line="52" selection-end-column="15" />
+            <state relative-caret-position="661">
+              <caret line="83" column="33" selection-start-line="83" selection-start-column="33" selection-end-line="83" selection-end-column="33" />
             </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="serv_loader.erl" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/game/src/core/serv_loader.erl">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-540" />
           </provider>
         </entry>
       </file>
@@ -908,12 +910,12 @@
       <workItem from="1530510340557" duration="1565000" />
       <workItem from="1530517227963" duration="5257000" />
       <workItem from="1530579801598" duration="24284000" />
-      <workItem from="1530616844398" duration="2329000" />
+      <workItem from="1530616844398" duration="2556000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="997581000" />
+    <option name="totallyTimeSpent" value="997808000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -969,13 +971,6 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/app/game/include/ai_def.hrl">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret line="53" column="60" selection-start-line="53" selection-start-column="60" selection-end-line="53" selection-end-column="60" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/game/include/trigger_def.hrl">
       <provider selected="true" editor-type-id="text-editor">
         <state>
@@ -1249,10 +1244,15 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/app/game/src/core/serv_loader.erl">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-540" />
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/app/game/src/core/serv_loader_logic.erl">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="668">
-          <caret line="52" column="15" selection-start-line="52" selection-start-column="15" selection-end-line="52" selection-end-column="15" />
+        <state relative-caret-position="661">
+          <caret line="83" column="33" selection-start-line="83" selection-start-column="33" selection-end-line="83" selection-end-column="33" />
         </state>
       </provider>
     </entry>
