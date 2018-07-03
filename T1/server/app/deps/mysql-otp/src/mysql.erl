@@ -45,7 +45,6 @@
 -define(default_query_timeout, infinity).
 -define(default_query_cache_time, 60000). %% for query/3.
 -define(default_ping_timeout, 60000).
--define(TCP_RECV_BUFFER, 8192).
 
 -define(cmd_timeout, 3000). %% Timeout used for various commands to the server
 
@@ -501,7 +500,7 @@ init(Opts) ->
                                       Socket0, SetFoundRows),
     case Result of
         {ok, Handshake, SockMod, Socket} ->
-            SockMod:setopts(Socket, [{active, once},{recbuf, ?TCP_RECV_BUFFER}]),
+            SockMod:setopts(Socket, [{active, once}]),
             #handshake{server_version = Version, connection_id = ConnId,
                        status = Status} = Handshake,
             State = #state{server_version = Version, connection_id = ConnId,
@@ -927,7 +926,7 @@ kill_query(#state{connection_id = ConnId, host = Host, port = Port,
                   user = User, password = Password, ssl_opts = SSLOpts,
                   cap_found_rows = SetFoundRows}) ->
     %% Connect socket
-    SockOpts = [{active, false}, binary, {packet, raw},{recbuf, ?TCP_RECV_BUFFER}],
+    SockOpts = [{active, false}, binary, {packet, raw}],
     {ok, Socket0} = mysql_sock_tcp:connect(Host, Port, SockOpts),
 
     %% Exchange handshake communication.
