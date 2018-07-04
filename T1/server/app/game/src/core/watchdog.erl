@@ -103,12 +103,12 @@ do_handle_cast(Request, State) ->
 %%--------------------------------------------------------------------
 print_status()->
     ?DEBUG("status:~n"
-    "==========~n"
+    "======================================================================================================~n"
     "auto reload src dirs: ~n\t~ts~n"
     "auto reload inc dirs: ~n\t~ts~n"
     "auto reload opt info: ~n\t~p~n"
     "auto reload interval: ~w(milliseconds)~n"
-    "==========",
+    "======================================================================================================",
         [
             io_lib:format("~ts",[misc:list_to_string_suffix(fly:info(src_dirs), "\n\t")]),
             io_lib:format("~ts",[misc:list_to_string_suffix(fly:info(inc_dirs), "\n\t")]),
