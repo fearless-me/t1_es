@@ -24,3 +24,5 @@ _gsdata_
 /T1/server/.idea/markdown-doclet.xml
 /T1/server/app/.vscode/settings.json
 /T1/server/app/game/scripts/compile_cht_gs.txt
+/T1/server/callg.raw
+/T1/server/dialyzer-game.out

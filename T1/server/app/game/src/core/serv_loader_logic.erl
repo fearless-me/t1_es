@@ -26,10 +26,10 @@ task_list() ->
     lists:map(
         fun({_,Task,_,_,_})->
             Task
-        end, task_list_inner()
+        end, tasks()
     ).
 
-task_list_inner() ->
+tasks() ->
     [
         {?TASK_SINGLE, serv_start,          1, gconf:get_sid(), fun lib_db:action_pub_/3},
         {?TASK_MULTI , load_all_role_info,  0, gconf:get_sid(), fun lib_db:action_p_all_/2}
@@ -37,20 +37,18 @@ task_list_inner() ->
 
 %%-------------------------------------------------------------------
 start_all_task() ->
-    L = task_list_inner(),
-    lists:foreach(
-        fun(Task)->
-            start_on_task(Task)
-        end, L),
+    L = tasks(),
+    F = fun(Task)-> start_on_task(Task) end,
+    lists:foreach(F, L),
     ok.
 
 start_on_task({?TASK_MULTI, Task, _Key, Params, F}) ->
     N = F(Task, Params),
-    put(Task, N),
+    put(Task, {N,N}),
     ok;
 start_on_task({?TASK_SINGLE, Task, HashKey, Params, F}) ->
     _ = F(HashKey, Task, Params),
-    put(Task, 1),
+    put(Task, {1,1}),
     ok.
 
 %%-------------------------------------------------------------------
@@ -77,12 +75,12 @@ on_info_msg(Info) ->
 
 %%-------------------------------------------------------------------
 task_done_action(Task) ->
-    case misc:get_pdict(Task, 1) of
-        1 ->
+    case misc:get_pdict(Task, {1,1}) of
+        {1,_M} ->
             ps:send(serv_loader, task_done, Task);
-        V ->
-            ?WARN("task ~p needs ~p ",[Task, V - 1]),
-            put(Task, V - 1)
+        {V,M} ->
+            ?WARN("task ~p progress ~p/~p ",[Task, M-V+1, M]),
+            put(Task, {V - 1,M})
     end.
 
 %%-------------------------------------------------------------------
