@@ -361,7 +361,8 @@ start_monster_walk_action(Uid, Dst, MoveState) ->
 
 is_can_monster_walk(Uid, _Dst, _MoveState, _NeedCheck) ->
     % todo 检查怪物状态、检查目标点等等
-    lib_unit:is_unit_cant_move_state(Uid).
+    lib_unit:is_unit_cant_move_state(Uid),
+    true.
 
 
 %%%-------------------------------------------------------------------
@@ -400,9 +401,9 @@ update_monster_walk(Uid, _CurPos, PathList, MoveTime) ->
 stop_move(Uid, NeedBroadcast) ->
     CurMove = lib_move_rw:get_cur_move(Uid),
     if
-        CurMove =:= ?EMS_WALK,
-        CurMove =:= ?EMS_MONSTER_PATROL,
-        CurMove =:= ?EMS_MONSTER_FLEE,
+        CurMove =:= ?EMS_WALK;
+        CurMove =:= ?EMS_MONSTER_PATROL;
+        CurMove =:= ?EMS_MONSTER_FLEE;
         CurMove =:= ?EMS_MONSTER_WALK ->
             CurPos = lib_move_rw:get_cur_pos(Uid),
             stop_move_set(Uid, CurPos),
@@ -418,9 +419,9 @@ stop_move(Uid, NeedBroadcast) ->
 stop_move_force(Uid, NeedBroadcast) ->
     CurMove = lib_move_rw:get_cur_move(Uid),
     if
-        CurMove =:= ?EMS_WALK,
-        CurMove =:= ?EMS_MONSTER_PATROL,
-        CurMove =:= ?EMS_MONSTER_FLEE,
+        CurMove =:= ?EMS_WALK;
+        CurMove =:= ?EMS_MONSTER_PATROL;
+        CurMove =:= ?EMS_MONSTER_FLEE;
         CurMove =:= ?EMS_MONSTER_WALK ->
             CurPos = lib_move_rw:get_cur_pos(Uid),
             stop_move_set(Uid, CurPos),

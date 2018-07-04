@@ -344,7 +344,7 @@ loadMapWayPtData(Bin,List,Num) when erlang:is_list(List) ->
 loadNeighborIds(Bin,Result,N,N) ->
 	{Result,Bin};
 loadNeighborIds(Bin,Result,I,N) ->
-	{ID,Remain} = netmsg:binary_read_int(Bin),
+	{ID,Remain} = binary_lib:read_int32(Bin),
 	loadNeighborIds(Remain,[ID | Result],I + 1,N).
 
 -spec loadMinCost(Bin) -> {Bin,list()} when
@@ -389,9 +389,9 @@ binaryReadTriggerData(<<>>,TriggerList) ->
     TriggerList;
 binaryReadTriggerData(Bin,TriggerList) when erlang:is_binary(Bin)->
 	?MapTriggerBaseData = Bin,
-	{InStrCount,R1} = netmsg:binary_read_int16(Left),
+	{InStrCount,R1} = binary_lib:read_int16(Left),
 	{InArgs,Left1} = binaryReadTriggerStringList(InStrCount,[],R1),
-	{OutStrCount,R2} = netmsg:binary_read_int16(Left1),
+	{OutStrCount,R2} = binary_lib:read_int16(Left1),
     {OutArgs,Left2} =  binaryReadTriggerStringList(OutStrCount,[],R2),
     TriggerArea = case VolumeType of
         1 ->
@@ -437,6 +437,6 @@ binaryReadTriggerData(Bin,TriggerList) when erlang:is_binary(Bin)->
 binaryReadTriggerStringList(0,StringList,Bin) ->
 	{lists:reverse(StringList),Bin};
 binaryReadTriggerStringList(StrCount,StringList,Bin) ->
-	{Args,Remain} = netmsg:binary_read_string(Bin),
+	{Args,Remain} = binary_lib:read_string(Bin),
 	binaryReadTriggerStringList(StrCount - 1,[Args | StringList],Remain).
 

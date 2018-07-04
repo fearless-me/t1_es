@@ -35,13 +35,10 @@ nc(N, Port) ->
     catch ets:new(tcpc, [named_table, public, {keypos, 1},  ?ETS_RC, ?ETS_WC]),
     lists:foreach(fun(_) -> tcp_client:c(Port, 1), timer:sleep(1) end, lists:seq(1, N)).
 
-set_buff(Bin) -> put('fak_buf', Bin).
-get_bufff() -> get('fak_buf').
 
 connect(Port, _MapID) ->
     tcp_codec:init(#net_conf{}),
-
-    set_buff(<<>>),
+    
     {ok, Socket} = ranch_tcp:connect({127, 0, 0, 1}, Port, [{active, false}]),
     socket(Socket),
     Msg1 = #pk_U2GS_Login_Normal{

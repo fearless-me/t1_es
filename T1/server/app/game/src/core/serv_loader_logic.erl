@@ -75,7 +75,7 @@ on_info_msg(Info) ->
 
 %%-------------------------------------------------------------------
 task_done_action(Task) ->
-    case misc:get_pdict(Task, {1,1}) of
+    case misc:get_dict_def(Task, {1,1}) of
         {1,_M} ->
             ps:send(serv_loader, task_done, Task);
         {V,M} ->

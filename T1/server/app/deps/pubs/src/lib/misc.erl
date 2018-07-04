@@ -21,11 +21,14 @@
     crc32/1, ceil/1,mod_1/2, floor/1, clamp/3, rand/2,
     get_value/3, callstack/0,
     interval_operation/5, parse_information_unit/1,
-    get_pdict/2, lists_rand_get/1
+    get_dict_def/2, md5/1,  int_to_hex/1,
+    lists_rand_get/1, lists_shuffle/1, lists_rand_get_n/2, list_to_hex/1,
+    string_to_term/1, term_to_string/1
+
 ]).
 
 %%%-------------------------------------------------------------------
-get_pdict(Key, Def) ->
+get_dict_def(Key, Def) ->
     case get(Key) of
         undefined -> Def;
         V -> V
@@ -119,6 +122,55 @@ lists_rand_get(List) ->
     N = erlang:length(List),
     X = rand_tool:rand() rem N,
     lists:nth(X, List).
+
+%% 
+lists_rand_get_n(_List, 0) ->
+    [];
+lists_rand_get_n([], _N) ->
+    [];
+lists_rand_get_n([_] = List, _N) ->
+    List;
+lists_rand_get_n(List, N) ->
+    lists:sublist( misc:lists_shuffle(List), N).
+
+
+-spec lists_shuffle(ListIn::list()) -> ListOut::list().
+lists_shuffle([]) ->
+    [];
+lists_shuffle([_] = L) ->
+    L;
+lists_shuffle(L) ->
+    List1 = [{rand:uniform(), X} || X <- L],
+    List2 = lists:keysort(1, List1),
+    [E || {_, E} <- List2].
+%%
+md5(S) ->
+    Md5_bin =  erlang:md5(S),
+    Md5_list = binary_to_list(Md5_bin),
+    lists:flatten(list_to_hex(Md5_list)).
+
+list_to_hex(L) ->
+    lists:map(fun(X) -> int_to_hex(X) end, L).
+
+int_to_hex(N) when N >= 256 ->
+    int_to_hex_1(N, []);
+int_to_hex(N) when N < 256 ->
+    less_256_hex(N).
+
+hex(N) when N < 10 ->
+    $0+N;
+hex(N) when N >= 10, N < 16 ->
+    $A + (N-10).
+
+less_256_hex(N)->
+    [hex(N div 16), hex(N rem 16)].
+
+int_to_hex_1(N, Acc) when N < 256 ->
+    lists:flatten([less_256_hex(N) | Acc]);
+int_to_hex_1(N, Acc) ->
+    X = N div 256,
+    M = N rem 256,
+    int_to_hex_1(X, [less_256_hex(M) | Acc]).
 
 %%
 rand(Min, Min)-> Min;
@@ -238,6 +290,26 @@ i2b(0) -> false;
 i2b(1) -> true;
 i2b(false) -> false;
 i2b(true) -> true.
+
+-spec string_to_term(String) ->term() when String::string().
+string_to_term([]) ->
+    [];
+string_to_term(String) when erlang:is_list(String) ->
+    case erl_scan:string(String++".") of
+        {ok, Tokens, _} ->
+            case erl_parse:parse_term(Tokens) of
+                {ok, Term} -> Term;
+                _Err -> undefined
+            end;
+        _Error ->
+            undefined
+    end;
+string_to_term(String) ->
+    String.
+
+term_to_string(Term) ->
+    binary_to_list(list_to_binary(io_lib:format("~w", [Term]))).
+
 
 %% Ideally, you'd want Fun to run every IdealInterval. but you don't
 %% want it to take more than MaxRatio of IdealInterval. So if it takes

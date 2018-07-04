@@ -18,8 +18,8 @@ on_enter(Uid) ->
     lib_ai:reset_lock_target_time(Uid),
     lib_ai_rw:set_target_uid(Uid, TarUid),
     case TarUid > 0 of
-        true -> lib_ai:start_pursue(Uid);
-        _ -> lib_ai_rw:set_pursue_tar_pos(CurPos)
+        true -> lib_ai:start_pursue(Uid, TarUid);
+        _ -> lib_ai_rw:set_pursue_tar_pos(Uid, CurPos)
     end,
 
     case lib_ai_rw:get_enter_combat_time(Uid) > 0 of

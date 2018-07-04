@@ -47,7 +47,7 @@ mon_vs_player(Aer, Der, SkillId) ->
 
 
 can_ai_use_skill(_Aer) ->
-    ok.
+    true.
 
 %%-------------------------------------------------------------------
 change_attr(#r_player_change_prop_req{

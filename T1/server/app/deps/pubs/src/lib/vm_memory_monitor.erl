@@ -52,9 +52,9 @@
 -ifdef(use_specs).
 
 -type(vm_memory_high_watermark() :: (float() | {'absolute', integer() | string()})).
--spec(start_link/1 :: (float()) -> rabbit_types:ok_pid_or_error()).
+-spec(start_link/1 :: (float()) -> pid() | {'error', term()}).
 -spec(start_link/3 :: (float(), fun ((any()) -> 'ok'),
-    fun ((any()) -> 'ok')) -> rabbit_types:ok_pid_or_error()).
+    fun ((any()) -> 'ok')) -> pid() | {'error', term()} ).
 -spec(get_total_memory/0 :: () -> (non_neg_integer() | 'unknown')).
 -spec(get_vm_limit/0 :: () -> non_neg_integer()).
 -spec(get_check_interval/0 :: () -> non_neg_integer()).

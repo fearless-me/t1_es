@@ -67,7 +67,8 @@ action_p_all_(MsgId, Msg, FromPid) ->
         fun(Mgr) ->
             db_mgr:scheduler_(Mgr, 0, {MsgId, Msg, FromPid})
         end, Members
-    ).
+    ),
+    erlang:length(Members).
 
 %%-------------------------------------------------------------------
 %% 账号库

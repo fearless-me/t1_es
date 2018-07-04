@@ -635,15 +635,16 @@ set_title(Title) ->
 
 
 convertMD5ToHexString(MD5) ->
-	convertMD5ToHexString(lists:reverse(MD5), []).
+    lists:flatten(list_to_hex(MD5)).
+%%convertMD5ToHexString(lists:reverse(MD5), []).
 
-convertMD5ToHexString([], AccIn) ->
-	AccIn;
-convertMD5ToHexString([H | T], AccIn) ->
-%%	R = [io_lib:format("~.16B", [H]) | AccIn],
-	R = [io_lib:format("~2.16.0B", [H]) | AccIn],
-	convertMD5ToHexString(T, R).
-
+%%convertMD5ToHexString([], AccIn) ->
+%%	AccIn;
+%%convertMD5ToHexString([H | T], AccIn) ->
+%%%%	R = [io_lib:format("~.16B", [H]) | AccIn],
+%%	R = [io_lib:format("~2.16.0B", [H]) | AccIn],
+%%	convertMD5ToHexString(T, R).
+%%
 getTempDir() ->
 	".\\___temp_gs___".
 
@@ -662,3 +663,18 @@ string_strip(Str, [CH | L]) ->
 localTimeYMD() ->
 	{{YYYY, MM, DD}, _} = erlang:localtime(),
 	io_lib:format("~.4w~.2.0w~.2.0w", [YYYY, MM, DD]).
+
+
+list_to_hex(L) ->
+    lists:map(fun(X) -> int_to_hex(X) end, L).
+
+int_to_hex(N) when N < 256 ->
+    less_256_hex(N).
+
+hex(N) when N < 10 ->
+    $0+N;
+hex(N) when N >= 10, N < 16 ->
+    $A + (N-10).
+
+less_256_hex(N)->
+    [hex(N div 16), hex(N rem 16)].
