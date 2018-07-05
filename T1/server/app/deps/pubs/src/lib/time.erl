@@ -32,9 +32,10 @@ localtime_str() ->
 
 %%
 tz_seconds() ->
-    Local = calendar:local_time(),
     Utc = calendar:universal_time(),
-    calendar:datetime_to_gregorian_seconds(Local) - calendar:datetime_to_gregorian_seconds(Utc).
+    Now = calendar:local_time(),
+    Sec = calendar:datetime_to_gregorian_seconds(Now) - calendar:datetime_to_gregorian_seconds(Utc),
+    (Sec div 3600) * 3600.
 
 
 utc_str() ->

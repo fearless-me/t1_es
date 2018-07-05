@@ -38,22 +38,20 @@ dist_of_line(V, S, E)->
     % | V1 * V2| 表示菱形面积 |V2| 高
     vector3:dist(V3) / vector3:dist(V2).
 
+%%  叉乘
 cross_product(V1, V2) ->
     #vector3{x = X1, y = Y1, z = Z1} = V1,
     #vector3{x = X2, y = Y2, z = Z2} = V2,
-    #vector3{
-        x = Y1*Z2 - Y2*Z1,
-        y = Z1*X2 - Z2*X1,
-        z = X1*Y2 - X2*Y1
-    }.
+    #vector3{x = Y1*Z2 - Y2*Z1, y = Z1*X2 - Z2*X1, z = X1*Y2 - X2*Y1}.
 
 %%
 zero()-> #vector3{}.
 
 %%
 new() -> #vector3{x = 0.0, y = 0.0, z =0.0}.
-new(X, Y, Z) ->
-    #vector3{x = float(X), y = float(Y), z = float(Z)}.
+
+%%
+new(X, Y, Z) -> #vector3{x = float(X), y = float(Y), z = float(Z)}.
 
 %%
 x(V) -> V#vector3.x.

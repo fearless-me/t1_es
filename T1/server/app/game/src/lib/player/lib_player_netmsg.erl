@@ -39,12 +39,9 @@ handle(#pk_U2GS_Login_Normal{
     }),
     ok;
 handle(#pk_U2GS_RequestCreatePlayer{
-    name = Name,
-    camp = Camp,
-    career = Career,
-    race = Race,
-    sex = Sex,
-    head = Head
+    name = Name, camp = Camp,
+    career = Career, race = Race,
+    sex = Sex, head = Head
 }) ->
     BornMid = map_creator_pub:born_map_id(),
     #vector3{x = X, z = Z} = map_creator_pub:born_map_pos(),
