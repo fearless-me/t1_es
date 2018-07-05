@@ -16,6 +16,13 @@
 
 tv3()->
 
+    V = vector3:new(10, 0, 0),
+    S = vector3:new(),
+    E = vector3:new(1,0,1),
+    D = vector3:dist_of_line(V, S, E),
+
+    io:format("dist = ~p~n", [D]),
+
     Dir1 = vector3:new(10,0,0),
     Dir2 = vector3:rotate_around_origin_2d(Dir1, 90),
     io:format("~w rotate 90 ~w~n",[Dir1, Dir2]),

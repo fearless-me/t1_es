@@ -28,6 +28,24 @@
 -export([dist/2, dist_sq/2]).
 -export([linear_lerp/3]).
 -export([rotate_around_origin_2d/2]). %% 围绕远点的2d旋转,传入的是角度
+-export([cross_product/2, dist_of_line/3]).
+
+%% V 到 S、E 表示的支线的距离
+dist_of_line(V, S, E)->
+    V1 = vector3:subtract(S, V),
+    V2 = vector3:subtract(E, S),
+    V3 = vector3:cross_product(V1, V2),
+    % | V1 * V2| 表示菱形面积 |V2| 高
+    vector3:dist(V3) / vector3:dist(V2).
+
+cross_product(V1, V2) ->
+    #vector3{x = X1, y = Y1, z = Z1} = V1,
+    #vector3{x = X2, y = Y2, z = Z2} = V2,
+    #vector3{
+        x = Y1*Z2 - Y2*Z1,
+        y = Z1*X2 - Z2*X1,
+        z = X1*Y2 - X2*Y1
+    }.
 
 %%
 zero()-> #vector3{}.
