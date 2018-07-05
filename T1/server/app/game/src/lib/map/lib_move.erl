@@ -67,9 +67,8 @@ stop_move_set(Uid, Pos) ->
 start_player_walk(Uid, Start, End) ->
     case is_player_can_walk(Uid, Start, End) of
         true -> start_player_walk_1(Uid, Start, End);
-        _ -> false
-    end,
-    ok.
+        _ -> error
+    end.
 
 test_path() ->
     [
@@ -116,8 +115,7 @@ start_player_walk_1(Uid, Start, End) ->
 
 stop_player_move(Uid, Pos) ->
     case is_player_can_stop(Uid, Pos) of
-        true ->
-            stop_player_move_1(Uid, Pos);
+        true -> stop_player_move_1(Uid, Pos);
         _ -> error
     end.
 

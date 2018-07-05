@@ -38,6 +38,8 @@
 -define(MAP_CALL_TIMEOUT, 15000).
 -define(MAP_INIT_TIMEOUT, 60000).
 
+-define(MAP_TICK, 200).
+
 
 -record(m_map_mgr, {map_id = 0, mgr = undefined}).
 -define(MAP_MGR_ETS, map_mgr_ets__).

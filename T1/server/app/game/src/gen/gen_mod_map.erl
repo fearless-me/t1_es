@@ -65,6 +65,18 @@ do_handle_info({stop_move, Req}, State) ->
     {noreply, State};
 do_handle_info(stop_immediately, State) ->
     {stop, normal, State};
+do_handle_info({msg_broadcast, {MsgId}}, State) ->
+    {noreply, State};
+do_handle_info({msg_broadcast,  {MsgId, Msg}}, State) ->
+    {noreply, State};
+do_handle_info({net_msg_broadcast, NetMsg}, State) ->
+    {noreply, State};
+do_handle_info({msg_broadcast_view, {MsgId}}, State) ->
+    {noreply, State};
+do_handle_info({msg_broadcast_view, {MsgId, Msg}}, State) ->
+    {noreply, State};
+do_handle_info({net_msg_broadcast_view, {Uid, NetMsg}}, State) ->
+    {noreply, State};
 do_handle_info(Info, State) ->
     lib_map:on_info_msg(Info),
     {noreply, State}.

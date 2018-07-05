@@ -12,18 +12,21 @@
 -include("map.hrl").
 -include("pub_common.hrl").
 -include("vector3.hrl").
+-include("mem_record.hrl").
 
 
 %% API
 %% 玩家进程其他模块可调用的接口
 -export([
-    shutdown/1, socket/0,
-    stop/1, send/1
+    shutdown/1, socket/0, stop/1, send/1
 ]).
 
 -export([
-    change_map_/3, change_map_pre_/0,
-    teleport_/1, start_move_/2, stop_move_/2
+    change_map_/3, change_pre_map_/0,
+    teleport_/1, start_move_/2, stop_move_/2,
+    send_map_msg_/1, send_map_msg_/2,
+    broadcast_map_msg_/1, broadcast_map_msg_/2,broadcast_map_net_msg_/1,
+    broadcast_map_view_msg_/1, broadcast_map_view_msg_/2, broadcast_map_view_net_msg_/1
 ]).
 
 
@@ -39,7 +42,53 @@ send(Msg) -> mod_player:send(Msg).
 socket() -> mod_player:socket().
 
 %%-------------------------------------------------------------------
-change_map_pre_() ->
+send_map_msg_(MsgId) ->
+    #m_player_map{map_pid = MapPid} = lib_player_rw:get_map(),
+    ps:send(MapPid, MsgId),
+    ok.
+
+send_map_msg_(MsgId, Msg) ->
+    #m_player_map{map_pid = MapPid} = lib_player_rw:get_map(),
+    ps:send(MapPid, MsgId, Msg),
+    ok.
+
+%%-------------------------------------------------------------------
+broadcast_map_msg_(MsgId) ->
+    #m_player_map{map_pid = MapPid} = lib_player_rw:get_map(),
+    ps:send(MapPid, msg_broadcast, {MsgId}),
+    ok.
+
+broadcast_map_msg_(MsgId, Msg) ->
+    #m_player_map{map_pid = MapPid} = lib_player_rw:get_map(),
+    ps:send(MapPid, msg_broadcast, {MsgId, Msg}),
+    ok.
+
+broadcast_map_net_msg_(NetMsg) ->
+    #m_player_map{map_pid = MapPid} = lib_player_rw:get_map(),
+    ps:send(MapPid, net_msg_broadcast, NetMsg),
+    ok.
+
+%%-------------------------------------------------------------------
+broadcast_map_view_msg_(MsgId) ->
+    Uid = lib_player_rw:get_uid(),
+    #m_player_map{map_pid = MapPid} = lib_player_rw:get_map(),
+    ps:send(MapPid, msg_broadcast_view, {Uid, MsgId}),
+    ok.
+
+broadcast_map_view_msg_(MsgId, Msg) ->
+    Uid = lib_player_rw:get_uid(),
+    #m_player_map{map_pid = MapPid} = lib_player_rw:get_map(),
+    ps:send(MapPid, msg_broadcast_view, {Uid, MsgId, Msg}),
+    ok.
+
+broadcast_map_view_net_msg_(NetMsg) ->
+    Uid = lib_player_rw:get_uid(),
+    #m_player_map{map_pid = MapPid} = lib_player_rw:get_map(),
+    ps:send(MapPid, net_msg_broadcast_view, {Uid, NetMsg}),
+    ok.
+
+%%-------------------------------------------------------------------
+change_pre_map_() ->
     ps:send(self(), return_to_pre_map_req).
 
 %%-------------------------------------------------------------------

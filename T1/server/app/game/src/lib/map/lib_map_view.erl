@@ -21,11 +21,12 @@
     init_vis_tile/1,
     sync_movement_to_big_visual_tile/1,
     sync_change_pos_visual_tile/3,
-    pos_to_vis_index/1,
     sync_del_pet/1,
     sync_player_join_map/1,
     sync_player_exit_map/1,
-    add_obj_to_vis_tile/2
+    add_obj_to_vis_tile/2,
+    pos_to_vis_index/1,
+    send_net_msg_to_visual/2, send_msg_to_visual/3, send_msg_to_visual/2
 ]).
 
 
@@ -84,7 +85,7 @@ init_vis_tile(#recGameMapCfg{
     init_vis_tile_1(VisT),
     ok.
 
-%%%-------------------------------------------------------------------
+%%-------------------------------------------------------------------
 init_vis_tile_1(X) when X < 0 ->
     ?ERROR("");
 init_vis_tile_1(X) when X =:= 0 ->
@@ -92,6 +93,28 @@ init_vis_tile_1(X) when X =:= 0 ->
 init_vis_tile_1(X) ->
     set_vis_tile(X, #m_vis_tile{index = X}),
     init_vis_tile_1(X - 1).
+
+%%-------------------------------------------------------------------
+send_net_msg_to_visual(Uid, NetMsg) ->
+    VisTileIndex = lib_move_rw:get_vis_tile_idx(Uid),
+    VisTileList = get_vis_tile_around(VisTileIndex),
+    send_net_msg_to_big_visual(VisTileList, NetMsg),
+    ok.
+
+%%-------------------------------------------------------------------
+send_msg_to_visual(Uid, MsgId) ->
+    VisTileIndex = lib_move_rw:get_vis_tile_idx(Uid),
+    VisTileList = get_vis_tile_around(VisTileIndex),
+    send_msg_to_big_visual(VisTileList, MsgId),
+    ok.
+
+
+%%-------------------------------------------------------------------
+send_msg_to_visual(Uid, MsgId, Msg) ->
+    VisTileIndex = lib_move_rw:get_vis_tile_idx(Uid),
+    VisTileList = get_vis_tile_around(VisTileIndex),
+    send_msg_to_big_visual(VisTileList, MsgId, Msg),
+    ok.
 
 %%%-------------------------------------------------------------------
 %% 开始移动广播
@@ -101,22 +124,44 @@ sync_movement_to_big_visual_tile(Uid) ->
     sync_movement_to_big_visual_tile(VisTileIndex, Msg),
     ok.
 
+%%%-------------------------------------------------------------------
 sync_movement_to_big_visual_tile(_VisTileIndex, undefined) ->
     skip;
 sync_movement_to_big_visual_tile(VisTileIndex, Msg) ->
     VisTileList = get_vis_tile_around(VisTileIndex),
-    sync_msg_to_big_vis_tile_1(VisTileList, Msg),
+    send_net_msg_to_big_visual(VisTileList, Msg),
     ok.
 
-sync_msg_to_big_vis_tile_1(_VisTileList, undefined) ->
+
+%%%-------------------------------------------------------------------
+send_net_msg_to_big_visual(_VisTileList, undefined) ->
     skip;
-sync_msg_to_big_vis_tile_1(VisTileList, Msg) ->
+send_net_msg_to_big_visual(VisTileList, Msg) ->
     PlayerList = [Players || #m_vis_tile{player = Players} <- VisTileList],
     lists:foreach(
         fun(Uid) -> gcore:send_net_msg(Uid, Msg) end,
         lists:flatten(PlayerList)
     ),
     ok.
+
+
+%%%-------------------------------------------------------------------
+send_msg_to_big_visual(VisTileList, MsgId) ->
+    PlayerList = [Players || #m_vis_tile{player = Players} <- VisTileList],
+    lists:foreach(
+        fun(Uid) -> gcore:send_msg(Uid, MsgId) end,
+        lists:flatten(PlayerList)
+    ),
+    ok.
+
+send_msg_to_big_visual(VisTileList, MsgId, Msg) ->
+    PlayerList = [Players || #m_vis_tile{player = Players} <- VisTileList],
+    lists:foreach(
+        fun(Uid) -> gcore:send_msg(Uid, MsgId, Msg) end,
+        lists:flatten(PlayerList)
+    ),
+    ok.
+
 
 %%%-------------------------------------------------------------------
 %% 坐標位移廣播
@@ -299,12 +344,12 @@ do_sync_big_vis_tile_to_me(_Type, _Uid, _VisTileList, _Msg) -> skip.
 sync_me_to_big_vis_tile(Unit, VisTileList, del_me) ->
     Uid = lib_unit:get_uid(Unit),
     Msg = #pk_GS2U_RemoveRemote{uid_list = [Uid]},
-    sync_msg_to_big_vis_tile_1(VisTileList, Msg),
+    send_net_msg_to_big_visual(VisTileList, Msg),
     ok;
 sync_me_to_big_vis_tile(Unit, VisTileList, add_me) ->
     Uid = lib_unit:get_uid(Unit),
     Msg = lib_move:cal_move_msg(Uid),
-    sync_msg_to_big_vis_tile_1(VisTileList, Msg),
+    send_net_msg_to_big_visual(VisTileList, Msg),
     ok.
 %%-------------------------------------------------------------------
 %%

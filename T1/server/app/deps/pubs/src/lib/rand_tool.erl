@@ -10,10 +10,11 @@
 -author("mawenhong").
 
 %% API
--export([new/0]).
--export([new/1]).
--export([rand/0]).
--export([seed/0]).
+-export([
+    new/0, new/1,
+    rand/0, rand/2,
+    seed/0
+]).
 
 
 -define(INT32_MAX, 2147483647).
@@ -25,6 +26,7 @@ new() ->
     put(?RAND_KEY, Key),
     Key.
 
+-spec new( Seed :: integer() ) -> Seed :: integer().
 new(Seed) ->
     put(?RAND_KEY, Seed),
     Seed.
@@ -32,14 +34,21 @@ new(Seed) ->
 -spec rand() -> integer().
 rand() ->
     Key1 = ensure_new(),
-    % gcc
-    Key2 = ((Key1 * 1103515245 + 12345) bsr 1) band ?INT32_MAX ,
+    % gcc 线性同余随机数生成器
+    Key2 = Key1 * 1103515245 + 12345,
     put(?RAND_KEY, Key2),
-    Key2.
+    (Key2 bsr 1) band ?INT32_MAX .
 
+-spec rand(Min :: integer(), Max :: integer()) -> integer().
+rand(Min, Min) -> Min;
+rand(Min, Max) ->
+    Min + (rand() rem (Max - Min + 1)).
+
+-spec seed() -> integer().
 seed() ->
     ensure_new().
 %%
+-spec ensure_new() -> integer().
 ensure_new() ->
     case get(?RAND_KEY) of
         undefined -> new();

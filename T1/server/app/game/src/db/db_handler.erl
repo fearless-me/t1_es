@@ -44,8 +44,8 @@ do_handle_info(load_all_role_info, Sid, FromPid, PoolId) ->
             Start = (Batch - 1) * Load,
             End   = Batch * Load,
             SqlLoad = db_sql:sql(load_all_role_info),
-            ResLoad = db:query(PoolId, SqlLoad, [Start, End], infinity),
-            check_res(ResLoad, SqlLoad, [Start, End]),
+            ResLoad = db:query(PoolId, SqlLoad, [Sid, Start, End], infinity),
+            check_res(ResLoad, SqlLoad, [Sid, Start, End]),
             ResList0 = db:as_record(ResLoad, p_player, record_info(fields, p_player)),
             ResList1 = [ Player#p_player{name = binary_to_list(Player#p_player.name)} || Player <- ResList0],
             ps:send(FromPid, load_all_role_info_ack, ResList1)

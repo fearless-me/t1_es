@@ -16,22 +16,35 @@
 -include("cfg_mapsetting.hrl").
 -include("common_record.hrl").
 -include("netmsg.hrl").
+-include("vector3.hrl").
 
-%% API
--export([init/1]).
--export([tick/1]).
--export([start_stop_now/1]).
+
+-spec init(S ::#m_map_state{}) -> #m_map_state{}.
+-spec tick(S ::#m_map_state{}) -> #m_map_state{}.
+-spec start_stop_now(S :: #m_map_state{}) -> #m_map_state{}.
+-spec player_start_move(Req :: #r_player_start_move_req{}) -> ok | error.
+-spec player_stop_move(Req :: #r_player_stop_move_req{})  -> ok | error.
+-spec broadcast_msg({MsgId :: term()} | {MsgId :: term(), Msg :: term()}) -> ok.
+-spec broadcast_net_msg(NetMsg :: tuple()) -> ok.
+-spec broadcast_msg_view(
+    {Uid :: integer(), MsgId :: term()} |{Uid :: integer(), MsgId :: term(), Msg :: term()} ) -> ok.
+-spec broadcast_net_msg_view({Uid :: integer(), NetMsg :: tuple()}) -> ok.
+
+
+
+%% 初始化， tick， 开始推出
+-export([init/1, tick/1, start_stop_now/1]).
 -export([player_start_move/1, player_stop_move/1]).
+-export([broadcast_msg/1, broadcast_net_msg/1, broadcast_msg_view/1, broadcast_net_msg_view/1]).
 
 %%--------------------------------
 %% WARNING!!! WARNING!!! WARNING!!!
 %% call
+%% 基础代码调用的玩家上线，下线、切地图、同地图传送
 -export([player_join_call/2]).
 -export([player_exit_call/2]).
 -export([force_teleport_call/2]).
 %%--------------------------------
-
--define(MAP_TICK, 200).
 
 %%%-------------------------------------------------------------------
 init(S) ->
@@ -262,5 +275,43 @@ send_goto_map_msg(Uid, Pos) ->
     },
     gcore:send_net_msg(Uid, Msg),
     ok.
+
+%%-------------------------------------------------------------------
+broadcast_msg({MsgId}) ->
+    ets:foldl(
+        fun(#m_map_unit{uid = Uid}, _) ->
+            gcore:send_msg(Uid, MsgId)
+        end, 0, lib_map_rw:get_player_ets()
+    ),
+    ok;
+broadcast_msg({MsgId, Msg}) ->
+    ets:foldl(
+        fun(#m_map_unit{uid = Uid}, _) ->
+            gcore:send_msg(Uid, MsgId, Msg)
+        end, 0, lib_map_rw:get_player_ets()
+    ),
+    ok.
+
+broadcast_net_msg(NetMsg) ->
+    ets:foldl(
+        fun(#m_map_unit{uid = Uid}, _) ->
+            gcore:send_net_msg(Uid, NetMsg)
+        end, 0, lib_map_rw:get_player_ets()
+    ),
+    ok.
+
+%%-------------------------------------------------------------------
+broadcast_msg_view({Uid, MsgId}) ->
+    lib_map_view:send_msg_to_visual(Uid, MsgId),
+    ok;
+broadcast_msg_view({Uid, MsgId, Msg}) ->
+    lib_map_view:send_msg_to_visual(Uid, MsgId, Msg),
+    ok.
+
+broadcast_net_msg_view({Uid, NetMsg}) ->
+    lib_map_view:send_net_msg_to_visual(Uid, NetMsg),
+    ok.
+
+
 
 

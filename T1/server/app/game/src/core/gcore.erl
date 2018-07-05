@@ -50,7 +50,7 @@ ppid_name(Aid) ->
 register_ppid(Pid, Aid) ->
     PsName = ppid_name(Aid),
     try  erlang:register(PsName, Pid) of
-        true -> sucess
+        true -> success
     catch _:_:_ -> repeat_login end.
 
 %%-------------------------------------------------------------------

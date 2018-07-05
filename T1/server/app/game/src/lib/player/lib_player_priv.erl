@@ -61,7 +61,7 @@ loop_check(_, _Pid, _N) ->
     ok.
 
 %%-------------------------------------------------------------------
-login_ack_success(sucess, AccountIfo) ->
+login_ack_success(success, AccountIfo) ->
     Aid = AccountIfo#p_account.aid,
     lib_player_pub:send(#pk_GS2U_LoginResult{
         aid = Aid,
