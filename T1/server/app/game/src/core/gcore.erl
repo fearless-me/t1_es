@@ -16,7 +16,7 @@
 -export([
     %% 注册玩家进程
     ppid_name/1,
-    register_ppid/2,
+    register_pid/2,
     %% 踢人
     kick_account/2,
     %% 封号
@@ -47,7 +47,7 @@
 ppid_name(Aid) ->
     misc:create_atom(player, [Aid]).
 
-register_ppid(Pid, Aid) ->
+register_pid(Pid, Aid) ->
     PsName = ppid_name(Aid),
     try  erlang:register(PsName, Pid) of
         true -> success

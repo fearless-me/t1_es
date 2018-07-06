@@ -40,13 +40,13 @@ login_ack(#r_login_ack{error = 0, account_info = AccountIfo}) ->
     #p_account{aid = AccId} = AccountIfo,
     %%% fixme errorrororororor
     PsName =  gcore:ppid_name(AccId),
-    loop_check(misc:is_palive(PsName), erlang:whereis(PsName), 5),
+    loop_check(misc:is_alive(PsName), erlang:whereis(PsName), 5),
     %%% fixme errorrororororor
-    Ret = gcore:register_ppid(self(), AccId),
+    Ret = gcore:register_pid(self(), AccId),
     login_ack_success(Ret, AccountIfo),
     ok;
 login_ack(#r_login_ack{error = Error}) ->
-    lib_player_pub:send(#pk_GS2U_LoginResult{
+    lib_player_pub:send_net_msg(#pk_GS2U_LoginResult{
         result = Error,
         msg = io_lib:format("ErrorCode:~p", [Error])
     }),
@@ -56,14 +56,14 @@ login_ack(#r_login_ack{error = Error}) ->
 loop_check(true, Pid, N) when N > 0, is_pid(Pid)->
     ps:send(Pid, active_stop, repeat_login),
     timer:sleep(2000),
-    loop_check(misc:is_palive(Pid), Pid, N - 1);
+    loop_check(misc:is_alive(Pid), Pid, N - 1);
 loop_check(_, _Pid, _N) ->
     ok.
 
 %%-------------------------------------------------------------------
 login_ack_success(success, AccountIfo) ->
     Aid = AccountIfo#p_account.aid,
-    lib_player_pub:send(#pk_GS2U_LoginResult{
+    lib_player_pub:send_net_msg(#pk_GS2U_LoginResult{
         aid = Aid,
         identity = "",
         result = 0,
@@ -77,7 +77,7 @@ login_ack_success(Reason, AccountIfo) ->
     #p_account{aid = Aid} = AccountIfo,
     ?ERROR("acc ~w register process ~p faild with ~w",
         [Aid, self(), Reason]),
-    lib_player_pub:send(#pk_GS2U_LoginResult{
+    lib_player_pub:send_net_msg(#pk_GS2U_LoginResult{
         result = -1,
         msg = io_lib:format("ErrorCode:~p", [Reason])
     }),
@@ -89,7 +89,7 @@ login_ack_success(Reason, AccountIfo) ->
 %%-------------------------------------------------------------------
 loaded_player_list([]) ->
     lib_player_rw:set_status(?PS_WAIT_SELECT_CREATE),
-    lib_player_pub:send(#pk_GS2U_UserPlayerList{}),
+    lib_player_pub:send_net_msg(#pk_GS2U_UserPlayerList{}),
     ok;
 loaded_player_list(RoleList) ->
     lib_player_rw:set_status(?PS_WAIT_SELECT_CREATE),
@@ -115,7 +115,7 @@ loaded_player_list(RoleList) ->
                 mapID = MapId, oldMapID = OldMapId
             }
         end, RoleList),
-    lib_player_pub:send(#pk_GS2U_UserPlayerList{info = Info}),
+    lib_player_pub:send_net_msg(#pk_GS2U_UserPlayerList{info = Info}),
     ok.
 
 %%-------------------------------------------------------------------
@@ -132,7 +132,7 @@ create_player_ack(#r_create_player_ack{error = 0, uid = Uid}) ->
     ok;
 create_player_ack(#r_create_player_ack{error = Err}) ->
     lib_player_rw:set_status(?PS_WAIT_SELECT_CREATE),
-    lib_player_pub:send(#pk_GS2U_CreatePlayerResult{errorCode = Err}).
+    lib_player_pub:send_net_msg(#pk_GS2U_CreatePlayerResult{errorCode = Err}).
 
 %%-------------------------------------------------------------------
 select_player(Uid) ->

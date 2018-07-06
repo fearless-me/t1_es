@@ -28,10 +28,10 @@
 -export([dist/2, dist_sq/2]).
 -export([linear_lerp/3]).
 -export([rotate_around_origin_2d/2]). %% 围绕远点的2d旋转,传入的是角度
--export([cross_product/2, dist_of_line/3]).
+-export([cross_product/2, dist_to_line/3]).
 
 %% V 到 S、E 表示的支线的距离
-dist_of_line(V, S, E)->
+dist_to_line(V, S, E)->
     V1 = vector3:subtract(S, V),
     V2 = vector3:subtract(E, S),
     V3 = vector3:cross_product(V1, V2),

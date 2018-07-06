@@ -26,6 +26,9 @@
   所需要交换的数据放在ETS里。所以ETS数据的实时性将由各个逻辑层决定
 * 所有进程需要的数据定义尽量不要带出本模块
 
+## 一些对erlang的错误认识
+[关于erlang很慢的错误认识](http://jlouisramblings.blogspot.com/2013/07/problematic-traits-in-erlang.html)
+
 
 ## record
 * m_xxx  内存中(ETS,进程字典)

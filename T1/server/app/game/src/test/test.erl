@@ -19,7 +19,7 @@ tv3()->
     V = vector3:new(10, 0, 0),
     S = vector3:new(),
     E = vector3:new(1,0,1),
-    D = vector3:dist_of_line(V, S, E),
+    D = vector3:dist_to_line(V, S, E),
 
     io:format("dist = ~p~n", [D]),
 

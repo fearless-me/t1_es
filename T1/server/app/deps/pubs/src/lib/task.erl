@@ -9,21 +9,9 @@
 
 -module(task).
 
--export([async/3,
-         async/4,
-         async/1,
-         async/2,
-         await/1,
-         await/2]).
-
--export([async_opt/4,
-         async_opt/5,
-         async_opt/2,
-         async_opt/3]).
-
--export([safe_await/2,
-         safe_await/3]).
-
+-export([async/3, async/4, async/1, async/2, await/1, await/2]).
+-export([async_opt/4, async_opt/5, async_opt/2, async_opt/3]).
+-export([safe_await/2, safe_await/3]).
 -export([async_do/3]).
 
 -spec async(function()) -> {pid(), reference()}.

@@ -37,10 +37,11 @@ init(Player) ->
     ?WARN("~p mapid ~p",[Uid, Mid]),
     lib_player_rw:set_map(#m_player_map{map_id = Mid, line_id = LineId}),
     ok.
+
 %%-------------------------------------------------------------------
 send_init_data() ->
     send_base_info(),
-    lib_player_pub:send(#pk_GS2U_GetPlayerInitDataEnd{}),
+    lib_player_pub:send_net_msg(#pk_GS2U_GetPlayerInitDataEnd{}),
     ok.
 
 send_base_info() ->
@@ -65,9 +66,10 @@ send_base_info() ->
 %% UInt16 角色
         mapID = Mid
     },
-    lib_player_pub:send(Msg),
+    lib_player_pub:send_net_msg(Msg),
     ok.
 
+%%-------------------------------------------------------------------
 start_walk(Tar) ->
     #m_player_map{map_pid = Mpid} = lib_player_rw:get_map(),
     Uid = lib_player_rw:get_uid(),
@@ -82,6 +84,7 @@ start_walk(Tar) ->
     end,
     ok.
 
+%%-------------------------------------------------------------------
 stop_move(Pos) ->
     #m_player_map{map_pid = Mpid} = lib_player_rw:get_map(),
     Uid = lib_player_rw:get_uid(),

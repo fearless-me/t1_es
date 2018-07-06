@@ -16,6 +16,8 @@
 
 -define(DAYS_FROM_0_TO_1970, 719528).
 -define(SECONDS_PER_DAY, 86400).
+-define(SECONDS_FROM_0_TO_1970, ?DAYS_FROM_0_TO_1970 * ?SECONDS_PER_DAY).
+-define(TIME_FMT, "~.4w-~.2.0w-~.2.0w ~.2.0w:~.2.0w:~.2.0w").
 
 milli_seconds() -> os:system_time(milli_seconds).
 
@@ -23,12 +25,12 @@ utc_seconds() -> os:system_time(seconds).
 
 localtime_seconds()->
     calendar:datetime_to_gregorian_seconds(calendar:local_time()) -
-        ?DAYS_FROM_0_TO_1970 * ?SECONDS_PER_DAY.
+        ?SECONDS_FROM_0_TO_1970.
 
 
 localtime_str() ->
     {{Y, MO, D}, {H, MU, S}} = calendar:local_time(),
-    lists:flatten(io_lib:format("~.4w-~.2.0w-~.2.0w ~.2.0w:~.2.0w:~.2.0w", [Y, MO, D, H, MU, S])).
+    lists:flatten(io_lib:format(?TIME_FMT, [Y, MO, D, H, MU, S])).
 
 %%
 tz_seconds() ->
@@ -40,8 +42,7 @@ tz_seconds() ->
 
 utc_str() ->
     {{Y, MO, D}, {H, MU, S}} = calendar:universal_time(),
-    io_lib:format("~.4w-~.2.0w-~.2.0w ~.2.0w:~.2.0w:~.2.0w",
-        [Y, MO, D, H, MU, S]).
+    io_lib:format(?TIME_FMT, [Y, MO, D, H, MU, S]).
 
 day_of_the_week() ->
     {Day, _} = calendar:local_time(),

@@ -14,6 +14,7 @@
 %% API
 -export([save/1]).
 
+%%-------------------------------------------------------------------
 save(Player) ->
     #m_player_pub{aid = Aid, uid = Uid, pos = Pos, mid = Mid} = Player,
     ?DEBUG("save player aid ~w uid ~w",[Aid, Uid]),

@@ -18,14 +18,20 @@
 %% API
 %% 玩家进程其他模块可调用的接口
 -export([
-    shutdown/1, socket/0, stop/1, send/1
+    % 关掉网络 、获取socket 、终止进程、发送网络消息
+    shutdown/1, socket/0, stop/1, send_net_msg/1
 ]).
 
 -export([
+    % 换地图、回之前的地图
     change_map_/3, change_pre_map_/0,
+    % 本地图传送、开始移动、停止移动
     teleport_/1, start_move_/2, stop_move_/2,
+    % 给我所在的地图发送消息
     send_map_msg_/1, send_map_msg_/2,
+    % 给我所在地图所有玩家进程发消息或者发送网络消息
     broadcast_map_msg_/1, broadcast_map_msg_/2,broadcast_map_net_msg_/1,
+    % 给我视野范围内的所有玩家进程发消息或者发送网络消息
     broadcast_map_view_msg_/1, broadcast_map_view_msg_/2, broadcast_map_view_net_msg_/1
 ]).
 
@@ -35,11 +41,11 @@
     How :: read | write | read_write.
 shutdown(How) -> mod_player:shutdown(How).
 stop(Reason) -> mod_player:stop(Reason).
+socket() -> mod_player:socket().
 %%-------------------------------------------------------------------
 
--spec send(Msg :: list() | tuple()) -> ok.
-send(Msg) -> mod_player:send(Msg).
-socket() -> mod_player:socket().
+-spec send_net_msg(Msg :: list() | tuple()) -> ok.
+send_net_msg(Msg) -> mod_player:send_net_msg(Msg).
 
 %%-------------------------------------------------------------------
 send_map_msg_(MsgId) ->

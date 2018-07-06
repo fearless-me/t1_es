@@ -23,6 +23,7 @@ tick_go() ->
     lib_player_rw:set_last_minute_tick(Now),
     lib_player_rw:set_last_hour_tick(Now),
     ok.
+
 %%-------------------------------------------------------------------
 tick_msg()-> erlang:send_after(100, self(), tick_me).
 

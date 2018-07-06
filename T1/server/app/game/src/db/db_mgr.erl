@@ -85,7 +85,7 @@ hash_to_worker(Key, State) ->
     WorkerNo = maps:get(worker_no, State),
     X = Key rem WorkerNo + 1,
     P = get({?WORKER_KEY, X}),
-    try misc:is_palive(P) of
+    try misc:is_alive(P) of
         true -> P
     catch _:_:_ ->
         ?ERROR("~p's worker ~p of ~p for pool ~p restart",

@@ -25,7 +25,7 @@ on_account_login(Aid, Pid, Sock) ->
 
 %%-------------------------------------------------------------------
 on_create(Uid) ->
-    lib_player_pub:send(#pk_GS2U_CreatePlayerResult{uid = Uid}),
+    lib_player_pub:send_net_msg(#pk_GS2U_CreatePlayerResult{uid = Uid}),
     ?DEBUG("[hook]Aid ~p create new player ~w",
         [lib_player_rw:get_aid(), Uid]),
     ok.

@@ -16,7 +16,7 @@
     b2i/1, i2b/1, ntoa/1, ntoab/1,
     to_atom/1, create_atom/2, list_to_string_suffix/2,
     register_process/3, register_name/0, register_name/1,
-    is_palive/1, is_palive_g/1, is_palive_lg/1,
+    is_alive/1, is_alive_g/1, is_alive_lg/1,
     ip/0, peername/1, ip_string/1,
     crc32/1, ceil/1,mod_1/2, floor/1, clamp/3, rand/2,
     get_value/3, callstack/0,
@@ -27,14 +27,14 @@
 
 ]).
 
-%%%-------------------------------------------------------------------
+%%-------------------------------------------------------------------
 get_dict_def(Key, Def) ->
     case get(Key) of
         undefined -> Def;
         V -> V
     end.
 
-%%%-------------------------------------------------------------------
+%%-------------------------------------------------------------------
 atom_to_binary(A) ->
     list_to_binary(atom_to_list(A)).
 
@@ -54,31 +54,31 @@ register_name(Pid) ->
     end.
 
 %% local
-is_palive(0)-> false;
-is_palive(undefined) -> false;
-is_palive(Name) when is_atom(Name) ->
+is_alive(0)-> false;
+is_alive(undefined) -> false;
+is_alive(Name) when is_atom(Name) ->
     case whereis(Name) of
         undefined -> false;
         Pid -> erlang:is_process_alive(Pid)
     end;
-is_palive(Pid) when is_pid(Pid) ->
+is_alive(Pid) when is_pid(Pid) ->
     erlang:is_process_alive(Pid).
 
 %% global
-is_palive_g(0)-> false;
-is_palive_g(undefined) -> false;
-is_palive_g(Name) when is_atom(Name) ->
+is_alive_g(0)-> false;
+is_alive_g(undefined) -> false;
+is_alive_g(Name) when is_atom(Name) ->
     case global:whereis_name(Name) of
         undefined -> false;
         Pid -> erlang:is_process_alive(Pid)
     end;
-is_palive_g(Pid) when is_pid(Pid) ->
+is_alive_g(Pid) when is_pid(Pid) ->
     erlang:is_process_alive(Pid).
 
 %% local and global
-is_palive_lg(0)-> false;
-is_palive_lg(undefined) -> false;
-is_palive_lg(Name) when is_atom(Name) ->
+is_alive_lg(0)-> false;
+is_alive_lg(undefined) -> false;
+is_alive_lg(Name) when is_atom(Name) ->
     case whereis(Name) of
         undefined ->
             case global:whereis_name(Name) of
@@ -87,7 +87,7 @@ is_palive_lg(Name) when is_atom(Name) ->
             end;
         Pid -> erlang:is_process_alive(Pid)
     end;
-is_palive_lg(Pid) when is_pid(Pid) ->
+is_alive_lg(Pid) when is_pid(Pid) ->
     erlang:is_process_alive(Pid).
 
 %%

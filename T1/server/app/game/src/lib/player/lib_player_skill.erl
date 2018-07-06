@@ -20,13 +20,13 @@ use_skill(SkillId, Tar) ->
     ok = do_use_skill(R2, SkillId, Tar),
     ok.
 
-
+%%-------------------------------------------------------------------
 do_use_skill(true, _SkillId, _Tar) ->
     ok;
 do_use_skill(ErrAndFalse, _SkillId, _Tar) ->
     ErrAndFalse.
 
-
+%%-------------------------------------------------------------------
 check_1(_SkillId)->
     true.
 

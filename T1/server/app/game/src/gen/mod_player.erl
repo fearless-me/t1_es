@@ -29,7 +29,7 @@
 
 %% API
 -export([shutdown/1]).
--export([stop/1, send/1]).
+-export([stop/1, send_net_msg/1]).
 -export([on_init/1, on_data/3, on_close/3]).
 -export([on_info_msg/2, on_call_msg/3, on_cast_msg/2, on_net_msg/2]).
 -export([socket/1, socket/0]).
@@ -51,13 +51,13 @@ shutdown(How) ->
 stop(Reason)->
     ?INFO("aid ~p uid ~p pid ~p stopped with reason ~p",
         [lib_player_rw:get_aid(), lib_player_rw:get_uid(), self(), Reason]),
-    catch lib_player_pub:send(#pk_GS2U_KickByServer{reason = io_lib:format("~p", [Reason])}),
+    catch lib_player_pub:send_net_msg(#pk_GS2U_KickByServer{reason = io_lib:format("~p", [Reason])}),
     tcp_handler:active_stop(Reason).
 
 %%-------------------------------------------------------------------
-send(IoList) when is_list(IoList)->
+send_net_msg(IoList) when is_list(IoList)->
     tcp_handler:direct_send_net_msg(socket(), IoList);
-send(Msg) ->
+send_net_msg(Msg) ->
     {Bytes1, IoList} = tcp_codec:encode(Msg),
     ?DEBUG("~p send ~p bytes, msg ~w",[lib_player_rw:get_uid(), Bytes1, Msg]),
     tcp_handler:direct_send_net_msg(socket(), IoList),
@@ -93,7 +93,7 @@ on_info_msg({kick_role, Reason}, S) ->
     mod_player:stop(Reason),
     S;
 on_info_msg({net_msg, NetMsg}, S) ->
-    mod_player:send(NetMsg),
+    mod_player:send_net_msg(NetMsg),
     S;
 on_info_msg({login_ack, Msg}, S) ->
     ?DEBUG("login_ack:~p",[Msg]),
