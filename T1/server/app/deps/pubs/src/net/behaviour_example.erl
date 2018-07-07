@@ -32,14 +32,14 @@
 -export([on_init/1, on_data/3, on_close/3]).
 -export([on_info_msg/2, on_call_msg/3, on_cast_msg/2, on_net_msg/2]).
 -export([socket/1, socket/0]).
-%%%-------------------------------------------------------------------
+%%-------------------------------------------------------------------
 stop(Reason)->
     tcp_handler:active_stop(Reason).
 
 direct_stop()->
     erlang:exit(self(), normal).
 
-%%%-------------------------------------------------------------------
+%%-------------------------------------------------------------------
 send(IoList) when is_list(IoList)->
     tcp_handler:send_net_msg(IoList);
 send(Msg) ->
@@ -50,7 +50,7 @@ send(Msg) ->
 direct_send(IoList)->
     tcp_handler:direct_send_net_msg(socket(), IoList).
 
-%%%-------------------------------------------------------------------
+%%-------------------------------------------------------------------
 on_init(Socket) ->
     {Ip, Port} = misc:peername(Socket),
     socket(Socket),
@@ -66,7 +66,7 @@ on_data(Socket, Data, S)->
 on_close(Socket, Reason, S) ->
     ?DEBUG("~p close,reason:~p",[Socket, Reason]),
     S.
-%%%-------------------------------------------------------------------
+%%-------------------------------------------------------------------
 on_info_msg(Info, S) ->
     ?DEBUG("info:~p",[Info]),
     S.
@@ -84,7 +84,7 @@ on_net_msg(Cmd, Msg)->
     ?DEBUG("net msg ~p,~p",[Cmd, Msg]),
     ok.
 
-%%%-------------------------------------------------------------------
+%%-------------------------------------------------------------------
 socket(Socket) -> put(?SocketKey, Socket).
 socket()-> get(?SocketKey).
 

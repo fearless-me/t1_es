@@ -64,6 +64,7 @@ new_monster(#recMapObjData{
     lib_ai_rw:init_default(Uid),
     lib_move_rw:init_default(Uid),
     lib_unit_rw:init_default(Uid),
+    %% todo 怪物AI配置
     lib_ai:init(Uid, ?AIAT_Active),
     new(?OBJ_MON, Pid, Uid, Mid, 0, Group, Pos, vector3:new(0.1, 0, 0.5)).
 

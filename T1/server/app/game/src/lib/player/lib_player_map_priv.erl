@@ -86,7 +86,7 @@ serv_change_map_call(DestMapID, DestLineId, TarPos) ->
         }
     ),
 
-    serv_change_map_call_ret(Mid, Line, Pos, Ack, gameing),
+    serv_change_map_call_ret(Mid, Line, Pos, Ack, gaming),
     ok.
 
 %%-------------------------------------------------------------------
@@ -159,22 +159,24 @@ serv_change_map_call_ret(
     #r_change_map_ack{error = Err, map_id = Mid}, Flag
 ) ->
     case Flag of
-        gameing -> lib_player_rw:set_status(?PS_GAME);
+        gaming -> lib_player_rw:set_status(?PS_GAME);
         _Flag -> error
     end,
     ?ERROR("player ~p change from map ~p:~p to map ~p failed with ~p",
         [lib_player_rw:get_uid(), OldMid, OldLineId, Mid, Err]),
     ok.
 
-%%%-------------------------------------------------------------------
+%%-------------------------------------------------------------------
 return_to_old_map_call() ->
     Uid = lib_player_rw:get_uid(),
-    #m_player_pub{mpid = Mid, old_mid = OMid, old_line = OLineId, old_pos = OPos} = lib_cache:get_player_pub(Uid),
+    #m_player_pub{
+        mpid = Mid, old_mid = OMid, old_line = OLineId, old_pos = OPos
+    } = lib_cache:get_player_pub(Uid),
     ?DEBUG("player ~p return_to_pre_map from ~p to ~p", [Uid, Mid, OMid]),
     serv_change_map_call(OMid, OLineId, OPos),
     ok.
 
-%%%-------------------------------------------------------------------
+%%-------------------------------------------------------------------
 offline_call(Uid, MapID, LineId, MapPid) ->
     Mgr = map_creator_pub:map_mgr(MapID),
     map_mgr_pub:player_exit_map_call(
@@ -183,7 +185,7 @@ offline_call(Uid, MapID, LineId, MapPid) ->
     ),
     ok.
 
-%%%-------------------------------------------------------------------
+%%-------------------------------------------------------------------
 goto_born_map(Req) ->
     Mid = map_creator_pub:born_map_id(),
     Pos = map_creator_pub:born_map_pos(),

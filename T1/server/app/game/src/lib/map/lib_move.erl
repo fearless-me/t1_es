@@ -26,7 +26,7 @@
 -export([cal_move_msg/1]).
 %%-export([cal_move_msg_info/2]).
 
-%%%-------------------------------------------------------------------
+%%-------------------------------------------------------------------
 init(Uid, Pos, Face) ->
     lib_move_rw:set_cur_move(Uid, ?EMS_STAND),
     lib_move_rw:set_next_move(Uid, ?EMS_STAND),
@@ -63,7 +63,7 @@ stop_move_set(Uid, Pos) ->
     lib_move_rw:set_path_list(Uid, []),
     ok.
 
-%%%-------------------------------------------------------------------
+%%-------------------------------------------------------------------
 start_player_walk(Uid, Start, End) ->
     case is_player_can_walk(Uid, Start, End) of
         true -> start_player_walk_1(Uid, Start, End);
@@ -125,7 +125,7 @@ stop_player_move_1(Uid, Pos) ->
     lib_map_view:sync_movement_to_big_visual_tile(Uid),
     ok.
 
-%%%-------------------------------------------------------------------
+%%-------------------------------------------------------------------
 is_player_can_walk(_Uid, _Pos, _End) -> true.
 
 is_player_can_stop(Uid, Pos) ->
@@ -137,13 +137,13 @@ is_distance_safe(False, _Uid, _Pos) -> False.
 
 is_pos_valid(_Pos) -> true.
 
-%%%-------------------------------------------------------------------
+%%-------------------------------------------------------------------
 make_path_list(Acc, _Start, [], _Speed) -> lists:reverse(Acc);
 make_path_list(Acc, Start, [Tar | Left], Speed) ->
     R = make_move_r(Start, Tar, Speed),
     make_path_list([R | Acc], Tar, Left, Speed).
 
-%%%-------------------------------------------------------------------
+%%-------------------------------------------------------------------
 make_move_r(Start, End, Speed) ->
     Dist = vector3:dist(Start, End),
     #m_move_pos{
@@ -154,17 +154,17 @@ make_move_r(Start, End, Speed) ->
         dir = vector3:subtract(End, Start)
     }.
 
-%%%-------------------------------------------------------------------
+%%-------------------------------------------------------------------
 update(Unit) -> update_dispatcher(Unit).
 
-%%%-------------------------------------------------------------------
+%%-------------------------------------------------------------------
 update_dispatcher(#m_map_unit{type = ?OBJ_USR, uid = Uid} = Unit) ->
     update_player_move(Unit, lib_move_rw:get_cur_move(Uid));
 update_dispatcher(#m_map_unit{type = ?OBJ_MON, uid = Uid} = Unit) ->
     update_monster_move(Unit, lib_move_rw:get_cur_move(Uid));
 update_dispatcher(_Obj) -> skip.
 
-%%%-------------------------------------------------------------------
+%%-------------------------------------------------------------------
 update_player_move(Unit, ?EMS_WALK) ->
     #m_map_unit{uid = Uid} = Unit,
 
@@ -176,7 +176,7 @@ update_player_move(Unit, ?EMS_WALK) ->
     ok;
 update_player_move(_Obj, _Move) -> skip.
 
-%%%-------------------------------------------------------------------
+%%-------------------------------------------------------------------
 update_monster_move(Unit, ?EMS_WALK) ->
     #m_map_unit{uid = Uid} = Unit,
 
@@ -188,7 +188,7 @@ update_monster_move(Unit, ?EMS_WALK) ->
     ok;
 update_monster_move(_Obj, _Move) -> skip.
 
-%%%-------------------------------------------------------------------
+%%-------------------------------------------------------------------
 update_role_walk(Uid, CurPos, [], _MoveTime) ->
     ?WARN("mapid ~p player ~w arrived ~w", [self(), Uid, CurPos]),
     lib_move_rw:set_cur_move(Uid, ?EMS_STAND),
@@ -223,7 +223,7 @@ update_role_walk(Uid, _CurPos, PathList, MoveTime) ->
             {?ENR_TOBECONTINUED, NewPathList, TarDir, End, MoreTime}
     end.
 
-%%%-------------------------------------------------------------------
+%%-------------------------------------------------------------------
 -spec linear_pos(vector3(), list(), keep | changed) ->
     {vector3(), list() | ?ENR_TOBECONTINUED, float()}.
 
@@ -250,20 +250,20 @@ calc_move_time(Speed, Dist) ->
     misc:ceil(Dist / Speed * 1000).
 
 
-%%%-------------------------------------------------------------------
+%%-------------------------------------------------------------------
 linear_pos_1(StartPos, EndPos, K0, MoveTime, PathList, Flag) ->
     K1 = if K0 < 0 -> 0; true -> K0 end,
     K2 = if K1 > 1 -> 1; true -> K1 end,
     Dst = vector3:linear_lerp(StartPos, EndPos, K2),
     linear_pos_2(Dst, PathList, MoveTime, Flag).
 
-%%%-------------------------------------------------------------------
+%%-------------------------------------------------------------------
 linear_pos_2(Dst, _PathList, _MoveTime, keep) ->
     {Dst, ?ENR_TOBECONTINUED, 0};
 linear_pos_2(Dst, PathList, MoveTime, changed) ->
     {Dst, PathList, MoveTime}.
 
-%%%-------------------------------------------------------------------
+%%-------------------------------------------------------------------
 on_obj_pos_change(Uid, Tar) ->
     %
     %% ?DEBUG("~w pos change ~w", [Uid, Tar]),
@@ -284,7 +284,7 @@ on_obj_pos_changed(?OBJ_USR, Uid, Tar) ->
     lib_cache:update_player_pub(Uid, {#m_player_pub.pos, Tar}),
     ok.
 
-%%%-------------------------------------------------------------------
+%%-------------------------------------------------------------------
 cal_move_msg(Uid) ->
     do_cal_move_msg(lib_move_rw:get_cur_move(Uid), Uid).
 
@@ -328,7 +328,7 @@ do_cal_move_msg(
 do_cal_move_msg(_S, _Uid) ->
     undefined.
 
-%%%-------------------------------------------------------------------
+%%-------------------------------------------------------------------
 start_monster_walk(Uid, Dst, MoveState, NeedCheck) ->
     case is_can_monster_walk(Uid, Dst, MoveState, NeedCheck) of
         true -> start_monster_walk_action(Uid, Dst, MoveState);
@@ -363,7 +363,7 @@ is_can_monster_walk(Uid, _Dst, _MoveState, _NeedCheck) ->
     true.
 
 
-%%%-------------------------------------------------------------------
+%%-------------------------------------------------------------------
 update_monster_walk(Uid, CurPos, [], _MoveTime) ->
     ?WARN("mapid ~p monster ~w arrived ~w", [self(), Uid, CurPos]),
     lib_move_rw:set_cur_move(Uid, ?EMS_STAND),

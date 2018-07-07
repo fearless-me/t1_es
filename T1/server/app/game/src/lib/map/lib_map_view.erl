@@ -36,7 +36,7 @@
 -define(VIS_H, map_vis_h__).
 -define(CELL_SIZE, map_cell_size__).
 
-%%%-------------------------------------------------------------------
+%%-------------------------------------------------------------------
 sync_player_join_map(Unit) ->
     %1.
     Uid = lib_unit:get_uid(Unit),
@@ -49,7 +49,7 @@ sync_player_join_map(Unit) ->
     add_obj_to_vis_tile(Unit, Index),
     ok.
 
-%%%-------------------------------------------------------------------
+%%-------------------------------------------------------------------
 sync_player_exit_map(Unit) ->
     %1.
     Uid = lib_unit:get_uid(Unit),
@@ -63,11 +63,11 @@ sync_player_exit_map(Unit) ->
     sync_del_obj(Unit, Tiles),
     ok.
 
-%%%-------------------------------------------------------------------
+%%-------------------------------------------------------------------
 sync_del_pet(_Uid) -> ok.
 
 
-%%%-------------------------------------------------------------------
+%%-------------------------------------------------------------------
 init_vis_tile(#recGameMapCfg{
     colCellNum = Col,
     rowCellNum = Row,
@@ -116,7 +116,7 @@ send_msg_to_visual(Uid, MsgId, Msg) ->
     send_msg_to_big_visual(VisTileList, MsgId, Msg),
     ok.
 
-%%%-------------------------------------------------------------------
+%%-------------------------------------------------------------------
 %% 开始移动广播
 sync_movement_to_big_visual_tile(Uid) ->
     Msg = lib_move:cal_move_msg(Uid),
@@ -124,7 +124,7 @@ sync_movement_to_big_visual_tile(Uid) ->
     sync_movement_to_big_visual_tile(VisTileIndex, Msg),
     ok.
 
-%%%-------------------------------------------------------------------
+%%-------------------------------------------------------------------
 sync_movement_to_big_visual_tile(_VisTileIndex, undefined) ->
     skip;
 sync_movement_to_big_visual_tile(VisTileIndex, Msg) ->
@@ -133,7 +133,7 @@ sync_movement_to_big_visual_tile(VisTileIndex, Msg) ->
     ok.
 
 
-%%%-------------------------------------------------------------------
+%%-------------------------------------------------------------------
 send_net_msg_to_big_visual(_VisTileList, undefined) ->
     skip;
 send_net_msg_to_big_visual(VisTileList, Msg) ->
@@ -145,7 +145,7 @@ send_net_msg_to_big_visual(VisTileList, Msg) ->
     ok.
 
 
-%%%-------------------------------------------------------------------
+%%-------------------------------------------------------------------
 send_msg_to_big_visual(VisTileList, MsgId) ->
     PlayerList = [Players || #m_vis_tile{player = Players} <- VisTileList],
     lists:foreach(
@@ -163,7 +163,7 @@ send_msg_to_big_visual(VisTileList, MsgId, Msg) ->
     ok.
 
 
-%%%-------------------------------------------------------------------
+%%-------------------------------------------------------------------
 %% 坐標位移廣播
 sync_change_pos_visual_tile(_Obj, OldVisTileIndex, OldVisTileIndex) ->
     ok;
@@ -180,21 +180,21 @@ sync_change_pos_visual_tile(Unit, OldVisTileIndex, NewVisTileIndex) ->
     add_obj_to_vis_tile(Unit, NewVisTileIndex),
     ok.
 
-%%%-------------------------------------------------------------------
+%%-------------------------------------------------------------------
 %% 删除广播
 sync_del_obj(Unit, VisTiles) ->
     sync_me_to_big_vis_tile(Unit, VisTiles, del_me),
     sync_big_vis_tile_to_me(Unit, VisTiles, del_all),
     ok.
 
-%%%-------------------------------------------------------------------
+%%-------------------------------------------------------------------
 %% 添加广播                           
 sync_add_obj(Unit, VisTiles) ->
     sync_me_to_big_vis_tile(Unit, VisTiles, add_me),
     sync_big_vis_tile_to_me(Unit, VisTiles, add_all),
     ok.
 
-%%%-------------------------------------------------------------------
+%%-------------------------------------------------------------------
 %% 加入格子
 add_obj_to_vis_tile(Unit, VisTileIndex) ->
     ?assert(is_number(VisTileIndex) andalso VisTileIndex > 0),
@@ -234,7 +234,7 @@ add_to_vis_tile_1(?OBJ_NPC, Uid, VisTileIndex, VisTile) ->
 add_to_vis_tile_1(_Type, _Uid, _VisTileIndex, _VisTile) ->
     ok.
 
-%%%-------------------------------------------------------------------
+%%-------------------------------------------------------------------
 %% 移除格子
 del_obj_from_vis_tile(Unit, VisTileIndex) ->
     ?assert(is_number(VisTileIndex) andalso VisTileIndex > 0),
@@ -355,7 +355,7 @@ sync_me_to_big_vis_tile(Unit, VisTileList, add_me) ->
 %%
 %%-------------------------------------------------------------------
 
-%%%-------------------------------------------------------------------
+%%-------------------------------------------------------------------
 pos_to_vis_index(Pos) ->
     pos_to_vis_index(Pos, get(?VIS_W), ?VIS_DIST).
 
@@ -367,7 +367,7 @@ pos_to_vis_index(Pos, VisTileWidth, ViewDist) ->
 
     (IndexZ * VisTileWidth + IndexX).
 
-%%%-------------------------------------------------------------------
+%%-------------------------------------------------------------------
 vis_tile_intersection(OldVisTileIndex, NewVisTileIndex) ->
     L1 = get_vis_tile_around_index(OldVisTileIndex),
     L2 = get_vis_tile_around_index(NewVisTileIndex),
@@ -375,7 +375,7 @@ vis_tile_intersection(OldVisTileIndex, NewVisTileIndex) ->
     L4 = lists:subtract(L2, L1),
     {[get_vis_tile(TileIndex) || TileIndex <- L3], [get_vis_tile(TileIndex) || TileIndex <- L4]}.
 
-%%%-------------------------------------------------------------------
+%%-------------------------------------------------------------------
 get_vis_tile_around(VisTileIndex) ->
     L1 = get_vis_tile_around_index(VisTileIndex),
     [get_vis_tile(TileIndex) || TileIndex <- L1].
@@ -403,15 +403,15 @@ get_vis_tile_around_index(VisTileIndex) ->
     [TileIndex || TileIndex <- [C, L, R, T, B, LT, RT, LB, RB]
         , TileIndex > 0, TileIndex =< (W * H)].
 
-%%%-------------------------------------------------------------------
+%%-------------------------------------------------------------------
 get_vis_tile(VisTileIndex) ->
     get({?VIS_KEY, VisTileIndex}).
 
-%%%-------------------------------------------------------------------
+%%-------------------------------------------------------------------
 set_vis_tile(VisTileIndex, VisTile) ->
     put({?VIS_KEY, VisTileIndex}, VisTile).
 
-%%%-------------------------------------------------------------------
+%%-------------------------------------------------------------------
 %%is_visible(_Self, _Target) -> true.
 
 

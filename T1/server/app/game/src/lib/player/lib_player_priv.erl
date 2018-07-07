@@ -154,7 +154,7 @@ loaded_player(Player) ->
     hook_player:on_login(Player),
     ok.
 
-%%%-------------------------------------------------------------------
+%%-------------------------------------------------------------------
 offline(Reason) ->
     ?TRY_CATCH(offline_1(lib_player_rw:get_status(), Reason), Err0, St0),
     ?TRY_CATCH(flush_cache(Reason), Err1, St1),
@@ -180,7 +180,7 @@ offline_1(Status, Reason) ->
 
     ok.
 
-%%%-------------------------------------------------------------------
+%%-------------------------------------------------------------------
 flush_cache(transfer_to_cross) -> ok;
 flush_cache(_) -> skip.
 

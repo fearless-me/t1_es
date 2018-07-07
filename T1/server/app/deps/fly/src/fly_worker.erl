@@ -104,15 +104,15 @@ mod_init(_Args) ->
     ?WARN("fly worker stared!"),
     {ok, #state{}}.
 
-%%%-------------------------------------------------------------------
+%%-------------------------------------------------------------------
 do_handle_call(Request, From, State) ->
     ?ERROR("undeal call ~w from ~w", [Request, From]),
     {reply, ok, State}.
-%%%-------------------------------------------------------------------
+%%-------------------------------------------------------------------
 do_handle_info(Info, State) ->
     ?ERROR("undeal info ~w", [Info]),
     {noreply, State}.
-%%%-------------------------------------------------------------------
+%%-------------------------------------------------------------------
 do_handle_cast(pause, State) ->
     ?WARN("Pausing reload. Call fly:continue() to restart~n"),
     {noreply, State#state{paused = true}};
@@ -132,7 +132,7 @@ do_handle_cast(Request, State) ->
     ?ERROR("undeal cast ~w", [Request]),
     {noreply, State}.
 
-%%%-------------------------------------------------------------------
+%%-------------------------------------------------------------------
 discover_src_dirs(State) ->
     SrcDirs = fly:info(src_dirs),
     IncDirs = fly:info(inc_dirs),

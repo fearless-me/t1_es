@@ -26,11 +26,8 @@ change_attr(AddList, MultiList, AddList_Del, MultiList_Del) ->
     map_pub:player_change_attr_(
         Pid,
         #r_player_change_prop_req{
-            uid = Uid,
-            add = AddList,
-            multi = MultiList,
-            add_del = AddList_Del,
-            multi_del = MultiList_Del
+            uid = Uid, add = AddList,
+            multi = MultiList, add_del = AddList_Del, multi_del = MultiList_Del
         }
     ),
     ok.

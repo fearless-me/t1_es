@@ -179,7 +179,7 @@ log_error_msg(Reason, Cmd, Msg) ->
 socket(Socket) -> put(?SocketKey, Socket).
 socket()-> get(?SocketKey).
 
-%%%-------------------------------------------------------------------
+%%-------------------------------------------------------------------
 set_latest_net_time() -> put('RECV_NETMSG_LATEST', time:milli_seconds()).
 check_idle_msg() -> erlang:send_after(?NET_IDLE_TIME, self(), check_net).
 check_idle_action() ->

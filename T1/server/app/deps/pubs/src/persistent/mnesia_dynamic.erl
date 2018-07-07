@@ -42,7 +42,8 @@ code_create_setting_module_format(ServerID, ModuleName, Tabs) ->
             end, "", Tabs),
     io_lib:format(?MNESIA_MODULE_HEADER(ModuleName), [CodeSrc]).
 
-%%%-------------------------------------------------------------------
+%%-------------------------------------------------------------------
+%%-------------------------------------------------------------------
 test_create()->
     code_create_setting_module(11, "mnesia_x", [player_data, server_info, package]),
     ok.

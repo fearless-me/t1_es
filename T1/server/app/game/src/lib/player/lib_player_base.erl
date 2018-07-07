@@ -71,13 +71,13 @@ send_base_info() ->
 
 %%-------------------------------------------------------------------
 start_walk(Tar) ->
-    #m_player_map{map_pid = Mpid} = lib_player_rw:get_map(),
+    #m_player_map{map_pid = MPid} = lib_player_rw:get_map(),
     Uid = lib_player_rw:get_uid(),
     case vector3:valid(Tar) of
         true ->
             Req = #r_player_start_move_req{uid = Uid, tar = Tar},
-            lib_player_pub:start_move_(Mpid, Req),
-            ?WARN("player start walk at ~p mapid ~p move to ~w", [Uid, Mpid, Tar]),
+            lib_player_pub:start_move_(MPid, Req),
+            ?WARN("player start walk at ~p mapid ~p move to ~w", [Uid, MPid, Tar]),
             ok;
         _ ->
             ?DEBUG("### error walk pos ~w",[Tar])
@@ -86,13 +86,13 @@ start_walk(Tar) ->
 
 %%-------------------------------------------------------------------
 stop_move(Pos) ->
-    #m_player_map{map_pid = Mpid} = lib_player_rw:get_map(),
+    #m_player_map{map_pid = MPid} = lib_player_rw:get_map(),
     Uid = lib_player_rw:get_uid(),
     case vector3:valid(Pos) of
         true ->
             Req = #r_player_stop_move_req{uid = Uid, pos = Pos},
-            lib_player_pub:stop_move_(Mpid, Req),
-            ?WARN("player ~p mapid ~p stop on ~w", [Uid, Mpid, Pos]),
+            lib_player_pub:stop_move_(MPid, Req),
+            ?WARN("player ~p mapid ~p stop on ~w", [Uid, MPid, Pos]),
             ok;
         _ ->
             ?DEBUG("### error stop pos ~w",[Pos])

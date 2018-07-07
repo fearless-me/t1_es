@@ -46,7 +46,7 @@
 -export([force_teleport_call/2]).
 %%--------------------------------
 
-%%%-------------------------------------------------------------------
+%%-------------------------------------------------------------------
 init(S) ->
     Conf = map_creator_pub:map_conf(S#m_map_state.map_id),
     S1 = init_1(S),
@@ -58,7 +58,7 @@ init(S) ->
     catch hook_map:on_map_create(),
     S1.
 
-%%%-------------------------------------------------------------------
+%%-------------------------------------------------------------------
 init_1(State) ->
     State#m_map_state{
         npc = ets:new(npc, [protected, {keypos, #m_map_unit.uid}, ?ETS_RC]),
@@ -67,7 +67,7 @@ init_1(State) ->
         monster = ets:new(monster, [protected, {keypos, #m_map_unit.uid}, ?ETS_RC])
     }.
 
-%%%-------------------------------------------------------------------
+%%-------------------------------------------------------------------
 %% WARNING!!! WARNING!!! WARNING!!!
 %% call
 player_exit_call(S, #r_exit_map_req{
@@ -91,7 +91,7 @@ do_player_exit_call(Uid, _Obj) ->
         [Uid, self(), misc:register_name()]),
     error.
 
-%%%-------------------------------------------------------------------
+%%-------------------------------------------------------------------
 %% WARNING!!! WARNING!!! WARNING!!!
 %% call
 player_join_call(
@@ -113,7 +113,7 @@ player_join_call(S, Any) ->
     {error, S}.
 
 
-%%%-------------------------------------------------------------------
+%%-------------------------------------------------------------------
 %% WARNING!!! WARNING!!! WARNING!!!
 %% call
 force_teleport_call(S, #r_teleport_req{
@@ -127,7 +127,7 @@ force_teleport_call(S, #r_teleport_req{
     {ok, S}.
 
 
-%%%-------------------------------------------------------------------
+%%-------------------------------------------------------------------
 init_monster(#recGameMapCfg{
     mapMonster = MonsterList
 }) ->
@@ -151,7 +151,7 @@ init_all_monster_2(Unit) ->
         [lib_map_rw:get_map_id(), lib_map_rw:get_line_id(), lib_unit:get_did(Unit), Uid, VisIndex]),
     ok.
 
-%%%-------------------------------------------------------------------
+%%-------------------------------------------------------------------
 init_npc(#recGameMapCfg{
     mapNpc = NpcList
 }) ->
@@ -161,7 +161,7 @@ init_npc(#recGameMapCfg{
 init_all_npc(_NL) ->
     ok.
 
-%%%-------------------------------------------------------------------
+%%-------------------------------------------------------------------
 tick_msg() -> erlang:send_after(?MAP_TICK, self(), tick_now).
 
 tick(S) ->
@@ -195,7 +195,7 @@ tick_obj() ->
     ?TRY_CATCH(tick_update_after(),  Err5, Stk5),
     ok.
 
-%%%-------------------------------------------------------------------
+%%-------------------------------------------------------------------
 tick_player() ->
     ets:foldl(
         fun(Unit, _) -> tick_player_1(Unit) end,
@@ -206,7 +206,7 @@ tick_player_1(Unit) ->
     ?TRY_CATCH(lib_move:update(Unit)),
     ok.
 
-%%%-------------------------------------------------------------------
+%%-------------------------------------------------------------------
 tick_monster() ->
     ets:foldl(
         fun(Unit, _) -> tick_monster_1(Unit) end,
@@ -218,7 +218,7 @@ tick_monster_1(Unit) ->
     ?TRY_CATCH(lib_ai:update(Unit), Err2, Stk2),
     ok.
 
-%%%-------------------------------------------------------------------
+%%-------------------------------------------------------------------
 tick_pet() ->
     ets:foldl(
         fun(Unit, _) -> tick_pet_1(Unit) end,
@@ -229,12 +229,12 @@ tick_pet_1(Unit) ->
     ?TRY_CATCH(lib_move:update(Unit)),
     ok.
 
-%%%-------------------------------------------------------------------
+%%-------------------------------------------------------------------
 tick_update_before() -> ok.
 
 tick_update_after() -> ok.
 
-%%%-------------------------------------------------------------------
+%%-------------------------------------------------------------------
 real_stop_now(0) ->
     ?INFO("~p ~p stop now", [misc:register_name(), self()]),
     ps:send(self(), stop_immediately);
@@ -242,7 +242,7 @@ real_stop_now(_Players) ->
     tick_msg(),
     ok.
 
-%%%-------------------------------------------------------------------
+%%-------------------------------------------------------------------
 start_stop_now(S) ->
     ?INFO("~p ~p start stop now, kick all player(s)",
         [misc:register_name(), self()]),
