@@ -11,7 +11,6 @@
       <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/net/behaviour_example.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/net/behaviour_example.erl" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/net/tcp_codec.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/net/tcp_codec.erl" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/persistent/mnesia_dynamic.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/persistent/mnesia_dynamic.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/scripts/reload.bat" beforeDir="false" afterPath="$PROJECT_DIR$/app/game/scripts/reload.bat" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/game/scripts/reload.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/game/scripts/reload.erl" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/game/src/gen/map_creator_pub.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/game/src/gen/map_creator_pub.erl" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/game/src/gen/mod_player.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/game/src/gen/mod_player.erl" afterDir="false" />
@@ -65,15 +64,6 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="lib_map_priv.erl" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/game/src/lib/map/lib_map_priv.erl">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-125">
-              <caret line="244" column="1" selection-start-line="244" selection-start-column="1" selection-end-line="244" selection-end-column="1" />
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="lib_map_view.erl" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/game/src/lib/map/lib_map_view.erl">
           <provider selected="true" editor-type-id="text-editor">
@@ -124,7 +114,7 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="reload.erl" pinned="false" current-in-tab="true">
+      <file leaf-file-name="reload.erl" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/game/scripts/reload.erl">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="322">
@@ -133,11 +123,18 @@
           </provider>
         </entry>
       </file>
+      <file leaf-file-name="version.ers" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/app/game/scripts/version.ers">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-1753" />
+          </provider>
+        </entry>
+      </file>
       <file leaf-file-name="reload.bat" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/game/scripts/reload.bat">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="23">
-              <caret line="1" column="5" lean-forward="true" selection-start-line="1" selection-start-column="5" selection-end-line="1" selection-end-column="5" />
+              <caret line="2" column="5" lean-forward="true" selection-start-line="2" selection-start-column="5" selection-end-line="2" selection-end-column="5" />
             </state>
           </provider>
         </entry>
@@ -301,7 +298,7 @@
   <component name="NodePackageJsonFileManager">
     <packageJsonPaths />
   </component>
-  <component name="ProjectFrameBounds">
+  <component name="ProjectFrameBounds" extendedState="6">
     <option name="x" value="487" />
     <option name="y" value="164" />
     <option name="width" value="1936" />
@@ -932,12 +929,12 @@
       <workItem from="1530682461984" duration="28034000" />
       <workItem from="1530789243299" duration="7635000" />
       <workItem from="1530855480140" duration="5881000" />
-      <workItem from="1530944447436" duration="3219000" />
+      <workItem from="1530944447436" duration="3795000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="1051884000" />
+    <option name="totallyTimeSpent" value="1052460000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -949,7 +946,7 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="487" y="164" width="1936" height="1056" extended-state="0" />
+    <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
     <editor active="true" />
     <layout>
       <window_info anchor="right" id="Palette" order="3" />
@@ -1023,13 +1020,6 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/app/deps/pubs/src/lib/misc.erl">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1794">
-          <caret line="78" column="3" selection-start-line="78" selection-start-column="3" selection-end-line="78" selection-end-column="3" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/game/src/lib/player/lib_player_netmsg.erl">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="598">
@@ -1319,7 +1309,7 @@
     <entry file="file://$PROJECT_DIR$/app/game/scripts/reload.bat">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="23">
-          <caret line="1" column="5" lean-forward="true" selection-start-line="1" selection-start-column="5" selection-end-line="1" selection-end-column="5" />
+          <caret line="2" column="5" lean-forward="true" selection-start-line="2" selection-start-column="5" selection-end-line="2" selection-end-column="5" />
         </state>
       </provider>
     </entry>
@@ -1335,6 +1325,11 @@
         <state relative-caret-position="322">
           <caret line="14" column="43" selection-start-line="14" selection-start-column="33" selection-end-line="14" selection-end-column="43" />
         </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/game/scripts/version.ers">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-1753" />
       </provider>
     </entry>
   </component>

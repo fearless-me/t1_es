@@ -241,7 +241,7 @@ getCompileServer(24) -> gsD;
 getCompileServer(_) -> gsD.
 
 jump_package() ->
-	os:cmd(" cd ../../scripts/ && start ps_gs.ers"),
+	os:cmd(" cd ../../scripts/ && start escript.exe cpk.ers pkg"),
 	ok.
 
 compile(Lang, 1) ->

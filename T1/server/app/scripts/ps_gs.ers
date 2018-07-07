@@ -298,7 +298,7 @@ doWorkZip(Type, Lang, Platform, HotList, SvnVer, SvnA, SvnB) ->
 
 zipAndMd5(SourcePath, DestPath, ZipName) ->
 	TempDir = getTempDir(),
-	io:format("zip [~ts]~n", [ZipName]),
+	io:format("zip [~ts]~n ~ts", [ZipName, TempDir]),
 	CmdStr = io_lib:format("cd ~ts && tar -czf ~ts ./~ts/",
 		[TempDir, ZipName, SourcePath]),
 	os:cmd(CmdStr),
