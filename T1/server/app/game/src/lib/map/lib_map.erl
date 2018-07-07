@@ -20,8 +20,6 @@
 %%-------------------------------------------------------------------
 on_info_msg({player_change_attr, _Req}) ->
     ok;
-on_info_msg({net_msg_broadcast, _Req}) ->
-    ok;
 on_info_msg(Info) ->
     ?DEBUG("info:~p",[Info]),
     ok.

@@ -393,7 +393,18 @@ write_console(Level, Stdio, String) ->
     end,
     ok.
 -else.
-write_console(_Level, _Stdio, _String) -> skip.
+write_console(Level, Stdio, String) ->
+    case os:type() of
+        {win32, _} ->
+            case Stdio of
+                true -> erlang:spawn(fun() -> color_inout(Level, String) end);
+                _ -> skip
+            end,
+            ok;
+        _ ->
+            skip
+    end,
+    skip.
 -endif.
 
 color_inout(fatal, Msg) -> io:format("~ts", [color:redb(Msg)]);

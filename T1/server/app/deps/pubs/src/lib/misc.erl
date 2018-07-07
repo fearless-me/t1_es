@@ -11,7 +11,7 @@
 
 %% API
 -export([
-    start_app/1, start_all_app/1,
+    start_app/1, start_all_app/1, os_type/0,
     make_atom/2,atom_to_binary/1,
     b2i/1, i2b/1, ntoa/1, ntoab/1,
     to_atom/1, create_atom/2, list_to_string_suffix/2,
@@ -26,6 +26,12 @@
     string_to_term/1, term_to_string/1
 
 ]).
+
+os_type() ->
+    case os:type() of
+        {OsFamily, _OsName} -> OsFamily;
+        _ -> unknown
+    end.
 
 %%-------------------------------------------------------------------
 get_dict_def(Key, Def) ->
