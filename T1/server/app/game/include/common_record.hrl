@@ -38,6 +38,7 @@
 %%
 -record(r_player_start_move_req,{uid = 0, tar}).
 %%
+-record(r_player_use_skill_req,{uid=0, skill_id=0, tar=0, pos, serial=0}).
 
 
 

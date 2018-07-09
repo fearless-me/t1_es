@@ -11,6 +11,7 @@
 -author("mawenhong").
 
 -include("logger.hrl").
+-include("common_record.hrl").
 
 %% API
 -export([on_call_msg/2]).
@@ -19,6 +20,10 @@
 
 %%-------------------------------------------------------------------
 on_info_msg({player_change_attr, _Req}) ->
+    ok;
+on_info_msg({player_use_skill, Req}) ->
+    #r_player_use_skill_req{uid=Aer, skill_id=SkillId, tar=Der, serial = Serial} = Req,
+    lib_battle:player_use_skill(Aer, Der, SkillId, Serial),
     ok;
 on_info_msg(Info) ->
     ?DEBUG("info:~p",[Info]),

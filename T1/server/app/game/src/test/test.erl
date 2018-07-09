@@ -12,7 +12,18 @@
 -include("pub_common.hrl").
 
 %% API
--export([tv3/0]).
+-export([tv3/0, a/0]).
+
+a()->
+    V1 = vector3:new(10, 0, 0),
+    V2 = vector3:new(10, 0, 10),
+    V3 = vector3:new(-10, 0, 10),
+    V4 = vector3:new(-10, 0, -10),
+    Angle1 = vector3:angle(V1, V2),
+    Angle2 = vector3:angle(V1, V3),
+    Angle3 = vector3:angle(V1, V4),
+    io:format("~p, ~p, ~p~n", [Angle1, Angle2, Angle3]),
+    ok.
 
 tv3()->
 

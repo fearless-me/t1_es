@@ -25,9 +25,11 @@
     sync_player_join_map/1,
     sync_player_exit_map/1,
     add_obj_to_vis_tile/2,
-    pos_to_vis_index/1,
+
     send_net_msg_to_visual/2, send_msg_to_visual/3, send_msg_to_visual/2
 ]).
+
+-export([pos_to_vis_index/1, get_vis_tile_around/1]).
 
 
 

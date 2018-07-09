@@ -2,7 +2,81 @@
 -ifndef(netmsg).
 -define(netmsg,1).
 
--define(ProtoVersion,642).
+-define(ProtoVersion,646).
+
+%% 
+-define(GS2U_SkillInterrupt,59398).
+-record(pk_GS2U_SkillInterrupt,{
+	%% UInt64 角色ID
+	uid = 0,
+	%% UInt32 技能id
+	skill_id = 0
+}).
+
+%% 
+-define(GS2U_SpecialMove,37134).
+-record(pk_GS2U_SpecialMove,{
+	%% UInt32 移动类型
+	type = 0,
+	%% UInt64 角色ID
+	uid = 0,
+	%% Single 目标点
+	x = 0.0,
+	%% Single
+	y = 0.0
+}).
+
+%% 
+-define(GS2U_UseSkill,61150).
+-record(pk_GS2U_UseSkill,{
+	%% UInt64 角色ID
+	uid = 0,
+	%% UInt64 ID
+	tar_uid = 0,
+	%% UInt32 技能id
+	skill_id = 0,
+	%% UInt32 序列号
+	serial = 0,
+	%% UInt32吟唱时间(毫秒)
+	spell_time = 0,
+	%% UInt32 错误码
+	error_code = 0
+}).
+
+%% 
+%% // 技能打断
+-define(U2GS_SkillInterrupt,38536).
+-record(pk_U2GS_SkillInterrupt,{
+	%% UInt32 技能id
+	skill_id = 0
+}).
+
+%% 
+%% //////////////////////////////////////////////////////////////////////////
+%% //<-发出去     ;      ->收消息
+%% //不用使用int uint long 
+%% //
+%% /////////////////////////////////////////////////////////////////////////
+%% //不用使用int uint long 
+%% //不用使用int uint long 
+%% //不用使用int uint long 
+%% //不用使用int uint long 
+%% //不用使用int uint long 
+%% //不用使用int uint long 
+%% // 技能攻击
+-define(U2GS_UseSkill,2416).
+-record(pk_U2GS_UseSkill,{
+	%% Single 施法者坐标
+	x = 0.0,
+	%% Single 
+	y = 0.0,
+	%% UInt64 ID
+	tar_uid = 0,
+	%% UInt32 技能id
+	skill_id = 0,
+	%% UInt32 序列号
+	serial = 0
+}).
 
 %% 
 -define(GS2U_CreatePlayerResult,45054).

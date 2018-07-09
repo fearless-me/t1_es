@@ -205,12 +205,11 @@ void CGen2Erlang::makeRecord(FILE* fp, const std::vector<SourceGenInfo>& vctSGI,
 	char CmdBuffer[1024];
 	cmdListStr = "cmd_list()->\n\t[\n";
 
-
+	auto isFirst = true;
 	auto lastFileIter = (--vctSGI.end());
 	for (auto it = vctSGI.begin(); it != vctSGI.end(); it++)
 	{
 		const SourceGenInfo& SGI = *it;
-		auto isFirst = true;
 		for (auto iter = SGI.meta.cachedMsgDefine.begin(); iter != SGI.meta.cachedMsgDefine.end(); ++iter)
 		{
 			const MsgDefine& Info = iter->second;

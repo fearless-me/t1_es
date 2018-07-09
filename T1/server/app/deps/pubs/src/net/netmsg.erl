@@ -36,6 +36,72 @@
 
 -export([decode/2, encode/1, name/1, cmd_list/0]).
 
+%GENERATED from file:combat.h => GS2U_SkillInterrupt
+decode(?GS2U_SkillInterrupt,Bin0) ->
+	{ V_uid, Bin1 } = read_uint64( Bin0 ),
+	{ V_skill_id, Bin2 } = read_uint32( Bin1 ),
+	{ #pk_GS2U_SkillInterrupt {
+		uid = V_uid,
+		skill_id = V_skill_id
+		},
+	Bin2 };
+
+%GENERATED from file:combat.h => GS2U_SpecialMove
+decode(?GS2U_SpecialMove,Bin0) ->
+	{ V_type, Bin1 } = read_uint32( Bin0 ),
+	{ V_uid, Bin2 } = read_uint64( Bin1 ),
+	{ V_x, Bin3 } = read_float( Bin2 ),
+	{ V_y, Bin4 } = read_float( Bin3 ),
+	{ #pk_GS2U_SpecialMove {
+		type = V_type,
+		uid = V_uid,
+		x = V_x,
+		y = V_y
+		},
+	Bin4 };
+
+%GENERATED from file:combat.h => GS2U_UseSkill
+decode(?GS2U_UseSkill,Bin0) ->
+	{ V_uid, Bin1 } = read_uint64( Bin0 ),
+	{ V_tar_uid, Bin2 } = read_uint64( Bin1 ),
+	{ V_skill_id, Bin3 } = read_uint32( Bin2 ),
+	{ V_serial, Bin4 } = read_uint32( Bin3 ),
+	{ V_spell_time, Bin5 } = read_uint32( Bin4 ),
+	{ V_error_code, Bin6 } = read_uint32( Bin5 ),
+	{ #pk_GS2U_UseSkill {
+		uid = V_uid,
+		tar_uid = V_tar_uid,
+		skill_id = V_skill_id,
+		serial = V_serial,
+		spell_time = V_spell_time,
+		error_code = V_error_code
+		},
+	Bin6 };
+
+%GENERATED from file:combat.h => U2GS_SkillInterrupt
+decode(?U2GS_SkillInterrupt,Bin0) ->
+	{ V_skill_id, Bin1 } = read_uint32( Bin0 ),
+	{ #pk_U2GS_SkillInterrupt {
+		skill_id = V_skill_id
+		},
+	Bin1 };
+
+%GENERATED from file:combat.h => U2GS_UseSkill
+decode(?U2GS_UseSkill,Bin0) ->
+	{ V_x, Bin1 } = read_float( Bin0 ),
+	{ V_y, Bin2 } = read_float( Bin1 ),
+	{ V_tar_uid, Bin3 } = read_uint64( Bin2 ),
+	{ V_skill_id, Bin4 } = read_uint32( Bin3 ),
+	{ V_serial, Bin5 } = read_uint32( Bin4 ),
+	{ #pk_U2GS_UseSkill {
+		x = V_x,
+		y = V_y,
+		tar_uid = V_tar_uid,
+		skill_id = V_skill_id,
+		serial = V_serial
+		},
+	Bin5 };
+
 %GENERATED from file:login.h => GS2U_CreatePlayerResult
 decode(?GS2U_CreatePlayerResult,Bin0) ->
 	{ V_errorCode, Bin1 } = read_int32( Bin0 ),
@@ -492,6 +558,72 @@ decode_UserPlayerData(Bin0) ->
 		},
 	Bin11 }.
 
+%GENERATED from file:combat.h => GS2U_SkillInterrupt
+encode(#pk_GS2U_SkillInterrupt{} = P) ->
+	Bin_uid = write_uint64( P#pk_GS2U_SkillInterrupt.uid ),
+	Bin_skill_id = write_uint32( P#pk_GS2U_SkillInterrupt.skill_id ),
+	[
+		<<?GS2U_SkillInterrupt:?U16>>,
+		Bin_uid,
+		Bin_skill_id
+	];
+
+%GENERATED from file:combat.h => GS2U_SpecialMove
+encode(#pk_GS2U_SpecialMove{} = P) ->
+	Bin_type = write_uint32( P#pk_GS2U_SpecialMove.type ),
+	Bin_uid = write_uint64( P#pk_GS2U_SpecialMove.uid ),
+	Bin_x = write_float( P#pk_GS2U_SpecialMove.x ),
+	Bin_y = write_float( P#pk_GS2U_SpecialMove.y ),
+	[
+		<<?GS2U_SpecialMove:?U16>>,
+		Bin_type,
+		Bin_uid,
+		Bin_x,
+		Bin_y
+	];
+
+%GENERATED from file:combat.h => GS2U_UseSkill
+encode(#pk_GS2U_UseSkill{} = P) ->
+	Bin_uid = write_uint64( P#pk_GS2U_UseSkill.uid ),
+	Bin_tar_uid = write_uint64( P#pk_GS2U_UseSkill.tar_uid ),
+	Bin_skill_id = write_uint32( P#pk_GS2U_UseSkill.skill_id ),
+	Bin_serial = write_uint32( P#pk_GS2U_UseSkill.serial ),
+	Bin_spell_time = write_uint32( P#pk_GS2U_UseSkill.spell_time ),
+	Bin_error_code = write_uint32( P#pk_GS2U_UseSkill.error_code ),
+	[
+		<<?GS2U_UseSkill:?U16>>,
+		Bin_uid,
+		Bin_tar_uid,
+		Bin_skill_id,
+		Bin_serial,
+		Bin_spell_time,
+		Bin_error_code
+	];
+
+%GENERATED from file:combat.h => U2GS_SkillInterrupt
+encode(#pk_U2GS_SkillInterrupt{} = P) ->
+	Bin_skill_id = write_uint32( P#pk_U2GS_SkillInterrupt.skill_id ),
+	[
+		<<?U2GS_SkillInterrupt:?U16>>,
+		Bin_skill_id
+	];
+
+%GENERATED from file:combat.h => U2GS_UseSkill
+encode(#pk_U2GS_UseSkill{} = P) ->
+	Bin_x = write_float( P#pk_U2GS_UseSkill.x ),
+	Bin_y = write_float( P#pk_U2GS_UseSkill.y ),
+	Bin_tar_uid = write_uint64( P#pk_U2GS_UseSkill.tar_uid ),
+	Bin_skill_id = write_uint32( P#pk_U2GS_UseSkill.skill_id ),
+	Bin_serial = write_uint32( P#pk_U2GS_UseSkill.serial ),
+	[
+		<<?U2GS_UseSkill:?U16>>,
+		Bin_x,
+		Bin_y,
+		Bin_tar_uid,
+		Bin_skill_id,
+		Bin_serial
+	];
+
 %GENERATED from file:login.h => GS2U_CreatePlayerResult
 encode(#pk_GS2U_CreatePlayerResult{} = P) ->
 	Bin_errorCode = write_int32( P#pk_GS2U_CreatePlayerResult.errorCode ),
@@ -942,6 +1074,11 @@ encode_UserPlayerData( #pk_UserPlayerData{} = P ) ->
 ].
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+name(?GS2U_SkillInterrupt) -> "GS2U_SkillInterrupt";
+name(?GS2U_SpecialMove) -> "GS2U_SpecialMove";
+name(?GS2U_UseSkill) -> "GS2U_UseSkill";
+name(?U2GS_SkillInterrupt) -> "U2GS_SkillInterrupt";
+name(?U2GS_UseSkill) -> "U2GS_UseSkill";
 name(?GS2U_CreatePlayerResult) -> "GS2U_CreatePlayerResult";
 name(?GS2U_DeletePlayerResult) -> "GS2U_DeletePlayerResult";
 name(?GS2U_GetPlayerInitDataEnd) -> "GS2U_GetPlayerInitDataEnd";
@@ -976,7 +1113,12 @@ name(MsgID) -> "ErrorNetMsg_" ++ erlang:integer_to_list(MsgID).
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 cmd_list()->
 	[
-		?GS2U_CreatePlayerResult
+		?GS2U_SkillInterrupt
+		,?GS2U_SpecialMove
+		,?GS2U_UseSkill
+		,?U2GS_SkillInterrupt
+		,?U2GS_UseSkill
+		,?GS2U_CreatePlayerResult
 		,?GS2U_DeletePlayerResult
 		,?GS2U_GetPlayerInitDataEnd
 		,?GS2U_GotoNewMap
