@@ -209,7 +209,7 @@ dist_sq(V1, V2) ->
     X = X1 - X2, Y = Y1 - Y2, Z = Z1 - Z2,
     X * X + Y * Y + Z * Z.
 
-%%
+%% 线性差值
 linear_lerp(Src, Dst, Factor) ->
     #vector3{x = X1, y = Y1, z = Z1} = Src,
     #vector3{x = X2, y = Y2, z = Z2} = Dst,
