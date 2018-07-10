@@ -18,7 +18,7 @@
     register_process/3, register_name/0, register_name/1,
     is_alive/1, is_alive_g/1, is_alive_lg/1,
     ip/0, peername/1, ip_string/1,
-    crc32/1, ceil/1,mod_1/2, floor/1, clamp/3, rand/2,
+    crc32/1, mod_1/2, clamp/3, rand/2,
     get_value/3, callstack/0,
     interval_operation/5, parse_information_unit/1,
     get_dict_def/2, md5/1,  int_to_hex/1,
@@ -181,36 +181,6 @@ int_to_hex_1(N, Acc) ->
 %%
 rand(Min, Min)-> Min;
 rand(Min, Max)-> Min + rand:uniform(Max - Min).
-
--spec ceil(X) -> integer() when X::number().
-ceil(X) ->
-    T = trunc(X),
-    if
-        X - T == 0 ->
-            T;
-        true ->
-            if
-                X > 0 ->
-                    T + 1;
-                true ->
-                    T
-            end
-    end.
-
--spec floor(X) -> integer() when X::number().
-floor(X) ->
-    T = trunc(X),
-    if
-        X - T == 0 ->
-            T;
-        true ->
-            if
-                X > 0 ->
-                    T;
-                true ->
-                    T-1
-            end
-    end.
 
 -spec clamp(X,Min,Max) -> Min | X | Max when X::number(),Min::number(),Max::number().
 clamp(X,Min,Max) when Min =< Max andalso X < Min ->

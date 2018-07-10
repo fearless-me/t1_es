@@ -6,7 +6,7 @@
 %%% @end
 %%% Created : 09. 七月 2018 15:50
 %%%-------------------------------------------------------------------
--module(lib_map_scanner).
+-module(lib_skill_selector).
 -author("mawenhong").
 -include("logger.hrl").
 -include("vector3.hrl").

@@ -247,7 +247,7 @@ calc_move_dist(Speed, MoveTime) ->
     MoveTime * Speed / 1000.
 
 calc_move_time(Speed, Dist) ->
-    misc:ceil(Dist / Speed * 1000).
+    erlang:ceil(Dist / Speed * 1000).
 
 
 %%-------------------------------------------------------------------

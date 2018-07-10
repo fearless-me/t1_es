@@ -208,8 +208,8 @@ loadMapByVersion(1,MapID,Bin,?GameMapBinFile)->
 				worldPos = {X,Y,Z},
 				colCellNum = TotalColCellNum,
 				rowCellNum = TotalRowCellNum,
-				colGridNum = misc:ceil(TotalColCellNum / mapView:maxGridCellColNum()),
-				rowGridNum = misc:ceil(TotalColCellNum / mapView:maxGridCellRowNum()),
+				colGridNum = erlang:ceil(TotalColCellNum / mapView:maxGridCellColNum()),
+				rowGridNum = erlang:ceil(TotalColCellNum / mapView:maxGridCellRowNum()),
 				block = BlockBin,
 				height = HeightBin
 	}.

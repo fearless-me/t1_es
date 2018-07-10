@@ -50,7 +50,7 @@ angle(V1, V2) ->
         Cross =< 0 ->
             Angle;
         true ->
-            180 + Angle
+            360 - Angle
     end.
 
 
