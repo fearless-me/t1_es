@@ -100,8 +100,8 @@
       <file leaf-file-name="vector3.erl" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app/deps/pubs/src/lib/vector3.erl">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="317">
-              <caret line="211" column="7" selection-start-line="211" selection-start-column="7" selection-end-line="211" selection-end-column="7" />
+            <state relative-caret-position="851">
+              <caret line="37" column="31" lean-forward="true" selection-start-line="37" selection-start-column="31" selection-end-line="37" selection-end-column="31" />
             </state>
           </provider>
         </entry>
@@ -843,12 +843,12 @@
       <workItem from="1530855480140" duration="5881000" />
       <workItem from="1530944447436" duration="19396000" />
       <workItem from="1531118643452" duration="24339000" />
-      <workItem from="1531201761971" duration="7618000" />
+      <workItem from="1531201761971" duration="9451000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="1100018000" />
+    <option name="totallyTimeSpent" value="1101851000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -1251,8 +1251,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/app/deps/pubs/src/lib/vector3.erl">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="317">
-          <caret line="211" column="7" selection-start-line="211" selection-start-column="7" selection-end-line="211" selection-end-column="7" />
+        <state relative-caret-position="851">
+          <caret line="37" column="31" lean-forward="true" selection-start-line="37" selection-start-column="31" selection-end-line="37" selection-end-column="31" />
         </state>
       </provider>
     </entry>
