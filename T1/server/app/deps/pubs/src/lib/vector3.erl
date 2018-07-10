@@ -27,7 +27,7 @@
 -export([dist/1, dist_sq/1]).
 -export([dist/2, dist_sq/2]).
 -export([linear_lerp/3]).
--export([rotate_around_origin_2d/2]). %% 围绕远点的2d旋转,传入的是角度
+-export([rotate_around_origin_2d/2]). %% 围绕原点的2d旋转,传入的是角度
 -export([dot_product/2, cross_product/2, dot_product_v/2, cross_product_v/2, dist_to_line/3]).
 %% 点乘 a●b = |a|*|b|*cosθ
 %% 叉乘 |a*b| = |a|*|b|*sinθ

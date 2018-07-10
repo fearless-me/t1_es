@@ -15,7 +15,7 @@
 
 
 %% API
--export([circle/3, ring/4, sector/3, rectangle/4, rectangle_center/4]).
+-export([circle/3, ring/4, sector/4, rectangle/5, rectangle_center/5]).
 
 %% 圆形
 circle(Aer, Pos, Radius) ->
@@ -42,7 +42,7 @@ circle(Aer, Pos, Radius) ->
             Acc1 = lists:foldl(fun(Uid, Acc) -> FC(Uid, Acc) end, Acc0, PL),
             Acc2 = lists:foldl(fun(Uid, Acc) -> FC(Uid, Acc) end, Acc1, ML),
             Acc3 = lists:foldl(fun(Uid, Acc) -> FC(Uid, Acc) end, Acc2, NL),
-                   lists:foldl(fun(Uid, Acc) -> FC(Uid, Acc) end, Acc3, Pets)
+            lists:foldl(fun(Uid, Acc) -> FC(Uid, Acc) end, Acc3, Pets)
         end,
     lists:foldl(FV, [], Tiles).
 
@@ -76,11 +76,10 @@ ring(Aer, Pos, RadiusIn, RadiusOut) ->
     lists:foldl(FV, [], Tiles).
 
 %% 扇形
-sector(Aer, Pos, Angle) ->
-    Face  = lib_move_rw:get_face(Aer),
+sector(Aer, Pos, Face, Angle) ->
     Index = lib_map_view:pos_to_vis_index(Pos),
     Tiles = lib_map_view:get_vis_tile_around(Index),
-    Half  = Angle / 2,
+    Half = Angle / 2,
     %%
     FC =
         fun(Der, Acc) ->
@@ -107,18 +106,21 @@ sector(Aer, Pos, Angle) ->
     lists:foldl(FV, [], Tiles).
 
 %% 矩形
-rectangle(Aer, Pos, Width, Height) -> rectangle_selector(Aer, Pos, Width, Height).
+rectangle(Aer, Pos, Dir, Width, Height) ->
+    rectangle_selector(Aer, Pos, Dir, Width, Height).
+
 %% 矩形 Pos 为中心点
-rectangle_center(Aer, Pos, Width, Height) ->
-    Dir = lib_move_rw:get_face(Aer),
-    Behind = vector3:behind(Pos, Dir, Height/2),
-    rectangle_selector(Aer, Behind, Width, Height).
+rectangle_center(Aer, Pos, Dir, Width, Height) ->
+    Behind = vector3:behind_dir(Pos, Dir, Height / 2),
+    rectangle_selector(Aer, Behind, Dir, Width, Height).
 
 %% 矩形选择实现
-rectangle_selector(Aer, Pos, Width, Height) ->
-    Face  = lib_move_rw:get_face(Aer),
+rectangle_selector(Aer, Pos, Face, Width, Height) ->
     Index = lib_map_view:pos_to_vis_index(Pos),
     Tiles = lib_map_view:get_vis_tile_around(Index),
+    Face_SQ = vector3:dist_sq(Face),
+    Height_SQ = Height * Height,
+    Width_SQ = Width * Width,
     %%
     FC =
         fun(Der, Acc) ->
@@ -127,24 +129,29 @@ rectangle_selector(Aer, Pos, Width, Height) ->
                 true ->
                     DPos = lib_move_rw:get_cur_pos(Der),
                     TarV = vector3:subtract(DPos, Pos),
-                    DotC = vector3:dot_product(TarV, Face),
-                    Dist_Face = vector3:dist(Face),
-                    Dist_Tar = vector3:dist(TarV),
-                    CosA = misc:clamp(DotC / Dist_Face / Dist_Tar, -1, 1),
-                    Dist_H = Dist_Tar * CosA,
-                    Dist_W_SQ = Dist_Tar * Dist_Tar - Dist_H * Dist_H,
-                    case Dist_H =< Height of
-                        true when Dist_W_SQ < 0 ->
-                            [Der | Acc];
-                        true ->
-                            case Dist_W_SQ =<  Width * Width of
-                                true ->
-                                    [Der | Acc];
-                                _ ->
-                                    Acc
-                            end;
+                    Dot_Dist = vector3:dot_product(TarV, Face),
+                    % cos(a) >0 [0,90]
+                    case Dot_Dist < 0 of
+                        true -> Acc;
                         _ ->
-                            Acc
+                            %% 点乘 a●b = |a|*|b|*cosθ
+                            Dot_Dist_SQ = Dot_Dist * Dot_Dist,
+                            %% 目标点距离 投影到face上的距离
+                            ProjectorDist_SQ =
+                                case Face_SQ == 0 of
+                                    true -> 0;
+                                    _ -> Dot_Dist_SQ / Face_SQ
+                                end,
+
+                            case ProjectorDist_SQ > Height_SQ of
+                                true -> Acc;
+                                _ ->
+                                    TarV_SQ = vector3:dist_sq(TarV),
+                                    case TarV_SQ - ProjectorDist_SQ > Width_SQ of
+                                        true -> Acc;
+                                        _ -> [Der | Acc]
+                                    end
+                            end
                     end;
                 _ ->
                     Acc

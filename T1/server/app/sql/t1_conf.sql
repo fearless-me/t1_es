@@ -15,13 +15,17 @@
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
+CREATE DATABASE /*!32312 IF NOT EXISTS*/`t1_conf` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_bin */;
+
+USE `t1_conf`;
+
 --
 -- Table structure for table `account_db_conf`
 --
 
 DROP TABLE IF EXISTS `account_db_conf`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `account_db_conf` (
   `id` int(11) NOT NULL,
   `host` varchar(64) DEFAULT NULL,
@@ -33,7 +37,7 @@ CREATE TABLE `account_db_conf` (
   `max_conn` int(11) DEFAULT '40',
   `worker` int(11) DEFAULT '20',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -42,7 +46,7 @@ CREATE TABLE `account_db_conf` (
 
 DROP TABLE IF EXISTS `player_db_conf`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `player_db_conf` (
   `id` int(11) NOT NULL,
   `host` varchar(64) DEFAULT NULL,
@@ -54,7 +58,7 @@ CREATE TABLE `player_db_conf` (
   `max_conn` int(11) DEFAULT '40',
   `worker` int(11) DEFAULT '20',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -63,7 +67,7 @@ CREATE TABLE `player_db_conf` (
 
 DROP TABLE IF EXISTS `public_db_conf`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `public_db_conf` (
   `id` int(11) NOT NULL,
   `host` varchar(64) DEFAULT NULL,
@@ -75,7 +79,7 @@ CREATE TABLE `public_db_conf` (
   `max_conn` int(11) DEFAULT '40',
   `worker` int(11) DEFAULT '20',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
