@@ -254,7 +254,7 @@ calc_move_time(Speed, Dist) ->
 linear_pos_1(StartPos, EndPos, K0, MoveTime, PathList, Flag) ->
     K1 = if K0 < 0 -> 0; true -> K0 end,
     K2 = if K1 > 1 -> 1; true -> K1 end,
-    Dst = vector3:linear_lerp(StartPos, EndPos, K2),
+    Dst = vector3:linear_interpolation(StartPos, EndPos, K2),
     linear_pos_2(Dst, PathList, MoveTime, Flag).
 
 %%-------------------------------------------------------------------

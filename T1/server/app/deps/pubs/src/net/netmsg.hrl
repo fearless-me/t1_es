@@ -2,7 +2,43 @@
 -ifndef(netmsg).
 -define(netmsg,1).
 
--define(ProtoVersion,646).
+-define(ProtoVersion,647).
+
+%% 
+-define(GS2U_HPChange,51252).
+-record(pk_GS2U_HPChange,{
+	%% UInt64角色ID
+	uid = 0,
+	%% UInt32HP变化原因
+	cause = 0,
+	%% UInt321闪避 2 暴击 3 格挡等等 
+	result = 0,
+	%% Int32HP变化值
+	hp_change = 0,
+	%% UInt64发起者ID
+	src_uid = 0,
+	%% UInt32根据原因来定义
+	misc1 = 0,
+	%% UInt32根据原因来定义
+	misc2 = 0,
+	%% UInt32根据原因来定义，如果是技能，由为技能消息序列号；其它原因填0
+	serial = 0
+}).
+
+%% 
+-define(GS2U_HitTarget,35916).
+-record(pk_GS2U_HitTarget,{
+	%% UInt64角色ID
+	uid = 0,
+	%% UInt64发起者ID
+	src_uid = 0,
+	%% UInt32原因 1 :使用技能
+	cause = 0,
+	%% UInt32如果是技能，则为技能ID
+	misc = 0,
+	%% UInt32如果是技能，则为技能消息序列号
+	serial = 0
+}).
 
 %% 
 -define(GS2U_SkillInterrupt,59398).
@@ -14,6 +50,7 @@
 }).
 
 %% 
+%% // 特殊移动 比如 冲锋、抓取、瞬移、拖拽等等
 -define(GS2U_SpecialMove,37134).
 -record(pk_GS2U_SpecialMove,{
 	%% UInt32 移动类型

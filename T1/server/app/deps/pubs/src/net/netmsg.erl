@@ -36,6 +36,44 @@
 
 -export([decode/2, encode/1, name/1, cmd_list/0]).
 
+%GENERATED from file:combat.h => GS2U_HPChange
+decode(?GS2U_HPChange,Bin0) ->
+	{ V_uid, Bin1 } = read_uint64( Bin0 ),
+	{ V_cause, Bin2 } = read_uint32( Bin1 ),
+	{ V_result, Bin3 } = read_uint32( Bin2 ),
+	{ V_hp_change, Bin4 } = read_int32( Bin3 ),
+	{ V_src_uid, Bin5 } = read_uint64( Bin4 ),
+	{ V_misc1, Bin6 } = read_uint32( Bin5 ),
+	{ V_misc2, Bin7 } = read_uint32( Bin6 ),
+	{ V_serial, Bin8 } = read_uint32( Bin7 ),
+	{ #pk_GS2U_HPChange {
+		uid = V_uid,
+		cause = V_cause,
+		result = V_result,
+		hp_change = V_hp_change,
+		src_uid = V_src_uid,
+		misc1 = V_misc1,
+		misc2 = V_misc2,
+		serial = V_serial
+		},
+	Bin8 };
+
+%GENERATED from file:combat.h => GS2U_HitTarget
+decode(?GS2U_HitTarget,Bin0) ->
+	{ V_uid, Bin1 } = read_uint64( Bin0 ),
+	{ V_src_uid, Bin2 } = read_uint64( Bin1 ),
+	{ V_cause, Bin3 } = read_uint32( Bin2 ),
+	{ V_misc, Bin4 } = read_uint32( Bin3 ),
+	{ V_serial, Bin5 } = read_uint32( Bin4 ),
+	{ #pk_GS2U_HitTarget {
+		uid = V_uid,
+		src_uid = V_src_uid,
+		cause = V_cause,
+		misc = V_misc,
+		serial = V_serial
+		},
+	Bin5 };
+
 %GENERATED from file:combat.h => GS2U_SkillInterrupt
 decode(?GS2U_SkillInterrupt,Bin0) ->
 	{ V_uid, Bin1 } = read_uint64( Bin0 ),
@@ -558,6 +596,44 @@ decode_UserPlayerData(Bin0) ->
 		},
 	Bin11 }.
 
+%GENERATED from file:combat.h => GS2U_HPChange
+encode(#pk_GS2U_HPChange{} = P) ->
+	Bin_uid = write_uint64( P#pk_GS2U_HPChange.uid ),
+	Bin_cause = write_uint32( P#pk_GS2U_HPChange.cause ),
+	Bin_result = write_uint32( P#pk_GS2U_HPChange.result ),
+	Bin_hp_change = write_int32( P#pk_GS2U_HPChange.hp_change ),
+	Bin_src_uid = write_uint64( P#pk_GS2U_HPChange.src_uid ),
+	Bin_misc1 = write_uint32( P#pk_GS2U_HPChange.misc1 ),
+	Bin_misc2 = write_uint32( P#pk_GS2U_HPChange.misc2 ),
+	Bin_serial = write_uint32( P#pk_GS2U_HPChange.serial ),
+	[
+		<<?GS2U_HPChange:?U16>>,
+		Bin_uid,
+		Bin_cause,
+		Bin_result,
+		Bin_hp_change,
+		Bin_src_uid,
+		Bin_misc1,
+		Bin_misc2,
+		Bin_serial
+	];
+
+%GENERATED from file:combat.h => GS2U_HitTarget
+encode(#pk_GS2U_HitTarget{} = P) ->
+	Bin_uid = write_uint64( P#pk_GS2U_HitTarget.uid ),
+	Bin_src_uid = write_uint64( P#pk_GS2U_HitTarget.src_uid ),
+	Bin_cause = write_uint32( P#pk_GS2U_HitTarget.cause ),
+	Bin_misc = write_uint32( P#pk_GS2U_HitTarget.misc ),
+	Bin_serial = write_uint32( P#pk_GS2U_HitTarget.serial ),
+	[
+		<<?GS2U_HitTarget:?U16>>,
+		Bin_uid,
+		Bin_src_uid,
+		Bin_cause,
+		Bin_misc,
+		Bin_serial
+	];
+
 %GENERATED from file:combat.h => GS2U_SkillInterrupt
 encode(#pk_GS2U_SkillInterrupt{} = P) ->
 	Bin_uid = write_uint64( P#pk_GS2U_SkillInterrupt.uid ),
@@ -1074,6 +1150,8 @@ encode_UserPlayerData( #pk_UserPlayerData{} = P ) ->
 ].
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+name(?GS2U_HPChange) -> "GS2U_HPChange";
+name(?GS2U_HitTarget) -> "GS2U_HitTarget";
 name(?GS2U_SkillInterrupt) -> "GS2U_SkillInterrupt";
 name(?GS2U_SpecialMove) -> "GS2U_SpecialMove";
 name(?GS2U_UseSkill) -> "GS2U_UseSkill";
@@ -1113,7 +1191,9 @@ name(MsgID) -> "ErrorNetMsg_" ++ erlang:integer_to_list(MsgID).
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 cmd_list()->
 	[
-		?GS2U_SkillInterrupt
+		?GS2U_HPChange
+		,?GS2U_HitTarget
+		,?GS2U_SkillInterrupt
 		,?GS2U_SpecialMove
 		,?GS2U_UseSkill
 		,?U2GS_SkillInterrupt

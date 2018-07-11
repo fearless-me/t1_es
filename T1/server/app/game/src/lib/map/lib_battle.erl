@@ -11,6 +11,7 @@
 -include("logger.hrl").
 -include("common_record.hrl").
 -include("map_unit.hrl").
+-include("netmsg.hrl").
 
 %% API
 -export([
@@ -22,18 +23,44 @@
 
 player_use_skill(Aer, Der, SkillId, Serial) ->
     lib_ai_rw:set_skill_serial(Aer, Serial),
+    TarUid = case Der > 0 of
+                 true -> Der;
+                 _ -> Aer
+             end,
+    TargetList =
+        lib_skill_selector:circle(Aer, lib_move_rw:get_cur_pos(TarUid), 100),
+
+    
+    %% todo 是否可以优化，因为这个是视野广播，不用给每个人发一次
+    %% todo 一次性广播给所有同样的消息，让客户端呢判断下
+    F =
+        fun(HitUid)->
+            calculate_dmg(Aer, SkillId, HitUid, Serial)
+        end,
+
+    lists:foreach(F, TargetList),
+
+
+    NetMsg = #pk_GS2U_UseSkill{
+        uid = Aer,
+        tar_uid = Der,
+        skill_id = SkillId,
+        serial = Serial,
+        error_code = 0
+    },
+    lib_map_view:send_net_msg_to_visual(Aer, NetMsg),
     ?DEBUG("~p use skill ~p tar ~p", [Aer, Der, SkillId]),
     ok.
 
 %%-------------------------------------------------------------------
-dispatcher(?OBJ_USR, ?OBJ_USR, Aer, Der, SkillId)->
+dispatcher(?OBJ_USR, ?OBJ_USR, Aer, Der, SkillId) ->
     player_vs_player(Aer, Der, SkillId);
-dispatcher(?OBJ_USR, ?OBJ_MON, Aer, Der, SkillId)->
+dispatcher(?OBJ_USR, ?OBJ_MON, Aer, Der, SkillId) ->
     player_vs_mon(Aer, Der, SkillId);
-dispatcher(?OBJ_MON, ?OBJ_USR, Aer, Der, SkillId)->
+dispatcher(?OBJ_MON, ?OBJ_USR, Aer, Der, SkillId) ->
     mon_vs_player(Aer, Der, SkillId);
-dispatcher(AType, DType, Aer, Der, SkillId)->
-    ?WARN("~p(~p) vs ~p(~p) skill",[Aer, AType, Der, DType, SkillId]).
+dispatcher(AType, DType, Aer, Der, SkillId) ->
+    ?WARN("~p(~p) vs ~p(~p) skill", [Aer, AType, Der, DType, SkillId]).
 
 
 %%-------------------------------------------------------------------
@@ -57,6 +84,21 @@ can_ai_use_skill(_Aer) ->
 
 
 %%-------------------------------------------------------------------
+calculate_dmg(Uid, SkillId, TargetUid, Serial) ->
+    HitMsg = #pk_GS2U_HitTarget{
+        uid = TargetUid, src_uid = Uid, cause = 1, misc = SkillId, serial = Serial
+    },
+    lib_map_view:send_net_msg_to_visual(TargetUid, HitMsg),
+
+    HpMsg = #pk_GS2U_HPChange{
+        uid = TargetUid, src_uid = Uid, cause = 1, result = 2, hp_change = -1000,
+        misc1 = SkillId, misc2 = 0, serial = Serial
+    },
+    lib_map_view:send_net_msg_to_visual(TargetUid, HpMsg),
+    ok.
+
+
+%%-------------------------------------------------------------------
 change_attr(#r_player_change_prop_req{
     uid = Uid,
     add = AddList, multi = MultiList,
@@ -66,9 +108,8 @@ change_attr(#r_player_change_prop_req{
     ok.
 
 %%-------------------------------------------------------------------
-add_buff(_Uid, _BuffId, _SrcUid) ->
+add_buff(_Uid, _BuffId, _SrcUid) -> ok.
 
-    ok.
 %%-------------------------------------------------------------------
 change_attr(Uid, AddList, MultiList) ->
     change_attr_action(Uid, AddList, MultiList, [], []),

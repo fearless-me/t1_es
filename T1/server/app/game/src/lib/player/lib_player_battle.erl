@@ -19,6 +19,7 @@
 
 %%-------------------------------------------------------------------
 use_skill(SkillId, Tar, Pos, Serial) ->
+    ?DEBUG("~p use skill ~p",[lib_player_rw:get_uid(), SkillId]),
     R1 = check_cd(SkillId),
     R2 = check_cost(R1, SkillId),
     R3 = check_skill(R2, SkillId),
@@ -31,7 +32,8 @@ do_use_skill(true, SkillId, Tar, Pos, Serial) ->
     Uid = lib_player_rw:get_uid(),
     Msg = #r_player_use_skill_req{
         uid = Uid, skill_id = SkillId, tar = Tar, pos = Pos, serial = Serial},
-    lib_player_map_priv:teleport_call(Pos),
+%%    lib_player_map_priv:teleport_call(Pos),
+    ?DEBUG("send use skill to map ~p", [ lib_player_rw:get_map() ]),
     lib_player_pub:send_map_msg_(player_use_skill, Msg),
     ok;
 do_use_skill(ErrAndFalse, _SkillId, _Tar, _Pos, _Serial) ->
@@ -53,7 +55,7 @@ check_skill(ErrAndFalse, _SkillId) ->
     ErrAndFalse.
 
 check_target(true, _SkillId, _Tar) ->
-    ok;
+    true;
 check_target(ErrAndFalse, _SkillId, _Tar) ->
     ErrAndFalse.
 

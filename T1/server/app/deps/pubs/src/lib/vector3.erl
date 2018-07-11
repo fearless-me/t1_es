@@ -21,16 +21,34 @@
 -export([divi/2]).
 -export([behind/3, behind_dir/3]).
 -export([front/3, front_dir/3]).
--export([is_behind/3]). %% src 是否在目标反面
--export([is_front/3]). %% src 是否在目标正面
+-export([is_behind/3]). %% tar  是否在 src 反面
+-export([is_front/3]). %% tar 是否在 src 正面
 -export([normalized/1]).
 -export([dist/1, dist_sq/1]).
 -export([dist/2, dist_sq/2]).
--export([linear_lerp/3]).
+-export([linear_interpolation/3]).
 -export([rotate_around_origin_2d/2]). %% 围绕原点的2d旋转,传入的是角度
 -export([dot_product/2, cross_product/2, dot_product_v/2, cross_product_v/2, dist_to_line/3]).
+
+%%
+zero()->
+    #vector3{}.
+
+%%
+new() ->
+    #vector3{x = 0.0, y = 0.0, z =0.0}.
+
+%%
+new(X, Y, Z) ->
+    #vector3{x = float(X), y = float(Y), z = float(Z)}.
+
+%%
+x(V) -> V#vector3.x.
+y(V) -> V#vector3.y.
+z(V) -> V#vector3.z.
+
 %% 点乘 a●b = |a|*|b|*cosθ
-%% 叉乘 |a*b| = |a|*|b|*sinθ
+%% 叉乘 |a × b| = |a|*|b|*sinθ
 
 angle(V1, V2) ->
     % cost(Angle) = A*B/ |A|*|B|
@@ -84,20 +102,6 @@ dot_product_v(V1, V2) ->
     #vector3{x = X1*X2, y = Y1*Y2, z = Z1*Z2}.
 
 %%
-zero()-> #vector3{}.
-
-%%
-new() -> #vector3{x = 0.0, y = 0.0, z =0.0}.
-
-%%
-new(X, Y, Z) -> #vector3{x = float(X), y = float(Y), z = float(Z)}.
-
-%%
-x(V) -> V#vector3.x.
-y(V) -> V#vector3.y.
-z(V) -> V#vector3.z.
-
-%%
 valid(V) ->
     #vector3{x = X,  z = Z} = V,
     erlang:is_number(X) andalso erlang:is_number(Z).
@@ -137,11 +141,11 @@ normalized(V) ->
     end.
 
 %%
-is_behind(Src, Dst, DstFace) ->
+is_behind(Src, SrcFace, Tar) ->
     %
-    #vector3{x = X2, y = Y2, z = Z2} = DstFace,
+    #vector3{x = X2, y = Y2, z = Z2} = SrcFace,
     % dir
-    #vector3{x = X1, y = Y1, z = Z1} = vector3:subtract(Src, Dst),
+    #vector3{x = X1, y = Y1, z = Z1} = vector3:subtract(Tar, Src),
     % |A|*|B|*cosθ
     (X1 * X2 + Y1 * Y2 + Z1 * Z2) < 0.
 %%
@@ -180,11 +184,11 @@ front_dir_action(Src, Dir, Dist) ->
     vector3:add(Src, Delta).
 
 %%
-is_front(Src, Dst, DstFace) ->
+is_front(Src, SrcFace, Tar) ->
     %
-    #vector3{x = X2, y = Y2, z = Z2} = DstFace,
+    #vector3{x = X2, y = Y2, z = Z2} = SrcFace,
     % dir
-    #vector3{x = X1, y = Y1, z = Z1} = vector3:subtract(Src, Dst),
+    #vector3{x = X1, y = Y1, z = Z1} = vector3:subtract(Tar, Src),
     % |A|*|B|*cosθ
     (X1 * X2 + Y1 * Y2 + Z1 * Z2) >= 0.
 
@@ -210,7 +214,7 @@ dist_sq(V1, V2) ->
     X * X + Y * Y + Z * Z.
 
 %% 线性差值
-linear_lerp(Src, Dst, Factor) ->
+linear_interpolation(Src, Dst, Factor) ->
     #vector3{x = X1, y = Y1, z = Z1} = Src,
     #vector3{x = X2, y = Y2, z = Z2} = Dst,
     #vector3{

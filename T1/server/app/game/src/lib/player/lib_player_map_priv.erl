@@ -21,6 +21,8 @@
 %%--------------------------------
 %% WARNING!!! WARNING!!! WARNING!!!
 %% call
+%% todo teleport_call / offline_call 是需要call调用，等后面来确定
+
 -export([
     online_call/1, offline_call/4, serv_change_map_call/3,
     teleport_call/1, return_to_old_map_call/0
