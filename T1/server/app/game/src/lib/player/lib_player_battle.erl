@@ -13,8 +13,9 @@
 -include("common_record.hrl").
 
 %% API
--export([use_skill/4]).
--export([change_attr/2, change_attr/4]).
+-export([
+    use_skill/4,  add_buff/2,
+    change_attr/2, change_attr/4]).
 
 
 %%-------------------------------------------------------------------
@@ -75,4 +76,11 @@ change_attr(AddList, MultiList, AddList_Del, MultiList_Del) ->
             multi = MultiList, add_del = AddList_Del, multi_del = MultiList_Del
         }
     ),
+    ok.
+
+%%-------------------------------------------------------------------
+add_buff(BuffId, Level) ->
+    Uid = lib_player_rw:get_uid(),
+    Req = #r_player_add_buff_req{uid = Uid, buff_id = BuffId, level = Level},
+    lib_player_pub:send_map_msg_(player_use_skill, Req),
     ok.

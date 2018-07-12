@@ -39,6 +39,7 @@
 -record(r_player_start_move_req,{uid = 0, tar}).
 %%
 -record(r_player_use_skill_req,{uid=0, skill_id=0, tar=0, pos, serial=0}).
+-record(r_player_add_buff_req,{uid=0, src_uid=0, buff_id=0, level=1}).
 
 
 

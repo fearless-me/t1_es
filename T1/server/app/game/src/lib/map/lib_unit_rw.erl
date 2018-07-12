@@ -20,6 +20,7 @@
 	get_max_hp/1, get_max_hp_def/2, set_max_hp/2, set_max_hp_direct/2, % #m_map_unit_rw.max_hp
 	get_attr/1, get_attr_def/2, set_attr/2, set_attr_direct/2, % #m_map_unit_rw.attr
 	get_buff_list/1, get_buff_list_def/2, set_buff_list/2, set_buff_list_direct/2, % #m_map_unit_rw.buff_list
+	get_skill_queue/1, get_skill_queue_def/2, set_skill_queue/2, set_skill_queue_direct/2, % #m_map_unit_rw.skill_queue
 	% common function 
 	del/1 ,to_record/1 ,init_from/2 ,init_default/1
 ]).
@@ -170,6 +171,22 @@ set_buff_list(Uid, V)->
 set_buff_list_direct(Uid, V)-> put({buff_list,Uid}, V).
 
 %%-------------------------------------------------------------------
+%% #m_map_unit_rw.skill_queue
+get_skill_queue(Uid)-> get({skill_queue,Uid}).
+
+get_skill_queue_def(Uid, Def)->
+	case get({skill_queue,Uid}) of
+		undefined -> Def;
+		V -> V
+	end.
+
+set_skill_queue(Uid, V)->
+	put({skill_queue,Uid}, V),
+	hook_map:on_rw_update(Uid, skill_queue, V).
+
+set_skill_queue_direct(Uid, V)-> put({skill_queue,Uid}, V).
+
+%%-------------------------------------------------------------------
 del(Uid)->
 	erase({pid, Uid}),
 	erase({did, Uid}),
@@ -180,6 +197,7 @@ del(Uid)->
 	erase({max_hp, Uid}),
 	erase({attr, Uid}),
 	erase({buff_list, Uid}),
+	erase({skill_queue, Uid}),
 	ok.
 %%-------------------------------------------------------------------
 to_record(Uid)->
@@ -192,7 +210,8 @@ to_record(Uid)->
 		hp = get_hp(Uid),
 		max_hp = get_max_hp(Uid),
 		attr = get_attr(Uid),
-		buff_list = get_buff_list(Uid)
+		buff_list = get_buff_list(Uid),
+		skill_queue = get_skill_queue(Uid)
 	}.
 %%-------------------------------------------------------------------
 init_from(Uid, Rec)->
@@ -205,6 +224,7 @@ init_from(Uid, Rec)->
 	set_max_hp_direct(Uid, Rec#m_map_unit_rw.max_hp),
 	set_attr_direct(Uid, Rec#m_map_unit_rw.attr),
 	set_buff_list_direct(Uid, Rec#m_map_unit_rw.buff_list),
+	set_skill_queue_direct(Uid, Rec#m_map_unit_rw.skill_queue),
 	ok.
 %%-------------------------------------------------------------------
 init_default(Uid)->
@@ -218,5 +238,6 @@ init_default(Uid)->
 	set_max_hp_direct(Uid, Rec#m_map_unit_rw.max_hp),
 	set_attr_direct(Uid, Rec#m_map_unit_rw.attr),
 	set_buff_list_direct(Uid, Rec#m_map_unit_rw.buff_list),
+	set_skill_queue_direct(Uid, Rec#m_map_unit_rw.skill_queue),
 	ok.
 %%-------------------------------------------------------------------

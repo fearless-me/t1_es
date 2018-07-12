@@ -17,7 +17,7 @@
 -record(m_map_unit_rw,{
     pid = 0, did = 0, group = 0, owner = 0, type=-1,
 %%  战斗相关
-    hp = 1, max_hp = 1, attr= [], buff_list = []
+    hp = 1, max_hp = 1, attr= [], buff_list = [], skill_queue=[]
 }).
 
 %% 移动相关

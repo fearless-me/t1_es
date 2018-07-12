@@ -12,6 +12,7 @@
 -include("common_record.hrl").
 -include("map_unit.hrl").
 -include("netmsg.hrl").
+-include("combat.hrl").
 
 %% API
 -export([
@@ -86,12 +87,12 @@ can_ai_use_skill(_Aer) ->
 %%-------------------------------------------------------------------
 calculate_dmg(Uid, SkillId, TargetUid, Serial) ->
     HitMsg = #pk_GS2U_HitTarget{
-        uid = TargetUid, src_uid = Uid, cause = 1, misc = SkillId, serial = Serial
+        uid = TargetUid, src_uid = Uid, cause = ?EHTC_Skill, misc = SkillId, serial = Serial
     },
     lib_map_view:send_net_msg_to_visual(TargetUid, HitMsg),
 
     HpMsg = #pk_GS2U_HPChange{
-        uid = TargetUid, src_uid = Uid, cause = 1, result = 2, hp_change = -1000,
+        uid = TargetUid, src_uid = Uid, cause = ?RHPCC_SkillDamage, result = ?ESR_Critical, hp_change = -1000,
         misc1 = SkillId, misc2 = 0, serial = Serial
     },
     lib_map_view:send_net_msg_to_visual(TargetUid, HpMsg),
