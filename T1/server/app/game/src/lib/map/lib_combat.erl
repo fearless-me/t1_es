@@ -95,7 +95,8 @@ calculate_skill_effect(_Uid, _SkillId, _TarUid) ->
     ok.
 
 %%-------------------------------------------------------------------
-end_use_skill(_Uid) ->
+end_use_skill(Uid) ->
+    lib_combat_rw:init_default(Uid),
     ok.
 
 interrup_skill(Uid) ->
@@ -104,15 +105,18 @@ interrup_skill(Uid) ->
 
 %%-------------------------------------------------------------------
 tick(Unit) ->
-    ?TRY_CATCH(tick_skill_queue(Unit), Err1, Stk1),
+    ?TRY_CATCH(tick_cur_skill(Unit), Err1, Stk1),
+    ?TRY_CATCH(tick_skill_queue(Unit), Err2, Stk2),
     ok.
 
 
 
+%%todo 引导技能、吟唱技能
+tick_cur_skill(_Unit) -> ok.
+
+%%todo 放外那不管的，但是要持续生效的技能
+%%todo 创建了一个 OBJ_STATIC
 tick_skill_queue(_Unit) -> ok.
-
-
-
 
 %%-------------------------------------------------------------------
 dispatcher(?OBJ_USR, ?OBJ_USR, Aer, Der, SkillId) ->

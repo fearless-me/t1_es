@@ -12,13 +12,14 @@
 -define(MA_UNIT_HRL, true).
 
 %%
--define(OBJ_ERR, 0).
--define(OBJ_MIN, 1).
--define(OBJ_MON, 1).
--define(OBJ_NPC, 2).
--define(OBJ_PET, 3).
--define(OBJ_USR, 4).
--define(OBJ_MAX, 4).
+-define(OBJ_ERR,    0).
+-define(OBJ_MIN,    1).
+-define(OBJ_MON,    1).
+-define(OBJ_STATIC, 2).
+-define(OBJ_NPC,    3).
+-define(OBJ_PET,    4).
+-define(OBJ_USR,    5).
+-define(OBJ_MAX,    5).
 -type obj_type() :: ?OBJ_MIN .. ?OBJ_MAX.
 
 %% 进入地图后不会变的
