@@ -24,11 +24,11 @@ on_info_msg({player_change_attr, _Req}) ->
 on_info_msg({player_use_skill, Req}) ->
     ?DEBUG("player_use_skill ~p",[Req]),
     #r_player_use_skill_req{uid=Aer, skill_id=SkillId, tar=Der, serial = Serial} = Req,
-    lib_battle:player_use_skill(Aer, Der, SkillId, Serial),
+    lib_combat:use_skill(Aer, Der, SkillId, Serial),
     ok;
 on_info_msg({player_use_skill, Req}) ->
     #r_player_add_buff_req{uid = Aer, buff_id = BuffId, level = Level} = Req,
-    lib_battle:add_buff(Aer, BuffId, Level),
+    lib_combat:add_buff(Aer, BuffId, Level),
     ok;
 on_info_msg(Info) ->
     ?DEBUG("info:~p",[Info]),

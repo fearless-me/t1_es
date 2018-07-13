@@ -554,12 +554,10 @@ is_in_attack_dist(_Uid, _Any) ->
     false.
 
 ai_use_skill(Uid, SkillId, TarUid)->
-    AerType = lib_unit_rw:get_type(Uid),
-    DerType = lib_unit_rw:get_type(TarUid),
-    Ret = lib_battle:dispatcher(AerType, DerType, Uid, TarUid, SkillId),
+    Serial = lib_ai_rw:get_skill_serial(Uid),
+    Ret = lib_combat:use_skill(Uid, TarUid, SkillId, Serial),
     case Ret =:= ok of
         true ->
-            Serial = lib_ai_rw:get_skill_serial(Uid),
             lib_ai_rw:set_skill_serial(Uid, Serial + 1);
         _ -> skip
     end,

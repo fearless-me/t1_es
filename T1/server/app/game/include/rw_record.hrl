@@ -71,4 +71,21 @@
 %%  逻辑代码的放在这之后（比如背包，技能等等）
 }).
 
+
+
+%% player
+%% 通过自动生成代码lib_player_rw
+-record(m_combat_rw, {
+    %% 基础信息
+    skill_id=0, target_uid=0, skill_serial=0,
+    %% 技能目标点 , 第几次伤害计算 , 从开始到现在的时长(MS).
+    persist_pos, cur_dmg_index=0, operate_time=0,
+    %% 吟唱技能
+    spell_time=0,
+    %% 引导技能
+    channel_cd=0
+}).
+
+
+
 -endif.

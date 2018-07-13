@@ -66,7 +66,7 @@ handle(#pk_U2GS_PlayerStopWalk{cur_x = X, cur_y = Y}) ->
     ok;
 handle(#pk_U2GS_UseSkill{tar_uid = Tar, x = X, y = Y, skill_id = SkillId, serial = Serial}) ->
     Pos = vector3:new(X, 0, Y),
-    lib_player_battle:use_skill(SkillId, Tar, Pos, Serial),
+    lib_player_combat:use_skill(SkillId, Tar, Pos, Serial),
     ok;
 handle(#pk_U2GS_SkillInterrupt{}) ->
     ok;

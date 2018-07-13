@@ -172,7 +172,7 @@ tick_1(#m_map_state{status = ?MAP_READY_EXIT, protect_tick = Tick} = S) when Tic
     PlayerSize = lib_map_rw:get_player_size(),
     ?FATAL("map_~p_~p destroy error, player size ~p, force stop now",
         [lib_map_rw:get_map_id(), lib_map_rw:get_line_id(), PlayerSize]),
-    real_stop_now(0),
+    ?TRY_CATCH(real_stop_now(0)),
     S;
 tick_1(#m_map_state{status = ?MAP_READY_EXIT, protect_tick = TickMax} = S) ->
     PlayerSize = lib_map_rw:get_player_size(),
@@ -203,7 +203,8 @@ tick_player() ->
     ).
 
 tick_player_1(Unit) ->
-    ?TRY_CATCH(lib_move:update(Unit)),
+    ?TRY_CATCH(lib_move:update(Unit), Err1, Stk1),
+    ?TRY_CATCH(lib_combat:tick(Unit), Err2, Stk2),
     ok.
 
 %%-------------------------------------------------------------------
@@ -215,7 +216,8 @@ tick_monster() ->
 
 tick_monster_1(Unit) ->
     ?TRY_CATCH(lib_move:update(Unit), Err1, Stk1),
-    ?TRY_CATCH(lib_ai:update(Unit), Err2, Stk2),
+    ?TRY_CATCH(lib_ai:update(Unit),   Err2, Stk2),
+    ?TRY_CATCH(lib_combat:tick(Unit), Err3, Stk3),
     ok.
 
 %%-------------------------------------------------------------------
@@ -226,7 +228,8 @@ tick_pet() ->
     ).
 
 tick_pet_1(Unit) ->
-    ?TRY_CATCH(lib_move:update(Unit)),
+    ?TRY_CATCH(lib_move:update(Unit), Err1, Stk1),
+    ?TRY_CATCH(lib_combat:tick(Unit), Err2, Stk2),
     ok.
 
 %%-------------------------------------------------------------------
