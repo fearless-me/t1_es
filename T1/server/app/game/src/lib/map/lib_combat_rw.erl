@@ -19,6 +19,7 @@
 	get_operate_time/1, get_operate_time_def/2, set_operate_time/2, % #m_combat_rw.operate_time
 	get_spell_time/1, get_spell_time_def/2, set_spell_time/2, % #m_combat_rw.spell_time
 	get_channel_cd/1, get_channel_cd_def/2, set_channel_cd/2, % #m_combat_rw.channel_cd
+	get_skill_queue/1, get_skill_queue_def/2, set_skill_queue/2, % #m_combat_rw.skill_queue
 	% common function 
 	del/1 ,to_record/1 ,init_from/2 ,init_default/1
 ]).
@@ -121,6 +122,18 @@ get_channel_cd_def(Uid, Def)->
 set_channel_cd(Uid, V)-> put({channel_cd,Uid}, V).
 
 %%-------------------------------------------------------------------
+%% #m_combat_rw.skill_queue
+get_skill_queue(Uid)-> get({skill_queue,Uid}).
+
+get_skill_queue_def(Uid, Def)->
+	case get({skill_queue,Uid}) of
+		undefined -> Def;
+		V -> V
+	end.
+
+set_skill_queue(Uid, V)-> put({skill_queue,Uid}, V).
+
+%%-------------------------------------------------------------------
 del(Uid)->
 	erase({skill_id, Uid}),
 	erase({target_uid, Uid}),
@@ -130,6 +143,7 @@ del(Uid)->
 	erase({operate_time, Uid}),
 	erase({spell_time, Uid}),
 	erase({channel_cd, Uid}),
+	erase({skill_queue, Uid}),
 	ok.
 %%-------------------------------------------------------------------
 to_record(Uid)->
@@ -141,7 +155,8 @@ to_record(Uid)->
 		cur_dmg_index = get_cur_dmg_index(Uid),
 		operate_time = get_operate_time(Uid),
 		spell_time = get_spell_time(Uid),
-		channel_cd = get_channel_cd(Uid)
+		channel_cd = get_channel_cd(Uid),
+		skill_queue = get_skill_queue(Uid)
 	}.
 %%-------------------------------------------------------------------
 init_from(Uid, Rec)->
@@ -153,6 +168,7 @@ init_from(Uid, Rec)->
 	set_operate_time(Uid, Rec#m_combat_rw.operate_time),
 	set_spell_time(Uid, Rec#m_combat_rw.spell_time),
 	set_channel_cd(Uid, Rec#m_combat_rw.channel_cd),
+	set_skill_queue(Uid, Rec#m_combat_rw.skill_queue),
 	ok.
 %%-------------------------------------------------------------------
 init_default(Uid)->
@@ -165,5 +181,6 @@ init_default(Uid)->
 	set_operate_time(Uid, Rec#m_combat_rw.operate_time),
 	set_spell_time(Uid, Rec#m_combat_rw.spell_time),
 	set_channel_cd(Uid, Rec#m_combat_rw.channel_cd),
+	set_skill_queue(Uid, Rec#m_combat_rw.skill_queue),
 	ok.
 %%-------------------------------------------------------------------

@@ -83,7 +83,9 @@
     %% 吟唱技能
     spell_time=0,
     %% 引导技能
-    channel_cd=0
+    channel_cd=0,
+    %%
+    skill_queue=[]
 }).
 
 

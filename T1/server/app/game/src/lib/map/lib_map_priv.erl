@@ -32,7 +32,7 @@
 
 
 
-%% 初始化， tick， 开始推出
+%% 初始化， tick， 开始终止进程
 -export([init/1, tick/1, start_stop_now/1]).
 -export([player_start_move/1, player_stop_move/1]).
 -export([broadcast_msg/1, broadcast_net_msg/1, broadcast_msg_view/1, broadcast_net_msg_view/1]).
