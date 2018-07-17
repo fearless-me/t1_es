@@ -18,20 +18,23 @@
     partition/1, size/1
 ]).
 
+-opaque llist() :: {?MODULE, Partition :: non_neg_integer(), Count :: non_neg_integer(), Dict :: dict:dict()}.
+-export_type([llist/0]).
+
 -export([test/0]).
 
-new(N) -> {N, 0, #{}}.
+new(N) -> {?MODULE, N, 0, #{}}.
 
-partition({N, _EN, _Maps}) -> N.
+partition({?MODULE, N, _EN, _Maps}) -> N.
 
-size({_N, EN, _Maps}) -> EN.
+size({?MODULE,_N, EN, _Maps}) -> EN.
 
-add({N, EN, Maps}, HashKey, Elem) ->
+add({?MODULE, N, EN, Maps}, HashKey, Elem) ->
     Idx = hashkey_to_key(N, HashKey),
     List = maps:get(Idx, Maps, []),
-    {N, EN + 1, maps:put(Idx, [Elem | List], Maps)}.
+    {?MODULE, N, EN + 1, maps:put(Idx, [Elem | List], Maps)}.
 
-del({N, EN, Maps} = LList, HashKey, KeyPos, Key) ->
+del({?MODULE, N, EN, Maps} = LList, HashKey, KeyPos, Key) ->
     Idx = hashkey_to_key(N, HashKey),
     List = maps:get(Idx, Maps, []),
     case List of
@@ -42,11 +45,11 @@ del({N, EN, Maps} = LList, HashKey, KeyPos, Key) ->
                     LList;
                 _ ->
                     New = lists:keydelete(Key, KeyPos, List),
-                    {N, EN - 1, maps:put(Idx, New, Maps)}
+                    {?MODULE, N, EN - 1, maps:put(Idx, New, Maps)}
             end
     end.
 
-del_n({N, EN, Maps} = LList, HashKey, KeyPos, KeyList) ->
+del_n({?MODULE, N, EN, Maps} = LList, HashKey, KeyPos, KeyList) ->
     Idx = hashkey_to_key(N, HashKey),
     List = maps:get(Idx, Maps, []),
     case List of
@@ -57,10 +60,10 @@ del_n({N, EN, Maps} = LList, HashKey, KeyPos, KeyList) ->
                 fun(Key, Acc) ->
                     lists:keydelete(Key, KeyPos, Acc)
                 end, List, KeyList),
-            {N, EN - 1, maps:put(Idx, New, Maps)}
+            {?MODULE, N, EN - 1, maps:put(Idx, New, Maps)}
     end.
 
-member({N, _EN, Maps} = _LList, HashKey, KeyPos, Key) ->
+member({?MODULE, N, _EN, Maps} = _LList, HashKey, KeyPos, Key) ->
     Idx = hashkey_to_key(N, HashKey),
     List = maps:get(Idx, Maps, []),
     case List of
@@ -73,9 +76,9 @@ member({N, _EN, Maps} = _LList, HashKey, KeyPos, Key) ->
 foreach(LList, Fun) ->
     do_foreach(LList, Fun).
 
-do_foreach({0, _EN, _Maps}, _Fun) -> ok;
-do_foreach({_N, 0, _Maps}, _Fun) -> ok;
-do_foreach({N, _EN, Maps}, Fun) -> do_foreach_1(1, N, Maps, Fun).
+do_foreach({?MODULE, 0, _EN, _Maps}, _Fun) -> ok;
+do_foreach({?MODULE, _N, 0, _Maps}, _Fun) -> ok;
+do_foreach({?MODULE, N, _EN, Maps}, Fun) -> do_foreach_1(1, N, Maps, Fun).
 
 do_foreach_1(X, N, Maps, Fun) when X >= 1, X =< N ->
     List = maps:get(X, Maps),
@@ -85,7 +88,7 @@ do_foreach_1(_X, _N, _Maps, _Fun) ->
     ok.
 
 
-foreach_n({_N, _EN, Maps}, X, Fun) ->
+foreach_n({?MODULE, _N, _EN, Maps}, X, Fun) ->
     List = maps:get(X, Maps, []),
     lists:foreach(Fun, List),
     ok.
@@ -93,9 +96,9 @@ foreach_n({_N, _EN, Maps}, X, Fun) ->
 foldl(LList, Acc, Fun) ->
     do_foldl(LList, Acc, Fun).
 
-do_foldl({0, _EN, _Maps}, Acc, _Fun) -> Acc;
-do_foldl({_N, 0, _Maps}, Acc, _Fun) -> Acc;
-do_foldl({N, _EN, Maps}, Acc, Fun) -> do_foldl_1(1, N, Maps, Acc, Fun).
+do_foldl({?MODULE, 0, _EN, _Maps}, Acc, _Fun) -> Acc;
+do_foldl({?MODULE, _N, 0, _Maps}, Acc, _Fun) -> Acc;
+do_foldl({?MODULE, N, _EN, Maps}, Acc, Fun) -> do_foldl_1(1, N, Maps, Acc, Fun).
 
 do_foldl_1(X, N, Maps, Acc, Fun) when X >= 1, X =< N ->
     List = maps:get(X, Maps),
@@ -105,13 +108,16 @@ do_foldl_1(_X, _N, _Maps, Acc, _Fun) ->
     Acc.
 
 
-foldl_n({_N, _EN, Maps}, X, Acc, Fun) ->
+foldl_n({?MODULE, _N, _EN, Maps}, X, Acc, Fun) ->
     List = maps:get(X, Maps, []),
     lists:foldl(Fun, Acc, List).
 
 
 hashkey_to_key(N, HashKey) when is_integer(HashKey) ->
     HashKey rem N + 1.
+
+
+
 
 test() ->
     LList0 = llist:new(5),

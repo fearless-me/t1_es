@@ -39,4 +39,10 @@
 -type skill_result() :: ?ESR_Dodge .. ?ESR_Blocked.
 
 
+-define(ESOT_Instant, 1).  %% 瞬发
+-define(ESOT_Channel, 2).  %% 引导
+-define(ESOT_Spell, 3).    %% 吟唱
+-type skill_optype() :: ?ESOT_Instant ..  ?ESOT_Spell.
+
+
 -endif.

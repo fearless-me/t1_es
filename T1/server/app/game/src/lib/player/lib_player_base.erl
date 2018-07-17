@@ -36,6 +36,7 @@ init(Player) ->
     lib_player_rw:set_head(Head),
     ?WARN("~p mapid ~p",[Uid, Mid]),
     lib_player_rw:set_map(#m_player_map{map_id = Mid, line_id = LineId}),
+    %% todo 设置buff， cd等等
     ok.
 
 %%-------------------------------------------------------------------

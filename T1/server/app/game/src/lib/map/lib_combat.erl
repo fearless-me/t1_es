@@ -24,7 +24,7 @@
 %% API
 -export([
     use_skill/4, tick/1, interrup_skill/1,
-    dispatcher/5, can_ai_use_skill/1
+    dispatcher/5, can_ai_use_skill/1, is_using_skill/1
 ]).
 
 use_skill(Aer, Der, SkillId, Serial) ->
@@ -34,18 +34,10 @@ use_skill(Aer, Der, SkillId, Serial) ->
                  _ -> Aer
              end,
 
+    %% 根据类型
+    SkillOpType = ?ESOT_Channel,
 
-    TargetList = calculate_target_list(Aer, SkillId, lib_move_rw:get_cur_pos(TarUid)),
-    
-    %% todo 是否可以优化，因为这个是视野广播，不用给每个人发一次
-    %% todo 一次性广播给所有同样的消息，让客户端呢判断下
-    F =
-        fun(HitUid)->
-            calculate_dmg(Aer, SkillId, HitUid, Serial)
-        end,
-
-    lists:foreach(F, TargetList),
-
+    skill_action_dispatcher(SkillOpType, Aer, TarUid, SkillId, Serial),
 
     NetMsg = #pk_GS2U_UseSkill{
         uid = Aer,
@@ -58,16 +50,38 @@ use_skill(Aer, Der, SkillId, Serial) ->
     ?DEBUG("~p use skill ~p tar ~p", [Aer, Der, SkillId]),
     ok.
 
+skill_action_dispatcher(?ESOT_Instant, Aer, Tar, SkillId, Serial) ->
+    instant_skill_action(Aer, Tar, SkillId, Serial);
+skill_action_dispatcher(?ESOT_Channel, Aer, Tar, SkillId, Serial) ->
+    channel_skill_action(Aer, Tar, SkillId, Serial);
+skill_action_dispatcher(?ESOT_Spell, Aer, Tar, SkillId, Serial) ->
+    spell_skill_action(Aer, Tar, SkillId, Serial).
+
 %% todo 引导类型技能
-channel_skill_action() ->
+channel_skill_action(Aer, Tar, SkillId, Serial) ->
+    active_skill_once(Aer, Tar, SkillId, Serial),
     ok.
 
 %% todo 吟唱技能
-spell_skill_action() ->
+spell_skill_action(_Aer, _Tar, _SkillId, _Serial) ->
     ok.
 
 %% todo 瞬发技能
-instant_skill_action() ->
+instant_skill_action(Aer, Tar, SkillId, Serial) ->
+    active_skill_once(Aer, Tar, SkillId, Serial),
+    ok.
+
+active_skill_once(Aer, TarUid, SkillId, Serial)->
+    TargetList = calculate_target_list(Aer, SkillId, lib_move_rw:get_cur_pos(TarUid)),
+
+    %% todo 是否可以优化，因为这个是视野广播，不用给每个人发一次
+    %% todo 一次性广播给所有同样的消息，让客户端呢判断下
+    F =
+        fun(HitUid) ->
+            calculate_dmg(Aer, SkillId, HitUid, Serial)
+        end,
+
+    lists:foreach(F, TargetList),
     ok.
 
 %%-------------------------------------------------------------------
@@ -110,11 +124,10 @@ tick(Unit) ->
     ok.
 
 
-
 %%todo 引导技能、吟唱技能
 tick_cur_skill(_Unit) -> ok.
 
-%%todo 放外那不管的，但是要持续生效的技能
+%%todo 放完就不管的，但是要持续生效的技能
 %%todo 创建了一个 OBJ_STATIC
 tick_skill_queue(_Unit) -> ok.
 
@@ -147,3 +160,7 @@ mon_vs_player(Aer, Der, SkillId) ->
 
 can_ai_use_skill(_Aer) ->
     true.
+
+
+is_using_skill(Aer) ->
+    lib_combat_rw:get_skill_id(Aer) > 0.

@@ -225,5 +225,5 @@ short(UID) ->
 long(ShortID) ->
     <<IDRange:?BIT_ACCU, DBID:?BIT_SVER, UIDIndex:?BIT_INDX>>
         = <<ShortID:(?BIT_SVER + ?BIT_INDX + ?BIT_ACCU)>>,
-    gen(?UID_TYPE_PLAYER, globalSetup:getADBID(), DBID, UIDIndex, IDRange).
+    gen(?UID_TYPE_PLAYER, 1, DBID, UIDIndex, IDRange).
 %% ================以上两个方法仅针对角色UID================

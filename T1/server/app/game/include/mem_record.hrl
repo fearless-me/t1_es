@@ -23,8 +23,7 @@
 
 %%一些核心模块用的东西
 -record(m_player_private,{
-    uid, aid,
-    priv_attrs=[], priv_buffs=[]
+    uid, aid, priv_attrs=[], priv_buffs=[]
 }).
 
 %%
@@ -37,6 +36,9 @@
 %% 玩家数据预警
 -record(m_alarm_policy, {id, limit, warn}).
 -record(m_alarm_player, {uid, alarm_data}).
+
+
+-record(m_skill_cd,{uid, skill_id, cd}).
 
 
 

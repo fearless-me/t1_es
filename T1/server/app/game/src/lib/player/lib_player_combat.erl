@@ -35,11 +35,17 @@ do_use_skill(true, SkillId, Tar, Pos, Serial) ->
         uid = Uid, skill_id = SkillId, tar = Tar, pos = Pos, serial = Serial},
 %%    lib_player_map_priv:teleport_call(Pos),
     ?DEBUG("send use skill to map ~p", [ lib_player_rw:get_map() ]),
+    update_skill_cd(SkillId),
     lib_player_pub:send_map_msg_(player_use_skill, Msg),
     ok;
 do_use_skill(ErrAndFalse, _SkillId, _Tar, _Pos, _Serial) ->
     %% todo 发送错误消息
     ErrAndFalse.
+
+
+update_skill_cd(_SkillId) ->
+    %% todo 技能cd更新
+    ok.
 
 %%-------------------------------------------------------------------
 check_cd(_SkillId)->
