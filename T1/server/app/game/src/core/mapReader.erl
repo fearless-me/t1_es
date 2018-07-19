@@ -45,7 +45,7 @@ loadAllMaps() ->
 %% ====================================================================
 
 -spec readMap(MapID,FileName,ArCfg) -> array:array() when
-	MapID::mapId(),FileName::string(),ArCfg::array:array().
+	MapID::uint16(),FileName::string(),ArCfg::array:array().
 readMap(MapID,FileName,ArCfg) when erlang:is_integer(MapID) andalso MapID > 0 andalso MapID =< 65535 ->
     Ret = loadMapFromFile(MapID,FileName),
     case Ret of
@@ -56,7 +56,7 @@ readMap(MapID,FileName,ArCfg) when erlang:is_integer(MapID) andalso MapID > 0 an
     end.
 
 -spec readMapInfo(MapID,FileName,ArCfg) -> array:array() when
-	MapID::mapId(),FileName::string(),ArCfg::array:array().
+	MapID::uint16(),FileName::string(),ArCfg::array:array().
 readMapInfo(MapID,FileName,ArCfg) when erlang:is_integer(MapID) andalso MapID > 0 andalso MapID =< 65535 ->
     RetInfo = loadMapInfoFromFile(MapID,FileName),
     case RetInfo of
@@ -320,7 +320,7 @@ loadMapInfoByVersion(1,Bin,?GameMapInfoBinFile) ->
 	Ar7.
 
 -spec loadMapWayPtData(Bin,List,Num) -> list() when
-	Bin::binary(),List::list(),Num::uint().
+	Bin::binary(),List::list(),Num::uint32().
 loadMapWayPtData(<<>>,List,0) when erlang:is_list(List) ->
 	lists:reverse(List);
 loadMapWayPtData(Bin,List,Num) when erlang:is_list(List) ->
@@ -340,7 +340,7 @@ loadMapWayPtData(Bin,List,Num) when erlang:is_list(List) ->
 	loadMapWayPtData(Remain2,[WayPt | List],Num - 1).
 
 -spec loadNeighborIds(Bin,Result,I,N) -> {Result,Bin} when
-	Bin::binary(),Result::list(),I::uint(),N::uint().
+	Bin::binary(),Result::list(),I::uint32(),N::uint32().
 loadNeighborIds(Bin,Result,N,N) ->
 	{Result,Bin};
 loadNeighborIds(Bin,Result,I,N) ->
@@ -354,7 +354,7 @@ loadMinCost(Bin) ->
 	loadMinCost(MinCostCount,Remain,[]).
 
 -spec loadMinCost(MinCostCount,Bin,Result) -> {Bin,list()} when
-	MinCostCount::uint(),Bin::binary(),Result::list().
+	MinCostCount::uint32(),Bin::binary(),Result::list().
 loadMinCost(0,Bin,Result) ->
 	{Bin,lists:reverse(Result)};
 loadMinCost(MinCostCount,Bin,Result) ->
@@ -368,7 +368,7 @@ loadMapStubData(Bin,Num) ->
     binaryReadStubData(Bin,[],Num).
 
 -spec binaryReadStubData(Bin,List,Num) -> list() when
-	Bin::binary(),List::list(),Num::uint().
+	Bin::binary(),List::list(),Num::uint32().
 binaryReadStubData(<<>>,List,0) ->
 	List;
 binaryReadStubData(Bin,List,Num) when erlang:is_binary(Bin)->
@@ -433,7 +433,7 @@ binaryReadTriggerData(Bin,TriggerList) when erlang:is_binary(Bin)->
     binaryReadTriggerData(Remain,[Data | TriggerList]).
 
 -spec binaryReadTriggerStringList(StrCount,StringList,Bin) -> {list(),Bin} when
-	StrCount::uint(),StringList::list(),Bin::binary().
+	StrCount::uint32(),StringList::list(),Bin::binary().
 binaryReadTriggerStringList(0,StringList,Bin) ->
 	{lists:reverse(StringList),Bin};
 binaryReadTriggerStringList(StrCount,StringList,Bin) ->

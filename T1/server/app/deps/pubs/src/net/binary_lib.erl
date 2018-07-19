@@ -100,7 +100,7 @@ read_uint32(Bin) when erlang:is_binary(Bin) ->
     {C, Left}.
 
 %%-spec read_uint(Bin :: binary()) -> {C, Left} when
-%%    C :: uint(), Left :: binary().
+%%    C :: uint32(), Left :: binary().
 %%read_uint(Bin) when erlang:is_binary(Bin) ->
 %%    <<C:?U32, Left/binary>> = Bin,
 %%    {C, Left}.
@@ -236,7 +236,7 @@ write_array(Data, Fun) when erlang:is_function(Fun, 1) ->
 %% ====================================================================
 %%读取bin数据中用户自定义的N个数据项
 -spec binary_read_n(N, Bin, Fun, AccList) -> {list(), Remain} when
-    N :: uint(), Bin :: binary(), Fun :: function(), AccList :: list(), Remain :: binary().
+    N :: uint32(), Bin :: binary(), Fun :: function(), AccList :: list(), Remain :: binary().
 binary_read_n(0, Bin, _, AccList) ->
     {lists:reverse(AccList), Bin};
 binary_read_n(N, Bin, Fun, AccList) ->

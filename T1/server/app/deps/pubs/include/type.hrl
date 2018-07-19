@@ -30,11 +30,6 @@
 -define(F32,32/little-float).
 -define(F64,64/little-float).
 
--type id() :: non_neg_integer().
--type uint() :: non_neg_integer().
--type int() :: integer().
--type etsTab() :: integer() | atom().
--type bool01() :: 0 | 1.
 
 -type uint8() :: 0 .. 255.
 -type uint16() :: 0 .. 65535.
@@ -46,10 +41,6 @@
 -type int32() :: -2147483648 .. 2147483647.
 -type int64() :: -9223372036854775808 .. 9223372036854775807.
 
--type skillId() :: uint16().
--type itemId() :: uint16().
--type monsterId() :: uint16().
--type mapId() :: uint16().
 
 
 -endif.

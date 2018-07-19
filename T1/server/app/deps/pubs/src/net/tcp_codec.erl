@@ -139,7 +139,7 @@ parse_msg(#net_conf{
 
 %%拼接之前收到的半包
 -spec merge_binary(DataBin) -> {NewMsg, NewMsgSize} when
-    DataBin :: binary(), NewMsg :: binary(), NewMsgSize :: uint().
+    DataBin :: binary(), NewMsg :: binary(), NewMsgSize :: uint32().
 merge_binary(DataBin) ->
     HalfMsg = get_buffer(),
     MsgSize = erlang:byte_size(DataBin),
@@ -165,7 +165,7 @@ read_one_msg(4, Bin) ->
 
 %%解析网络包的长度
 -spec read_msg_size(PacketLen, NewMsg) -> {IsEncode, Len, RemainBin} when
-    PacketLen :: uint(), NewMsg :: binary(), IsEncode :: boolean(), Len :: uint(), RemainBin :: binary().
+    PacketLen :: uint32(), NewMsg :: binary(), IsEncode :: boolean(), Len :: uint32(), RemainBin :: binary().
 read_msg_size(2, NewMsg) ->
     binary_lib:read_uint16(NewMsg);
 read_msg_size(4, NewMsg) ->

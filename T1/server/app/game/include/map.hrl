@@ -109,7 +109,7 @@
     rotW = 0.0 :: float(),                    %%旋转坐标W
     extData,                               %其它数据
     camp = 0,                              %%所属阵营#recSpawnMonster{}默认为0
-    groupID = 0 :: uint()                   %所属分组ID
+    groupID = 0 :: uint32()                   %所属分组ID
 }).
 
 -record(recMapTriggerData,

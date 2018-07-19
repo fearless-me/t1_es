@@ -211,7 +211,7 @@ parse(UID) ->
     {H, UIDType, ADBID, DBID, UIDIndex, IDRange}.
 
 %%当达到最大UID值时，会自动从最小值再次开始
--spec gen_1(Type) -> uint() when Type::uid_type().
+-spec gen_1(Type) -> uint32() when Type::uid_type().
 gen_1(Type) ->
     [#recUID{minUID = MinUID, maxUID = MaxUID}] = ets:lookup(?UIDEts, Type),
     ets:update_counter(?UIDEts, Type, {#recUID.curUID, 1, MaxUID, MinUID}).

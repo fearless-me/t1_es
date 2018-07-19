@@ -121,7 +121,7 @@ on_info_msg({teleport, NewPos}, S) ->
     lib_player_map_priv:teleport_call(NewPos),
     S;
 on_info_msg(Info, S) ->
-    lib_player:on_info_msg(Info),
+    ?TRY_CATCH(lib_player:on_info_msg(Info)),
     S.
 
 %%-------------------------------------------------------------------
