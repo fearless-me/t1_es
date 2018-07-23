@@ -29,18 +29,7 @@
 ]).
 
 use_skill(Aer, Der, SkillId, Serial) ->
-    lib_ai_rw:set_skill_serial(Aer, Serial),
-    TarUid = case Der > 0 of
-                 true -> Der;
-                 _ -> Aer
-             end,
-
-    %% 根据类型
-    SkillOpType = ?ESOT_Channel,
-
-    lib_combat_rw:set_skill_serial(Aer, Serial),
-    skill_action_dispatcher(SkillOpType, Aer, TarUid, SkillId, Serial),
-
+    TarUid = ?if_else(Der > 0, Der, Aer),
     NetMsg = #pk_GS2U_UseSkill{
         uid = Aer,
         tar_uid = Der,
@@ -49,6 +38,12 @@ use_skill(Aer, Der, SkillId, Serial) ->
         error_code = 0
     },
     lib_map_view:send_net_msg_to_visual(Aer, NetMsg),
+
+    %% 根据类型
+    SkillOpType = ?ESOT_Channel,
+
+    lib_combat_rw:set_skill_serial(Aer, Serial),
+    skill_action_dispatcher(SkillOpType, Aer, TarUid, SkillId, Serial),
     ?DEBUG("~p use skill ~p tar ~p", [Aer, Der, SkillId]),
     ok.
 

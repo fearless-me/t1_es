@@ -10,6 +10,11 @@
 -author("mawenhong").
 
 -record(m_item, {uid = 0, did = 0, num = 1, bind = true}).
+%% todo list -- 背包后期事项
+%% 1. 根据不同逻辑需要   实现背包的整理
+%% 2. 添加新物品时要考虑是否叠加
+%% 3. 在物品增删改的时候各个系统自己写逻辑，比如装备背包，需要计算属性等等
+
 %% API
 -export([
     %% 生成一個道具、
@@ -24,8 +29,12 @@
 %%-------------------------------------------------------------------
 -spec del_one_op(Type :: non_neg_integer(), Rs :: tuple(),
     Need :: non_neg_integer()) -> {ok, New :: tuple()} | all.
-del_one_op(_Type, Rs, _Need)->
-    {ok, Rs}.
+del_one_op(_Type, #m_item{num = Have}, Need) when Need >= Have ->
+    all;
+del_one_op(_Type, #m_item{num = Have} = Rs, Need) when Need < Have, Need >= 0 ->
+    {ok, Rs#m_item{num = Have-Need}};
+del_one_op(_Type, _Rs, _Need) ->
+    erlang:error(bad_agrs).
 
 %%-------------------------------------------------------------------
 make(_Type, Uid, Did, Num) ->
@@ -42,18 +51,18 @@ find_check(_Rs, _Dis, _Need) ->
 %%-------------------------------------------------------------------
 is_did(#m_item{did = Did}, Did) ->
     true;
-is_did(Rs, _Did) ->
+is_did(_Rs, _Did) ->
     false.
 
 %%-------------------------------------------------------------------
+overlap_num(#m_item{num = Have}) -> Have;
 overlap_num(_Rs) -> 0.
 
 %%-------------------------------------------------------------------
-need_slot(Dis, Num) ->
-    1.
+need_slot(_Did, _Num) -> 1.
 
 %%-------------------------------------------------------------------
-reorder(Type, Map) ->
+reorder(_Type, Map) ->
     Map.
 
 %%-------------------------------------------------------------------

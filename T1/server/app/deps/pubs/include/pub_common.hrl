@@ -31,6 +31,9 @@
 -define(ServerState, serverStateEts_).
 
 
+%%
+-define(if_else(Cond, True, False), case Cond of true -> True; _ -> False end).
+
 %%-------------------------------------------------------------------------------
 -define(TRY_CATCH(Fun, Err, St, Format, Args),
     try

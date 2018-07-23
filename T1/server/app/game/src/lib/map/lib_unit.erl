@@ -17,9 +17,14 @@
 -include("ai_def.hrl").
 
 %% API
--export([new_player/5, del_player/1,new_monster/1, del_monster/1]).
--export([get_uid/1, get_pid/1, get_did/1, get_owner/1, get_type/1]).
 -export([
+    new_player/5, del_player/1,
+    new_monster/1, del_monster/1,
+    new_static/3, del_static/1,
+
+    get_uid/1, get_pid/1,
+    get_did/1, get_owner/1, get_type/1,
+    
     is_unit_cant_move_state/1, is_dead/1
 ]).
 
@@ -44,6 +49,24 @@ del_player(Uid) ->
     lib_ai_rw:del(Uid),
     lib_move_rw:del(Uid),
     lib_unit_rw:del(Uid),
+    lib_combat_rw:del(Uid),
+    ok.
+
+%%-------------------------------------------------------------------
+new_static(Group, Pos, Face) ->
+    Pid = self(),
+    Uid = uid_gen:mon_uid(),
+    lib_ai_rw:init_default(Uid),
+    lib_move_rw:init_default(Uid),
+    lib_unit_rw:init_default(Uid),
+    lib_combat_rw:init_default(Uid),
+    new(?OBJ_STATIC, Pid, Uid, 0, 0, Group, Pos, Face).
+
+del_static(Uid) ->
+    lib_ai_rw:del(Uid),
+    lib_move_rw:del(Uid),
+    lib_unit_rw:del(Uid),
+    lib_combat_rw:del(Uid),
     ok.
 
 %%-------------------------------------------------------------------

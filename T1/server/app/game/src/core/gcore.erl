@@ -40,7 +40,8 @@
     %% 关闭虚拟机
     halt/1, halt/2,
     %% 输出15个空行
-    nnl/0
+    nnl/0,
+    system_info/0
 ]).
 
 %%-------------------------------------------------------------------
@@ -113,6 +114,40 @@ nnl() ->
     S = lists:duplicate(15, "\n"),
     ?DEBUG("~ts", [lists:flatten(S)]).
 
+system_info() ->
+    %% observer_backend:sys_info
+    ?WARN("~n======================================================================================================~n\t"
+    "port(cur/max)                  :   ~p / ~p~n\t"
+    "process(cur/max)               :   ~p / ~p~n\t"
+    "atoms(cur/max)                 :   ~p / ~p~n\t"
+    "ets(cur/max)                   :   ~p / ~p~n\t"
+    "schedulers(on/max)             :   ~p / ~p~n\t"
+    "dirty schedulers cpu(on/max)   :   ~p / ~p~n\t"
+    "dirty io schedulers            :   ~p ~n\t"
+    "thread pool size               :   ~p ~n\t"
+    "system version                 :   ~ts~n\t"
+    "ERTS vesion                    :   ~ts~n\t"
+    "ulimit -a                      :   ~ts~n"
+    "======================================================================================================~n",
+        [
+            erlang:system_info(port_count),                     erlang:system_info(process_limit),
+            erlang:system_info(process_count),                  erlang:system_info(process_limit),
+            erlang:system_info(atom_count),                     erlang:system_info(atom_limit),
+            length(ets:all()),                                  erlang:system_info(ets_limit),
+            erlang:system_info(schedulers_online),              erlang:system_info(schedulers),
+            erlang:system_info(dirty_cpu_schedulers_online),    erlang:system_info(dirty_cpu_schedulers),
+            erlang:system_info(dirty_io_schedulers),
+            erlang:system_info(thread_pool_size),
+            erlang:system_info(otp_release),
+            erlang:system_info(version),
+            ulimit(misc:os_type())
+        ]
+    ),
+    ok.
+
+ulimit(unix) ->
+    os:cmd("ulimit -a");
+ulimit(_) -> "unknown".
 
 %%
 %%%% API

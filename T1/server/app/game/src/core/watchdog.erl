@@ -116,4 +116,5 @@ print_status()->
             fly:info(interval)
         ]
     ),
+    gcore:system_info(),
     ok.

@@ -87,7 +87,8 @@ sector(Aer, Pos, Face, Angle) ->
             case Own =/= Aer andalso Aer =/= Der of
                 true ->
                     DPos = lib_move_rw:get_cur_pos(Der),
-                    AngleBetween = vector3:angle(Face, DPos),
+                    DDir = vector3:subtract(DPos, Pos),
+                    AngleBetween = vector3:angle(Face, DDir),
                     case AngleBetween =< Half of
                         true -> [Der | Acc];
                         _ -> [Acc]
