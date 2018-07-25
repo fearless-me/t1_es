@@ -10,4 +10,8 @@
 -author("mawenhong").
 
 %% API
--export([]).
+-export([run/0]).
+
+run() ->
+    lib_player_bag:new(1, 100),
+    ok.

@@ -14,7 +14,9 @@
 
 %% ## cprof 模块调用次数统计
 %% ## cover 代码覆盖测试
+%% ## profiler
 %% ## xref 交叉引用检查，发现缺失函数
+%% ## common_test 单元测试
 %% ## 代码测试 https://github.com/proper-testing/proper
 %% ## dialyzer  静态分析
 %%      https://blog.csdn.net/wu545134650/article/details/53005093
@@ -35,7 +37,7 @@
 %%    et_collector:report_event(CollectorPid,85,from,to,fuck,extra_stuff),
 %%    ok.
 
-%% ## dtrace 或者 systemtap
+%% ## dtrace 或者 systemtap (erlang内部dyntrace)
 %% ## tsung 压力测试
 
 
