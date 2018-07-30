@@ -38,6 +38,7 @@
       <sourceFolder url="file://$MODULE_DIR$/app" isTestSource="false" />
       <excludeFolder url="file://$MODULE_DIR$/app/center/data" />
       <excludeFolder url="file://$MODULE_DIR$/app/center/scripts" />
+      <excludeFolder url="file://$MODULE_DIR$/app/dbs" />
       <excludeFolder url="file://$MODULE_DIR$/app/dbs/data" />
       <excludeFolder url="file://$MODULE_DIR$/app/dbs/scripts" />
       <excludeFolder url="file://$MODULE_DIR$/app/game/data" />
