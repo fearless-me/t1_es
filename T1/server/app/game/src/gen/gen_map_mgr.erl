@@ -6,7 +6,7 @@
 %%% @end
 %%% Created : 10. 五月 2018 11:06
 %%%-------------------------------------------------------------------
--module(gen_mod_map_mgr).
+-module(gen_map_mgr).
 -author("mawenhong").
 
 -behaviour(gen_serverw).
@@ -34,7 +34,7 @@ start_link(MapID) ->
 %%%===================================================================
 -define(MAP_LINES, map_line_ets__).
 mod_init([MapID]) ->
-    ProcessName = misc:create_atom(gen_mod_map_mgr, [MapID]),
+    ProcessName = misc:create_atom(gen_map_mgr, [MapID]),
     true = erlang:register(ProcessName, self()),
     erlang:process_flag(trap_exit, true),
     erlang:process_flag(priority, high),
@@ -136,7 +136,7 @@ do_player_exit_map_call(S, Req) ->
 
 %%--------------------------------------------------------------------
 create_new_line(S, MapID, LineID) ->
-    {ok, Pid} = map_supervisor:start_child([MapID, LineID]),
+    {ok, Pid} = map_sup:start_child([MapID, LineID]),
     Line = #m_map_line{
         map_id = MapID, line_id = LineID, pid = Pid,
         dead_line = time:milli_seconds() + ?LINE_LIFETIME

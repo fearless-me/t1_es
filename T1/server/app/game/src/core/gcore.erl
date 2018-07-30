@@ -35,6 +35,7 @@
     broadcast_net_msg/1,
     %% 平台账号登录时做些处理
     merge_plat_acc_name/2,
+    plat_account_crc/2,
     %% 根据地图来检查坐标的有效性
     fix_pos/2,
     %% 关闭虚拟机
@@ -92,6 +93,12 @@ broadcast_msg(MsgId, Msg) ->
 %%-------------------------------------------------------------------
 merge_plat_acc_name(PlatName, PlatAcc) ->
     misc:list_to_string_suffix([PlatName, PlatAcc], "_").
+
+plat_account_crc(PlatName, PlatAcc) ->
+    PN = misc:crc32(PlatName),
+    AN = misc:crc32(PlatAcc),
+    (PN bsl 32) bor AN .
+
 
 %%-------------------------------------------------------------------
 forbid_account(Aid) ->

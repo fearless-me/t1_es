@@ -40,33 +40,22 @@ is_dead(Uid) ->
 
 %%-------------------------------------------------------------------
 new_player(Pid, Uid, Group, Pos, Face) ->
-    lib_ai_rw:init_default(Uid),
-    lib_move_rw:init_default(Uid),
-    lib_unit_rw:init_default(Uid),
+    init_rw_default(Uid),
     new(?OBJ_USR, Pid, Uid, 0, 0, Group, Pos, Face).
 
 del_player(Uid) ->
-    lib_ai_rw:del(Uid),
-    lib_move_rw:del(Uid),
-    lib_unit_rw:del(Uid),
-    lib_combat_rw:del(Uid),
+    del_all_rw(Uid),
     ok.
 
 %%-------------------------------------------------------------------
 new_static(Group, Pos, Face) ->
     Pid = self(),
     Uid = uid_gen:mon_uid(),
-    lib_ai_rw:init_default(Uid),
-    lib_move_rw:init_default(Uid),
-    lib_unit_rw:init_default(Uid),
-    lib_combat_rw:init_default(Uid),
+    init_rw_default(Uid),
     new(?OBJ_STATIC, Pid, Uid, 0, 0, Group, Pos, Face).
 
 del_static(Uid) ->
-    lib_ai_rw:del(Uid),
-    lib_move_rw:del(Uid),
-    lib_unit_rw:del(Uid),
-    lib_combat_rw:del(Uid),
+    del_all_rw(Uid),
     ok.
 
 %%-------------------------------------------------------------------
@@ -84,23 +73,16 @@ new_monster(#recMapObjData{
     Pid = self(),
     Uid = uid_gen:mon_uid(),
     Pos = vector3:new(X, 0.0, Y),
-    lib_ai_rw:init_default(Uid),
-    lib_move_rw:init_default(Uid),
-    lib_unit_rw:init_default(Uid),
-    lib_combat_rw:init_default(Uid),
+    init_rw_default(Uid),
+
     %% todo 怪物AI配置
     lib_ai:init(Uid, ?AIAT_Active),
     new(?OBJ_MON, Pid, Uid, Mid, 0, Group, Pos, vector3:new(0.1, 0, 0.5)).
 
 
 del_monster(Uid) ->
-    lib_ai_rw:del(Uid),
-    lib_move_rw:del(Uid),
-    lib_unit_rw:del(Uid),
-    lib_combat_rw:del(Uid),
+    del_all_rw(Uid),
     ok.
-
-
 %%-------------------------------------------------------------------
 new(Type, Pid, Uid, Did, Owner, Group, Pos, Face) ->
     lib_move:init(Uid, Pos, Face),
@@ -110,6 +92,25 @@ new(Type, Pid, Uid, Did, Owner, Group, Pos, Face) ->
     lib_unit_rw:set_type(Uid, Type),
     #m_map_unit{uid = Uid, pid = Pid, did = Did, owner = Owner, type = Type}.
 
+
+%%-------------------------------------------------------------------
+%%-------------------------------------------------------------------
+init_rw_default(Uid)->
+    lib_ai_rw:init_default(Uid),
+    lib_move_rw:init_default(Uid),
+    lib_unit_rw:init_default(Uid),
+    lib_combat_rw:init_default(Uid),
+    ok.
+
+del_all_rw(Uid) ->
+    lib_ai_rw:del(Uid),
+    lib_move_rw:del(Uid),
+    lib_unit_rw:del(Uid),
+    lib_combat_rw:del(Uid),
+    ok.
+
+%%-------------------------------------------------------------------
+%%-------------------------------------------------------------------
 
 
 %%-------------------------------------------------------------------

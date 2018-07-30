@@ -21,8 +21,10 @@
 -export([
     %% 生成一個道具、
     make/4,
-    %% 刪除成功時、新增時， 同步數據給客戶端
-    on_deleted/3, on_added/3, on_overlapped/4, sync_all/2,
+    %% 刪除成功時、新增時， 同步數據給客戶端,直接更新某个道具
+    on_deleted/3, on_added/3, on_overlapped/4, on_update/4,
+    %% 同步數據給客戶端
+    sync_all/2,
     %% 刪除一個道具的操作、 堆疊數量、 查找時的檢查、判斷是否是某個物品
     del_one_op/3, overlap_op/2, overlap_num/1, find_check/3, is_did/2,
     %% 道具需要的格子數、最大的格子数、整理背包（合併）
@@ -50,6 +52,11 @@ on_added(Type, #m_item{uid = Uid, did = Did} = _News, Num) ->
 on_overlapped(Type, #m_item{uid = Uid, did = Did, num = Have} = _News, From, Num) ->
     ?DEBUG("overlapped ~p item(s) to ~p from ~p, total ~p in bag ~p",
         [Num, {Uid, Did}, From, Have, Type]),
+    ok.
+
+on_update(Type, Uid, Old, New) ->
+    ?DEBUG("update ~p item old ~p , new ~p in bag ~p",
+        [Uid, Old, New, Type]),
     ok.
 
 %%-------------------------------------------------------------------

@@ -57,7 +57,7 @@ do_handle_info(account_login, Req, _FromPid, PoolId) ->
     ?DEBUG("account_login ~p pool ~p",[Req, PoolId]),
     #r_login_req{plat_name = PN, plat_account_name = PA, player_pid = ToPid} = Req,
     MergeAccount = gcore:merge_plat_acc_name(PN, PA),
-    AccountCrc = misc:crc32(MergeAccount),
+    AccountCrc = gcore:plat_account_crc(PN, PA),
     Sql = db_sql:sql(load_acount),
     Res = db:query(PoolId, Sql, [AccountCrc], infinity),
     check_res(Res, Sql, [AccountCrc]),

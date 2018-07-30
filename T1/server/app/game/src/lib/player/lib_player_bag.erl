@@ -46,8 +46,10 @@ find(Type, Uid, Def) ->
 update(Type, Uid, New) ->
     Bag = get_bag(Type),
     Map0 = Bag#user_bag.items,
+    Old = maps:get(Uid, Map0, undefined),
     Map1 = maps:update(Uid, New, Map0),
     set_bag(Type, Bag#user_bag{items = Map1}),
+    ?TRY_CATCH(hook_bag:on_update(Type, Uid, Old, New)),
     ok.
 
 %%-------------------------------------------------------------------

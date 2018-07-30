@@ -2,6 +2,8 @@
 
 -export([reload/1]).
 
+%% todo 重新整理下这个逻辑好安全的更新
+
 reload([])->
 	ok;
 reload([Module | T]) ->

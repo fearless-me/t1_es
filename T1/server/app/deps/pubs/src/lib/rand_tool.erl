@@ -18,6 +18,7 @@
 
 
 -define(INT32_MAX, 2147483647).
+-define(UINT32_MAX, 4294967295).
 -define(RAND_KEY, fake_rand_process_key___).
 
 -spec new() -> integer().
@@ -29,15 +30,16 @@ new() ->
 -spec new( Seed :: integer() ) -> Seed :: integer().
 new(Seed) ->
     put(?RAND_KEY, Seed),
-    Seed.
+Seed.
 
 -spec rand() -> integer().
 rand() ->
     Key1 = ensure_new(),
     % gcc 线性同余随机数生成器
-    Key2 = Key1 * 1103515245 + 12345,
-    put(?RAND_KEY, Key2),
-    (Key2 bsr 1) band ?INT32_MAX .
+    Key2 = ((Key1 * 1103515245 + 12345)),
+    <<Key3:32/signed-little>> = <<Key2:32/unsigned-little>>,
+    put(?RAND_KEY, Key3),
+    (Key3 bsr 1) band ?INT32_MAX .
 
 -spec rand(Min :: integer(), Max :: integer()) -> integer().
 rand(Min, Min) -> Min;

@@ -131,7 +131,7 @@ tick_cur_skill_action(_Uid, 0) ->
     ok;
 tick_cur_skill_action(Uid, SkillId) ->
     Serial  = lib_combat_rw:get_skill_serial(Uid),
-    OpTime0 = lib_combat_rw:get_operate_time(Uid),
+    OpTime0 = lib_combat_rw:get_operate_time_def(Uid, 0),
     OpTime1 = OpTime0 + ?MAP_TICK,
     lib_combat_rw:set_operate_time(Uid, OpTime1),
     case can_skill_active_tick(Uid, SkillId) of

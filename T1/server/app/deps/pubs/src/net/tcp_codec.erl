@@ -67,6 +67,7 @@ decode(Handler, Socket, Bin) ->
 
 decode(Conf, Handler, Socket, Bin) ->
     {NewMsg, _NewMsgSize} = merge_binary(Bin),
+    ?DEBUG("~p",[NewMsg]),
     set_buffer(<<>>),
     do_decode(Conf, Handler, Socket, NewMsg),
     ok.

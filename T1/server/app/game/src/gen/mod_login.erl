@@ -26,8 +26,9 @@ login_2({false, Error}, Req, S)->
     S;
 login_2(true, Req, S)->
     #r_login_req{plat_name = PN, plat_account_name = PA} = Req,
-    MergeAccount = gcore:merge_plat_acc_name(PN, PA),
-    lib_db:action_a_(misc:crc32(MergeAccount), account_login,  Req),
+%%    MergeAccount = gcore:merge_plat_acc_name(PN, PA),
+    AccountCrc = gcore:plat_account_crc(PN, PA),
+    lib_db:action_a_(AccountCrc, account_login,  Req),
     maps:update(in, maps:get(in, S) + 1, S).
 
 %%--------------------------------------------------------------------

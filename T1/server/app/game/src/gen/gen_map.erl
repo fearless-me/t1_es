@@ -6,7 +6,7 @@
 %%% @end
 %%% Created : 10. 五月 2018 11:09
 %%%-------------------------------------------------------------------
--module(gen_mod_map).
+-module(gen_map).
 -author("mawenhong").
 
 -behaviour(gen_serverw).
@@ -30,7 +30,7 @@ start_link(Params) ->
 mod_init([MapID, MapLine]) ->
      erlang:process_flag(trap_exit, true),
     %% erlang:process_flag(priority, high),
-    ProcessName = misc:create_atom(gen_mod_map, [MapID,MapLine]),
+    ProcessName = misc:create_atom(gen_map, [MapID,MapLine]),
     true = erlang:register(ProcessName, self()),
     ?INFO("map ~p:~p started",[ProcessName, self()]),
     {ok, lib_map_priv:init(#m_map_state{map_id = MapID, line_id = MapLine})}.

@@ -6,7 +6,7 @@
 %%% @end
 %%% Created : 15. 五月 2018 20:12
 %%%-------------------------------------------------------------------
--module(gen_mod_login).
+-module(gen_login).
 -author("mawenhong").
 
 -behaviour(gen_serverw).
