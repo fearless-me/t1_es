@@ -29,7 +29,7 @@
 
 start(SupervisorRef, App) ->
     {ok, _} = supervisor:start_child(SupervisorRef, {?MODULE, {?MODULE, start_link, [App]},
-        transient, brutal_kill, worker, [dbs_error_logger]}),
+        transient, brutal_kill, worker, [common_error_logger_h]}),
     error_logger:add_report_handler(common_error_logger_h, common_error_logger).
 
 

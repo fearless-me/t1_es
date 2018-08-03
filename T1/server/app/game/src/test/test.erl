@@ -12,7 +12,17 @@
 -include("pub_common.hrl").
 
 %% API
--export([tv3/0, a/0]).
+-export([tv3/0, a/0, rand/1]).
+
+rand(N) ->
+    rand_tool:new(999),
+    lists:foreach(
+        fun(_)->
+            R = rand_tool:rand(),
+            S = rand_tool:seed(),
+            io:format("seed: ~p, ret: ~p~n",[S, R])
+        end, lists:seq(1, N)),
+    ok.
 
 a()->
     V1 = vector3:new(10, 0, 0),

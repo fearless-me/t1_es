@@ -27,19 +27,28 @@ new() ->
     put(?RAND_KEY, Key),
     Key.
 
--spec new( Seed :: integer() ) -> Seed :: integer().
+-spec new(Seed :: integer()) -> Seed :: integer().
 new(Seed) ->
     put(?RAND_KEY, Seed),
-Seed.
+    Seed.
 
 -spec rand() -> integer().
 rand() ->
     Key1 = ensure_new(),
     % gcc 线性同余随机数生成器
-    Key2 = ((Key1 * 1103515245 + 12345)),
-    <<Key3:32/signed-little>> = <<Key2:32/unsigned-little>>,
+    Key2 = ((Key1 * 1103515245 + 12345)) band ?UINT32_MAX,
+%%    <<Key3:32/signed-little>> = <<Key2:32/unsigned-little>>,
+    
+    Key3 =
+        if
+            Key2 > ?INT32_MAX ->
+                0 - (((Key2 - 1) band ?INT32_MAX) bxor ?INT32_MAX);
+            true ->
+                (Key2 band ?UINT32_MAX)
+        end,
+    
     put(?RAND_KEY, Key3),
-    (Key3 bsr 1) band ?INT32_MAX .
+    (Key3 bsr 1) band ?INT32_MAX.
 
 -spec rand(Min :: integer(), Max :: integer()) -> integer().
 rand(Min, Min) -> Min;
