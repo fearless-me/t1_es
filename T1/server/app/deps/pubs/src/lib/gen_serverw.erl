@@ -149,9 +149,10 @@ handle_info(Info, State) ->
 %% @spec terminate(Reason, State) -> void()
 %% 
 %%--------------------------------------------------------------------
-terminate(Reason, _State) ->
+terminate(Reason, State) ->
     Module = get(?LogicModule),
     ?INFO("~p,~p terminate ~p", [Module, self(), Reason]),
+    catch Module:on_terminate(Reason, State),
     ok.
 
 %%--------------------------------------------------------------------

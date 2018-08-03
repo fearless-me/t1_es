@@ -52,8 +52,8 @@ on_start_move(_Uid) ->
 %% 不要在调用lib_obj_rw:set_xxx
 %% 逻辑代码必须要喊在 ?lock() 与 ?unlock 之间
 %%-------------------------------------------------------------------
--define(lock(X), lock_transcation(X)).
--define(unlock(), unlock_transcation()).
+-define(lock(X), lock_transaction(X)).
+-define(unlock(), unlock_transaction()).
 
 on_rw_update(Uid, hp, Hp) ->
     ?lock({Uid, hp}),
@@ -93,13 +93,13 @@ on_rw_update_priv_action(_ObjType, _Uid, _Element) ->
 
 
 %%-------------------------------------------------------------------
-lock_transcation(Key)->
-    case get(map_obj_lock_transcation) of
+lock_transaction(Key)->
+    case get(map_obj_lock_transaction) of
         Key -> throw("recursive call");
-        _ -> put(map_obj_lock_transcation, Key)
+        _ -> put(map_obj_lock_transaction, Key)
     end,
     ok.
 
-unlock_transcation()->
-    erase(map_obj_lock_transcation).
+unlock_transaction()->
+    erase(map_obj_lock_transaction).
 

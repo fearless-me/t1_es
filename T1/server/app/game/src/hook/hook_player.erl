@@ -85,8 +85,8 @@ on_sharp(Hour) ->
     ok.
 
 %%-------------------------------------------------------------------
--define(lock(X), lock_transcation(X)).
--define(unlock(), unlock_transcation()).
+-define(lock(X), lock_transaction(X)).
+-define(unlock(), unlock_transaction()).
 
 %%不要在调用lib_player_rw:set_xxx
 on_rw_update(level, Level) ->
@@ -103,13 +103,13 @@ on_rw_update(_Key, _Value) ->
 
 
 %%-------------------------------------------------------------------
-lock_transcation(Key)->
-    case get(player_lock_transcation) of
+lock_transaction(Key)->
+    case get(player_lock_transaction) of
         Key -> throw("recursive call");
-        _ -> put(player_lock_transcation, Key)
+        _ -> put(player_lock_transaction, Key)
     end,
     ok.
 
-unlock_transcation()->
-    erase(player_lock_transcation).
+unlock_transaction()->
+    erase(player_lock_transaction).
 

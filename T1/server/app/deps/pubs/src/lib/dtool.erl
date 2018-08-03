@@ -10,7 +10,154 @@
 -author("mawenhong").
 
 %% API
--export([]).
+-export([
+    proc_info/1, proc_basic_info/1, proc_backtrace/1,
+    proc_signal/1, proc_reduction/1, proc_binary/1, proc_memory/1,
+
+    proc_top/2, proc_top_memory/1, proc_top_message_queue/1,
+    proc_top_bin_leak/1, proc_unlink/0,
+
+    node_stats_print/2,
+    node_memory/1, node_memory/2,
+    node_allocator_snapshot/0, node_allocator_snapshot_save/1,
+    node_cache_hit/0, node_avg_block_size/1,  node_sbcs_to_mbcs/1,
+    node_fragmentation/1
+]).
+
+%%-------------------------------------------------------------------
+proc_info(PidTerm) ->
+    recon:info(PidTerm).
+
+%%-------------------------------------------------------------------
+proc_basic_info(PidTerm) ->
+    recon:info(PidTerm, meta).
+
+%%-------------------------------------------------------------------
+proc_backtrace(PidTerm)->
+    recon:info(PidTerm, location).
+
+%%-------------------------------------------------------------------
+proc_signal(PidTerm) ->
+    recon:info(PidTerm, signals).
+
+%%-------------------------------------------------------------------
+proc_reduction(PidTerm) ->
+    recon:info(PidTerm, work).
+
+%%-------------------------------------------------------------------
+proc_binary(PidOrTerm) ->
+    recon:info(PidOrTerm,binary).
+
+%%-------------------------------------------------------------------
+proc_memory(PidTerm) ->
+    recon:info(PidTerm, memory_used).
+
+%%-------------------------------------------------------------------
+proc_top(AttrName, Num) ->
+    recon:proc_count(AttrName, Num).
+
+%%-------------------------------------------------------------------
+proc_top_memory(N) ->
+    recon:proc_count(memory, N).
+
+%%-------------------------------------------------------------------
+proc_top_message_queue(N) ->
+    recon:proc_count(message_queue_len, N).
+
+%%-------------------------------------------------------------------
+proc_top_bin_leak(N) ->
+    recon:bin_leak(N).
+
+%%-------------------------------------------------------------------
+proc_unlink() ->
+    [
+        {P,misc:register_name(P)} || P <- processes(),
+        [{_, Ls}, {_, Ms}] <- [process_info(P, [links, monitors])],
+        [] == Ls, [] == Ms
+    ].
+
+%%-------------------------------------------------------------------
+node_stats_print(N, Interval) ->
+    recon:node_stats_print(N, Interval).
+
+%%-------------------------------------------------------------------
+node_allocator_snapshot() ->
+    ensure_recon_unit(),
+    recon_alloc:snapshot_print().
+
+%%-------------------------------------------------------------------
+node_allocator_snapshot_save(File) ->
+    ensure_recon_unit(),
+    recon_alloc:snapshot_save(File).
+
+%%-------------------------------------------------------------------
+node_memory(Stage)->
+    Ks = [used, allocated, unused, usage, allocated_types, allocated_instances],
+    lists:map(fun(Key)-> node_memory(Key, Stage) end, Ks).
+
+%%-------------------------------------------------------------------
+-spec node_memory(Key, Stage) -> any() when
+    Key :: used | allocated | unused | usage | allocated_types|allocated_instances,
+    Stage :: current | max.
+node_memory(usage, Stage) ->
+    ensure_recon_unit(),
+    {usage, trunc(recon_alloc:memory(usage, Stage)*10000)/10000};
+node_memory(Key, Stage) ->
+    ensure_recon_unit(),
+    trans_to_unit_mb(Key, recon_alloc:memory(Key, Stage)).
+
+%%-------------------------------------------------------------------
+node_cache_hit()->
+    ensure_recon_unit(),
+    recon_alloc:cache_hit_rates().
+
+%%-------------------------------------------------------------------
+node_avg_block_size(Stage)->
+    ensure_recon_unit(),
+    recon_alloc:average_block_sizes(Stage).
+
+
+%%-------------------------------------------------------------------
+node_sbcs_to_mbcs(Stage) ->
+    ["the higher the value,  the worst the condition" |
+        recon_alloc:sbcs_to_mbcs(Stage)].
+%%-------------------------------------------------------------------
+node_fragmentation(Stage) ->
+    recon_alloc:fragmentation(Stage).
+
+%%-------------------------------------------------------------------
+%%-------------------------------------------------------------------
+trans_to_unit_mb(Key, {Key, Size}) ->
+    {Key, mem2str(Size)};
+trans_to_unit_mb(Key, Size) when is_number(Size)->
+    {Key, mem2str(Size)};
+trans_to_unit_mb(Key, List) when is_list(List) ->
+    F = fun
+            ({K, V}) when is_number(V) ->
+                {K,  mem2str(V)};
+            (O) ->
+                O
+        end,
+    {Key, lists:map(F, List)};
+trans_to_unit_mb(_Key, Other)->
+    Other.
+
+%%-------------------------------------------------------------------
+-define(KIB, (1024)).
+-define(MIB, (?KIB * 1024)).
+-define(GIB, (?MIB * 1024)).
+mem2str(Mem) ->
+    if Mem > ?GIB -> io_lib:format("~.3fG", [Mem / ?GIB]);
+        Mem > ?MIB -> io_lib:format("~.3fM", [Mem / ?MIB]);
+        Mem > ?KIB -> io_lib:format("~.3fK", [Mem / ?KIB]);
+        Mem >= 0 -> io_lib:format("~.1fB", [Mem / 1.0])
+    end.
+
+%%-------------------------------------------------------------------
+ensure_recon_unit()->
+    recon_alloc:set_unit(byte).
+%%-------------------------------------------------------------------
+
 
 %% ## cprof 模块调用次数统计
 %% ## cover 代码覆盖测试

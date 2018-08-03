@@ -38,7 +38,19 @@ do_handle_call(Request, From, State) ->
     ?ERROR("undeal call ~w from ~w", [Request, From]),
     {reply, ok, State}.
 
+loop_rand(0) -> skip;
+loop_rand(N) ->
+    rand_tool:rand(),
+    loop_rand(N - 1).
+
+
 %%--------------------------------------------------------------------
+do_handle_info(rand, State) ->
+    Old = erlang:process_info(self(), memory),
+    loop_rand(100000),
+    New = erlang:process_info(self(), memory),
+    ?DEBUG("~nrand_10000:~n~p~n~p",[Old, New]),
+    {noreply, State};
 do_handle_info(loop_map, State) ->
     Old = erlang:process_info(self(), memory),
     List1 =

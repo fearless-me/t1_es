@@ -124,20 +124,21 @@ nnl() ->
 system_info() ->
     %% observer_backend:sys_info
     ?WARN("~n======================================================================================================~n\t"
-    "port(cur/max)                  :   ~p / ~p~n\t"
-    "process(cur/max)               :   ~p / ~p~n\t"
-    "atoms(cur/max)                 :   ~p / ~p~n\t"
-    "ets(cur/max)                   :   ~p / ~p~n\t"
-    "schedulers(on/max)             :   ~p / ~p~n\t"
-    "dirty schedulers cpu(on/max)   :   ~p / ~p~n\t"
-    "dirty io schedulers            :   ~p ~n\t"
-    "thread pool size               :   ~p ~n\t"
-    "system version                 :   ~ts~n\t"
-    "ERTS vesion                    :   ~ts~n\t"
-    "ulimit -a                      :   ~ts~n"
+    "port(cur/max)(+Q)                      :   ~p / ~p~n\t"
+    "process(cur/max)(+P)                   :   ~p / ~p~n\t"
+    "atoms(cur/max)(+t)                     :   ~p / ~p~n\t"
+    "ets(cur/max)(+e)                       :   ~p / ~p~n\t"
+    "schedulers(on/max)(+S)                 :   ~p / ~p~n\t"
+    "dirty schedulers cpu(on/max)(+SDcpu)   :   ~p / ~p~n\t"
+    "dirty io schedulers(+SDio)             :   ~p ~n\t"
+    "thread pool size(+A)                   :   ~p ~n\t"
+    "system version                         :   ~ts~n\t"
+    "ERTS vesion                            :   ~ts~n\t"
+    "ulimit -a                              :   ~ts~n\t"
+    "sytem monitor                          :   ~w~n"
     "======================================================================================================~n",
         [
-            erlang:system_info(port_count),                     erlang:system_info(process_limit),
+            erlang:system_info(port_count),                     erlang:system_info(port_limit),
             erlang:system_info(process_count),                  erlang:system_info(process_limit),
             erlang:system_info(atom_count),                     erlang:system_info(atom_limit),
             length(ets:all()),                                  erlang:system_info(ets_limit),
@@ -147,7 +148,8 @@ system_info() ->
             erlang:system_info(thread_pool_size),
             erlang:system_info(otp_release),
             erlang:system_info(version),
-            ulimit(misc:os_type())
+            ulimit(misc:os_type()),
+            erlang:system_monitor()
         ]
     ),
     ok.

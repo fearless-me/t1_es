@@ -263,6 +263,7 @@ fragmentation(Keyword) ->
 %% Cache can be tweaked using three VM flags: `+MMmcs', `+MMrmcbf', and
 %% `+MMamcbf'.
 %%
+
 %% `+MMmcs' stands for the maximum amount of cached memory segments. Its
 %% default value is '10' and can be anything from 0 to 30. Increasing
 %% it first and verifying if cache hits get better should be the first

@@ -8,5 +8,5 @@
                   stdlib
                  ]},
   {mod, { fastlog_app, []}},
-  {env, []}
+  {env, [{show_in_stdio,true},{mkdir_restart, true}]}
  ]}.

@@ -14,14 +14,14 @@
 -include_lib("kernel/include/file.hrl").
 
 %% API
--export([start_link/1]).
+-export([start_link/1, start_link/2]).
 
 -export([
-    debug/1, debug/2,
-    info/1, info/2,
-    warn/1, warn/2,
-    error/1, error/2,
-    fatal/1, fatal/2
+    debug/3, debug/2,
+    info/3, info/2,
+    warn/3, warn/2,
+    error/3, error/2,
+    fatal/3, fatal/2
 ]).
 
 -export([
@@ -39,9 +39,6 @@
 
 -export([color_inout/2]).
 
--define(SERVER, ?MODULE).
--define(LOGGER, ?SERVER).
-
 -define(LOGDIR, "log").
 -define(MSG, fast_logger_msg).
 -define(MAX_LOG_CNT_ONE_FILE, 150000).
@@ -55,7 +52,7 @@
 -define(FlagEts, discardLogEts___).
 
 
--record(state, {monitorRef, counter, fileName, fd, fd_err, is_log_stdio}).
+-record(state, {monitorRef, counter, fileName, fd, fd_err, is_log_stdio, no_err_fd = false, dir=?LOGDIR}).
 
 %%设置日志文件和错误文件的相关选项
 -define(LogFileOptions, [
@@ -77,72 +74,71 @@
 -define(LOG_LEVEL, debug).
 -endif.
 
-fatal(Fmt) -> fatal_(?LOG_LEVEL, Fmt, []).
-fatal(Fmt, Arg) -> fatal_(?LOG_LEVEL, Fmt, Arg).
+fatal(Sink, Fmt) -> fatal_(?LOG_LEVEL, Sink, Fmt, []).
+fatal(Sink, Fmt, Arg) -> fatal_(?LOG_LEVEL, Sink, Fmt, Arg).
 
-fatal_(debug, Fmt, Arg) ->
-    do_log(fatal, Fmt, Arg);
-fatal_(info, Fmt, Arg) ->
-    do_log(fatal, Fmt, Arg);
-fatal_(warn, Fmt, Arg) ->
-    do_log(fatal, Fmt, Arg);
-fatal_(error, Fmt, Arg) ->
-    do_log(fatal, Fmt, Arg);
-fatal_(_, Fmt, Arg) ->
-    do_log(fatal, Fmt, Arg).
+fatal_(debug, Sink, Fmt, Arg) ->
+    do_log(fatal, Sink, Fmt, Arg);
+fatal_(info, Sink, Fmt, Arg) ->
+    do_log(fatal, Sink, Fmt, Arg);
+fatal_(warn, Sink, Fmt, Arg) ->
+    do_log(fatal, Sink, Fmt, Arg);
+fatal_(error, Sink, Fmt, Arg) ->
+    do_log(fatal, Sink, Fmt, Arg);
+fatal_(_, Sink, Fmt, Arg) ->
+    do_log(fatal, Sink, Fmt, Arg).
 
-error(Fmt) -> error_(?LOG_LEVEL, Fmt, []).
-error(Fmt, Arg) -> error_(?LOG_LEVEL, Fmt, Arg).
+error(Sink, Fmt) -> error_(?LOG_LEVEL, Sink, Fmt, []).
+error(Sink, Fmt, Arg) -> error_(?LOG_LEVEL, Sink, Fmt, Arg).
 
-error_(debug, Fmt, Arg) ->
-    do_log(error, Fmt, Arg);
-error_(info, Fmt, Arg) ->
-    do_log(error, Fmt, Arg);
-error_(warn, Fmt, Arg) ->
-    do_log(error, Fmt, Arg);
-error_(error, Fmt, Arg) ->
-    do_log(error, Fmt, Arg);
-error_(_, _Fmt, _Arg) ->
+error_(debug, Sink, Fmt, Arg) ->
+    do_log(error, Sink, Fmt, Arg);
+error_(info, Sink, Fmt, Arg) ->
+    do_log(error, Sink, Fmt, Arg);
+error_(warn, Sink, Fmt, Arg) ->
+    do_log(error, Sink, Fmt, Arg);
+error_(error, Sink, Fmt, Arg) ->
+    do_log(error, Sink, Fmt, Arg);
+error_(_, _Sink, _Fmt, _Arg) ->
     skip.
 
-warn(Fmt) -> warn_(?LOG_LEVEL, Fmt, []).
-warn(Fmt, Arg) -> warn_(?LOG_LEVEL, Fmt, Arg).
+warn(Sink, Fmt) -> warn_(?LOG_LEVEL, Sink, Fmt, []).
+warn(Sink, Fmt, Arg) -> warn_(?LOG_LEVEL, Sink, Fmt, Arg).
 
-warn_(debug, Fmt, Arg) ->
-    do_log(warn, Fmt, Arg);
-warn_(info, Fmt, Arg) ->
-    do_log(warn, Fmt, Arg);
-warn_(warn, Fmt, Arg) ->
-    do_log(warn, Fmt, Arg);
-warn_(_, _Fmt, _Arg) ->
+warn_(debug, Sink, Fmt, Arg) ->
+    do_log(warn, Sink, Fmt, Arg);
+warn_(info, Sink, Fmt, Arg) ->
+    do_log(warn, Sink, Fmt, Arg);
+warn_(warn, Sink, Fmt, Arg) ->
+    do_log(warn, Sink, Fmt, Arg);
+warn_(_, _Sink, _Fmt, _Arg) ->
     skip.
 
-info(Fmt) -> info_(?LOG_LEVEL, Fmt, []).
-info(Fmt, Arg) -> info_(?LOG_LEVEL, Fmt, Arg).
+info(Sink, Fmt) -> info_(?LOG_LEVEL, Sink, Fmt, []).
+info(Sink, Fmt, Arg) -> info_(?LOG_LEVEL, Sink, Fmt, Arg).
 
-info_(debug, Fmt, Arg) ->
-    do_log(info, Fmt, Arg);
-info_(info, Fmt, Arg) ->
-    do_log(info, Fmt, Arg);
-info_(_, _Fmt, _Arg) ->
+info_(debug, Sink, Fmt, Arg) ->
+    do_log(info, Sink, Fmt, Arg);
+info_(info, Sink, Fmt, Arg) ->
+    do_log(info, Sink, Fmt, Arg);
+info_(_, _Sink, _Fmt, _Arg) ->
     skip.
 
-debug(Fmt) -> debug_(?LOG_LEVEL, Fmt, []).
-debug(Fmt, Arg) -> debug_(?LOG_LEVEL, Fmt, Arg).
+debug(Sink, Fmt) -> debug_(?LOG_LEVEL, Sink, Fmt, []).
+debug(Sink, Fmt, Arg) -> debug_(?LOG_LEVEL, Sink, Fmt, Arg).
 
-debug_(debug, Fmt, Arg) ->
-    do_log(debug, Fmt, Arg);
-debug_(_, _Fmt, _Arg) ->
+debug_(debug, Sink, Fmt, Arg) ->
+    do_log(debug, Sink, Fmt, Arg);
+debug_(_, _Sink, _Fmt, _Arg) ->
     skip.
 
 
-do_log(Level, F, A) ->
+do_log(Level, Sink, F, A) ->
     {{YYYY, MM, DD}, {Hour, Min, Sec}} = erlang:localtime(),
     String =
         io_lib:format("[~.4w-~.2.0w-~.2.0w ~.2.0w:~.2.0w:~.2.0w][~w]~ts~n",
             [YYYY, MM, DD, Hour, Min, Sec, Level, io_lib:format(F, A)]),
-    ?LOGGER ! {?MSG, Level, String},
-%%    ?LOGGER ! {?MSG,Level,F, A, erlang:localtime()},
+    Sink ! {?MSG, Level, String},
     ok.
 
 -spec discard(IsDiscardLog :: true|false) -> ok.
@@ -161,7 +157,11 @@ discard(IsDiscardLog) ->
 %%--------------------------------------------------------------------
 start_link(Fname) ->
     ParentPid = self(),
-    gen_server2:start_link({local, ?SERVER}, ?MODULE, [Fname, ParentPid], []).
+    gen_server2:start_link({local, ?MODULE}, ?MODULE, [Fname, ParentPid], []).
+
+start_link(Sink, Fname) ->
+    ParentPid = self(),
+    gen_server2:start_link({local, Sink}, ?MODULE, [Fname, ParentPid], []).
 
 %%%===================================================================
 %%% gen_server callbacks
@@ -256,7 +256,8 @@ handle_info(Info, State) ->
 %%--------------------------------------------------------------------
 -spec(terminate(Reason :: (normal | shutdown | {shutdown, term()} | term()),
     State :: #state{}) -> term()).
-terminate(_Reason, _State) ->
+terminate(_Reason, #state{fd = Fd}) ->
+    catch file:close(Fd),
     ok.
 
 %%--------------------------------------------------------------------
@@ -280,19 +281,34 @@ mod_init([Fname, ParentPid]) ->
     erlang:process_flag(trap_exit, true),
     erlang:process_flag(priority, high),
 
-    ets:new(?FlagEts, [public, named_table, {keypos, #recDiscard.key}, {write_concurrency, true}]),
-    ets:insert(?FlagEts, #recDiscard{}),
+    case ets:info(?FlagEts) of
+        undefined ->
+            ets:new(?FlagEts, [public, named_table, {keypos, #recDiscard.key}, {write_concurrency, true}]),
+            ets:insert(?FlagEts, #recDiscard{});
+        _ -> skip
+    end,
 
     Ref = erlang:monitor(process, ParentPid),
     do_init(Ref, Fname, ?LOGDIR).
 
+
 do_init(Ref, Fname, Dir) ->
-    ensure_log_dir(Dir),
-    Fd = make_file_(Dir, Fname),
-    FdErr = make_file_(Dir, Fname, ".Err"),
+    MkDirNew = application:get_env(fastlog, mkdir_restart, false),
+    NewDir = ensure_log_dir(MkDirNew, Dir),
+    NoErr = case erlang:process_info(self(), registered_name) of
+                {registered_name, ?MODULE} -> false;
+                _ -> true
+            end,
+    Fd = make_file_(NewDir, Fname),
+    FdErr = case NoErr of
+                true -> undefined;
+                _ -> make_file_(NewDir, Fname, ".Err")
+            end,
     IsShowInStdio = application:get_env(fastlog, show_in_stdio, true),
-    {ok, #state{monitorRef = Ref, counter = 0, fileName = Fname,
-        fd = Fd, fd_err = FdErr, is_log_stdio = IsShowInStdio}}.
+    {ok, #state{
+        monitorRef = Ref, counter = 0, fileName = Fname,
+        fd = Fd, fd_err = FdErr, is_log_stdio = IsShowInStdio,
+        no_err_fd = NoErr, dir = NewDir}}.
 
 
 start_file_timer() ->
@@ -340,11 +356,14 @@ call(Request, From, State) ->
     {noreply, ok, State}.
 
 %%--------------------------------------------------------------------
-rotate(#state{fileName = Fname, fd = Fd, fd_err = FdErr} = State) ->
+rotate(#state{fileName = Fname, fd = Fd, fd_err = FdErr, no_err_fd = NoErr, dir = Dir} = State) ->
     catch file:close(Fd),
     catch file:close(FdErr),
-    Fd2 = make_file_(?LOGDIR, Fname),
-    Fd3 = make_file_(?LOGDIR, Fname, ".Err"),
+    Fd2 = make_file_(Dir, Fname),
+    Fd3 = case NoErr of
+              true -> undefined;
+              _ -> make_file_(Dir, Fname, ".Err")
+          end,
     {ok, State#state{fd = Fd2, fd_err = Fd3, counter = 0}}.
 
 % Check if the file needs to be rotated
@@ -359,16 +378,16 @@ check_rotation(State) ->
             State#state{counter = Cntr + 1}
     end.
 
-write_log(Level, String, #state{fd = Fd, fd_err = FdErr, is_log_stdio = Stdio}) ->
+write_log(Level, String, #state{fd = Fd, fd_err = FdErr, is_log_stdio = Stdio, no_err_fd = NoErr}) ->
     file:write(Fd, String),
     write_console(Level, Stdio, String),
-    case is_error_log(Level) of
+    case NoErr =:= false andalso is_error_log(Level) of
         true -> file:write(FdErr, String);
         _ -> skip
     end.
 
 write_log(Level, Fmt, Args,
-    {{YYYY, MM, DD}, {Hour, Min, Sec}}, #state{fd = Fd, fd_err = FdErr, is_log_stdio = Stdio}) ->
+    {{YYYY, MM, DD}, {Hour, Min, Sec}}, #state{fd = Fd, fd_err = FdErr, is_log_stdio = Stdio, no_err_fd = NoErr}) ->
 
     Str1 = io_lib:format(Fmt, Args),
     String =
@@ -376,7 +395,7 @@ write_log(Level, Fmt, Args,
             [YYYY, MM, DD, Hour, Min, Sec, Level, Str1]),
     file:write(Fd, String),
     write_console(Level, Stdio, String),
-    case is_error_log(Level) of
+    case NoErr =:= false andalso is_error_log(Level) of
         true -> file:write(FdErr, String);
         _ -> skip
     end.
@@ -407,11 +426,11 @@ write_console(Level, Stdio, String) ->
     skip.
 -endif.
 
-color_inout(fatal, Msg) -> io:format("~ts", [color:redb(Msg)]);
-color_inout(error, Msg) -> io:format("~ts", [color:redb(Msg)]);
-color_inout(warn, Msg)-> io:format("~ts", [color:yellowb(Msg)]);
-color_inout(debug, Msg) -> io:format("~ts", [color:green(Msg)]);
-color_inout(_, Msg) -> io:format("~ts", [Msg]).
+color_inout(fatal, Msg) -> io:format(user, "~ts", [color:redb(Msg)]);
+color_inout(error, Msg) -> io:format(user, "~ts", [color:redb(Msg)]);
+color_inout(warn, Msg) -> io:format(user, "~ts", [color:yellowb(Msg)]);
+color_inout(debug, Msg) -> io:format(user, "~ts", [color:green(Msg)]);
+color_inout(_, Msg) -> io:format(user, "~ts", [Msg]).
 
 
 is_error_log(debug) -> false;
@@ -445,13 +464,22 @@ make_file_(Dir, Fname, Suffix) ->
     io:format("[~ts][info]create log file[~s] succ.~n", [time_format_str(erlang:localtime()), File]),
     Fd.
 
-ensure_log_dir(Dir) ->
+ensure_log_dir(true, Dir) ->
+    NewDir = Dir ++ now_day(),
+    file:make_dir(NewDir),
+    NewDir;
+ensure_log_dir(_, Dir) ->
     file:make_dir(Dir),
-    ok.
+    Dir.
 
 next_hour_sec() ->
     {_, {_, Min, Sec}} = erlang:localtime(),
     3600 - Min * 60 - Sec.
+
+now_day() ->
+    {{YYYY, MM, DD}, _} = erlang:localtime(),
+    lists:flatten(io_lib:format("~.4w~.2.0w~.2.0w",
+        [YYYY, MM, DD])).
 
 time_format_str({{YYYY, MM, DD}, {Hour, Min, Sec}}) ->
     lists:flatten(io_lib:format("~.4w-~.2.0w-~.2.0w ~.2.0w:~.2.0w:~.2.0w",
