@@ -71,7 +71,7 @@ proc_top_bin_leak(N) ->
 %%-------------------------------------------------------------------
 proc_unlink() ->
     [
-        {P,misc:register_name(P)} || P <- processes(),
+        {P,misc:registered_name(P)} || P <- processes(),
         [{_, Ls}, {_, Ms}] <- [process_info(P, [links, monitors])],
         [] == Ls, [] == Ms
     ].

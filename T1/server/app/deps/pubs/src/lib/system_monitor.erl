@@ -73,24 +73,24 @@ do_handle_call(Request, From, State) ->
 %%--------------------------------------------------------------------
 do_handle_info({monitor, GcPid, long_gc, Info}, Logger) ->
     ?WARN_SINK(Logger, "long_gc ~p(~p)  ~w",
-        [GcPid, misc:register_name(GcPid), Info]),
+        [GcPid, misc:registered_name(GcPid), Info]),
     {noreply, Logger};
 do_handle_info({monitor, PidOrPort, long_schedule, Info} , Logger) ->
     ?WARN_SINK(Logger, "long_schedule ~p   ~w", [PidOrPort, Info]),
     {noreply, Logger};
 do_handle_info({monitor, GcPid, large_heap, Info} , Logger) ->
     ?WARN_SINK(Logger, "large_heap ~p(~p)   ~w",
-        [GcPid, misc:register_name(GcPid), Info]),
+        [GcPid, misc:registered_name(GcPid), Info]),
     {noreply, Logger};
 do_handle_info({monitor, SusPid, busy_port, Port} , Logger) ->
-    case  misc:register_name(SusPid) of
+    case  misc:registered_name(SusPid) of
         user -> skip;
         Name -> ?WARN_SINK(Logger, "busy_port ~p(~p)  ~w", [SusPid, Name, Port])
     end,
     {noreply, Logger};
 do_handle_info({monitor, SusPid, busy_dist_port, Port} , Logger) ->
     ?WARN_SINK(Logger, "busy_dist_port ~p(~p)  ~w",
-        [SusPid, misc:register_name(SusPid), Port]),
+        [SusPid, misc:registered_name(SusPid), Port]),
     {noreply, Logger};
 do_handle_info({set_large_heap, SetsWord}, State) ->
     {_MonitorPid,Old} = erlang:system_monitor(),

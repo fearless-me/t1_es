@@ -65,7 +65,7 @@ do_handle_cast(Request, State) ->
 
 %%--------------------------------------------------------------------
 init_worker(N, _PoolId) when N < 1 ->
-    ?ERROR("~p worker num <1", [misc:register_name()]),
+    ?ERROR("~p worker num <1", [misc:registered_name()]),
     error;
 init_worker(N, PoolId) ->
     F = fun(X) -> init_worker_1(PoolId, X) end,
@@ -73,7 +73,7 @@ init_worker(N, PoolId) ->
     sucess.
 
 init_worker_1(PoolId, X) ->
-    MgrName = misc:register_name(),
+    MgrName = misc:registered_name(),
     {ok, Pid} = db_sup:start_child([PoolId, MgrName, X]),
     put({?WORKER_KEY, X}, Pid),
     Pid.
@@ -89,7 +89,7 @@ hash_to_worker(Key, State) ->
         true -> P
     catch _:_:_ ->
         ?ERROR("~p's worker ~p of ~p for pool ~p restart",
-            [misc:register_name(), X, WorkerNo, PoolId]),
+            [misc:registered_name(), X, WorkerNo, PoolId]),
         init_worker_1(PoolId, X)
     end.
 

@@ -33,7 +33,7 @@ mod_init([PoolId, MgrName, X]) ->
     misc:register_process(self(), MgrName, [son, X]),
     erlang:process_flag(trap_exit, true),
     erlang:process_flag(priority, high),
-    ?INFO("\t~p", [misc:register_name()]),
+    ?INFO("\t~p", [misc:registered_name()]),
     {ok, #{pool => PoolId}}.
 
 %%--------------------------------------------------------------------

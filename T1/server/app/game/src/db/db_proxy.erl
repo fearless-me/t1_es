@@ -205,7 +205,7 @@ start_db_pool(PoolRef, Ets, Conf) ->
     db_pool:add_pool(PoolId, Host, Port, User, Password, Database, Connections, MaxConnections),
 
     {ok, Pid} = db_mgr_sup:start_child([Id, PoolId, WorkerNo]),
-    ?INFO("\t~p", [misc:register_name(Pid)]),
+    ?INFO("\t~p", [misc:registered_name(Pid)]),
 
     pg_local:join(PoolRef, Pid),
     db_mgr:start_worker(Pid),

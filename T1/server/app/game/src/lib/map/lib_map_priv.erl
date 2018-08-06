@@ -88,7 +88,7 @@ do_player_exit_call(Uid, #m_map_unit{} = Unit) ->
     Data;
 do_player_exit_call(Uid, _Obj) ->
     ?ERROR("~w req exit map ~w ~w, but obj not exists!",
-        [Uid, self(), misc:register_name()]),
+        [Uid, self(), misc:registered_name()]),
     error.
 
 %%-------------------------------------------------------------------
@@ -105,11 +105,11 @@ player_join_call(
     lib_map_view:sync_player_join_map(Unit),
     hook_map:on_player_join(Uid),
     ?DEBUG("uid ~p, join map ~w, name ~p",
-        [lib_unit:get_uid(Unit), self(), misc:register_name()]),
+        [lib_unit:get_uid(Unit), self(), misc:registered_name()]),
     {ok, S};
 player_join_call(S, Any) ->
     ?ERROR("player join map ~w, name ~p, error obj data ~w",
-        [self(), misc:register_name(), Any]),
+        [self(), misc:registered_name(), Any]),
     {error, S}.
 
 
@@ -239,7 +239,7 @@ tick_update_after() -> ok.
 
 %%-------------------------------------------------------------------
 real_stop_now(0) ->
-    ?INFO("~p ~p stop now", [misc:register_name(), self()]),
+    ?INFO("~p ~p stop now", [misc:registered_name(), self()]),
     ps:send(self(), stop_immediately);
 real_stop_now(_Players) ->
     tick_msg(),
@@ -248,7 +248,7 @@ real_stop_now(_Players) ->
 %%-------------------------------------------------------------------
 start_stop_now(S) ->
     ?INFO("~p ~p start stop now, kick all player(s)",
-        [misc:register_name(), self()]),
+        [misc:registered_name(), self()]),
     ?TRY_CATCH(hook_map:on_map_destroy(), Err1, Stk1),
     ?TRY_CATCH(kick_all_player(S), Err2, Stk2),
     S#m_map_state{status = ?MAP_READY_EXIT}.
