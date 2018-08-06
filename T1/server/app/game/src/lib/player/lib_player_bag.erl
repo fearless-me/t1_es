@@ -12,8 +12,8 @@
 -include("logger.hrl").
 -include("pub_common.hrl").
 
--record(user_bag, {type = 0, slots = 1, items = #{}}).
--opaque bag() :: #user_bag{}.
+-record(player_bag, {type = 0, slots = 1, items = #{}}).
+-opaque bag() :: #player_bag{}.
 -export_type([bag/0]).
 
 
@@ -32,23 +32,23 @@
 new(Type, MaxFreeSlot) when MaxFreeSlot =< 0 ->
     new(Type, 1);
 new(Type, MaxFreeSlot) ->
-    Bag = #user_bag{type = Type, slots = MaxFreeSlot},
+    Bag = #player_bag{type = Type, slots = MaxFreeSlot},
     set_bag(Type, Bag),
     true.
 
 %%-------------------------------------------------------------------
 find(Type, Uid, Def) ->
     Bag = get_bag(Type),
-    Maps = Bag#user_bag.items,
+    Maps = Bag#player_bag.items,
     maps:get(Uid, Maps, Def).
 
 %%-------------------------------------------------------------------
 update(Type, Uid, New) ->
     Bag = get_bag(Type),
-    Map0 = Bag#user_bag.items,
+    Map0 = Bag#player_bag.items,
     Old = maps:get(Uid, Map0, undefined),
     Map1 = maps:update(Uid, New, Map0),
-    set_bag(Type, Bag#user_bag{items = Map1}),
+    set_bag(Type, Bag#player_bag{items = Map1}),
     ?TRY_CATCH(hook_bag:on_update(Type, Uid, Old, New)),
     ok.
 
@@ -61,12 +61,12 @@ add(Type, Did, Num) ->
 
 add_1(true, Type, Did, Num) ->
     Bag = get_bag(Type),
-    Maps = Bag#user_bag.items,
+    Maps = Bag#player_bag.items,
     case try_to_overlapped(Type, Maps, Did, Num) of
         {make_new, Num} ->
             add_2(Type, Did, Num);
         {make_new, New, NewMaps} ->
-            set_bag(Type, Bag#user_bag{items = NewMaps}),
+            set_bag(Type, Bag#player_bag{items = NewMaps}),
             add_2(Type, Did, New)
     end;
 add_1(_No, Type, Did, Num) ->
@@ -89,7 +89,7 @@ add_action(Type, Did, Num) ->
     Uid = uid_gen:item_uid(),
     Bag0 = get_bag(Type),
     Item = hook_bag:make(Type, Uid, Did, Num),
-    Bag1 = Bag0#user_bag{items = maps:put(Uid, Item, Bag0#user_bag.items)},
+    Bag1 = Bag0#player_bag{items = maps:put(Uid, Item, Bag0#player_bag.items)},
     set_bag(Type, Bag1),
     ?TRY_CATCH(hook_bag:on_added(Type, Item, Num)),
     true.
@@ -123,7 +123,7 @@ add_instance(Type, Uid, Item) ->
 
 add_instance_action(Type, Uid, Item) when is_tuple(Item) ->
     Bag0 = get_bag(Type),
-    Bag1 = Bag0#user_bag{items = maps:put(Uid, Item, Bag0#user_bag.items)},
+    Bag1 = Bag0#player_bag{items = maps:put(Uid, Item, Bag0#player_bag.items)},
     set_bag(Type, Bag1),
     ?TRY_CATCH(hook_bag:on_added(Type, Item, hook_bag:overlap_num(Item))),
     true;
@@ -143,8 +143,8 @@ del_uid(Type, Uid, Num) ->
 del_uid(Type, Uid) ->
     Bag = get_bag(Type),
     Res = find_from_bag_uid(Bag, Uid),
-    Maps = Bag#user_bag.items,
-    Bag1 = Bag#user_bag{items = maps:remove(Uid, Maps)},
+    Maps = Bag#player_bag.items,
+    Bag1 = Bag#player_bag{items = maps:remove(Uid, Maps)},
     set_bag(Type, Bag1),
     ?TRY_CATCH(hook_bag:on_deleted(Type, Res, hook_bag:overlap_num(Res))),
     true.
@@ -153,7 +153,7 @@ del_uid(Type, Uid) ->
 del_did(Type, Did, Num) ->
     Bag = get_bag(Type),
     Res = find_from_bag_did(Bag, Did, Num),
-    Map = Bag#user_bag.items,
+    Map = Bag#player_bag.items,
     lists:foldl(
         fun({Uid, Dec}, Con) ->
             Elm = maps:get(Uid, Con),
@@ -182,13 +182,13 @@ del_uid_action(Type, Bag, Uid, Res, Num) ->
     ?TRY_CATCH_RET
     (
         begin
-            Maps = Bag#user_bag.items,
+            Maps = Bag#player_bag.items,
             Bag1 =
                 case hook_bag:del_one_op(Type, Res, Num) of
                     {ok, New} ->
-                        Bag#user_bag{items = maps:update(Uid, New, Maps)};
+                        Bag#player_bag{items = maps:update(Uid, New, Maps)};
                     all ->
-                        Bag#user_bag{items = maps:remove(Uid, Maps)}
+                        Bag#player_bag{items = maps:remove(Uid, Maps)}
                 end,
             set_bag(Type, Bag1),
             ?TRY_CATCH(hook_bag:on_deleted(Type, Res, Num), Err1, Stk1),
@@ -200,16 +200,16 @@ del_uid_action(Type, Bag, Uid, Res, Num) ->
 %%-------------------------------------------------------------------
 reorder(Type) ->
     Bag = get_bag(Type),
-    Map = Bag#user_bag.items,
+    Map = Bag#player_bag.items,
     New = hook_bag:reorder(Type, Map),
-    set_bag(Type, Bag#user_bag{items = New}),
+    set_bag(Type, Bag#player_bag{items = New}),
     hook_bag:sync_all(Type, New),
     ok.
 
 %%-------------------------------------------------------------------
 sum(Type, Did) ->
     Bag = get_bag(Type),
-    Map = Bag#user_bag.items,
+    Map = Bag#player_bag.items,
     maps:fold(
         fun(_K, V, Sum)->
             case hook_bag:is_did(V, Did) of
@@ -221,12 +221,12 @@ sum(Type, Did) ->
 %%-------------------------------------------------------------------
 all_items(Type) ->
     Bag = get_bag(Type),
-    Bag#user_bag.items.
+    Bag#player_bag.items.
 
 %%-------------------------------------------------------------------
 overlapped(Type, Uid) ->
     Bag = get_bag(Type),
-    case maps:find(Uid, Bag#user_bag.items) of
+    case maps:find(Uid, Bag#player_bag.items) of
         {ok, Rs} -> hook_bag:overlap_num(Rs);
         _ -> 0
     end.
@@ -234,11 +234,11 @@ overlapped(Type, Uid) ->
 %%-------------------------------------------------------------------
 cur_slots(Type) ->
     Bag = get_bag(Type),
-    Bag#user_bag.slots.
+    Bag#player_bag.slots.
 
 %%-------------------------------------------------------------------
 remain_slots(Type) ->
-    #user_bag{slots = Slot, items = Map} = get_bag(Type),
+    #player_bag{slots = Slot, items = Map} = get_bag(Type),
     Slot - maps:size(Map).
 
 %%-------------------------------------------------------------------
@@ -264,7 +264,7 @@ find_from_bag_did(Bag, Did, Num) ->
                         _ ->
                             Res
                     end
-            end, {[], Num}, Bag#user_bag.items),
+            end, {[], Num}, Bag#player_bag.items),
     case Res of
         {UidList, 0} -> UidList;
         _ -> error
@@ -292,7 +292,7 @@ find_overlap_from_bag_did(Maps, Did, Added) ->
 find_from_bag_uid(_Bag, Uid) when Uid =< 0 ->
     error;
 find_from_bag_uid(Bag, Uid) ->
-    case maps:find(Uid, Bag#user_bag.items) of
+    case maps:find(Uid, Bag#player_bag.items) of
         {ok, Rs} -> Rs;
         _ -> error
     end.
@@ -306,7 +306,7 @@ bag_valid(Type) ->
 
 uid_valid(Type, Uid) ->
     Bag = get_bag(Type),
-    maps:is_key(Uid, Bag#user_bag.items).
+    maps:is_key(Uid, Bag#player_bag.items).
 
 
 %%-------------------------------------------------------------------
@@ -315,7 +315,7 @@ get_bag(Type) -> get(key(Type)).
 set_bag(Type, Bag) -> put(key(Type), Bag).
 set_bag_items(Type, Maps)  ->
     Bag = get_bag(Type),
-    set_bag(Type, Bag#user_bag{items = Maps}),
+    set_bag(Type, Bag#player_bag{items = Maps}),
     ok.
 
 

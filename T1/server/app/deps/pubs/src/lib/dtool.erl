@@ -12,7 +12,7 @@
 %% API
 -export([
     proc_info/1, proc_basic_info/1, proc_backtrace/1,
-    proc_signal/1, proc_reduction/1, proc_binary/1, proc_memory/1,
+    proc_signal/1, proc_reduction/1, proc_binary/1, proc_memory/1, proc_gc/1,
 
     proc_top/2, proc_top_memory/1, proc_top_message_queue/1,
     proc_top_bin_leak/1, proc_unlink/0,
@@ -51,6 +51,12 @@ proc_binary(PidOrTerm) ->
 %%-------------------------------------------------------------------
 proc_memory(PidTerm) ->
     recon:info(PidTerm, memory_used).
+
+%%-------------------------------------------------------------------
+proc_gc(PidTerm) ->
+    A = erlang:process_info(recon_lib:term_to_pid(PidTerm),garbage_collection),
+    B = erlang:process_info(recon_lib:term_to_pid(PidTerm),garbage_collection_info),
+    [A,B].
 
 %%-------------------------------------------------------------------
 proc_top(AttrName, Num) ->

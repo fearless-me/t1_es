@@ -13,6 +13,48 @@
 
 %% API
 -export([tv3/0, a/0, rand/1]).
+-export([test_apply/1, test_apply/2, apply_fun/0, loop_call/1, loop_mfa_call/2, loop_apply_call/2]).
+
+test_apply(Mod)->
+    io:format("call times           local call                      MFA         apply(microseconds)~n"),
+    test_apply(Mod, 10),
+    test_apply(Mod, 100),
+    test_apply(Mod, 1000),
+    test_apply(Mod, 10000),
+    test_apply(Mod, 100000),
+    test_apply(Mod, 1000000),
+    test_apply(Mod, 10000000),
+    ok.
+
+test_apply({Mod, _,_} = MFA,N) ->
+    {Local,_} = timer:tc(fun()->  test:loop_call(N) end),
+    {MfaEx,_} = timer:tc(fun()->  test:loop_mfa_call(Mod, N) end),
+    {Apply,_} = timer:tc(fun()->  test:loop_apply_call(MFA, N) end),
+    io:format("~.10w\t~.15w\t\t~.15w\t\t~.15w~n",[N, Local, MfaEx, Apply]),
+    ok.
+
+loop_call(0) ->
+    ok;
+loop_call(N) ->
+    test:apply_fun(),
+    loop_call(N - 1).
+
+loop_mfa_call(_, 0) ->
+    ok;
+loop_mfa_call(M, N) ->
+    M:apply_fun(),
+    loop_mfa_call(M, N - 1).
+
+
+loop_apply_call(_, 0) ->
+    ok;
+loop_apply_call({M,F,A} = MFA, N) ->
+    erlang:apply(M, F, A),
+    loop_apply_call(MFA, N - 1).
+
+apply_fun() ->
+    ok.
+
 
 rand(N) ->
     rand_tool:new(999),

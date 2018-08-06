@@ -14,6 +14,8 @@
 
 -define(MAX_OBJ, 350).
 
+
+
 %% API
 -export([start_link/0]).
 -export([mod_init/1, do_handle_call/3, do_handle_info/2, do_handle_cast/2]).
@@ -29,7 +31,7 @@ start_link() ->
 %%% Internal functions
 %%%===================================================================	
 mod_init(_Args) ->
-    %% erlang:process_flag(trap_exit, true),
+    erlang:process_flag(trap_exit, true),
     %% erlang:process_flag(priority, high),
 
     tick_msg(),

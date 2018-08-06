@@ -28,7 +28,7 @@ start_link() ->
 mod_init(_Args) ->
     erlang:process_flag(trap_exit, true),
     erlang:process_flag(priority, high),
-    TaskList = serv_loader_logic:task_list(),
+    TaskList = lib_loader:task_list(),
     ?WARN("loader task list ~p", [TaskList]),
     ps:send(self(), start_all_task),
     {ok, TaskList}.
@@ -42,14 +42,14 @@ do_handle_call(Request, From, State) ->
 
 %%--------------------------------------------------------------------
 do_handle_info(start_all_task, State) ->
-    serv_loader_logic:start_all_task(),
+    lib_loader:start_all_task(),
     {noreply, State};
 do_handle_info({task_done, Task}, State) ->
     LeftTaskList = lists:delete(Task, State),
     ?WARN("task ~p done, task list left ~p",[Task, LeftTaskList]),
     {noreply, LeftTaskList};
 do_handle_info(Info, State) ->
-    serv_loader_logic:on_info_msg(Info),
+    lib_loader:on_info_msg(Info),
     {noreply, State}.
 
 %%--------------------------------------------------------------------

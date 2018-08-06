@@ -16,6 +16,8 @@
 
 %% API
 -export([
+    init/0,
+%%    
     online/3, offline/2,
 %% ETS_PLAYER_PUB
     add_player_pub/1, del_player_pub/1, get_player_pub/1, update_player_pub/2,
@@ -26,6 +28,14 @@
 %% ETS_ACCOUNT_PSOCK
     get_account_pid/1,add_account_socket/3, get_account_socket/1, del_account_socket/1
 ]).
+
+%%-------------------------------------------------------------------
+init() ->
+    ets:new(?ETS_PLAYER_PUB,   [named_table, public, {keypos, #m_player_pub.uid},           ?ETS_RC, ?ETS_WC]),
+    ets:new(?ETS_PLAYER_PRIV,   [named_table, public, {keypos, #m_player_private.uid},    ?ETS_RC, ?ETS_WC]),
+    ets:new(?ETS_PLAYER_PSOCK, [named_table, public, {keypos, #m_player_pid_sock.uid},  ?ETS_RC, ?ETS_WC]),
+    ets:new(?ETS_ACCOUNT_PSOCK,[named_table, public, {keypos, #m_account_pid_sock.aid}, ?ETS_RC, ?ETS_WC]),
+    ok.
 
 %%-------------------------------------------------------------------
 %%-------------------------------------------------------------------
