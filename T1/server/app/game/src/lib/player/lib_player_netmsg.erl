@@ -70,6 +70,6 @@ handle(#pk_U2GS_UseSkill{tar_uid = Tar, x = X, y = Y, skill_id = SkillId, serial
     ok;
 handle(#pk_U2GS_SkillInterrupt{}) ->
     ok;
-handle(Msg) ->
-    ?DEBUG("~p", [Msg]),
+handle(_Msg) ->
+%%    ?DEBUG("~p", [Msg]),
     ok.

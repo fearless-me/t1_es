@@ -6,6 +6,7 @@
 -include("pub_common.hrl").
 
 %% API
+-export([ensure/0]).
 -export([c/1]).
 -export([c/2]).
 -export([nc/2]).
@@ -33,7 +34,16 @@ c(Port, MapID) -> spawn(fun() -> tcp_client:connect(Port, MapID) end).
 
 nc(N, Port) ->
     catch ets:new(tcpc, [named_table, public, {keypos, 1},  ?ETS_RC, ?ETS_WC]),
-    lists:foreach(fun(_) -> tcp_client:c(Port, 1), timer:sleep(1) end, lists:seq(1, N)).
+    lists:foreach(fun(_) -> tcp_client:c(Port, 1), timer:sleep(2) end, lists:seq(1, N)).
+
+ensure()->
+    true = misc:start_all_app(kernel),
+    true = misc:start_all_app(ssl),
+    true = misc:start_all_app(stdlib),
+    true = misc:start_all_app(ranch),
+    true = misc:start_all_app(fastlog),
+    true = misc:start_all_app(fly),
+    ok.
 
 
 connect(Port, _MapID) ->
@@ -59,6 +69,7 @@ connect(Port, _MapID) ->
     timer:sleep(50),
     erlang:send_after(100 * 60 * 1000, self(), exit),
     loop_recv(),
+    ?WARN("socket ~p, pid ~p bye~~!",[socket(), self()]),
 
     ok.
 
@@ -67,7 +78,8 @@ loop_recv() ->
         exit ->
             gen_tcp:close(socket()),
             ok
-    after 0 ->
+    after 10000 ->
+        heartbeat(),
         recv_msg(socket()),
         timer:sleep(50),
         loop_recv()
@@ -75,7 +87,7 @@ loop_recv() ->
 
 send_msg(Socket, Msg) ->
     {_Bytes1, IoList1} = tcp_codec:encode(Msg),
-    io:format("~p~n", [iolist_to_binary(IoList1)]),
+    ?DEBUG("send: ~p",[Msg]),
     ranch_tcp:send(Socket, IoList1).
 
 
@@ -101,7 +113,7 @@ handle_1(#pk_GS2U_LoginResult{}) ->
 handle_1(#pk_GS2U_CreatePlayerResult{errorCode = ErrCode, uid = Uid}) ->
     case ErrCode of
         0 -> send_msg(socket(), #pk_U2GS_SelPlayerEnterGame{uid = Uid});
-        _ -> io:format("create role failed ~p~n", [ErrCode])
+        _ -> ?ERROR("create role failed ~p~n", [ErrCode])
     end,
     ok;
 handle_1(#pk_GS2U_UserPlayerList{info = Info}) ->
@@ -122,7 +134,7 @@ handle_1(#pk_GS2U_GotoNewMap{}) ->
     case get_aid() of
         undefined ->
             send_msg(socket(), #pk_U2GS_GetPlayerInitData{});
-        _ -> skip
+        _ -> rand_walk()
     end,
     ok;
 handle_1(#pk_GS2U_PlayerInitBase{uid = Uid}) ->
@@ -130,11 +142,10 @@ handle_1(#pk_GS2U_PlayerInitBase{uid = Uid}) ->
     ets:insert(tcpc, {Uid, socket()}),
     ok;
 handle_1(#pk_GS2U_GetPlayerInitDataEnd{}) ->
-    Delta = misc:rand(5, 15)/1.0,
-    send_msg(socket(), #pk_U2GS_PlayerWalk{dst_x = 234.1 + Delta, dst_y = 250.1 + Delta}),
+    rand_walk(),
     ok;
 handle_1(Msg) ->
-    io:format("~p~n", [Msg]).
+    ?WARN("recv: ~p", [Msg]).
 
 -define(SocketKey, socketRef___).
 socket(Socket) -> put(?SocketKey, Socket).
@@ -142,3 +153,13 @@ socket() -> get(?SocketKey).
 
 set_aid(Aid) -> put('AID', Aid).
 get_aid() -> get('AID').
+
+heartbeat()->
+    Msg = #pk_GS2U_HearBeat{},
+    send_msg(socket(), Msg),
+    ok.
+
+rand_walk() ->
+    Delta = misc:rand(5, 15)/1.0,
+    send_msg(socket(), #pk_U2GS_PlayerWalk{dst_x = 234.1 + Delta, dst_y = 250.1 + Delta}),
+    ok.

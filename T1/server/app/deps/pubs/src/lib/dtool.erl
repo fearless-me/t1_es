@@ -17,11 +17,11 @@
     proc_top/2, proc_top_memory/1, proc_top_message_queue/1,
     proc_top_bin_leak/1, proc_unlink/0,
 
-    node_stats_print/2,
+    node_stats/0, node_stats_print/2,
     node_memory/1, node_memory/2,
     node_allocator_snapshot/0, node_allocator_snapshot_save/1,
     node_cache_hit/0, node_avg_block_size/1,  node_sbcs_to_mbcs/1,
-    node_fragmentation/1
+    node_fragmentation/1, node_scheduler_usage/1
 ]).
 
 %%-------------------------------------------------------------------
@@ -83,6 +83,9 @@ proc_unlink() ->
     ].
 
 %%-------------------------------------------------------------------
+node_stats() ->
+    recon:node_stats_print(1, 1000).
+
 node_stats_print(N, Interval) ->
     recon:node_stats_print(N, Interval).
 
@@ -130,6 +133,10 @@ node_sbcs_to_mbcs(Stage) ->
 %%-------------------------------------------------------------------
 node_fragmentation(Stage) ->
     recon_alloc:fragmentation(Stage).
+
+node_scheduler_usage(Interval) ->
+    recon:scheduler_usage(Interval).
+
 
 %%-------------------------------------------------------------------
 %%-------------------------------------------------------------------

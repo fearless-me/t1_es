@@ -32,7 +32,7 @@
 -define(MAP_READY_EXIT, 2).
 -define(MAP_EXIT,       3).
 
--define(LINE_LIFETIME, 10 * 60 * 1000).
+-define(LINE_LIFETIME, 1 * 60 * 1000).
 -define(DEAD_LINE_PROTECT, 60 * 1000).
 
 -define(MAP_CALL_TIMEOUT, 15000).
@@ -52,7 +52,7 @@
 %%
 -record(m_map_line,{
     map_id = 0, line_id = 0, pid,
-    limits = 50, in = 0, reserve = 10,
+    limits = 5, in = 0, reserve = 10,
     dead_line = 0, status = ?MAP_NORMAL
 }).
 

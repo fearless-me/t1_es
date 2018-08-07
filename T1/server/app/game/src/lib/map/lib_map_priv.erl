@@ -78,7 +78,7 @@ player_exit_call(S, #r_exit_map_req{
     {Ret, S}.
 
 do_player_exit_call(Uid, #m_map_unit{} = Unit) ->
-    ?INFO("user ~p exit map ~p:~p:~p",
+    ?INFO("player ~p exit map ~p:~p:~p",
         [Uid, lib_map_rw:get_map_id(), lib_map_rw:get_line_id(), self()]),
 
     lib_map_rw:del_obj_to_ets(Unit),

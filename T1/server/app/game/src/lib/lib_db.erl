@@ -9,6 +9,10 @@
 %%%  3个参数/*_all_/2，消息来源进程是self()
 %%%  4个参数/*_all_/3，消息来源将由逻辑进程自己指定
 %%%
+%%% @HashKey@ 用于决定由那个数据库工作进程来操作数据库
+%%% 针对玩家，全部用账号ID
+%%% 针对公共数据没如果可以并发，随机算则，如果要串行就固定某一个ID
+%% 
 %%% @end
 %%% Created : 30. 五月 2018 14:22
 %%%-------------------------------------------------------------------
@@ -24,6 +28,7 @@
 %% 公共库
     action_pub_/3, action_pub_/4, action_pub_all_/2, action_pub_all_/3
 ]).
+
 
 -spec action_p_(HashKey :: integer(), MsgId :: atom(), Msg :: any()) -> ok.
 -spec action_p_(HashKey :: integer(), MsgId :: atom(), Msg :: any(), FromPid :: pid()) -> ok.
