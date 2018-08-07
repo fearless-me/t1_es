@@ -13,7 +13,7 @@
 -include("logger.hrl").
 -include("map.hrl").
 -include("pub_common.hrl").
--include("vector3.hrl").
+
 
 %%
 -export([start_link/0]).

@@ -9,7 +9,7 @@
 -include("logger.hrl").
 -include("player_status.hrl").
 -include("rw_record.hrl").
--include("vector3.hrl").
+
 %%-------------------------------------------------------------------
 
 -export([

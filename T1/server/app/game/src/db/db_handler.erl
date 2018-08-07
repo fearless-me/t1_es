@@ -14,7 +14,7 @@
 -include("common_record.hrl").
 -include("db_record.hrl").
 %%-include("map_unit.hrl").
--include("vector3.hrl").
+
 
 %% API
 -export([do_handle_info/4]).

@@ -24,7 +24,7 @@
 
 %%服务器当前使用的语言
 -ifndef(Region).
--define(Cur_Lang, ?Lang_CHS).
+-define(Cur_Lang, ?Lang_CHT).
 -else.
 -define(Cur_Lang,?Region).
 -endif.

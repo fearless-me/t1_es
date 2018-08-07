@@ -9,7 +9,7 @@
 -module(lib_skill_selector).
 -author("mawenhong").
 -include("logger.hrl").
--include("vector3.hrl").
+
 -include("map.hrl").
 -include("map_unit.hrl").
 

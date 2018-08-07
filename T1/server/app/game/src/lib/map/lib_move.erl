@@ -11,7 +11,7 @@
 -include("map_unit.hrl").
 -include("movement.hrl").
 -include("logger.hrl").
--include("vector3.hrl").
+
 -include("mem_record.hrl").
 -include("netmsg.hrl").
 -include_lib("stdlib/include/assert.hrl").
@@ -224,8 +224,8 @@ update_role_walk(Uid, _CurPos, PathList, MoveTime) ->
     end.
 
 %%-------------------------------------------------------------------
--spec linear_pos(vector3(), list(), keep | changed) ->
-    {vector3(), list() | ?ENR_TOBECONTINUED, float()}.
+-spec linear_pos(vector3:vector3(), list(), keep | changed) ->
+    {vector3:vector3(), list() | ?ENR_TOBECONTINUED, float()}.
 
 linear_pos([MovePos] = PL, MoveTime, Flag) ->
     #m_move_pos{dist = Dist, start_pos = Start, end_pos = End, speed = Speed} = MovePos,

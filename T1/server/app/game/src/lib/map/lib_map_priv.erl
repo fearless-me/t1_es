@@ -16,7 +16,7 @@
 -include("cfg_mapsetting.hrl").
 -include("common_record.hrl").
 -include("netmsg.hrl").
--include("vector3.hrl").
+
 
 
 -spec init(S ::#m_map_state{}) -> #m_map_state{}.

@@ -11,7 +11,7 @@
 -include("logger.hrl").
 -include("map.hrl").
 -include("pub_common.hrl").
--include("vector3.hrl").
+
 
 %% API
 -export([

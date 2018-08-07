@@ -22,6 +22,7 @@ SOURCE_DIR += ../deps/poolboy
 #文件包含目录
 INCLUDE_DIR = -I ./include
 INCLUDE_DIR += -I ./src/config
+INCLUDE_DIR += -I ./src/netmsg
 INCLUDE_DIR += -I ../deps/pubs/include
 INCLUDE_DIR += -I ../deps/pubs/src/net
 INCLUDE_DIR += -I ../deps/pubs/src/resource/pack

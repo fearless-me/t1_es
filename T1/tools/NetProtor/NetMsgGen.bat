@@ -4,7 +4,7 @@ echo delete client message sources...
 del "..\\..\\Client\\Assets\\Code\\Base\\Net\\Messages\\*.cs" /s /q
 
 echo delete server message sources...
-del "..\\..\\server\\app\\deps\\pubs\\src\\net\\msg*" /s /q
+del "..\\..\\Server\\app\\game\\src\\netmsg\\msg*" /s /q
 
 echo clear output directory...
 del ".\\Out\\*.cs" /s /q
@@ -38,7 +38,7 @@ echo copy net message sources to client
 XCOPY "..\\Out" "..\\..\\..\\Client\\Assets\\Code\\Base\\Net\\Messages" /s /c /i /d /y /EXCLUDE:EXCLUDE_erl.txt
 
 echo copy net message sources to server
-XCOPY ..\\out ..\\..\\..\\server\\app\\deps\\pubs\\src\\net /s /c /i /d /y /EXCLUDE:EXCLUDE_cs.txt
+XCOPY ..\\out ..\\..\\..\\Server\\app\\game\\src\\netmsg /s /c /i /d /y /EXCLUDE:EXCLUDE_cs.txt
 
 ::echo copy lua net message sources to client
 ::XCOPY "..\\Out" "..\\..\\..\\Client\\Assets\\StreamingAssets\\LuaRoot\\Net" /s /c /i /d /y /EXCLUDE:EXCLUDE_only_lua.txt

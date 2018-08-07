@@ -9,7 +9,7 @@
 -module(vector3).
 -author("mawenhong").
 
--include("vector3.hrl").
+
 %% API
 -export([new/0, new/3]).
 -export([zero/0]).
@@ -29,6 +29,10 @@
 -export([linear_interpolation/3]).
 -export([rotate_around_origin_2d/2]). %% 围绕原点的2d旋转,传入的是角度
 -export([dot_product/2, cross_product/2, dot_product_v/2, cross_product_v/2, dist_to_line/3]).
+
+-record(vector3,{x=0.0,y=0.0,z=0.0}).
+-type vector3() :: #vector3{}.
+-export_type([vector3/0]).
 
 %%
 zero()->

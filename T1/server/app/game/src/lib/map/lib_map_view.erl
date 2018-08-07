@@ -10,7 +10,7 @@
 -author("mawenhong").
 
 -include("logger.hrl").
--include("vector3.hrl").
+
 -include("map.hrl").
 -include("map_unit.hrl").
 -include("netmsg.hrl").
@@ -364,8 +364,8 @@ pos_to_vis_index(Pos) ->
 %% vector3 
 pos_to_vis_index(Pos, VisTileWidth, ViewDist) ->
     CellSize = get(?CELL_SIZE),
-    IndexX = trunc(Pos#vector3.x / CellSize / ?TILE_SCALE / ViewDist) + 1,
-    IndexZ = trunc(Pos#vector3.z / CellSize / ?TILE_SCALE / ViewDist) + 1,
+    IndexX = trunc(vector3:x(Pos) / CellSize / ?TILE_SCALE / ViewDist) + 1,
+    IndexZ = trunc(vector3:z(Pos) / CellSize / ?TILE_SCALE / ViewDist) + 1,
 
     (IndexZ * VisTileWidth + IndexX).
 

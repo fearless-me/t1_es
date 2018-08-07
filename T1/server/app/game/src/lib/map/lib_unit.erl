@@ -12,7 +12,7 @@
 -include("logger.hrl").
 -include("map.hrl").
 -include("map_unit.hrl").
--include("vector3.hrl").
+
 -include("cfg_monster.hrl").
 -include("ai_def.hrl").
 

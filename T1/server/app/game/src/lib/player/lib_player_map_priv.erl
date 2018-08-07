@@ -11,7 +11,7 @@
 -include("logger.hrl").
 -include("map.hrl").
 -include("pub_common.hrl").
--include("vector3.hrl").
+
 -include("mem_record.hrl").
 -include("db_record.hrl").
 -include("common_record.hrl").

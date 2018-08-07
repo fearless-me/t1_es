@@ -101,7 +101,7 @@ do_handle_info(
     {tcp_error, Socket, Reason},
     #state{handler = Handler, cli_data = S} = State
 ) ->
-    ?TRY_CATCH(Handler:on_close(Socket, tcp_error, S)),
+    ?TRY_CATCH(Handler:on_close(Socket, {tcp_error,Reason}, S)),
     {stop, Reason, State};
 do_handle_info(
     {active_stop, Reason},

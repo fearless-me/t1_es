@@ -23,6 +23,7 @@
 					{inc_dirs,[
 								"../include", 
 								"../src/config", 
+								"../src/netmsg", 
 								"../../deps/pubs/include", 
 								"../../deps/pubs/src/net", 
 								"../../deps/pubs/src/resource/pack"]},
@@ -48,6 +49,7 @@
 							},
 							{i, "../include"},
 							{i, "../src/config"},
+							{i, "../src/netmsg"},
 							{i, "../../deps/pubs/include"},
 							{i, "../../deps/pubs/src/net"},
 							{i, "../../deps/pubs/src/resource/pack"},

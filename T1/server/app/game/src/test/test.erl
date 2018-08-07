@@ -8,7 +8,7 @@
 %%%-------------------------------------------------------------------
 -module(test).
 -author("mawenhong").
--include("vector3.hrl").
+
 -include("pub_common.hrl").
 
 %% API

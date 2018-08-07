@@ -17,7 +17,7 @@
 -include("map_unit.hrl").
 -include("db_record.hrl").
 -include("mem_record.hrl").
--include("vector3.hrl").
+
 -include("pub_common.hrl").
 
 %% 逻辑层不要调用这些接口
