@@ -22,8 +22,8 @@
                     },
 					{inc_dirs,[
 								"../include", 
-								"../src/config", 
-								"../src/netmsg", 
+								"../src/pub/config", 
+								"../src/pub/netmsg", 
 								"../../deps/pubs/include", 
 								"../../deps/pubs/src/net", 
 								"../../deps/pubs/src/resource/pack"]},
@@ -48,8 +48,8 @@
                                ]
 							},
 							{i, "../include"},
-							{i, "../src/config"},
-							{i, "../src/netmsg"},
+							{i, "../src/pub/config"},
+							{i, "../src/pub/netmsg"},
 							{i, "../../deps/pubs/include"},
 							{i, "../../deps/pubs/src/net"},
 							{i, "../../deps/pubs/src/resource/pack"},

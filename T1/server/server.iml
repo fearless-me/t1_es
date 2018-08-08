@@ -27,25 +27,16 @@
       <sourceFolder url="file://$MODULE_DIR$/app/deps/poolboy/test" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/app/deps/pubs/include" type="erlang-include" />
       <sourceFolder url="file://$MODULE_DIR$/app/deps/pubs/src" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/app/deps/pubs/src/resource/pack" type="erlang-include" />
       <sourceFolder url="file://$MODULE_DIR$/app/deps/ranch/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/app/deps/ranch/test" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/app/game/include" type="erlang-include" />
       <sourceFolder url="file://$MODULE_DIR$/app/game/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/app/deps/pubs/src/net" type="erlang-include" />
       <sourceFolder url="file://$MODULE_DIR$" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/app/game/src/config" type="erlang-include" />
       <sourceFolder url="file://$MODULE_DIR$/app" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/app/game/src/netmsg" type="erlang-include" />
-      <excludeFolder url="file://$MODULE_DIR$/app/center/data" />
-      <excludeFolder url="file://$MODULE_DIR$/app/center/scripts" />
-      <excludeFolder url="file://$MODULE_DIR$/app/dbs" />
-      <excludeFolder url="file://$MODULE_DIR$/app/dbs/data" />
-      <excludeFolder url="file://$MODULE_DIR$/app/dbs/scripts" />
-      <excludeFolder url="file://$MODULE_DIR$/app/game/data" />
-      <excludeFolder url="file://$MODULE_DIR$/app/game/scripts" />
-      <excludeFolder url="file://$MODULE_DIR$/deps_1" />
-      <excludeFolder url="file://$MODULE_DIR$/repo_priv" />
+      <sourceFolder url="file://$MODULE_DIR$/app/game/src/pub/config" type="erlang-include" />
+      <sourceFolder url="file://$MODULE_DIR$/app/game/src/pub/netmsg" type="erlang-include" />
+      <sourceFolder url="file://$MODULE_DIR$/app/game/src/pub/mapcfgs" type="erlang-include" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

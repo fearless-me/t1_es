@@ -227,7 +227,7 @@
 |       |       gs_db_supervisor.erl                                             
 |       |       gs_db_worker.erl                                                                                                                       
 |       +---config  配置表代码目录                                                                                                                                                                          
-|       +---core  核心代码                                                               
+|       +---base.core  核心代码                                                               
 |       |       gconf.erl    server配置的读写                                                    
 |       |       gcore.erl    一些基础功能比如发网络消息、广播、踢人、注册玩家进程等、关闭虚拟机等等                                                     
 |       |       mapReader.erl                                                    
@@ -248,7 +248,7 @@
 |       |       db_son.erl       数据库工作进程                                                
 |       |       db_sql.erl      sql语句集中营                                                 
 |       |       db_sup.erl    ,,,                                                                                                                         
-|       +---gen                                                                  
+|       +---base.gen                                                                  
 |       |       gen_mod_login.erl   全局登录otp                                             
 |       |       gen_mod_map.erl     地图otp (map otp)                                            
 |       |       gen_mod_map_creator.erl    地图数据初始化otp                                      
@@ -261,7 +261,7 @@
 |       |       mod_login.erl    login逻辑代码   （logint otp）                                             
 |       |       mod_player.erl     玩家进程                                              
 |       |       player_supervisor.erl                                                                                                                  
-|       +---hook                                                                 
+|       +---logic.hook                                                                 
 |       |       hook_copy.erl       副本事件拦截器     (地图otp)                                       
 |       |       hook_map.erl       地图事拦截器     (地图otp)                                           
 |       |       hook_player.erl   玩家事件拦截器      (玩家otp)                                                                                                                
@@ -311,7 +311,7 @@
 |       |           lib_player_save.erl    持久化                                  
 |       |           lib_player_skill.erl   技能                                      
 |       |           lib_player_sub.erl   周期性触发逻辑（tick, 每秒，每分钟，每小时，每个整点）                                                                                                         
-|       +---mapcfgs                                                                                                                                                                                   
+|       +---logic.mapcfgs                                                                                                                                                                                   
 |       \---test                                                                                                                                                                                      
 +---scripts                                                                                                                                                     
 \---sql                                                                          

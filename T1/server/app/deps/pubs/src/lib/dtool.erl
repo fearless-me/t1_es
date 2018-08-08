@@ -20,7 +20,7 @@
     node_stats/0, node_stats_print/2,
     node_memory/1, node_memory/2,
     node_allocator_snapshot/0, node_allocator_snapshot_save/1,
-    node_cache_hit/0, node_avg_block_size/1,  node_sbcs_to_mbcs/1,
+    node_cache_hit/0, node_avg_block_size/1, node_sbcs_to_mbcs/1,
     node_fragmentation/1, node_scheduler_usage/1
 ]).
 
@@ -33,7 +33,7 @@ proc_basic_info(PidTerm) ->
     recon:info(PidTerm, meta).
 
 %%-------------------------------------------------------------------
-proc_backtrace(PidTerm)->
+proc_backtrace(PidTerm) ->
     recon:info(PidTerm, location).
 
 %%-------------------------------------------------------------------
@@ -46,7 +46,7 @@ proc_reduction(PidTerm) ->
 
 %%-------------------------------------------------------------------
 proc_binary(PidOrTerm) ->
-    recon:info(PidOrTerm,binary).
+    recon:info(PidOrTerm, binary).
 
 %%-------------------------------------------------------------------
 proc_memory(PidTerm) ->
@@ -54,9 +54,9 @@ proc_memory(PidTerm) ->
 
 %%-------------------------------------------------------------------
 proc_gc(PidTerm) ->
-    A = erlang:process_info(recon_lib:term_to_pid(PidTerm),garbage_collection),
-    B = erlang:process_info(recon_lib:term_to_pid(PidTerm),garbage_collection_info),
-    [A,B].
+    A = erlang:process_info(recon_lib:term_to_pid(PidTerm), garbage_collection),
+    B = erlang:process_info(recon_lib:term_to_pid(PidTerm), garbage_collection_info),
+    [A, B].
 
 %%-------------------------------------------------------------------
 proc_top(AttrName, Num) ->
@@ -77,7 +77,7 @@ proc_top_bin_leak(N) ->
 %%-------------------------------------------------------------------
 proc_unlink() ->
     [
-        {P,misc:registered_name(P)} || P <- processes(),
+        {P, misc:registered_name(P)} || P <- processes(),
         [{_, Ls}, {_, Ms}] <- [process_info(P, [links, monitors])],
         [] == Ls, [] == Ms
     ].
@@ -92,7 +92,10 @@ node_stats_print(N, Interval) ->
 %%-------------------------------------------------------------------
 node_allocator_snapshot() ->
     ensure_recon_unit(),
-    recon_alloc:snapshot_print().
+    case recon_alloc:snapshot_get() of
+        undefined -> recon_alloc:snapshot();
+        Snap -> Snap
+    end.
 
 %%-------------------------------------------------------------------
 node_allocator_snapshot_save(File) ->
@@ -100,9 +103,9 @@ node_allocator_snapshot_save(File) ->
     recon_alloc:snapshot_save(File).
 
 %%-------------------------------------------------------------------
-node_memory(Stage)->
+node_memory(Stage) ->
     Ks = [used, allocated, unused, usage, allocated_types, allocated_instances],
-    lists:map(fun(Key)-> node_memory(Key, Stage) end, Ks).
+    lists:map(fun(Key) -> node_memory(Key, Stage) end, Ks).
 
 %%-------------------------------------------------------------------
 -spec node_memory(Key, Stage) -> any() when
@@ -110,18 +113,18 @@ node_memory(Stage)->
     Stage :: current | max.
 node_memory(usage, Stage) ->
     ensure_recon_unit(),
-    {usage, trunc(recon_alloc:memory(usage, Stage)*10000)/10000};
+    {usage, trunc(recon_alloc:memory(usage, Stage) * 10000) / 10000};
 node_memory(Key, Stage) ->
     ensure_recon_unit(),
     trans_to_unit_mb(Key, recon_alloc:memory(Key, Stage)).
 
 %%-------------------------------------------------------------------
-node_cache_hit()->
+node_cache_hit() ->
     ensure_recon_unit(),
     recon_alloc:cache_hit_rates().
 
 %%-------------------------------------------------------------------
-node_avg_block_size(Stage)->
+node_avg_block_size(Stage) ->
     ensure_recon_unit(),
     recon_alloc:average_block_sizes(Stage).
 
@@ -142,17 +145,17 @@ node_scheduler_usage(Interval) ->
 %%-------------------------------------------------------------------
 trans_to_unit_mb(Key, {Key, Size}) ->
     {Key, mem2str(Size)};
-trans_to_unit_mb(Key, Size) when is_number(Size)->
+trans_to_unit_mb(Key, Size) when is_number(Size) ->
     {Key, mem2str(Size)};
 trans_to_unit_mb(Key, List) when is_list(List) ->
     F = fun
             ({K, V}) when is_number(V) ->
-                {K,  mem2str(V)};
+                {K, mem2str(V)};
             (O) ->
                 O
         end,
     {Key, lists:map(F, List)};
-trans_to_unit_mb(_Key, Other)->
+trans_to_unit_mb(_Key, Other) ->
     Other.
 
 %%-------------------------------------------------------------------
@@ -167,7 +170,7 @@ mem2str(Mem) ->
     end.
 
 %%-------------------------------------------------------------------
-ensure_recon_unit()->
+ensure_recon_unit() ->
     recon_alloc:set_unit(byte).
 %%-------------------------------------------------------------------
 

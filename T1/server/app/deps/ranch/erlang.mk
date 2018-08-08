@@ -2821,7 +2821,7 @@ pkg_nifty_commit = master
 
 PACKAGES += nitrogen_core
 pkg_nitrogen_core_name = nitrogen_core
-pkg_nitrogen_core_description = The core Nitrogen library.
+pkg_nitrogen_core_description = The base.core Nitrogen library.
 pkg_nitrogen_core_homepage = http://nitrogenproject.com/
 pkg_nitrogen_core_fetch = git
 pkg_nitrogen_core_repo = https://github.com/nitrogen/nitrogen_core
@@ -4253,7 +4253,7 @@ export DEPS_DIR
 REBAR_DEPS_DIR = $(DEPS_DIR)
 export REBAR_DEPS_DIR
 
-# External "early" plugins (see core/plugins.mk for regular plugins).
+# External "early" plugins (see base.core/plugins.mk for regular plugins).
 # They both use the core_dep_plugin macro.
 
 define core_dep_plugin
@@ -4885,7 +4885,7 @@ distclean-deps:
 	$(gen_verbose) rm -rf $(DEPS_DIR)
 endif
 
-# Forward-declare variables used in core/deps-tools.mk. This is required
+# Forward-declare variables used in base.core/deps-tools.mk. This is required
 # in case plugins use them.
 
 ERLANG_MK_RECURSIVE_DEPS_LIST = $(ERLANG_MK_TMP)/recursive-deps-list.log
@@ -4960,7 +4960,7 @@ makedep_verbose_2 = set -x;
 makedep_verbose = $(makedep_verbose_$(V))
 
 erlc_verbose_0 = @echo " ERLC  " $(filter-out $(patsubst %,%.erl,$(ERLC_EXCLUDE)),\
-	$(filter %.erl %.core,$(?F)));
+	$(filter %.erl %.base.core,$(?F)));
 erlc_verbose_2 = set -x;
 erlc_verbose = $(erlc_verbose_$(V))
 
@@ -5023,7 +5023,7 @@ app-build: ebin/$(PROJECT).app
 ALL_SRC_FILES := $(sort $(call core_find,src/,*))
 
 ERL_FILES := $(filter %.erl,$(ALL_SRC_FILES))
-CORE_FILES := $(filter %.core,$(ALL_SRC_FILES))
+CORE_FILES := $(filter %.base.core,$(ALL_SRC_FILES))
 
 # ASN.1 files.
 

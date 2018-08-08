@@ -11,7 +11,7 @@
 -export([c/2]).
 -export([nc/2]).
 -export([connect/2]).
--export([handle/1,handle/2]).
+-export([handle/1, handle/2]).
 -export([move/2]).
 
 move(X, Y) ->
@@ -33,10 +33,10 @@ c(Port) -> c(Port, 1).
 c(Port, MapID) -> spawn(fun() -> tcp_client:connect(Port, MapID) end).
 
 nc(N, Port) ->
-    catch ets:new(tcpc, [named_table, public, {keypos, 1},  ?ETS_RC, ?ETS_WC]),
+    catch ets:new(tcpc, [named_table, public, {keypos, 1}, ?ETS_RC, ?ETS_WC]),
     lists:foreach(fun(_) -> tcp_client:c(Port, 1), timer:sleep(2) end, lists:seq(1, N)).
 
-ensure()->
+ensure() ->
     true = misc:start_all_app(kernel),
     true = misc:start_all_app(ssl),
     true = misc:start_all_app(stdlib),
@@ -47,29 +47,35 @@ ensure()->
 
 
 connect(Port, _MapID) ->
-    tcp_codec:init(#net_conf{}),
-    
-    {ok, Socket} = ranch_tcp:connect({127, 0, 0, 1}, Port, [{active, false}]),
-    socket(Socket),
-    Msg1 = #pk_U2GS_Login_Normal{
-        platformAccount = "test_net" ++ integer_to_list(time:milli_seconds()),
-        platformName = "test",
-        platformNickName = "",
-        time = time:utc_seconds(),
-        sign = "owner"
-    },
+    try
+        tcp_codec:init(#net_conf{}),
 
-    send_msg(Socket, Msg1),
-    recv_msg(Socket),
+        {ok, Socket} = ranch_tcp:connect({127, 0, 0, 1}, Port, [{active, false}]),
+        socket(Socket),
+        Msg1 = #pk_U2GS_Login_Normal{
+            platformAccount = "test_net" ++ integer_to_list(time:milli_seconds()),
+            platformName = "test",
+            platformNickName = "",
+            time = time:utc_seconds(),
+            sign = "owner"
+        },
 
-    recv_msg(Socket),
+        send_msg(Socket, Msg1),
+        recv_msg(Socket),
 
-    timer:sleep(15000),
+        recv_msg(Socket),
 
-    timer:sleep(50),
-    erlang:send_after(100 * 60 * 1000, self(), exit),
-    loop_recv(),
-    ?WARN("socket ~p, pid ~p bye~~!",[socket(), self()]),
+        timer:sleep(15000),
+
+        timer:sleep(50),
+        erlang:send_after(1000 * 60 * 1000, self(), exit),
+        loop_recv(),
+        ?WARN("socket ~p, pid ~p bye~~!", [socket(), self()]),
+        ok
+    catch
+        _ : Err: _ ->
+            ?WARN("socket ~p, pid ~p err ~p bye~~!", [socket(), self(), Err])
+    end,
 
     ok.
 
@@ -87,7 +93,7 @@ loop_recv() ->
 
 send_msg(Socket, Msg) ->
     {_Bytes1, IoList1} = tcp_codec:encode(Msg),
-    ?DEBUG("send: ~p",[Msg]),
+    ?DEBUG("send: ~p", [Msg]),
     ranch_tcp:send(Socket, IoList1).
 
 
@@ -100,7 +106,7 @@ recv_msg(Socket) ->
             skip
     end.
 
-handle(_Cmd, Msg)-> handle(Msg).
+handle(_Cmd, Msg) -> handle(Msg).
 
 handle(Msg) ->
     handle_1(Msg),
@@ -154,12 +160,12 @@ socket() -> get(?SocketKey).
 set_aid(Aid) -> put('AID', Aid).
 get_aid() -> get('AID').
 
-heartbeat()->
+heartbeat() ->
     Msg = #pk_GS2U_HearBeat{},
     send_msg(socket(), Msg),
     ok.
 
 rand_walk() ->
-    Delta = misc:rand(5, 15)/1.0,
+    Delta = misc:rand(5, 15) / 1.0,
     send_msg(socket(), #pk_U2GS_PlayerWalk{dst_x = 234.1 + Delta, dst_y = 250.1 + Delta}),
     ok.
