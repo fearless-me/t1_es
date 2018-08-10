@@ -20,14 +20,14 @@
 
 %%-------------------------------------------------------------------
 handler(serv_start, Sid, FromPid, PoolId) ->
-    Sql = db_sql:sql(load_serv_start),
+    Sql = gs_db_sql:sql(load_serv_start),
     Res = db:query(PoolId, Sql, [Sid], infinity),
     check_res(Res, Sql, [Sid]),
     RunNo = db:scalar(Res),
     ps:send(FromPid, serv_start_ack, RunNo),
     ok;
 handler(load_all_role_info, Sid, FromPid, PoolId) ->
-    Sql = db_sql:sql(load_all_role_info_cnt),
+    Sql = gs_db_sql:sql(load_all_role_info_cnt),
     Res = db:query(PoolId, Sql, [Sid], infinity),
     check_res(Res, Sql, [Sid]),
     Load  = 100,
@@ -42,7 +42,7 @@ handler(load_all_role_info, Sid, FromPid, PoolId) ->
         fun(Batch) ->
             Start = (Batch - 1) * Load,
             End   = Batch * Load,
-            SqlLoad = db_sql:sql(load_all_role_info),
+            SqlLoad = gs_db_sql:sql(load_all_role_info),
             ResLoad = db:query(PoolId, SqlLoad, [Sid, Start, End], infinity),
             check_res(ResLoad, SqlLoad, [Sid, Start, End]),
             ResList0 = db:as_record(ResLoad, p_player, record_info(fields, p_player)),
@@ -57,7 +57,7 @@ handler(account_login, Req, _FromPid, PoolId) ->
     #r_login_req{plat_name = PN, plat_account_name = PA, player_pid = ToPid} = Req,
     MergeAccount = gcore:merge_plat_acc_name(PN, PA),
     AccountCrc = gcore:plat_account_crc(PN, PA),
-    Sql = db_sql:sql(load_acount),
+    Sql = gs_db_sql:sql(load_acount),
     Res = db:query(PoolId, Sql, [AccountCrc], infinity),
     check_res(Res, Sql, [AccountCrc]),
 
@@ -66,7 +66,7 @@ handler(account_login, Req, _FromPid, PoolId) ->
     case AccountList of
         [] ->
             NewAid = uid_gen:acc_uid(),
-            InsSql = db_sql:sql(insert_acount),
+            InsSql = gs_db_sql:sql(insert_acount),
             NowStr = time:localtime_str(),
 %% aid,account,account_crc, plat_account, plat_name, device, imei, idfa, mac, create_time, version_hash_code
             Params = [NewAid, MergeAccount, AccountCrc, PA, PN, "","","","",NowStr, time:utc_seconds()],
@@ -89,7 +89,7 @@ handler(account_login, Req, _FromPid, PoolId) ->
     ps:send(ToPid, login_ack, #r_login_ack{account_info = Info}),
     ok;
 handler(load_player_list, AccId, FromPid, PoolId) ->
-    Sql = db_sql:sql(load_player_list),
+    Sql = gs_db_sql:sql(load_player_list),
     Res = db:query(PoolId, Sql, [AccId], infinity),
     check_res(Res, Sql, [AccId]),
     PL1 = db:as_record(Res, p_player, record_info(fields, p_player)),
@@ -100,7 +100,7 @@ handler(load_player_list, AccId, FromPid, PoolId) ->
     ps:send(FromPid, load_player_list_ack, PL2),
     ok;
 handler(load_player_data, {_Aid, Uid}, FromPid, PoolId) ->
-    Sql = db_sql:sql(load_player),
+    Sql = gs_db_sql:sql(load_player),
     Res = db:query(PoolId, Sql, [Uid], infinity),
     check_res(Res, Sql, [Uid]),
     [#p_player{name = Name} = Player] =
@@ -114,7 +114,7 @@ handler(create_player, {AccId, Req}, FromPid, PoolId) ->
         x = X, y = Y
     } = Req,
     Uid = uid_gen:player_uid(),
-    Sql = db_sql:sql(insert_player),
+    Sql = gs_db_sql:sql(insert_player),
     Params = [AccId, Uid, Sid, Name, 1, Sex, Camp, Race, Career, Head,
         Mid, 0, X, Y, Mid, 0, X, Y, time:milli_seconds()],
     Res = db:query(PoolId, Sql, Params, infinity),
@@ -136,7 +136,7 @@ handler(save_player, Player, _FromPid, PoolId) ->
         mid = Mid, line = Line, pos = Pos,
         old_mid = OMid, old_line = OLine, old_pos = OPos
     } = Player,
-    Sql = db_sql:sql(save_player),
+    Sql = gs_db_sql:sql(save_player),
     Params = [Career, Lv, Mid, Line, vector3:x(Pos), vector3:z(Pos),
         OMid, OLine, vector3:x(OPos), vector3:z(OPos), time:milli_seconds(), Uid],
     Res = db:query(PoolId, Sql, Params),
