@@ -32,14 +32,16 @@ start_link(MapID) ->
 %%%===================================================================
 %%% Internal functions
 %%%===================================================================
--define(MAP_LINES, map_line_ets__).
+-define(MAP_LINES, map_mgr_line_ets).
 mod_init([MapID]) ->
     ProcessName = misc:create_atom(gen_map_mgr, [MapID]),
     true = erlang:register(ProcessName, self()),
     erlang:process_flag(trap_exit, true),
     erlang:process_flag(priority, high),
-    Ets = ets:new(?MAP_LINES, [{keypos, #m_map_line.line_id}, ?ETS_RC]),
+    EtsAtom = misc:create_atom(?MAP_LINES, [MapID]),
+    Ets = ets:new(EtsAtom, [named_table, protected, {keypos, #m_map_line.line_id}, ?ETS_RC]),
     ?INFO("mapMgr ~p started, line ets:~p,mapID:~p", [ProcessName, Ets, MapID]),
+    ps:send(gen_map_creator, map_mgr_line_ets, {MapID, EtsAtom}),
     {ok, #state{ets = Ets, map_id = MapID}}.
 
 %%--------------------------------------------------------------------

@@ -37,10 +37,10 @@ get_db_conf()->
     lists:map(fun({K,V}) -> {erlang:list_to_atom(K),V} end, Conf).
 
 get_area() ->
-    econfig:get_integer(?GS_INI_CONF, server, area_id).
+    econfig:get_integer(?GS_INI_CONF, server, area_id, 1).
 
 get_sid() ->
-    econfig:get_integer(?GS_INI_CONF, server, server_id).
+    econfig:get_integer(?GS_INI_CONF, server, server_id, 1).
 
 get_run_no()->
     econfig:get_integer(?GS_INI_CONF, server, run_no).

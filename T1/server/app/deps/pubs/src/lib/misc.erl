@@ -8,10 +8,11 @@
 %%%-------------------------------------------------------------------
 -module(misc).
 -author("mawenhong").
+-include("logger.hrl").
 
 %% API
 -export([
-    start_app/1, start_all_app/1, os_type/0,
+    start_app/1, start_all_app/1, os_type/0, halt/1, halt/2, nnl/0, system_info/0,
     make_atom/2,atom_to_binary/1,
     b2i/1, i2b/1, ntoa/1, ntoab/1,
     to_atom/1, create_atom/2, list_to_string_suffix/2,
@@ -24,7 +25,6 @@
     get_dict_def/2, md5/1,  int_to_hex/1,
     lists_rand_get/1, lists_shuffle/1, lists_rand_get_n/2, list_to_hex/1,
     string_to_term/1, term_to_string/1
-
 ]).
 
 os_type() ->
@@ -327,3 +327,53 @@ parse_information_unit(Value) when is_list(Value) ->
             {error, parse_error}
     end.
 
+
+%%-------------------------------------------------------------------
+-define(CRASH_WAIT_SECONDS, 15).
+halt(Fmt, Args) -> gcore:halt(io_lib:format(Fmt, Args)).
+halt(Msg) ->
+    ?FATAL("~ts, after ~p second(s) app crash,~n",
+        [Msg, ?CRASH_WAIT_SECONDS]),
+    timer:sleep(?CRASH_WAIT_SECONDS * 1000),
+    erlang:halt().
+
+nnl() ->
+    S = lists:duplicate(15, "\n"),
+    ?DEBUG("~ts", [lists:flatten(S)]).
+
+system_info() ->
+    %% observer_backend:sys_info
+    ?WARN("~n======================================================================================================~n\t"
+    "port(cur/max)(+Q)                      :   ~p / ~p~n\t"
+    "process(cur/max)(+P)                   :   ~p / ~p~n\t"
+    "atoms(cur/max)(+t)                     :   ~p / ~p~n\t"
+    "ets(cur/max)(+e)                       :   ~p / ~p~n\t"
+    "schedulers(on/max)(+S)                 :   ~p / ~p~n\t"
+    "dirty schedulers cpu(on/max)(+SDcpu)   :   ~p / ~p~n\t"
+    "dirty io schedulers(+SDio)             :   ~p ~n\t"
+    "thread pool size(+A)                   :   ~p ~n\t"
+    "system version                         :   ~ts~n\t"
+    "ERTS vesion                            :   ~ts~n\t"
+    "ulimit -a                              :   ~ts~n\t"
+    "sytem monitor                          :   ~w~n"
+    "======================================================================================================~n",
+        [
+            erlang:system_info(port_count),                     erlang:system_info(port_limit),
+            erlang:system_info(process_count),                  erlang:system_info(process_limit),
+            erlang:system_info(atom_count),                     erlang:system_info(atom_limit),
+            length(ets:all()),                                  erlang:system_info(ets_limit),
+            erlang:system_info(schedulers_online),              erlang:system_info(schedulers),
+            erlang:system_info(dirty_cpu_schedulers_online),    erlang:system_info(dirty_cpu_schedulers),
+            erlang:system_info(dirty_io_schedulers),
+            erlang:system_info(thread_pool_size),
+            erlang:system_info(otp_release),
+            erlang:system_info(version),
+            ulimit(misc:os_type()),
+            erlang:system_monitor()
+        ]
+    ),
+    ok.
+
+ulimit(unix) ->
+    os:cmd("ulimit -a");
+ulimit(_) -> "unknown".

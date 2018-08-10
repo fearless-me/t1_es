@@ -28,3 +28,4 @@ player_join_map_call(MgrPid, Req) ->
 player_exit_map_call(MgrPid, Req) ->
     gen_server:call(MgrPid, {exit_map, Req}, ?MAP_CALL_TIMEOUT).
 %%--------------------------------
+

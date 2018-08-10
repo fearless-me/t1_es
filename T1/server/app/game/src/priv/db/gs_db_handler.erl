@@ -6,28 +6,27 @@
 %%% @end
 %%% Created : 29. 五月 2018 14:34
 %%%-------------------------------------------------------------------
--module(db_handler).
+-module(gs_db_handler).
 -author("mawenhong").
 
 -include("logger.hrl").
 -include("mem_record.hrl").
 -include("common_record.hrl").
 -include("db_record.hrl").
-%%-include("map_unit.hrl").
 
 
 %% API
--export([do_handle_info/4]).
+-export([handler/4]).
 
 %%-------------------------------------------------------------------
-do_handle_info(serv_start, Sid, FromPid, PoolId) ->
+handler(serv_start, Sid, FromPid, PoolId) ->
     Sql = db_sql:sql(load_serv_start),
     Res = db:query(PoolId, Sql, [Sid], infinity),
     check_res(Res, Sql, [Sid]),
     RunNo = db:scalar(Res),
     ps:send(FromPid, serv_start_ack, RunNo),
     ok;
-do_handle_info(load_all_role_info, Sid, FromPid, PoolId) ->
+handler(load_all_role_info, Sid, FromPid, PoolId) ->
     Sql = db_sql:sql(load_all_role_info_cnt),
     Res = db:query(PoolId, Sql, [Sid], infinity),
     check_res(Res, Sql, [Sid]),
@@ -53,7 +52,7 @@ do_handle_info(load_all_role_info, Sid, FromPid, PoolId) ->
 
     ps:send(FromPid, load_all_role_info_ack_end),
     ok;
-do_handle_info(account_login, Req, _FromPid, PoolId) ->
+handler(account_login, Req, _FromPid, PoolId) ->
     ?DEBUG("account_login ~p pool ~p",[Req, PoolId]),
     #r_login_req{plat_name = PN, plat_account_name = PA, player_pid = ToPid} = Req,
     MergeAccount = gcore:merge_plat_acc_name(PN, PA),
@@ -89,7 +88,7 @@ do_handle_info(account_login, Req, _FromPid, PoolId) ->
 
     ps:send(ToPid, login_ack, #r_login_ack{account_info = Info}),
     ok;
-do_handle_info(load_player_list, AccId, FromPid, PoolId) ->
+handler(load_player_list, AccId, FromPid, PoolId) ->
     Sql = db_sql:sql(load_player_list),
     Res = db:query(PoolId, Sql, [AccId], infinity),
     check_res(Res, Sql, [AccId]),
@@ -100,7 +99,7 @@ do_handle_info(load_player_list, AccId, FromPid, PoolId) ->
         end, PL1),
     ps:send(FromPid, load_player_list_ack, PL2),
     ok;
-do_handle_info(load_player_data, {_Aid, Uid}, FromPid, PoolId) ->
+handler(load_player_data, {_Aid, Uid}, FromPid, PoolId) ->
     Sql = db_sql:sql(load_player),
     Res = db:query(PoolId, Sql, [Uid], infinity),
     check_res(Res, Sql, [Uid]),
@@ -108,7 +107,7 @@ do_handle_info(load_player_data, {_Aid, Uid}, FromPid, PoolId) ->
         db:as_record(Res, p_player, record_info(fields, p_player)),
     ps:send(FromPid, load_player_data_ack, Player#p_player{name = binary_to_list(Name)}),
     ok;
-do_handle_info(create_player, {AccId, Req}, FromPid, PoolId) ->
+handler(create_player, {AccId, Req}, FromPid, PoolId) ->
     #r_create_player_req{
         sid = Sid, name = Name, camp = Camp, career = Career,
         race = Race, sex = Sex, head = Head, mid = Mid,
@@ -131,7 +130,7 @@ do_handle_info(create_player, {AccId, Req}, FromPid, PoolId) ->
         }
     ),
     ok;
-do_handle_info(save_player, Player, _FromPid, PoolId) ->
+handler(save_player, Player, _FromPid, PoolId) ->
     #m_player_pub{
         uid = Uid, career = Career, level = Lv,
         mid = Mid, line = Line, pos = Pos,
@@ -143,7 +142,7 @@ do_handle_info(save_player, Player, _FromPid, PoolId) ->
     Res = db:query(PoolId, Sql, Params),
     check_res(Res, Sql, Params),
     ok;
-do_handle_info(MsgId, Msg, FromPid, _PoolId) ->
+handler(MsgId, Msg, FromPid, _PoolId) ->
     ?ERROR("undeal msg ~w ~w from ~p", [MsgId, Msg, FromPid]),
     ok.
 

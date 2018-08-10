@@ -45,6 +45,9 @@ do_handle_call(Request, From, State) ->
     {reply, ok, State}.
 
 %%--------------------------------------------------------------------
+do_handle_info({map_mgr_line_ets, {MapID, Ets}}, State) ->
+    ets:update_element(?MAP_MGR_ETS, MapID, {#m_map_mgr.line_ets, Ets}),
+    {noreply, State};
 do_handle_info(Info, State) ->
     ?ERROR("undeal info ~w", [Info]),
     {noreply, State}.
@@ -62,12 +65,7 @@ load_all_map() ->
 
 load_one_map(MapID) ->
     {ok, Pid} = map_mgr_sup:start_child(MapID),
-    ets:insert(
-        ?MAP_MGR_ETS,
-        #m_map_mgr{
-            map_id = MapID,
-            mgr = Pid
-        }),
+    ets:insert(?MAP_MGR_ETS, #m_map_mgr{map_id = MapID, mgr = Pid}),
     ok.
 
 

@@ -41,7 +41,7 @@
 -define(MAP_TICK, 200).
 
 
--record(m_map_mgr, {map_id = 0, mgr = undefined}).
+-record(m_map_mgr, {map_id = 0, mgr, line_ets}).
 -define(MAP_MGR_ETS, map_mgr_ets__).
 
 %%

@@ -17,7 +17,8 @@
 								"../../deps/recon",
 								"../../deps/mysql-otp",
 								"../../deps/mysql-otp-poolboy",
-								"../../deps/poolboy"
+								"../../deps/poolboy",
+								"../../deps/db_proxy"
                               ]
                     },
 					{inc_dirs,[
@@ -44,7 +45,8 @@
 									"../../deps/recon",
 									"../../deps/mysql-otp",
 									"../../deps/mysql-otp-poolboy",
-									"../../deps/poolboy"								
+									"../../deps/poolboy",
+									"../../deps/db_proxy"
                                ]
 							},
 							{i, "../include"},

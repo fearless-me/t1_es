@@ -17,6 +17,12 @@
 %% API
 -export([
     init/0,
+    read/2, read/3, read_element/3,
+    write/2, replace/3, update_element/3,
+    delete/2,
+    select/2, match/2, match_object/2, match_object/3
+]).
+-export([
 %%    
     online/3, offline/2,
 %% ETS_PLAYER_PUB
@@ -31,11 +37,47 @@
 
 %%-------------------------------------------------------------------
 init() ->
-    ets:new(?ETS_PLAYER_PUB,   [named_table, public, {keypos, #m_player_pub.uid},           ?ETS_RC, ?ETS_WC]),
-    ets:new(?ETS_PLAYER_PRIV,   [named_table, public, {keypos, #m_player_private.uid},    ?ETS_RC, ?ETS_WC]),
+    ets:new(?ETS_PLAYER_PUB,   [named_table, public, {keypos, #m_player_pub.uid},       ?ETS_RC, ?ETS_WC]),
+    ets:new(?ETS_PLAYER_PRIV,   [named_table, public, {keypos, #m_player_private.uid},  ?ETS_RC, ?ETS_WC]),
     ets:new(?ETS_PLAYER_PSOCK, [named_table, public, {keypos, #m_player_pid_sock.uid},  ?ETS_RC, ?ETS_WC]),
     ets:new(?ETS_ACCOUNT_PSOCK,[named_table, public, {keypos, #m_account_pid_sock.aid}, ?ETS_RC, ?ETS_WC]),
     ok.
+
+%%-------------------------------------------------------------------
+read(Tab, Key) -> ets:lookup(Tab, Key).
+read(Tab, Key, Def) ->
+    case ets:lookup(Tab, Key) of
+        [] -> Def;
+        Val -> Val
+    end.
+read_element(Tab, Key, Pos)->
+    ets:read_element(Tab, Key, Pos).
+%%-------------------------------------------------------------------
+write(Tab,Val) ->   ets:insert(Tab, Val).
+%%-------------------------------------------------------------------
+replace(Tab, Key, Val) ->
+    case ets:member(Tab, Key) of
+        true -> ets:insert(Tab, Val);
+        _ -> ets:insert_new(Tab, Val)
+    end.
+%%-------------------------------------------------------------------
+update_element(Tab, Key, ElementSpec) ->
+    ets:update_element(Tab, Key, ElementSpec).
+
+%%-------------------------------------------------------------------
+delete(Tab, Key) ->
+    ets:delete(Tab, Key).
+
+%%-------------------------------------------------------------------
+select(Tab, QS) -> ets:select(Tab, QS).
+
+%%-------------------------------------------------------------------
+match(Tab, Pattern) -> ets:match(Tab, Pattern).
+
+%%-------------------------------------------------------------------
+match_object(Tab, Pattern) -> ets:match_object(Tab, Pattern).
+match_object(Tab, Pattern, Limit) -> ets:match_object(Tab, Pattern, Limit).
+
 
 %%-------------------------------------------------------------------
 %%-------------------------------------------------------------------

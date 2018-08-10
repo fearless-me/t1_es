@@ -48,3 +48,20 @@ map_init_pos(MapID) ->
 
 born_map_id()   -> 1.
 born_map_pos()  -> vector3:new(321, 0, 235).
+
+
+%%--------------------------------
+map_line_info(line_count, all) ->
+    QS = ets:fun2ms(fun(Info)-> {Info#m_map_mgr.map_id, Info#m_map_mgr.line_ets} end),
+    List = ets:select(?MAP_MGR_ETS),
+    lists:map(
+        fun({MapId, Ets})->
+            ok
+        end, List);
+map_line_info(line_count, MapId) ->
+    ok.
+
+
+info_head(linecount)->
+    "mapid    line count".
+

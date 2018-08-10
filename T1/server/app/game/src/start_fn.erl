@@ -14,7 +14,7 @@
     start_auto_reload/1,start_gc_vm/2, start_conf/2, start_errlog/1,
     start_logs/1, start_broadcast/1, start_db_worker/1,
     start_listener_15555/1, start_listener_25555/1,
-    start_logic_sup/1, start_logic_sup/1, start_login/1,
+    start_logic_sup/1, start_login/1,
     start_watchdog/1, start_serv_cache/1, start_map_root_supervisor/1,
     start_serv_loader/1, start_system_monitor/1
 
@@ -77,11 +77,8 @@ start_map_root_supervisor(SupPid) ->
     {ok, _} = ?CHILD(SupPid, map_root_supervisor, supervisor),
     ok.
 
-start_db_worker(SupPid) ->
-    {ok, _} = ?CHILD(SupPid, db_sup, supervisor),
-    {ok, _} = ?CHILD(SupPid, db_mgr_sup, supervisor),
-    {ok, _} = ?CHILD(SupPid, db_proxy, worker),
-    ok = db_proxy:start_db_pool(50 * 1000),
+start_db_worker(_SupPid) ->
+    gs_db_starter:init_pool(),
     ok.
 
 start_serv_loader(SupPid) ->

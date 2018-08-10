@@ -39,7 +39,7 @@
 run() ->
     try
         multi_to_code(
-            "..\\src\\lib\\map\\lib_unit_rw.erl",
+            "..\\src\\pub\\map\\lib_unit_rw.erl",
             lib_unit_rw,
             [
                 ["logger.hrl", "rw_record.hrl"],
@@ -49,7 +49,7 @@ run() ->
             ]
         ),
         multi_to_code(
-            "..\\src\\lib\\map\\lib_combat_rw.erl",
+            "..\\src\\pub\\map\\lib_combat_rw.erl",
             lib_combat_rw,
             [
                 ["logger.hrl", "rw_record.hrl"],
@@ -59,7 +59,7 @@ run() ->
             ]
         ),
         multi_to_code(
-            "..\\src\\lib\\map\\lib_move_rw.erl",
+            "..\\src\\pub\\map\\lib_move_rw.erl",
             lib_move_rw,
             [
                 ["logger.hrl", "rw_record.hrl"],
@@ -69,7 +69,7 @@ run() ->
             ]
         ),
         multi_to_code(
-            "..\\src\\lib\\map\\lib_ai_rw.erl",
+            "..\\src\\pub\\map\\lib_ai_rw.erl",
             lib_ai_rw,
             [
                 ["logger.hrl", "ai_def.hrl", "rw_record.hrl", "vector3.hrl"],
@@ -79,7 +79,7 @@ run() ->
             ]
         ),
         multi_to_code(
-            "..\\src\\lib\\player\\lib_player_rw.erl",
+            "..\\src\\pub\\player\\lib_player_rw.erl",
             lib_player_rw,
             [
                 ["logger.hrl", "player_status.hrl", "rw_record.hrl", "vector3.hrl"],

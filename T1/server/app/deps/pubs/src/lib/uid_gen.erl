@@ -24,7 +24,7 @@
 -export([uid_type/1, parse_db_id/1]).
 -export([short/1, long/1]).
 -export([parse/1]).
--export([init/0, init/1]).
+-export([init/3]).
 
 
 %%数据库中UID的类型，取值范围为[0,31]
@@ -89,23 +89,12 @@ mail_uid() -> gen_1(?UID_TYPE_MAIL).
 
 
 %%%-------------------------------------------------------------------
-init()-> init(false).
 
--spec init(IsCenterServer::boolean()) -> ok.
-init(IsCenterServer) ->
+init(AreaID, Sid, UIDIndex) ->
     ?INFO("~p init", [?MODULE]),
-    init_1(IsCenterServer).
+    init_1(AreaID, Sid, UIDIndex).
 
--spec init_1(IsCenterServer::boolean()) -> ok.
-init_1(IsCenterServer) ->
-    {ADBID, DBID, UIDIndex} =
-        case IsCenterServer of
-            true ->
-                {1, 9999, 1};
-            _ ->
-                {1, 1, gconf:get_run_no()}
-        end,
-
+init_1(AreaID, Sid, UIDIndex) ->
      case UIDIndex >= 0 andalso UIDIndex =< ?INDEX_MAX  of
          true -> skip;
          _ ->
@@ -117,8 +106,8 @@ init_1(IsCenterServer) ->
     List = lists:seq(?UID_TYPE_START, ?UID_TYPE_END),
     Fun =
         fun(UIDType) ->
-            MinUID = gen(UIDType, ADBID, DBID, UIDIndex, 0),
-            MaxUID = gen(UIDType, ADBID, DBID, UIDIndex, (1 bsl ?BIT_ACCU) - 1),
+            MinUID = gen(UIDType, AreaID, Sid, UIDIndex, 0),
+            MaxUID = gen(UIDType, AreaID, Sid, UIDIndex, (1 bsl ?BIT_ACCU) - 1),
 
             ets:insert(?UIDEts, #recUID{type = UIDType,curUID = MinUID,minUID = MinUID,maxUID = MaxUID}),
 

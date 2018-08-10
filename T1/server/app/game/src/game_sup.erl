@@ -55,7 +55,7 @@ start() ->
         wrapper({"test network 25555", ?Wrap(start_fn:start_listener_25555(SupPid))}),
         ok
     catch _ : Err : ST ->
-        gcore:halt("start app error ~p, stacktrace ~p", [Err, ST])
+        misc:halt("start app error ~p, stacktrace ~p", [Err, ST])
     end,
 
     {ok, SupPid}.
@@ -70,7 +70,7 @@ wrapper({Msg, Thunk}) ->
     ?INFO("~s ...", [Msg]),
     try Thunk()
     catch _ : _Err : _ST ->
-        gcore:halt("~n## run \'~ts\' failed ##~n", [Msg])
+        misc:halt("~n## run \'~ts\' failed ##~n", [Msg])
     end,
     ?INFO("~s done #", [Msg]),
     ok.

@@ -28,11 +28,11 @@ start_link(Params) ->
 %%% Internal functions
 %%%===================================================================	
 mod_init([MapID, MapLine]) ->
-     erlang:process_flag(trap_exit, true),
-    %% erlang:process_flag(priority, high),
-    ProcessName = misc:create_atom(gen_map, [MapID,MapLine]),
+    erlang:process_flag(trap_exit, true),
+    erlang:process_flag(priority, high),
+    ProcessName = misc:create_atom(gen_map, [MapID, MapLine]),
     true = erlang:register(ProcessName, self()),
-    ?INFO("map ~p:~p started",[ProcessName, self()]),
+    ?INFO("map ~p:~p started", [ProcessName, self()]),
     {ok, lib_map_priv:init(#m_map_state{map_id = MapID, line_id = MapLine})}.
 
 %%--------------------------------------------------------------------
@@ -65,7 +65,7 @@ do_handle_info({stop_move, Req}, State) ->
     {noreply, State};
 do_handle_info(stop_immediately, State) ->
     {stop, normal, State};
-do_handle_info({msg_broadcast,  Msg}, State) ->
+do_handle_info({msg_broadcast, Msg}, State) ->
     lib_map_priv:broadcast_msg(Msg),
     {noreply, State};
 do_handle_info({net_msg_broadcast, NetMsg}, State) ->

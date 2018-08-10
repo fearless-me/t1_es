@@ -37,12 +37,7 @@
     merge_plat_acc_name/2,
     plat_account_crc/2,
     %% 根据地图来检查坐标的有效性
-    fix_pos/2,
-    %% 关闭虚拟机
-    halt/1, halt/2,
-    %% 输出15个空行
-    nnl/0,
-    system_info/0
+    fix_pos/2
 ]).
 
 %%-------------------------------------------------------------------
@@ -116,47 +111,6 @@ halt(Msg) ->
 %%-------------------------------------------------------------------
 fix_pos(_MapId, _Pos) ->
     ok.
-
-nnl() ->
-    S = lists:duplicate(15, "\n"),
-    ?DEBUG("~ts", [lists:flatten(S)]).
-
-system_info() ->
-    %% observer_backend:sys_info
-    ?WARN("~n======================================================================================================~n\t"
-    "port(cur/max)(+Q)                      :   ~p / ~p~n\t"
-    "process(cur/max)(+P)                   :   ~p / ~p~n\t"
-    "atoms(cur/max)(+t)                     :   ~p / ~p~n\t"
-    "ets(cur/max)(+e)                       :   ~p / ~p~n\t"
-    "schedulers(on/max)(+S)                 :   ~p / ~p~n\t"
-    "dirty schedulers cpu(on/max)(+SDcpu)   :   ~p / ~p~n\t"
-    "dirty io schedulers(+SDio)             :   ~p ~n\t"
-    "thread pool size(+A)                   :   ~p ~n\t"
-    "system version                         :   ~ts~n\t"
-    "ERTS vesion                            :   ~ts~n\t"
-    "ulimit -a                              :   ~ts~n\t"
-    "sytem monitor                          :   ~w~n"
-    "======================================================================================================~n",
-        [
-            erlang:system_info(port_count),                     erlang:system_info(port_limit),
-            erlang:system_info(process_count),                  erlang:system_info(process_limit),
-            erlang:system_info(atom_count),                     erlang:system_info(atom_limit),
-            length(ets:all()),                                  erlang:system_info(ets_limit),
-            erlang:system_info(schedulers_online),              erlang:system_info(schedulers),
-            erlang:system_info(dirty_cpu_schedulers_online),    erlang:system_info(dirty_cpu_schedulers),
-            erlang:system_info(dirty_io_schedulers),
-            erlang:system_info(thread_pool_size),
-            erlang:system_info(otp_release),
-            erlang:system_info(version),
-            ulimit(misc:os_type()),
-            erlang:system_monitor()
-        ]
-    ),
-    ok.
-
-ulimit(unix) ->
-    os:cmd("ulimit -a");
-ulimit(_) -> "unknown".
 
 %%
 %%%% API
