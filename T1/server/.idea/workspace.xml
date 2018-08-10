@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
+    <list id="b84605e7-b6a8-415d-8e82-941d3321f10b" name="ignore-on-commit" comment="">
+      <change afterPath="$PROJECT_DIR$/app/center/data/log/center.2018_08_10_17_04_38.Err.log" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/center/data/log/monitor.sys.2018_08_10_17_04_38.log" afterDir="false" />
+    </list>
     <list default="true" readonly="true" id="354d5196-8a2e-476f-8af6-71424480c5e1" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/app/center/src/cs_start_fn.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/center/src/cs_start_fn.erl" afterDir="false" />
     </list>
@@ -340,60 +344,6 @@
               <item name="Server" type="462c0819:PsiDirectoryNode" />
               <item name="app" type="462c0819:PsiDirectoryNode" />
               <item name="deps" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="Server" type="b2602c69:ProjectViewProjectNode" />
-              <item name="Server" type="462c0819:PsiDirectoryNode" />
-              <item name="app" type="462c0819:PsiDirectoryNode" />
-              <item name="deps" type="462c0819:PsiDirectoryNode" />
-              <item name="db_proxy" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="Server" type="b2602c69:ProjectViewProjectNode" />
-              <item name="Server" type="462c0819:PsiDirectoryNode" />
-              <item name="app" type="462c0819:PsiDirectoryNode" />
-              <item name="deps" type="462c0819:PsiDirectoryNode" />
-              <item name="db_proxy" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="Server" type="b2602c69:ProjectViewProjectNode" />
-              <item name="Server" type="462c0819:PsiDirectoryNode" />
-              <item name="app" type="462c0819:PsiDirectoryNode" />
-              <item name="deps" type="462c0819:PsiDirectoryNode" />
-              <item name="econfig" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="Server" type="b2602c69:ProjectViewProjectNode" />
-              <item name="Server" type="462c0819:PsiDirectoryNode" />
-              <item name="app" type="462c0819:PsiDirectoryNode" />
-              <item name="deps" type="462c0819:PsiDirectoryNode" />
-              <item name="econfig" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="Server" type="b2602c69:ProjectViewProjectNode" />
-              <item name="Server" type="462c0819:PsiDirectoryNode" />
-              <item name="app" type="462c0819:PsiDirectoryNode" />
-              <item name="deps" type="462c0819:PsiDirectoryNode" />
-              <item name="pubs" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="Server" type="b2602c69:ProjectViewProjectNode" />
-              <item name="Server" type="462c0819:PsiDirectoryNode" />
-              <item name="app" type="462c0819:PsiDirectoryNode" />
-              <item name="deps" type="462c0819:PsiDirectoryNode" />
-              <item name="pubs" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="Server" type="b2602c69:ProjectViewProjectNode" />
-              <item name="Server" type="462c0819:PsiDirectoryNode" />
-              <item name="app" type="462c0819:PsiDirectoryNode" />
-              <item name="deps" type="462c0819:PsiDirectoryNode" />
-              <item name="pubs" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="lib" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="Server" type="b2602c69:ProjectViewProjectNode" />
@@ -945,12 +895,12 @@
       <workItem from="1533793431698" duration="4805000" />
       <workItem from="1533803793457" duration="5135000" />
       <workItem from="1533865191849" duration="5136000" />
-      <workItem from="1533879959618" duration="9679000" />
+      <workItem from="1533879959618" duration="10350000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="1455229000" />
+    <option name="totallyTimeSpent" value="1455900000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -963,7 +913,6 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
-    <editor active="true" />
     <layout>
       <window_info anchor="right" id="Palette" order="3" />
       <window_info anchor="bottom" id="TODO" order="6" weight="0.67932963" />
