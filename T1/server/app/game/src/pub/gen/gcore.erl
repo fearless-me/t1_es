@@ -100,15 +100,6 @@ forbid_account(Aid) ->
     gcore:kick_account(Aid, forbid_account).
 
 %%-------------------------------------------------------------------
--define(CRASH_WAIT_SECONDS, 15).
-halt(Fmt, Args) -> gcore:halt(io_lib:format(Fmt, Args)).
-halt(Msg) ->
-    ?FATAL("~ts, after ~p second(s) app crash,~n",
-        [Msg, ?CRASH_WAIT_SECONDS]),
-    timer:sleep(?CRASH_WAIT_SECONDS * 1000),
-    erlang:halt().
-
-%%-------------------------------------------------------------------
 fix_pos(_MapId, _Pos) ->
     ok.
 

@@ -12,8 +12,7 @@
 
 %% API
 -export([
-    start_app/1, start_all_app/1, os_type/0, halt/1, halt/2, nnl/0, system_info/0,
-    make_atom/2,atom_to_binary/1,
+    start_app/1, start_all_app/1, os_type/0, halt/1, halt/2, nnl/0, system_info/0, atom_to_binary/1,
     b2i/1, i2b/1, ntoa/1, ntoab/1,
     to_atom/1, create_atom/2, list_to_string_suffix/2,
     register_process/3, registered_name/0, registered_name/1,
@@ -253,10 +252,6 @@ start_all_app(App) ->
 
 mod_1(Val, Base) -> (Val rem Base) + 1.
 
-
-make_atom(Fmt,Args)->
-    list_to_atom(lists:flatten(io_lib:format(Fmt, Args))).
-
 b2i(true) -> 1;
 b2i(false) -> 0;
 b2i(1) -> 1;
@@ -330,7 +325,7 @@ parse_information_unit(Value) when is_list(Value) ->
 
 %%-------------------------------------------------------------------
 -define(CRASH_WAIT_SECONDS, 15).
-halt(Fmt, Args) -> gcore:halt(io_lib:format(Fmt, Args)).
+halt(Fmt, Args) -> misc:halt(io_lib:format(Fmt, Args)).
 halt(Msg) ->
     ?FATAL("~ts, after ~p second(s) app crash,~n",
         [Msg, ?CRASH_WAIT_SECONDS]),

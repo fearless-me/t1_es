@@ -1,0 +1,12 @@
+{application, db_share,
+ [
+  {description, ""},
+  {vsn, "1"},
+  {registered, []},
+  {applications, [
+                  kernel,
+                  stdlib
+                 ]},
+  {mod, { db_share_app, []}},
+  {env, []}
+ ]}.

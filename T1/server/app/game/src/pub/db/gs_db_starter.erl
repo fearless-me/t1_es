@@ -22,7 +22,7 @@
 init_pool() ->
     true = misc:start_app(db_proxy),
     Sid = gconf:get_sid(),
-    {_PoolOptions, MySqlOptions} = get_player_ins_opt(),
+    {_PoolOptions, MySqlOptions} = get_inst_opt(),
     {ok, Pid} = mysql:start_link(MySqlOptions),
 
     ?INFO("init player db pool ..."),
@@ -95,7 +95,7 @@ modify_record(#r_db_conf{
 modify_record(R) -> R.
 
 %%-------------------------------------------------------------------
-get_player_ins_opt() ->
+get_inst_opt() ->
     PoolOptions = [{size, 1}, {max_overflow, 1}],
     Conf1 = gconf:get_db_conf(),
     Conf2 = case lists:keyfind(port, 1, Conf1) of

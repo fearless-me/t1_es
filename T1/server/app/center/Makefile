@@ -18,6 +18,7 @@ SOURCE_DIR += ../deps/pubs
 SOURCE_DIR += ../deps/mysql-otp
 SOURCE_DIR += ../deps/mysql-otp-poolboy
 SOURCE_DIR += ../deps/poolboy
+SOURCE_DIR += ../deps/db_share
 
 #文件包含目录
 INCLUDE_DIR = -I ./include

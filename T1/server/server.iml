@@ -37,6 +37,8 @@
       <sourceFolder url="file://$MODULE_DIR$/app/game/src/pub/config" type="erlang-include" />
       <sourceFolder url="file://$MODULE_DIR$/app/game/src/pub/netmsg" type="erlang-include" />
       <sourceFolder url="file://$MODULE_DIR$/app/game/src/pub/mapcfgs" type="erlang-include" />
+      <sourceFolder url="file://$MODULE_DIR$/app/deps/db_share/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/app/deps/db_proxy/src" isTestSource="false" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

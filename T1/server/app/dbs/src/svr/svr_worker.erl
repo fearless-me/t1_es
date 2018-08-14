@@ -45,7 +45,7 @@ mod_init({DBId, SeverType, FromPid}) ->
     erlang:process_flag(priority, high),
     try
         GSNode = erlang:node(FromPid),
-        NameAtom = misc:make_atom("~p_~p", [SeverType, DBId]),
+        NameAtom = misc:create_atom(SeverType, [DBId]),
         true = erlang:register(NameAtom, self()),
         erlang:monitor_node(GSNode, true),
         tick_msg(),

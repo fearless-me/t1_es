@@ -14,7 +14,8 @@
     start_auto_reload/1,start_gc_vm/2, start_conf/2, start_errlog/1,
     start_logs/1, start_db_worker/1, start_logic_sup/1,
     start_watchdog/1, start_serv_cache/1,
-    start_serv_loader/1, start_system_monitor/1
+    start_serv_loader/1, start_system_monitor/1,
+    start_mnesia/1
 
 ]).
 
@@ -66,4 +67,8 @@ start_logic_sup(SupPid) ->
 
 start_system_monitor(SupPid) ->
     {ok, _} = ?CHILD(SupPid, system_monitor, worker),
+    ok.
+
+start_mnesia(_SupPid) ->
+    lib_cs_share:start(),
     ok.

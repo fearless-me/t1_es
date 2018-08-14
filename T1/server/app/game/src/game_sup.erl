@@ -69,8 +69,8 @@ wrapper({Msg, stdio, Thunk}) ->
 wrapper({Msg, Thunk}) ->
     ?INFO("~s ...", [Msg]),
     try Thunk()
-    catch _ : _Err : _ST ->
-        misc:halt("~n## run \'~ts\' failed ##~n", [Msg])
+    catch _ : Err : ST ->
+        misc:halt("~n## run \'~ts\' failed ##~n ~p ~n ~p", [Msg, Err, ST])
     end,
     ?INFO("~s done #", [Msg]),
     ok.
