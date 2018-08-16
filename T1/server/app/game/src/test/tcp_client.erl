@@ -30,9 +30,12 @@ move(X, Y) ->
 
 c(Port) -> c(Port, 1).
 
-c(Port, MapID) -> spawn(fun() -> tcp_client:connect(Port, MapID) end).
+c(Port, MapID) ->
+    ensure(),
+    spawn(fun() -> tcp_client:connect(Port, MapID) end).
 
 nc(N, Port) ->
+    ensure(),
     catch ets:new(tcpc, [named_table, public, {keypos, 1}, ?ETS_RC, ?ETS_WC]),
     lists:foreach(fun(_) -> tcp_client:c(Port, 1), timer:sleep(2) end, lists:seq(1, N)).
 
