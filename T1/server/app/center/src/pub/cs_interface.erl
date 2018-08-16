@@ -18,7 +18,7 @@
 %% 直接给服务器发消息
 -export([
     %%
-    is_center_read/0,
+    is_center_ready/0,
     
     %%
     send_msg_2_server_with_sid/2, send_msg_2_server_with_sid/3,
@@ -44,7 +44,7 @@
 
 
 %%%-------------------------------------------------------------------
-is_center_read() ->
+is_center_ready() ->
     cs_watchdog:ready().
 
 %%%-------------------------------------------------------------------

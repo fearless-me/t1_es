@@ -136,7 +136,7 @@ do_register(FromPid, ServerId, ServerType, ServerName) ->
 	ok.
 
 can_register(FromPid, ServerId) ->
-	case cs_interface:is_center_read() of
+	case cs_interface:is_center_ready() of
 		true ->
 			GSNode = erlang:node(FromPid),
 			case mne_ex:dirty_read(m_server_info, ServerId) of

@@ -6,7 +6,7 @@
 %%% @end
 %%% Created : 15. 八月 2018 16:24
 %%%-------------------------------------------------------------------
--module(gs_center_otp).
+-module(gs_cs_otp).
 -author("mawenhong").
 
 -behaviour(gen_serverw).

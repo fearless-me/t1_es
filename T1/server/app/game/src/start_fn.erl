@@ -100,5 +100,5 @@ start_system_monitor(SupPid) ->
     ok.
 
 start_center(SupPid) ->
-    {ok, _} = ?CHILD(SupPid, gs_center_otp, worker),
+    {ok, _} = ?CHILD(SupPid, gs_cs_otp, worker),
     ok.
