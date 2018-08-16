@@ -4,10 +4,13 @@
 %%% @doc
 %%%
 %%% @end
-%%% Created : 14. 八月 2018 9:34
+%%% Created : 15. 八月 2018 14:36
 %%%-------------------------------------------------------------------
--module(svr_mgr).
+-module(svr_mgr_pub).
 -author("mawenhong").
 
 %% API
--export([]).
+-export([on_nodedown/2]).
+
+on_nodedown(GSNode,  ServerID) ->
+    ok.

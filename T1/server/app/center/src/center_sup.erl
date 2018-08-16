@@ -47,6 +47,8 @@ start() ->
         wrapper({"auto compile and load",   ?Wrap(cs_start_fn:start_auto_reload(SupPid))}),
 
         cs_watchdog:wait(),
+
+        wrapper({"server mgr",              ?Wrap(cs_start_fn:start_svr_mgr(SupPid))}),
         ok
     catch _ : Err : ST ->
         misc:halt("start app error ~p, stacktrace ~p", [Err, ST])

@@ -6,7 +6,7 @@
 %%% @end
 %%% Created : 28. 五月 2018 14:38
 %%%-------------------------------------------------------------------
--module(gcore).
+-module(gs_core).
 -author("mawenhong").
 -include("gdef.hrl").
 -include("logger.hrl").
@@ -97,7 +97,7 @@ plat_account_crc(PlatName, PlatAcc) ->
 
 %%-------------------------------------------------------------------
 forbid_account(Aid) ->
-    gcore:kick_account(Aid, forbid_account).
+    gs_core:kick_account(Aid, forbid_account).
 
 %%-------------------------------------------------------------------
 fix_pos(_MapId, _Pos) ->

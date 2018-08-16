@@ -151,7 +151,7 @@ handle_info(Info, State) ->
 %%--------------------------------------------------------------------
 terminate(Reason, State) ->
     Module = get(?LogicModule),
-    ?INFO("~p,~p terminate ~p", [Module, self(), Reason]),
+    ?INFO("~p,~p|~p terminate ~p", [Module, self(), misc:registered_name(), Reason]),
     catch Module:on_terminate(Reason, State),
     ok.
 

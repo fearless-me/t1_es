@@ -21,7 +21,7 @@
 %%--------------------------------------------------------------------
 init_pool() ->
     true = misc:start_app(db_proxy),
-    Sid = gconf:get_sid(),
+    Sid = gs_conf:get_sid(),
     {_PoolOptions, MySqlOptions} = get_inst_opt(),
     {ok, Pid} = mysql:start_link(MySqlOptions),
 
@@ -97,7 +97,7 @@ modify_record(R) -> R.
 %%-------------------------------------------------------------------
 get_inst_opt() ->
     PoolOptions = [{size, 1}, {max_overflow, 1}],
-    Conf1 = gconf:get_db_conf(),
+    Conf1 = gs_conf:get_db_conf(),
     Conf2 = case lists:keyfind(port, 1, Conf1) of
                 {port, Port} when is_number(Port) ->
                     Conf1;

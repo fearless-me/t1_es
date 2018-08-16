@@ -18,10 +18,13 @@
 
 %% API
 -export([
-    start/0, stop/0, sync/1, table_size/1,
+    start/0, stop/0, sync/1, table_size/1, add_table_copy/3, del_table_copy/2,
     create_table/2, delete_table/1, clear_table/1,
     write/1, s_write/1, write/2, read/2, index_read/3, all_keys/1, delete/2,
     dirty_delete/2, dirty_match/2, dirty_read/2, dirty_write/1, dirty_write/2, dirty_all_keys/1, dirty_read_all/1
+]).
+
+-export([
 ]).
 
 
@@ -41,15 +44,36 @@ stop() -> mnesia:stop().
 sync(Node) ->
     case mnesia:change_config(extra_db_nodes, [Node]) of
         {ok, ReturnValue} ->
-            ?INFO("syncToNode:~p ok,Ret:~p", [Node, ReturnValue]),
+            ?INFO("mnesia sync to ~p ok ~p", [Node, ReturnValue]),
             Tables = mnesia:system_info(tables),
             mnesia:wait_for_tables(Tables, 10000),
             true;
         {error, Reason} ->
-            ?FATAL("syncToNode:~p failed:~p", [Node, Reason]),
+            ?FATAL("mnesia sync to ~p failed ~p", [Node, Reason]),
             false
     end.
 
+-spec add_table_copy(Tab:: mnesia:table(), N::node(), ST:: mnesia:storage_type()) -> mnesia:t_result(ok).
+add_table_copy(Tab, N, S) ->
+   case  mnesia:add_table_copy(Tab, N, S) of
+       {atomic, ok} -> true;
+       {aborted, Reason} ->
+           ?ERROR("add_table_copy ~p ~p to ~p failed[~p]",
+               [Tab, S, N, Reason]
+           ),
+           false
+   end.
+
+-spec del_table_copy(Tab::mnesia:table(), N::node()) -> mnesia:t_result(ok).
+del_table_copy(Tab, N) ->
+    case mnesia:del_table_copy(Tab, N) of
+        {atomic, ok} -> true;
+        {aborted, Reason} ->
+            ?ERROR("del_table_copy ~p from ~p failed[~p]",
+                [Tab,  N, Reason]
+            ),
+            false
+    end.
 
 table_size(Table) ->
     Node = mnesia:table_info(Table, where_to_read),
@@ -199,8 +223,4 @@ dirty_read_all(TabName) ->
     TabName :: atom().
 dirty_all_keys(TabName) ->
     mnesia:dirty_all_keys(TabName).
-
-
-
-
 

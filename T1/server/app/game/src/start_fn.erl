@@ -16,7 +16,7 @@
     start_listener_15555/1, start_listener_25555/1,
     start_logic_sup/1, start_login/1,
     start_watchdog/1, start_serv_cache/1, start_map_root_supervisor/1,
-    start_serv_loader/1, start_system_monitor/1
+    start_serv_loader/1, start_system_monitor/1, start_center/1
 
 ]).
 
@@ -37,7 +37,7 @@ start_watchdog(SupPid) ->
     ok.
 
 start_conf(_SupPid, FileName) ->
-    gconf:start(FileName),
+    gs_conf:start(FileName),
     ok.
 
 
@@ -78,6 +78,7 @@ start_map_root_supervisor(SupPid) ->
     ok.
 
 start_db_worker(_SupPid) ->
+    gs_share:start(),
     gs_db_starter:init_pool(),
     ok.
 
@@ -96,4 +97,8 @@ start_logic_sup(SupPid) ->
 
 start_system_monitor(SupPid) ->
     {ok, _} = ?CHILD(SupPid, system_monitor, worker),
+    ok.
+
+start_center(SupPid) ->
+    {ok, _} = ?CHILD(SupPid, gs_center_otp, worker),
     ok.

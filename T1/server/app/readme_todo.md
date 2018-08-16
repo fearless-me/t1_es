@@ -248,7 +248,7 @@
 |       |       db_son.erl       数据库工作进程                                                
 |       |       db_sql.erl      sql语句集中营                                                 
 |       |       db_sup.erl    ,,,                                                                                                                         
-|       +---base.gen                                                                  
+|       +---base.core                                                                  
 |       |       gen_mod_login.erl   全局登录otp                                             
 |       |       gen_mod_map.erl     地图otp (map otp)                                            
 |       |       gen_mod_map_creator.erl    地图数据初始化otp                                      

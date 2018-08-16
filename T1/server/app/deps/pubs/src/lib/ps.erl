@@ -17,6 +17,7 @@
 %% send_with_from(_, MsgId, Msg, FromPid) -> {MsgId, Msg, FromPid}
     send/2,
     send/3,
+    send_with_from/2,
     send_with_from/3,
     send_with_from/4
 ]).
@@ -52,6 +53,22 @@ send(Pid, MsgId, Msg) when is_pid(Pid), is_atom(MsgId) ->
     erlang:send(Pid, {MsgId,Msg});
 send(Dst,MsgId, Msg) when is_tuple(Dst), is_atom(MsgId)->
     erlang:send(Dst, {MsgId,Msg}).
+
+send_with_from(undefined, _) -> ok;
+send_with_from(0, _)-> ok;
+send_with_from(Name, MsgId) when is_atom(Name), is_atom(MsgId) ->
+    case whereis(Name) of
+        undefined ->
+            case global:whereis_name(Name) of
+                undefined -> skip;
+                Pid -> erlang:send(Pid, {MsgId, self()})
+            end;
+        Pid -> erlang:send(Pid, {MsgId, self()})
+    end;
+send_with_from(Pid, MsgId) when is_pid(Pid), is_atom(MsgId) ->
+    erlang:send(Pid, {MsgId,self()});
+send_with_from(Dst, MsgId) when is_tuple(Dst), is_atom(MsgId)->
+    erlang:send(Dst, {MsgId,self()}).
 
 send_with_from(undefined, _, _) -> ok;
 send_with_from(0, _, _)-> ok;

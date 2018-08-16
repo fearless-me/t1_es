@@ -276,21 +276,21 @@ send_goto_map_msg(Uid, Pos) ->
         map_id = lib_map_rw:get_map_id(),
         x = vector3:x(Pos), y = vector3:z(Pos)
     },
-    gcore:send_net_msg(Uid, Msg),
+    gs_core:send_net_msg(Uid, Msg),
     ok.
 
 %%-------------------------------------------------------------------
 broadcast_msg({MsgId}) ->
     ets:foldl(
         fun(#m_map_unit{uid = Uid}, _) ->
-            gcore:send_msg(Uid, MsgId)
+            gs_core:send_msg(Uid, MsgId)
         end, 0, lib_map_rw:get_player_ets()
     ),
     ok;
 broadcast_msg({MsgId, Msg}) ->
     ets:foldl(
         fun(#m_map_unit{uid = Uid}, _) ->
-            gcore:send_msg(Uid, MsgId, Msg)
+            gs_core:send_msg(Uid, MsgId, Msg)
         end, 0, lib_map_rw:get_player_ets()
     ),
     ok.
@@ -298,7 +298,7 @@ broadcast_msg({MsgId, Msg}) ->
 broadcast_net_msg(NetMsg) ->
     ets:foldl(
         fun(#m_map_unit{uid = Uid}, _) ->
-            gcore:send_net_msg(Uid, NetMsg)
+            gs_core:send_net_msg(Uid, NetMsg)
         end, 0, lib_map_rw:get_player_ets()
     ),
     ok.

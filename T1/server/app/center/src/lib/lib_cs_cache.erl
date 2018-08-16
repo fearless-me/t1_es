@@ -4,16 +4,11 @@
 %%% @doc
 %%%
 %%% @end
-%%% Created : 30. 五月 2018 19:31
+%%% Created : 15. 八月 2018 15:37
 %%%-------------------------------------------------------------------
+
 -module(lib_cs_cache).
 -author("mawenhong").
--include("logger.hrl").
--include("pub_common.hrl").
--include("mem_record.hrl").
--include("gdef.hrl").
--include("db_record.hrl").
-
 %% API
 -export([
     init/0,  member/2,

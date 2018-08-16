@@ -15,7 +15,7 @@
     start_logs/1, start_db_worker/1, start_logic_sup/1,
     start_watchdog/1, start_serv_cache/1,
     start_serv_loader/1, start_system_monitor/1,
-    start_mnesia/1
+    start_mnesia/1, start_svr_mgr/1
 
 ]).
 
@@ -71,4 +71,8 @@ start_system_monitor(SupPid) ->
 
 start_mnesia(_SupPid) ->
     lib_cs_share:start(),
+    ok.
+
+start_svr_mgr(SupPid) ->
+    {ok, _} = ?CHILD(SupPid, cs_svr_sup, supervisor),
     ok.

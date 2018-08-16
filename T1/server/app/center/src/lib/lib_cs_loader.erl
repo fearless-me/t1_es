@@ -13,7 +13,6 @@
 -export([]).
 
 -include("logger.hrl").
--include("mem_record.hrl").
 
 %% API
 -export([

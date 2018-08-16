@@ -8,30 +8,40 @@
 %%%-------------------------------------------------------------------
 -module(lib_cs_share).
 -author("mawenhong").
+-include("cs_priv.hrl").
+-include("pub_def.hrl").
+-include("logger.hrl").
 
 %% API
--export([start/0]).
+-export([start/0, sync/1]).
 
--record(s_info,{id,name,node}).
--record(f_info,{id,name,node}).
--define(STORE_ARG, {storage_properties, [{ets, [ {read_concurrency, true},{write_concurrency, true}]}]} ).
+-record(s_info, {id, name, node}).
+-record(f_info, {id, name, node}).
+-define(STORE_ARG, {storage_properties, [{ets, [{read_concurrency, true}, {write_concurrency, true}]}]}).
 
 
 frag_share_tables() ->
-    Node = node(),
+    _Node = node(),
     [
-        {f_info,    [{ram_copies, [Node]}, {attributes, record_info(fields, f_info)}, ?STORE_ARG]}
     ].
 
 share_tables() ->
     Node = node(),
     [
-        {s_info,    [{ram_copies, [Node]}, {attributes, record_info(fields, s_info)}, ?STORE_ARG]}
+        {m_server_info, [{ram_copies, [Node]}, {attributes, record_info(fields, m_server_info)}, ?STORE_ARG]}
     ].
 
 start() ->
     db_share:start(),
     db_share:add_share(share_tables()),
     db_share:add_frag_share(frag_share_tables(), 1),
+    ok.
+
+sync(Node) ->
+    true = mne_ex:sync(Node),
+    lists:foreach(
+        fun({Tab, _Arg}) ->
+            mne_ex:add_table_copy(Tab, Node, ram_copies)
+        end, share_tables()),
     ok.
 

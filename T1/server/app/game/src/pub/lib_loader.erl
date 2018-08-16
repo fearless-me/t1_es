@@ -29,8 +29,8 @@ tasks() ->
     [
         %% task_name, sub_task_count, hashkey, sid, db_func
         %% sub_task_count 如果是0，那么将由 db_func 决定任务数量
-        {serv_start, 1, 1, gconf:get_sid(), fun lib_db:action_pub_/3},
-        {load_all_role_info, 0, 0, gconf:get_sid(), fun lib_db:action_p_all_/2}
+        {serv_start, 1, 1, gs_conf:get_sid(), fun lib_db:action_pub_/3},
+        {load_all_role_info, 0, 0, gs_conf:get_sid(), fun lib_db:action_p_all_/2}
     ].
 
 task_list() -> lists:map(fun({Task, _, _, _, _}) -> Task end, tasks()).
@@ -38,9 +38,9 @@ task_list() -> lists:map(fun({Task, _, _, _, _}) -> Task end, tasks()).
 %%-------------------------------------------------------------------
 on_info_msg({serv_start_ack, RunNo}) ->
     try
-        gconf:set_run_no(RunNo),
-        AreaId = gconf:get_area(),
-        Sid = gconf:get_sid(),
+        gs_conf:set_run_no(RunNo),
+        AreaId = gs_conf:get_area(),
+        Sid = gs_conf:get_sid(),
         uid_gen:init(AreaId, Sid, RunNo),
         task_done_action(serv_start)
     catch _:Err:ST ->

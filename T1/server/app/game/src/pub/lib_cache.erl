@@ -105,7 +105,7 @@ add_player_pub(PPlayer) ->
         old_mid= OMid, old_line = 1, old_pos = vector3:new(Ox, 0, Oy)
     },
     ets:insert(?ETS_PLAYER_PUB, Player),
-    ?INFO("add player ~w to ETS_PLAYER_PUB", [Uid]),
+%%    ?INFO("add player ~w to ETS_PLAYER_PUB", [Uid]),
     ok.
 
 %%-------------------------------------------------------------------

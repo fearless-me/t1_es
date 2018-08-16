@@ -21,13 +21,8 @@
 								"../../deps/db_share"
                               ]
                     },
-					{inc_dirs,[
-								"../include", 
-								"../src/pub/config", 
-								"../src/pub/netmsg", 
-								"../../deps/pubs/include", 
-								"../../deps/pubs/src/net", 
-								"../../deps/pubs/src/resource/pack"]},
+					{inc_dirs,["../include", "../../deps/pubs/include"]
+					},
 					{opts,
 						[
 							debug_info, nowarn_export_all, bin_opt_info,
@@ -51,10 +46,7 @@
 							},
 							{i, "../include"},
 							{i, "../src/pub/config"},
-							{i, "../src/pub/netmsg"},
 							{i, "../../deps/pubs/include"},
-							{i, "../../deps/pubs/src/net"},
-							{i, "../../deps/pubs/src/resource/pack"},
 							{i, "../../deps/mysql-otp/include"}
 						]
 					}
