@@ -19,8 +19,8 @@
 
 %%-------------------------------------------------------------------
 on_account_login(Aid, Pid, Sock) ->
-    lib_cache:add_account_socket(Aid, Pid, Sock),
-    lib_db:action_p_(Aid, load_player_list, Aid),
+    gs_cache_interface:add_account_socket(Aid, Pid, Sock),
+    gs_db_interface:action_p_(Aid, load_player_list, Aid),
     ok.
 
 %%-------------------------------------------------------------------
@@ -34,7 +34,7 @@ on_create(Uid) ->
 on_login(Player) ->
     lib_player_base:init(Player),
     lib_player_base:send_init_data(),
-    lib_cache:online(Player, self(), lib_player_pub:socket()),
+    gs_cache_interface:online(Player, self(), lib_player_pub:socket()),
     lib_player_map_priv:online_call(Player),
     lib_player_alarm:init(),
     lib_player_sub:tick_go(),
@@ -49,7 +49,7 @@ on_offline(Player) ->
         mid = Mid, mpid = MPid, line = LineId
     } = Player,
     lib_player_map_priv:offline_call(Uid, Mid, LineId, MPid),
-    lib_cache:offline(Aid, Uid),
+    gs_cache_interface:offline(Aid, Uid),
     lib_player_alarm:save(),
     ?WARN("player ~p exit map_~p_~p",[Uid, Mid, LineId]),
     ok.
@@ -92,7 +92,7 @@ on_sharp(Hour) ->
 on_rw_update(level, Level) ->
     ?lock(level),
     Uid = lib_player_rw:get_uid(),
-    lib_cache:update_player_pub(Uid, {#m_player_pub.level, Level}),
+    gs_cache_interface:update_player_pub(Uid, {#m_player_pub.level, Level}),
     ?unlock(),
     ok;
 on_rw_update(_Key, _Value) ->

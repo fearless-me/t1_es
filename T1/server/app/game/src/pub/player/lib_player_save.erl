@@ -21,8 +21,8 @@ save(Player) ->
     NewPlayer = case vector3:valid(Pos) of
                     true -> Player;
                     _ ->
-                        NewPos = map_creator_pub:map_init_pos(Mid),
+                        NewPos = gs_map_creator_interface:map_init_pos(Mid),
                         Player#m_player_pub{pos = NewPos}
                 end,
-    lib_db:action_p_(Aid, save_player, NewPlayer),
+    gs_db_interface:action_p_(Aid, save_player, NewPlayer),
     ok.

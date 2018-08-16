@@ -6,7 +6,7 @@
 %%% @end
 %%% Created : 10. 五月 2018 11:06
 %%%-------------------------------------------------------------------
--module(gen_map_creator).
+-module(gs_map_creator_otp).
 -author("mawenhong").
 
 -behaviour(gen_serverw).
@@ -64,7 +64,7 @@ load_all_map() ->
     ok.
 
 load_one_map(MapID) ->
-    {ok, Pid} = map_mgr_sup:start_child(MapID),
+    {ok, Pid} = gs_map_mgr_sup:start_child(MapID),
     ets:insert(?MAP_MGR_ETS, #m_map_mgr{map_id = MapID, mgr = Pid}),
     ok.
 

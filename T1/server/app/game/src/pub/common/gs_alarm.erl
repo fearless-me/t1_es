@@ -6,7 +6,7 @@
 %%% @end
 %%% Created : 08. 八月 2018 11:20
 %%%-------------------------------------------------------------------
--module(lib_alarm).
+-module(gs_alarm).
 -include("pub_common.hrl").
 -include("common_record.hrl").
 -include("mem_record.hrl").

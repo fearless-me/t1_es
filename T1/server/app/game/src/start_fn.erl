@@ -33,7 +33,7 @@ start_errlog(_SupPid) ->
     common_error_logger:start(game_sup, game).
 
 start_watchdog(SupPid) ->
-    {ok, _} = ?CHILD(SupPid, watchdog, worker),
+    {ok, _} = ?CHILD(SupPid, gs_watchdog, worker),
     ok.
 
 start_conf(_SupPid, FileName) ->
@@ -66,7 +66,7 @@ start_auto_reload(_SupPid) ->
     ok = fly:start().
 
 start_serv_cache(SupPid) ->
-    {ok, _} = ?CHILD(SupPid, serv_cache, worker),
+    {ok, _} = ?CHILD(SupPid, gs_cache_otp, worker),
     ok.
 
 start_login(SupPid) ->
@@ -74,7 +74,7 @@ start_login(SupPid) ->
     ok.
 
 start_map_root_supervisor(SupPid) ->
-    {ok, _} = ?CHILD(SupPid, map_root_supervisor, supervisor),
+    {ok, _} = ?CHILD(SupPid, gs_map_root_sup, supervisor),
     ok.
 
 start_db_worker(_SupPid) ->
@@ -83,15 +83,15 @@ start_db_worker(_SupPid) ->
     ok.
 
 start_serv_loader(SupPid) ->
-    {ok, _} = ?CHILD(SupPid, serv_loader, worker),
+    {ok, _} = ?CHILD(SupPid, gs_loader_otp, worker),
     ok.
 
 start_broadcast(SupPid) ->
-    {ok, _} = ?CHILD(SupPid, serv_broadcast, worker),
+    {ok, _} = ?CHILD(SupPid, gs_broadcast_otp, worker),
     ok.
 
 start_logic_sup(SupPid) ->
-    {ok, _} = ?CHILD(SupPid, gen_logic_sup, supervisor),
+    {ok, _} = ?CHILD(SupPid, gs_logic_sup, supervisor),
     ok.
 
 

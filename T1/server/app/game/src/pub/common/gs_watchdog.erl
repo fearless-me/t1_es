@@ -6,7 +6,7 @@
 %%% @end
 %%% Created : 12. 一月 2018 10:28
 %%%-------------------------------------------------------------------
--module(watchdog).
+-module(gs_watchdog).
 -author("mawenhong").
 
 -behaviour(gen_serverw).
@@ -48,7 +48,7 @@ ready()->
 
 wait_all_started()->
    wait_all_started_1(
-       fun lib_loader:is_task_all_done/0,
+       fun gs_loader:is_task_all_done/0,
        "wait all data load ...",
        "all data load done"
    ),

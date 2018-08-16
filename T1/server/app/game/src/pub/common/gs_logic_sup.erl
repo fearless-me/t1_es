@@ -4,16 +4,15 @@
 %%% @doc
 %%%
 %%% @end
-%%% Created : 10. 五月 2018 11:10
+%%% Created : 30. 七月 2018 15:00
 %%%-------------------------------------------------------------------
--module(map_sup).
+-module(gs_logic_sup).
 -author("mawenhong").
 
 -behaviour(supervisor).
 
 %% API
 -export([start_link/0]).
--export([start_child/1]).
 
 %% Supervisor callbacks
 -export([init/1]).
@@ -23,10 +22,10 @@
 -define(CHILD(I, Type, Params), {I, {I, start_link, Params}, permanent, 5000, Type, [I]}).
 -define(CHILD(Name, I, Type, Params), {Name, {I, start_link, Params}, permanent, 5000, Type, [Name]}).
 
-
 %%%===================================================================
 %%% API functions
 %%%===================================================================
+
 
 %%--------------------------------------------------------------------
 %% @doc
@@ -34,32 +33,42 @@
 %%
 %% @end
 %%--------------------------------------------------------------------
+-spec(start_link() ->
+    {ok, Pid :: pid()} | ignore | {error, Reason :: term()}).
 start_link() ->
     supervisor:start_link({local, ?MODULE}, ?MODULE, []).
-
-start_child(CreateMapArg) ->
-    supervisor:start_child(?MODULE, [CreateMapArg]).
 
 %%%===================================================================
 %%% Supervisor callbacks
 %%%===================================================================
+
+%%--------------------------------------------------------------------
+%% @private
+%% @doc
+%% Whenever a supervisor is started using supervisor:start_link/[2,3],
+%% this function is called by the new process to find out about
+%% restart strategy, maximum restart frequency and child
+%% specifications.
+%%
+%% @end
+%%--------------------------------------------------------------------
+-spec(init(Args :: term()) ->
+    {ok, {SupFlags :: {RestartStrategy :: supervisor:strategy(),
+        MaxR :: non_neg_integer(), MaxT :: non_neg_integer()},
+        [ChildSpec :: supervisor:child_spec()]
+    }} |
+    ignore |
+    {error, Reason :: term()}).
 init([]) ->
     {
         ok,
         {
-            {simple_one_for_one, 5, 10},
+            {one_for_one, 5, 10},
             [
-                {   undefind,                               	% Id       = internal id
-                    {gen_map, start_link, []},             % StartFun = {M, F, A}
-                    temporary,                               	% Restart  = permanent | transient | temporary (不会重启)
-                    2000,                                    	% Shutdown = brutal_kill | int() >= 0 | infinity
-                    worker,                                  	% Type     = worker | supervisor
-                    []                                       	% Modules  = [Module] | dynamic
-                }
+                %% 把逻辑进程挂到这个下面
             ]
         }
     }.
-
 
 %%%===================================================================
 %%% Internal functions

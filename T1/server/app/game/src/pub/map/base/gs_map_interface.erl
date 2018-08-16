@@ -7,7 +7,7 @@
 %%% @end
 %%% Created : 13. 六月 2018 9:58
 %%%-------------------------------------------------------------------
--module(map_pub).
+-module(gs_map_interface).
 -author("mawenhong").
 -include("map.hrl").
 %% API

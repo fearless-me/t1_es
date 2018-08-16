@@ -6,7 +6,7 @@
 %%% @end
 %%% Created : 30. 五月 2018 19:31
 %%%-------------------------------------------------------------------
--module(lib_cache).
+-module(gs_cache_interface).
 -author("mawenhong").
 -include("logger.hrl").
 -include("pub_common.hrl").
@@ -83,9 +83,9 @@ match_object(Tab, Pattern, Limit) -> ets:match_object(Tab, Pattern, Limit).
 %%-------------------------------------------------------------------
 online(Player, Pid, Sock) ->
     #p_player{aid = Aid, uid = Uid} = Player,
-    lib_cache:add_player_pub(Player),
-    lib_cache:add_player_priv(Aid, Uid),
-    lib_cache:add_socket(Aid, Uid, Pid, Sock),
+    gs_cache_interface:add_player_pub(Player),
+    gs_cache_interface:add_player_priv(Aid, Uid),
+    gs_cache_interface:add_socket(Aid, Uid, Pid, Sock),
     ok.
 
 %%-------------------------------------------------------------------
@@ -116,9 +116,9 @@ del_player_pub(Uid) ->
 %%-------------------------------------------------------------------
 offline(Aid, Uid) ->
     ?INFO("player ~w of account ~p offline", [Uid, Aid]),
-    lib_cache:del_socket(Uid),
-    lib_cache:del_account_socket(Aid),
-    lib_cache:del_player_priv(Uid),
+    gs_cache_interface:del_socket(Uid),
+    gs_cache_interface:del_account_socket(Aid),
+    gs_cache_interface:del_player_priv(Uid),
     ok.
 
 %%-------------------------------------------------------------------

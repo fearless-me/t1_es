@@ -6,7 +6,7 @@
 %%% @end
 %%% Created : 04. 六月 2018 15:09
 %%%-------------------------------------------------------------------
--module(serv_alarm).
+-module(gs_alarm_otp).
 -author("mawenhong").
 
 -behaviour(gen_serverw).
@@ -27,7 +27,7 @@ start_link() ->
 %%%===================================================================	
 mod_init(_Args) ->
     erlang:process_flag(trap_exit, true),
-    lib_alarm:init(),
+    gs_alarm:init(),
     {ok, #{}}.
 
 %%--------------------------------------------------------------------	

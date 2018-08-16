@@ -1,17 +1,19 @@
+
 %%%-------------------------------------------------------------------
 %%% @author mawenhong
 %%% @copyright (C) 2018, <COMPANY>
 %%% @doc
 %%%
 %%% @end
-%%% Created : 30. 七月 2018 15:00
+%%% Created : 10. 五月 2018 11:10
 %%%-------------------------------------------------------------------
--module(gen_logic_sup).
+-module(gs_map_mgr_sup).
 -author("mawenhong").
 
 -behaviour(supervisor).
 
 %% API
+-export([start_child/1]).
 -export([start_link/0]).
 
 %% Supervisor callbacks
@@ -22,10 +24,10 @@
 -define(CHILD(I, Type, Params), {I, {I, start_link, Params}, permanent, 5000, Type, [I]}).
 -define(CHILD(Name, I, Type, Params), {Name, {I, start_link, Params}, permanent, 5000, Type, [Name]}).
 
+
 %%%===================================================================
 %%% API functions
 %%%===================================================================
-
 
 %%--------------------------------------------------------------------
 %% @doc
@@ -33,39 +35,28 @@
 %%
 %% @end
 %%--------------------------------------------------------------------
--spec(start_link() ->
-    {ok, Pid :: pid()} | ignore | {error, Reason :: term()}).
 start_link() ->
     supervisor:start_link({local, ?MODULE}, ?MODULE, []).
+
+start_child(MapID) ->
+    supervisor:start_child(?MODULE, [MapID]).
 
 %%%===================================================================
 %%% Supervisor callbacks
 %%%===================================================================
-
-%%--------------------------------------------------------------------
-%% @private
-%% @doc
-%% Whenever a supervisor is started using supervisor:start_link/[2,3],
-%% this function is called by the new process to find out about
-%% restart strategy, maximum restart frequency and child
-%% specifications.
-%%
-%% @end
-%%--------------------------------------------------------------------
--spec(init(Args :: term()) ->
-    {ok, {SupFlags :: {RestartStrategy :: supervisor:strategy(),
-        MaxR :: non_neg_integer(), MaxT :: non_neg_integer()},
-        [ChildSpec :: supervisor:child_spec()]
-    }} |
-    ignore |
-    {error, Reason :: term()}).
 init([]) ->
     {
         ok,
         {
-            {one_for_one, 5, 10},
+            {simple_one_for_one, 5, 10},
             [
-                %% 把逻辑进程挂到这个下面
+                {   undefind,                               	% Id       = internal id
+                    {gs_map_mgr_otp, start_link, []},             % StartFun = {M, F, A}
+                    temporary,                               	% Restart  = permanent | transient | temporary (不会重启)
+                    2000,                                    	% Shutdown = brutal_kill | int() >= 0 | infinity
+                    worker,                                  	% Type     = worker | supervisor
+                    []                                       	% Modules  = [Module] | dynamic
+                }
             ]
         }
     }.

@@ -16,8 +16,9 @@
 %%% @end
 %%% Created : 30. 五月 2018 14:22
 %%%-------------------------------------------------------------------
--module(lib_cs_db).
+-module(gs_db_interface).
 -author("mawenhong").
+-include("gsdb_def.hrl").
 
 %%-------------------------------------------------------------------
 -export([
@@ -48,16 +49,16 @@
 %%-------------------------------------------------------------------
 %% 玩家数据库
 action_p_(HashKey, MsgId, Msg) ->
-    Mgr = db_proxy:checkout_ppool_(HashKey),
+    Mgr = db_proxy:checkout_pool(?PLAYER_DB_POOL_NAME),
     db_mgr:scheduler_(Mgr, HashKey, {MsgId, Msg, self()}).
 
 action_p_(HashKey, MsgId, Msg, FromPid) ->
-    Mgr = db_proxy:checkout_ppool_(HashKey),
+    Mgr = db_proxy:checkout_pool(?PLAYER_DB_POOL_NAME),
     db_mgr:scheduler_(Mgr, HashKey, {MsgId, Msg, FromPid}).
 
 %%-------------------------------------------------------------------
 action_p_all_(MsgId, Msg) ->
-    PoolRef = db_proxy:ppool_pg(),
+    PoolRef = db_proxy:pool_pg(?PLAYER_DB_POOL_NAME),
     Members = pg_local:get_members(PoolRef),
     lists:foreach(
         fun(Mgr) ->
@@ -66,7 +67,7 @@ action_p_all_(MsgId, Msg) ->
     erlang:length(Members).
 
 action_p_all_(MsgId, Msg, FromPid) ->
-    PoolRef = db_proxy:ppool_pg(),
+    PoolRef = db_proxy:pool_pg(?PLAYER_DB_POOL_NAME),
     Members = pg_local:get_members(PoolRef),
     lists:foreach(
         fun(Mgr) ->
@@ -78,16 +79,16 @@ action_p_all_(MsgId, Msg, FromPid) ->
 %%-------------------------------------------------------------------
 %% 账号库
 action_a_(HashKey, MsgId, Msg) ->
-    Mgr = db_proxy:checkout_apool_(HashKey),
+    Mgr = db_proxy:checkout_pool(?ACCOUNT_DB_POOL_NAME),
     db_mgr:scheduler_(Mgr, HashKey, {MsgId, Msg, self()}).
 
 action_a_(HashKey, MsgId, Msg, FromPid) ->
-    Mgr = db_proxy:checkout_apool_(HashKey),
+    Mgr = db_proxy:checkout_pool(?ACCOUNT_DB_POOL_NAME),
     db_mgr:scheduler_(Mgr, HashKey, {MsgId, Msg, FromPid}).
 
 %%-------------------------------------------------------------------
 action_a_all_(MsgId, Msg) ->
-    PoolRef = db_proxy:apool_pg(),
+    PoolRef = db_proxy:pool_pg(?ACCOUNT_DB_POOL_NAME),
     Members = pg_local:get_members(PoolRef),
     lists:foreach(
         fun(Mgr) ->
@@ -97,7 +98,7 @@ action_a_all_(MsgId, Msg) ->
     erlang:length(Members).
 
 action_a_all_(MsgId, Msg, FromPid) ->
-    PoolRef = db_proxy:apool_pg(),
+    PoolRef = db_proxy:pool_pg(?ACCOUNT_DB_POOL_NAME),
     Members = pg_local:get_members(PoolRef),
     lists:foreach(
         fun(Mgr) ->
@@ -110,16 +111,16 @@ action_a_all_(MsgId, Msg, FromPid) ->
 %%-------------------------------------------------------------------
 %% 公共库
 action_pub_(HashKey, MsgId, Msg) ->
-    Mgr = db_proxy:checkout_pubpool_(HashKey),
+    Mgr = db_proxy:checkout_pool(?PUBLIC_DB_POOL_NAME),
     db_mgr:scheduler_(Mgr, HashKey, {MsgId, Msg, self()}).
 
 action_pub_(HashKey, MsgId, Msg, FromPid) ->
-    Mgr = db_proxy:checkout_pubpool_(HashKey),
+    Mgr = db_proxy:checkout_pool(?PUBLIC_DB_POOL_NAME),
     db_mgr:scheduler_(Mgr, HashKey, {MsgId, Msg, FromPid}).
 
 %%-------------------------------------------------------------------
 action_pub_all_(MsgId, Msg) ->
-    PoolRef = db_proxy:pubpool_pg(),
+    PoolRef = db_proxy:pool_pg(?PUBLIC_DB_POOL_NAME),
     Members = pg_local:get_members(PoolRef),
     lists:foreach(
         fun(Mgr) ->
@@ -129,7 +130,7 @@ action_pub_all_(MsgId, Msg) ->
     erlang:length(Members).
 
 action_pub_all_(MsgId, Msg, FromPid) ->
-    PoolRef = db_proxy:pubpool_pg(),
+    PoolRef = db_proxy:pool_pg(?PUBLIC_DB_POOL_NAME),
     Members = pg_local:get_members(PoolRef),
     lists:foreach(
         fun(Mgr) ->

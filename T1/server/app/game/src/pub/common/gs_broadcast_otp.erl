@@ -6,7 +6,7 @@
 %%% @end
 %%% Created : 01. 六月 2018 10:21
 %%%-------------------------------------------------------------------
--module(serv_broadcast).
+-module(gs_broadcast_otp).
 -author("mawenhong").
 
 -behaviour(gen_serverw).

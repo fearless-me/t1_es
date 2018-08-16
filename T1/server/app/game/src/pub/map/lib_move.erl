@@ -281,7 +281,7 @@ on_obj_pos_change(Uid, Tar) ->
     ok.
 
 on_obj_pos_changed(?OBJ_USR, Uid, Tar) ->
-    lib_cache:update_player_pub(Uid, {#m_player_pub.pos, Tar}),
+    gs_cache_interface:update_player_pub(Uid, {#m_player_pub.pos, Tar}),
     ok.
 
 %%-------------------------------------------------------------------

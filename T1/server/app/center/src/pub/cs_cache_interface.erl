@@ -7,7 +7,7 @@
 %%% Created : 15. 八月 2018 15:37
 %%%-------------------------------------------------------------------
 
--module(lib_cs_cache).
+-module(cs_cache_interface).
 -author("mawenhong").
 %% API
 -export([

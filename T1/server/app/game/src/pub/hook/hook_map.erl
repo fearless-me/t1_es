@@ -79,14 +79,14 @@ on_rw_update(_Uid, _Key, _Value) ->
 
 %%-------------------------------------------------------------------
 on_rw_update_pub_action(?OBJ_USR, Uid, Element) ->
-    lib_cache:update_player_pub(Uid, Element),
+    gs_cache_interface:update_player_pub(Uid, Element),
     ok;
 on_rw_update_pub_action(_ObjType, _Uid, _Element) ->
     ok.
 
 %%-------------------------------------------------------------------
 on_rw_update_priv_action(?OBJ_USR, Uid, Element) ->
-    lib_cache:update_player_priv(Uid, Element),
+    gs_cache_interface:update_player_priv(Uid, Element),
     ok;
 on_rw_update_priv_action(_ObjType, _Uid, _Element) ->
     ok.

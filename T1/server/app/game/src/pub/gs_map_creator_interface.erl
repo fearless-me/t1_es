@@ -6,7 +6,7 @@
 %%% @end
 %%% Created : 13. 六月 2018 10:05
 %%%-------------------------------------------------------------------
--module(map_creator_pub).
+-module(gs_map_creator_interface).
 -author("mawenhong").
 -include("logger.hrl").
 -include("map.hrl").

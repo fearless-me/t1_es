@@ -60,30 +60,30 @@ kick_account(Aid, Reason) ->
 send_msg(Pid, MsgId) when is_pid(Pid) ->
     ps:send(Pid, MsgId);
 send_msg(Uid, MsgId) when is_number(Uid) ->
-    Pid = lib_cache:get_ppid(Uid),
+    Pid = gs_cache_interface:get_ppid(Uid),
     ps:send(Pid, MsgId).
 
 %%-------------------------------------------------------------------
 send_msg(Pid, MsgId, Msg) when is_pid(Pid) ->
     ps:send(Pid, MsgId, Msg);
 send_msg(Uid, MsgId, Msg) when is_number(Uid) ->
-    Pid = lib_cache:get_ppid(Uid),
+    Pid = gs_cache_interface:get_ppid(Uid),
     ps:send(Pid, MsgId, Msg).
 
 %%-------------------------------------------------------------------
 send_net_msg(Pid, NetMsg) when is_pid(Pid) ->
     ps:send(Pid, net_msg, NetMsg);
 send_net_msg(Uid, NetMsg) when is_number(Uid) ->
-    Pid = lib_cache:get_ppid(Uid),
+    Pid = gs_cache_interface:get_ppid(Uid),
     ps:send(Pid, net_msg, NetMsg).
 
 %%-------------------------------------------------------------------
 broadcast_net_msg(NetMsg) ->
-    ps:send(serv_broadcast, broadcast_net, NetMsg).
+    ps:send(gs_broadcast_otp, broadcast_net, NetMsg).
 
 %%-------------------------------------------------------------------
 broadcast_msg(MsgId, Msg) ->
-    ps:send(serv_broadcast, broadcast, {MsgId, Msg}).
+    ps:send(gs_broadcast_otp, broadcast, {MsgId, Msg}).
 
 %%-------------------------------------------------------------------
 merge_plat_acc_name(PlatName, PlatAcc) ->

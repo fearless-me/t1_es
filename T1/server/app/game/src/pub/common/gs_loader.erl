@@ -6,7 +6,7 @@
 %%% @end
 %%% Created : 06. 八月 2018 16:24
 %%%-------------------------------------------------------------------
--module(lib_loader).
+-module(gs_loader).
 -author("mawenhong").
 
 %% API
@@ -29,8 +29,8 @@ tasks() ->
     [
         %% task_name, sub_task_count, hashkey, sid, db_func
         %% sub_task_count 如果是0，那么将由 db_func 决定任务数量
-        {serv_start, 1, 1, gs_conf:get_sid(), fun lib_db:action_pub_/3},
-        {load_all_role_info, 0, 0, gs_conf:get_sid(), fun lib_db:action_p_all_/2}
+        {serv_start, 1, 1, gs_conf:get_sid(), fun gs_db_interface:action_pub_/3},
+        {load_all_role_info, 0, 0, gs_conf:get_sid(), fun gs_db_interface:action_p_all_/2}
     ].
 
 task_list() -> lists:map(fun({Task, _, _, _, _}) -> Task end, tasks()).
@@ -50,7 +50,7 @@ on_info_msg({serv_start_ack, RunNo}) ->
 %%-------------------------------------------------------------------
 on_info_msg({load_all_role_info_ack, List}) ->
     lists:foreach(
-        fun(Player) -> lib_cache:add_player_pub(Player) end, List),
+        fun(Player) -> gs_cache_interface:add_player_pub(Player) end, List),
     ok;
 on_info_msg(load_all_role_info_ack_end) ->
     task_done_action(load_all_role_info),
@@ -79,7 +79,7 @@ start_on_task({Task, X, HashKey, Params, F}) ->
 task_done_action(Task) ->
     case misc:get_dict_def(Task, {1, 1}) of
         {1, _M} ->
-            ps:send(serv_loader, task_done, Task);
+            ps:send(gs_loader_otp, task_done, Task);
         {V, M} ->
             ?WARN("task ~p progress ~p/~p ", [Task, M - V + 1, M]),
             put(Task, {V - 1, M})
@@ -87,6 +87,6 @@ task_done_action(Task) ->
 
 %%-------------------------------------------------------------------
 is_task_all_done() ->
-    gen_server:call(serv_loader, task_all_done).
+    gen_server:call(gs_loader_otp, task_all_done).
 %%-------------------------------------------------------------------
 %%-------------------------------------------------------------------

@@ -6,7 +6,7 @@
 %%% @end
 %%% Created : 10. 五月 2018 11:06
 %%%-------------------------------------------------------------------
--module(gen_map_mgr).
+-module(gs_map_mgr_otp).
 -author("mawenhong").
 
 -behaviour(gen_serverw).
@@ -34,14 +34,14 @@ start_link(MapID) ->
 %%%===================================================================
 -define(MAP_LINES, map_mgr_line_ets).
 mod_init([MapID]) ->
-    ProcessName = misc:create_atom(gen_map_mgr, [MapID]),
+    ProcessName = misc:create_atom(?MODULE, [MapID]),
     true = erlang:register(ProcessName, self()),
     erlang:process_flag(trap_exit, true),
     erlang:process_flag(priority, high),
     EtsAtom = misc:create_atom(?MAP_LINES, [MapID]),
     Ets = ets:new(EtsAtom, [named_table, protected, {keypos, #m_map_line.line_id}, ?ETS_RC]),
     ?INFO("mapMgr ~p started, line ets:~p,mapID:~p", [ProcessName, Ets, MapID]),
-    ps:send(gen_map_creator, map_mgr_line_ets, {MapID, EtsAtom}),
+    ps:send(gs_map_creator_otp, map_mgr_line_ets, {MapID, EtsAtom}),
     {ok, #state{ets = Ets, map_id = MapID}}.
 
 %%--------------------------------------------------------------------
@@ -110,7 +110,7 @@ do_player_join_map_call(S, Req) ->
     #m_map_line{pid = MapPid, map_id = MapID, line_id = LineID} = Line,
 
     %3. 加入
-    map_pub:player_join_call(MapPid, Req),
+    gs_map_interface:player_join_call(MapPid, Req),
 
     %4. 更新
     ets:update_counter(S#state.ets, LineID, {#m_map_line.in, 1}),
@@ -129,7 +129,7 @@ do_player_exit_map_call(S, Req) ->
     case ets:lookup(S#state.ets, LineID) of
         [#m_map_line{pid = Pid}] ->
             ets:update_counter(S#state.ets, LineID, {#m_map_line.in, -1}),
-            map_pub:player_exit_call(Pid, Req);
+            gs_map_interface:player_exit_call(Pid, Req);
         _ ->
             ?ERROR("player ~p exit map_~p_~p but line ~p not exists",
                 [Uid, S#state.map_id, LineID, LineID]),
@@ -138,7 +138,7 @@ do_player_exit_map_call(S, Req) ->
 
 %%--------------------------------------------------------------------
 create_new_line(S, MapID, LineID) ->
-    {ok, Pid} = map_sup:start_child([MapID, LineID]),
+    {ok, Pid} = gs_map_sup:start_child([MapID, LineID]),
     Line = #m_map_line{
         map_id = MapID, line_id = LineID, pid = Pid,
         dead_line = time:milli_seconds() + ?LINE_LIFETIME

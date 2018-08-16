@@ -47,7 +47,7 @@ on_info_msg({serv_start_ack, RunNo}) ->
 %%-------------------------------------------------------------------
 on_info_msg({load_all_role_info_ack, List}) ->
     lists:foreach(
-        fun(Player)-> lib_cache:add_player_pub(Player) end, List),
+        fun(Player)-> gs_cache_interface:add_player_pub(Player) end, List),
     ok;
 on_info_msg(load_all_role_info_ack_end) ->
     task_done_action(load_all_role_info),

@@ -27,7 +27,7 @@ start_link() ->
 %%%===================================================================	
 mod_init(_Args) ->
     erlang:process_flag(trap_exit, true),
-    lib_cs_cache:init(),
+    cs_cache_interface:init(),
     {ok, #{}}.
 
 %%--------------------------------------------------------------------	

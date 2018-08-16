@@ -122,7 +122,7 @@ loaded_player_list(RoleList) ->
 create_player_(Req) ->
     Aid = lib_player_rw:get_aid(),
     lib_player_rw:set_status(?PS_CREATING),
-    lib_db:action_p_(Aid, create_player, {Aid, Req}),
+    gs_db_interface:action_p_(Aid, create_player, {Aid, Req}),
     ok.
 
 %%-------------------------------------------------------------------
@@ -139,7 +139,7 @@ select_player(Uid) ->
     Aid = lib_player_rw:get_aid(),
     lib_player_rw:set_status(?PS_WAIT_LOAD),
     lib_player_rw:set_uid(Uid),
-    lib_db:action_p_(Aid, load_player_data, {Aid, Uid}),
+    gs_db_interface:action_p_(Aid, load_player_data, {Aid, Uid}),
     ok.
 
 %%-------------------------------------------------------------------
@@ -164,7 +164,7 @@ offline_1(Status, Reason)
     when Status =:= ?PS_GAME; Status =:= ?PS_CHANGE_MAP ->
     Uid = lib_player_rw:get_uid_def(0),
     lib_player_rw:set_status(?PS_OFFLINE),
-    Player = lib_cache:get_player_pub(Uid),
+    Player = gs_cache_interface:get_player_pub(Uid),
     ?TRY_CATCH(hook_player:on_offline(Player)),
     lib_player_save:save(Player),
     ?INFO("player ~p pid ~p sock ~p player ~w offline status ~p reason ~p",
@@ -174,7 +174,7 @@ offline_1(Status, Reason) ->
     Uid = lib_player_rw:get_uid_def(0),
     Aid = lib_player_rw:get_aid_def(0),
     lib_player_rw:set_status(?PS_OFFLINE),
-    lib_cache:offline(Aid, Uid),
+    gs_cache_interface:offline(Aid, Uid),
     ?INFO("player ~p pid ~p sock ~p player ~w offline status ~p reason ~p",
         [Uid, self(), lib_player_pub:socket(), Uid, Status, Reason]),
 

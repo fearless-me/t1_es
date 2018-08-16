@@ -4,9 +4,9 @@
 %%% @doc
 %%%
 %%% @end
-%%% Created : 04. 六月 2018 10:34
+%%% Created : 17. 五月 2018 10:17
 %%%-------------------------------------------------------------------
--module(serv_loader).
+-module(gs_cache_otp).
 -author("mawenhong").
 
 -behaviour(gen_serverw).
@@ -27,29 +27,17 @@ start_link() ->
 %%%===================================================================	
 mod_init(_Args) ->
     erlang:process_flag(trap_exit, true),
-    erlang:process_flag(priority, high),
-    TaskList = lib_loader:task_list(),
-    ?WARN("loader task list ~p", [TaskList]),
-    ps:send(self(), start_all_task),
-    {ok, TaskList}.
+    gs_cache_interface:init(),
+    {ok, #{}}.
 
-%%--------------------------------------------------------------------
-do_handle_call(task_all_done, _From, State) ->
-    {reply,  State =:= [], State};
+%%--------------------------------------------------------------------	
 do_handle_call(Request, From, State) ->
     ?ERROR("undeal call ~w from ~w", [Request, From]),
     {reply, ok, State}.
 
 %%--------------------------------------------------------------------
-do_handle_info(start_all_task, State) ->
-    lib_loader:start_all_task(),
-    {noreply, State};
-do_handle_info({task_done, Task}, State) ->
-    LeftTaskList = lists:delete(Task, State),
-    ?WARN("task ~p done, task list left ~p",[Task, LeftTaskList]),
-    {noreply, LeftTaskList};
 do_handle_info(Info, State) ->
-    lib_loader:on_info_msg(Info),
+    ?ERROR("undeal info ~w", [Info]),
     {noreply, State}.
 
 %%--------------------------------------------------------------------

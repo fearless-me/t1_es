@@ -33,7 +33,7 @@ handle(#pk_U2GS_Login_Normal{
 }) ->
     ?DEBUG("mod_login:login_"),
     lib_player_rw:set_status(?PS_VERIFY),
-    lib_login:login_(#r_login_req{
+    gs_login_interface:login_(#r_login_req{
         plat_name = PlatName, plat_account_name = PlatAccount,
         access_token = Token, player_pid = self()
     }),
@@ -43,8 +43,8 @@ handle(#pk_U2GS_RequestCreatePlayer{
     career = Career, race = Race,
     sex = Sex, head = Head
 }) ->
-    BornMid = map_creator_pub:born_map_id(),
-    V = map_creator_pub:born_map_pos(),
+    BornMid = gs_map_creator_interface:born_map_id(),
+    V = gs_map_creator_interface:born_map_pos(),
     lib_player_priv:create_player_(#r_create_player_req{
        name = Name, camp = Camp, career = Career, race = Race, sex = Sex,
         head = Head, mid = BornMid, x = vector3:x(V), y = vector3:z(V), sid = gs_conf:get_sid()
