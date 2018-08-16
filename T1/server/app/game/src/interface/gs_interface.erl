@@ -21,7 +21,9 @@
     %% 踢人
     kick_account/2,
     %% 封号
-    forbid_account/1
+    forbid_account/1,
+    %% 在线人数
+    total_online/0
 ]).
 -export([
     %% 给某个进程或者某个玩家发消息
@@ -41,6 +43,9 @@
     fix_pos/2
 ]).
 
+total_online() ->
+    ets:info(?ETS_ACCOUNT_PSOCK, size).
+    
 %%-------------------------------------------------------------------
 ppid_name(Aid) ->
     misc:create_atom(player, [Aid]).
