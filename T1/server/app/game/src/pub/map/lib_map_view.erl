@@ -141,7 +141,7 @@ send_net_msg_to_big_visual(_VisTileList, undefined) ->
 send_net_msg_to_big_visual(VisTileList, Msg) ->
     PlayerList = [Players || #m_vis_tile{player = Players} <- VisTileList],
     lists:foreach(
-        fun(Uid) -> gs_core:send_net_msg(Uid, Msg) end,
+        fun(Uid) -> gs_interface:send_net_msg(Uid, Msg) end,
         lists:flatten(PlayerList)
     ),
     ok.
@@ -151,7 +151,7 @@ send_net_msg_to_big_visual(VisTileList, Msg) ->
 send_msg_to_big_visual(VisTileList, MsgId) ->
     PlayerList = [Players || #m_vis_tile{player = Players} <- VisTileList],
     lists:foreach(
-        fun(Uid) -> gs_core:send_msg(Uid, MsgId) end,
+        fun(Uid) -> gs_interface:send_msg(Uid, MsgId) end,
         lists:flatten(PlayerList)
     ),
     ok.
@@ -159,7 +159,7 @@ send_msg_to_big_visual(VisTileList, MsgId) ->
 send_msg_to_big_visual(VisTileList, MsgId, Msg) ->
     PlayerList = [Players || #m_vis_tile{player = Players} <- VisTileList],
     lists:foreach(
-        fun(Uid) -> gs_core:send_msg(Uid, MsgId, Msg) end,
+        fun(Uid) -> gs_interface:send_msg(Uid, MsgId, Msg) end,
         lists:flatten(PlayerList)
     ),
     ok.
@@ -292,7 +292,7 @@ do_sync_big_vis_tile_to_me(?OBJ_USR, Uid, VisTileList, del_all) ->
         [] -> skip;
         _ ->
             Msg = #pk_GS2U_RemoveRemote{uid_list = UidList},
-            gs_core:send_net_msg(Uid, Msg)
+            gs_interface:send_net_msg(Uid, Msg)
     end,
     ok;
 do_sync_big_vis_tile_to_me(?OBJ_USR, TarUid, VisTileList, add_all) ->
@@ -301,7 +301,7 @@ do_sync_big_vis_tile_to_me(?OBJ_USR, TarUid, VisTileList, add_all) ->
             Msg = lib_move:cal_move_msg(Uid),
             if
                 Msg =:= undefined -> skip;
-                true -> gs_core:send_net_msg(TarUid, Msg)
+                true -> gs_interface:send_net_msg(TarUid, Msg)
             end
         end,
     FV =

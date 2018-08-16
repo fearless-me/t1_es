@@ -39,10 +39,10 @@ init() ->
 login_ack(#r_login_ack{error = 0, account_info = AccountIfo}) ->
     #p_account{aid = AccId} = AccountIfo,
     %%% fixme errorrororororor
-    PsName =  gs_core:ppid_name(AccId),
+    PsName =  gs_interface:ppid_name(AccId),
     loop_check(misc:is_alive(PsName), erlang:whereis(PsName), 5),
     %%% fixme errorrororororor
-    Ret = gs_core:register_pid(self(), AccId),
+    Ret = gs_interface:register_pid(self(), AccId),
     login_ack_success(Ret, AccountIfo),
     ok;
 login_ack(#r_login_ack{error = Error}) ->
@@ -83,7 +83,7 @@ login_ack_success(Reason, AccountIfo) ->
     }),
     lib_player_rw:set_status(?PS_ERROR),
     lib_player_pub:shutdown(read),
-    gs_core:kick_account(Aid, Reason),
+    gs_interface:kick_account(Aid, Reason),
     ok.
 
 %%-------------------------------------------------------------------

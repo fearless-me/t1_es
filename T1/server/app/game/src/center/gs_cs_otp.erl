@@ -28,36 +28,36 @@ start_link() ->
 mod_init(_Args) ->
     erlang:process_flag(trap_exit, true),
     erlang:process_flag(priority, high),
-    gs_center_priv:init(),
+    gs_cs_priv:init(),
     ?INFO("init OK"),
     {ok, #{}}.
 
 %%--------------------------------------------------------------------
 do_handle_call(Request, From, State) ->
-    Ret = gs_center_pub:call(Request, From),
+    Ret = gs_cs_pub:call(Request, From),
     {reply, Ret, State}.
 
 %%--------------------------------------------------------------------
 do_handle_info({registerAck, Data, FromPid}, State) ->
-    gs_center_priv:register_ack(FromPid, Data),
+    gs_cs_priv:register_ack(FromPid, Data),
     {noreply, State};
 do_handle_info({nodedown, NodeName}, State) ->
-    gs_center_priv:nodedown(NodeName),
+    gs_cs_priv:nodedown(NodeName),
     {noreply, State};
 do_handle_info({ackTimeOut, FromPid}, State) ->
-    gs_center_priv:ack_timeout(FromPid),
+    gs_cs_priv:ack_timeout(FromPid),
     {noreply, State};
 do_handle_info({syncAllData,FromPid}, State) ->
-    gs_center_priv:sync_all_data(FromPid),
+    gs_cs_priv:sync_all_data(FromPid),
     {noreply, State};
 do_handle_info(check_connect, State) ->
-    gs_center_priv:tick_check_connect(),
+    gs_cs_priv:tick_check_connect(),
     {noreply, State};
 do_handle_info({startNow,FromPid}, State) ->
-    gs_center_priv:start_now(FromPid),
+    gs_cs_priv:start_now(FromPid),
     {noreply, State};
 do_handle_info(Info, State) ->
-    gs_center_pub:info(Info),
+    gs_cs_pub:info(Info),
     {noreply, State}.
 
 %%--------------------------------------------------------------------

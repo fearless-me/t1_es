@@ -6,7 +6,7 @@
 %%% @end
 %%% Created : 28. 五月 2018 14:38
 %%%-------------------------------------------------------------------
--module(gs_core).
+-module(gs_interface).
 -author("mawenhong").
 -include("gdef.hrl").
 -include("logger.hrl").
@@ -27,7 +27,7 @@
     send_msg/2,
     send_msg/3,
     %% ** 给某个角色发网络消息，比如 给好友发或者公共进程给角色发
-    %% ** 给自己发 用 mod_player:send/1
+    %% ** 给自己发 用 lib_player_pub:send_**/1
     send_net_msg/2,
     %% 广播消息
     broadcast_msg/2,
@@ -97,7 +97,7 @@ plat_account_crc(PlatName, PlatAcc) ->
 
 %%-------------------------------------------------------------------
 forbid_account(Aid) ->
-    gs_core:kick_account(Aid, forbid_account).
+    gs_interface:kick_account(Aid, forbid_account).
 
 %%-------------------------------------------------------------------
 fix_pos(_MapId, _Pos) ->

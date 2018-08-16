@@ -6,7 +6,7 @@
 %%% @end
 %%% Created : 15. 八月 2018 16:24
 %%%-------------------------------------------------------------------
--module(gs_center_priv).
+-module(gs_cs_priv).
 -author("mawenhong").
 -include("logger.hrl").
 -include("pub_def.hrl").
