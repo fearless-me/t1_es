@@ -33,7 +33,7 @@ start_errlog(_SupPid) ->
     common_error_logger:start(game_sup, game).
 
 start_watchdog(SupPid) ->
-    {ok, _} = ?CHILD(SupPid, gs_watchdog, worker),
+    {ok, _} = ?CHILD(SupPid, gs_watchdog_otp, worker),
     ok.
 
 start_conf(_SupPid, FileName) ->
@@ -70,7 +70,7 @@ start_serv_cache(SupPid) ->
     ok.
 
 start_login(SupPid) ->
-    {ok, _} = ?CHILD(SupPid, gen_login, worker),
+    {ok, _} = ?CHILD(SupPid, login_otp, worker),
     ok.
 
 start_map_root_supervisor(SupPid) ->

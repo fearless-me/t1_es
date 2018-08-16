@@ -11,6 +11,7 @@
 
 -behaviour(gen_serverw).
 -include("logger.hrl").
+-include("gs_ps_def.hrl").
 
 %% API
 -export([start_link/0]).
@@ -20,7 +21,7 @@
 %%% public functions
 %%%===================================================================
 start_link() ->
-    gen_serverw:start_link({local, ?MODULE}, ?MODULE, [], []).
+    gen_serverw:start_link({local, ?GS_CS_OTP}, ?MODULE, [], []).
 
 %%%===================================================================
 %%% Internal functions

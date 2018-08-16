@@ -6,13 +6,15 @@
 %%% @end
 %%% Created : 15. 五月 2018 20:12
 %%%-------------------------------------------------------------------
--module(gen_login).
+-module(login_otp).
 -author("mawenhong").
 
 -behaviour(gen_serverw).
 -include("logger.hrl").
 -include("netmsg.hrl").
 -include("common_record.hrl").
+-include("gs_ps_def.hrl").
+
 %% API
 -export([start_link/0]).
 -export([mod_init/1, do_handle_call/3, do_handle_info/2, do_handle_cast/2]).
@@ -23,7 +25,7 @@
 %%% public functions
 %%%===================================================================
 start_link() ->
-    gen_serverw:start_link({local, ?MODULE}, ?MODULE, [], []).
+    gen_serverw:start_link({local, ?GS_LOGIN_OTP}, ?MODULE, [], []).
 
 %%%===================================================================
 %%% Internal functions

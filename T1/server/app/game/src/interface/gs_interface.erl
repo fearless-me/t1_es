@@ -11,6 +11,7 @@
 -include("gdef.hrl").
 -include("logger.hrl").
 -include("pub_common.hrl").
+-include("gs_ps_def.hrl").
 
 
 -export([
@@ -79,11 +80,11 @@ send_net_msg(Uid, NetMsg) when is_number(Uid) ->
 
 %%-------------------------------------------------------------------
 broadcast_net_msg(NetMsg) ->
-    ps:send(gs_broadcast_otp, broadcast_net, NetMsg).
+    ps:send(?GS_BROADCAST_OTP, broadcast_net, NetMsg).
 
 %%-------------------------------------------------------------------
 broadcast_msg(MsgId, Msg) ->
-    ps:send(gs_broadcast_otp, broadcast, {MsgId, Msg}).
+    ps:send(?GS_BROADCAST_OTP, broadcast, {MsgId, Msg}).
 
 %%-------------------------------------------------------------------
 merge_plat_acc_name(PlatName, PlatAcc) ->

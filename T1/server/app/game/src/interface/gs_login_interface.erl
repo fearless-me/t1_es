@@ -8,8 +8,9 @@
 %%%-------------------------------------------------------------------
 -module(gs_login_interface).
 -author("mawenhong").
+-include("gs_ps_def.hrl").
 
 -export([login_/1, logout_/1]).
 
-login_(Req)         -> ps:send(gen_login, login_req,Req).
-logout_(AccountID)  -> ps:send(gen_login, logout, AccountID).
+login_(Req)         -> ps:send(?GS_LOGIN_OTP, login_req,Req).
+logout_(AccountID)  -> ps:send(?GS_LOGIN_OTP, logout, AccountID).

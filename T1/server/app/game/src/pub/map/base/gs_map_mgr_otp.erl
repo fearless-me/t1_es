@@ -15,6 +15,7 @@
 -include("map.hrl").
 -include("common_record.hrl").
 -include("map_unit.hrl").
+-include("gs_ps_def.hrl").
 
 %% API
 -export([start_link/1]).
@@ -41,7 +42,7 @@ mod_init([MapID]) ->
     EtsAtom = misc:create_atom(?MAP_LINES, [MapID]),
     Ets = ets:new(EtsAtom, [named_table, protected, {keypos, #m_map_line.line_id}, ?ETS_RC]),
     ?INFO("mapMgr ~p started, line ets:~p,mapID:~p", [ProcessName, Ets, MapID]),
-    ps:send(gs_map_creator_otp, map_mgr_line_ets, {MapID, EtsAtom}),
+    ps:send(?GS_MAP_CREATOR_OTP, map_mgr_line_ets, {MapID, EtsAtom}),
     {ok, #state{ets = Ets, map_id = MapID}}.
 
 %%--------------------------------------------------------------------

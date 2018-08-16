@@ -13,6 +13,7 @@
 -include("logger.hrl").
 -include("map.hrl").
 -include("pub_common.hrl").
+-include("gs_ps_def.hrl").
 
 
 %%
@@ -23,7 +24,7 @@
 %%% public functions
 %%%===================================================================
 start_link() ->
-    gen_serverw:start_link({local, ?MODULE}, ?MODULE, [], []).
+    gen_serverw:start_link({local, ?GS_MAP_CREATOR_OTP}, ?MODULE, [], []).
 
 %%%===================================================================
 %%% Internal functions

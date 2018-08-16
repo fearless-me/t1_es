@@ -54,5 +54,5 @@ get_server_type() ->
 
 get_center() ->
     Center = econfig:get_value(?GS_INI_CONF, center, center, "center@127.0.0.1"),
-    list_to_atom(Center).
+    misc:to_atom(Center).
 

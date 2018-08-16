@@ -6,12 +6,13 @@
 %%% @end
 %%% Created : 12. 一月 2018 10:28
 %%%-------------------------------------------------------------------
--module(gs_watchdog).
+-module(gs_watchdog_otp).
 -author("mawenhong").
 
 -behaviour(gen_serverw).
 -include("pub_common.hrl").
 -include("logger.hrl").
+-include("gs_ps_def.hrl").
 
 %% define
 -record(state, {}).
@@ -69,7 +70,7 @@ wrapper_check(_, Msg) -> ?WARN("wait ~ts...", [Msg]), throw(wait).
 %%% public functions
 %%%===================================================================
 start_link() ->
-    gen_serverw:start_link({local, ?MODULE}, ?MODULE, [], []).
+    gen_serverw:start_link({local, ?GS_WATCHDOG_OTP}, ?MODULE, [], []).
 
 %%%===================================================================
 %%% Internal functions

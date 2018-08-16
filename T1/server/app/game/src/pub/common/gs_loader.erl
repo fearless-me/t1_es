@@ -9,11 +9,9 @@
 -module(gs_loader).
 -author("mawenhong").
 
-%% API
--export([]).
-
 -include("logger.hrl").
 -include("mem_record.hrl").
+-include("gs_ps_def.hrl").
 
 %% API
 -export([
@@ -79,7 +77,7 @@ start_on_task({Task, X, HashKey, Params, F}) ->
 task_done_action(Task) ->
     case misc:get_dict_def(Task, {1, 1}) of
         {1, _M} ->
-            ps:send(gs_loader_otp, task_done, Task);
+            ps:send(?GS_LOADER_OTP, task_done, Task);
         {V, M} ->
             ?WARN("task ~p progress ~p/~p ", [Task, M - V + 1, M]),
             put(Task, {V - 1, M})
@@ -87,6 +85,6 @@ task_done_action(Task) ->
 
 %%-------------------------------------------------------------------
 is_task_all_done() ->
-    gen_server:call(gs_loader_otp, task_all_done).
+    gen_server:call(?GS_LOADER_OTP, task_all_done).
 %%-------------------------------------------------------------------
 %%-------------------------------------------------------------------
