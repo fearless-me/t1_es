@@ -82,7 +82,7 @@ do_player_join_map_call(S, Req) ->
         tar_pos = Pos, force = Force
     } = Req,
 
-    Now = time:milli_seconds(),
+    Now = time_misc:milli_seconds(),
     MS =
         ets:fun2ms(
             fun(#m_map_line{
@@ -142,7 +142,7 @@ create_new_line(S, MapID, LineID) ->
     {ok, Pid} = gs_map_sup:start_child([MapID, LineID]),
     Line = #m_map_line{
         map_id = MapID, line_id = LineID, pid = Pid,
-        dead_line = time:milli_seconds() + ?LINE_LIFETIME
+        dead_line = time_misc:milli_seconds() + ?LINE_LIFETIME
     },
     erlang:send_after(?LINE_LIFETIME, self(), {stop_line, Line}),
     ets:insert(S#state.ets, Line),

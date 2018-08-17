@@ -48,7 +48,7 @@ start() ->
         wrapper({"all logic process",       ?Wrap(start_fn:start_logic_sup(SupPid))}),
 
         wrapper({"auto compile and load",   ?Wrap(start_fn:start_auto_reload(SupPid))}),
-        wrapper({"connect center",          ?Wrap(start_fn:start_center(SupPid))}),
+        wrapper({"center window process",   ?Wrap(start_fn:start_center(SupPid))}),
         watchdog:wait(),
 
         wrapper({"test network 15555",      ?Wrap(start_fn:start_listener_15555(SupPid))}),

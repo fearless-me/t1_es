@@ -103,7 +103,7 @@ tick_connect_cs_node() ->
     ok.
 
 connect_cs_node() ->
-    Now = time:utc_seconds(),
+    Now = time_misc:utc_seconds(),
     case ets:lookup(?CenterServerEts, ?CenterServerKey) of
         [#recCenterInfo{status = ?SEVER_STATUS_DONE}] ->
             ok;
@@ -132,7 +132,7 @@ connect_cs_node(DBId, Node) ->
             %% 告诉跨服，保存本节点
             case gs_cs_interface:register(Node) of
                 true ->
-                    DeadLine = time:utc_seconds() + ?ConnectTimeoutSec,
+                    DeadLine = time_misc:utc_seconds() + ?ConnectTimeoutSec,
                     ets:insert(?CenterServerEts, #recCenterInfo{status = ?SEVER_STATUS_READY, dead_line = DeadLine}),
                     ?WARN("[~p][~p]wait centerServer regiseter ack", [self(), DBId]),
                     ok;

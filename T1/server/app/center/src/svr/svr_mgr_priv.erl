@@ -35,7 +35,7 @@ tick() ->
 	ok.
 
 check() ->
-	NowTime = time:milli_seconds(),
+	NowTime = time_misc:milli_seconds(),
 	ServerList = ets:tab2list(?GCS_CK_REG),
 	do_check(NowTime, ServerList, []),
 	ok.

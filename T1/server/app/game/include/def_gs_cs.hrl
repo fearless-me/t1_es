@@ -14,7 +14,7 @@
 %%
 -define(CenterServerKey, 1).
 -define(TickTime, 500).%% 10 s
--define(ConnectTick, 20).%% 30 s
+-define(ConnectTick, 1).%% 30 s
 -define(SyncAllServerTick, 60).
 -define(ConnectTimeoutSec, 60).
 %%

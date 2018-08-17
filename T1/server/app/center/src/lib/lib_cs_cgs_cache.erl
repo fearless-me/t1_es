@@ -39,7 +39,7 @@ init_select_policy()->
 
 %%%-------------------------------------------------------------------
 add_to_check(ServerID)->
-	ets:insert(?GCS_CK_REG, #recServerCheck{id = ServerID, time = time:milli_seconds()}),
+	ets:insert(?GCS_CK_REG, #recServerCheck{id = ServerID, time = time_misc:milli_seconds()}),
 	ok.
 
 del_from_check(ServerID)->

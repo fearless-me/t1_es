@@ -18,7 +18,8 @@
 
 %% API
 -export([
-    start/0, stop/0, sync/1, table_size/1, add_table_copy/3, del_table_copy/2,
+    start/0, stop/0, sync/1,
+    table_size/1, add_table_copy/3, del_table_copy/2,
     create_table/2, delete_table/1, clear_table/1,
     write/1, s_write/1, write/2, read/2, index_read/3, all_keys/1, delete/2,
     dirty_delete/2, dirty_match/2, dirty_select/2, dirty_read/2, dirty_write/1, dirty_write/2,
@@ -44,8 +45,8 @@ stop() -> mnesia:stop().
 -spec sync(Node) -> boolean() when Node :: node().
 sync(Node) ->
     case mnesia:change_config(extra_db_nodes, [Node]) of
-        {ok, ReturnValue} ->
-            ?INFO("mnesia sync to ~p ok ~p", [Node, ReturnValue]),
+        {ok, _} = Ret ->
+            ?INFO("mnesia sync to ~p ~p", [Node, Ret]),
             Tables = mnesia:system_info(tables),
             mnesia:wait_for_tables(Tables, 10000),
             true;
