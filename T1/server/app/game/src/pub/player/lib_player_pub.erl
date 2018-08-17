@@ -38,13 +38,13 @@
 %%-------------------------------------------------------------------
 -spec shutdown(How) -> ok when
     How :: read | write | read_write.
-shutdown(How) -> mod_player:shutdown(How).
-stop(Reason) -> mod_player:stop(Reason).
-socket() -> mod_player:socket().
+shutdown(How) -> gs_player_handler:shutdown(How).
+stop(Reason) -> gs_player_handler:stop(Reason).
+socket() -> gs_player_handler:socket().
 %%-------------------------------------------------------------------
 
 -spec send_net_msg(Msg :: list() | tuple()) -> ok.
-send_net_msg(Msg) -> mod_player:send_net_msg(Msg).
+send_net_msg(Msg) -> gs_player_handler:send_net_msg(Msg).
 
 %%-------------------------------------------------------------------
 send_map_msg_(MsgId) ->

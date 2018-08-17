@@ -49,10 +49,9 @@ start() ->
 
         wrapper({"auto compile and load",   ?Wrap(start_fn:start_auto_reload(SupPid))}),
         wrapper({"connect center",          ?Wrap(start_fn:start_center(SupPid))}),
-        gs_watchdog_otp:wait(),
+        watchdog:wait(),
 
         wrapper({"test network 15555",      ?Wrap(start_fn:start_listener_15555(SupPid))}),
-        wrapper({"test network 25555",      ?Wrap(start_fn:start_listener_25555(SupPid))}),
         ok
     catch _ : Err : ST ->
         misc:halt("start app error ~p, stacktrace ~p", [Err, ST])

@@ -46,7 +46,7 @@ start() ->
         wrapper({"mnesia",                  ?Wrap(cs_start_fn:start_mnesia(SupPid))}),
         wrapper({"auto compile and load",   ?Wrap(cs_start_fn:start_auto_reload(SupPid))}),
 
-        cs_watchdog:wait(),
+        watchdog:wait(),
 
         wrapper({"server mgr",              ?Wrap(cs_start_fn:start_svr_mgr(SupPid))}),
         ok

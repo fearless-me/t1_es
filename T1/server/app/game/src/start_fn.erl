@@ -13,7 +13,7 @@
 -export([
     start_auto_reload/1,start_gc_vm/2, start_conf/2, start_errlog/1,
     start_logs/1, start_broadcast/1, start_db_worker/1,
-    start_listener_15555/1, start_listener_25555/1,
+    start_listener_15555/1, 
     start_logic_sup/1, start_login/1,
     start_watchdog/1, start_serv_cache/1, start_map_root_supervisor/1,
     start_serv_loader/1, start_system_monitor/1, start_center/1
@@ -33,7 +33,7 @@ start_errlog(_SupPid) ->
     common_error_logger:start(game_sup, game).
 
 start_watchdog(SupPid) ->
-    {ok, _} = ?CHILD(SupPid, gs_watchdog_otp, worker),
+    {ok, _} = ?CHILD(SupPid, watchdog, worker, [fun gs_watchdog_hook:task_list/0]),
     ok.
 
 start_conf(_SupPid, FileName) ->
@@ -46,20 +46,12 @@ start_gc_vm(SupPid, MemFraction) ->
     {ok, _} = ?CHILD(SupPid, vm_memory_monitor, worker, [MemFraction]),
     ok.
 
-start_listener_25555(_SupPid) ->
-    tcp_listener:start_listener(
-        test_tcp_25555,
-        10,
-        [{port, 25555}, {max_connections, 1000}],
-        behaviour_example
-    ).
-
 start_listener_15555(_SupPid) ->
     tcp_listener:start_listener(
         test_tcp_15555,
         10,
         [{port, 15555}, {max_connections, 1000}, {linger, {false, 0}}],
-        mod_player
+        gs_player_handler
     ).
 
 start_auto_reload(_SupPid) ->

@@ -32,7 +32,7 @@ start_errlog(_SupPid) ->
     common_error_logger:start(center_sup, center).
 
 start_watchdog(SupPid) ->
-    {ok, _} = ?CHILD(SupPid, cs_watchdog, worker),
+    {ok, _} = ?CHILD(SupPid, watchdog, worker, [fun cs_watchdog_hook:task_list/0]),
     ok.
 
 start_conf(_SupPid, FileName) ->
