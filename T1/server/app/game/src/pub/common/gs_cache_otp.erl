@@ -11,7 +11,7 @@
 
 -behaviour(gen_serverw).
 -include("logger.hrl").
--include("gs_ps_def.hrl").
+-include("def_gs_ps.hrl").
 
 %% API
 -export([start_link/0]).

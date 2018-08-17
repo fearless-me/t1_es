@@ -6,9 +6,9 @@
 %%% @end
 %%% Created : 15. 五月 2018 20:12
 %%%-------------------------------------------------------------------
--module(lib_login_mod).
+-module(lib_login).
 -author("mawenhong").
--include("common_record.hrl").
+-include("rec_common.hrl").
 -include("logger.hrl").
 
 %% API
@@ -26,7 +26,6 @@ login_2({false, Error}, Req, S)->
     S;
 login_2(true, Req, S)->
     #r_login_req{plat_name = PN, plat_account_name = PA} = Req,
-%%    MergeAccount = gcore:merge_plat_acc_name(PN, PA),
     AccountCrc = gs_interface:plat_account_crc(PN, PA),
     gs_db_interface:action_a_(AccountCrc, account_login,  Req),
     maps:update(in, maps:get(in, S) + 1, S).

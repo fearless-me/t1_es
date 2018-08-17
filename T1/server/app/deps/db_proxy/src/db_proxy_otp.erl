@@ -11,7 +11,7 @@
 
 -behaviour(gen_serverw).
 -include("logger.hrl").
--include("pub_common.hrl").
+-include("pub_def.hrl").
 
 -define(ETS_DB_POOL, db_pool_ets).
 -record(r_db_pool, {pool, mgr, conf, pg}).

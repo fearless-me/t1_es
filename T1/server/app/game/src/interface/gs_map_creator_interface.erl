@@ -9,8 +9,8 @@
 -module(gs_map_creator_interface).
 -author("mawenhong").
 -include("logger.hrl").
--include("map.hrl").
--include("pub_common.hrl").
+-include("inc_map.hrl").
+-include("pub_rec.hrl").
 
 
 %% API

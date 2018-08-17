@@ -8,8 +8,8 @@
 %%%-------------------------------------------------------------------
 -author("mawenhong").
 
--ifndef(GS_CS_DEF_HRL).
--define(GS_CS_DEF_HRL, true).
+-ifndef(DEF_GS_CS_HRL).
+-define(DEF_GS_CS_HRL, true).
 
 %%
 -define(CenterServerKey, 1).

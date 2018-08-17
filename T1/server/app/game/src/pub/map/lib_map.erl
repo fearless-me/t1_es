@@ -11,7 +11,7 @@
 -author("mawenhong").
 
 -include("logger.hrl").
--include("common_record.hrl").
+-include("rec_common.hrl").
 
 %% API
 -export([on_call_msg/2]).

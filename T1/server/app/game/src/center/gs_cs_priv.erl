@@ -10,8 +10,8 @@
 -author("mawenhong").
 -include("logger.hrl").
 -include("pub_def.hrl").
--include("pub_common.hrl").
--include("gs_cs_def.hrl").
+-include("pub_rec.hrl").
+-include("def_gs_cs.hrl").
 
 
 %% API
@@ -56,7 +56,7 @@ nodedown(NodeName) ->
 %%%-------------------------------------------------------------------
 center_nodedown(true) ->
     ?WARN("center server nodedown, all backGS"),
-    ps:send(?PsCsSvrMgrName, pidMsg2AllOLPlayer, {backToGSNow, centerDown}),
+    ps:send(?CS_SVR_MGR_OTP, pidMsg2AllOLPlayer, {backToGSNow, centerDown}),
     ok;
 center_nodedown(_IsCrossServer) ->
     ok.

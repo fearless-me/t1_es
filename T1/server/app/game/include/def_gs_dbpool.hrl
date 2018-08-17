@@ -8,8 +8,8 @@
 %%%-------------------------------------------------------------------
 -author("mawenhong").
 
--ifndef(GSDB_DEF_HRL).
--define(GSDB_DEF_HRL, true).
+-ifndef(DEF_GS_DB_POOL_HRL).
+-define(DEF_GS_DB_POOL_HRL, true).
 
 %%--------------------------------------------------------------------
 -define(PLAYER_DB_POOL_NAME, pdb_pool).

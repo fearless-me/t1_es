@@ -10,7 +10,7 @@
 -author("mawenhong").
 
 -include("logger.hrl").
--include("pub_common.hrl").
+-include("pub_def.hrl").
 
 -record(player_bag, {type = 0, slots = 1, items = #{}}).
 -opaque bag() :: #player_bag{}.

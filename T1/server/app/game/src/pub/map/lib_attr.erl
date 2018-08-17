@@ -9,11 +9,11 @@
 -module(lib_attr).
 -author("mawenhong").
 -include("logger.hrl").
--include("common_record.hrl").
--include("map_unit.hrl").
+-include("rec_common.hrl").
+-include("inc_map_unit.hrl").
 -include("netmsg.hrl").
--include("combat.hrl").
--include("pub_common.hrl").
+-include("inc_combat.hrl").
+-include("pub_rec.hrl").
 %% API
 -export([
     calc/5, change_attr/1, change_attr/3, change_attr/5

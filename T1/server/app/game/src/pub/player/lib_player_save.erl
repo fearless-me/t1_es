@@ -9,7 +9,7 @@
 -module(lib_player_save).
 -author("mawenhong").
 -include("logger.hrl").
--include("mem_record.hrl").
+-include("rec_mem.hrl").
 
 %% API
 -export([save/1]).

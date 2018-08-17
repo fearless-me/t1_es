@@ -11,35 +11,92 @@
 -ifndef(PUB_DEF_HRL).
 -define(PUB_DEF_HRL, true).
 
--define(PsCsSvrMgrName, csSvrMgr___).
+-include_lib("stdlib/include/ms_transform.hrl").
+
+-define(ETS_RC,{read_concurrency,true}).
+-define(ETS_WC,{write_concurrency,true}).
+
+-define(ONS_SECOND_MS, 1000).
+-define(ONE_MINUTE_MS, 60*1000).
+-define(ONT_HOUR_MS, 60*60*1000).
+
+
+%% cs 服务器窗口管理进程
+-define(CS_SVR_MGR_OTP, csSvrMgr___).
+
+%% 服务器类型
+-define(SERVER_TYPE_GS, 1).  % 游戏服
+-define(SERVER_TYPE_CGS, 2). % 跨服
+
+%% 服务器状态
+-define(SEVER_STATUS_INIT, 0).  % 初始化
+-define(SEVER_STATUS_READY, 1). % 连接中
+-define(SEVER_STATUS_DONE, 2).  % 启动好
+
+%% 玩家跨服状态
+-define(CS_PS_NONE,  0). % 无状态
+-define(CS_PS_READY, 1). % 连接好，等待确认
+-define(CS_PS_DONE,  2). % 已经完成跨服
+
+
+
 
 %%
--define(SERVER_TYPE_GS, 1).
--define(SERVER_TYPE_CGS, 2).
+-define(if_else(Cond, True, False), case Cond of true -> True; _ -> False end).
 
--define(SEVER_STATUS_INIT, 0).
--define(SEVER_STATUS_READY, 1).
--define(SEVER_STATUS_DONE, 2).
+%%-------------------------------------------------------------------------------
+-define(TRY_CATCH(Fun, Err, St, Format, Args),
+    try Fun
+    catch _:Err:St ->
+        ?ERROR(Format ++ "Reason=~w,Stacktrace=~p", Args ++ [Err, St])
+    end).
 
--define(MAX_ROLE, 1800).
+%%-------------------------------------------------------------------------------
+-define(TRY_CATCH(Fun, Err, St, Tip),
+    try Fun
+    catch _:Err:St ->
+        ?ERROR("~ts: Reason=~w,Stacktrace=~p", [Tip, Err, St])
+    end).
+-define(TRY_CATCH(Fun, Err, St),
+    try Fun
+    catch _:Err:St ->
+        ?ERROR("Reason=~w,Stacktrace=~p", [Err, St])
+    end).
 
--define(PS_NONE, 0).
--define(PS_DONE, 2).
+-define(TRY_CATCH(Fun), ?TRY_CATCH(Fun,Err,St)).
 
--record(pub_kv,{key,value}).
--record(m_server_info,{sid = 0, type = 0, node = '', name = "", status = 0, online = 0, max_online = 1800, src_pid , worker}).
+%%-------------------------------------------------------------------------------
+-define(TRY_CATCH_RET(Fun, Ret, Err, St, Format, Args),
+    try Fun
+    catch _:Err:St ->
+        ?ERROR(Format ++ "Reason=~w,Stacktrace=~p", Args ++ [Err, St]),
+        Ret
+    end).
+
+-define(TRY_CATCH_RET(Fun, Ret, Err, St, Tip),
+    try Fun
+    catch _:Err:St ->
+        ?ERROR("~ts: Reason=~w,Stacktrace=~p", [Tip,Err,St]),
+        Ret
+    end).
+-define(TRY_CATCH_RET(Fun, Ret, Err, St),
+    try Fun
+    catch _:Err:St ->
+        ?ERROR("Reason=~w,Stacktrace=~p", [Err,St]),
+        Ret
+    end).
+
+-define(TRY_CATCH_RET(Fun,Ret), ?TRY_CATCH_RET(Fun, Ret,Err,St)).
+
+%%-------------------------------------------------------------------------------
+-define(TRY_CATCH_ONLY(Fun),
+    try Fun
+    catch _:_ -> skip
+    end).
+
+%%-------------------------------------------------------------------------------
 
 
--record(recPlayerInfo,{
-    roleID              = 0, % 角色ID
-    roleName            = "",% 角色名字
-    accountID           = 0, % 帐号ID
-    status              = ?PS_NONE,
-    pid                 = 0,
-    netPid              = 0,
-    gsServerID          = 0,
-    cgsServerID         = 0
-}).
 
 
 -endif.

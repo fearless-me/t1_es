@@ -1,7 +1,7 @@
 %% coding: latin-1
 -module(cfg_gamemapcfg1).
 -export([getRow/1]).
--include("map.hrl").
+-include("inc_map.hrl").
 getRow(1) ->
 		#recGameMapCfg{
 		mapID = 1,

@@ -11,7 +11,8 @@
 
 -behaviour(gen_serverw).
 -include("logger.hrl").
--include("pub_common.hrl").
+-include("pub_def.hrl").
+-include("pub_rec.hrl").
 
 
 

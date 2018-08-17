@@ -8,7 +8,7 @@
 %%%-------------------------------------------------------------------
 -module(mod_player_cache_impl_mnesia).
 -author("mawenhong").
--include("pub_common.hrl").
+-include("pub_rec.hrl").
 -include("logger.hrl").
 -include("dbs_private.hrl").
 

@@ -9,9 +9,10 @@
 -module(svr_priv).
 -author("mawenhong").
 
--include("cs_priv.hrl").
--include("pub_def.hrl").
 -include("logger.hrl").
+-include("pub_def.hrl").
+-include("pub_rec.hrl").
+-include("cs_priv.hrl").
 
 %% API
 -export([
@@ -47,7 +48,7 @@ sync_over(GSNode, Sid) ->
     [Info] = mne_ex:dirty_read(m_server_info, Sid),
     mne_ex:dirty_write(Info#m_server_info{status = ?SEVER_STATUS_DONE}),
     ?WARN("server[~p] sync done #", [GSNode]),
-    ps:send_with_from(?PsCsSvrMgrName, allReadyNow, {Sid}),
+    ps:send_with_from(?CS_SVR_MGR_OTP, allReadyNow, {Sid}),
     catch all_ready(Sid),
     erlang:garbage_collect(self()),
     ok.
@@ -61,7 +62,7 @@ all_ready(_ServerID) ->
 
 %%-------------------------------------------------------------------
 nodedown(GSNode, OtpName) ->
-    ps:send(?PsCsSvrMgrName, nodedown, {GSNode, svr_priv:get_sid()}),
+    ps:send(?CS_SVR_MGR_OTP, nodedown, {GSNode, svr_priv:get_sid()}),
     ?WARN("server[~p], stop worker[~p][~p] now", [GSNode, self(), OtpName]),
     ok.
 

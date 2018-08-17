@@ -7,7 +7,7 @@
 -include("logger.hrl").
 -include("type.hrl").
 -include("cfg_mapsetting.hrl").
--include("map.hrl").
+-include("inc_map.hrl").
 -include("mapCfgPrivate.hrl").
 
 -compile(nowarn_unused_vars).

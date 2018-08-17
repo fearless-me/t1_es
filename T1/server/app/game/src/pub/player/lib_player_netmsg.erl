@@ -10,11 +10,11 @@
 -author("mawenhong").
 -include("logger.hrl").
 -include("netmsg.hrl").
--include("map.hrl").
+-include("inc_map.hrl").
 
--include("player_status.hrl").
--include("common_record.hrl").
--include("mem_record.hrl").
+-include("def_player_status.hrl").
+-include("rec_common.hrl").
+-include("rec_mem.hrl").
 
 
 %% API

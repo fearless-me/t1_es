@@ -12,9 +12,9 @@
 -behaviour(gen_serverw).
 -include("logger.hrl").
 -include("netconf.hrl").
--include("mem_record.hrl").
--include("gdef.hrl").
--include("gs_ps_def.hrl").
+-include("rec_mem.hrl").
+-include("def_gs.hrl").
+-include("def_gs_ps.hrl").
 
 %% API
 -export([start_link/0]).

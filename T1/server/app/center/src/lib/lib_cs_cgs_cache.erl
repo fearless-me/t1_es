@@ -8,8 +8,10 @@
 %%%-------------------------------------------------------------------
 -module(lib_cs_cgs_cache).
 -author("mawenhong").
--include("cs_priv.hrl").
+
 -include("pub_def.hrl").
+-include("pub_rec.hrl").
+-include("cs_priv.hrl").
 %% API
 -export([
 	init/0, add_to_check/1, del_from_check/1

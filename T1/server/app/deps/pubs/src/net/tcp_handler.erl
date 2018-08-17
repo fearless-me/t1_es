@@ -12,7 +12,7 @@
 -behaviour(ranch_protocol).
 -behaviour(gen_server).
 -include("logger.hrl").
--include("pub_common.hrl").
+-include("pub_def.hrl").
 -include("netconf.hrl").
 
 %% define

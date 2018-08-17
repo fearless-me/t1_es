@@ -8,8 +8,8 @@
 %%%-------------------------------------------------------------------
 -author("mawenhong").
 
--ifndef(MA_UNIT_HRL).
--define(MA_UNIT_HRL, true).
+-ifndef(INC_MAP_UNIT_HRL).
+-define(INC_MAP_UNIT_HRL, true).
 
 %%
 -define(OBJ_ERR,    0).

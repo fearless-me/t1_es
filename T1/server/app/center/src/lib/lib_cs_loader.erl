@@ -9,10 +9,8 @@
 -module(lib_cs_loader).
 -author("mawenhong").
 
-%% API
--export([]).
-
 -include("logger.hrl").
+-include("cs_ps_def.hrl").
 
 %% API
 -export([
@@ -76,7 +74,7 @@ start_on_task({Task, X, HashKey, Params, F}) ->
 task_done_action(Task) ->
     case misc:get_dict_def(Task, {1,1}) of
         {1,_M} ->
-            ps:send(cs_loader, task_done, Task);
+            ps:send(?CS_LOADER_OTP, task_done, Task);
         {V,M} ->
             ?WARN("task ~p progress ~p/~p ",[Task, M-V+1, M]),
             put(Task, {V - 1,M})
@@ -84,6 +82,6 @@ task_done_action(Task) ->
 
 %%-------------------------------------------------------------------
 is_task_all_done() ->
-    gen_server:call(cs_loader, task_all_done).
+    gen_server:call(?CS_LOADER_OTP, task_all_done).
 %%-------------------------------------------------------------------
 %%-------------------------------------------------------------------

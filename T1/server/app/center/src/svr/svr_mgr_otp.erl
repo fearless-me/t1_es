@@ -21,7 +21,7 @@
 %%% public functions
 %%%===================================================================
 start_link() ->
-    gen_serverw:start_link({local, ?PsCsSvrMgrName}, ?MODULE, [], []).
+    gen_serverw:start_link({local, ?CS_SVR_MGR_OTP}, ?MODULE, [], []).
 
 %%%===================================================================
 %%% Internal functions

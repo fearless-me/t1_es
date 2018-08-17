@@ -9,9 +9,9 @@
 -module(ai_trigger).
 -author("mawenhong").
 -include("logger.hrl").
--include("pub_common.hrl").
--include("trigger_def.hrl").
--include("map_unit.hrl").
+-include("pub_def.hrl").
+-include("inc_map_unit.hrl").
+-include("inc_trigger.hrl").
 
 %% API
 

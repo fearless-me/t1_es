@@ -11,8 +11,8 @@
 
 -include("logger.hrl").
 
--include("map.hrl").
--include("map_unit.hrl").
+-include("inc_map.hrl").
+-include("inc_map_unit.hrl").
 -include("netmsg.hrl").
 -include_lib("stdlib/include/assert.hrl").
 

@@ -9,10 +9,10 @@
 -module(gs_cache_interface).
 -author("mawenhong").
 -include("logger.hrl").
--include("pub_common.hrl").
--include("mem_record.hrl").
--include("gdef.hrl").
--include("db_record.hrl").
+-include("pub_def.hrl").
+-include("def_gs.hrl").
+-include("rec_mem.hrl").
+-include("rec_db.hrl").
 
 %% API
 -export([

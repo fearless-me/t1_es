@@ -11,10 +11,9 @@
 
 -behaviour(gen_serverw).
 -include("logger.hrl").
--include("map.hrl").
--include("pub_common.hrl").
--include("gs_ps_def.hrl").
-
+-include("pub_def.hrl").
+-include("def_gs_ps.hrl").
+-include("inc_map.hrl").
 
 %%
 -export([start_link/0]).

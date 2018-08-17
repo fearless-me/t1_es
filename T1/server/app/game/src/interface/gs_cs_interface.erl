@@ -11,7 +11,7 @@
 
 -include("logger.hrl").
 -include("pub_def.hrl").
--include("gs_cs_def.hrl").
+-include("def_gs_cs.hrl").
 
 %% API
 -export([

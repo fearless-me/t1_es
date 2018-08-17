@@ -8,8 +8,8 @@
 %%%-------------------------------------------------------------------
 -author("mawenhong").
 
--ifndef(GS_PS_DEF_HRL).
--define(GS_PS_DEF_HRL, true).
+-ifndef(DEF_GS_PS_HRL).
+-define(DEF_GS_PS_HRL, true).
 
 -define(GS_CS_OTP,          gs_cs_otp).
 -define(GS_ALARM_OTP,       gs_alarm_otp).

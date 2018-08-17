@@ -8,8 +8,8 @@
 %%%-------------------------------------------------------------------
 -author("mawenhong").
 
--ifndef(TRIGGER_DEF_HRL).
--define(TRIGGER_DEF_HRL, true).
+-ifndef(INC_TRIGGER_HRL).
+-define(INC_TRIGGER_HRL, true).
 
 %% 触发器事件类型
 

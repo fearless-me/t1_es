@@ -8,10 +8,10 @@
 %%%-------------------------------------------------------------------
 -module(hook_bag).
 -author("mawenhong").
--include("pub_common.hrl").
--include("logger.hrl").
 
--record(m_item, {uid = 0, owner = 0, did = 0, num = 1, bind = false}).
+-include("logger.hrl").
+-include("pub_def.hrl").
+
 %% todo list -- 背包后期事项
 %% 1. 根据不同逻辑需要   实现背包的整理
 %% 2. 添加新物品时要考虑是否叠加
@@ -33,6 +33,8 @@
     can_be_overlapped/2, bag_can_overlap/1, did_can_overlap/1
 ]).
 
+
+-record(m_item, {uid = 0, owner = 0, did = 0, num = 1, bind = false}).
 
 %%-------------------------------------------------------------------
 make(_Type, Uid, Did, Num) ->

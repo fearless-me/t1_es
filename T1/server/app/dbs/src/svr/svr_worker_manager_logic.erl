@@ -9,7 +9,7 @@
 -module(svr_worker_manager_logic).
 -author("mawenhong").
 -include("dbs_private.hrl").
--include("pub_common.hrl").
+-include("pub_rec.hrl").
 -include("logger.hrl").
 
 %% API

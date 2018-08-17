@@ -10,12 +10,12 @@
 -author("mawenhong").
 
 -include("logger.hrl").
--include("map.hrl").
--include("map_unit.hrl").
--include("pub_common.hrl").
--include("cfg_mapsetting.hrl").
--include("common_record.hrl").
+-include("pub_def.hrl").
 -include("netmsg.hrl").
+-include("rec_common.hrl").
+-include("cfg_mapsetting.hrl").
+-include("inc_map.hrl").
+-include("inc_map_unit.hrl").
 
 
 

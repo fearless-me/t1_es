@@ -8,9 +8,9 @@
 %%%-------------------------------------------------------------------
 -module(rw_code).
 -author("mawenhong").
--include("map_unit.hrl").
--include("db_record.hrl").
--include("rw_record.hrl").
+-include("inc_map_unit.hrl").
+-include("rec_db.hrl").
+-include("rec_rw.hrl").
 -define(LogFileOptions, [exclusive, append, raw, binary]).
 %% API
 -export([run/0]).
@@ -42,7 +42,7 @@ run() ->
             "..\\src\\pub\\map\\lib_unit_rw.erl",
             lib_unit_rw,
             [
-                ["logger.hrl", "rw_record.hrl"],
+                ["logger.hrl", "rec_rw.hrl"],
                 [
                     {m_map_unit_rw, record_info(fields, m_map_unit_rw), none, ["Uid"], "hook_map:on_rw_update"}
                 ]
@@ -52,7 +52,7 @@ run() ->
             "..\\src\\pub\\map\\lib_combat_rw.erl",
             lib_combat_rw,
             [
-                ["logger.hrl", "rw_record.hrl"],
+                ["logger.hrl", "rec_rw.hrl"],
                 [
                     {m_combat_rw, record_info(fields, m_combat_rw), none, ["Uid"], ""}
                 ]
@@ -62,7 +62,7 @@ run() ->
             "..\\src\\pub\\map\\lib_move_rw.erl",
             lib_move_rw,
             [
-                ["logger.hrl", "rw_record.hrl"],
+                ["logger.hrl", "rec_rw.hrl"],
                 [
                     {m_map_unit_move_rw, record_info(fields, m_map_unit_move_rw), none, ["Uid"], "hook_map:on_rw_update"}
                 ]
@@ -72,7 +72,7 @@ run() ->
             "..\\src\\pub\\map\\lib_ai_rw.erl",
             lib_ai_rw,
             [
-                ["logger.hrl", "ai_def.hrl", "rw_record.hrl", "vector3.hrl"],
+                ["logger.hrl", "inc_ai.hrl", "rec_rw.hrl", "vector3.hrl"],
                 [
                     {m_map_unit_ai_rw, record_info(fields, m_map_unit_ai_rw), none, ["Uid"], ""}
                 ]
@@ -82,7 +82,7 @@ run() ->
             "..\\src\\pub\\player\\lib_player_rw.erl",
             lib_player_rw,
             [
-                ["logger.hrl", "player_status.hrl", "rw_record.hrl", "vector3.hrl"],
+                ["logger.hrl", "def_player_status.hrl", "rec_rw.hrl", "vector3.hrl"],
                 [
                     {m_player_rw, record_info(fields, m_player_rw), none, [], "hook_player:on_rw_update"}
                 ]

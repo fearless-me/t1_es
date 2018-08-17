@@ -20,12 +20,12 @@
 -behaviour(tcp_behaviour).
 
 -include("logger.hrl").
+-include("pub_def.hrl").
 -include("netconf.hrl").
--include("player_status.hrl").
--include("mem_record.hrl").
--include("pub_common.hrl").
--include("player_status.hrl").
 -include("netmsg.hrl").
+-include("rec_mem.hrl").
+-include("def_player_status.hrl").
+
 
 %% API
 -export([shutdown/1]).

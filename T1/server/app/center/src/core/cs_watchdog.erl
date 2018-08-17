@@ -10,11 +10,14 @@
 -author("mawenhong").
 
 -behaviour(gen_serverw).
--include("pub_common.hrl").
 -include("logger.hrl").
+-include("pub_def.hrl").
+-include("pub_rec.hrl").
+-include("cs_ps_def.hrl").
 
 %% define
 -record(state, {}).
+-define(ServerState, serverStateEts_).
 
 %% API
 -export([wait/0]).
@@ -33,17 +36,17 @@ wait() ->
     ok.
 
 status()->
-    gen_server:call(?MODULE, status, infinity).
+    gen_server:call(?CS_WATCHDOG_OTP, status, infinity).
 
 status_()->
-    ps:send(?MODULE, status).
+    ps:send(?CS_WATCHDOG_OTP, status).
 
 ready(V) ->
-    ets:insert(?ServerState, #kv{k = 1, v = V}).
+    ets:insert(?ServerState, #pub_kv{key = 1, value =  V}).
 
 ready()->
     case catch ets:lookup(?ServerState, 1) of
-        [#kv{v = V}] -> misc:i2b(V);
+        [#pub_kv{value = V}] -> misc:i2b(V);
         _ -> false
     end.
 
@@ -60,8 +63,9 @@ wait_all_started_1(Fun, Tip, Done) ->
     case catch wrapper_check(Fun(), Tip) of
         true ->
             ?WARN("~ts",[Done]);
-        _ ->
+        V ->
             timer:sleep(5000),
+            ?WARN("wait all task done ~p",[V]),
             wait_all_started_1(Fun, Tip, Done)
     end.
 
@@ -71,15 +75,14 @@ wrapper_check(_, Msg) -> ?WARN("wait ~ts...", [Msg]), throw(wait).
 %%% public functions
 %%%===================================================================
 start_link() ->
-    gen_serverw:start_link({local, ?MODULE}, ?MODULE, [], []).
+    gen_serverw:start_link({local, ?CS_WATCHDOG_OTP}, ?MODULE, [], []).
 
 %%%===================================================================
 %%% Internal functions
 %%%===================================================================	
 mod_init(_Args) ->
     erlang:process_flag(trap_exit, true),
-    ets:new(?ServerState,
-        [public, named_table, {keypos, #kv.k}, {read_concurrency, true},{write_concurrency, true}]),
+    ets:new(?ServerState, [public, named_table, {keypos, #pub_kv.key}, ?ETS_RC, ?ETS_WC]),
     {ok, #state{}}.
 
 %%--------------------------------------------------------------------

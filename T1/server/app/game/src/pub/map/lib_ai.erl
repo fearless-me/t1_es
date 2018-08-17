@@ -10,12 +10,11 @@
 -module(lib_ai).
 -author("mawenhong").
 -include("logger.hrl").
--include("ai_def.hrl").
--include("movement.hrl").
--include("pub_common.hrl").
--include("map_unit.hrl").
--include("movement.hrl").
--include("trigger_def.hrl").
+-include("pub_def.hrl").
+-include("inc_map_unit.hrl").
+-include("inc_move.hrl").
+-include("inc_ai.hrl").
+-include("inc_trigger.hrl").
 
 %% API
 -export([

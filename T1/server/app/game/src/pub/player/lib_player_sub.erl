@@ -9,7 +9,7 @@
 -module(lib_player_sub).
 -author("mawenhong").
 -include("logger.hrl").
--include("pub_common.hrl").
+-include("pub_def.hrl").
 
 %% API
 -export([tick_go/0, tick_me/0, tick_msg/0]).

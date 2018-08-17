@@ -9,8 +9,8 @@
 -module(lib_player_combat).
 -author("mawenhong").
 -include("logger.hrl").
--include("mem_record.hrl").
--include("common_record.hrl").
+-include("rec_mem.hrl").
+-include("rec_common.hrl").
 
 %% API
 -export([

@@ -8,9 +8,10 @@
 %%%-------------------------------------------------------------------
 -module(lib_cs_share).
 -author("mawenhong").
--include("cs_priv.hrl").
--include("pub_def.hrl").
 -include("logger.hrl").
+-include("pub_def.hrl").
+-include("pub_rec.hrl").
+-include("cs_priv.hrl").
 
 %% API
 -export([start/0, sync/1]).

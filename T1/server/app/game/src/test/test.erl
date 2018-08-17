@@ -9,7 +9,7 @@
 -module(test).
 -author("mawenhong").
 
--include("pub_common.hrl").
+-include("pub_rec.hrl").
 
 %% API
 -export([tv3/0, a/0, rand/1]).

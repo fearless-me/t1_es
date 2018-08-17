@@ -10,12 +10,12 @@
 -author("mawenhong").
 
 -behaviour(gen_serverw).
--include("pub_common.hrl").
 -include("logger.hrl").
--include("map.hrl").
--include("common_record.hrl").
--include("map_unit.hrl").
--include("gs_ps_def.hrl").
+-include("pub_def.hrl").
+-include("rec_common.hrl").
+-include("def_gs_ps.hrl").
+-include("inc_map.hrl").
+-include("inc_map_unit.hrl").
 
 %% API
 -export([start_link/1]).

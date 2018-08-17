@@ -9,13 +9,13 @@
 -module(lib_player_map_priv).
 -author("mawenhong").
 -include("logger.hrl").
--include("map.hrl").
--include("pub_common.hrl").
+-include("inc_map.hrl").
+-include("pub_rec.hrl").
 
--include("mem_record.hrl").
--include("db_record.hrl").
--include("common_record.hrl").
--include("player_status.hrl").
+-include("rec_mem.hrl").
+-include("rec_db.hrl").
+-include("rec_common.hrl").
+-include("def_player_status.hrl").
 %% API
 
 %%--------------------------------

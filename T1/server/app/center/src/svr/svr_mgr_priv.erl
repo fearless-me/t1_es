@@ -10,9 +10,9 @@
 -author("mawenhong").
 
 -include("logger.hrl").
--include("cs_priv.hrl").
 -include("pub_def.hrl").
-
+-include("pub_rec.hrl").
+-include("cs_priv.hrl").
 %% API
 -export([
 	init/0, tick/0, ack_now/2, register/2, nodedown/1, server_ready/2

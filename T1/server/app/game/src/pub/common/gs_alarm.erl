@@ -7,9 +7,9 @@
 %%% Created : 08. 八月 2018 11:20
 %%%-------------------------------------------------------------------
 -module(gs_alarm).
--include("pub_common.hrl").
--include("common_record.hrl").
--include("mem_record.hrl").
+-include("pub_def.hrl").
+-include("rec_common.hrl").
+-include("rec_mem.hrl").
 
 %% API
 -export([init/0]).

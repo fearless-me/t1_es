@@ -49,7 +49,7 @@ start_auto_reload(_SupPid) ->
     ok = fly:start().
 
 start_serv_cache(SupPid) ->
-    {ok, _} = ?CHILD(SupPid, cs_cache, worker),
+    {ok, _} = ?CHILD(SupPid, cs_cache_otp, worker),
     ok.
 
 
@@ -57,7 +57,7 @@ start_db_worker(_SupPid) ->
     ok.
 
 start_serv_loader(SupPid) ->
-    {ok, _} = ?CHILD(SupPid, cs_loader, worker),
+    {ok, _} = ?CHILD(SupPid, cs_loader_otp, worker),
     ok.
 
 start_logic_sup(SupPid) ->
@@ -74,5 +74,5 @@ start_mnesia(_SupPid) ->
     ok.
 
 start_svr_mgr(SupPid) ->
-    {ok, _} = ?CHILD(SupPid, cs_svr_sup, supervisor),
+    {ok, _} = ?CHILD(SupPid, svr_root_sup, supervisor),
     ok.

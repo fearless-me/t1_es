@@ -1,9 +1,10 @@
 -module(tcp_client).
 -author("Administrator").
+-include("logger.hrl").
+-include("pub_def.hrl").
 -include("netmsg.hrl").
 -include("netconf.hrl").
--include("logger.hrl").
--include("pub_common.hrl").
+
 
 %% API
 -export([ensure/0]).

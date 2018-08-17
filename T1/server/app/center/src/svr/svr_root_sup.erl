@@ -6,7 +6,7 @@
 %%% @end
 %%% Created : 03. 十一月 2017 16:36
 %%%-------------------------------------------------------------------
--module(cs_svr_sup).
+-module(svr_root_sup).
 -author("mawenhong").
 
 -behaviour(supervisor).

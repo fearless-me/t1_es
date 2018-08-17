@@ -9,7 +9,7 @@
 -module(hook_player).
 -author("mawenhong").
 -include("logger.hrl").
--include("mem_record.hrl").
+-include("rec_mem.hrl").
 -include("netmsg.hrl").
 
 %% API

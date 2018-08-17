@@ -12,8 +12,8 @@
 -behaviour(gen_serverw).
 -include("logger.hrl").
 -include("netmsg.hrl").
--include("common_record.hrl").
--include("gs_ps_def.hrl").
+-include("rec_common.hrl").
+-include("def_gs_ps.hrl").
 
 %% API
 -export([start_link/0]).
@@ -43,9 +43,9 @@ do_handle_call(Request, From, State) ->
 
 %%--------------------------------------------------------------------
 do_handle_info({login_req, Req}, State) ->
-    {noreply, lib_login_mod:login_1(Req, State)};
+    {noreply, lib_login:login_1(Req, State)};
 do_handle_info({logout, AccountID}, State) ->
-    {noreply, lib_login_mod:logout_1(AccountID, State)};
+    {noreply, lib_login:logout_1(AccountID, State)};
 do_handle_info(Info, State) ->
     ?ERROR("undeal info ~w", [Info]),
     {noreply, State}.

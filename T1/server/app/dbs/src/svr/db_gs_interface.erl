@@ -10,7 +10,7 @@
 -author("mawenhong").
 
 -include("dbs_private.hrl").
--include("pub_common.hrl").
+-include("pub_rec.hrl").
 
 %% API
 -export([send_2_gs/2]).

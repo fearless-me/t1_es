@@ -10,15 +10,16 @@
 -author("mawenhong").
 
 -include("logger.hrl").
+-include("pub_def.hrl").
 -include("netmsg.hrl").
--include("map.hrl").
--include("player_status.hrl").
--include("common_record.hrl").
--include("map_unit.hrl").
--include("db_record.hrl").
--include("mem_record.hrl").
+-include("inc_map.hrl").
+-include("inc_map_unit.hrl").
+-include("def_player_status.hrl").
+-include("rec_common.hrl").
+-include("rec_db.hrl").
+-include("rec_mem.hrl").
 
--include("pub_common.hrl").
+
 
 %% 逻辑层不要调用这些接口
 -export([init/0]).

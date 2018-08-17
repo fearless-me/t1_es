@@ -9,12 +9,13 @@
 -module(lib_combat).
 -author("mawenhong").
 -include("logger.hrl").
--include("common_record.hrl").
--include("map_unit.hrl").
+-include("pub_def.hrl").
 -include("netmsg.hrl").
--include("combat.hrl").
--include("pub_common.hrl").
--include("map.hrl").
+-include("rec_common.hrl").
+-include("inc_map.hrl").
+-include("inc_map_unit.hrl").
+-include("inc_combat.hrl").
+
 %% 瞬发技能放完就结束
 %% 吟唱技能设置到当前技能
 %% 引导技能也设置到当前技能

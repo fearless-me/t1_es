@@ -9,10 +9,9 @@
 -module(lib_player_pub).
 -author("mawenhong").
 -include("logger.hrl").
--include("map.hrl").
--include("pub_common.hrl").
-
--include("mem_record.hrl").
+-include("pub_def.hrl").
+-include("inc_map.hrl").
+-include("rec_mem.hrl").
 
 
 %% API

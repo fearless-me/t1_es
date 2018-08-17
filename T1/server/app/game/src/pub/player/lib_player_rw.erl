@@ -7,8 +7,8 @@
 
 %%-------------------------------------------------------------------
 -include("logger.hrl").
--include("player_status.hrl").
--include("rw_record.hrl").
+-include("def_player_status.hrl").
+-include("rec_rw.hrl").
 
 %%-------------------------------------------------------------------
 

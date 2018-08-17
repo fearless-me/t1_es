@@ -10,12 +10,14 @@
 -author("mawenhong").
 
 -behaviour(gen_serverw).
--include("pub_common.hrl").
 -include("logger.hrl").
--include("gs_ps_def.hrl").
+-include("pub_def.hrl").
+-include("pub_rec.hrl").
+-include("def_gs_ps.hrl").
 
 %% define
 -record(state, {}).
+-define(ServerState, serverStateEts_).
 
 %% API
 -export([wait/0]).
@@ -38,11 +40,11 @@ status_()->
     ps:send(?MODULE, status).
 
 ready(V) ->
-    ets:insert(?ServerState, #kv{k = 1, v = V}).
+    ets:insert(?ServerState, #pub_kv{key =  1, value =  V}).
 
 ready()->
     case catch ets:lookup(?ServerState, 1) of
-        [#kv{v = V}] -> misc:i2b(V);
+        [#pub_kv{ value = V}] -> misc:i2b(V);
         _ -> false
     end.
 
@@ -77,8 +79,7 @@ start_link() ->
 %%%===================================================================	
 mod_init(_Args) ->
     erlang:process_flag(trap_exit, true),
-    ets:new(?ServerState,
-        [public, named_table, {keypos, #kv.k}, {read_concurrency, true},{write_concurrency, true}]),
+    ets:new(?ServerState, [public, named_table, {keypos, #pub_kv.key}, ?ETS_WC, ?ETS_RC]),
     {ok, #state{}}.
 
 %%--------------------------------------------------------------------

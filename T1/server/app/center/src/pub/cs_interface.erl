@@ -9,8 +9,10 @@
 -module(cs_interface).
 -author("mawenhong").
 
--include("cs_priv.hrl").
 -include("pub_def.hrl").
+-include("pub_rec.hrl").
+-include("cs_priv.hrl").
+
 
 -define(TYPE_WORKER, 0).
 -define(TYPE_WINDOW, 1).
@@ -122,7 +124,7 @@ get_player_state(RoleID) ->
         [#recPlayerInfo{status = ST}] ->
             ST;
         _ ->
-            ?PS_NONE
+            ?CS_PS_NONE
     end.
 
 %%%-------------------------------------------------------------------
@@ -250,31 +252,30 @@ sel_server_pid_list(ServerType, Type, ExceptServerID) ->
 
 sel_server_id(0) ->
     QS = ets:fun2ms(fun(Info) -> Info#m_server_info.sid end),
-    ets:select(?GLOBAL_GS_ETS, QS);
+    mne_ex:dirty_select(m_server_info, QS);
 sel_server_id(SeverType) ->
     QS = ets:fun2ms(fun(Info) when Info#m_server_info.type =:= SeverType -> Info#m_server_info.sid end),
-    ets:select(?GLOBAL_GS_ETS, QS).
+    mne_ex:dirty_select(m_server_info, QS).
 
 sel_server_pid_list_1(0, ?TYPE_WINDOW, ExceptServerID) ->
     QS = ets:fun2ms(fun(Info) when Info#m_server_info.sid =/= ExceptServerID -> Info#m_server_info.src_pid end),
-    ets:select(?GLOBAL_GS_ETS, QS);
+    mne_ex:dirty_select(m_server_info, QS);
 sel_server_pid_list_1(Type, ?TYPE_WINDOW, ExceptServerID) ->
     QS = ets:fun2ms(fun(Info) when Info#m_server_info.sid =/= ExceptServerID andalso Info#m_server_info.type =:= Type -> Info#m_server_info.src_pid end),
-    ets:select(?GLOBAL_GS_ETS, QS);
+    mne_ex:dirty_select(m_server_info, QS);
 sel_server_pid_list_1(0, _Type, ExceptServerID) ->
     QS = ets:fun2ms(
         fun(Info) when Info#m_server_info.status =:= ?SEVER_STATUS_DONE andalso Info#m_server_info.sid =/= ExceptServerID ->
             Info#m_server_info.worker end
     ),
-    ets:select(?GLOBAL_GS_ETS, QS);
+    mne_ex:dirty_select(m_server_info, QS);
 sel_server_pid_list_1(Type, _Type, ExceptServerID) ->
     QS = ets:fun2ms(
         fun(Info) when Info#m_server_info.sid =/= ExceptServerID, Info#m_server_info.type =:= Type, Info#m_server_info.status =:= ?SEVER_STATUS_DONE ->
             Info#m_server_info.worker
         end
     ),
-    ets:select(?GLOBAL_GS_ETS, QS).
-
+    mne_ex:dirty_select(m_server_info, QS).
 
 %%%-------------------------------------------------------------------
 sel_server_pid(ServerID, Type) ->
@@ -287,14 +288,16 @@ sel_server_pid(ServerID, Type) ->
 
 
 sel_server_pid_1(ServerID, ?TYPE_WINDOW) ->
-    case ets:lookup(?GLOBAL_GS_ETS, ServerID) of
+%%    case ets:lookup(?GLOBAL_GS_ETS, ServerID) of
+    case mne_ex:dirty_read(m_server_info, ServerID) of
         [#m_server_info{src_pid = Pid}] when is_pid(Pid) ->
             Pid;
         _ ->
             0
     end;
 sel_server_pid_1(ServerID, _Type) ->
-    case ets:lookup(?GLOBAL_GS_ETS, ServerID) of
+%%    case ets:lookup(?GLOBAL_GS_ETS, ServerID) of
+    case mne_ex:dirty_read(m_server_info, ServerID) of
         [#m_server_info{worker = Pid, status = ?SEVER_STATUS_DONE}] when is_pid(Pid) ->
             Pid;
         _ ->

@@ -9,7 +9,7 @@
 -module(gs_db_starter).
 -author("mawenhong").
 -include("logger.hrl").
--include("gsdb_def.hrl").
+-include("def_gs_dbpool.hrl").
 
 %% API
 -export([init_pool/0]).

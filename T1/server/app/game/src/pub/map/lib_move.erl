@@ -8,11 +8,11 @@
 %%%-------------------------------------------------------------------
 -module(lib_move).
 -author("mawenhong").
--include("map_unit.hrl").
--include("movement.hrl").
+-include("inc_map_unit.hrl").
+-include("inc_move.hrl").
 -include("logger.hrl").
 
--include("mem_record.hrl").
+-include("rec_mem.hrl").
 -include("netmsg.hrl").
 -include_lib("stdlib/include/assert.hrl").
 

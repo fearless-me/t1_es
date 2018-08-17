@@ -10,8 +10,8 @@
 -author("mawenhong").
 
 -include("logger.hrl").
--include("mem_record.hrl").
--include("gs_ps_def.hrl").
+-include("rec_mem.hrl").
+-include("def_gs_ps.hrl").
 
 %% API
 -export([

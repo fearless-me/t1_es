@@ -11,7 +11,7 @@
 
 -behaviour(gen_serverw).
 -include("dbs_private.hrl").
--include("pub_common.hrl").
+-include("pub_rec.hrl").
 -include("logger.hrl").
 
 %% define

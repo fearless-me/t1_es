@@ -10,9 +10,9 @@
 -author("mawenhong").
 -include("logger.hrl").
 -include("netmsg.hrl").
--include("db_record.hrl").
--include("mem_record.hrl").
--include("common_record.hrl").
+-include("rec_db.hrl").
+-include("rec_mem.hrl").
+-include("rec_common.hrl").
 
 %% API
 -export([init/1]).

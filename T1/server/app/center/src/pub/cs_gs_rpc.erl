@@ -14,9 +14,9 @@
 -export([register/4]).
 
 register(Sid, ServerType, ServerName, FromPid) ->
-    case misc:is_alive(?PsCsSvrMgrName) of
+    case misc:is_alive(?CS_SVR_MGR_OTP) of
         true ->
-            ps:send_with_from(?PsCsSvrMgrName, register, {Sid, ServerType, ServerName}, FromPid);
+            ps:send_with_from(?CS_SVR_MGR_OTP, register, {Sid, ServerType, ServerName}, FromPid);
         _ ->
             {badrpc, not_ready}
     end.

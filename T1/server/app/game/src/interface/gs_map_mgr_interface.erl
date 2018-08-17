@@ -9,7 +9,7 @@
 -module(gs_map_mgr_interface).
 -author("mawenhong").
 
--include("map.hrl").
+-include("inc_map.hrl").
 
 %% API
 
