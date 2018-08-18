@@ -39,6 +39,8 @@
       <sourceFolder url="file://$MODULE_DIR$/app/game/src/pub/mapcfgs" type="erlang-include" />
       <sourceFolder url="file://$MODULE_DIR$/app/deps/db_share/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/app/deps/db_proxy/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/app/deps/gen_rpc/include" type="erlang-include" />
+      <sourceFolder url="file://$MODULE_DIR$/app/deps/gen_rpc/src" isTestSource="false" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

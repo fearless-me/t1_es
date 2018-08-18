@@ -71,7 +71,7 @@ sync_all(_Type, _Map) ->
 del_one_op(_Type, #m_item{num = Have}, Need) when Need >= Have ->
     all;
 del_one_op(_Type, #m_item{num = Have} = Rs, Need) when Need < Have, Need >= 0 ->
-    {ok, Rs#m_item{num = Have-Need}};
+    {part, Rs#m_item{num = Have-Need}};
 del_one_op(_Type, _Rs, _Need) ->
     erlang:error(bad_agrs).
 
@@ -83,15 +83,15 @@ overlap_num(#m_item{num = Have}) -> Have;
 overlap_num(_Rs) -> 0.
 
 can_be_overlapped(#m_item{bind = true}, _Did) ->
-    skip;
+    false;
 can_be_overlapped(#m_item{uid = Uid, num = Have, did = Did}, Did) ->
     Max = max_overlapped(Did),
-    ?if_else(Max > Have, {Uid, Max - Have}, skip);
+    ?if_else(Max > Have, {Uid, Max - Have}, false);
 can_be_overlapped(#m_item{uid = Uid, num = Have, did = Did}, #m_item{did = Did}) ->
     Max = max_overlapped(Did),
-    ?if_else(Max > Have, {Uid, Max - Have}, skip);
+    ?if_else(Max > Have, {Uid, Max - Have}, false);
 can_be_overlapped(_Org, _DidOrItem) ->
-    skip.
+    false.
 
 %% 背包是否允许叠加
 bag_can_overlap(1) ->
@@ -107,7 +107,7 @@ did_can_overlap(_Did) ->
 
 %%-------------------------------------------------------------------
 find_check(#m_item{did = Did1, num = Have}, Did, Need) when Have >= Need, Did1 =:= Did ->
-    {full, Need};
+    {all, Need};
 find_check(#m_item{did = Did1, num = Have}, Did, Need) when Did1 =:= Did ->
     {more, Have, Need - Have};
 find_check(_Rs, _Dis, _Need) ->

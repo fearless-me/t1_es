@@ -16,7 +16,7 @@
     start_listener_15555/1, 
     start_logic_sup/1, start_login/1,
     start_watchdog/1, start_serv_cache/1, start_map_root_supervisor/1,
-    start_serv_loader/1, start_system_monitor/1, start_center/1
+    start_serv_loader/1, start_system_monitor/1, start_center/1, start_rpc/1
 
 ]).
 
@@ -93,4 +93,8 @@ start_system_monitor(SupPid) ->
 
 start_center(SupPid) ->
     {ok, _} = ?CHILD(SupPid, gs_cs_otp, worker),
+    ok.
+
+start_rpc(_SupPid) ->
+    true = misc:start_all_app(gen_rpc),
     ok.

@@ -18,6 +18,7 @@
 								"../../deps/mysql-otp",
 								"../../deps/mysql-otp-poolboy",
 								"../../deps/poolboy",
+								"../../deps/gen_rpc",
 								"../../deps/db_proxy"
                               ]
                     },
@@ -26,8 +27,7 @@
 								"../src/pub/config", 
 								"../src/pub/netmsg", 
 								"../../deps/pubs/include", 
-								"../../deps/pubs/src/net", 
-								"../../deps/pubs/src/resource/pack"]},
+								"../../deps/gen_rpc/include"]},
 					{opts,
 						[
 							debug_info, nowarn_export_all, bin_opt_info,
@@ -46,15 +46,14 @@
 									"../../deps/mysql-otp",
 									"../../deps/mysql-otp-poolboy",
 									"../../deps/poolboy",
+									"../../deps/gen_rpc",
 									"../../deps/db_proxy"
                                ]
 							},
 							{i, "../include"},
 							{i, "../src/pub/config"},
 							{i, "../src/pub/netmsg"},
-							{i, "../../deps/pubs/include"},
-							{i, "../../deps/pubs/src/net"},
-							{i, "../../deps/pubs/src/resource/pack"},
+							{i, "../../deps/gen_rpc-otp/include"},
 							{i, "../../deps/mysql-otp/include"}
 						]
 					}

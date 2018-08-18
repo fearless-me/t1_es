@@ -159,7 +159,7 @@ del_did(Type, Did, Num) ->
             Elm = maps:get(Uid, Con),
             ?TRY_CATCH(hook_bag:on_deleted(Type, Elm, Dec)),
             case hook_bag:del_one_op(Type, Elm, Dec) of
-                {ok, New} ->
+                {part, New} ->
                     Maps = maps:update(Uid, New, Con),
                     set_bag_items(Type, Maps),
                     Maps;
@@ -185,7 +185,7 @@ del_uid_action(Type, Bag, Uid, Res, Num) ->
             Maps = Bag#player_bag.items,
             Bag1 =
                 case hook_bag:del_one_op(Type, Res, Num) of
-                    {ok, New} ->
+                    {part, New} ->
                         Bag#player_bag{items = maps:update(Uid, New, Maps)};
                     all ->
                         Bag#player_bag{items = maps:remove(Uid, Maps)}
@@ -257,7 +257,7 @@ find_from_bag_did(Bag, Did, Num) ->
                     Res;
                 (K, V, {Acc, Need} = Res) ->
                     case hook_bag:find_check(V, Did, Need) of
-                        {full, Dec} ->
+                        {all, Dec} ->
                             {[{K, Dec} | Acc], 0};
                         {more, Dec, Left} ->
                             {[{K, Dec} | Acc], Left};

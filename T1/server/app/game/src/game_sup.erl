@@ -50,7 +50,7 @@ start() ->
         wrapper({"auto compile and load",   ?Wrap(start_fn:start_auto_reload(SupPid))}),
         wrapper({"center window process",   ?Wrap(start_fn:start_center(SupPid))}),
         watchdog:wait(),
-
+        wrapper({"gen rpc app",             ?Wrap(start_fn:start_rpc(SupPid))}),
         wrapper({"test network 15555",      ?Wrap(start_fn:start_listener_15555(SupPid))}),
         ok
     catch _ : Err : ST ->
