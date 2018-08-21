@@ -18,10 +18,11 @@
 								"../../deps/mysql-otp",
 								"../../deps/mysql-otp-poolboy",
 								"../../deps/poolboy",
+								"../../deps/gen_rpc",
 								"../../deps/db_share"
                               ]
                     },
-					{inc_dirs,["../include", "../../deps/pubs/include"]
+					{inc_dirs,["../include", "../../deps/pubs/include", "../../deps/gen_rpc/include"]
 					},
 					{opts,
 						[
@@ -41,12 +42,13 @@
 									"../../deps/mysql-otp",
 									"../../deps/mysql-otp-poolboy",
 									"../../deps/poolboy",
+									"../../deps/gen_rpc",
 									"../../deps/db_share"
                                ]
 							},
 							{i, "../include"},
-							{i, "../src/pub/config"},
 							{i, "../../deps/pubs/include"},
+							{i, "../../deps/gen_rpc/include"},
 							{i, "../../deps/mysql-otp/include"}
 						]
 					}

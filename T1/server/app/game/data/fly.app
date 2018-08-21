@@ -53,7 +53,8 @@
 							{i, "../include"},
 							{i, "../src/pub/config"},
 							{i, "../src/pub/netmsg"},
-							{i, "../../deps/gen_rpc-otp/include"},
+							{i, "../../deps/pubs/include"},
+							{i, "../../deps/gen_rpc/include"},
 							{i, "../../deps/mysql-otp/include"}
 						]
 					}

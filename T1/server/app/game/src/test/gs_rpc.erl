@@ -4,14 +4,14 @@
 %%% @doc
 %%%
 %%% @end
-%%% Created : 18. 八月 2018 14:04
+%%% Created : 21. 八月 2018 11:44
 %%%-------------------------------------------------------------------
--module(slave).
+-module(gs_rpc).
 -author("mawenhong").
+-include("logger.hrl").
 
 %% API
--export([]).
+-export([test_rpc/0]).
 
-f() ->
-    slave:start("slave@127.0.0.1"),
-    ok.
+test_rpc() ->
+    ?WARN("center rpc call game").

@@ -129,7 +129,12 @@ get_server_driver_options(Driver) when is_atom(Driver) ->
     ClosedMsg = erlang:list_to_atom(DriverStr ++ "_closed"),
     ErrorMsg = erlang:list_to_atom(DriverStr ++ "_error"),
     PortSetting = erlang:list_to_atom(DriverStr ++ "_server_port"),
-    {ok, DriverPort} = application:get_env(?APP, PortSetting),
+    DriverPort =
+        case application:get_env(?APP, PortSetting) of
+            {ok, ServerPort} -> ServerPort;
+            {external, Module} when is_atom(Module) ->
+                Module:get_server_port()
+        end,
     {DriverMod, DriverPort, ClosedMsg, ErrorMsg}.
 
 -spec get_client_driver_options(atom()) -> tuple().
@@ -142,12 +147,16 @@ get_client_driver_options(Driver) when is_atom(Driver) ->
 
 -spec get_client_config_per_node(node_or_tuple()) -> {atom(), inet:port_number()} | {error, {atom(), term()}}.
 get_client_config_per_node({Node, _Key}) ->
+
     get_client_config_per_node(Node);
 get_client_config_per_node(Node) when is_atom(Node) ->
     {ok, NodeConfig} = application:get_env(?APP, client_config_per_node),
     case NodeConfig of
         {external, Module} when is_atom(Module) ->
             try Module:get_config(Node) of
+                Port when is_integer(Port), Port > 0 ->
+                    {ok, Driver} = application:get_env(?APP, default_client_driver),
+                    {Driver, Port};
                 {Driver, Port} when is_atom(Driver), is_integer(Port), Port > 0 ->
                     {Driver, Port};
                 {error, Reason} ->

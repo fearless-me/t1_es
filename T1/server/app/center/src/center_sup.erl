@@ -36,6 +36,7 @@ start() ->
         wrapper({"logger", stdio,           ?Wrap(cs_start_fn:start_logs(SupPid))}),
         wrapper({"error Logger",            ?Wrap(cs_start_fn:start_errlog(SupPid))}),
         wrapper({"watchdog",                ?Wrap(cs_start_fn:start_watchdog(SupPid))}),
+        wrapper({"gen rpc app",             ?Wrap(cs_start_fn:start_rpc(SupPid))}),
         wrapper({"config init",             ?Wrap(cs_start_fn:start_conf(SupPid, "center.ini"))}),
         wrapper({"monitor/gc/vms",          ?Wrap(cs_start_fn:start_gc_vm(SupPid, 0.5))}),
         wrapper({"system monitor",          ?Wrap(cs_start_fn:start_system_monitor(SupPid))}),

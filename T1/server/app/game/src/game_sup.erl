@@ -36,6 +36,7 @@ start() ->
         wrapper({"logger", stdio,           ?Wrap(start_fn:start_logs(SupPid))}),
         wrapper({"error Logger",            ?Wrap(start_fn:start_errlog(SupPid))}),
         wrapper({"watchdog",                ?Wrap(start_fn:start_watchdog(SupPid))}),
+        wrapper({"gen rpc app",             ?Wrap(start_fn:start_rpc(SupPid))}),
         wrapper({"config init",             ?Wrap(start_fn:start_conf(SupPid, "game.ini"))}),
         wrapper({"monitor/gc/vms",          ?Wrap(start_fn:start_gc_vm(SupPid, 0.5))}),
         wrapper({"system monitor",          ?Wrap(start_fn:start_system_monitor(SupPid))}),
@@ -50,7 +51,7 @@ start() ->
         wrapper({"auto compile and load",   ?Wrap(start_fn:start_auto_reload(SupPid))}),
         wrapper({"center window process",   ?Wrap(start_fn:start_center(SupPid))}),
         watchdog:wait(),
-        wrapper({"gen rpc app",             ?Wrap(start_fn:start_rpc(SupPid))}),
+
         wrapper({"test network 15555",      ?Wrap(start_fn:start_listener_15555(SupPid))}),
         ok
     catch _ : Err : ST ->

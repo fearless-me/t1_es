@@ -46,7 +46,7 @@
         %% If you have an external service that allows discovery
         %% of port/node mappings, you can change this setting to
         %% {external, Module}
-        {client_config_per_node, {internal, #{}}},
+        {client_config_per_node, {external, grpc_port_hook}},
         %% List of modules available for RPC
         %% This is either whitelist, blacklist or disabled
         %% to disable the feature

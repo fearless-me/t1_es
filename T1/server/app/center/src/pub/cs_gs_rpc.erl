@@ -9,9 +9,11 @@
 -module(cs_gs_rpc).
 -author("mawenhong").
 -include("pub_def.hrl").
+-include("logger.hrl").
 
 %% API
 -export([register/4]).
+-export([test_rpc/0]).
 
 register(Sid, ServerType, ServerName, FromPid) ->
     case misc:is_alive(?CS_SVR_MGR_OTP) of
@@ -20,3 +22,6 @@ register(Sid, ServerType, ServerName, FromPid) ->
         _ ->
             {badrpc, not_ready}
     end.
+
+test_rpc() ->
+    ?WARN("game rpc call center").
