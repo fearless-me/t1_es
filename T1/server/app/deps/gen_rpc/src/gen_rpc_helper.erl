@@ -118,8 +118,12 @@ is_driver_enabled(Driver) when is_atom(Driver) ->
     case application:get_env(?APP, Setting) of
         {ok, false} ->
             false;
-        {ok, _Port} ->
-            true
+        {ok, Port} when is_integer(Port), Port > 0  ->
+            true;
+        {ok, {external, Module}} when is_atom(Module) ->
+            true;
+        _ ->
+            false
     end.
 
 -spec get_server_driver_options(atom()) -> tuple().
@@ -129,10 +133,12 @@ get_server_driver_options(Driver) when is_atom(Driver) ->
     ClosedMsg = erlang:list_to_atom(DriverStr ++ "_closed"),
     ErrorMsg = erlang:list_to_atom(DriverStr ++ "_error"),
     PortSetting = erlang:list_to_atom(DriverStr ++ "_server_port"),
+    application:get_env(?APP, PortSetting),
     DriverPort =
         case application:get_env(?APP, PortSetting) of
-            {ok, ServerPort} -> ServerPort;
-            {external, Module} when is_atom(Module) ->
+            {ok, ServerPort} when is_integer(ServerPort), ServerPort > 0  ->
+                ServerPort;
+            {ok, {external, Module}} when is_atom(Module) ->
                 Module:get_server_port()
         end,
     {DriverMod, DriverPort, ClosedMsg, ErrorMsg}.

@@ -24,7 +24,7 @@
     {applications, [kernel, stdlib, crypto, asn1, public_key, ssl]},
     {env,[
         %% TCP server port. Set to false to disable
-        {tcp_server_port, 5369},
+        {tcp_server_port, {external,grpc_port_hook}},
         %% Default TCP port for outgoing connections
         {tcp_client_port, 5369},
         %% SSL server port. Set to false to disable

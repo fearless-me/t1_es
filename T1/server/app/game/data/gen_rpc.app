@@ -9,7 +9,7 @@
               {files,["LICENSE","README.md","CHANGELOG.md","include",
                       "package.exs","rebar.config","src"]},
               {applications,[kernel,stdlib,crypto,asn1,public_key,ssl]},
-              {env,[{tcp_server_port,5369},
+              {env,[{tcp_server_port,{external,grpc_port_hook}},
                     {tcp_client_port,5369},
                     {ssl_server_port,false},
                     {ssl_server_options,[]},

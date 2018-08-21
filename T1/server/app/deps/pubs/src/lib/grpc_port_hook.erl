@@ -16,8 +16,6 @@
 -export([test/0]).
 -endif.
 
--define(CLI_SIDE, 1).
--define(SVR_SIDE, 2).
 -define(PORT_BASE, 40000).
 -define(PORT_MOD, 19000).
 -define(PORT_HASH_MIN, 59001).
