@@ -19,6 +19,7 @@
 								"../../deps/mysql-otp-poolboy",
 								"../../deps/poolboy",
 								"../../deps/gen_rpc",
+								"../../deps/dist-otp",
 								"../../deps/db_share"
                               ]
                     },
@@ -43,6 +44,7 @@
 									"../../deps/mysql-otp-poolboy",
 									"../../deps/poolboy",
 									"../../deps/gen_rpc",
+									"../../deps/dist-otp",
 									"../../deps/db_share"
                                ]
 							},

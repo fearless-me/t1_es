@@ -15,7 +15,7 @@
     start_app/1, start_all_app/1, os_type/0, halt/1, halt/2, nnl/0,  nnl/1, system_info/0,
     b2i/1, i2b/1, ntoa/1, ntoab/1,
     atom_to_binary/1, to_atom/1, create_atom/2, list_to_string_suffix/2,
-    register_process/2, register_process/3, registered_name/0, registered_name/1,
+    register_process/2, register_process/3, registered_name/0, registered_name/1, process_node/1,
     is_alive/1, is_alive_g/1, is_alive_lg/1,
     ip/0, peername/1, ip_string/1,
     crc32/1, mod_1/2, clamp/3, rand/2,
@@ -60,6 +60,18 @@ registered_name(Pid) ->
     case erlang:process_info(Pid, registered_name) of
         {registered_name,Name} -> Name;
         _ -> unknown
+    end.
+
+process_node(Pid) when is_pid(Pid) ->
+    erlang:node(Pid);
+process_node(PidName) when is_atom(PidName) ->
+    case erlang:whereis(PidName) of
+        undefined ->
+            case global:whereis_name(PidName) of
+                undefined -> undefined;
+                GPid -> erlang:node(GPid)
+            end;
+        Pid -> erlang:node(Pid)
     end.
 
 %% local

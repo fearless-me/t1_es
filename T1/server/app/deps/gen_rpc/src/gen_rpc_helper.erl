@@ -133,7 +133,6 @@ get_server_driver_options(Driver) when is_atom(Driver) ->
     ClosedMsg = erlang:list_to_atom(DriverStr ++ "_closed"),
     ErrorMsg = erlang:list_to_atom(DriverStr ++ "_error"),
     PortSetting = erlang:list_to_atom(DriverStr ++ "_server_port"),
-    application:get_env(?APP, PortSetting),
     DriverPort =
         case application:get_env(?APP, PortSetting) of
             {ok, ServerPort} when is_integer(ServerPort), ServerPort > 0  ->

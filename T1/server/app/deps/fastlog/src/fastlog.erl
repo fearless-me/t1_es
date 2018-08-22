@@ -45,11 +45,13 @@
 
 
 -define(CheckFlagMaxLogTimes, 50).
--record(recDiscard, {
+-record(fastlog_config, {
     key = 1,
-    isDiscard = false
+    isDiscard = false,
+    isSlave = false,
+    master_node
 }).
--define(FlagEts, discardLogEts___).
+-define(FlagEts, fastLogEts___).
 
 
 -record(state, {monitorRef, counter, fileName, fd, fd_err, is_log_stdio, no_err_fd = false, dir=?LOGDIR}).
@@ -138,16 +140,25 @@ do_log(Level, Sink, F, A) ->
     String =
         io_lib:format("[~.4w-~.2.0w-~.2.0w ~.2.0w:~.2.0w:~.2.0w][~w]~ts~n",
             [YYYY, MM, DD, Hour, Min, Sec, Level, io_lib:format(F, A)]),
-    Sink ! {?MSG, Level, String},
+    case ets:lookup_element(?FlagEts, 1, #fastlog_config.master_node) of
+        undefined ->
+            Sink ! {?MSG, Level, String};
+        MasterNode ->
+            {Sink, MasterNode} !   {?MSG, Level, String}
+    end,
     ok.
 
 -spec discard(IsDiscardLog :: true|false) -> ok.
 discard(IsDiscardLog) ->
     ets:insert(
         ?FlagEts,
-        #recDiscard{isDiscard = misc:i2b(IsDiscardLog)}
+        #fastlog_config{isDiscard = misc:i2b(IsDiscardLog)}
     ),
     ok.
+
+
+is_slave() ->
+    ets:lookup_element(?FlagEts, 1, #fastlog_config.isSlave).
 
 %%--------------------------------------------------------------------
 %% @doc
@@ -283,16 +294,23 @@ mod_init([Fname, ParentPid]) ->
 
     case ets:info(?FlagEts) of
         undefined ->
-            ets:new(?FlagEts, [public, named_table, {keypos, #recDiscard.key}, {write_concurrency, true}]),
-            ets:insert(?FlagEts, #recDiscard{});
+            MasterNode = master_node(),
+            ets:new(?FlagEts, [public, named_table, {keypos, #fastlog_config.key}, {write_concurrency, true}, {read_concurrency, true}]),
+            case MasterNode of
+                undefined ->
+                    ets:insert(?FlagEts, #fastlog_config{});
+                _ ->
+                    ets:insert(?FlagEts, #fastlog_config{isSlave = true, master_node = MasterNode})
+            end;
         _ -> skip
     end,
 
     Ref = erlang:monitor(process, ParentPid),
-    do_init(Ref, Fname, ?LOGDIR).
+    do_init(is_slave(), Ref, Fname, ?LOGDIR).
 
-
-do_init(Ref, Fname, Dir) ->
+do_init(true, Ref, _Fname, _Dir) ->
+    {ok, #state{monitorRef = Ref, counter = 0}};
+do_init(false, Ref, Fname, Dir) ->
     MkDirNew = application:get_env(fastlog, mkdir_restart, false),
     NewDir = ensure_log_dir(MkDirNew, Dir),
     NoErr = case erlang:process_info(self(), registered_name) of
@@ -442,7 +460,7 @@ need_write_log(Cnt) when is_number(Cnt) ->
     case Cnt > 0 andalso (Cnt rem ?CheckFlagMaxLogTimes) =:= 0 of
         true ->
             case ets:lookup(?FlagEts, 1) of
-                [#recDiscard{isDiscard = IsDiscardLog} | _] ->
+                [#fastlog_config{isDiscard = IsDiscardLog} | _] ->
                     not IsDiscardLog;
                 _ ->
                     true
@@ -487,3 +505,9 @@ time_format_str({{YYYY, MM, DD}, {Hour, Min, Sec}}) ->
 
 time_format({{YYYY, MM, DD}, {Hour, Min, Sec}}) ->
     lists:flatten(io_lib:format("~.4w_~.2.0w_~.2.0w_~.2.0w_~.2.0w_~.2.0w", [YYYY, MM, DD, Hour, Min, Sec])).
+
+master_node() ->
+    case init:get_argument(master) of
+        error -> undefined;
+        {ok,[[MasterNode]]} -> erlang:list_to_atom(MasterNode)
+    end.

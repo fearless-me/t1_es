@@ -20,6 +20,7 @@ SOURCE_DIR += ../deps/mysql-otp-poolboy
 SOURCE_DIR += ../deps/poolboy
 SOURCE_DIR += ../deps/db_share
 SOURCE_DIR += ../deps/gen_rpc
+SOURCE_DIR += ../deps/dist-otp
 
 #文件包含目录
 INCLUDE_DIR = -I ./include
