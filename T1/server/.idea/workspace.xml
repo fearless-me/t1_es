@@ -13,7 +13,6 @@
       <change beforePath="$PROJECT_DIR$/app/deps/fastlog/src/fastlog.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/fastlog/src/fastlog.erl" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/deps/gen_rpc/src/gen_rpc_helper.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/gen_rpc/src/gen_rpc_helper.erl" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/lib/misc.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/lib/misc.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/lib/slave.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/lib/misc_dist.erl" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/game/scripts/start.sh" beforeDir="false" afterPath="$PROJECT_DIR$/app/game/scripts/start.sh" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/readme_todo.md" beforeDir="false" afterPath="$PROJECT_DIR$/app/readme_todo.md" afterDir="false" />
     </list>
@@ -67,7 +66,7 @@
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
-          <entry key="erl" value="6680" />
+          <entry key="erl" value="6862" />
           <entry key="hrl" value="557" />
           <entry key="md" value="70" />
           <entry key="src" value="5" />
@@ -75,7 +74,7 @@
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
-          <entry key="Erlang" value="6680" />
+          <entry key="Erlang" value="6862" />
           <entry key="Erlang Header" value="557" />
           <entry key="Erlang/OTP app" value="5" />
           <entry key="Markdown" value="70" />
@@ -86,7 +85,7 @@
           <entry key="Makefile" value="1" />
           <entry key="app" value="1" />
           <entry key="config" value="3" />
-          <entry key="erl" value="412" />
+          <entry key="erl" value="413" />
           <entry key="hrl" value="91" />
           <entry key="log" value="1" />
           <entry key="md" value="2" />
@@ -95,7 +94,7 @@
       </usages-collector>
       <usages-collector id="statistics.file.types.open">
         <counts>
-          <entry key="Erlang" value="412" />
+          <entry key="Erlang" value="413" />
           <entry key="Erlang Header" value="91" />
           <entry key="Erlang Terms" value="3" />
           <entry key="Erlang/OTP app" value="10" />
@@ -122,8 +121,17 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app/center/src/dist/cs_dist.erl">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="387">
-              <caret line="27" column="76" lean-forward="true" selection-start-line="27" selection-start-column="76" selection-end-line="27" selection-end-column="76" />
+            <state relative-caret-position="413">
+              <caret line="27" column="36" selection-start-line="27" selection-start-column="36" selection-end-line="27" selection-end-column="36" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/center/src/dist/dist_exam_otp.erl">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="28">
+              <caret line="8" column="21" selection-start-line="8" selection-start-column="8" selection-end-line="8" selection-end-column="21" />
             </state>
           </provider>
         </entry>
@@ -140,8 +148,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/deps/pubs/src/lib/misc_dist.erl">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="679">
-              <caret line="49" column="51" selection-start-line="49" selection-start-column="51" selection-end-line="49" selection-end-column="51" />
+            <state relative-caret-position="499">
+              <caret line="49" column="43" selection-start-line="49" selection-start-column="43" selection-end-line="49" selection-end-column="43" />
             </state>
           </provider>
         </entry>
@@ -281,8 +289,8 @@
         <option value="$PROJECT_DIR$/app/center/src/cs_start_fn.erl" />
         <option value="$PROJECT_DIR$/app/deps/dist-otp/src/dist.app.src" />
         <option value="$PROJECT_DIR$/app/deps/dist-otp/src/dist.erl" />
-        <option value="$PROJECT_DIR$/app/deps/pubs/src/lib/misc_dist.erl" />
         <option value="$PROJECT_DIR$/app/deps/fastlog/src/fastlog.erl" />
+        <option value="$PROJECT_DIR$/app/deps/pubs/src/lib/misc_dist.erl" />
         <option value="$PROJECT_DIR$/app/center/src/dist/cs_dist.erl" />
       </list>
     </option>
@@ -383,6 +391,30 @@
             </path>
             <path>
               <item name="Server" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Server" type="462c0819:PsiDirectoryNode" />
+              <item name="app" type="462c0819:PsiDirectoryNode" />
+              <item name="deps" type="462c0819:PsiDirectoryNode" />
+              <item name="pubs" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="Server" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Server" type="462c0819:PsiDirectoryNode" />
+              <item name="app" type="462c0819:PsiDirectoryNode" />
+              <item name="deps" type="462c0819:PsiDirectoryNode" />
+              <item name="pubs" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="Server" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Server" type="462c0819:PsiDirectoryNode" />
+              <item name="app" type="462c0819:PsiDirectoryNode" />
+              <item name="deps" type="462c0819:PsiDirectoryNode" />
+              <item name="pubs" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="lib" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="Server" type="b2602c69:ProjectViewProjectNode" />
               <item name="External Libraries" type="cb654da1:ExternalLibrariesNode" />
             </path>
             <path>
@@ -451,7 +483,7 @@
     <property name="SearchEverywhereHistoryKey" value="&#9;FILE&#9;file://C:/Program Files/erl10.0/lib/erts-10.0/src/erlang.erl" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1534941421724" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1534942224616" />
     <property name="last_opened_file_path" value="E:/other/RabbitMQ" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
@@ -952,12 +984,12 @@
       <workItem from="1534571757144" duration="3746000" />
       <workItem from="1534813927916" duration="8923000" />
       <workItem from="1534830549403" duration="6677000" />
-      <workItem from="1534853277177" duration="25167000" />
+      <workItem from="1534853277177" duration="25969000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="1600963000" />
+    <option name="totallyTimeSpent" value="1601765000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -1183,13 +1215,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/center/src/dist/dist_exam_otp.erl">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="28">
-          <caret line="8" column="21" selection-start-line="8" selection-start-column="8" selection-end-line="8" selection-end-column="21" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/center/src/center.app.src">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
@@ -1321,13 +1346,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/deps/pubs/src/lib/misc_dist.erl">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="679">
-          <caret line="49" column="51" selection-start-line="49" selection-start-column="51" selection-end-line="49" selection-end-column="51" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/deps/fastlog/src/fastlog.erl">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="660">
@@ -1342,10 +1360,24 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/app/center/src/dist/dist_exam_otp.erl">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="28">
+          <caret line="8" column="21" selection-start-line="8" selection-start-column="8" selection-end-line="8" selection-end-column="21" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/deps/pubs/src/lib/misc_dist.erl">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="499">
+          <caret line="49" column="43" selection-start-line="49" selection-start-column="43" selection-end-line="49" selection-end-column="43" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/app/center/src/dist/cs_dist.erl">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="387">
-          <caret line="27" column="76" lean-forward="true" selection-start-line="27" selection-start-column="76" selection-end-line="27" selection-end-column="76" />
+        <state relative-caret-position="413">
+          <caret line="27" column="36" selection-start-line="27" selection-start-column="36" selection-end-line="27" selection-end-column="36" />
         </state>
       </provider>
     </entry>
