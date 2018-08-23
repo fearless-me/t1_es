@@ -67,9 +67,9 @@ handler(account_login, Req, _FromPid, PoolId) ->
         [] ->
             NewAid = uid_gen:acc_uid(),
             InsSql = gs_db_sql:sql(insert_acount),
-            NowStr = time_misc:localtime_str(),
+            NowStr = misc_time:localtime_str(),
 %% aid,account,account_crc, plat_account, plat_name, device, imei, idfa, mac, create_time, version_hash_code
-            Params = [NewAid, MergeAccount, AccountCrc, PA, PN, "","","","",NowStr, time_misc:utc_seconds()],
+            Params = [NewAid, MergeAccount, AccountCrc, PA, PN, "","","","",NowStr, misc_time:utc_seconds()],
             ResCreate =  db:query(PoolId, InsSql, Params),
             check_res(ResCreate, InsSql, Params),
             Res11 = db:query(PoolId, Sql, [AccountCrc], infinity),
@@ -116,7 +116,7 @@ handler(create_player, {AccId, Req}, FromPid, PoolId) ->
     Uid = uid_gen:player_uid(),
     Sql = gs_db_sql:sql(insert_player),
     Params = [AccId, Uid, Sid, Name, 1, Sex, Camp, Race, Career, Head,
-        Mid, 0, X, Y, Mid, 0, X, Y, time_misc:milli_seconds()],
+        Mid, 0, X, Y, Mid, 0, X, Y, misc_time:milli_seconds()],
     Res = db:query(PoolId, Sql, Params, infinity),
 
     check_res(Res, Sql, Params),
@@ -138,7 +138,7 @@ handler(save_player, Player, _FromPid, PoolId) ->
     } = Player,
     Sql = gs_db_sql:sql(save_player),
     Params = [Career, Lv, Mid, Line, vector3:x(Pos), vector3:z(Pos),
-        OMid, OLine, vector3:x(OPos), vector3:z(OPos), time_misc:milli_seconds(), Uid],
+        OMid, OLine, vector3:x(OPos), vector3:z(OPos), misc_time:milli_seconds(), Uid],
     Res = db:query(PoolId, Sql, Params),
     check_res(Res, Sql, Params),
     ok;

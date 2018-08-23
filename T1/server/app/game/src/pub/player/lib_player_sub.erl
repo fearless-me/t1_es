@@ -18,7 +18,7 @@
 %%-------------------------------------------------------------------
 tick_go() ->
     tick_msg(),
-    Now = time_misc:milli_seconds(),
+    Now = misc_time:milli_seconds(),
     lib_player_rw:set_last_second_tick(Now),
     lib_player_rw:set_last_minute_tick(Now),
     lib_player_rw:set_last_hour_tick(Now),
@@ -32,7 +32,7 @@ tick_me()->
     %
     tick_msg(),
     
-    Now = time_misc:milli_seconds(),
+    Now = misc_time:milli_seconds(),
     %
     ?TRY_CATCH(hook_player:on_tick()),
     S = second_action(Now),

@@ -24,7 +24,7 @@ handle(#pk_U2GS_ExitGame{}) ->
     lib_player_pub:stop(client_req_exit),
     ok;
 handle(#pk_U2GS_HearBeat{}) ->
-    lib_player_pub:send_net_msg(#pk_GS2U_HearBeat{now = time_misc:localtime_seconds()}),
+    lib_player_pub:send_net_msg(#pk_GS2U_HearBeat{now = misc_time:localtime_seconds()}),
     ok;
 handle(#pk_U2GS_Login_Normal{
     platformName = PlatName,

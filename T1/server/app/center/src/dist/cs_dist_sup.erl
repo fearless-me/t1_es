@@ -67,6 +67,7 @@ init([]) ->
             {one_for_one, 5, 10},
             [
                 %% 把逻辑进程挂到这个下面
+                ?CHILD(cs_dist_core_otp, worker)
             ]
         }
     }.

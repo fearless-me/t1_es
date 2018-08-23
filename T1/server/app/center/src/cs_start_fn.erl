@@ -11,12 +11,15 @@
 
 %% API
 -export([
-    start_auto_reload/1,start_gc_vm/2, start_conf/2, start_errlog/1,
+    start_auto_reload/1, start_gc_vm/2, start_conf/2, start_errlog/1,
     start_logs/1, start_db_worker/1, start_logic_sup/1,
     start_watchdog/1, start_serv_cache/1,
     start_serv_loader/1, start_system_monitor/1,
-    start_mnesia/1, start_svr_mgr/1, start_rpc/1, start_slave_otp/2
+    start_mnesia/1, start_svr_mgr/1, start_rpc/1
+]).
 
+-export([
+    start_slave_otp/3, start_dist/1
 ]).
 
 %% Helper macro for declaring children of supervisor
@@ -81,6 +84,14 @@ start_rpc(_SupPid) ->
     true = misc:start_all_app(gen_rpc),
     ok.
 
-start_slave_otp(SupPid, Module) ->
-    {ok, _} = ?CHILD(SupPid, Module, worker),
+
+start_dist(_SupPid) ->
+    case application:get_env(center, mode, allin) of
+        dist -> cs_dist:start_master();
+        _ -> skip
+    end,
+    ok.
+
+start_slave_otp(SupPid, Module, Type) ->
+    {ok, _} = ?CHILD(SupPid, Module, Type),
     ok.

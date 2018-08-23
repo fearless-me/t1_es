@@ -12,12 +12,10 @@
 -include("pub_def.hrl").
 -include("pub_rec.hrl").
 -include("cs_priv.hrl").
+-include("team.hrl").
 
 %% API
 -export([start/0, sync/1]).
-
--record(s_info, {id, name, node}).
--record(f_info, {id, name, node}).
 -define(STORE_ARG, {storage_properties, [{ets, [{read_concurrency, true}, {write_concurrency, true}]}]}).
 
 
@@ -29,7 +27,10 @@ frag_share_tables() ->
 share_tables() ->
     Node = node(),
     [
-        {m_server_info, [{ram_copies, [Node]}, {attributes, record_info(fields, m_server_info)}, ?STORE_ARG]}
+        {m_server_info,  [{ram_copies, [Node]}, {attributes, record_info(fields, m_server_info)}, ?STORE_ARG]},
+        {m_team_info,    [{ram_copies, [Node]}, {attributes, record_info(fields, m_team_info)}, ?STORE_ARG]},
+        {m_uid_ref_tid,  [{ram_copies, [Node]}, {attributes, record_info(fields, m_uid_ref_tid)}, ?STORE_ARG]},
+        {m_player_match, [{ram_copies, [Node]}, {attributes, record_info(fields, m_player_match)}, ?STORE_ARG]}
     ].
 
 start() ->
@@ -39,10 +40,15 @@ start() ->
     ok.
 
 sync(Node) ->
+    ?INFO("start sync mnesia to ~p ... ", [Node]),
     true = mne_ex:sync(Node),
     lists:foreach(
         fun({Tab, _Arg}) ->
+            ?INFO("\tadd table copy ~-20w to ~p ...", [Tab, Node]),
             mne_ex:add_table_copy(Tab, Node, ram_copies)
         end, share_tables()),
+    mne_ex:wait_for_tables(),
+    ?INFO("start sync mnesia to ~p done #", [Node]),
     ok.
+
 

@@ -44,7 +44,7 @@
 
 %%%-------------------------------------------------------------------
 init_ets(State) ->
-    Now = time_misc:milli_seconds(),
+    Now = misc_time:milli_seconds(),
     put(?MAP_ID,        State#m_map_state.map_id),
     put(?LINE_ID,       State#m_map_state.line_id),
     put(?MAP_NPC_ETS,   State#m_map_state.npc),
@@ -139,7 +139,7 @@ del_obj_to_ets(_) ->
     ok.
 %%-------------------------------------------------------------------
 update_move_timer() ->
-    Now = time_misc:milli_seconds(),
+    Now = misc_time:milli_seconds(),
     #m_move_timer{latest_up = Latest} = get(?MOVE_TIMER),
     put(?MOVE_TIMER, #m_move_timer{now = Now, latest_up = Now, delta = Now - Latest}),
     ok.

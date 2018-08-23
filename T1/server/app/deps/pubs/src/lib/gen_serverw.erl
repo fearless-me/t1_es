@@ -82,7 +82,9 @@ init(Args) ->
     try
         [Module, ArgList] = Args,
         put(?LogicModule, Module),
-        Module:mod_init(ArgList)
+        Ret = Module:mod_init(ArgList),
+        ?INFO("~p|~p init ok", [Module, self()]),
+        Ret
     catch _ : Error : ST ->
         ?ERROR("module ~p,args ~p,error ~p,st ~p", [get(?LogicModule), Args, Error, ST]),
         {stop, Error}

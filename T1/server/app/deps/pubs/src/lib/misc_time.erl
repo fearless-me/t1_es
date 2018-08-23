@@ -6,7 +6,7 @@
 %%% @end
 %%% Created : 02. 六月 2018 16:02
 %%%-------------------------------------------------------------------
--module(time_misc).
+-module(misc_time).
 -author("mawenhong").
 %% API
 -export([milli_seconds/0, utc_seconds/0, tz_seconds/0, localtime_seconds/0]).

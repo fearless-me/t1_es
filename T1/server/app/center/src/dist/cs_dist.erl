@@ -18,9 +18,12 @@
 
 start_master() ->
     ?WARN("try to start master node ..."),
-    misc_dist:start_slave('127.0.0.1', cg, " -s dist start "),
-    misc_dist:start_slave('127.0.0.1', ct, " -s dist start "),
-    misc_dist:start_slave('127.0.0.1', cf, " -s dist start "),
+    CGNode = misc_dist:start_slave('127.0.0.1', cg, " -s dist start "),
+    CTNode = misc_dist:start_slave('127.0.0.1', ct, " -s dist start "),
+    CFNode = misc_dist:start_slave('127.0.0.1', cf, " -s dist start "),
+    lib_cs_share:sync(CGNode),
+    lib_cs_share:sync(CTNode),
+    lib_cs_share:sync(CFNode),
     ok.
 
 start_slave(SupPid) ->
@@ -28,6 +31,7 @@ start_slave(SupPid) ->
         wrapper({"logger", stdio,   ?Wrap(cs_start_fn:start_logs(SupPid))}),
         wrapper({"error Logger",    ?Wrap(cs_start_fn:start_errlog(SupPid))}),
         wrapper({"gen rpc app",     ?Wrap(cs_start_fn:start_rpc(SupPid))}),
+        wrapper({"start mnesia",    ?Wrap(start_mnesia(SupPid))}),
         wrapper({"start logic otp", ?Wrap(start_slave_otp(node(), SupPid))}),
         ok
     catch _ : Err : ST ->
@@ -36,11 +40,21 @@ start_slave(SupPid) ->
     ?WARN("###slave ~p start ok###", [node()]),
     ok.
 
+start_mnesia(_SupPid) ->
+    mne_ex:start(),
+    ok.
+
 start_slave_otp('cg@127.0.0.1', SupPid)->
-    wrapper({"create dist_exam_otp", ?Wrap(cs_start_fn:start_slave_otp(SupPid, dist_exam_otp))}),
+    wrapper({"create dist_exam_otp",    ?Wrap(cs_start_fn:start_slave_otp(SupPid, dist_exam_otp, worker))}),
+    wrapper({"create dist_sup",         ?Wrap(cs_start_fn:start_slave_otp(SupPid, cs_dist_sup, supervisor))}),
     ok;
-start_slave_otp(_Node, _SupPid) ->
-    skip.
+start_slave_otp('cg@127.0.0.1', SupPid)->
+    wrapper({"create team_otp",         ?Wrap(cs_start_fn:start_slave_otp(SupPid, team_otp, worker))}),
+    wrapper({"create dist_sup",         ?Wrap(cs_start_fn:start_slave_otp(SupPid, cs_dist_sup, supervisor))}),
+    ok;
+start_slave_otp(_Node, SupPid) ->
+    wrapper({"create dist_sup",         ?Wrap(cs_start_fn:start_slave_otp(SupPid, cs_dist_sup, supervisor))}),
+    ok.
 
 
 wrapper({Msg, stdio, Thunk}) ->

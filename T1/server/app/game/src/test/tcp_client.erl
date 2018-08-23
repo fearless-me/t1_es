@@ -57,10 +57,10 @@ connect(Port, _MapID) ->
         {ok, Socket} = ranch_tcp:connect({127, 0, 0, 1}, Port, [{active, false}]),
         socket(Socket),
         Msg1 = #pk_U2GS_Login_Normal{
-            platformAccount = "test_net" ++ integer_to_list(time_misc:milli_seconds()),
+            platformAccount = "test_net" ++ integer_to_list(misc_time:milli_seconds()),
             platformName = "test",
             platformNickName = "",
-            time = time_misc:utc_seconds(),
+            time = misc_time:utc_seconds(),
             sign = "owner"
         },
 
@@ -130,7 +130,7 @@ handle_1(#pk_GS2U_UserPlayerList{info = Info}) ->
     case Info of
         [] ->
             send_msg(socket(), #pk_U2GS_RequestCreatePlayer{
-                name = "player" ++ integer_to_list(time_misc:milli_seconds()),
+                name = "player" ++ integer_to_list(misc_time:milli_seconds()),
                 race = 1, career = 1,
                 sex = 1, head = 1
             }),

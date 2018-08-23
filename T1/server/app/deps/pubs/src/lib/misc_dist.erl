@@ -24,7 +24,7 @@ start_slaves(Host, SlaveNum) ->
         fun(Number, Index) ->
             NodeName = misc:to_atom(lists:concat(["slave_", Number])),
             Command = lists:concat([
-                "+S 1  +h 10240 -detached -noinput ", Path,
+                "+S 1  -detached -noinput ", Path,
                 " -setcookie ", erlang:get_cookie()]),
             case slave:start(misc:to_atom(Host), NodeName, Command) of
                 {ok, Node} ->
@@ -47,11 +47,11 @@ start_slave(Host, SlaveName, Args) ->
         end, [], Paths),
 
     Command = lists:concat([
-        "+S 1  +h 10240 -detached -noinput ", Path,
+        "+S 1 -detached -noinput ", Path,
         " -setcookie ", erlang:get_cookie(), Args]),
     case slave:start(misc:to_atom(Host), SlaveName, Command) of
         {ok, Node} ->
-            ?WARN("~p create slave node ~p ~ts ok", [node(), Node, Command]),
+            ?WARN("~p create slave node ~p ok", [node(), Node]),
             Node;
         {_, Error} ->
             misc:halt("~p create slave node ~p:~p failed ~p",

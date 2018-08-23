@@ -25,7 +25,7 @@ on_enter(Uid) ->
     case lib_ai_rw:get_enter_combat_time(Uid) > 0 of
         true -> skip;
         _Fls ->
-            lib_ai_rw:get_enter_combat_time(time_misc:utc_seconds()),
+            lib_ai_rw:get_enter_combat_time(misc_time:utc_seconds()),
             lib_ai_rw:set_enter_combat_pos(Uid, CurPos)
     end,
     ok.

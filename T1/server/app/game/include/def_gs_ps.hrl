@@ -11,6 +11,8 @@
 -ifndef(DEF_GS_PS_HRL).
 -define(DEF_GS_PS_HRL, true).
 
+-include("pub_ps_def.hrl").
+
 -define(GS_CS_OTP,          gs_cs_otp).
 -define(GS_ALARM_OTP,       gs_alarm_otp).
 -define(GS_BROADCAST_OTP,   gs_broadcast_otp).

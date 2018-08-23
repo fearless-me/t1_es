@@ -19,7 +19,7 @@
 %% API
 -export([
     start/0, stop/0, sync/1,
-    table_size/1, add_table_copy/3, del_table_copy/2,
+    table_size/1, add_table_copy/3, del_table_copy/2,  wait_for_tables/0,
     create_table/2, delete_table/1, clear_table/1,
     write/1, s_write/1, write/2, read/2, index_read/3, all_keys/1, delete/2,
     dirty_delete/2, dirty_match/2, dirty_select/2, dirty_read/2, dirty_write/1, dirty_write/2,
@@ -107,6 +107,10 @@ clear_table(TabName) ->
         {atomic, ok} -> true;
         {aborted, Reason} -> ?ERROR("clear mnesia table failed[~p]", [Reason]), false
     end.
+
+wait_for_tables() ->
+    mnesia:wait_for_tables(mnesia:system_info(local_tables), infinity),
+    ok.
 
 
 %%%%使用普通锁写入一条记录

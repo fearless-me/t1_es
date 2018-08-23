@@ -180,11 +180,11 @@ socket(Socket) -> put(?SocketKey, Socket).
 socket()-> get(?SocketKey).
 
 %%-------------------------------------------------------------------
-set_latest_net_time() -> put('RECV_NETMSG_LATEST', time_misc:milli_seconds()).
+set_latest_net_time() -> put('RECV_NETMSG_LATEST', misc_time:milli_seconds()).
 check_idle_msg() -> erlang:send_after(?NET_IDLE_TIME, self(), check_net).
 check_idle_action() ->
     try
-        case time_misc:milli_seconds() - get('RECV_NETMSG_LATEST') > ?NET_IDLE_TIME of
+        case misc_time:milli_seconds() - get('RECV_NETMSG_LATEST') > ?NET_IDLE_TIME of
             true -> gs_player_handler:stop(net_heartbeat_stop);
             false -> check_idle_msg()
         end

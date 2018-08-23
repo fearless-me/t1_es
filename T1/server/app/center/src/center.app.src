@@ -5,5 +5,5 @@
   {registered, []},
   {applications, [kernel,stdlib,mysql_poolboy,mysql,poolboy,econfig,dynamic_compile,recon]},
   {mod, {center, []}},
-  {env, []}
+  {env, [{mode, dist}]}
  ]}.

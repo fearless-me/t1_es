@@ -45,6 +45,7 @@ start() ->
         wrapper({"serv data loader",        ?Wrap(cs_start_fn:start_serv_loader(SupPid))}),
         wrapper({"all logic process",       ?Wrap(cs_start_fn:start_logic_sup(SupPid))}),
         wrapper({"mnesia",                  ?Wrap(cs_start_fn:start_mnesia(SupPid))}),
+        wrapper({"distritbution",           ?Wrap(cs_start_fn:start_dist(SupPid))}),
         wrapper({"auto compile and load",   ?Wrap(cs_start_fn:start_auto_reload(SupPid))}),
 
         watchdog:wait(),
