@@ -15,7 +15,7 @@
 -include("rec_mem.hrl").
 -include("rec_db.hrl").
 -include("rec_common.hrl").
--include("def_player_status.hrl").
+-include("gs_player_status.hrl").
 %% API
 
 %%--------------------------------

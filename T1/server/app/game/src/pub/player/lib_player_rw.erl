@@ -7,7 +7,7 @@
 
 %%-------------------------------------------------------------------
 -include("logger.hrl").
--include("def_player_status.hrl").
+-include("gs_player_status.hrl").
 -include("rec_rw.hrl").
 
 %%-------------------------------------------------------------------

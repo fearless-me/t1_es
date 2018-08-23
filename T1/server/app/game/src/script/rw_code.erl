@@ -82,7 +82,7 @@ run() ->
             "..\\src\\pub\\player\\lib_player_rw.erl",
             lib_player_rw,
             [
-                ["logger.hrl", "def_player_status.hrl", "rec_rw.hrl", "vector3.hrl"],
+                ["logger.hrl", "gs_player_status.hrl", "rec_rw.hrl", "vector3.hrl"],
                 [
                     {m_player_rw, record_info(fields, m_player_rw), none, [], "hook_player:on_rw_update"}
                 ]

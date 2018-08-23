@@ -18,7 +18,7 @@
 %%%-------------------------------------------------------------------
 -module(gs_db_interface).
 -author("mawenhong").
--include("def_gs_dbpool.hrl").
+-include("gs_dbpool_def.hrl").
 
 %%-------------------------------------------------------------------
 -export([

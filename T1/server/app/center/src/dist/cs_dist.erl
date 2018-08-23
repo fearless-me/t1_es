@@ -18,9 +18,9 @@
 
 start_master() ->
     ?WARN("try to start master node ..."),
-    CGNode = misc_dist:start_slave('127.0.0.1', cg, " -s dist start "),
-    CTNode = misc_dist:start_slave('127.0.0.1', ct, " -s dist start "),
-    CFNode = misc_dist:start_slave('127.0.0.1', cf, " -s dist start "),
+    CGNode = misc_dist:start_slave('127.0.0.1', center_g, " -s dist start "),
+    CTNode = misc_dist:start_slave('127.0.0.1', center_t, " -s dist start "),
+    CFNode = misc_dist:start_slave('127.0.0.1', center_f, " -s dist start "),
     lib_cs_share:sync(CGNode),
     lib_cs_share:sync(CTNode),
     lib_cs_share:sync(CFNode),
@@ -48,7 +48,7 @@ start_slave_otp('cg@127.0.0.1', SupPid)->
     wrapper({"create dist_exam_otp",    ?Wrap(cs_start_fn:start_slave_otp(SupPid, dist_exam_otp, worker))}),
     wrapper({"create dist_sup",         ?Wrap(cs_start_fn:start_slave_otp(SupPid, cs_dist_sup, supervisor))}),
     ok;
-start_slave_otp('cg@127.0.0.1', SupPid)->
+start_slave_otp('ct@127.0.0.1', SupPid)->
     wrapper({"create team_otp",         ?Wrap(cs_start_fn:start_slave_otp(SupPid, team_otp, worker))}),
     wrapper({"create dist_sup",         ?Wrap(cs_start_fn:start_slave_otp(SupPid, cs_dist_sup, supervisor))}),
     ok;

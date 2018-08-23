@@ -10,7 +10,7 @@
 -author("mawenhong").
 -include("logger.hrl").
 -include("pub_def.hrl").
--include("def_gs.hrl").
+-include("gs_def.hrl").
 -include("rec_mem.hrl").
 -include("rec_db.hrl").
 

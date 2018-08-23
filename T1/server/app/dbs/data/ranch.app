@@ -1,9 +1,0 @@
-{application, 'ranch', [
-	{description, "Socket acceptor pool for TCP protocols."},
-	{vsn, "1.4.0"},
-	{modules, []},
-	{registered, [ranch_sup,ranch_server]},
-	{applications, [kernel,stdlib,ssl]},
-	{mod, {ranch_app, []}},
-	{env, []}
-]}.

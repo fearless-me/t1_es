@@ -24,7 +24,7 @@
 -include("netconf.hrl").
 -include("netmsg.hrl").
 -include("rec_mem.hrl").
--include("def_player_status.hrl").
+-include("gs_player_status.hrl").
 
 
 %% API

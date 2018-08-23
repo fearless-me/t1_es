@@ -11,7 +11,7 @@
 
 -include("logger.hrl").
 -include("pub_def.hrl").
--include("def_gs_cs.hrl").
+-include("gs_cs_def.hrl").
 
 %% API
 -export([
@@ -44,8 +44,8 @@ allow() ->
         CsNode = gs_conf:get_center(),
         [_CurNodeName, IP | _] = string:tokens(atom_to_list(CurNode), "@"),
         NodeList = ["stopgs@" ++ IP, "reload@" ++ IP, "entopGS@" ++ IP, "dbgEmc@" ++ IP],
-        do_allow(CsNode),
-        lists:foreach(fun(Name) -> do_allow(Name) end, NodeList),
+        misc:allow_node(CsNode),
+        lists:foreach(fun(Name) -> misc:allow_node(Name) end, NodeList),
         ok
     catch
         _ : _Err : _ ->
@@ -53,16 +53,6 @@ allow() ->
     end,
     ok.
 
-do_allow(undefined) ->
-    ok;
-do_allow(Name) when is_list(Name) ->
-    ?WARN("allown node[~ts]", [Name]),
-    catch net_kernel:allow([list_to_atom(Name)]);
-do_allow(NameAtom) when is_atom(NameAtom) ->
-    ?WARN("allown node[~p]", [NameAtom]),
-    catch net_kernel:allow([NameAtom]);
-do_allow(_Any) ->
-    ok.
 
 %%%-------------------------------------------------------------------
 get_server_type() ->

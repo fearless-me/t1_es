@@ -13,7 +13,7 @@
 -include("logger.hrl").
 -include("pub_def.hrl").
 -include("rec_common.hrl").
--include("def_gs_ps.hrl").
+-include("gs_ps_def.hrl").
 -include("inc_map.hrl").
 -include("inc_map_unit.hrl").
 

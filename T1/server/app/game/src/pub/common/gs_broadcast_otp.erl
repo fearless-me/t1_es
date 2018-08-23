@@ -13,8 +13,8 @@
 -include("logger.hrl").
 -include("netconf.hrl").
 -include("rec_mem.hrl").
--include("def_gs.hrl").
--include("def_gs_ps.hrl").
+-include("gs_def.hrl").
+-include("gs_ps_def.hrl").
 
 %% API
 -export([start_link/0]).

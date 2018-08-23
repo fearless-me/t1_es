@@ -14,7 +14,7 @@
 -include("netmsg.hrl").
 -include("inc_map.hrl").
 -include("inc_map_unit.hrl").
--include("def_player_status.hrl").
+-include("gs_player_status.hrl").
 -include("rec_common.hrl").
 -include("rec_db.hrl").
 -include("rec_mem.hrl").

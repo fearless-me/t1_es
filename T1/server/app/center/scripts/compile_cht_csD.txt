@@ -1,350 +1,352 @@
 
 *********************************************************
 *********************************************************
-*  2018-08-23 11:43:48 csD cht 170 files 8 workers	*
+*  2018-08-23 14:15:15 csD cht 170 files 8 workers	*
 *********************************************************
 *********************************************************
 
-[2018-08-23 11:43:48] compiled[0.5%] db_share_sup.erl true 
-[2018-08-23 11:43:48] compiled[1.1%] mne_monitor.erl true 
-[2018-08-23 11:43:48] mne_monitor.erl:12: Warning: behaviour gen_serverw undefined
+[2018-08-23 14:15:15] compiled[1.1%] mne_monitor.erl true 
+[2018-08-23 14:15:15] mne_monitor.erl:12: Warning: behaviour gen_serverw undefined
 
-[2018-08-23 11:43:48] compiled[1.7%] svr_root_sup.erl true 
-[2018-08-23 11:43:48] compiled[2.3%] misc_time.erl true 
-[2018-08-23 11:43:48] compiled[2.9%] reverse_protocol.erl true 
-[2018-08-23 11:43:48] reverse_protocol.erl:5: Warning: behaviour ranch_protocol undefined
+[2018-08-23 14:15:15] compiled[0.5%] db_share_sup.erl true 
+[2018-08-23 14:15:15] compiled[1.7%] reverse_protocol.erl true 
+[2018-08-23 14:15:15] reverse_protocol.erl:5: Warning: behaviour ranch_protocol undefined
 
-[2018-08-23 11:43:48] compiled[3.5%] center_sup.erl true 
-[2018-08-23 11:43:48] compiled[4.1%] poolboy.erl true 
-[2018-08-23 11:43:48] poolboy.erl:59: Warning: erlang:get_stacktrace/0: deprecated; use the new try/catch syntax for retrieving the stack backtrace
+[2018-08-23 14:15:15] compiled[2.3%] svr_root_sup.erl true 
+[2018-08-23 14:15:15] compiled[2.9%] misc_time.erl true 
+[2018-08-23 14:15:15] compiled[3.5%] center_sup.erl true 
+[2018-08-23 14:15:15] compiled[4.1%] poolboy.erl true 
+[2018-08-23 14:15:15] poolboy.erl:59: Warning: erlang:get_stacktrace/0: deprecated; use the new try/catch syntax for retrieving the stack backtrace
 
-[2018-08-23 11:43:48] compiled[4.7%] sendfile_SUITE.erl true 
-[2018-08-23 11:43:48] compiled[5.2%] tcp_echo_sup.erl true 
-[2018-08-23 11:43:48] compiled[5.8%] mysql_poolboy_sup.erl true 
-[2018-08-23 11:43:48] compiled[6.4%] center.erl true 
-[2018-08-23 11:43:48] compiled[7.0%] misc_dist.erl true 
-[2018-08-23 11:43:48] compiled[7.6%] remove_conn_and_wait_protocol.erl true 
-[2018-08-23 11:43:48] remove_conn_and_wait_protocol.erl:2: Warning: behaviour ranch_protocol undefined
+[2018-08-23 14:15:15] compiled[4.7%] sendfile_SUITE.erl true 
+[2018-08-23 14:15:15] compiled[5.2%] tcp_echo_sup.erl true 
+[2018-08-23 14:15:15] compiled[5.8%] remove_conn_and_wait_protocol.erl true 
+[2018-08-23 14:15:15] remove_conn_and_wait_protocol.erl:2: Warning: behaviour ranch_protocol undefined
 
-[2018-08-23 11:43:48] compiled[8.2%] tcp_echo_app.erl true 
-[2018-08-23 11:43:48] compiled[8.8%] mysql_poolboy_app.erl true 
-[2018-08-23 11:43:48] compiled[9.4%] mne_ex.erl true 
-[2018-08-23 11:43:48] compiled[10.0%] ranch_ct_hook.erl true 
-[2018-08-23 11:43:48] compiled[10.5%] mysql_poolboy.erl true 
-[2018-08-23 11:43:48] compiled[11.1%] mnesia_utils.erl true 
-[2018-08-23 11:43:48] compiled[11.7%] mnesia_starter.erl true 
-[2018-08-23 11:43:48] compiled[12.3%] notify_and_wait_protocol.erl true 
-[2018-08-23 11:43:48] notify_and_wait_protocol.erl:2: Warning: behaviour ranch_protocol undefined
+[2018-08-23 14:15:15] compiled[6.4%] center.erl true 
+[2018-08-23 14:15:15] compiled[7.0%] mysql_poolboy_sup.erl true 
+[2018-08-23 14:15:15] compiled[7.6%] tcp_echo_app.erl true 
+[2018-08-23 14:15:15] compiled[8.2%] mysql_poolboy_app.erl true 
+[2018-08-23 14:15:15] compiled[8.8%] misc_dist.erl true 
+[2018-08-23 14:15:15] compiled[9.4%] ranch_ct_hook.erl true 
+[2018-08-23 14:15:15] compiled[10.0%] mne_ex.erl true 
+[2018-08-23 14:15:15] compiled[10.5%] mysql_poolboy.erl true 
+[2018-08-23 14:15:15] compiled[11.1%] mnesia_utils.erl true 
+[2018-08-23 14:15:15] compiled[11.7%] notify_and_wait_protocol.erl true 
+[2018-08-23 14:15:15] notify_and_wait_protocol.erl:2: Warning: behaviour ranch_protocol undefined
 
-[2018-08-23 11:43:48] compiled[12.9%] echo_protocol.erl true 
-[2018-08-23 11:43:48] echo_protocol.erl:4: Warning: behaviour ranch_protocol undefined
+[2018-08-23 14:15:15] compiled[12.3%] echo_protocol.erl true 
+[2018-08-23 14:15:15] echo_protocol.erl:4: Warning: behaviour ranch_protocol undefined
 
-[2018-08-23 11:43:48] compiled[13.5%] svr_priv.erl true 
-[2018-08-23 11:43:48] compiled[14.1%] embedded_sup.erl true 
-[2018-08-23 11:43:48] compiled[14.7%] db_share_otp.erl true 
-[2018-08-23 11:43:48] db_share_otp.erl:12: Warning: behaviour gen_serverw undefined
+[2018-08-23 14:15:15] compiled[12.9%] misc.erl true 
+[2018-08-23 14:15:15] compiled[13.5%] embedded_sup.erl true 
+[2018-08-23 14:15:15] compiled[14.1%] db_share_otp.erl true 
+[2018-08-23 14:15:15] db_share_otp.erl:12: Warning: behaviour gen_serverw undefined
 
-[2018-08-23 11:43:48] compiled[15.2%] mnesia_dynamic.erl true 
-[2018-08-23 11:43:48] compiled[15.8%] misc.erl true 
-[2018-08-23 11:43:48] compiled[16.4%] db_share_app.erl true 
-[2018-08-23 11:43:48] compiled[17.0%] db_pool.erl true 
-[2018-08-23 11:43:48] compiled[17.6%] lqueue.erl true 
-[2018-08-23 11:43:48] compiled[18.2%] echo_protocol.erl true 
-[2018-08-23 11:43:48] echo_protocol.erl:2: Warning: behaviour ranch_protocol undefined
+[2018-08-23 14:15:15] compiled[14.7%] mnesia_starter.erl true 
+[2018-08-23 14:15:15] compiled[15.2%] svr_priv.erl true 
+[2018-08-23 14:15:16] compiled[15.8%] db_share_app.erl true 
+[2018-08-23 14:15:16] compiled[16.4%] lqueue.erl true 
+[2018-08-23 14:15:16] compiled[17.0%] echo_protocol.erl true 
+[2018-08-23 14:15:16] echo_protocol.erl:2: Warning: behaviour ranch_protocol undefined
 
-[2018-08-23 11:43:48] compiled[18.8%] db_share.erl true 
-[2018-08-23 11:43:48] compiled[19.4%] crash_protocol.erl true 
-[2018-08-23 11:43:48] compiled[20.0%] db.erl true 
-[2018-08-23 11:43:48] compiled[20.5%] dist_sup.erl true 
-[2018-08-23 11:43:48] compiled[21.1%] llist.erl true 
-[2018-08-23 11:43:48] compiled[21.7%] tcp_listener.erl true 
-[2018-08-23 11:43:48] compiled[22.3%] dist.erl true 
-[2018-08-23 11:43:48] compiled[22.9%] svr_otp.erl true 
-[2018-08-23 11:43:48] svr_otp.erl:12: Warning: behaviour gen_serverw undefined
+[2018-08-23 14:15:16] compiled[17.6%] mnesia_dynamic.erl true 
+[2018-08-23 14:15:16] compiled[18.2%] fly_worker.erl true 
+[2018-08-23 14:15:16] compiled[18.8%] crash_protocol.erl true 
+[2018-08-23 14:15:16] compiled[19.4%] db_share.erl true 
+[2018-08-23 14:15:16] compiled[20.0%] db_pool.erl true 
+[2018-08-23 14:15:16] compiled[20.5%] llist.erl true 
+[2018-08-23 14:15:16] compiled[21.1%] fly.erl true 
+[2018-08-23 14:15:16] compiled[21.7%] transaction_tests.erl true 
+[2018-08-23 14:15:16] compiled[22.3%] check_tcp_options.erl true 
+[2018-08-23 14:15:16] check_tcp_options.erl:2: Warning: behaviour ranch_protocol undefined
 
-[2018-08-23 11:43:48] compiled[23.5%] fly_worker.erl true 
-[2018-08-23 11:43:48] compiled[24.1%] hot_update.erl true 
-[2018-08-23 11:43:48] compiled[24.7%] gen_rpc_sup.erl true 
-[2018-08-23 11:43:48] compiled[25.2%] check_tcp_options.erl true 
-[2018-08-23 11:43:48] check_tcp_options.erl:2: Warning: behaviour ranch_protocol undefined
+[2018-08-23 14:15:16] compiled[22.9%] dist_sup.erl true 
+[2018-08-23 14:15:16] compiled[23.5%] hot_update.erl true 
+[2018-08-23 14:15:16] compiled[24.1%] fastlog_sup.erl true 
+[2018-08-23 14:15:16] compiled[24.7%] db.erl true 
+[2018-08-23 14:15:16] compiled[25.2%] dist.erl true 
+[2018-08-23 14:15:16] compiled[25.8%] active_echo_protocol.erl true 
+[2018-08-23 14:15:16] active_echo_protocol.erl:2: Warning: behaviour ranch_protocol undefined
 
-[2018-08-23 11:43:48] compiled[25.8%] svr_mgr_pub.erl true 
-[2018-08-23 11:43:48] svr_mgr_pub.erl:15: Warning: variable 'GSNode' is unused
-[2018-08-23 11:43:48] svr_mgr_pub.erl:15: Warning: variable 'ServerID' is unused
+[2018-08-23 14:15:16] compiled[26.4%] fastlog_app.erl true 
+[2018-08-23 14:15:16] compiled[27.0%] tcp_listener.erl true 
+[2018-08-23 14:15:16] compiled[27.6%] svr_otp.erl true 
+[2018-08-23 14:15:16] svr_otp.erl:12: Warning: behaviour gen_serverw undefined
 
-[2018-08-23 11:43:48] compiled[26.4%] fly.erl true 
-[2018-08-23 11:43:49] compiled[27.0%] fastlog_sup.erl true 
-[2018-08-23 11:43:49] compiled[27.6%] active_echo_protocol.erl true 
-[2018-08-23 11:43:49] active_echo_protocol.erl:2: Warning: behaviour ranch_protocol undefined
+[2018-08-23 14:15:16] compiled[28.2%] grpc_port_hook.erl true 
+[2018-08-23 14:15:16] compiled[28.8%] gen_rpc_sup.erl true 
+[2018-08-23 14:15:16] compiled[29.4%] svr_mgr_pub.erl true 
+[2018-08-23 14:15:16] svr_mgr_pub.erl:15: Warning: variable 'GSNode' is unused
+[2018-08-23 14:15:16] svr_mgr_pub.erl:15: Warning: variable 'ServerID' is unused
 
-[2018-08-23 11:43:49] compiled[28.2%] grpc_port_hook.erl true 
-[2018-08-23 11:43:49] compiled[28.8%] transaction_tests.erl true 
-[2018-08-23 11:43:49] compiled[29.4%] gen_rpc_client_sup.erl true 
-[2018-08-23 11:43:49] compiled[30.0%] fastlog_app.erl true 
-[2018-08-23 11:43:49] compiled[30.5%] grpc.erl true 
-[2018-08-23 11:43:49] compiled[31.1%] tcp_handler.erl true 
-[2018-08-23 11:43:49] tcp_handler.erl:12: Warning: behaviour ranch_protocol undefined
+[2018-08-23 14:15:16] compiled[30.0%] grpc.erl true 
+[2018-08-23 14:15:16] compiled[30.5%] gen_rpc_client_sup.erl true 
+[2018-08-23 14:15:16] compiled[31.1%] svr_mgr_priv.erl true 
+[2018-08-23 14:15:16] compiled[31.7%] getCfg.erl true 
+[2018-08-23 14:15:16] compiled[32.3%] fastlog.erl true 
+[2018-08-23 14:15:16] fastlog.erl:12: Warning: behaviour gen_server2 undefined
 
-[2018-08-23 11:43:49] compiled[31.7%] gen_rpc_acceptor_sup.erl true 
-[2018-08-23 11:43:49] compiled[32.3%] svr_mgr_priv.erl true 
-[2018-08-23 11:43:49] compiled[32.9%] getCfg.erl true 
-[2018-08-23 11:43:49] compiled[33.5%] gen_rpc_server.erl true 
-[2018-08-23 11:43:49] compiled[34.1%] fastlog.erl true 
-[2018-08-23 11:43:49] fastlog.erl:12: Warning: behaviour gen_server2 undefined
+[2018-08-23 14:15:16] compiled[32.9%] gen_rpc_acceptor_sup.erl true 
+[2018-08-23 14:15:16] compiled[33.5%] tcp_handler.erl true 
+[2018-08-23 14:15:16] tcp_handler.erl:12: Warning: behaviour ranch_protocol undefined
 
-[2018-08-23 11:43:49] compiled[34.7%] tcp_codec.erl true 
-[2018-08-23 11:43:49] tcp_codec.erl:122: Warning: NOT OPTIMIZED: sub binary is used or returned
+[2018-08-23 14:15:16] compiled[34.1%] eep_app.erl true 
+[2018-08-23 14:15:16] compiled[34.7%] gen_serverw.erl true 
+[2018-08-23 14:15:16] compiled[35.2%] svr_mgr_otp.erl true 
+[2018-08-23 14:15:16] svr_mgr_otp.erl:12: Warning: behaviour gen_serverw undefined
 
-[2018-08-23 11:43:49] compiled[35.2%] eep_app.erl true 
-[2018-08-23 11:43:49] compiled[35.8%] gen_serverw.erl true 
-[2018-08-23 11:43:49] compiled[36.4%] tcp_behaviour.erl true 
-[2018-08-23 11:43:49] compiled[37.0%] svr_mgr_otp.erl true 
-[2018-08-23 11:43:49] svr_mgr_otp.erl:12: Warning: behaviour gen_serverw undefined
+[2018-08-23 14:15:16] compiled[35.8%] gen_rpc_server.erl true 
+[2018-08-23 14:15:16] compiled[36.4%] svr_logic.erl true 
+[2018-08-23 14:15:16] compiled[37.0%] tcp_codec.erl true 
+[2018-08-23 14:15:16] tcp_codec.erl:122: Warning: NOT OPTIMIZED: sub binary is used or returned
 
-[2018-08-23 11:43:49] compiled[37.6%] svr_logic.erl true 
-[2018-08-23 11:43:49] compiled[38.2%] cs_watchdog_hook.erl true 
-[2018-08-23 11:43:49] compiled[38.8%] behaviour_example.erl true 
-[2018-08-23 11:43:49] behaviour_example.erl:22: Warning: behaviour tcp_behaviour undefined
+[2018-08-23 14:15:16] compiled[37.6%] cs_watchdog_hook.erl true 
+[2018-08-23 14:15:16] compiled[38.2%] acceptor_SUITE.erl true 
+[2018-08-23 14:15:16] compiled[38.8%] mysql_tests.erl true 
+[2018-08-23 14:15:16] compiled[39.4%] tcp_behaviour.erl true 
+[2018-08-23 14:15:16] compiled[40.0%] eep.erl true 
+[2018-08-23 14:15:16] compiled[40.5%] ranch_transport.erl true 
+[2018-08-23 14:15:16] compiled[41.1%] gen_rpc_helper.erl true 
+[2018-08-23 14:15:16] compiled[41.7%] cs_interface.erl true 
+[2018-08-23 14:15:16] compiled[42.3%] econfig_watcher_sup.erl true 
+[2018-08-23 14:15:16] compiled[42.9%] gen_server2.erl true 
+[2018-08-23 14:15:16] compiled[43.5%] behaviour_example.erl true 
+[2018-08-23 14:15:16] behaviour_example.erl:22: Warning: behaviour tcp_behaviour undefined
 
-[2018-08-23 11:43:49] compiled[39.4%] loggerS.erl true 
-[2018-08-23 11:43:49] compiled[40.0%] mysql_tests.erl true 
-[2018-08-23 11:43:49] compiled[40.5%] acceptor_SUITE.erl true 
-[2018-08-23 11:43:49] compiled[41.1%] eep.erl true 
-[2018-08-23 11:43:49] compiled[41.7%] gen_server2.erl true 
-[2018-08-23 11:43:49] compiled[42.3%] cs_interface.erl true 
-[2018-08-23 11:43:49] compiled[42.9%] econfig_watcher_sup.erl true 
-[2018-08-23 11:43:49] compiled[43.5%] ranch_transport.erl true 
-[2018-08-23 11:43:49] compiled[44.1%] gen_rpc_helper.erl true 
-[2018-08-23 11:43:49] compiled[44.7%] watchdog.erl true 
-[2018-08-23 11:43:49] watchdog.erl:12: Warning: behaviour gen_serverw undefined
+[2018-08-23 14:15:16] compiled[44.1%] gen_rpc_driver.erl true 
+[2018-08-23 14:15:16] compiled[44.7%] ranch_tcp.erl true 
+[2018-08-23 14:15:16] ranch_tcp.erl:16: Warning: behaviour ranch_transport undefined
 
-[2018-08-23 11:43:49] compiled[45.2%] gen_rpc_driver.erl true 
-[2018-08-23 11:43:49] compiled[45.8%] econfig_watcher.erl true 
-[2018-08-23 11:43:49] compiled[46.4%] ranch_tcp.erl true 
-[2018-08-23 11:43:49] ranch_tcp.erl:16: Warning: behaviour ranch_transport undefined
+[2018-08-23 14:15:16] compiled[45.2%] cs_gs_rpc.erl true 
+[2018-08-23 14:15:16] compiled[45.8%] econfig_watcher.erl true 
+[2018-08-23 14:15:16] compiled[46.4%] ranch_sup.erl true 
+[2018-08-23 14:15:16] compiled[47.0%] loggerS.erl true 
+[2018-08-23 14:15:16] compiled[47.6%] gen_rpc_dispatcher.erl true 
+[2018-08-23 14:15:16] compiled[48.2%] cs_db_interface.erl true 
+[2018-08-23 14:15:16] compiled[48.8%] econfig_util.erl true 
+[2018-08-23 14:15:16] compiled[49.4%] file_ex.erl true 
+[2018-08-23 14:15:16] compiled[50.0%] ranch_ssl.erl true 
+[2018-08-23 14:15:16] ranch_ssl.erl:16: Warning: behaviour ranch_transport undefined
+[2018-08-23 14:15:16] ranch_ssl.erl:131: Warning: ssl:ssl_accept/2: deprecated; use ssl:handshake/2 instead
 
-[2018-08-23 11:43:49] compiled[47.0%] cs_gs_rpc.erl true 
-[2018-08-23 11:43:49] compiled[47.6%] econfig_util.erl true 
-[2018-08-23 11:43:49] compiled[48.2%] file_ex.erl true 
-[2018-08-23 11:43:49] compiled[48.8%] mysql_protocol_tests.erl true 
-[2018-08-23 11:43:49] mysql_protocol_tests.erl:129: Warning: NOT OPTIMIZED: called function hexdump_to_bin/3 does not begin with a suitable binary matching instruction
+[2018-08-23 14:15:16] compiled[50.5%] gen_rpc_client_config.erl true 
+[2018-08-23 14:15:16] compiled[51.1%] mysql_protocol_tests.erl true 
+[2018-08-23 14:15:16] mysql_protocol_tests.erl:129: Warning: NOT OPTIMIZED: called function hexdump_to_bin/3 does not begin with a suitable binary matching instruction
 
-[2018-08-23 11:43:49] compiled[49.4%] ranch_sup.erl true 
-[2018-08-23 11:43:49] compiled[50.0%] econfig_sup.erl true 
-[2018-08-23 11:43:49] compiled[50.5%] cs_db_interface.erl true 
-[2018-08-23 11:43:49] compiled[51.1%] dtool.erl true 
-[2018-08-23 11:43:49] compiled[51.7%] gen_rpc_dispatcher.erl true 
-[2018-08-23 11:43:49] compiled[52.3%] vm_memory_monitor.erl true 
-[2018-08-23 11:43:49] compiled[52.9%] cs_cache_interface.erl true 
-[2018-08-23 11:43:49] compiled[53.5%] common_error_logger_h.erl true 
-[2018-08-23 11:43:49] compiled[54.1%] gen_rpc_client_config.erl true 
-[2018-08-23 11:43:49] compiled[54.7%] ranch_ssl.erl true 
-[2018-08-23 11:43:49] ranch_ssl.erl:16: Warning: behaviour ranch_transport undefined
-[2018-08-23 11:43:49] ranch_ssl.erl:131: Warning: ssl:ssl_accept/2: deprecated; use ssl:handshake/2 instead
+[2018-08-23 14:15:16] compiled[51.7%] cs_cache_interface.erl true 
+[2018-08-23 14:15:16] compiled[52.3%] econfig_sup.erl true 
+[2018-08-23 14:15:16] compiled[52.9%] dtool.erl true 
+[2018-08-23 14:15:17] compiled[53.5%] ranch_server.erl true 
+[2018-08-23 14:15:17] compiled[54.1%] watchdog.erl true 
+[2018-08-23 14:15:17] watchdog.erl:12: Warning: behaviour gen_serverw undefined
 
-[2018-08-23 11:43:49] compiled[55.2%] mysql_encode_tests.erl true 
-[2018-08-23 11:43:49] compiled[55.8%] vector3.erl true 
-[2018-08-23 11:43:49] compiled[56.4%] ranch_server.erl true 
-[2018-08-23 11:43:49] compiled[57.0%] common_error_logger.erl true 
-[2018-08-23 11:43:49] common_error_logger.erl:13: Warning: behaviour gen_server2 undefined
+[2018-08-23 14:15:17] compiled[54.7%] common_error_logger_h.erl true 
+[2018-08-23 14:15:17] compiled[55.2%] ranch_protocol.erl true 
+[2018-08-23 14:15:17] compiled[55.8%] mysql_encode_tests.erl true 
+[2018-08-23 14:15:17] compiled[56.4%] gen_rpc_client.erl true 
+[2018-08-23 14:15:17] compiled[57.0%] ranch_listener_sup.erl true 
+[2018-08-23 14:15:17] compiled[57.6%] mock_tcp.erl true 
+[2018-08-23 14:15:17] mock_tcp.erl:64: Warning: NOT OPTIMIZED: sub binary is used or returned
+[2018-08-23 14:15:17] mock_tcp.erl:73: Warning: NOT OPTIMIZED: sub binary is used or returned
 
-[2018-08-23 11:43:49] compiled[57.6%] mock_tcp.erl true 
-[2018-08-23 11:43:49] mock_tcp.erl:64: Warning: NOT OPTIMIZED: sub binary is used or returned
-[2018-08-23 11:43:49] mock_tcp.erl:73: Warning: NOT OPTIMIZED: sub binary is used or returned
+[2018-08-23 14:15:17] compiled[58.2%] common_error_logger.erl true 
+[2018-08-23 14:15:17] common_error_logger.erl:13: Warning: behaviour gen_server2 undefined
 
-[2018-08-23 11:43:49] compiled[58.2%] ranch_protocol.erl true 
-[2018-08-23 11:43:49] compiled[58.8%] lib_cs_share.erl true 
-[2018-08-23 11:43:49] lib_cs_share.erl:23: Warning: the call to node/0 has no effect
+[2018-08-23 14:15:17] compiled[58.8%] econfig_server.erl true 
+[2018-08-23 14:15:17] compiled[59.4%] gen_rpc_app.erl true 
+[2018-08-23 14:15:17] compiled[60.0%] lib_cs_share.erl true 
+[2018-08-23 14:15:17] lib_cs_share.erl:23: Warning: the call to node/0 has no effect
 
-[2018-08-23 11:43:49] compiled[59.4%] econfig_server.erl true 
-[2018-08-23 11:43:49] compiled[60.0%] error_logger_acc.erl true 
-[2018-08-23 11:43:49] error_logger_acc.erl:34: Warning: erlang:get_stacktrace/0: deprecated; use the new try/catch syntax for retrieving the stack backtrace
+[2018-08-23 14:15:17] compiled[60.5%] error_logger_acc.erl true 
+[2018-08-23 14:15:17] error_logger_acc.erl:34: Warning: erlang:get_stacktrace/0: deprecated; use the new try/catch syntax for retrieving the stack backtrace
 
-[2018-08-23 11:43:49] compiled[60.5%] ranch_listener_sup.erl true 
-[2018-08-23 11:43:49] compiled[61.1%] color.erl true 
-[2018-08-23 11:43:49] compiled[61.7%] mysql_sock_tcp.erl true 
-[2018-08-23 11:43:49] compiled[62.3%] uid_gen.erl true 
-[2018-08-23 11:43:49] compiled[62.9%] econfig_file_writer.erl true 
-[2018-08-23 11:43:49] compiled[63.5%] lib_cs_loader.erl true 
-[2018-08-23 11:43:49] compiled[64.1%] mysql_sock_ssl.erl true 
-[2018-08-23 11:43:49] compiled[64.7%] econfig_app.erl true 
-[2018-08-23 11:43:50] compiled[65.2%] task.erl true 
-[2018-08-23 11:43:50] compiled[65.8%] ranch_conns_sup.erl true 
-[2018-08-23 11:43:50] compiled[66.4%] gen_rpc_client.erl true 
-[2018-08-23 11:43:50] compiled[67.0%] code_gen.erl true 
-[2018-08-23 11:43:50] compiled[67.6%] econfig.erl true 
-[2018-08-23 11:43:50] compiled[68.2%] lib_cs_cgs_cache.erl true 
-[2018-08-23 11:43:50] compiled[68.8%] ranch_app.erl true 
-[2018-08-23 11:43:50] compiled[69.4%] gen_rpc_app.erl true 
-[2018-08-23 11:43:50] compiled[70.0%] ranch_acceptors_sup.erl true 
-[2018-08-23 11:43:50] compiled[70.5%] system_monitor.erl true 
-[2018-08-23 11:43:50] system_monitor.erl:12: Warning: behaviour gen_serverw undefined
+[2018-08-23 14:15:17] compiled[61.1%] ranch_conns_sup.erl true 
+[2018-08-23 14:15:17] compiled[61.7%] vm_memory_monitor.erl true 
+[2018-08-23 14:15:17] compiled[62.3%] econfig_file_writer.erl true 
+[2018-08-23 14:15:17] compiled[62.9%] color.erl true 
+[2018-08-23 14:15:17] compiled[63.5%] econfig_app.erl true 
+[2018-08-23 14:15:17] compiled[64.1%] mysql_sock_tcp.erl true 
+[2018-08-23 14:15:17] compiled[64.7%] ranch_app.erl true 
+[2018-08-23 14:15:17] compiled[65.2%] lib_cs_loader.erl true 
+[2018-08-23 14:15:17] compiled[65.8%] gen_rpc_acceptor.erl true 
+[2018-08-23 14:15:17] gen_rpc_acceptor.erl:270: Warning: erlang:get_stacktrace/0: deprecated; use the new try/catch syntax for retrieving the stack backtrace
 
-[2018-08-23 11:43:50] compiled[71.1%] binary_lib.erl true 
-[2018-08-23 11:43:50] binary_lib.erl:40: Warning: NOT OPTIMIZED: sub binary is used or returned
-[2018-08-23 11:43:50] binary_lib.erl:53: Warning: NOT OPTIMIZED: sub binary is used or returned
-[2018-08-23 11:43:50] binary_lib.erl:61: Warning: NOT OPTIMIZED: sub binary is used or returned
-[2018-08-23 11:43:50] binary_lib.erl:69: Warning: NOT OPTIMIZED: sub binary is used or returned
-[2018-08-23 11:43:50] binary_lib.erl:81: Warning: NOT OPTIMIZED: sub binary is used or returned
-[2018-08-23 11:43:50] binary_lib.erl:87: Warning: NOT OPTIMIZED: sub binary is used or returned
-[2018-08-23 11:43:50] binary_lib.erl:93: Warning: NOT OPTIMIZED: sub binary is used or returned
-[2018-08-23 11:43:50] binary_lib.erl:99: Warning: NOT OPTIMIZED: sub binary is used or returned
-[2018-08-23 11:43:50] binary_lib.erl:111: Warning: NOT OPTIMIZED: sub binary is used or returned
-[2018-08-23 11:43:50] binary_lib.erl:119: Warning: NOT OPTIMIZED: sub binary is used or returned
-[2018-08-23 11:43:50] binary_lib.erl:127: Warning: NOT OPTIMIZED: sub binary is used or returned
-[2018-08-23 11:43:50] binary_lib.erl:136: Warning: NOT OPTIMIZED: sub binary is used or returned
-[2018-08-23 11:43:50] binary_lib.erl:136: Warning: INFO: using a matched out sub binary will prevent delayed sub binary optimization
-[2018-08-23 11:43:50] binary_lib.erl:155: Warning: NOT OPTIMIZED: called function binary_read_n/4 does not begin with a suitable binary matching instruction
+[2018-08-23 14:15:17] compiled[66.4%] ranch_acceptors_sup.erl true 
+[2018-08-23 14:15:17] compiled[67.0%] vector3.erl true 
+[2018-08-23 14:15:17] compiled[67.6%] mysql_sock_ssl.erl true 
+[2018-08-23 14:15:17] compiled[68.2%] econfig.erl true 
+[2018-08-23 14:15:17] compiled[68.8%] ranch_acceptor.erl true 
+[2018-08-23 14:15:17] compiled[69.4%] code_gen.erl true 
+[2018-08-23 14:15:17] compiled[70.0%] gen_rpc.erl true 
+[2018-08-23 14:15:17] compiled[70.5%] dynamic_compile.erl true 
+[2018-08-23 14:15:17] compiled[71.1%] lib_cs_cgs_cache.erl true 
+[2018-08-23 14:15:17] compiled[71.7%] binary_lib.erl true 
+[2018-08-23 14:15:17] binary_lib.erl:40: Warning: NOT OPTIMIZED: sub binary is used or returned
+[2018-08-23 14:15:17] binary_lib.erl:53: Warning: NOT OPTIMIZED: sub binary is used or returned
+[2018-08-23 14:15:17] binary_lib.erl:61: Warning: NOT OPTIMIZED: sub binary is used or returned
+[2018-08-23 14:15:17] binary_lib.erl:69: Warning: NOT OPTIMIZED: sub binary is used or returned
+[2018-08-23 14:15:17] binary_lib.erl:81: Warning: NOT OPTIMIZED: sub binary is used or returned
+[2018-08-23 14:15:17] binary_lib.erl:87: Warning: NOT OPTIMIZED: sub binary is used or returned
+[2018-08-23 14:15:17] binary_lib.erl:93: Warning: NOT OPTIMIZED: sub binary is used or returned
+[2018-08-23 14:15:17] binary_lib.erl:99: Warning: NOT OPTIMIZED: sub binary is used or returned
+[2018-08-23 14:15:17] binary_lib.erl:111: Warning: NOT OPTIMIZED: sub binary is used or returned
+[2018-08-23 14:15:17] binary_lib.erl:119: Warning: NOT OPTIMIZED: sub binary is used or returned
+[2018-08-23 14:15:17] binary_lib.erl:127: Warning: NOT OPTIMIZED: sub binary is used or returned
+[2018-08-23 14:15:17] binary_lib.erl:136: Warning: NOT OPTIMIZED: sub binary is used or returned
+[2018-08-23 14:15:17] binary_lib.erl:136: Warning: INFO: using a matched out sub binary will prevent delayed sub binary optimization
+[2018-08-23 14:15:17] binary_lib.erl:155: Warning: NOT OPTIMIZED: called function binary_read_n/4 does not begin with a suitable binary matching instruction
 
-[2018-08-23 11:43:50] compiled[71.7%] dynamic_compile.erl true 
-[2018-08-23 11:43:50] compiled[72.3%] dist_exam_otp.erl true 
-[2018-08-23 11:43:50] dist_exam_otp.erl:12: Warning: behaviour gen_serverw undefined
+[2018-08-23 14:15:17] compiled[72.3%] ranch.erl true 
+[2018-08-23 14:15:17] compiled[72.9%] uid_gen.erl true 
+[2018-08-23 14:15:17] compiled[73.5%] tcp_reverse_sup.erl true 
+[2018-08-23 14:15:17] compiled[74.1%] tcp_reverse_app.erl true 
+[2018-08-23 14:15:17] compiled[74.7%] task.erl true 
+[2018-08-23 14:15:17] compiled[75.2%] dist_exam_otp.erl true 
+[2018-08-23 14:15:17] dist_exam_otp.erl:12: Warning: behaviour gen_serverw undefined
 
-[2018-08-23 11:43:50] compiled[72.9%] ranch_acceptor.erl true 
-[2018-08-23 11:43:50] compiled[73.5%] rand_tool.erl true 
-[2018-08-23 11:43:50] compiled[74.1%] cs_dist_sup.erl true 
-[2018-08-23 11:43:50] compiled[74.7%] ral.erl true 
-[2018-08-23 11:43:50] compiled[75.2%] cs_dist_core_otp.erl true 
-[2018-08-23 11:43:50] cs_dist_core_otp.erl:12: Warning: behaviour gen_serverw undefined
+[2018-08-23 14:15:17] compiled[75.8%] background_gc.erl true 
+[2018-08-23 14:15:17] background_gc.erl:13: Warning: behaviour gen_server2 undefined
 
-[2018-08-23 11:43:50] compiled[76.4%] ranch.erl true 
-[2018-08-23 11:43:50] compiled[75.8%] gen_rpc_acceptor.erl true 
-[2018-08-23 11:43:50] gen_rpc_acceptor.erl:270: Warning: erlang:get_stacktrace/0: deprecated; use the new try/catch syntax for retrieving the stack backtrace
+[2018-08-23 14:15:17] compiled[76.4%] cs_dist_sup.erl true 
+[2018-08-23 14:15:17] compiled[77.0%] team_otp.erl true 
+[2018-08-23 14:15:17] team_otp.erl:12: Warning: behaviour gen_serverw undefined
 
-[2018-08-23 11:43:50] compiled[77.0%] background_gc.erl true 
-[2018-08-23 11:43:50] background_gc.erl:13: Warning: behaviour gen_server2 undefined
+[2018-08-23 14:15:17] compiled[77.6%] poolboy_test_worker.erl true 
+[2018-08-23 14:15:17] poolboy_test_worker.erl:3: Warning: behaviour poolboy_worker undefined
 
-[2018-08-23 11:43:50] compiled[77.6%] tcp_reverse_sup.erl true 
-[2018-08-23 11:43:50] compiled[78.2%] ps.erl true 
-[2018-08-23 11:43:50] compiled[78.8%] tcp_reverse_app.erl true 
-[2018-08-23 11:43:50] compiled[79.4%] cs_dist.erl true 
-[2018-08-23 11:43:50] compiled[80.0%] gen_rpc.erl true 
-[2018-08-23 11:43:50] compiled[80.5%] team_otp.erl true 
-[2018-08-23 11:43:50] team_otp.erl:12: Warning: behaviour gen_serverw undefined
+[2018-08-23 14:15:17] compiled[78.2%] gen_rpc_driver_tcp.erl true 
+[2018-08-23 14:15:17] gen_rpc_driver_tcp.erl:13: Warning: behaviour gen_rpc_driver undefined
 
-[2018-08-23 11:43:50] compiled[81.1%] poolboy_test_worker.erl true 
-[2018-08-23 11:43:50] poolboy_test_worker.erl:3: Warning: behaviour poolboy_worker undefined
+[2018-08-23 14:15:17] compiled[78.8%] system_monitor.erl true 
+[2018-08-23 14:15:17] system_monitor.erl:12: Warning: behaviour gen_serverw undefined
 
-[2018-08-23 11:43:50] compiled[81.7%] cs_start_fn.erl true 
-[2018-08-23 11:43:50] compiled[82.3%] priority_queue.erl true 
-[2018-08-23 11:43:50] compiled[82.9%] cs_logic_sup.erl true 
-[2018-08-23 11:43:50] compiled[83.5%] mysql_protocol.erl true 
-[2018-08-23 11:43:50] mysql_protocol.erl:129: Warning: INFO: using a matched out sub binary will prevent delayed sub binary optimization
-[2018-08-23 11:43:50] mysql_protocol.erl:208: Warning: NOT OPTIMIZED: called function nulterm_str/1 does not begin with a suitable binary matching instruction
-[2018-08-23 11:43:50] mysql_protocol.erl:220: Warning: NOT OPTIMIZED: the binary matching instruction that follows in the same function have problems that prevent delayed sub binary optimization (probably indicated by INFO warnings)
-[2018-08-23 11:43:50] mysql_protocol.erl:226: Warning: NOT OPTIMIZED: sub binary is used or returned
-[2018-08-23 11:43:50] mysql_protocol.erl:366: Warning: INFO: using a matched out sub binary will prevent delayed sub binary optimization
-[2018-08-23 11:43:50] mysql_protocol.erl:378: Warning: NOT OPTIMIZED: called function parse_auth_method_switch/1 does not begin with a suitable binary matching instruction
-[2018-08-23 11:43:50] mysql_protocol.erl:396: Warning: INFO: using a matched out sub binary will prevent delayed sub binary optimization
-[2018-08-23 11:43:50] mysql_protocol.erl:484: Warning: INFO: using a matched out sub binary will prevent delayed sub binary optimization
-[2018-08-23 11:43:50] mysql_protocol.erl:509: Warning: NOT OPTIMIZED: sub binary is used or returned
-[2018-08-23 11:43:50] mysql_protocol.erl:528: Warning: NOT OPTIMIZED: called function decode_text_row_acc/3 does not begin with a suitable binary matching instruction
-[2018-08-23 11:43:50] mysql_protocol.erl:586: Warning: INFO: matching non-variables after a previous clause matching a variable will prevent delayed sub binary optimization
-[2018-08-23 11:43:50] mysql_protocol.erl:593: Warning: NOT OPTIMIZED: sub binary used by erlang:binary_to_float/1
-[2018-08-23 11:43:50] mysql_protocol.erl:631: Warning: NOT OPTIMIZED: called function null_bitmap_decode/3 does not begin with a suitable binary matching instruction
-[2018-08-23 11:43:50] mysql_protocol.erl:636: Warning: OPTIMIZED: creation of sub binary delayed
-[2018-08-23 11:43:50] mysql_protocol.erl:639: Warning: OPTIMIZED: creation of sub binary delayed
-[2018-08-23 11:43:50] mysql_protocol.erl:658: Warning: NOT OPTIMIZED: sub binary is used or returned
-[2018-08-23 11:43:50] mysql_protocol.erl:660: Warning: OPTIMIZED: creation of sub binary delayed
-[2018-08-23 11:43:50] mysql_protocol.erl:674: Warning: OPTIMIZED: creation of sub binary delayed
-[2018-08-23 11:43:50] mysql_protocol.erl:702: Warning: NOT OPTIMIZED: sub binary is used or returned
-[2018-08-23 11:43:50] mysql_protocol.erl:706: Warning: NOT OPTIMIZED: the binary matching instruction that follows in the same function have problems that prevent delayed sub binary optimization (probably indicated by INFO warnings)
-[2018-08-23 11:43:50] mysql_protocol.erl:710: Warning: NOT OPTIMIZED: sub binary is used or returned
-[2018-08-23 11:43:50] mysql_protocol.erl:715: Warning: NOT OPTIMIZED: the binary matching instruction that follows in the same function have problems that prevent delayed sub binary optimization (probably indicated by INFO warnings)
-[2018-08-23 11:43:50] mysql_protocol.erl:720: Warning: NOT OPTIMIZED: the binary matching instruction that follows in the same function have problems that prevent delayed sub binary optimization (probably indicated by INFO warnings)
-[2018-08-23 11:43:50] mysql_protocol.erl:724: Warning: NOT OPTIMIZED: the binary matching instruction that follows in the same function have problems that prevent delayed sub binary optimization (probably indicated by INFO warnings)
-[2018-08-23 11:43:50] mysql_protocol.erl:729: Warning: NOT OPTIMIZED: sub binary is used or returned
-[2018-08-23 11:43:50] mysql_protocol.erl:733: Warning: NOT OPTIMIZED: the binary matching instruction that follows in the same function have problems that prevent delayed sub binary optimization (probably indicated by INFO warnings)
-[2018-08-23 11:43:50] mysql_protocol.erl:743: Warning: NOT OPTIMIZED: sub binary is used or returned
-[2018-08-23 11:43:50] mysql_protocol.erl:743: Warning: INFO: matching non-variables after a previous clause matching a variable will prevent delayed sub binary optimization
-[2018-08-23 11:43:50] mysql_protocol.erl:746: Warning: NOT OPTIMIZED: sub binary is used or returned
-[2018-08-23 11:43:50] mysql_protocol.erl:749: Warning: NOT OPTIMIZED: sub binary is used or returned
-[2018-08-23 11:43:50] mysql_protocol.erl:789: Warning: OPTIMIZED: creation of sub binary delayed
-[2018-08-23 11:43:50] mysql_protocol.erl:794: Warning: NOT OPTIMIZED: sub binary is used or returned
-[2018-08-23 11:43:50] mysql_protocol.erl:796: Warning: NOT OPTIMIZED: the binary matching instruction that follows in the same function have problems that prevent delayed sub binary optimization (probably indicated by INFO warnings)
-[2018-08-23 11:43:50] mysql_protocol.erl:802: Warning: NOT OPTIMIZED: sub binary is used or returned
-[2018-08-23 11:43:50] mysql_protocol.erl:804: Warning: NOT OPTIMIZED: sub binary is used or returned
-[2018-08-23 11:43:50] mysql_protocol.erl:806: Warning: NOT OPTIMIZED: sub binary is used or returned
-[2018-08-23 11:43:50] mysql_protocol.erl:809: Warning: OPTIMIZED: creation of sub binary delayed
-[2018-08-23 11:43:50] mysql_protocol.erl:820: Warning: NOT OPTIMIZED: sub binary is used or returned
-[2018-08-23 11:43:50] mysql_protocol.erl:822: Warning: NOT OPTIMIZED: sub binary is used or returned
-[2018-08-23 11:43:50] mysql_protocol.erl:824: Warning: NOT OPTIMIZED: sub binary is used or returned
-[2018-08-23 11:43:50] mysql_protocol.erl:829: Warning: NOT OPTIMIZED: sub binary is used or returned
-[2018-08-23 11:43:50] mysql_protocol.erl:1019: Warning: NOT OPTIMIZED: called function add_packet_headers/2 does not begin with a suitable binary matching instruction
-[2018-08-23 11:43:50] mysql_protocol.erl:1024: Warning: INFO: using a matched out sub binary in a guard will prevent delayed sub binary optimization
-[2018-08-23 11:43:50] mysql_protocol.erl:1030: Warning: OPTIMIZED: creation of sub binary delayed
-[2018-08-23 11:43:50] mysql_protocol.erl:1033: Warning: NOT OPTIMIZED: sub binary is used or returned
-[2018-08-23 11:43:50] mysql_protocol.erl:1058: Warning: NOT OPTIMIZED: sub binary is used or returned
-[2018-08-23 11:43:50] mysql_protocol.erl:1083: Warning: NOT OPTIMIZED: sub binary is used or returned
-[2018-08-23 11:43:50] mysql_protocol.erl:1085: Warning: OPTIMIZED: creation of sub binary delayed
-[2018-08-23 11:43:50] mysql_protocol.erl:1112: Warning: INFO: using the original binary variable in a guard will prevent delayed sub binary optimization
-[2018-08-23 11:43:50] mysql_protocol.erl:1124: Warning: NOT OPTIMIZED: sub binary is used or returned
-[2018-08-23 11:43:50] mysql_protocol.erl:1125: Warning: NOT OPTIMIZED: sub binary is used or returned
-[2018-08-23 11:43:50] mysql_protocol.erl:1126: Warning: NOT OPTIMIZED: sub binary is used or returned
-[2018-08-23 11:43:50] mysql_protocol.erl:1127: Warning: NOT OPTIMIZED: sub binary is used or returned
-[2018-08-23 11:43:50] mysql_protocol.erl:1143: Warning: NOT OPTIMIZED: sub binary is used or returned
+[2018-08-23 14:15:17] compiled[79.4%] cs_dist_core_otp.erl true 
+[2018-08-23 14:15:17] cs_dist_core_otp.erl:12: Warning: behaviour gen_serverw undefined
 
-[2018-08-23 11:43:50] compiled[84.1%] team_logic.erl true 
-[2018-08-23 11:43:50] team_logic.erl:70: Warning: variable 'NetPid' is unused
-[2018-08-23 11:43:50] team_logic.erl:115: Warning: variable 'NetPid' is unused
+[2018-08-23 14:15:17] compiled[80.0%] team_logic.erl true 
+[2018-08-23 14:15:17] team_logic.erl:70: Warning: variable 'NetPid' is unused
+[2018-08-23 14:15:17] team_logic.erl:115: Warning: variable 'NetPid' is unused
 
-[2018-08-23 11:43:50] compiled[84.7%] cs_team_interface.erl true 
-[2018-08-23 11:43:50] compiled[85.2%] mysql_encode.erl true 
-[2018-08-23 11:43:50] mysql_encode.erl:25: Warning: OPTIMIZED: creation of sub binary delayed
+[2018-08-23 14:15:17] compiled[80.5%] rand_tool.erl true 
+[2018-08-23 14:15:17] compiled[81.1%] cs_team_interface.erl true 
+[2018-08-23 14:15:17] compiled[81.7%] cs_dist.erl true 
+[2018-08-23 14:15:17] cs_dist.erl:51: Warning: this clause cannot match because a previous clause at line 47 always matches
 
-[2018-08-23 11:43:50] compiled[85.8%] pg_local.erl true 
-[2018-08-23 11:43:50] compiled[86.4%] svr_sup.erl true 
-[2018-08-23 11:43:50] compiled[87.0%] gen_rpc_driver_tcp.erl true 
-[2018-08-23 11:43:50] gen_rpc_driver_tcp.erl:13: Warning: behaviour gen_rpc_driver undefined
+[2018-08-23 14:15:17] compiled[82.3%] mysql_protocol.erl true 
+[2018-08-23 14:15:17] mysql_protocol.erl:129: Warning: INFO: using a matched out sub binary will prevent delayed sub binary optimization
+[2018-08-23 14:15:17] mysql_protocol.erl:208: Warning: NOT OPTIMIZED: called function nulterm_str/1 does not begin with a suitable binary matching instruction
+[2018-08-23 14:15:17] mysql_protocol.erl:220: Warning: NOT OPTIMIZED: the binary matching instruction that follows in the same function have problems that prevent delayed sub binary optimization (probably indicated by INFO warnings)
+[2018-08-23 14:15:17] mysql_protocol.erl:226: Warning: NOT OPTIMIZED: sub binary is used or returned
+[2018-08-23 14:15:17] mysql_protocol.erl:366: Warning: INFO: using a matched out sub binary will prevent delayed sub binary optimization
+[2018-08-23 14:15:17] mysql_protocol.erl:378: Warning: NOT OPTIMIZED: called function parse_auth_method_switch/1 does not begin with a suitable binary matching instruction
+[2018-08-23 14:15:17] mysql_protocol.erl:396: Warning: INFO: using a matched out sub binary will prevent delayed sub binary optimization
+[2018-08-23 14:15:17] mysql_protocol.erl:484: Warning: INFO: using a matched out sub binary will prevent delayed sub binary optimization
+[2018-08-23 14:15:17] mysql_protocol.erl:509: Warning: NOT OPTIMIZED: sub binary is used or returned
+[2018-08-23 14:15:17] mysql_protocol.erl:528: Warning: NOT OPTIMIZED: called function decode_text_row_acc/3 does not begin with a suitable binary matching instruction
+[2018-08-23 14:15:17] mysql_protocol.erl:586: Warning: INFO: matching non-variables after a previous clause matching a variable will prevent delayed sub binary optimization
+[2018-08-23 14:15:17] mysql_protocol.erl:593: Warning: NOT OPTIMIZED: sub binary used by erlang:binary_to_float/1
+[2018-08-23 14:15:17] mysql_protocol.erl:631: Warning: NOT OPTIMIZED: called function null_bitmap_decode/3 does not begin with a suitable binary matching instruction
+[2018-08-23 14:15:17] mysql_protocol.erl:636: Warning: OPTIMIZED: creation of sub binary delayed
+[2018-08-23 14:15:17] mysql_protocol.erl:639: Warning: OPTIMIZED: creation of sub binary delayed
+[2018-08-23 14:15:17] mysql_protocol.erl:658: Warning: NOT OPTIMIZED: sub binary is used or returned
+[2018-08-23 14:15:17] mysql_protocol.erl:660: Warning: OPTIMIZED: creation of sub binary delayed
+[2018-08-23 14:15:17] mysql_protocol.erl:674: Warning: OPTIMIZED: creation of sub binary delayed
+[2018-08-23 14:15:17] mysql_protocol.erl:702: Warning: NOT OPTIMIZED: sub binary is used or returned
+[2018-08-23 14:15:17] mysql_protocol.erl:706: Warning: NOT OPTIMIZED: the binary matching instruction that follows in the same function have problems that prevent delayed sub binary optimization (probably indicated by INFO warnings)
+[2018-08-23 14:15:17] mysql_protocol.erl:710: Warning: NOT OPTIMIZED: sub binary is used or returned
+[2018-08-23 14:15:17] mysql_protocol.erl:715: Warning: NOT OPTIMIZED: the binary matching instruction that follows in the same function have problems that prevent delayed sub binary optimization (probably indicated by INFO warnings)
+[2018-08-23 14:15:17] mysql_protocol.erl:720: Warning: NOT OPTIMIZED: the binary matching instruction that follows in the same function have problems that prevent delayed sub binary optimization (probably indicated by INFO warnings)
+[2018-08-23 14:15:17] mysql_protocol.erl:724: Warning: NOT OPTIMIZED: the binary matching instruction that follows in the same function have problems that prevent delayed sub binary optimization (probably indicated by INFO warnings)
+[2018-08-23 14:15:17] mysql_protocol.erl:729: Warning: NOT OPTIMIZED: sub binary is used or returned
+[2018-08-23 14:15:17] mysql_protocol.erl:733: Warning: NOT OPTIMIZED: the binary matching instruction that follows in the same function have problems that prevent delayed sub binary optimization (probably indicated by INFO warnings)
+[2018-08-23 14:15:17] mysql_protocol.erl:743: Warning: NOT OPTIMIZED: sub binary is used or returned
+[2018-08-23 14:15:17] mysql_protocol.erl:743: Warning: INFO: matching non-variables after a previous clause matching a variable will prevent delayed sub binary optimization
+[2018-08-23 14:15:17] mysql_protocol.erl:746: Warning: NOT OPTIMIZED: sub binary is used or returned
+[2018-08-23 14:15:17] mysql_protocol.erl:749: Warning: NOT OPTIMIZED: sub binary is used or returned
+[2018-08-23 14:15:17] mysql_protocol.erl:789: Warning: OPTIMIZED: creation of sub binary delayed
+[2018-08-23 14:15:17] mysql_protocol.erl:794: Warning: NOT OPTIMIZED: sub binary is used or returned
+[2018-08-23 14:15:17] mysql_protocol.erl:796: Warning: NOT OPTIMIZED: the binary matching instruction that follows in the same function have problems that prevent delayed sub binary optimization (probably indicated by INFO warnings)
+[2018-08-23 14:15:17] mysql_protocol.erl:802: Warning: NOT OPTIMIZED: sub binary is used or returned
+[2018-08-23 14:15:17] mysql_protocol.erl:804: Warning: NOT OPTIMIZED: sub binary is used or returned
+[2018-08-23 14:15:17] mysql_protocol.erl:806: Warning: NOT OPTIMIZED: sub binary is used or returned
+[2018-08-23 14:15:17] mysql_protocol.erl:809: Warning: OPTIMIZED: creation of sub binary delayed
+[2018-08-23 14:15:17] mysql_protocol.erl:820: Warning: NOT OPTIMIZED: sub binary is used or returned
+[2018-08-23 14:15:17] mysql_protocol.erl:822: Warning: NOT OPTIMIZED: sub binary is used or returned
+[2018-08-23 14:15:17] mysql_protocol.erl:824: Warning: NOT OPTIMIZED: sub binary is used or returned
+[2018-08-23 14:15:17] mysql_protocol.erl:829: Warning: NOT OPTIMIZED: sub binary is used or returned
+[2018-08-23 14:15:17] mysql_protocol.erl:1019: Warning: NOT OPTIMIZED: called function add_packet_headers/2 does not begin with a suitable binary matching instruction
+[2018-08-23 14:15:17] mysql_protocol.erl:1024: Warning: INFO: using a matched out sub binary in a guard will prevent delayed sub binary optimization
+[2018-08-23 14:15:17] mysql_protocol.erl:1030: Warning: OPTIMIZED: creation of sub binary delayed
+[2018-08-23 14:15:17] mysql_protocol.erl:1033: Warning: NOT OPTIMIZED: sub binary is used or returned
+[2018-08-23 14:15:17] mysql_protocol.erl:1058: Warning: NOT OPTIMIZED: sub binary is used or returned
+[2018-08-23 14:15:17] mysql_protocol.erl:1083: Warning: NOT OPTIMIZED: sub binary is used or returned
+[2018-08-23 14:15:17] mysql_protocol.erl:1085: Warning: OPTIMIZED: creation of sub binary delayed
+[2018-08-23 14:15:17] mysql_protocol.erl:1112: Warning: INFO: using the original binary variable in a guard will prevent delayed sub binary optimization
+[2018-08-23 14:15:17] mysql_protocol.erl:1124: Warning: NOT OPTIMIZED: sub binary is used or returned
+[2018-08-23 14:15:17] mysql_protocol.erl:1125: Warning: NOT OPTIMIZED: sub binary is used or returned
+[2018-08-23 14:15:17] mysql_protocol.erl:1126: Warning: NOT OPTIMIZED: sub binary is used or returned
+[2018-08-23 14:15:17] mysql_protocol.erl:1127: Warning: NOT OPTIMIZED: sub binary is used or returned
+[2018-08-23 14:15:17] mysql_protocol.erl:1143: Warning: NOT OPTIMIZED: sub binary is used or returned
 
-[2018-08-23 11:43:50] compiled[87.6%] mysql_cache.erl true 
-[2018-08-23 11:43:50] compiled[88.2%] cs_loader_otp.erl true 
-[2018-08-23 11:43:50] cs_loader_otp.erl:12: Warning: behaviour gen_serverw undefined
+[2018-08-23 14:15:17] compiled[82.9%] svr_sup.erl true 
+[2018-08-23 14:15:17] compiled[83.5%] cs_start_fn.erl true 
+[2018-08-23 14:15:17] compiled[84.1%] ral.erl true 
+[2018-08-23 14:15:17] compiled[84.7%] mysql_encode.erl true 
+[2018-08-23 14:15:17] mysql_encode.erl:25: Warning: OPTIMIZED: creation of sub binary delayed
 
-[2018-08-23 11:43:50] compiled[88.8%] cs_conf.erl true 
-[2018-08-23 11:43:50] compiled[89.4%] cs_cache_otp.erl true 
-[2018-08-23 11:43:50] cs_cache_otp.erl:12: Warning: behaviour gen_serverw undefined
+[2018-08-23 14:15:17] compiled[85.2%] cs_logic_sup.erl true 
+[2018-08-23 14:15:17] compiled[85.8%] gen_rpc_driver_ssl.erl true 
+[2018-08-23 14:15:17] gen_rpc_driver_ssl.erl:13: Warning: behaviour gen_rpc_driver undefined
+[2018-08-23 14:15:17] gen_rpc_driver_ssl.erl:68: Warning: ssl:ssl_accept/1: deprecated; use ssl:handshake/1 instead
 
-[2018-08-23 11:43:50] compiled[90.0%] gen_rpc_driver_ssl.erl true 
-[2018-08-23 11:43:50] gen_rpc_driver_ssl.erl:13: Warning: behaviour gen_rpc_driver undefined
-[2018-08-23 11:43:50] gen_rpc_driver_ssl.erl:68: Warning: ssl:ssl_accept/1: deprecated; use ssl:handshake/1 instead
+[2018-08-23 14:15:17] compiled[86.4%] ps.erl true 
+[2018-08-23 14:15:17] compiled[87.0%] mysql_cache.erl true 
+[2018-08-23 14:15:17] compiled[87.6%] version.erl true 
+[2018-08-23 14:15:17] compiled[88.2%] priority_queue.erl true 
+[2018-08-23 14:15:17] compiled[88.8%] pubs_sup.erl true 
+[2018-08-23 14:15:17] compiled[89.4%] cs_loader_otp.erl true 
+[2018-08-23 14:15:17] cs_loader_otp.erl:12: Warning: behaviour gen_serverw undefined
 
-[2018-08-23 11:43:50] compiled[90.5%] version.erl true 
-[2018-08-23 11:43:50] compiled[91.1%] pubs_sup.erl true 
-[2018-08-23 11:43:50] compiled[91.7%] pubs_app.erl true 
-[2018-08-23 11:43:50] compiled[92.3%] mne_mt.erl true 
-[2018-08-23 11:43:50] compiled[92.9%] mysql.erl true 
-[2018-08-23 11:43:50] mysql.erl:409: Warning: erlang:get_stacktrace/0: deprecated; use the new try/catch syntax for retrieving the stack backtrace
-[2018-08-23 11:43:50] mysql.erl:415: Warning: erlang:get_stacktrace/0: deprecated; use the new try/catch syntax for retrieving the stack backtrace
-[2018-08-23 11:43:50] mysql.erl:424: Warning: erlang:get_stacktrace/0: deprecated; use the new try/catch syntax for retrieving the stack backtrace
-[2018-08-23 11:43:50] mysql.erl:431: Warning: erlang:get_stacktrace/0: deprecated; use the new try/catch syntax for retrieving the stack backtrace
+[2018-08-23 14:15:17] compiled[90.0%] pubs_app.erl true 
+[2018-08-23 14:15:17] compiled[90.5%] pg_local.erl true 
+[2018-08-23 14:15:17] compiled[91.1%] cs_conf.erl true 
+[2018-08-23 14:15:17] compiled[91.7%] poolboy_tests.erl true 
+[2018-08-23 14:15:17] compiled[92.3%] mne_mt.erl true 
+[2018-08-23 14:15:17] compiled[92.9%] poolboy_eqc.erl true 
+[2018-08-23 14:15:17] poolboy_eqc.erl:2: Warning: export_all flag enabled - all functions will be exported
 
-[2018-08-23 11:43:50] compiled[93.5%] poolboy_tests.erl true 
-[2018-08-23 11:43:50] compiled[94.1%] poolboy_eqc.erl true 
-[2018-08-23 11:43:50] poolboy_eqc.erl:2: Warning: export_all flag enabled - all functions will be exported
+[2018-08-23 14:15:18] compiled[93.5%] poolboy_worker.erl true 
+[2018-08-23 14:15:18] compiled[94.1%] poolboy_sup.erl true 
+[2018-08-23 14:15:18] compiled[94.7%] cs_cache_otp.erl true 
+[2018-08-23 14:15:18] cs_cache_otp.erl:12: Warning: behaviour gen_serverw undefined
 
-[2018-08-23 11:43:50] compiled[94.7%] poolboy_worker.erl true 
-[2018-08-23 11:43:50] compiled[95.2%] poolboy_sup.erl true 
-[2018-08-23 11:43:50] compiled[95.8%] recon_trace.erl true 
-[2018-08-23 11:43:50] compiled[96.4%] recon_lib.erl true 
-[2018-08-23 11:43:50] compiled[97.0%] recon_alloc.erl true 
-[2018-08-23 11:43:50] compiled[97.6%] recon.erl true 
-[2018-08-23 11:43:50] compiled[98.2%] trap_exit_protocol.erl true 
-[2018-08-23 11:43:50] trap_exit_protocol.erl:2: Warning: behaviour ranch_protocol undefined
+[2018-08-23 14:15:18] compiled[95.2%] mysql.erl true 
+[2018-08-23 14:15:18] mysql.erl:409: Warning: erlang:get_stacktrace/0: deprecated; use the new try/catch syntax for retrieving the stack backtrace
+[2018-08-23 14:15:18] mysql.erl:415: Warning: erlang:get_stacktrace/0: deprecated; use the new try/catch syntax for retrieving the stack backtrace
+[2018-08-23 14:15:18] mysql.erl:424: Warning: erlang:get_stacktrace/0: deprecated; use the new try/catch syntax for retrieving the stack backtrace
+[2018-08-23 14:15:18] mysql.erl:431: Warning: erlang:get_stacktrace/0: deprecated; use the new try/catch syntax for retrieving the stack backtrace
 
-[2018-08-23 11:43:50] compiled[98.8%] transport_capabilities_protocol.erl true 
-[2018-08-23 11:43:50] transport_capabilities_protocol.erl:2: Warning: behaviour ranch_protocol undefined
+[2018-08-23 14:15:18] compiled[95.8%] recon_trace.erl true 
+[2018-08-23 14:15:18] compiled[96.4%] recon_lib.erl true 
+[2018-08-23 14:15:18] compiled[97.0%] recon_alloc.erl true 
+[2018-08-23 14:15:18] compiled[97.6%] recon.erl true 
+[2018-08-23 14:15:18] compiled[98.2%] trap_exit_protocol.erl true 
+[2018-08-23 14:15:18] trap_exit_protocol.erl:2: Warning: behaviour ranch_protocol undefined
 
-[2018-08-23 11:43:50] compiled[99.4%] supervisor_separate.erl true 
-[2018-08-23 11:43:50] supervisor_separate.erl:3: Warning: behaviour ranch_protocol undefined
+[2018-08-23 14:15:18] compiled[98.8%] transport_capabilities_protocol.erl true 
+[2018-08-23 14:15:18] transport_capabilities_protocol.erl:2: Warning: behaviour ranch_protocol undefined
 
-[2018-08-23 11:43:50] compiled[100.0%] shutdown_SUITE.erl true 
+[2018-08-23 14:15:18] compiled[99.4%] supervisor_separate.erl true 
+[2018-08-23 14:15:18] supervisor_separate.erl:3: Warning: behaviour ranch_protocol undefined
+
+[2018-08-23 14:15:18] compiled[100.0%] shutdown_SUITE.erl true 
 
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 
 
-@@@compile [cht,csD] success@@@ at 2018-08-23 11:43:50 2.626 seconds 
+@@@compile [cht,csD] success@@@ at 2018-08-23 14:15:18 3.157 seconds 
 
 
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^

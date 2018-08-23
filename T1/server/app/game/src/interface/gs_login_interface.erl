@@ -8,7 +8,7 @@
 %%%-------------------------------------------------------------------
 -module(gs_login_interface).
 -author("mawenhong").
--include("def_gs_ps.hrl").
+-include("gs_ps_def.hrl").
 
 -export([login_/1, logout_/1]).
 

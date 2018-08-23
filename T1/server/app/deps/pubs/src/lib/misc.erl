@@ -16,7 +16,7 @@
     b2i/1, i2b/1, ntoa/1, ntoab/1,
     atom_to_binary/1, to_atom/1, create_atom/2, list_to_string_suffix/2,
     register_process/2, register_process/3, registered_name/0, registered_name/1,
-    process_node/1,  whereis_lg/1,
+    process_node/1,  whereis_lg/1, allow_node/1,
     is_alive/1, is_alive_g/1, is_alive_lg/1,
     ip/0, peername/1, ip_string/1,
     crc32/1, mod_1/2, clamp/3, rand/2,
@@ -27,6 +27,7 @@
     string_to_term/1, term_to_string/1
 ]).
 
+%%-------------------------------------------------------------------
 os_type() ->
     case os:type() of
         {OsFamily, _OsName} -> OsFamily;
@@ -44,17 +45,21 @@ get_dict_def(Key, Def) ->
 atom_to_binary(A) ->
     list_to_binary(atom_to_list(A)).
 
+%%-------------------------------------------------------------------
 create_atom(Prefix, List) ->
     to_atom(lists:concat(lists:flatten([Prefix] ++ lists:map(fun(T) -> ['_', T] end, List)))).
 
+%%-------------------------------------------------------------------
 register_process(Pid, Name) ->
     erlang:register(misc:to_atom(Name), Pid).
 
 
+%%-------------------------------------------------------------------
 register_process(Pid, Prefix, List) ->
     ProcessName = misc:create_atom(Prefix, List),
     erlang:register(ProcessName, Pid).
 
+%%-------------------------------------------------------------------
 registered_name() -> registered_name(self()).
 
 registered_name(Pid) ->
@@ -63,6 +68,7 @@ registered_name(Pid) ->
         _ -> unknown
     end.
 
+%%-------------------------------------------------------------------
 process_node(Pid) when is_pid(Pid) ->
     erlang:node(Pid);
 process_node(PidName) when is_atom(PidName) ->
@@ -75,6 +81,19 @@ process_node(PidName) when is_atom(PidName) ->
         Pid -> erlang:node(Pid)
     end.
 
+%%-------------------------------------------------------------------
+allow_node(undefined) ->
+    ok;
+allow_node(Name) when is_list(Name) ->
+    ?WARN("allown node[~ts]", [Name]),
+    catch net_kernel:allow([list_to_atom(Name)]);
+allow_node(NameAtom) when is_atom(NameAtom) ->
+    ?WARN("allown node[~p]", [NameAtom]),
+    catch net_kernel:allow([NameAtom]);
+allow_node(_Any) ->
+    ok.
+
+%%-------------------------------------------------------------------
 whereis_lg(Pid) when is_pid(Pid) ->
     Pid;
 whereis_lg(PsName) when is_atom(PsName) ->
@@ -83,6 +102,7 @@ whereis_lg(PsName) when is_atom(PsName) ->
         Pid -> Pid
     end.
 
+%%-------------------------------------------------------------------
 %% local
 is_alive(0)-> false;
 is_alive(undefined) -> false;
@@ -94,6 +114,7 @@ is_alive(Name) when is_atom(Name) ->
 is_alive(Pid) when is_pid(Pid) ->
     erlang:is_process_alive(Pid).
 
+%%-------------------------------------------------------------------
 %% global
 is_alive_g(0)-> false;
 is_alive_g(undefined) -> false;
@@ -105,6 +126,7 @@ is_alive_g(Name) when is_atom(Name) ->
 is_alive_g(Pid) when is_pid(Pid) ->
     erlang:is_process_alive(Pid).
 
+%%-------------------------------------------------------------------
 %% local and global
 is_alive_lg(0)-> false;
 is_alive_lg(undefined) -> false;
@@ -116,10 +138,11 @@ is_alive_lg(Name) when is_atom(Name) ->
 is_alive_lg(Pid) when is_pid(Pid) ->
     erlang:is_process_alive(Pid).
 
-%%
+%%-------------------------------------------------------------------
 crc32(Str) -> erlang:adler32(Str).
 
 
+%%-------------------------------------------------------------------
 %% @doc convert other type to atom
 to_atom(Msg) when is_atom(Msg) ->
     Msg;
@@ -136,10 +159,11 @@ list_to_atom2(List) when is_list(List) ->
         Atom when is_atom(Atom) -> Atom
     end.
 
+%%-------------------------------------------------------------------
 list_to_string_suffix([], SuffixStr)-> SuffixStr;
 list_to_string_suffix(List, SuffixStr)-> string:join(List, SuffixStr).
 
-%%
+%%-------------------------------------------------------------------
 lists_rand_get([]) ->
     undefined;
 lists_rand_get([X]) ->
@@ -149,7 +173,7 @@ lists_rand_get(List) ->
     X = rand_tool:rand() rem N,
     lists:nth(X, List).
 
-%% 
+%%-------------------------------------------------------------------
 lists_rand_get_n(_List, 0) ->
     [];
 lists_rand_get_n([], _N) ->
@@ -160,6 +184,7 @@ lists_rand_get_n(List, N) ->
     lists:sublist( misc:lists_shuffle(List), N).
 
 
+%%-------------------------------------------------------------------
 -spec lists_shuffle(ListIn::list()) -> ListOut::list().
 lists_shuffle([]) ->
     [];
@@ -169,12 +194,13 @@ lists_shuffle(L) ->
     List1 = [{rand:uniform(), X} || X <- L],
     List2 = lists:keysort(1, List1),
     [E || {_, E} <- List2].
-%%
+%%-------------------------------------------------------------------
 md5(S) ->
     Md5_bin =  erlang:md5(S),
     Md5_list = binary_to_list(Md5_bin),
     lists:flatten(list_to_hex(Md5_list)).
 
+%%-------------------------------------------------------------------
 list_to_hex(L) ->
     lists:map(fun(X) -> int_to_hex(X) end, L).
 
@@ -198,10 +224,11 @@ int_to_hex_1(N, Acc) ->
     M = N rem 256,
     int_to_hex_1(X, [less_256_hex(M) | Acc]).
 
-%%
+%%-------------------------------------------------------------------
 rand(Min, Min)-> Min;
 rand(Min, Max)-> Min + rand:uniform(Max - Min).
 
+%%-------------------------------------------------------------------
 -spec clamp(X,Min,Max) -> Min | X | Max when X::number(),Min::number(),Max::number().
 clamp(X,Min,Max) when Min =< Max andalso X < Min ->
     Min;
@@ -211,6 +238,7 @@ clamp(X,Min,Max) when Min =< Max ->
     X.
 
 
+%%-------------------------------------------------------------------
 %% Faster alternative to proplists:get_value/3.
 get_value(Key, Opts, Default) ->
     case lists:keyfind(Key, 1, Opts) of
@@ -218,9 +246,10 @@ get_value(Key, Opts, Default) ->
         _ -> Default
     end.
 
+%%-------------------------------------------------------------------
 callstack()->
    try erlang:error(callStack) catch _ : _ : ST -> ST end.
-
+%%-------------------------------------------------------------------
 %% Format IPv4-mapped IPv6 addresses as IPv4, since they're what we see
 %% when IPv6 is enabled but not used (i.e. 99% of the time).
 ntoa({0,0,0,0,0,16#ffff,AB,CD}) ->
@@ -235,14 +264,14 @@ ntoab(IP) ->
         _ -> "[" ++ Str ++ "]"
     end.
 
-
+%%-------------------------------------------------------------------
 %获取本机IP地址
 -spec ip() -> string().
 ip() ->
     {ok, Hostname} = inet:gethostname(),
     {ok, Address}  = inet:getaddr(Hostname, inet),
     ip_string(Address).
-
+%%-------------------------------------------------------------------
 -spec peername(Socket) -> {IP,Port} when
     Socket::port(),IP::string(),Port::integer().
 peername(Socket) ->
@@ -253,11 +282,13 @@ peername(Socket) ->
             {"0.0.0.0",0}
     end.
 
+%%-------------------------------------------------------------------
 ip_string(Address)->
     AList = tuple_to_list(Address),
     [A1,A2,A3,A4 | _] = AList,
     io_lib:format( "~w.~w.~w.~w", [A1,A2,A3,A4] ).
 
+%%-------------------------------------------------------------------
 start_app(App)->
     case application:start(App) of
         ok -> true;
@@ -265,24 +296,29 @@ start_app(App)->
         {error,Reason} -> Reason
     end.
 
+%%-------------------------------------------------------------------
 start_all_app(App) ->
     case application:ensure_all_started(App) of
         {ok,_} -> true;
         {error,Reason} -> Reason
     end.
 
+%%-------------------------------------------------------------------
 mod_1(Val, Base) -> (Val rem Base) + 1.
 
+%%-------------------------------------------------------------------
 b2i(true) -> 1;
 b2i(false) -> 0;
 b2i(1) -> 1;
 b2i(0) -> 0.
 
+%%-------------------------------------------------------------------
 i2b(0) -> false;
 i2b(1) -> true;
 i2b(false) -> false;
 i2b(true) -> true.
 
+%%-------------------------------------------------------------------
 -spec string_to_term(String) ->term() when String::string().
 string_to_term([]) ->
     [];
@@ -299,10 +335,12 @@ string_to_term(String) when erlang:is_list(String) ->
 string_to_term(String) ->
     String.
 
+%%-------------------------------------------------------------------
 term_to_string(Term) ->
     binary_to_list(list_to_binary(io_lib:format("~w", [Term]))).
 
 
+%%-------------------------------------------------------------------
 %% Ideally, you'd want Fun to run every IdealInterval. but you don't
 %% want it to take more than MaxRatio of IdealInterval. So if it takes
 %% more then you want to run it less often. So we time how long it
@@ -353,6 +391,7 @@ halt(Msg) ->
     timer:sleep(?CRASH_WAIT_SECONDS * 1000),
     erlang:halt().
 
+%%-------------------------------------------------------------------
 nnl(N) ->
     S = lists:duplicate(N, "\n"),
     ?DEBUG("~ts", [lists:flatten(S)]).
@@ -361,6 +400,7 @@ nnl() ->
     S = lists:duplicate(15, "\n"),
     ?DEBUG("~ts", [lists:flatten(S)]).
 
+%%-------------------------------------------------------------------
 system_info() ->
     %% observer_backend:sys_info
     ?WARN("~n======================================================================================================~n\t"
@@ -394,6 +434,7 @@ system_info() ->
     ),
     ok.
 
+%%-------------------------------------------------------------------
 ulimit(unix) ->
     os:cmd("ulimit -a");
 ulimit(_) -> "unknown".

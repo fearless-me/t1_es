@@ -23,7 +23,7 @@
 %%% public functions
 %%%===================================================================
 start_link() ->
-    gen_serverw:start_link({local, ?MODULE}, ?MODULE, [], []).
+    gen_serverw:start_link({global, ?TEAM_OTP}, ?MODULE, [], []).
 
 %%%===================================================================
 %%% Internal functions
@@ -31,10 +31,9 @@ start_link() ->
 mod_init(_Args) ->
     erlang:process_flag(trap_exit, true),
     erlang:process_flag(priority, high),
-    global:register_name(?TEAM_OTP, self()),
-    ets:new(?Ets_TeamList, [protected, named_table, {keypos, #m_team_info.teamID},{read_concurrency, true}]),	%% 队伍信息
-    ets:new(?Ets_RoleIDRefTeamID, [protected, named_table, {keypos, #m_uid_ref_tid.roleID},{read_concurrency, true}]),	%% 队伍信息
-    ets:new(?Ets_RoleMatchTeam, [protected, named_table, {keypos, #m_player_match.roleID},{read_concurrency, true}]),	%% 队伍信息
+%%    ets:new(?Ets_TeamList, [protected, named_table, {keypos, #m_team_info.teamID},{read_concurrency, true}]),	%% 队伍信息
+%%    ets:new(?Ets_RoleIDRefTeamID, [protected, named_table, {keypos, #m_uid_ref_tid.roleID},{read_concurrency, true}]),	%% 队伍信息
+%%    ets:new(?Ets_RoleMatchTeam, [protected, named_table, {keypos, #m_player_match.roleID},{read_concurrency, true}]),	%% 队伍信息
     team_logic:tickMsg(),
     ?INFO("[~p] init ok",[self()]),
 
@@ -46,71 +45,12 @@ do_handle_call(Request, From, State) ->
     {reply, ok, State}.
 
 %%--------------------------------------------------------------------
-do_handle_info({queryMatchState, Msg ,_FromPid },State) ->
-    team_logic:queryMatchState(Msg),
-    {noreply,State};
-do_handle_info({sendInitTeamInfo, Msg ,_FromPid },State) ->
-    team_logic:sendInitTeamInfo(Msg),
-    {noreply,State};
+
 do_handle_info({createTeam, Msg ,_FromPid },State) ->
     team_logic:createNewTeam(Msg),
     {noreply,State};
-do_handle_info({dimissTeam, Msg ,_FromPid },State) ->
-    team_logic:dismissTeam(Msg),
-    {noreply,State};
-do_handle_info({joinTeam, Msg ,_FromPid },State) ->
-    team_logic:joinTeam(Msg),
-    {noreply,State};
-do_handle_info({matchTeam, Msg ,_FromPid },State) ->
-    team_logic:matchTeam(Msg),
-    {noreply,State};
-do_handle_info({cancelMatchTeam, Msg ,_FromPid },State) ->
-    team_logic:cancelMatchTeam( Msg ),
-    {noreply,State};
 do_handle_info({leaveTeam, Msg ,_FromPid },State) ->
     team_logic:leaveTeam(Msg),
-    {noreply,State};
-do_handle_info({leaveTeamAndEnter, Msg ,_FromPid },State) ->
-    team_logic:leaveTeamAndEnter(Msg),
-    {noreply,State};
-do_handle_info({kickMember, Msg ,_FromPid },State) ->
-    team_logic:kickMember(Msg),
-    {noreply,State};
-do_handle_info({changeLeader, Msg ,_FromPid },State) ->
-    team_logic:changeLeader(Msg),
-    {noreply,State};
-do_handle_info({leaderOffline, Msg ,_FromPid },State) ->
-    team_logic:leaderOffline(Msg),
-    {noreply,State};
-do_handle_info({changeTargetMapID, Msg ,_FromPid },State) ->
-    team_logic:changeTargetMap(Msg),
-    {noreply,State};
-do_handle_info({changeMapUpdateTeamInfo, Msg ,_FromPid },State) ->
-    team_logic:changeMapUpdateTeamInfo(Msg),
-    {noreply,State};
-do_handle_info({leaderStartCopymap, Msg ,_FromPid },State) ->
-    team_logic:leaderStartCopyMap(Msg),
-    {noreply,State};
-do_handle_info({memberStartCopymapAck, Msg ,_FromPid },State) ->
-    team_logic:memberStartCopyMapAck(Msg),
-    {noreply,State};
-do_handle_info({setSearchFlag, Msg ,_FromPid },State) ->
-    team_logic:setSearchFlag(Msg),
-    {noreply,State};
-do_handle_info({updateMemberInfo, Msg ,_FromPid },State) ->
-    team_logic:updateMemberInfo(Msg),
-    {noreply,State};
-do_handle_info({assistCopyMapStart, Msg ,_FromPid },State) ->
-    team_logic:assistCopyMapStart(Msg),
-    {noreply,State};
-do_handle_info({assistCopyMapCancel, Msg ,_FromPid },State) ->
-    team_logic:assistCopyMapCancel(Msg),
-    {noreply,State};
-do_handle_info({noticeLeader, Msg ,_FromPid },State) ->
-    team_logic:noticeLeader(Msg),
-    {noreply,State};
-do_handle_info({nodedown, Msg ,_FromPid },State) ->
-    team_logic:onServerDown(Msg),
     {noreply,State};
 do_handle_info(tick,State) ->
     team_logic:tick(),

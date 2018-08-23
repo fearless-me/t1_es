@@ -32,7 +32,7 @@ tickMsg() ->
 tick() ->
 	tickMsg(),
 	Now = misc_time:milli_seconds(),
-	L = ets:tab2list(?Ets_RoleMatchTeam),
+	L = mne_ex:dirty_all_keys(m_player_match),
 	tickMatch(Now, L, ?MatchTickControlMax),
 	ok.
 
@@ -58,7 +58,7 @@ createNewTeam({CopyMapID, TargetRoleID, MemberInfo}) ->
 %%canCreateTeam(0, _RoleID) ->
 %%	{false, ?ErrorCode_TeamCantChangeMapZero};
 canCreateTeam(_CopyMapID, RoleID) ->
-    case csTeamInterface:getTeamID(RoleID) of
+    case cs_team_interface:getTeamID(RoleID) of
         TeamID when TeamID > 0 ->
             {false, -1};
         _ ->
@@ -80,10 +80,10 @@ doCreateNewTeam(CopyMapID, TargetRoleID, #recTeamMemberInfo{
         searchStartTime = time:getSyncTimeFromDBS(),
         memberList = [MemberInfo]
     },
-    ets:delete(?Ets_RoleMatchTeam, RoleID),
-    true = ets:insert(?Ets_RoleIDRefTeamID,
+    mne_ex:dirty_delete(m_player_match, RoleID),
+    true = mne_ex:dirty_write(
         #m_uid_ref_tid{roleID = RoleID, teamID = NewTeamID, serverID = ServerID}),
-    true = ets:insert(?Ets_TeamList, TeamInfo),
+    true = mne_ex:dirty_write(?Ets_TeamList, TeamInfo),
 
     ?DEBUG("[~p]create Team[~p] with[~p], leader[~p],targetMap[~p], member[~p]",
         [RoleID, NewTeamID, TargetRoleID, RoleID, CopyMapID, RoleID]),
@@ -105,7 +105,7 @@ leaveTeam({RoleID, Pid, NetPid, IsNotify}) ->
     ok.
 
 canLeaveTeam(RoleID) ->
-    case csTeamInterface:getTeamID(RoleID) of
+    case cs_team_interface:getTeamID(RoleID) of
         TeamID when TeamID > 0 ->
             {true, ets:lookup(?Ets_TeamList, TeamID)};
         _ ->
@@ -117,7 +117,7 @@ doLeaveTeam(RoleID, Pid, NetPid,
 ) ->
 
     onMemberLeaveTeam(RoleID, LeaderID, TeamInfo),
-    ets:delete(?Ets_RoleIDRefTeamID, RoleID),
+    mne_ex:dirty_delete(m_uid_ref_tid, RoleID),
     ?DEBUG("[~p] leave team[~p],leadre[~p -> 0]",
         [RoleID, TeamID, LeaderID]),
 
@@ -140,13 +140,13 @@ onMemberLeaveTeam(LeaderID, LeaderID,
 
     case NewLeaderID =:= 0 of
         true ->
-            ets:delete(?Ets_TeamList, TeamID);
+            mne_ex:dirty_delete(m_team_info, TeamID);
         _ ->
             NewTeamInfo = TeamInfo#m_team_info{
                 leaderID = NewLeaderID,
                 memberList = lists:keydelete(LeaderID, #recTeamMemberInfo.roleID, ML)
             },
-            ets:insert(?Ets_TeamList, NewTeamInfo),
+            mne_ex:write(NewTeamInfo),
             ok
     end,
     ok;
@@ -157,13 +157,13 @@ onMemberLeaveTeam(RoleID, _LeaderID,
     NML = lists:keydelete(RoleID, #recTeamMemberInfo.roleID, ML),
     case NML of
         [] ->
-            ets:delete(?Ets_TeamList, TeamID),
+            mne_ex:dirty_delete(m_team_info, TeamID),
             ok;
         _ ->
             NewTeamInfo = TeamInfo#m_team_info{
                 memberList = lists:keydelete(RoleID, #recTeamMemberInfo.roleID, ML)
             },
-            ets:insert(?Ets_TeamList, NewTeamInfo),
+            mne_ex:write(NewTeamInfo),
             ok
     end,
     ok.

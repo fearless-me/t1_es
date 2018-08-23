@@ -8,10 +8,10 @@
 %%%-------------------------------------------------------------------
 -module(gs_interface).
 -author("mawenhong").
--include("def_gs.hrl").
+-include("gs_def.hrl").
 -include("logger.hrl").
 -include("pub_rec.hrl").
--include("def_gs_ps.hrl").
+-include("gs_ps_def.hrl").
 
 
 -export([

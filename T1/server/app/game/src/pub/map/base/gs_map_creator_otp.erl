@@ -12,7 +12,7 @@
 -behaviour(gen_serverw).
 -include("logger.hrl").
 -include("pub_def.hrl").
--include("def_gs_ps.hrl").
+-include("gs_ps_def.hrl").
 -include("inc_map.hrl").
 
 %%
