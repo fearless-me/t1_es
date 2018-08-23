@@ -464,10 +464,16 @@ reload_if_necessary(CompileFun, SrcFile, Module, _OldBinary, _Binary, Options, W
 
 reload(Module) ->
     code:purge(Module),
-    case code:load_file(Module) of
-        {module, Module} -> ?WARN("~p: Reload.", [Module]);
-        {error, nofile} -> ?ERROR("reload error:~p,~p", [Module, nofile])
-    end.
+    case code:is_loaded(hot_update) of
+        false ->
+            case code:load_file(Module) of
+                {module, Module} -> ?WARN("~p: Reload.", [Module]);
+                {error, nofile} -> ?ERROR("reload error:~p,~p", [Module, nofile])
+            end;
+        _ ->
+            hot_update:reload(Module)
+    end,
+    ok.
 
 print_results(_Module, SrcFile, [], []) ->
     Msg = io_lib:format("~s: Recompiled.", [filename:basename(SrcFile)]),

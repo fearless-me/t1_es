@@ -20,7 +20,7 @@ reload(Param)->
 					io:format("want to update modules:~p ok~n~n",[Other])
 			end;
 		_ ->
-			rpc:call(Node, update, u, [])
+			io:format("want to update modules:~p ok~n~n",[Other])
 	end,
     erlang:halt().
 

@@ -18,12 +18,16 @@
 
 start_master() ->
     ?WARN("try to start master node ..."),
-    CGNode = misc_dist:start_slave('127.0.0.1', center_g, " -s dist start "),
-    CTNode = misc_dist:start_slave('127.0.0.1', center_t, " -s dist start "),
-    CFNode = misc_dist:start_slave('127.0.0.1', center_f, " -s dist start "),
-    lib_cs_share:sync(CGNode),
-    lib_cs_share:sync(CTNode),
-    lib_cs_share:sync(CFNode),
+    gen_server:start({global, pool_master}, pool, [], []),
+    start_master_slave('127.0.0.1', center_g, " -s dist start "),
+    start_master_slave('127.0.0.1', center_t, " -s dist start "),
+    start_master_slave('127.0.0.1', center_f, " -s dist start "),
+    ok.
+
+start_master_slave(Host, SlaveName, Args) ->
+    Node = misc_dist:start_slave(Host, SlaveName, Args),
+    pool:attach(Node),
+    lib_cs_share:sync(Node),
     ok.
 
 start_slave(SupPid) ->
