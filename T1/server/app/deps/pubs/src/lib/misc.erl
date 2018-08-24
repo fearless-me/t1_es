@@ -12,7 +12,7 @@
 
 %% API
 -export([
-    start_app/1, start_all_app/1, os_type/0, halt/1, halt/2, nnl/0,  nnl/1, system_info/0,
+    start_app/1, start_all_app/1, os_type/0, halt/1, halt/2, nnl/0,  nnl/1, system_info/0, set_system_time/1,
     b2i/1, i2b/1, ntoa/1, ntoab/1,
     atom_to_binary/1, to_atom/1, create_atom/2, list_to_string_suffix/2,
     register_process/2, register_process/3, registered_name/0, registered_name/1,
@@ -439,3 +439,13 @@ ulimit(unix) ->
     os:cmd("ulimit -a");
 ulimit(_) -> "unknown".
 
+set_system_time(Date) ->
+    do_set_system_time(misc:os_type(), Date).
+
+do_set_system_time(unix, Date) ->
+    Cmd = io_lib:format("date -s \"~ts\"", [Date]),
+    os:cmd(Cmd);
+do_set_system_time(win32, Date) ->
+    [Date1, Time1] = string:tokens(Date, " "),
+    Cmd = io_lib:format("date ~ts && time ~ts", [Date1, Time1]),
+    os:cmd(Cmd).

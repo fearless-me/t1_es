@@ -16,10 +16,10 @@
 -export([test/0]).
 -endif.
 
--define(PORT_BASE, 40000).
--define(PORT_MOD, 19000).
--define(PORT_HASH_MIN, 59001).
--define(PORT_HASH_MAX, 60000).
+-define(PORT_BASE, 30000).
+-define(PORT_MOD, 16999).
+-define(PORT_HASH_MIN, 47001).
+-define(PORT_HASH_MAX, 49000).
 
 %%-------------------------------------------------------------------
 get_server_port() -> get_config(node()).

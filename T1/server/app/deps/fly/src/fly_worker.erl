@@ -468,7 +468,7 @@ reload(Module) ->
         false ->
             case code:load_file(Module) of
                 {module, Module} -> ?WARN("~p: Reload.", [Module]);
-                {error, nofile} -> ?ERROR("reload error:~p,~p", [Module, nofile])
+                {error, What} -> ?ERROR("reload error:~p,~p", [Module, What])
             end;
         _ ->
             hot_update:reload(Module)

@@ -45,11 +45,10 @@ do_reload_on_slave(Module, Binary, Filename) ->
                 Error ->
                     ?ERROR("~p: ~p reload error ~p.",[Module, Node, Error])
 			end
-		end, slave_excl_self()).
+		end, nodes_excl_me()).
 
 
-slave_excl_self() ->
-	pool:get_nodes() -- [node()].
+nodes_excl_me() -> pool:get_nodes() -- [node()].
 
 
 slave_reload_module(Module, Binary, Filename)->
