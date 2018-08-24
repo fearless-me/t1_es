@@ -28,11 +28,11 @@
 
 %% @doc Execute a mysql prepared statement with given params.
 execute_stmt(PoolName, StatementRef, Params) ->
-    mysql_poolboy:execute(PoolName, StatementRef, Params).
+    mysql_poolboy:execute(PoolName, StatementRef, encode_params(Params)).
 
 %% @doc Execute a mysql prepared statement with given params and timeout
 execute_stmt(PoolName, StatementRef, Params, Timeout) ->
-    mysql_poolboy:execute(PoolName, StatementRef, Params, Timeout).
+    mysql_poolboy:execute(PoolName, StatementRef, encode_params(Params), Timeout).
 
 %% @doc Executes a query to a mysql connection in a given pool.
 query(PoolName, Query) ->
@@ -41,12 +41,12 @@ query(PoolName, Query) ->
 %% @doc Executes a query to a mysql connection in a given pool with either
 %% list of query parameters or a timeout value.
 query(PoolName, Query, ParamsOrTimeout) ->
-    mysql_poolboy:query(PoolName, Query, ParamsOrTimeout).
+    mysql_poolboy:query(PoolName, Query, encode_params(ParamsOrTimeout)).
 
 %% @doc Executes a query to a mysql connection in a given pool with both
 %% a list of query parameters and a timeout value.
 query(PoolName, Query, Params, Timeout) ->
-    mysql_poolboy:query(PoolName, Query, Params, Timeout).
+    mysql_poolboy:query(PoolName, Query, encode_params(Params), Timeout).
 
 %% @doc Wrapper to poolboy:transaction/2. Since it is not a mysql transaction.
 %% Example instead of:
@@ -149,3 +149,22 @@ scalar_1([], Def) -> Def;
 scalar_1([[First | _] | _], _Def) ->  First;
 scalar_1(_, Def) -> Def.
 
+
+%% @doc Encodes a term as an ANSI SQL literal 
+encode_params(Params) when is_list(Params) ->
+    [ encode(Param) || Param <- Params];
+encode_params(Other) ->
+    Other.
+
+
+%% @doc only encode list (string)
+encode(String) when is_list(String) ->
+    case is_utf8_list(String) of
+    true -> list_to_binary(String);
+    _Any -> unicode:characters_to_binary(String)
+    end;
+encode(Other) ->
+    Other.
+
+is_utf8_list(List) ->
+    lists:any(fun(X)-> X < 256 andalso X >= 0 end, List).

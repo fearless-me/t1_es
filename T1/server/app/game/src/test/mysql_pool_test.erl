@@ -15,6 +15,8 @@
     query/0, transaction/0, with/0
 ]).
 
+-export([test/0]).
+
 start_alone()->
     application:ensure_all_started(mysql_poolboy),
     {PoolOptions, MySqlOptions} = get_conf(),
@@ -58,6 +60,14 @@ with()->
         %% Do some stuff in the UTC time zone...
         ok = mysql:query(Pid, "SET time_zone = ?", [OldTz])
                               end).
+
+
+test() ->
+    {ok, Pid} = mysql:start_link([{host, "localhost"}, {user, "root"},{password, "1234"}, {database, "t1_player"}]),
+    R1 = mysql:query(Pid, "insert test values(?,?,?)", [misc_time:milli_seconds(), "我是中文", "中国很牛逼"]),
+    R2 = mysql:query(Pid, "select * from test where id = ?", [1]),
+    io:format("~n ~p ~n ~p~n",[R1, R2]),
+    ok.
 
 %%{ok, Pid} = mysql:start_link([{host, "localhost"}, {user, "root"},{password, "1234"}, {database, "player_data"}])
 
