@@ -56,7 +56,8 @@ do_db_pool_init([Ins | _], PoolRef, Func) ->
     Conf = rec_to_map(Func, Ins),
     db_proxy:add_pool(PoolRef, Conf, ?INIT_DB_POOL_TIMEOUT);
 do_db_pool_init(_, PoolRef, _Func) ->
-    ?FATAL("init db pool ~p, but config not exists",[PoolRef]),
+    ?FATAL("node ~p sid ~p init db pool ~p, but config not exists",
+        [node(), gs_conf:get_sid(), PoolRef]),
     throw(db_pool_config_error).
 
 
