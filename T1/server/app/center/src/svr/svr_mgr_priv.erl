@@ -20,14 +20,13 @@
 
 %%%-------------------------------------------------------------------
 init() ->
-	lib_cs_cgs_cache:init(),
 	tick_msg(),
 	ok.
 
 
 %%%-------------------------------------------------------------------
 tick_msg() ->
-	erlang:send_after(?SVRMGR_TICK, self(), tickNow).
+	erlang:send_after(?SERVER_MGR_TICK, self(), tickNow).
 
 tick() ->
 	tick_msg(),
@@ -36,13 +35,13 @@ tick() ->
 
 check() ->
 	NowTime = misc_time:milli_seconds(),
-	ServerList = ets:tab2list(?GCS_CK_REG),
+	ServerList = ets:tab2list(?CS_SERVERS_CHECK_ETS),
 	do_check(NowTime, ServerList, []),
 	ok.
 
 do_check(_NowTime, [], Acc) ->
 	Acc;
-do_check(NowTime, [#recServerCheck{id = ServerID, time = ConnectTime} = Info | List], Acc) ->
+do_check(NowTime, [#m_all_server_check{id = ServerID, time = ConnectTime} = Info | List], Acc) ->
 	NewAcc =
 		case NowTime > ConnectTime + ?ServerAckTime of
 			true ->
@@ -56,7 +55,7 @@ do_check(NowTime, [#recServerCheck{id = ServerID, time = ConnectTime} = Info | L
 
 serv_ack_timeout(ServerID) ->
 	?WARN("wait server[~p] ack timeout",[ServerID]),
-	lib_cs_cgs_cache:del_from_check(ServerID),
+	cs_cache:del_from_check(ServerID),
 	cs_interface:send_msg_2_server_with_sid(ServerID, {ackTimeOut, self()}),
 %%	 worker 心跳自动退出
 %%	csInterface:sendMsg2ServerWorkerWithID(ServerID, ackTimeOut),
@@ -65,13 +64,13 @@ serv_ack_timeout(ServerID) ->
 	ok.
 
 server_ready(_WorkerPid, {ServerID})->
-	lib_cs_cgs_cache:del_from_check(ServerID),
+	cs_cache:del_from_check(ServerID),
 	ok.
 
 %%%-------------------------------------------------------------------
 ack_now(_WindowPid, {ServerID})->
-	case ets:lookup(?GCS_CK_REG, ServerID) of
-		[#recServerCheck{id = ServerID}] ->
+	case ets:lookup(?CS_SERVERS_CHECK_ETS, ServerID) of
+		[#m_all_server_check{id = ServerID}] ->
 			case mne_ex:dirty_read(m_server_info, ServerID) of
 				[#m_server_info{node = GSNode, worker = WorkerPid}]->
 					ps:send(WorkerPid, sync_all_data),
@@ -122,7 +121,7 @@ do_register(FromPid, ServerId, ServerType, ServerName) ->
 
 %%			lib_cs_cgs_cache:insertServerInfo(Info),
 			mne_ex:dirty_write(Info),
-			lib_cs_cgs_cache:add_to_check(ServerId),
+			cs_cache:add_to_check(ServerId),
 			ps:send_with_from(FromPid, registerAck, {true, Pid}),
 			?WARN("server[~p] name[~ts] wnd[~p] worker[~p|~p] registered, wait ack",
 				[GSNode, ServerName, FromPid, Pid, misc:registered_name(Pid)]),

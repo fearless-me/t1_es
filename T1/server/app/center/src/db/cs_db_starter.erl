@@ -6,10 +6,10 @@
 %%% @end
 %%% Created : 10. 八月 2018 15:45
 %%%-------------------------------------------------------------------
--module(gs_db_starter).
+-module(cs_db_starter).
 -author("mawenhong").
 -include("logger.hrl").
--include("gs_dbpool_def.hrl").
+-include("cs_dbpool_def.hrl").
 
 %% API
 -export([init_pool/0]).
@@ -21,22 +21,13 @@
 %%--------------------------------------------------------------------
 init_pool() ->
     true = misc:start_app(db_proxy),
-    Sid = gs_conf:get_sid(),
+    Sid = cs_conf:get_sid(),
     {_PoolOptions, MySqlOptions} = get_inst_opt(),
     {ok, Pid} = mysql:start_link(MySqlOptions),
-
-    ?INFO("init player db pool ..."),
-    db_pool_init(Pid, get_player_db_conf, [Sid], ?PLAYER_DB_POOL_NAME, fun gs_db_handler:handler/4),
-    ?INFO("init player db pool done"),
-    ?INFO("#"),
-
-    ?INFO("init account db pool ..."),
-    db_pool_init(Pid, get_account_db_conf, [Sid], ?ACCOUNT_DB_POOL_NAME, fun gs_db_handler:handler/4),
-    ?INFO("init account db pool done"),
-    ?INFO("#"),
+    
 
     ?INFO("init public db pool ..."),
-    db_pool_init(Pid, get_public_db_conf, [Sid], ?PUBLIC_DB_POOL_NAME, fun gs_db_handler:handler/4),
+    db_pool_init(Pid, get_public_db_conf, [Sid], ?PUBLIC_DB_POOL_NAME, fun cs_db_handler:handler/4),
     ?INFO("init public db pool done"),
     ?INFO("#"),
 
@@ -55,7 +46,7 @@ db_pool_init(Pid, StmtRef, Params, PoolRef, Func) ->
 do_db_pool_init([Ins | _], PoolRef, Func) ->
     Conf = rec_to_map(Func, Ins),
     db_proxy:add_pool(PoolRef, Conf, ?INIT_DB_POOL_TIMEOUT);
-do_db_pool_init(_, PoolRef, _Func) ->
+do_db_pool_init([], PoolRef, _Func) ->
     ?ERROR("init db pool ~p, but config not exists",[PoolRef]).
 
 
@@ -97,7 +88,7 @@ modify_record(R) -> R.
 %%-------------------------------------------------------------------
 get_inst_opt() ->
     PoolOptions = [{size, 1}, {max_overflow, 1}],
-    Conf1 = gs_conf:get_db_conf(),
+    Conf1 = cs_conf:get_db_conf(),
     Conf2 = case lists:keyfind(port, 1, Conf1) of
                 {port, Port} when is_number(Port) ->
                     Conf1;
@@ -110,9 +101,7 @@ get_inst_opt() ->
         {
             prepare,
             [
-                {get_player_db_conf, "select * from player_db_conf where id=?"},
-                {get_public_db_conf, "select * from public_db_conf where id=?"},
-                {get_account_db_conf, "select * from account_db_conf where id=?"}
+                {get_public_db_conf, "select * from public_db_conf where id=?"}
             ]
         }
     ],

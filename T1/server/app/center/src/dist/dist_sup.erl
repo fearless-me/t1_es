@@ -6,7 +6,7 @@
 %%% @end
 %%% Created : 22. 八月 2018 15:05
 %%%-------------------------------------------------------------------
--module(cs_dist_sup).
+-module(dist_sup).
 -author("mawenhong").
 
 
@@ -67,7 +67,7 @@ init([]) ->
             {one_for_one, 5, 10},
             [
                 %% 把逻辑进程挂到这个下面
-                ?CHILD(cs_dist_core_otp, worker)
+                ?CHILD(dist_core_otp, worker)
             ]
         }
     }.

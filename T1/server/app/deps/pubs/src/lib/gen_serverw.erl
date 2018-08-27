@@ -83,7 +83,7 @@ init(Args) ->
         [Module, ArgList] = Args,
         put(?LogicModule, Module),
         Ret = Module:mod_init(ArgList),
-        ?INFO("~p|~p init ok", [Module, self()]),
+        ?INFO("~p|~p|~p init ok", [misc:registered_name(), Module, self()]),
         Ret
     catch _ : Error : ST ->
         ?ERROR("module ~p,args ~p,error ~p,st ~p", [get(?LogicModule), Args, Error, ST]),

@@ -11,34 +11,14 @@
 
 %% API
 -export([
-    start_auto_reload/1,start_gc_vm/2, start_conf/2, start_errlog/1,
-    start_logs/1, start_broadcast/1, start_db_worker/1,
-    start_listener_15555/1, 
-    start_logic_sup/1, start_login/1,
-    start_watchdog/1, start_serv_cache/1, start_map_root_supervisor/1,
-    start_serv_loader/1, start_system_monitor/1, start_center/1, start_rpc/1
-
+    start_gc_vm/2, start_db_worker/1, start_listener_15555/1,
+    start_otp/3, start_otp/4, start_otp/5
 ]).
 
 %% Helper macro for declaring children of supervisor
 -define(CHILD(SupPid, I, Type), supervisor:start_child(SupPid, {I, {I, start_link, []}, permanent, 5000, Type, [I]})).
 -define(CHILD(SupPid, I, Type, Params), supervisor:start_child(SupPid, {I, {I, start_link, Params}, permanent, 5000, Type, [I]})).
 -define(CHILD(SupPid, Name, I, Type, Params), supervisor:start_child(SupPid, {Name, {I, start_link, Params}, permanent, 5000, Type, [Name]})).
-
-
-start_logs(_SupPid) ->
-    loggerS:start().
-
-start_errlog(_SupPid) ->
-    common_error_logger:start(game_sup, game).
-
-start_watchdog(SupPid) ->
-    {ok, _} = ?CHILD(SupPid, watchdog, worker, [fun gs_watchdog_hook:task_list/0]),
-    ok.
-
-start_conf(_SupPid, FileName) ->
-    gs_conf:start(FileName),
-    ok.
 
 
 start_gc_vm(SupPid, MemFraction) ->
@@ -54,47 +34,22 @@ start_listener_15555(_SupPid) ->
         gs_player_handler
     ).
 
-start_auto_reload(_SupPid) ->
-    ok = fly:start().
-
-start_serv_cache(SupPid) ->
-    {ok, _} = ?CHILD(SupPid, gs_cache_otp, worker),
-    ok.
-
-start_login(SupPid) ->
-    {ok, _} = ?CHILD(SupPid, login_otp, worker),
-    ok.
-
-start_map_root_supervisor(SupPid) ->
-    {ok, _} = ?CHILD(SupPid, gs_map_root_sup, supervisor),
-    ok.
 
 start_db_worker(_SupPid) ->
     gs_share:start(),
     gs_db_starter:init_pool(),
     ok.
 
-start_serv_loader(SupPid) ->
-    {ok, _} = ?CHILD(SupPid, gs_loader_otp, worker),
+
+start_otp(SupPid, Module, Type) ->
+    {ok, _} = ?CHILD(SupPid, Module, Type),
     ok.
 
-start_broadcast(SupPid) ->
-    {ok, _} = ?CHILD(SupPid, gs_broadcast_otp, worker),
+start_otp(SupPid, Module, Type, Params) ->
+    {ok, _} = ?CHILD(SupPid, Module, Type, Params),
     ok.
 
-start_logic_sup(SupPid) ->
-    {ok, _} = ?CHILD(SupPid, gs_logic_sup, supervisor),
+start_otp(SupPid, Name, Module, Type, Params) ->
+    {ok, _} = ?CHILD(SupPid, Name, Module, Type, Params),
     ok.
 
-
-start_system_monitor(SupPid) ->
-    {ok, _} = ?CHILD(SupPid, system_monitor, worker),
-    ok.
-
-start_center(SupPid) ->
-    {ok, _} = ?CHILD(SupPid, gs_cs_otp, worker),
-    ok.
-
-start_rpc(_SupPid) ->
-    true = misc:start_all_app(gen_rpc),
-    ok.

@@ -35,10 +35,10 @@ sync() ->
     Sid = get_sid(),
     Node = erlang:node(get_from_pid()),
     ?WARN("server[~p]sync start...", [Node]),
-    lib_cs_cgs_cache:add_to_check(Sid),
+    cs_cache:add_to_check(Sid),
     cs_interface:send_msg_2_server_with_sid(Sid, {syncAllData, self()}),
     ps:send_with_from(get_from_pid(), syncAllData),
-    lib_cs_share:sync(Node),
+    cs_share:sync(Node),
     sync_over(Node, Sid),
     ok.
 

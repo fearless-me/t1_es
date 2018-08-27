@@ -67,12 +67,12 @@ get_server_info(ServerID) ->
 % 选取所有可用跨服信息
 get_cgs_info() ->
     Q = ets:fun2ms(fun(Info) when Info#m_server_info.type =:= ?SERVER_TYPE_CGS -> Info end),
-    ets:select(?GLOBAL_GS_ETS, Q).
+    mne_ex:dirty_select(m_server_info, Q).
 
 %%%-------------------------------------------------------------------
 select_cross(?SelectPolicy_Turn) ->
     L = sel_server_id(?SERVER_TYPE_CGS),
-    N = ets:update_counter(?GS_SELECT_REG, ?SelectPolicy_Turn, {#pub_kv.value, 1}),
+    N = ets:update_counter(?CROSS_SELECT_POLICY_ETS, ?SelectPolicy_Turn, {#pub_kv.value, 1}),
     get_n(L, N);
 select_cross(?SelectPolicy_Full) ->
     Q = ets:fun2ms(
@@ -80,7 +80,7 @@ select_cross(?SelectPolicy_Full) ->
             {Info#m_server_info.online, Info#m_server_info.sid}
         end
     ),
-    L = ets:select(?GLOBAL_GS_ETS, Q),
+    L = mne_ex:dirty_select(m_server_info, Q),
     S = lists:sort(fun({OL1, _S1}, {OL2, _S2}) -> OL1 > OL2 end, L),
     E =
         case lists:reverse(S) of
@@ -120,7 +120,7 @@ is_server_worker_alive(ServerID) ->
 
 %%%-------------------------------------------------------------------
 get_player_state(RoleID) ->
-    case ets:lookup(?CSPLAYRER_ETS, RoleID) of
+    case ets:lookup(?CS_GLOBAL_PLAYER_INFO_ETS, RoleID) of
         [#recPlayerInfo{status = ST}] ->
             ST;
         _ ->

@@ -19,6 +19,7 @@ SOURCE_DIR += ../deps/mysql-otp
 SOURCE_DIR += ../deps/mysql-otp-poolboy
 SOURCE_DIR += ../deps/poolboy
 SOURCE_DIR += ../deps/db_share
+SOURCE_DIR += ../deps/db_proxy
 SOURCE_DIR += ../deps/gen_rpc
 SOURCE_DIR += ../deps/dist-otp
 

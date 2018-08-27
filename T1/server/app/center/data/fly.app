@@ -20,7 +20,8 @@
 								"../../deps/poolboy",
 								"../../deps/gen_rpc",
 								"../../deps/dist-otp",
-								"../../deps/db_share"
+								"../../deps/db_share",
+								"../../deps/db_proxy"
                               ]
                     },
 					{inc_dirs,["../include", "../../deps/pubs/include", "../../deps/gen_rpc/include"]
@@ -45,7 +46,8 @@
 									"../../deps/poolboy",
 									"../../deps/gen_rpc",
 									"../../deps/dist-otp",
-									"../../deps/db_share"
+									"../../deps/db_share",
+									"../../deps/db_proxy"
                                ]
 							},
 							{i, "../include"},

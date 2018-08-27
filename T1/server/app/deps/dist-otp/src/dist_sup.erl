@@ -30,7 +30,7 @@ init([]) ->
 start(Module) ->
     {ok, SupPid} = center_sup:start_link(),
     try
-        Module:start_slave(SupPid)
+        Module:start_slave(SupPid, dist)
     catch _ : Err : ST ->
         misc:halt("start app error ~p, stacktrace ~p", [Err, ST])
     end,

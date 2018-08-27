@@ -16,6 +16,7 @@
 -define(CS_CACHE_OTP, cs_cache_otp).
 -define(CS_LOADER_OTP, cs_loader_otp).
 -define(CS_WATCHDOG_OTP, cs_watchdog).
+-define(CS_DIST_OTP, cs_dist_otp).
 
 
 -endif.

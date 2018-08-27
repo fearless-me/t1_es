@@ -125,8 +125,8 @@ connect_cs_node(DBId, Node) ->
             %% 已连通，打印信息
             ?WARN("[~p][~p]start register to centerServer[~p]", [self(), DBId, Node]),
             %% 监控节点
+            erlang:monitor_node(Node, false),
             erlang:monitor_node(Node, true),
-
             gs_share:restart(),
             
             %% 告诉跨服，保存本节点

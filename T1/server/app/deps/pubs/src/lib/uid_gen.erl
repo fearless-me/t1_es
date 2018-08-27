@@ -91,7 +91,7 @@ mail_uid() -> gen_1(?UID_TYPE_MAIL).
 %%%-------------------------------------------------------------------
 
 init(AreaID, Sid, UIDIndex) ->
-    ?INFO("~p init", [?MODULE]),
+    ?INFO("~p init area ~p server ~p runno ~p", [node(), AreaID, Sid, UIDIndex]),
     init_1(AreaID, Sid, UIDIndex).
 
 init_1(AreaID, Sid, UIDIndex) ->

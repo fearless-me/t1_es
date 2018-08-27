@@ -33,26 +33,26 @@ start() ->
     {ok, SupPid} = game_sup:start_link(),
 
     try
-        wrapper({"logger", stdio,           ?Wrap(start_fn:start_logs(SupPid))}),
-        wrapper({"error Logger",            ?Wrap(start_fn:start_errlog(SupPid))}),
-        wrapper({"watchdog",                ?Wrap(start_fn:start_watchdog(SupPid))}),
-        wrapper({"gen rpc app",             ?Wrap(start_fn:start_rpc(SupPid))}),
-        wrapper({"config init",             ?Wrap(start_fn:start_conf(SupPid, "game.ini"))}),
-        wrapper({"monitor/gc/vms",          ?Wrap(start_fn:start_gc_vm(SupPid, 0.5))}),
-        wrapper({"system monitor",          ?Wrap(start_fn:start_system_monitor(SupPid))}),
-        wrapper({"map root supervisor",     ?Wrap(start_fn:start_map_root_supervisor(SupPid))}),
-        wrapper({"login window",            ?Wrap(start_fn:start_login(SupPid))}),
-        wrapper({"serv_cache",              ?Wrap(start_fn:start_serv_cache(SupPid))}),
-        wrapper({"db window",               ?Wrap(start_fn:start_db_worker(SupPid))}),
-        wrapper({"broadcast mod",           ?Wrap(start_fn:start_broadcast(SupPid))}),
-        wrapper({"serv data loader",        ?Wrap(start_fn:start_serv_loader(SupPid))}),
-        wrapper({"all logic process",       ?Wrap(start_fn:start_logic_sup(SupPid))}),
+        misc:fn_wrapper({"logger", stdio,           ?Wrap(loggerS:start())}),
+        misc:fn_wrapper({"error Logger",            ?Wrap(common_error_logger:start(game_sup, game))}),
+        misc:fn_wrapper({"watchdog",                ?Wrap(start_fn:start_otp(SupPid, watchdog, worker, [fun gs_watchdog_hook:task_list/0]))}),
+        misc:fn_wrapper({"gen rpc app",             ?Wrap(misc:start_all_app(gen_rpc))}),
+        misc:fn_wrapper({"config init",             ?Wrap(gs_conf:start("game.ini"))}),
+        misc:fn_wrapper({"monitor/gc/vms",          ?Wrap(start_fn:start_gc_vm(SupPid, 0.5))}),
+        misc:fn_wrapper({"system monitor",          ?Wrap(start_fn:start_otp(SupPid, system_monitor, worker))}),
+        misc:fn_wrapper({"map root supervisor",     ?Wrap(start_fn:start_otp(SupPid, gs_map_root_sup, supervisor))}),
+        misc:fn_wrapper({"login window",            ?Wrap(start_fn:start_otp(SupPid, login_otp, worker))}),
+        misc:fn_wrapper({"serv_cache",              ?Wrap(start_fn:start_otp(SupPid, gs_cache_otp, worker))}),
+        misc:fn_wrapper({"db window",               ?Wrap(start_fn:start_db_worker(SupPid))}),
+        misc:fn_wrapper({"broadcast mod",           ?Wrap(start_fn:start_otp(SupPid, gs_broadcast_otp, worker))}),
+        misc:fn_wrapper({"serv data loader",        ?Wrap(start_fn:start_otp(SupPid, gs_loader_otp, worker))}),
+        misc:fn_wrapper({"all logic process",       ?Wrap(start_fn:start_otp(SupPid, gs_logic_sup, supervisor))}),
 
-        wrapper({"auto compile and load",   ?Wrap(start_fn:start_auto_reload(SupPid))}),
-        wrapper({"center window process",   ?Wrap(start_fn:start_center(SupPid))}),
+        misc:fn_wrapper({"auto compile and load",   ?Wrap(fly:start())}),
+        misc:fn_wrapper({"center window process",   ?Wrap(start_fn:start_otp(SupPid, gs_cs_otp, worker))}),
         watchdog:wait(),
 
-        wrapper({"test network 15555",      ?Wrap(start_fn:start_listener_15555(SupPid))}),
+        misc:fn_wrapper({"test network 15555",      ?Wrap(start_fn:start_listener_15555(SupPid))}),
         ok
     catch _ : Err : ST ->
         misc:halt("start app error ~p, stacktrace ~p", [Err, ST])
@@ -60,17 +60,3 @@ start() ->
 
     {ok, SupPid}.
 
-
-
-wrapper({Msg, stdio, Thunk}) ->
-    io:format("~s ~n", [Msg]),
-    Thunk(),
-    ok;
-wrapper({Msg, Thunk}) ->
-    ?INFO("~s ...", [Msg]),
-    try Thunk()
-    catch _ : Err : ST ->
-        misc:halt("~n## run \'~ts\' failed ##~n ~p ~n ~p", [Msg, Err, ST])
-    end,
-    ?INFO("~s done #", [Msg]),
-    ok.

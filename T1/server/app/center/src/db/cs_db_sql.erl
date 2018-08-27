@@ -4,17 +4,15 @@
 %%% @doc
 %%%
 %%% @end
-%%% Created : 12. 一月 2018 10:28
+%%% Created : 31. 五月 2018 11:41
 %%%-------------------------------------------------------------------
--module(cs_watchdog_hook).
+-module(cs_db_sql).
 -author("mawenhong").
 
-
 %% API
--export([task_list/0]).
+-export([sql/1]).
 
-
-task_list() ->
-    [
-        {fun lib_cs_loader:is_task_all_done/0, "load all data"}
-    ].
+sql(load_serv_start) ->
+    <<"call get_serv_start(?)">>;
+sql(_) ->
+    <<"">>.

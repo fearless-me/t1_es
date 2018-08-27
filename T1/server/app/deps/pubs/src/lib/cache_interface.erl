@@ -7,21 +7,16 @@
 %%% Created : 15. 八月 2018 15:37
 %%%-------------------------------------------------------------------
 
--module(cs_cache_interface).
+-module(cache_interface).
 -author("mawenhong").
 %% API
 -export([
-    init/0,  member/2,
+    member/2,
     read/2, read/3, read_element/3,
     write/2, replace/3, update_element/3, delete/2,
     select/2, match/2, match_object/2, match_object/3
 ]).
 
-
-%%-------------------------------------------------------------------
-init() ->
-    uid_gen:init(1, 1023, 1),
-    ok.
 
 %%-------------------------------------------------------------------
 member(Tab, Key) ->

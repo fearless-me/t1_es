@@ -11,13 +11,12 @@
 -ifndef(CS_PRIV_HRL).
 -define(CS_PRIV_HRL, true).
 
--define(GCS_CK_REG,csAllServerCheckEts_).
--define(GLOBAL_GS_ETS, csAllGSEts_).
--define(GS_SELECT_REG,csCGSSelcectEts_).
--define(CSPLAYRER_ETS, csAllPlayerEts_).
+-define(CS_SERVERS_CHECK_ETS,csAllServerCheckEts_).
+-define(CROSS_SELECT_POLICY_ETS,csCGSSelcectEts_).
+-define(CS_GLOBAL_PLAYER_INFO_ETS, csAllPlayerEts_).
 
 
--define(SVRMGR_TICK, 100).
+-define(SERVER_MGR_TICK, 100).
 -define(ServerAckTime, 60*1000).
 
 
@@ -35,6 +34,6 @@
 
 
 
--record(recServerCheck,{id = 0, time = 0}).
+-record(m_all_server_check,{id = 0, time = 0}).
 
 -endif.
