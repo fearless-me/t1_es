@@ -12,14 +12,14 @@
 -include("cs_dbpool_def.hrl").
 
 %% API
--export([init_pool/0]).
+-export([start/0]).
 
 
 
 -record(r_db_conf, {id, host, port, user, password, database, conn, max_conn, worker}).
 
 %%--------------------------------------------------------------------
-init_pool() ->
+start() ->
     true = misc:start_app(db_proxy),
     Sid = cs_conf:get_sid(),
     {_PoolOptions, MySqlOptions} = get_inst_opt(),

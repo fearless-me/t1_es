@@ -9,6 +9,7 @@
 -module(misc).
 -author("mawenhong").
 -include("logger.hrl").
+-include("pub_def.hrl").
 
 %% API
 -export([
@@ -27,6 +28,8 @@
     lists_rand_get/1, lists_shuffle/1, lists_rand_get_n/2, list_to_hex/1,
     string_to_term/1, term_to_string/1
 ]).
+
+-export([start_otp/3, start_otp/4, start_otp/5]).
 
 %%-------------------------------------------------------------------
 os_type() ->
@@ -463,3 +466,16 @@ fn_wrapper({Msg, Thunk}) ->
     end,
     ?INFO("~s done #", [Msg]),
     ok.
+
+start_otp(SupPid, Module, Type) ->
+    {ok, _} = ?CHILD(SupPid, Module, Type),
+    ok.
+
+start_otp(SupPid, Module, Type, Params) ->
+    {ok, _} = ?CHILD(SupPid, Module, Type, Params),
+    ok.
+
+start_otp(SupPid, Name, Module, Type, Params) ->
+    {ok, _} = ?CHILD(SupPid, Name, Module, Type, Params),
+    ok.
+
