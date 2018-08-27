@@ -57,7 +57,7 @@ start() ->
             
         watchdog:wait(),
 
-        misc:fn_wrapper({"test network 15555",      ?Wrap(start_listener_15555(SupPid))}),
+        misc:fn_wrapper({"server listen at 15555",  ?Wrap(start_listener_15555(SupPid))}),
         ok
     catch _ : Err : ST ->
         misc:halt("start app error ~p, stacktrace ~p", [Err, ST])
