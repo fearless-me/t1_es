@@ -75,7 +75,7 @@
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
           <entry key="app" value="10" />
-          <entry key="erl" value="11411" />
+          <entry key="erl" value="11434" />
           <entry key="hrl" value="754" />
           <entry key="md" value="95" />
           <entry key="src" value="18" />
@@ -83,7 +83,7 @@
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
-          <entry key="Erlang" value="11411" />
+          <entry key="Erlang" value="11434" />
           <entry key="Erlang Header" value="754" />
           <entry key="Erlang/OTP app" value="28" />
           <entry key="Markdown" value="95" />
@@ -95,7 +95,7 @@
           <entry key="app" value="4" />
           <entry key="beam" value="3" />
           <entry key="config" value="3" />
-          <entry key="erl" value="816" />
+          <entry key="erl" value="821" />
           <entry key="hrl" value="128" />
           <entry key="log" value="1" />
           <entry key="md" value="3" />
@@ -105,7 +105,7 @@
       <usages-collector id="statistics.file.types.open">
         <counts>
           <entry key="BEAM" value="3" />
-          <entry key="Erlang" value="816" />
+          <entry key="Erlang" value="821" />
           <entry key="Erlang Header" value="128" />
           <entry key="Erlang Terms" value="3" />
           <entry key="Erlang/OTP app" value="17" />
@@ -120,20 +120,65 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app/center/src/center_sup.erl">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="266">
-              <caret line="51" column="8" selection-start-line="51" selection-start-column="8" selection-end-line="51" selection-end-column="8" />
+            <state relative-caret-position="147">
+              <caret line="40" column="72" selection-start-line="40" selection-start-column="72" selection-end-line="40" selection-end-column="72" />
             </state>
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/game/src/game_sup.erl">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="487">
-              <caret line="59" column="52" lean-forward="true" selection-start-line="59" selection-start-column="52" selection-end-line="59" selection-end-column="52" />
+            <state relative-caret-position="435">
+              <caret line="57" column="24" selection-start-line="57" selection-start-column="24" selection-end-line="57" selection-end-column="24" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/center/src/db/cs_db_starter.erl">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="83">
+              <caret line="21" column="2" lean-forward="true" selection-start-line="21" selection-start-column="2" selection-end-line="21" selection-end-column="2" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/game/src/pub/db/gs_db_starter.erl">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="589">
+              <caret line="56" column="60" selection-start-line="56" selection-start-column="60" selection-end-line="56" selection-end-column="60" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/deps/pubs/src/lib/watchdog.erl">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="585">
+              <caret line="70" column="70" selection-start-line="70" selection-start-column="70" selection-end-line="70" selection-end-column="70" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/center/src/interface/cs_interface.erl">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="147">
+              <caret line="69" column="37" selection-start-line="69" selection-start-column="37" selection-end-line="69" selection-end-column="37" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/center/src/interface/cs_watchdog_hook.erl">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="416">
+              <caret line="16" column="4" selection-start-line="16" selection-start-column="4" selection-end-line="16" selection-end-column="4" />
             </state>
           </provider>
         </entry>
@@ -268,14 +313,14 @@
         <option value="$PROJECT_DIR$/app/center/src/interface/cs_watchdog_hook.erl" />
         <option value="$PROJECT_DIR$/app/center/data/dist.app" />
         <option value="$PROJECT_DIR$/app/center/src/dist/cs_dist_interface.erl" />
-        <option value="$PROJECT_DIR$/app/center/src/db/cs_db_starter.erl" />
         <option value="$PROJECT_DIR$/app/deps/pubs/include/pub_def.hrl" />
         <option value="$PROJECT_DIR$/app/center/src/cs_start_fn.erl" />
         <option value="$PROJECT_DIR$/app/deps/pubs/src/lib/misc.erl" />
-        <option value="$PROJECT_DIR$/app/game/src/pub/db/gs_db_starter.erl" />
         <option value="$PROJECT_DIR$/app/game/src/start_fn.erl" />
         <option value="$PROJECT_DIR$/app/center/src/center_sup.erl" />
         <option value="$PROJECT_DIR$/app/game/src/game_sup.erl" />
+        <option value="$PROJECT_DIR$/app/center/src/db/cs_db_starter.erl" />
+        <option value="$PROJECT_DIR$/app/game/src/pub/db/gs_db_starter.erl" />
       </list>
     </option>
   </component>
@@ -653,7 +698,7 @@
     <property name="SearchEverywhereHistoryKey" value="&#9;FILE&#9;file://C:/Program Files/erl10.0/lib/erts-10.0/src/erlang.erl" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1535371360842" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1535371697986" />
     <property name="last_opened_file_path" value="E:/other/RabbitMQ" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
@@ -1163,12 +1208,12 @@
       <workItem from="1535162863301" duration="4212000" />
       <workItem from="1535176176806" duration="8476000" />
       <workItem from="1535335743931" duration="6899000" />
-      <workItem from="1535349425690" duration="11216000" />
+      <workItem from="1535349425690" duration="11911000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="1673162000" />
+    <option name="totallyTimeSpent" value="1673857000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -1315,13 +1360,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="379">
           <caret line="16" column="8" selection-start-line="16" selection-start-column="8" selection-end-line="16" selection-end-column="8" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/center/src/interface/cs_interface.erl">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="291">
-          <caret line="69" column="37" selection-start-line="69" selection-start-column="37" selection-end-line="69" selection-end-column="37" />
         </state>
       </provider>
     </entry>
@@ -1519,31 +1557,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/center/src/interface/cs_watchdog_hook.erl">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="416">
-          <caret line="16" column="4" selection-start-line="16" selection-start-column="4" selection-end-line="16" selection-end-column="4" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/deps/pubs/src/lib/watchdog.erl">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="26">
-          <caret line="27" selection-start-line="27" selection-end-line="27" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/center/src/common/cs_conf.erl">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="572">
           <caret line="22" selection-start-line="22" selection-end-line="22" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/center/src/db/cs_db_starter.erl">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="546">
-          <caret line="21" column="5" selection-start-line="21" selection-start-column="5" selection-end-line="21" selection-end-column="5" />
         </state>
       </provider>
     </entry>
@@ -1589,24 +1606,52 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/app/game/src/game_sup.erl">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="435">
+          <caret line="57" column="24" selection-start-line="57" selection-start-column="24" selection-end-line="57" selection-end-column="24" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/app/game/src/pub/db/gs_db_starter.erl">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="75">
-          <caret line="21" selection-start-line="21" selection-end-line="21" />
+        <state relative-caret-position="589">
+          <caret line="56" column="60" selection-start-line="56" selection-start-column="60" selection-end-line="56" selection-end-column="60" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/center/src/interface/cs_watchdog_hook.erl">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="416">
+          <caret line="16" column="4" selection-start-line="16" selection-start-column="4" selection-end-line="16" selection-end-column="4" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/center/src/interface/cs_interface.erl">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="147">
+          <caret line="69" column="37" selection-start-line="69" selection-start-column="37" selection-end-line="69" selection-end-column="37" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/deps/pubs/src/lib/watchdog.erl">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="585">
+          <caret line="70" column="70" selection-start-line="70" selection-start-column="70" selection-end-line="70" selection-end-column="70" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/center/src/db/cs_db_starter.erl">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="83">
+          <caret line="21" column="2" lean-forward="true" selection-start-line="21" selection-start-column="2" selection-end-line="21" selection-end-column="2" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/center/src/center_sup.erl">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="266">
-          <caret line="51" column="8" selection-start-line="51" selection-start-column="8" selection-end-line="51" selection-end-column="8" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/game/src/game_sup.erl">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="487">
-          <caret line="59" column="52" lean-forward="true" selection-start-line="59" selection-start-column="52" selection-end-line="59" selection-end-column="52" />
+        <state relative-caret-position="147">
+          <caret line="40" column="72" selection-start-line="40" selection-start-column="72" selection-end-line="40" selection-end-column="72" />
         </state>
       </provider>
     </entry>

@@ -56,7 +56,7 @@ do_db_pool_init([Ins | _], PoolRef, Func) ->
     Conf = rec_to_map(Func, Ins),
     db_proxy:add_pool(PoolRef, Conf, ?INIT_DB_POOL_TIMEOUT);
 do_db_pool_init(_, PoolRef, _Func) ->
-    ?ERROR("init db pool ~p, but config not exists",[PoolRef]).
+    throw(io_lib:format("init db pool ~p, but config not exists",[PoolRef])).
 
 
 rec_to_map(Func, #r_db_conf{
