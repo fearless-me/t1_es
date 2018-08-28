@@ -56,7 +56,7 @@
 %%% public functions
 %%%===================================================================	
 start_link() ->
-    gen_server:start_link({local, ?MODULE}, ?MODULE, [], []).
+    gen_server:start_link({local, ?MODULE}, ?MODULE, [], [{spawn_opt,[{fullsweep_after, 10}]}]).
 
 pause() ->
     gen_server:cast(?MODULE, pause),
@@ -299,9 +299,9 @@ wait_src_parse_finish(List) ->
     NewList =
     receive
         {'DOWN', MRef, _process, Pid, normal} ->
-            lists:delete(List, {Pid, MRef});
+            lists:delete({Pid, MRef}, List);
         {'DOWN', MRef, process, Pid, _Reason} ->
-            lists:delete(List, {Pid, MRef});
+            lists:delete({Pid, MRef}, List);
 %%            ?WARN("~p|~p finished ~p~n",[Pid, MRef, Reason]);
         {Pid, _Result} ->
             lists:keydelete(Pid, 1, List)
