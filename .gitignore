@@ -29,3 +29,5 @@ _gsdata_
 *.ilk
 /T1/tools/NetProtor/out
 /T1/server/scripts/_____package_____.txt
+/T1/server/app/center/scripts/compileListDEtsFile.data
+/T1/server/app/center/scripts/compile_cht_csD.txt
