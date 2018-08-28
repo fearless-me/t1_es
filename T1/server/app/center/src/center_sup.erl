@@ -49,7 +49,7 @@ start() ->
         misc:fn_wrapper({"serv_cache",              ?Wrap(misc:start_otp(SupPid, cs_cache_otp, worker))}),
         misc:fn_wrapper({"serv data loader",        ?Wrap(misc:start_otp(SupPid, cs_loader_otp, worker))}),
         misc:fn_wrapper({"all logic process",       ?Wrap(misc:start_otp(SupPid, cs_logic_sup, supervisor))}),
-        
+
         misc:fn_wrapper({"distritbution",           ?Wrap(start_dist(SupPid))}),
             
         watchdog:wait(),

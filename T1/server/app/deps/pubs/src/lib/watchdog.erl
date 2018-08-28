@@ -65,7 +65,7 @@ wait_all_started_1(Fun, Tip) ->
     end.
 
 wrapper_check(true, _) -> true;
-wrapper_check(_, Msg) -> ?WARN("wait ~ts ...", [Msg]), throw(wait).
+wrapper_check(_, Msg) -> ?WARN("wait ~ts ...", [Msg]), false.
 %%%===================================================================
 %%% public functions
 %%%===================================================================

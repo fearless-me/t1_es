@@ -26,7 +26,8 @@ start() ->
     ok.
 
 sync(Node) ->
-    ?INFO("sync mnesia to ~p ... ", [Node]),
+    ?INFO("[~p]sync mnesia to ~p ... ", [node(), Node]),
+    true = net_kernel:connect_node(Node),
     true = mne_ex:sync(Node),
     lists:foreach(
         fun({Tab, _Arg}) ->
@@ -34,7 +35,7 @@ sync(Node) ->
             mne_ex:add_table_copy(Tab, Node, ram_copies)
         end, cs_share_pub:share_tables()),
     mne_ex:wait_for_tables(),
-    ?INFO("sync mnesia to ~p done #", [Node]),
+    ?INFO("[~p]sync mnesia to ~p done #", [node(), Node]),
     ok.
 
 

@@ -62,7 +62,8 @@ online_call(Player) ->
     ok.
 
 do_online_call(MapID, Req) ->
-    Mgr = gs_map_creator_interface:map_mgr(MapID),
+    Aid = lib_player_rw:get_aid(),
+    Mgr = gs_map_creator_interface:map_mgr_lr(Aid, MapID),
     do_online_call_1(Mgr, Req).
 
 %%
@@ -97,8 +98,9 @@ serv_change_map_call_cation(Req) ->
         uid = Uid, tar_map_id = TMid,
         map_id = Mid, line_id = LineId, map_pid = Mpid
     } = Req,
-    CurMgr = gs_map_creator_interface:map_mgr(Mid),
-    TarMgr = gs_map_creator_interface:map_mgr(TMid),
+    Aid = lib_player_rw:get_aid(),
+    CurMgr = gs_map_creator_interface:map_mgr_lr(Aid, Mid),
+    TarMgr = gs_map_creator_interface:map_mgr_lr(Aid, TMid),
     ?INFO("player ~p, changeMap map_~p_~p:~p -> map ~p",
         [Uid, Mid, LineId, Mpid, TMid]),
     ExitRet =
@@ -180,7 +182,8 @@ return_to_old_map_call() ->
 
 %%-------------------------------------------------------------------
 offline_call(Uid, MapID, LineId, MapPid) ->
-    Mgr = gs_map_creator_interface:map_mgr(MapID),
+    Aid = lib_player_rw:get_aid(),
+    Mgr = gs_map_creator_interface:map_mgr_lr(Aid, MapID),
     gs_map_mgr_interface:player_exit_map_call(
         Mgr,
         #r_exit_map_req{map_id = MapID, line_id = LineId, map_pid = MapPid, uid = Uid}
@@ -189,9 +192,10 @@ offline_call(Uid, MapID, LineId, MapPid) ->
 
 %%-------------------------------------------------------------------
 goto_born_map(Req) ->
+    Aid = lib_player_rw:get_aid(),
     Mid = gs_map_creator_interface:born_map_id(),
     Pos = gs_map_creator_interface:born_map_pos(),
-    Mgr = gs_map_creator_interface:map_mgr(Mid),
+    Mgr = gs_map_creator_interface:map_mgr_lr(Aid, Mid),
     ?WARN("kick player[~p] to born map", [Req#r_change_map_req.uid]),
 
     case gs_map_mgr_interface:player_join_map_call(

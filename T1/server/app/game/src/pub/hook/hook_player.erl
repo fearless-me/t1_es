@@ -20,7 +20,7 @@
 %%-------------------------------------------------------------------
 on_account_login(Aid, Pid, Sock) ->
     gs_cache_interface:add_account_socket(Aid, Pid, Sock),
-    gs_db_interface:action_p_(Aid, load_player_list, Aid),
+    gs_db_interface:action_g_(Aid, load_player_list, Aid),
     ok.
 
 %%-------------------------------------------------------------------

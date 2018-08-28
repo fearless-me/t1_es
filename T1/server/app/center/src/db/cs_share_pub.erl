@@ -17,8 +17,9 @@
 %% API
 -export([frag_share_tables/0, share_tables/0]).
 
-
 -define(STORE_ARG, {storage_properties, [{ets, [{read_concurrency, true}, {write_concurrency, true}]}]}).
+-define(SHARE_TABLE(Node, Rec), {Rec,  [{ram_copies, [Node]}, {attributes, record_info(fields, Rec)}, ?STORE_ARG]}).
+-define(SHARE_LOCAL_TABLE(Node, Rec), {Rec,  [{local_content, true}, {ram_copies, [Node]}, {attributes, record_info(fields, Rec)}, ?STORE_ARG]}).
 
 frag_share_tables() ->
     _Node = node(),
@@ -28,8 +29,10 @@ frag_share_tables() ->
 share_tables() ->
     Node = node(),
     [
-        {m_server_info,  [{ram_copies, [Node]}, {attributes, record_info(fields, m_server_info)}, ?STORE_ARG]},
-        {m_team_info,    [{ram_copies, [Node]}, {attributes, record_info(fields, m_team_info)}, ?STORE_ARG]},
-        {m_uid_ref_tid,  [{ram_copies, [Node]}, {attributes, record_info(fields, m_uid_ref_tid)}, ?STORE_ARG]},
-        {m_player_match, [{ram_copies, [Node]}, {attributes, record_info(fields, m_player_match)}, ?STORE_ARG]}
+        ?SHARE_TABLE(Node, m_server_info),
+        ?SHARE_TABLE(Node, m_team_info),
+        ?SHARE_TABLE(Node, m_uid_ref_tid),
+        ?SHARE_TABLE(Node, m_player_match),
+        ?SHARE_LOCAL_TABLE(Node, m_player_cross_lock),
+        ?SHARE_LOCAL_TABLE(Node, m_player_cross_data)
     ].

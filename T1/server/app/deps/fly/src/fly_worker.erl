@@ -200,7 +200,7 @@ process_src_files_incs(SrcFiles) ->
             Pid = erlang:spawn(
                 fun() ->
                     PidList = process_src_file_incs_1([], SrcFiles),
-                    wait_src_parse_finish(erlang:length(PidList))
+                    wait_src_parse_finish(PidList)
                 end),
             wait_pid_go_die(is_process_alive(Pid), Pid),
             Diff = os:system_time(milli_seconds) - Now,
@@ -293,20 +293,21 @@ wait_pid_go_die(true, Pid) ->
     wait_pid_go_die(is_process_alive(Pid), Pid);
 wait_pid_go_die(_, _Pid) -> ok.
 
-wait_src_parse_finish(0) ->
+wait_src_parse_finish([]) ->
     skip;
-wait_src_parse_finish(N) ->
+wait_src_parse_finish(List) ->
+    NewList =
     receive
-        {'DOWN', _MRef, _process, _Pid, normal} ->
-            ok;
-        {'DOWN', _MRef, process, _Pid, _Reason} ->
-            ok;
+        {'DOWN', MRef, _process, Pid, normal} ->
+            lists:delete(List, {Pid, MRef});
+        {'DOWN', MRef, process, Pid, _Reason} ->
+            lists:delete(List, {Pid, MRef});
 %%            ?WARN("~p|~p finished ~p~n",[Pid, MRef, Reason]);
-        {_Pid, _Result} ->
-            skip
+        {Pid, _Result} ->
+            lists:keydelete(Pid, 1, List)
 %%            ?WARN("~p finished ~p~n",[Pid,  Result])
     end,
-    wait_src_parse_finish(N - 1).
+    wait_src_parse_finish(NewList).
 
 
 process_hrl_file_lastmod([{File, LastMod} | T1], [{File, LastMod} | T2], SrcFiles, Options) ->

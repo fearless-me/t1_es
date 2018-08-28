@@ -11,7 +11,7 @@
 
 %% API
 -export([
-    start/1, is_cross/0,
+    start/1, is_cross/0, get_server_port/0, get_max_connection/0,
     get_area/0,get_sid/0, get_server_name/0, get_server_type/0,
     get_db_conf/0, get_run_no/0, get_center/0,
     set_run_no/1
@@ -32,6 +32,12 @@ set_run_no(RunNo)->
 is_cross() ->
     econfig:get_integer(?GS_INI_CONF, server, is_cross, 0) =:= 1.
 %%-------------------------------------------------------------------
+get_server_port() ->
+    econfig:get_integer(?GS_INI_CONF, server, server_port).
+
+get_max_connection() ->
+    econfig:get_integer(?GS_INI_CONF, server, max_connection, 2000).
+
 get_db_conf()->
     Conf = econfig:get_value(?GS_INI_CONF, db_conf),
     lists:map(fun({K,V}) -> {erlang:list_to_atom(K),V} end, Conf).

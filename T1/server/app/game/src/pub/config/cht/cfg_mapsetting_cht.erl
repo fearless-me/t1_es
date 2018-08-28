@@ -9,6 +9,7 @@ getRow(1)->
     #mapsettingCfg {
     id = 1,
     type = 0,
+    is_cross = 0,
     subtype = 0,
     name = "map330",
     desc = "星月岛",
@@ -78,7 +79,8 @@ getRow(1)->
 getRow(2)->
     #mapsettingCfg {
     id = 2,
-    type = 0,
+    type = 0, 
+    is_cross = 0,
     subtype = 0,
     name = "map333",
     desc = "阿克勒港口",
@@ -148,7 +150,7 @@ getRow(2)->
     };
 getRow(3)->
     #mapsettingCfg {
-    id = 3,
+    id = 3, is_cross = 1,
     type = 0,
     subtype = 0,
     name = "map331",
@@ -221,6 +223,7 @@ getRow(3)->
 getRow(4)->
     #mapsettingCfg {
     id = 4,
+    is_cross = 1,
     type = 0,
     subtype = 0,
     name = "map301",
@@ -293,7 +296,7 @@ getRow(4)->
 getRow(10170)->
     #mapsettingCfg {
         id = 10170,
-        type = 2,
+        type = 2, is_cross = 0,
         subtype = 0,
         name = "map334",
         desc = "越狱II",

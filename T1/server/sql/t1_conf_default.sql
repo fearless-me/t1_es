@@ -22,8 +22,8 @@ insert  into `account_db_conf`(`id`,`host`,`port`,`user`,`password`,`database`,`
 
 /*Data for the table `player_db_conf` */
 
-insert  into `player_db_conf`(`id`,`host`,`port`,`user`,`password`,`database`,`conn`,`max_conn`,`worker`) values 
-(1,'127.0.0.1',3306,'root','1234','t1_player',5,10,10);
+insert  into `data_db_conf`(`id`,`host`,`port`,`user`,`password`,`database`,`conn`,`max_conn`,`worker`) values 
+(1,'127.0.0.1',3306,'root','1234','t1_data',5,10,10);
 
 /*Data for the table `public_db_conf` */
 

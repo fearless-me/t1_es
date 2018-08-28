@@ -25,21 +25,21 @@ start() ->
     {_PoolOptions, MySqlOptions} = get_inst_opt(),
     {ok, Pid} = mysql:start_link(MySqlOptions),
 
-    ?INFO("init player db pool ..."),
-    db_pool_init(Pid, get_player_db_conf, [Sid], ?PLAYER_DB_POOL_NAME, fun gs_db_handler:handler/4),
-    ?INFO("init player db pool done"),
+    ?INFO("init data db pool ..."),
+    db_pool_init(Pid, get_data_db_conf, [Sid], ?DATA_DB_POOL_NAME, fun gs_db_handler:handler/4),
+    ?INFO("init data db pool done"),
     ?INFO("#"),
 
     ?INFO("init account db pool ..."),
-    db_pool_init(Pid, get_account_db_conf, [Sid], ?ACCOUNT_DB_POOL_NAME, fun gs_db_handler:handler/4),
+    db_pool_init(Pid, get_account_db_conf, [], ?ACCOUNT_DB_POOL_NAME, fun gs_db_handler:handler/4),
     ?INFO("init account db pool done"),
     ?INFO("#"),
 
     ?INFO("init public db pool ..."),
-    db_pool_init(Pid, get_public_db_conf, [Sid], ?PUBLIC_DB_POOL_NAME, fun gs_db_handler:handler/4),
+    db_pool_init(Pid, get_public_db_conf, [], ?PUBLIC_DB_POOL_NAME, fun gs_db_handler:handler/4),
     ?INFO("init public db pool done"),
     ?INFO("#"),
-
+    
     erlang:exit(Pid, normal),
     
     ok.
@@ -112,9 +112,9 @@ get_inst_opt() ->
         {
             prepare,
             [
-                {get_player_db_conf, "select * from player_db_conf where id=?"},
-                {get_public_db_conf, "select * from public_db_conf where id=?"},
-                {get_account_db_conf, "select * from account_db_conf where id=?"}
+                {get_data_db_conf, "select * from data_db_conf where id=?"},
+                {get_public_db_conf, "select * from public_db_conf where id=0"},
+                {get_account_db_conf, "select * from account_db_conf limit 1"}
             ]
         }
     ],

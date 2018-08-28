@@ -23,18 +23,17 @@
 %%-------------------------------------------------------------------
 -export([
 %% 玩家数据库
-    action_p_/3, action_p_/4, action_p_all_/2, action_p_all_/3,
+    action_g_/3, action_g_/4, action_g_all_/2, action_g_all_/3,
 %% 账号库
     action_a_/3, action_a_/4, action_a_all_/2, action_a_all_/3,
 %% 公共库
     action_pub_/3, action_pub_/4, action_pub_all_/2, action_pub_all_/3
 ]).
 
-
--spec action_p_(HashKey :: integer(), MsgId :: atom(), Msg :: any()) -> ok.
--spec action_p_(HashKey :: integer(), MsgId :: atom(), Msg :: any(), FromPid :: pid()) -> ok.
--spec action_p_all_(MsgId :: atom(), Msg :: any()) -> integer().
--spec action_p_all_(MsgId :: atom(), Msg :: any(), FromPid :: pid()) -> integer().
+-spec action_g_(HashKey :: integer(), MsgId :: atom(), Msg :: any()) -> ok.
+-spec action_g_(HashKey :: integer(), MsgId :: atom(), Msg :: any(), FromPid :: pid()) -> ok.
+-spec action_g_all_(MsgId :: atom(), Msg :: any()) -> integer().
+-spec action_g_all_(MsgId :: atom(), Msg :: any(), FromPid :: pid()) -> integer().
 
 -spec action_a_(HashKey :: integer(), MsgId :: atom(), Msg :: any()) -> ok.
 -spec action_a_(HashKey :: integer(), MsgId :: atom(), Msg :: any(), FromPid :: pid()) -> ok.
@@ -48,17 +47,17 @@
 
 %%-------------------------------------------------------------------
 %% 玩家数据库
-action_p_(HashKey, MsgId, Msg) ->
-    Mgr = db_proxy:checkout_pool(?PLAYER_DB_POOL_NAME),
+action_g_(HashKey, MsgId, Msg) ->
+    Mgr = db_proxy:checkout_pool(?DATA_DB_POOL_NAME),
     db_mgr:scheduler_(Mgr, HashKey, {MsgId, Msg, self()}).
 
-action_p_(HashKey, MsgId, Msg, FromPid) ->
-    Mgr = db_proxy:checkout_pool(?PLAYER_DB_POOL_NAME),
+action_g_(HashKey, MsgId, Msg, FromPid) ->
+    Mgr = db_proxy:checkout_pool(?DATA_DB_POOL_NAME),
     db_mgr:scheduler_(Mgr, HashKey, {MsgId, Msg, FromPid}).
 
 %%-------------------------------------------------------------------
-action_p_all_(MsgId, Msg) ->
-    PoolRef = db_proxy:pool_pg(?PLAYER_DB_POOL_NAME),
+action_g_all_(MsgId, Msg) ->
+    PoolRef = db_proxy:pool_pg(?DATA_DB_POOL_NAME),
     Members = pg_local:get_members(PoolRef),
     lists:foreach(
         fun(Mgr) ->
@@ -66,8 +65,8 @@ action_p_all_(MsgId, Msg) ->
         end,Members),
     erlang:length(Members).
 
-action_p_all_(MsgId, Msg, FromPid) ->
-    PoolRef = db_proxy:pool_pg(?PLAYER_DB_POOL_NAME),
+action_g_all_(MsgId, Msg, FromPid) ->
+    PoolRef = db_proxy:pool_pg(?DATA_DB_POOL_NAME),
     Members = pg_local:get_members(PoolRef),
     lists:foreach(
         fun(Mgr) ->
@@ -106,7 +105,6 @@ action_a_all_(MsgId, Msg, FromPid) ->
         end, Members
     ),
     erlang:length(Members).
-
 
 %%-------------------------------------------------------------------
 %% 公共库

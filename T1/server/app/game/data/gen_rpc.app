@@ -22,7 +22,7 @@
                     {connect_timeout,5000},
                     {send_timeout,5000},
                     {authentication_timeout,5000},
-                    {call_receive_timeout,15000},
+                    {call_receive_timeout,5000},
                     {sbcast_receive_timeout,15000},
                     {client_inactivity_timeout,infinity},
                     {server_inactivity_timeout,infinity},

@@ -50,16 +50,16 @@
 %%-------------------------------------------------------------------
 %% 玩家数据库
 action_p_(HashKey, MsgId, Msg) ->
-    Mgr = db_proxy:checkout_pool(?PLAYER_DB_POOL_NAME),
+    Mgr = db_proxy:checkout_pool(?DATA_DB_POOL_NAME),
     db_mgr:scheduler_(Mgr, HashKey, {MsgId, Msg, self()}).
 
 action_p_(HashKey, MsgId, Msg, FromPid) ->
-    Mgr = db_proxy:checkout_pool(?PLAYER_DB_POOL_NAME),
+    Mgr = db_proxy:checkout_pool(?DATA_DB_POOL_NAME),
     db_mgr:scheduler_(Mgr, HashKey, {MsgId, Msg, FromPid}).
 
 %%-------------------------------------------------------------------
 action_p_all_(MsgId, Msg) ->
-    PoolRef = db_proxy:pool_pg(?PLAYER_DB_POOL_NAME),
+    PoolRef = db_proxy:pool_pg(?DATA_DB_POOL_NAME),
     Members = pg_local:get_members(PoolRef),
     lists:foreach(
         fun(Mgr) ->
@@ -68,7 +68,7 @@ action_p_all_(MsgId, Msg) ->
     erlang:length(Members).
 
 action_p_all_(MsgId, Msg, FromPid) ->
-    PoolRef = db_proxy:pool_pg(?PLAYER_DB_POOL_NAME),
+    PoolRef = db_proxy:pool_pg(?DATA_DB_POOL_NAME),
     Members = pg_local:get_members(PoolRef),
     lists:foreach(
         fun(Mgr) ->

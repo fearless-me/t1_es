@@ -18,15 +18,12 @@
 
 %% API
 -export([
-    start/0, stop/0, sync/1,
+    start/0, stop/0, sync/1, is_local_content/1,table_node/1,
     table_size/1, add_table_copy/3, del_table_copy/2,  wait_for_tables/0,
     create_table/2, delete_table/1, clear_table/1,
     write/1, s_write/1, write/2, read/2, index_read/3, all_keys/1, delete/2,
     dirty_delete/2, dirty_match/2, dirty_select/2, dirty_read/2, dirty_write/1, dirty_write/2,
     dirty_all_keys/1, dirty_read_all/1
-]).
-
--export([
 ]).
 
 
@@ -45,15 +42,23 @@ stop() -> mnesia:stop().
 -spec sync(Node) -> boolean() when Node :: node().
 sync(Node) ->
     case mnesia:change_config(extra_db_nodes, [Node]) of
-        {ok, _} = Ret ->
-            ?INFO("mnesia sync to ~p ~p", [Node, Ret]),
+        {ok, [Node]} ->
+%%            ?INFO("[~p]sync mnesia to ~p done #", [node(), Nodes]),
             Tables = mnesia:system_info(tables),
             mnesia:wait_for_tables(Tables, 10000),
             true;
         {error, Reason} ->
-            ?FATAL("mnesia sync to ~p failed ~p", [Node, Reason]),
+            ?FATAL("[~p]mnesia sync to ~p failed ~p", [node(), Node, Reason]),
             false
     end.
+
+
+table_node(Tab) ->
+    catch ets:lookup_element(mnesia_gvar,  {Tab,where_to_read}, 2).
+
+-spec is_local_content(Tab:: mnesia:table()) -> boolean().
+is_local_content(Tab) ->
+    mnesia:table_info(Tab, local_content).
 
 -spec add_table_copy(Tab:: mnesia:table(), N::node(), ST:: mnesia:storage_type()) -> mnesia:t_result(ok).
 add_table_copy(Tab, N, S) ->
@@ -65,6 +70,7 @@ add_table_copy(Tab, N, S) ->
            ),
            false
    end.
+
 
 -spec del_table_copy(Tab::mnesia:table(), N::node()) -> mnesia:t_result(ok).
 del_table_copy(Tab, N) ->
@@ -109,7 +115,8 @@ clear_table(TabName) ->
     end.
 
 wait_for_tables() ->
-    mnesia:wait_for_tables(mnesia:system_info(local_tables), infinity),
+    Tables = mnesia:system_info(tables),
+    mnesia:wait_for_tables(Tables, infinity),
     ok.
 
 

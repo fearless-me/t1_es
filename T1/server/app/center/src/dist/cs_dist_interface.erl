@@ -12,7 +12,6 @@
 -include("cs_ps_def.hrl").
 
 %% API
--export([register_slave_node/1, slave_node_started/1]).
 -export([start_master/0, start_independence/1, start_slave/2]).
 
 %% Helper macro for declaring children of supervisor
@@ -31,63 +30,53 @@ start_master() ->
     ok.
 
 start_independence(SupPid) ->
-    start_slave(SupPid, independence),
+    start_slave(SupPid, allin),
     ok.
 
 start_master_slave(Host, SlaveName, Args) ->
     Node = misc_dist:start_slave(Host, SlaveName, Args),
     pool:attach(Node),
-    cs_share:sync(Node),
+    register_slave_node(Node),
     ok.
 
 register_slave_node(Node) ->
     ps:send(?CS_DIST_OTP, slave_register, Node),
     ok.
 
-slave_node_started(Node) ->
-    ps:send(?CS_DIST_OTP, slave_started, Node),
-    ok.
-
 start_slave(SupPid, Mode) ->
     try
-        wrapper({"logger", stdio,   ?Wrap(cs_start_fn:start_logs(SupPid))}),
-        wrapper({"error Logger",    ?Wrap(cs_start_fn:start_errlog(SupPid))}),
-        wrapper({"gen rpc app",     ?Wrap(cs_start_fn:start_rpc(SupPid))}),
-        wrapper({"start mnesia",    ?Wrap(mne_ex:start())}),
-        wrapper({"start logic otp", ?Wrap(start_slave_otp(Mode, node(), SupPid))}),
+        misc:fn_wrapper({"logger", stdio,   ?Wrap(loggerS:start())}),
+        misc:fn_wrapper({"error Logger",    ?Wrap(common_error_logger:start(center_sup, center))}),
+        misc:fn_wrapper({"gen rpc app",     ?Wrap(misc:start_all_app(gen_rpc))}),
+        misc:fn_wrapper({"start mnesia",    ?Wrap(dist_share:start())}),
+        misc:fn_wrapper({"start logic otp", ?Wrap(start_slave_otp(Mode, node(), SupPid))}),
         ok
     catch _ : Err : ST ->
         misc:halt("start app error ~p, stacktrace ~p", [Err, ST])
     end,
+    slave_send_2_master(),
     ?WARN("###slave ~p start ok###", [node()]),
     ok.
 
-start_slave_otp(dist, 'cg@127.0.0.1', SupPid)->
-    wrapper({"create dist_exam_otp",    ?Wrap(cs_start_fn:start_otp(SupPid, dist_exam_otp, worker))}),
-    wrapper({"create dist_sup",         ?Wrap(cs_start_fn:start_otp(SupPid, dist_sup, supervisor))}),
-    ok;
-start_slave_otp(dist, 'ct@127.0.0.1', SupPid)->
-    wrapper({"create team_otp",         ?Wrap(cs_start_fn:start_otp(SupPid, team_otp, worker))}),
-    wrapper({"create dist_sup",         ?Wrap(cs_start_fn:start_otp(SupPid, dist_sup, supervisor))}),
-    ok;
-start_slave_otp(dist, _Node, SupPid) ->
-    wrapper({"create dist_sup",         ?Wrap(cs_start_fn:start_otp(SupPid, dist_sup, supervisor))}),
-    ok;
-start_slave_otp(dist, _Node, SupPid) ->
-    wrapper({"create dist_exam_otp",    ?Wrap(cs_start_fn:start_otp(SupPid, dist_exam_otp, worker))}),
-    wrapper({"create team_otp",         ?Wrap(cs_start_fn:start_otp(SupPid, team_otp, worker))}),
+slave_send_2_master()->
+    case misc:master_node() of
+        undefined -> ok;
+        MasterNode -> ps:send({?CS_DIST_OTP, MasterNode}, slave_started, node())
+    end,
     ok.
 
-
-wrapper({Msg, stdio, Thunk}) ->
-    io:format("~s ~n", [Msg]),
-    Thunk(),
+start_slave_otp(dist, 'cg@127.0.0.1', SupPid)->
+    misc:fn_wrapper({"create dist_exam_otp",    ?Wrap(misc:start_otp(SupPid, dist_exam_otp, worker))}),
+    misc:fn_wrapper({"create dist_sup",         ?Wrap(misc:start_otp(SupPid, dist_sup, supervisor))}),
     ok;
-wrapper({Msg, Thunk}) ->
-    ?INFO("~s ...", [Msg]),
-    try Thunk()
-    catch _ : Err : ST ->
-        misc:halt("~n## run \'~ts\' failed ##~n ~p ~n ~p", [Msg, Err, ST])
-    end,
-    ?INFO("~s done #", [Msg]),
+start_slave_otp(dist, 'ct@127.0.0.1', SupPid)->
+    misc:fn_wrapper({"create team_otp",         ?Wrap(misc:start_otp(SupPid, team_otp, worker))}),
+    misc:fn_wrapper({"create dist_sup",         ?Wrap(misc:start_otp(SupPid, dist_sup, supervisor))}),
+    ok;
+start_slave_otp(dist, _Node, SupPid) ->
+    misc:fn_wrapper({"create dist_sup",         ?Wrap(misc:start_otp(SupPid, dist_sup, supervisor))}),
+    ok;
+start_slave_otp(allin, _Node, SupPid) ->
+    misc:fn_wrapper({"create dist_exam_otp",    ?Wrap(misc:start_otp(SupPid, dist_exam_otp, worker))}),
+    misc:fn_wrapper({"create team_otp",         ?Wrap(misc:start_otp(SupPid, team_otp, worker))}),
     ok.

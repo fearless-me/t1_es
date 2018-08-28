@@ -4,20 +4,13 @@
 %%% @doc
 %%%
 %%% @end
-%%% Created : 16. 八月 2018 15:29
+%%% Created : 28. 八月 2018 10:53
 %%%-------------------------------------------------------------------
--module(gs_share).
+-module(cross_rpc).
 -author("mawenhong").
 
 %% API
--export([start/0, restart/0]).
+-export([rpc_call_get_map_mgr/1]).
 
-
-start() ->
-    true = mne_ex:start(),
-    ok.
-
-restart() ->
-    mne_ex:stop(),
-    true = mne_ex:start(),
-    ok.
+rpc_call_get_map_mgr(MapID) ->
+    gs_map_creator_interface:map_mgr_l(MapID).

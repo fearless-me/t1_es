@@ -24,7 +24,9 @@ start() ->
     Sid = cs_conf:get_sid(),
     {_PoolOptions, MySqlOptions} = get_inst_opt(),
     {ok, Pid} = mysql:start_link(MySqlOptions),
-    
+
+
+%%
 
     ?INFO("init public db pool ..."),
     db_pool_init(Pid, get_public_db_conf, [Sid], ?PUBLIC_DB_POOL_NAME, fun cs_db_handler:handler/4),
@@ -103,6 +105,7 @@ get_inst_opt() ->
         {
             prepare,
             [
+%%                {get_account_db_conf, "select * from account_db_conf limit 1"},
                 {get_public_db_conf, "select * from public_db_conf where id=?"}
             ]
         }

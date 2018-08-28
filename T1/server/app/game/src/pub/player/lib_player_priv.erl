@@ -123,7 +123,7 @@ loaded_player_list(RoleList) ->
 create_player_(Req) ->
     Aid = lib_player_rw:get_aid(),
     lib_player_rw:set_status(?PS_CREATING),
-    gs_db_interface:action_p_(Aid, create_player, {Aid, Req}),
+    gs_db_interface:action_g_(Aid, create_player, {Aid, Req}),
     ok.
 
 %%-------------------------------------------------------------------
@@ -140,7 +140,7 @@ select_player(Uid) ->
     Aid = lib_player_rw:get_aid(),
     lib_player_rw:set_status(?PS_WAIT_LOAD),
     lib_player_rw:set_uid(Uid),
-    gs_db_interface:action_p_(Aid, load_player_data, {Aid, Uid}),
+    gs_db_interface:action_g_(Aid, load_player_data, {Aid, Uid}),
     ok.
 
 %%-------------------------------------------------------------------

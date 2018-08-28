@@ -127,7 +127,7 @@ connect_cs_node(DBId, Node) ->
             %% 监控节点
             erlang:monitor_node(Node, false),
             erlang:monitor_node(Node, true),
-            gs_share:restart(),
+            gs_share_interface:restart(),
             
             %% 告诉跨服，保存本节点
             case gs_cs_interface:register(Node) of

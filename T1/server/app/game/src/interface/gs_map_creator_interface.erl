@@ -11,28 +11,51 @@
 -include("logger.hrl").
 -include("inc_map.hrl").
 -include("pub_rec.hrl").
+-include("cfg_mapsetting.hrl").
 
 
 %% API
 -export([
-    map_conf/1,map_mgr/1, born_map_id/0, born_map_pos/0,
-    broadcast_all/0, broadcast_map/1, map_init_pos/1
+    map_conf/1, map_mgr_lr/2, map_mgr_l/1,
+    born_map_id/0, born_map_pos/0, map_init_pos/1
 ]).
 
 %%-------------------------------------------------------------------
-broadcast_all() ->
-    ok.
-
-%%-------------------------------------------------------------------
-broadcast_map(_MapID) ->
-    ok.
-
-%%-------------------------------------------------------------------
-map_mgr(MapID) ->
+map_mgr_l(MapID) ->
     case ets:lookup(?MAP_MGR_ETS, MapID) of
         [#m_map_mgr{mgr = Mgr} | _] -> Mgr;
         _ -> undefined
     end.
+%%-------------------------------------------------------------------
+map_mgr_lr(Aid, MapID) ->
+    map_mgr_lr_action(gs_conf:is_cross(), Aid, getCfg:getCfgByArgs(cfg_mapsetting, MapID)).
+
+
+%% 在跨服上找非跨服地图
+map_mgr_lr_action(true, Aid, #mapsettingCfg{is_cross = 0, id = MapID}) ->
+    Node = gs_cross_interface:get_player_src_node(Aid),
+    case gs_cross_interface:get_remote_server_map_mgr(Node, MapID) of
+    MgrPid when is_pid(MgrPid) -> MgrPid;
+    Error ->
+        ?ERROR("~p get map mgr ~p from ~p, error ~p",[node(), MapID, Node, Error]),
+        undefined
+    end;
+%% 在普通服务器招跨服地图
+map_mgr_lr_action(false, Aid, #mapsettingCfg{is_cross = 1, id = MapID}) ->
+    Node = gs_cross_interface:get_player_cross_node(Aid),
+    case gs_cross_interface:get_remote_server_map_mgr(Node, MapID) of
+        MgrPid when is_pid(MgrPid) -> MgrPid;
+        Error ->
+            ?ERROR("~p get map mgr ~p from ~p, error ~p",[node(), MapID, Node, Error]),
+            undefined
+    end;
+%% 在跨服上找跨服地图/在普通副找非跨服地图
+map_mgr_lr_action(_Any, _Aid, #mapsettingCfg{id = MapID}) ->
+    case ets:lookup(?MAP_MGR_ETS, MapID) of
+        [#m_map_mgr{mgr = Mgr} | _] -> Mgr;
+        _ -> undefined
+    end.
+
 
 %%-------------------------------------------------------------------
 map_conf(MapID) -> gameMapCfg:getMapCfg(MapID).

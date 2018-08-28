@@ -14,7 +14,7 @@
 %% API
 -export([
     start_app/1, start_all_app/1, os_type/0, halt/1, halt/2, nnl/0,  nnl/1,
-    system_info/0, set_system_time/1, fn_wrapper/1,
+    system_info/0, set_system_time/1, fn_wrapper/1, master_node/0,
     b2i/1, i2b/1, ntoa/1, ntoab/1,
     atom_to_binary/1, to_atom/1, create_atom/2, list_to_string_suffix/2,
     register_process/2, register_process/3, registered_name/0, registered_name/1,
@@ -453,6 +453,12 @@ do_set_system_time(win32, Date) ->
     [Date1, Time1] = string:tokens(Date, " "),
     Cmd = io_lib:format("date ~ts && time ~ts", [Date1, Time1]),
     os:cmd(Cmd).
+
+master_node() ->
+    case init:get_argument(master) of
+        error -> undefined;
+        {ok,[[MasterNode]]} -> erlang:list_to_atom(MasterNode)
+    end.
 
 fn_wrapper({Msg, stdio, Thunk}) ->
     io:format("~s ~n", [Msg]),

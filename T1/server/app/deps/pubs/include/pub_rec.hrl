@@ -12,7 +12,8 @@
 
 -record(pub_kv,{key,value}).
 -record(m_server_info,{sid = 0, type = 0, node = '', name = "", status = 0, online = 0, max_online = 1800, src_pid , worker}).
-
+-record(m_player_cross_lock,{aid=0,src_sid=0, cross_sid =0,lock=0,lock_time=0}).
+-record(m_player_cross_data,{aid=0, data}).
 
 -record(recPlayerInfo,{
     roleID              = 0, % 角色ID

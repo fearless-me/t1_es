@@ -50,6 +50,7 @@ do_handle_call(Request, From, State) ->
 do_handle_info({slave_register, SlaveNode}, State) ->
     {noreply, lists:append([SlaveNode], State)};
 do_handle_info({slave_started, SlaveNode}, State) ->
+    cs_share:sync(SlaveNode),
     {noreply, lists:delete(SlaveNode, State)};
 do_handle_info(Info, State) ->
     ?ERROR("undeal info ~w", [Info]),
