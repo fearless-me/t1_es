@@ -37,8 +37,6 @@ get_remote_server_map_mgr(Node, MapID)
     grpc:call(Node, cross_rpc, rpc_call_get_map_mgr, [MapID]);
 get_remote_server_map_mgr(_Node, _MapID) -> undefined.
 
-
-
 %%-------------------------------------------------------------------
 %%-------------------------------------------------------------------
 inner_get_player_src_node(Aid) ->
