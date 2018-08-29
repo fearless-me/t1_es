@@ -22,12 +22,16 @@
 								"../../deps/db_proxy"
                               ]
                     },
-					{inc_dirs,[
+					{inc_dirs,
+							[
 								"../include", 
 								"../src/pub/config", 
 								"../src/pub/netmsg", 
 								"../../deps/pubs/include", 
-								"../../deps/gen_rpc/include"]},
+								"../../deps/gen_rpc/include",
+								"../../common_include"
+							]
+					},
 					{opts,
 						[
 							debug_info, nowarn_export_all, bin_opt_info,
@@ -53,6 +57,7 @@
 							{i, "../include"},
 							{i, "../src/pub/config"},
 							{i, "../src/pub/netmsg"},
+							{i, "../../common_include"},
 							{i, "../../deps/pubs/include"},
 							{i, "../../deps/gen_rpc/include"},
 							{i, "../../deps/mysql-otp/include"}

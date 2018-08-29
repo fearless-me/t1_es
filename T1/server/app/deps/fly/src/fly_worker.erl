@@ -465,8 +465,8 @@ reload_if_necessary(CompileFun, SrcFile, Module, _OldBinary, _Binary, Options, W
 
 reload(Module) ->
     code:purge(Module),
-    case code:is_loaded(hot_update) of
-        false ->
+    case code:which(hot_update) of
+        non_existing ->
             case code:load_file(Module) of
                 {module, Module} -> ?WARN("~p: Reload.", [Module]);
                 {error, What} -> ?ERROR("reload error:~p,~p", [Module, What])

@@ -14,21 +14,33 @@
 -include("pub_def.hrl").
 -include("pub_rec.hrl").
 
-%% define
--define(ServerState, serverStateEts_).
+-callback start_link() -> {'ok', pid()} | 'ignore' | {'error', term()}.
+-callback task_list() -> [#watchdog_task{}].
 
 %% API
--export([wait/0]).
--export([status/0, status_/0]).
--export([ready/1, ready/0]).
--export([start_link/1]).
--export([mod_init/1, do_handle_call/3, do_handle_info/2, do_handle_cast/2]).
+-export([
+    wait/0, status/0, status_/0,
+    ready/1, ready/0,
+    add_task/1, add_task_list/1
+]).
+-export([start_link/1, mod_init/1, do_handle_call/3, do_handle_info/2, do_handle_cast/2]).
 
+
+%%%===================================================================
+%% define
+-define(ServerState, serverStateEts_).
+-record(state, {all = [], todo = []}).
 %%%===================================================================
 wait() ->
     wait_all_started(),
     status(),
-    ready(true),
+    ok.
+
+add_task_list(TaskList) ->
+    gen_server:call(?MODULE, {add_task, TaskList}, infinity).
+
+add_task(Task) ->
+    gen_server:call(?MODULE, {add_task, [Task]}, infinity),
     ok.
 
 status() ->
@@ -46,12 +58,11 @@ ready() ->
         _ -> false
     end.
 
-
 wait_all_started() ->
     TaskList = gen_server:call(?MODULE, tasklist),
     lists:foreach(
-        fun({TaskFun, Tip}) ->
-            wait_all_started_1(TaskFun, Tip)
+        fun(#watchdog_task{check_fun = F, tip = Tip}) ->
+            wait_all_started_1(F, Tip)
         end, TaskList),
     ok.
 
@@ -65,24 +76,30 @@ wait_all_started_1(Fun, Tip) ->
     end.
 
 wrapper_check(true, _) -> true;
-wrapper_check(_, Msg) -> ?WARN("wait ~ts ...", [Msg]), false.
+wrapper_check(Ret, Msg) -> ?WARN("wait ~ts ~p ...", [Msg, Ret]), false.
 %%%===================================================================
 %%% public functions
 %%%===================================================================
-start_link(Arg) ->
-    gen_serverw:start_link({local, ?WATCHDOG_OTP}, ?MODULE, Arg, []).
+
+start_link(Mod) ->
+    gen_serverw:start_link({local, ?WATCHDOG_OTP}, ?MODULE, Mod, []).
 
 %%%===================================================================
 %%% Internal functions
 %%%===================================================================	
-mod_init(TaskFun) ->
+mod_init(Mod) ->
+    TaskList = Mod:task_list(),
     erlang:process_flag(trap_exit, true),
     ets:new(?ServerState, [public, named_table, {keypos, #pub_kv.key}, ?ETS_RC]),
-    {ok, TaskFun}.
+    {ok, #state{all = TaskList, todo = TaskList}}.
 
 %%--------------------------------------------------------------------
-do_handle_call(tasklist, _From, TaskFun) ->
-    {reply, TaskFun(), TaskFun};
+do_handle_call({add_task, TaskList}, _From, State) ->
+    #state{all = All, todo = ToDo} = State,
+    {reply, ok, #state{all = lists:append(TaskList, All), todo = lists:append(TaskList, ToDo)}};
+do_handle_call(tasklist, _From, State) ->
+    #state{all = All} = State,
+    {reply, All, State};
 do_handle_call(status, _From, State) ->
     print_status(),
     {reply, ok, State};

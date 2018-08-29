@@ -28,6 +28,7 @@ INCLUDE_DIR += -I ./src/pub/netmsg
 INCLUDE_DIR += -I ../deps/pubs/include
 INCLUDE_DIR += -I ../deps/mysql-otp/include
 INCLUDE_DIR += -I ../deps/gen_rpc/include
+INCLUDE_DIR += -I ../common_include
 
 
 

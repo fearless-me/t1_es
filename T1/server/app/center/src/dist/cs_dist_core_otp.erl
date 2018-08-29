@@ -6,7 +6,7 @@
 %%% @end
 %%% Created : 23. 八月 2018 10:50
 %%%-------------------------------------------------------------------
--module(dist_core_otp).
+-module(cs_dist_core_otp).
 -author("mawenhong").
 
 -behaviour(gen_serverw).
@@ -35,7 +35,7 @@ mod_init(_Args) ->
         list_to_integer(Sid),
         list_to_integer(RunNo)
     ),
-    {ok, #{}}.
+    {ok, ok}.
 
 %%--------------------------------------------------------------------	
 do_handle_call(Request, From, State) ->

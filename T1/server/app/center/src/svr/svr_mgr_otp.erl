@@ -12,6 +12,7 @@
 -behaviour(gen_serverw).
 -include("logger.hrl").
 -include("pub_def.hrl").
+-include("cs_ps_def.hrl").
 
 %% API
 -export([start_link/0]).
@@ -31,7 +32,7 @@ mod_init(_Args) ->
     erlang:process_flag(priority, high),
     svr_mgr_priv:init(),
     ?INFO("init OK"),
-    {ok, #{}}.
+    {ok, ok}.
 
 %%--------------------------------------------------------------------	
 do_handle_call(Request, From, State) ->

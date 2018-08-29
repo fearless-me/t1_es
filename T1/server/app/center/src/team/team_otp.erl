@@ -23,7 +23,7 @@
 %%% public functions
 %%%===================================================================
 start_link() ->
-    gen_serverw:start_link({global, ?TEAM_OTP}, ?MODULE, [], []).
+    gen_serverw:start_link({global, ?CS_TEAM_OTP}, ?MODULE, [], []).
 
 %%%===================================================================
 %%% Internal functions
@@ -37,7 +37,7 @@ mod_init(_Args) ->
     team_logic:tickMsg(),
     ?INFO("[~p] init ok",[self()]),
 
-    {ok, #{}}.
+    {ok, ok}.
 
 %%--------------------------------------------------------------------	
 do_handle_call(Request, From, State) ->

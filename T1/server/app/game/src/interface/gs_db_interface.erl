@@ -23,118 +23,121 @@
 %%-------------------------------------------------------------------
 -export([
 %% 玩家数据库
-    action_g_/3, action_g_/4, action_g_all_/2, action_g_all_/3,
+    action_data_/3, action_data_/4,
+%%    action_data_all_/2, action_data_all_/3,
 %% 账号库
-    action_a_/3, action_a_/4, action_a_all_/2, action_a_all_/3,
+    action_account_/3, action_account_/4,
+%%    action_account_all_/2, action_account_all_/3,
 %% 公共库
-    action_pub_/3, action_pub_/4, action_pub_all_/2, action_pub_all_/3
+    action_public_/3, action_public_/4
+%%    action_public_all_/2, action_public_all_/3
 ]).
 
--spec action_g_(HashKey :: integer(), MsgId :: atom(), Msg :: any()) -> ok.
--spec action_g_(HashKey :: integer(), MsgId :: atom(), Msg :: any(), FromPid :: pid()) -> ok.
--spec action_g_all_(MsgId :: atom(), Msg :: any()) -> integer().
--spec action_g_all_(MsgId :: atom(), Msg :: any(), FromPid :: pid()) -> integer().
+-spec action_data_(HashKey :: integer(), MsgId :: atom(), Msg :: any()) -> ok.
+-spec action_data_(HashKey :: integer(), MsgId :: atom(), Msg :: any(), FromPid :: pid()) -> ok.
+%%-spec action_data_all_(MsgId :: atom(), Msg :: any()) -> integer().
+%%-spec action_data_all_(MsgId :: atom(), Msg :: any(), FromPid :: pid()) -> integer().
 
--spec action_a_(HashKey :: integer(), MsgId :: atom(), Msg :: any()) -> ok.
--spec action_a_(HashKey :: integer(), MsgId :: atom(), Msg :: any(), FromPid :: pid()) -> ok.
--spec action_a_all_(MsgId :: atom(), Msg :: any()) -> integer().
--spec action_a_all_(MsgId :: atom(), Msg :: any(), FromPid :: pid()) -> integer().
+-spec action_account_(HashKey :: integer(), MsgId :: atom(), Msg :: any()) -> ok.
+-spec action_account_(HashKey :: integer(), MsgId :: atom(), Msg :: any(), FromPid :: pid()) -> ok.
+%%-spec action_account_all_(MsgId :: atom(), Msg :: any()) -> integer().
+%%-spec action_account_all_(MsgId :: atom(), Msg :: any(), FromPid :: pid()) -> integer().
 
--spec action_pub_(HashKey :: integer(), MsgId :: atom(), Msg :: any()) -> ok.
--spec action_pub_(HashKey :: integer(), MsgId :: atom(), Msg :: any(), FromPid :: pid()) -> ok.
--spec action_pub_all_(MsgId :: atom(), Msg :: any()) -> integer().
--spec action_pub_all_(MsgId :: atom(), Msg :: any(), FromPid :: pid()) -> integer().
+-spec action_public_(HashKey :: integer(), MsgId :: atom(), Msg :: any()) -> ok.
+-spec action_public_(HashKey :: integer(), MsgId :: atom(), Msg :: any(), FromPid :: pid()) -> ok.
+%%-spec action_public_all_(MsgId :: atom(), Msg :: any()) -> integer().
+%%-spec action_public_all_(MsgId :: atom(), Msg :: any(), FromPid :: pid()) -> integer().
 
 %%-------------------------------------------------------------------
 %% 玩家数据库
-action_g_(HashKey, MsgId, Msg) ->
+action_data_(HashKey, MsgId, Msg) ->
     Mgr = db_proxy:checkout_pool(?DATA_DB_POOL_NAME),
     db_mgr:scheduler_(Mgr, HashKey, {MsgId, Msg, self()}).
 
-action_g_(HashKey, MsgId, Msg, FromPid) ->
+action_data_(HashKey, MsgId, Msg, FromPid) ->
     Mgr = db_proxy:checkout_pool(?DATA_DB_POOL_NAME),
     db_mgr:scheduler_(Mgr, HashKey, {MsgId, Msg, FromPid}).
 
-%%-------------------------------------------------------------------
-action_g_all_(MsgId, Msg) ->
-    PoolRef = db_proxy:pool_pg(?DATA_DB_POOL_NAME),
-    Members = pg_local:get_members(PoolRef),
-    lists:foreach(
-        fun(Mgr) ->
-            db_mgr:scheduler_(Mgr, 0, {MsgId, Msg, self()})
-        end,Members),
-    erlang:length(Members).
-
-action_g_all_(MsgId, Msg, FromPid) ->
-    PoolRef = db_proxy:pool_pg(?DATA_DB_POOL_NAME),
-    Members = pg_local:get_members(PoolRef),
-    lists:foreach(
-        fun(Mgr) ->
-            db_mgr:scheduler_(Mgr, 0, {MsgId, Msg, FromPid})
-        end, Members
-    ),
-    erlang:length(Members).
+%%%%-------------------------------------------------------------------
+%%action_data_all_(MsgId, Msg) ->
+%%    PoolRef = db_proxy:pool_pg(?DATA_DB_POOL_NAME),
+%%    Members = pg_local:get_members(PoolRef),
+%%    lists:foreach(
+%%        fun(Mgr) ->
+%%            db_mgr:scheduler_(Mgr, 0, {MsgId, Msg, self()})
+%%        end,Members),
+%%    erlang:length(Members).
+%%
+%%action_data_all_(MsgId, Msg, FromPid) ->
+%%    PoolRef = db_proxy:pool_pg(?DATA_DB_POOL_NAME),
+%%    Members = pg_local:get_members(PoolRef),
+%%    lists:foreach(
+%%        fun(Mgr) ->
+%%            db_mgr:scheduler_(Mgr, 0, {MsgId, Msg, FromPid})
+%%        end, Members
+%%    ),
+%%    erlang:length(Members).
 
 %%-------------------------------------------------------------------
 %% 账号库
-action_a_(HashKey, MsgId, Msg) ->
+action_account_(HashKey, MsgId, Msg) ->
     Mgr = db_proxy:checkout_pool(?ACCOUNT_DB_POOL_NAME),
     db_mgr:scheduler_(Mgr, HashKey, {MsgId, Msg, self()}).
 
-action_a_(HashKey, MsgId, Msg, FromPid) ->
+action_account_(HashKey, MsgId, Msg, FromPid) ->
     Mgr = db_proxy:checkout_pool(?ACCOUNT_DB_POOL_NAME),
     db_mgr:scheduler_(Mgr, HashKey, {MsgId, Msg, FromPid}).
 
-%%-------------------------------------------------------------------
-action_a_all_(MsgId, Msg) ->
-    PoolRef = db_proxy:pool_pg(?ACCOUNT_DB_POOL_NAME),
-    Members = pg_local:get_members(PoolRef),
-    lists:foreach(
-        fun(Mgr) ->
-            db_mgr:scheduler_(Mgr, 0, {MsgId, Msg, self()})
-        end, Members
-    ),
-    erlang:length(Members).
-
-action_a_all_(MsgId, Msg, FromPid) ->
-    PoolRef = db_proxy:pool_pg(?ACCOUNT_DB_POOL_NAME),
-    Members = pg_local:get_members(PoolRef),
-    lists:foreach(
-        fun(Mgr) ->
-            db_mgr:scheduler_(Mgr, 0, {MsgId, Msg, FromPid})
-        end, Members
-    ),
-    erlang:length(Members).
+%%%%-------------------------------------------------------------------
+%%action_account_all_(MsgId, Msg) ->
+%%    PoolRef = db_proxy:pool_pg(?ACCOUNT_DB_POOL_NAME),
+%%    Members = pg_local:get_members(PoolRef),
+%%    lists:foreach(
+%%        fun(Mgr) ->
+%%            db_mgr:scheduler_(Mgr, 0, {MsgId, Msg, self()})
+%%        end, Members
+%%    ),
+%%    erlang:length(Members).
+%%
+%%action_account_all_(MsgId, Msg, FromPid) ->
+%%    PoolRef = db_proxy:pool_pg(?ACCOUNT_DB_POOL_NAME),
+%%    Members = pg_local:get_members(PoolRef),
+%%    lists:foreach(
+%%        fun(Mgr) ->
+%%            db_mgr:scheduler_(Mgr, 0, {MsgId, Msg, FromPid})
+%%        end, Members
+%%    ),
+%%    erlang:length(Members).
 
 %%-------------------------------------------------------------------
 %% 公共库
-action_pub_(HashKey, MsgId, Msg) ->
+action_public_(HashKey, MsgId, Msg) ->
     Mgr = db_proxy:checkout_pool(?PUBLIC_DB_POOL_NAME),
     db_mgr:scheduler_(Mgr, HashKey, {MsgId, Msg, self()}).
 
-action_pub_(HashKey, MsgId, Msg, FromPid) ->
+action_public_(HashKey, MsgId, Msg, FromPid) ->
     Mgr = db_proxy:checkout_pool(?PUBLIC_DB_POOL_NAME),
     db_mgr:scheduler_(Mgr, HashKey, {MsgId, Msg, FromPid}).
 
-%%-------------------------------------------------------------------
-action_pub_all_(MsgId, Msg) ->
-    PoolRef = db_proxy:pool_pg(?PUBLIC_DB_POOL_NAME),
-    Members = pg_local:get_members(PoolRef),
-    lists:foreach(
-        fun(Mgr) ->
-            db_mgr:scheduler_(Mgr, 0, {MsgId, Msg, self()})
-        end, Members
-    ),
-    erlang:length(Members).
-
-action_pub_all_(MsgId, Msg, FromPid) ->
-    PoolRef = db_proxy:pool_pg(?PUBLIC_DB_POOL_NAME),
-    Members = pg_local:get_members(PoolRef),
-    lists:foreach(
-        fun(Mgr) ->
-            db_mgr:scheduler_(Mgr, 0, {MsgId, Msg, FromPid})
-        end, Members
-    ),
-    erlang:length(Members).
+%%%%-------------------------------------------------------------------
+%%action_public_all_(MsgId, Msg) ->
+%%    PoolRef = db_proxy:pool_pg(?PUBLIC_DB_POOL_NAME),
+%%    Members = pg_local:get_members(PoolRef),
+%%    lists:foreach(
+%%        fun(Mgr) ->
+%%            db_mgr:scheduler_(Mgr, 0, {MsgId, Msg, self()})
+%%        end, Members
+%%    ),
+%%    erlang:length(Members).
+%%
+%%action_public_all_(MsgId, Msg, FromPid) ->
+%%    PoolRef = db_proxy:pool_pg(?PUBLIC_DB_POOL_NAME),
+%%    Members = pg_local:get_members(PoolRef),
+%%    lists:foreach(
+%%        fun(Mgr) ->
+%%            db_mgr:scheduler_(Mgr, 0, {MsgId, Msg, FromPid})
+%%        end, Members
+%%    ),
+%%    erlang:length(Members).
 %%-------------------------------------------------------------------
 

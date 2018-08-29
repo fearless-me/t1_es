@@ -6,41 +6,46 @@
 %%% @end
 %%% Created : 27. 八月 2018 16:53
 %%%-------------------------------------------------------------------
--module(cs_dist_otp).
+-module(dist_monitor).
 -author("mawenhong").
 
 -behaviour(gen_serverw).
 -include("logger.hrl").
 -include("pub_def.hrl").
--include("cs_ps_def.hrl").
 
+-callback start_link() -> {'ok', pid()} | 'ignore' | {'error', term()}.
+-callback slave_started(SlaveNode :: atom()) -> ok.
 
 
 %% API
 -export([is_all_slaves_stared/0]).
--export([start_link/0]).
+-export([start_link/1]).
 -export([mod_init/1, on_terminate/2, do_handle_call/3, do_handle_info/2, do_handle_cast/2]).
 
 
+%%===================================================================
+-record(state, {slaves = [], wait= [], mod}).
+%%===================================================================
+
 is_all_slaves_stared() ->
-    gen_server:call(?CS_DIST_OTP, all_slaves_stared).
+    gen_server:call(?DIST_MONITOR_OTP, all_slaves_stared).
 
 %%%===================================================================
 %%% public functions
 %%%===================================================================
-start_link() ->
-    gen_serverw:start_link({local, ?CS_DIST_OTP}, ?MODULE, [], []).
+start_link(Mod) ->
+    gen_serverw:start_link({local, ?DIST_MONITOR_OTP}, ?MODULE, Mod, []).
 
 %%%===================================================================
 %%% Internal functions
 %%%===================================================================	
-mod_init(_Args) ->
+mod_init(Mod) ->
     erlang:process_flag(trap_exit, true),
-    {ok, []}.
+    {ok, #state{mod = Mod}}.
 
 %%--------------------------------------------------------------------
-do_handle_call(all_slaves_stared, _From, State) ->
-    Ret = ?if_else(State =:= [], true, State),
+do_handle_call(all_slaves_stared, _From, #state{wait = Wait } = State) ->
+    Ret = ?if_else(Wait =:= [], true, Wait),
     {reply, Ret, State};
 do_handle_call(Request, From, State) ->
     ?ERROR("undeal call ~w from ~w", [Request, From]),
@@ -48,10 +53,12 @@ do_handle_call(Request, From, State) ->
 
 %%--------------------------------------------------------------------
 do_handle_info({slave_register, SlaveNode}, State) ->
-    {noreply, lists:append([SlaveNode], State)};
+    #state{wait = Wait, slaves = Slaves } = State,
+    {noreply, State#state{slaves = [SlaveNode | Slaves], wait = [SlaveNode | Wait]}};
 do_handle_info({slave_started, SlaveNode}, State) ->
-    cs_share:sync(SlaveNode),
-    {noreply, lists:delete(SlaveNode, State)};
+    #state{wait = Wait, mod = Mod} = State,
+    Mod:slave_started(SlaveNode),
+    {noreply, State#state{wait = lists:delete(SlaveNode, Wait)}};
 do_handle_info(Info, State) ->
     ?ERROR("undeal info ~w", [Info]),
     {noreply, State}.

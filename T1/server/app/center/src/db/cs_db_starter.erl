@@ -20,7 +20,7 @@
 
 %%--------------------------------------------------------------------
 start() ->
-    true = misc:start_app(db_proxy),
+    true = misc:start_all_app(db_proxy),
     Sid = cs_conf:get_sid(),
     {_PoolOptions, MySqlOptions} = get_inst_opt(),
     {ok, Pid} = mysql:start_link(MySqlOptions),

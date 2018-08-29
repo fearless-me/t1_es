@@ -36,7 +36,7 @@ mod_init(_Args) ->
 
     tick_msg(),
     init_data(?MAX_OBJ),
-    {ok, #{}}.
+    {ok, ok}.
 
 
 init_data(0)->

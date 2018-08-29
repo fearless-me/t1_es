@@ -12,6 +12,8 @@
 -include("logger.hrl").
 -include("pub_def.hrl").
 -include("pub_rec.hrl").
+-include("common_rec.hrl").
+-include("cs_ps_def.hrl").
 -include("cs_priv.hrl").
 
 %% API
@@ -44,11 +46,12 @@ sync() ->
 
 
 sync_over(GSNode, Sid) ->
+
+    ?WARN("server[~p] sync done #", [GSNode]),
+    all_ready(Sid),
     [Info] = mne_ex:dirty_read(m_server_info, Sid),
     mne_ex:dirty_write(Info#m_server_info{status = ?SEVER_STATUS_DONE}),
-    ?WARN("server[~p] sync done #", [GSNode]),
     ps:send_with_from(?CS_SVR_MGR_OTP, allReadyNow, {Sid}),
-    catch all_ready(Sid),
     erlang:garbage_collect(self()),
     ok.
 

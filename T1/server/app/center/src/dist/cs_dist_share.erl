@@ -4,9 +4,9 @@
 %%% @doc
 %%%
 %%% @end
-%%% Created : 16. 八月 2018 15:29
+%%% Created : 28. 八月 2018 8:42
 %%%-------------------------------------------------------------------
--module(gs_share_interface).
+-module(cs_dist_share).
 -author("mawenhong").
 
 %% API

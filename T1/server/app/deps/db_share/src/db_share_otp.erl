@@ -63,7 +63,7 @@ mod_init(_Args) ->
             ?ETS_RC, ?ETS_WC
         ]
     ),
-    {ok, #{}}.
+    {ok, ok}.
 
 %%--------------------------------------------------------------------	
 do_handle_call(Request, From, State) ->

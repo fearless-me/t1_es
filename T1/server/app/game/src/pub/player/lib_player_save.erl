@@ -24,5 +24,5 @@ save(Player) ->
                         NewPos = gs_map_creator_interface:map_init_pos(Mid),
                         Player#m_player_pub{pos = NewPos}
                 end,
-    gs_db_interface:action_g_(Aid, save_player, NewPlayer),
+    gs_db_interface:action_data_(Aid, save_player, NewPlayer),
     ok.

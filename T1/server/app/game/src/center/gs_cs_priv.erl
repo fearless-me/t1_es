@@ -11,6 +11,7 @@
 -include("logger.hrl").
 -include("pub_def.hrl").
 -include("pub_rec.hrl").
+-include("gs_ps_def.hrl").
 -include("gs_cs_def.hrl").
 
 
@@ -111,7 +112,7 @@ connect_cs_node() ->
             skip;
         _ ->
             DbID = gs_conf:get_sid(),
-            Node = gs_conf:get_center(),
+            Node = gs_conf:get_center_node(),
             connect_cs_node(DbID, Node),
             ok
     end,
@@ -127,7 +128,7 @@ connect_cs_node(DBId, Node) ->
             %% 监控节点
             erlang:monitor_node(Node, false),
             erlang:monitor_node(Node, true),
-            gs_share_interface:restart(),
+            gs_share:restart(),
             
             %% 告诉跨服，保存本节点
             case gs_cs_interface:register(Node) of

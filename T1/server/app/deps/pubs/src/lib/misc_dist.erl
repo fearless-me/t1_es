@@ -49,7 +49,7 @@ start_slave(Host, SlaveName, Args) ->
     Command = lists:concat([
         "+S 1 -detached -noinput ", Path,
         " -setcookie ", erlang:get_cookie(), Args]),
-    case slave:start(misc:to_atom(Host), SlaveName, Command) of
+    case slave:start_link(misc:to_atom(Host), SlaveName, Command) of
         {ok, Node} ->
             ?WARN("~p create slave node ~p ok", [node(), Node]),
             Node;

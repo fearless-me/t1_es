@@ -29,7 +29,7 @@ start_link() ->
 mod_init(_Args) ->
     erlang:process_flag(trap_exit, true),
     cs_cache:init(),
-    {ok, #{}}.
+    {ok, ok}.
 
 %%--------------------------------------------------------------------	
 do_handle_call(Request, From, State) ->

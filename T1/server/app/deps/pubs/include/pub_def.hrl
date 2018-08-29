@@ -21,9 +21,9 @@
 -define(ONT_HOUR_MS, 60*60*1000).
 
 
-%% cs 服务器窗口管理进程
--define(CS_SVR_MGR_OTP, csSvrMgr___).
+
 -define(WATCHDOG_OTP, watchdog).
+-define(DIST_MONITOR_OTP, dist_monitor).
 
 %% 服务器类型
 -define(SERVER_TYPE_GS, 1).  % 游戏服

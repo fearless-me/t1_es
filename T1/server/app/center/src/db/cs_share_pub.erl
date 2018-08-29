@@ -11,6 +11,7 @@
 
 -include("pub_def.hrl").
 -include("pub_rec.hrl").
+-include("common_rec.hrl").
 -include("cs_priv.hrl").
 -include("team.hrl").
 

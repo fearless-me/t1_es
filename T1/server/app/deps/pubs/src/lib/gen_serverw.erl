@@ -142,7 +142,7 @@ handle_info(Info, State) ->
     Module = get(?LogicModule),
     try Module:do_handle_info(Info, State)
     catch T : E : ST ->
-        ?ERROR("info ~p:~p,stack:~p", [T, E, ST]),
+        ?ERROR("~p info ~p:~p,stack:~p", [node(), T, E, ST]),
         {noreply, State}
     end.
 

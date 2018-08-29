@@ -2,7 +2,7 @@
 %%% @author mawenhong
 %%% @copyright (C) 2018, <COMPANY>
 %%% @doc
-%%%
+%%% todo : 整合数据库加载(gs/cs)，同时提供设置顺序加载或者并发加载；支持设置加载的优先级
 %%% @end
 %%% Created : 06. 八月 2018 16:24
 %%%-------------------------------------------------------------------
@@ -27,8 +27,8 @@ tasks() ->
     [
         %% task_name, sub_task_count, hashkey, sid, db_func
         %% sub_task_count 如果是0，那么将由 db_func 决定任务数量
-        {serv_start, 1, 1, gs_conf:get_sid(), fun gs_db_interface:action_pub_/3},
-        {load_all_role_info, 0, 0, gs_conf:get_sid(), fun gs_db_interface:action_g_all_/2}
+        {serv_start, 1, 1, gs_conf:get_sid(), fun gs_db_interface:action_public_/3},
+        {load_all_role_info, 1, 1, gs_conf:get_sid(), fun gs_db_interface:action_data_/2}
     ].
 
 task_list() -> lists:map(fun({Task, _, _, _, _}) -> Task end, tasks()).

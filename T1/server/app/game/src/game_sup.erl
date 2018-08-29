@@ -38,12 +38,12 @@ start() ->
         misc:fn_wrapper({"error Logger",            ?Wrap(common_error_logger:start(game_sup, game))}),
         misc:fn_wrapper({"gen rpc app",             ?Wrap(misc:start_all_app(gen_rpc))}),
         misc:fn_wrapper({"config init",             ?Wrap(gs_conf:start("game.ini"))}),
-        misc:fn_wrapper({"db share",                ?Wrap(gs_share_interface:start())}),
+        misc:fn_wrapper({"db share",                ?Wrap(gs_share:start())}),
         misc:fn_wrapper({"db window",               ?Wrap(gs_db_starter:start())}),
         misc:fn_wrapper({"auto compile and load",   ?Wrap(fly:start())}),
 
         %%
-        misc:fn_wrapper({"watchdog",                ?Wrap(misc:start_otp(SupPid, watchdog, worker, [fun gs_watchdog_hook:task_list/0]))}),
+        misc:fn_wrapper({"watchdog",                ?Wrap(misc:start_otp(SupPid, gs_watchdog, worker))}),
         misc:fn_wrapper({"monitor/gc/vms",          ?Wrap(misc:start_otp(SupPid, background_gc, worker))}),
         misc:fn_wrapper({"monitor/gc/vms",          ?Wrap(misc:start_otp(SupPid, vm_memory_monitor, worker, [0.5]))}),
         misc:fn_wrapper({"system monitor",          ?Wrap(misc:start_otp(SupPid, system_monitor, worker))}),
@@ -55,7 +55,7 @@ start() ->
         misc:fn_wrapper({"all logic process",       ?Wrap(misc:start_otp(SupPid, gs_logic_sup, supervisor))}),
         misc:fn_wrapper({"center window process",   ?Wrap(misc:start_otp(SupPid, gs_cs_otp, worker))}),
             
-        watchdog:wait(),
+        watchdog:wait(), watchdog:ready(true),
 
         misc:fn_wrapper({"server tcp listener",     ?Wrap(start_tcp_listener(SupPid))}),
         ok

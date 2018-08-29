@@ -21,6 +21,7 @@
 
 %%-------------------------------------------------------------------
 start(FileName) ->
+    true = misc:start_all_app(econfig),
     ok = econfig:register_config(?CS_INI_CONF, [FileName]).
 
 %%-------------------------------------------------------------------

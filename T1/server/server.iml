@@ -10,8 +10,6 @@
     <content url="file://$MODULE_DIR$">
       <sourceFolder url="file://$MODULE_DIR$/app/center/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/app/center/include" type="erlang-include" />
-      <sourceFolder url="file://$MODULE_DIR$/app/dbs/include" type="erlang-include" />
-      <sourceFolder url="file://$MODULE_DIR$/app/dbs/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/app/deps/cache/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/app/deps/dynamic_compile/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/app/deps/econfig/src" isTestSource="false" />
@@ -41,6 +39,7 @@
       <sourceFolder url="file://$MODULE_DIR$/app/deps/db_proxy/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/app/deps/gen_rpc/include" type="erlang-include" />
       <sourceFolder url="file://$MODULE_DIR$/app/deps/gen_rpc/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/app/common_include" type="erlang-include" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

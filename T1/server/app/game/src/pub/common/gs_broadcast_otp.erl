@@ -34,7 +34,7 @@ mod_init(_Args) ->
     erlang:process_flag(priority, high),
     tcp_codec:init(#net_conf{}),
 
-    {ok, #{}}.
+    {ok, ok}.
 
 %%--------------------------------------------------------------------	
 do_handle_call(Request, From, State) ->

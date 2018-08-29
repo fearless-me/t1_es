@@ -31,7 +31,7 @@ mod_init(_Args) ->
     erlang:process_flag(priority, high),
     gs_cs_priv:init(),
     ?INFO("init OK"),
-    {ok, #{}}.
+    {ok, ok}.
 
 %%--------------------------------------------------------------------
 do_handle_call(Request, From, State) ->

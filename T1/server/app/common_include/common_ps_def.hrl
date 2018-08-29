@@ -8,9 +8,11 @@
 %%%-------------------------------------------------------------------
 -author("mawenhong").
 
--ifndef(PUB_PS_DEF_HRL).
--define(PUB_PS_DEF_HRL, true).
+-ifndef(COMMON_PS_DEF_HRL).
+-define(COMMON_PS_DEF_HRL, true).
 
--define(TEAM_OTP, globalTeamOtp).
+%% cs 服务器窗口管理进程
+-define(CS_SVR_MGR_OTP, csSvrMgr___).
+-define(CS_TEAM_OTP, csTeamOtp___).
 
 -endif.

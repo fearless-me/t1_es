@@ -8,6 +8,7 @@
 %%%-------------------------------------------------------------------
 -module(cs_gs_rpc).
 -author("mawenhong").
+-include("common_ps_def.hrl").
 -include("pub_def.hrl").
 -include("logger.hrl").
 

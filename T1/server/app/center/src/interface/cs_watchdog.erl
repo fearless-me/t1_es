@@ -6,16 +6,20 @@
 %%% @end
 %%% Created : 12. 一月 2018 10:28
 %%%-------------------------------------------------------------------
--module(gs_watchdog_hook).
+-module(cs_watchdog).
+-behaviour(watchdog).
 -author("mawenhong").
+-include("pub_rec.hrl").
 
 
 %% API
--export([task_list/0]).
+-export([start_link/0, task_list/0]).
 
+
+start_link() ->
+    watchdog:start_link(?MODULE).
 
 task_list() ->
     [
-        {fun gs_loader:is_task_all_done/0, "load all data"},
-        {fun gs_cs_interface:is_center_ready/0, "connect to center"}
+        ?WATCHDOG_TASK(fun cs_loader:is_task_all_done/0, "load all data")
     ].

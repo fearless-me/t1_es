@@ -23,6 +23,7 @@ start() ->
     db_share:start(),
     db_share:add_share(cs_share_pub:share_tables()),
     db_share:add_frag_share(cs_share_pub:frag_share_tables(), 1),
+    mnesia:set_master_nodes([node()]),
     ok.
 
 sync(Node) ->

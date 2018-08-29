@@ -28,7 +28,7 @@ init([]) ->
 
 
 start(Module) ->
-    {ok, SupPid} = center_sup:start_link(),
+    {ok, SupPid} = dist_sup:start_link(),
     try
         Module:start_slave(SupPid, dist)
     catch _ : Err : ST ->

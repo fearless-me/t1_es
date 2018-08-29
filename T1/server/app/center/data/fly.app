@@ -24,7 +24,7 @@
 								"../../deps/db_proxy"
                               ]
                     },
-					{inc_dirs,["../include", "../../deps/pubs/include", "../../deps/gen_rpc/include"]
+					{inc_dirs,["../include", "../../deps/pubs/include", "../../deps/gen_rpc/include", "../../common_include"]
 					},
 					{opts,
 						[
@@ -51,6 +51,7 @@
                                ]
 							},
 							{i, "../include"},
+							{i, "../../common_include"},
 							{i, "../../deps/pubs/include"},
 							{i, "../../deps/gen_rpc/include"},
 							{i, "../../deps/mysql-otp/include"}

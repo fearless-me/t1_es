@@ -4,9 +4,9 @@
 %%% @doc
 %%%
 %%% @end
-%%% Created : 28. 八月 2018 8:42
+%%% Created : 16. 八月 2018 15:29
 %%%-------------------------------------------------------------------
--module(dist_share).
+-module(gs_share).
 -author("mawenhong").
 
 %% API
@@ -14,7 +14,9 @@
 
 
 start() ->
+    MasterNode = gs_conf:get_center_node(),
     true = mne_ex:start(),
+    mnesia:set_master_nodes([MasterNode]),
     ok.
 
 restart() ->

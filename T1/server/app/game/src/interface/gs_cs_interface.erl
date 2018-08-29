@@ -41,7 +41,7 @@ register(Node) ->
 allow() ->
     try
         CurNode = erlang:node(),
-        CsNode = gs_conf:get_center(),
+        CsNode = gs_conf:get_center_node(),
         [_CurNodeName, IP | _] = string:tokens(atom_to_list(CurNode), "@"),
         NodeList = ["stopgs@" ++ IP, "reload@" ++ IP, "entopGS@" ++ IP, "dbgEmc@" ++ IP],
         misc:allow_node(CsNode),

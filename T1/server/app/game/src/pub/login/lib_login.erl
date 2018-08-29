@@ -27,7 +27,7 @@ login_2({false, Error}, Req, S)->
 login_2(true, Req, S)->
     #r_login_req{plat_name = PN, plat_account_name = PA} = Req,
     AccountCrc = gs_interface:plat_account_crc(PN, PA),
-    gs_db_interface:action_a_(AccountCrc, account_login,  Req),
+    gs_db_interface:action_account_(AccountCrc, account_login,  Req),
     maps:update(in, maps:get(in, S) + 1, S).
 
 %%--------------------------------------------------------------------
