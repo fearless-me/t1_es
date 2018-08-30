@@ -1,0 +1,73 @@
+#!/usr/bin/env escript
+%% coding: latin-1
+%%%-------------------------------------------------------------------
+%%% @author mwh
+%%% @copyright (C) 2017, <COMPANY>
+%%% @doc
+%%%
+%%% @end
+%%% Created : 08. 六 2017 9:32
+%%%-------------------------------------------------------------------
+
+%% 热更新
+-define(ST_GS, 1).
+-define(ST_CS, 2).
+-define(ST_HTTP, 3).
+
+-define(OP_REF, 	xref).
+-define(OP_STATIC, 	static_check).
+-define(OP_DEL_LOG, delLog).
+
+main(_) ->
+	menu(),
+	ok.
+
+menu() ->
+    os:cmd("CHCP 65001"),
+	io:format(
+		"~n##########################################################~n"
+		"\t1.代码检查(xref)~n"
+		"\t2.代码检查(dialyzer)~n"
+		"\t3.删除日志(all)~n"
+		"\t4.删除日志(gs)~n"
+		"\t5.删除日志(cs)~n"
+		"\t6.开服务器（gs）~n"
+		"\t7.开服务器（cs）~n"
+		"\t999.编译~n"
+		"\t888.打包~n"
+		"\t0.exit~n"
+		"~n##########################################################~n~n"),
+	InputNoStr = io:get_line("Please enter your choice:"),
+	[T | _] = string:tokens(string_strip(InputNoStr, "\n"), " "),
+	{IT, _} = string:to_integer(T),
+	dispatchInput2(IT),
+	menu().
+
+dispatchInput2(0)->
+	erlang:halt();
+dispatchInput2(1)->
+	erlang:spawn(fun()-> os:cmd("start xref.bat") end);
+dispatchInput2(2)->
+	erlang:spawn(fun()-> os:cmd("start dialyzer.bat") end);
+dispatchInput2(3)->
+	erlang:spawn(fun()-> os:cmd(" cd ..\\ && del /q /s *.log && del /q /s *.err") end);
+dispatchInput2(4)->
+	erlang:spawn(fun()-> os:cmd(" cd ..\\app\\game && del /q /s *.log && del /q /s *.err") end);
+dispatchInput2(5)->
+	erlang:spawn(fun()-> os:cmd(" cd ..\\app\\center && del /q /s *.log && del /q /s *.err") end);
+dispatchInput2(6)->
+	erlang:spawn(fun()-> os:cmd("cd  ..\\app\\game\\scripts && call start.bat") end);
+dispatchInput2(7)->
+	erlang:spawn(fun()-> os:cmd("cd  ..\\app\\center\\scripts && call start.bat") end);
+dispatchInput2(888)->
+	erlang:spawn(fun()-> os:cmd("cd  ..\\app\\scripts && start escript.exe cpk.ers pkg") end);
+dispatchInput2(999)->
+    erlang:spawn(fun()-> os:cmd("start escript.exe cc_fast.ers") end);
+dispatchInput2(_)->
+     io:format("error retry !!").
+
+
+string_strip(Str, []) ->
+	Str;
+string_strip(Str, [CH | L]) ->
+	string_strip(string:strip(Str, both, CH), L).
