@@ -1,13 +1,13 @@
-%%#!/usr/bin/env escript
+#!/usr/bin/env escript
 -module(cc_fast).
-
--export([main/1]).
+-author(tiancheng).
 
 -define(IsOnlyCht, 1).
 -define(CompileEts, compileEts).
 -define(CompileFilesEts, compileFilesEts).
--define(CompileListDEts, compileServerFileListDEts).
-
+-define(CompileListDEts, get_dets_name(ServerType)).
+-define(ST_GS, game_server).
+-define(ST_CS, center_server).
 
 -record(rec_serverfile, {
 	fileName = "",
@@ -16,36 +16,55 @@
 
 
 main(_) ->
+    file:make_dir("../ebin"),
 	ets:new(?CompileEts, [public, named_table, {keypos, 1}]),
 	ets:new(?CompileFilesEts, [public, named_table, {keypos, 1},{write_concurrency, true},{read_concurrency, true}]),
-	dets:open_file(?CompileListDEts,
-		[
-			{keypos, #rec_serverfile.fileName},
-			{type, set},
-			{auto_save, 1000},
-			{file, "compileListDEtsFile.data"}
-		]),
-	menu(),
+    menu0(),
 	ok.
 
+menu0() ->
+    log(
+        "~n##########################################################~n"
+        "~n"
+        "\t1.~p~n"
+        "\t2.~p~n"
+        "~n"
+        "\t0.exit~n"
+        "~n##########################################################~n~n"
+    ,[?ST_GS, ?ST_CS]),
+	set_title(unknown_server, unkonw_region, unknown_type, unknown_mode),
+    InputNoStr = io:get_line("Please enter your choice:"),
+    {InputNo, _Rest} = string:to_integer(InputNoStr),
+    dispatchInput0(InputNo).
+
+
+dispatchInput0(0) ->
+    ok;
+dispatchInput0(1) -> menu1(?ST_GS);
+dispatchInput0(2) -> menu1(?ST_CS);
+dispatchInput0(_) -> menu0().
+
+
 -ifdef(IsOnlyCht).
-menu() ->
-	dispatchInput(2).
+menu1(ServerType) ->
+    ensure_dets(ServerType),
+	dispatchInput(ServerType, 2).
 -else.
-menu() ->
+menu1(ServerType) ->
+    ensure_dets(ServerType),
 	log(
 		"~n##########################################################~n"
 		"\t\tLUNA multi-language compile~n"
 		"~n"
 		"\t1.(chs) China~n"
 		"\t2.(cht) Taiwan~n"
-%%		"\t3.(enu) English~n"
-%%		"\t4.(kor) Korea~n"
-%%		"\t5.(xmt) Malaysia~n"
-%%		"\t6.(tha) Thailand~n"
-%%		"\t7.(rus) Russia~n"
-%%		"\t8.(jpn) Japan~n"
-%%		"\t9.(vietnam)  Vietnam~n"
+		"\t3.(enu) English~n"
+		"\t4.(kor) Korea~n"
+		"\t5.(xmt) Malaysia~n"
+		"\t6.(tha) Thailand~n"
+		"\t7.(rus) Russia~n"
+		"\t8.(jpn) Japan~n"
+		"\t9.(vietnam)  Vietnam~n"
 		"~n"
 		"\t[0  ].exit~n"
 		"\t[888].package~n"
@@ -54,37 +73,37 @@ menu() ->
 	%% 现在还没有多语言版本
 	InputNoStr = io:get_line("Please enter your choice:"),
 	{InputNo, _Rest} = string:to_integer(InputNoStr),
-	dispatchInput(InputNo).
+	dispatchInput(ServerType, InputNo).
 -endif.
 
-dispatchInput(0) ->
-	dets:close(?CompileListDEts),
+dispatchInput(ServerType, 0) ->
+	dets:close(get_dets_name(ServerType)),
 	ok;
-dispatchInput(1) -> menu2(chs);
-dispatchInput(2) -> menu2(cht);
-dispatchInput(3) -> menu2(enu);
-dispatchInput(4) -> menu2(kor);
-dispatchInput(5) -> menu2(xmt);
-dispatchInput(6) -> menu2(tha);
-dispatchInput(7) -> menu2(rus);
-dispatchInput(8) -> menu2(jpn);
-dispatchInput(9) -> menu2(vietnam);
-dispatchInput(888) ->
+dispatchInput(ServerType, 1) -> menu2(ServerType, chs);
+dispatchInput(ServerType, 2) -> menu2(ServerType, cht);
+dispatchInput(ServerType, 3) -> menu2(ServerType, enu);
+dispatchInput(ServerType, 4) -> menu2(ServerType, kor);
+dispatchInput(ServerType, 5) -> menu2(ServerType, xmt);
+dispatchInput(ServerType, 6) -> menu2(ServerType, tha);
+dispatchInput(ServerType, 7) -> menu2(ServerType, rus);
+dispatchInput(ServerType, 8) -> menu2(ServerType, jpn);
+dispatchInput(ServerType, 9) -> menu2(ServerType, vietnam);
+dispatchInput(_, 888) ->
 	jump_package(),
-	menu();
-dispatchInput(_) -> menu().
+	menu0();
+dispatchInput(ServerType, _) -> menu1(ServerType).
 
-menu2(Lang) ->
+menu2(ServerType, Lang) ->
 	log(
 		"~n##########################################################~n"
 		"\t\tselect compile sub order~n"
 		"~n"
-		"\t> 1.   gs(release)~n"
+		"\t> 1.   ~p(release)~n"
 		"~n"
-		"\t> 11.  gs(debug)~n"
+		"\t> 11.  ~p(debug)~n"
 %%		"~n"
 %%		"\t> 2.   gs fast(release)~n"
-		"\t> 12.  gs fast(debug)~n"
+		"\t> 12.  ~p fast(debug)~n"
 		"~n"
 %%		"\t> 23.  Engineer(release)~n"
 		"\t> 24.  Engineer(debug)~n"
@@ -93,59 +112,59 @@ menu2(Lang) ->
 		"\t> 8.   clean~n"
 		"\t> 9.   return main...~n"
 		"\t> 888. package~n"
-		"~n##########################################################~n~n"
-	),
-	set_title(Lang, unknown_type, unknown_mode),
+		"~n##########################################################~n~n",
+	[ServerType, ServerType, ServerType]),
+	set_title(ServerType, Lang, unknown_type, unknown_mode),
 	InputNoStr = io:get_line("Please enter your choice:"),
 	{InputNo, _Rest} = string:to_integer(InputNoStr),
-	dispatchInput2(Lang, InputNo).
+	dispatchInput2(ServerType, Lang, InputNo).
 
-dispatchInput2(Lang, 1) ->
+dispatchInput2(ServerType, Lang, 1) ->
 	setCompileFastParam(undefined),
-	compile(Lang, 1);
-%%dispatchInput2(Lang, 2) ->
-%%	Data = getChangeFileList(),
+	compile(ServerType, Lang, 1);
+%%dispatchInput2(ServerType, Lang, 2) ->
+%%	Data = getChangeFileList(ServerType),
 %%	setCompileFastParam(Data),
 %%	timer:sleep(2000),
 %%	compile(Lang, 2);
-dispatchInput2(Lang, 11) ->
+dispatchInput2(ServerType, Lang, 11) ->
 	setCompileFastParam(undefined),
-	compile(Lang, 11);
-dispatchInput2(Lang, 12) ->
-	Data = getChangeFileList(),
+	compile(ServerType, Lang, 11);
+dispatchInput2(ServerType, Lang, 12) ->
+	Data = getChangeFileList(ServerType),
 	setCompileFastParam(Data),
 	timer:sleep(2000),
-	compile(Lang, 12);
-dispatchInput2(_, 0) ->
-	dets:close(?CompileListDEts),
+	compile(ServerType, Lang, 12);
+dispatchInput2(ServerType, _, 0) ->
+	dets:close(get_dets_name(ServerType)),
 	erlang:halt();
-dispatchInput2(Lang, 888) ->
+dispatchInput2(ServerType, Lang, 888) ->
 	jump_package(),
-	menu2(Lang);
-dispatchInput2(_Lang, 9) ->
-	menu();
-dispatchInput2(Lang, 8) ->
-	dets:delete_all_objects(?CompileListDEts),
+	menu2(ServerType, Lang);
+dispatchInput2(_ServerType, _Lang, 9) ->
+	menu0();
+dispatchInput2(ServerType, Lang, 8) ->
+	dets:delete_all_objects(get_dets_name(ServerType)),
 	os:cmd("cd ../ebin/ && del /q /s *.*"),
 	warnLog("===> clean success!! <===~n~n"),
-	menu2(Lang);
-%%dispatchInput2(Lang, 23) ->
+	menu2(ServerType, Lang);
+%%dispatchInput2(ServerType, Lang, 23) ->
 %%	setSearchFileData(undefined),
-%%	searchFile(false, {Lang, 23}, scan_all_files());
-dispatchInput2(Lang, 24) ->
+%%	searchFile(false, {Lang, 23}, scan_all_files(ServerType));
+dispatchInput2(ServerType, Lang, 24) ->
 	setSearchFileData(undefined),
-	searchFile(false, {Lang, 24}, scan_all_files());
-dispatchInput2(Lang, _) ->
-	menu2(Lang).
+	searchFile(ServerType, false, {Lang, 24}, scan_all_files(ServerType));
+dispatchInput2(ServerType, Lang, _) ->
+	menu2(ServerType, Lang).
 
-searchFile(false, {Lang, _XH} = Param1, {_HrlFileList, ErlFileList, _Opts} = Param2) ->
+searchFile(ServerType, false, {Lang, _XH} = Param1, {_HrlFileList, ErlFileList, _Opts} = Param2) ->
 	log("\t[0] ===> return to main menu~n", []),
 	InputNoStr1 = io:get_line("Input search file key words:"),
 	InputNoStr2 = string_strip(string_strip(InputNoStr1), "\n"),
 	case InputNoStr2 of
 		"0" ->
 			setSearchFileData(undefined),
-			menu2(Lang);
+			menu2(ServerType, Lang);
 		_ ->
 			F =
 				fun(File, {IsEnough, {Number, AccL}} = Data) ->
@@ -172,14 +191,14 @@ searchFile(false, {Lang, _XH} = Param1, {_HrlFileList, ErlFileList, _Opts} = Par
 						end,
 					lists:foreach(FF, lists:reverse(List)),
 					setSearchFileData(List),
-					searchFile(true, Param1, Param2);
+					searchFile(ServerType, true, Param1, Param2);
 				_ ->
 					warnLog("No search~n"),
-					searchFile(false, Param1, Param2)
+					searchFile(ServerType, false, Param1, Param2)
 			end
 	end;
 	
-searchFile(_, {Lang, _XH} = Param1, {_HrlFileList, _ErlFileList, Opts} = Param2) ->
+searchFile(ServerType, _, {Lang, _XH} = Param1, {_HrlFileList, _ErlFileList, Opts} = Param2) ->
 	warnLog("[*] ===> compile all searched ~p file(s)", [safe_length(getSearchFileData())]),
 	warnLog("[0] ===> return to main menu", []),
 	
@@ -188,20 +207,20 @@ searchFile(_, {Lang, _XH} = Param1, {_HrlFileList, _ErlFileList, Opts} = Param2)
 	case InputNoStr2 of
 		"0" ->
 			setSearchFileData(undefined),
-			menu2(Lang);
+			menu2(ServerType, Lang);
 		_ ->
 			case InputNoStr2 of
 				"*" ->
-					compileSearchFile(0, Param1, Opts, getSearchFileData());
+					compileSearchFile(ServerType, 0, Param1, Opts, getSearchFileData());
 				_ ->
 				case string:to_integer(InputNoStr2) of
 					{Index, []} when erlang:is_integer(Index)->
-						compileSearchFile(Index, Param1, Opts, getSearchFileData());
+						compileSearchFile(ServerType, Index, Param1, Opts, getSearchFileData());
 					_ ->
 						skip
 				end			
 			end,
-			searchFile(false, Param1, Param2)
+			searchFile(ServerType,  false, Param1, Param2)
 	end.
 	
 safe_length(L) when is_list(L) ->
@@ -209,17 +228,17 @@ safe_length(L) when is_list(L) ->
 safe_length(_)->
 	0.
 
-compileSearchFile(_Index, _Param1, _Opts, undefined)->
+compileSearchFile(_ServerType, _Index, _Param1, _Opts, undefined)->
 	skip;
-compileSearchFile(0, {Lang, XH}, Opts, List)->
+compileSearchFile(ServerType, 0, {Lang, XH}, Opts, List)->
 	FileList = [File || {_, File} <- List],
 	setCompileFastParam({true, FileList, Opts, []}),
-	compile(Lang, XH);
-compileSearchFile(Index, {Lang, XH}, Opts, List)->
+	compile(ServerType, Lang, XH);
+compileSearchFile(ServerType, Index, {Lang, XH}, Opts, List)->
 	case lists:keyfind(Index, 1, List) of
 		{_, File} ->
 			setCompileFastParam({true, [File], Opts, []}),
-			compile(Lang, XH);
+			compile(ServerType, Lang, XH);
 		_ ->
 			skip
 	end.	
@@ -235,21 +254,21 @@ foldlEx(F, Accu, [Hd|Tail]) ->
 	foldlEx(F, F(Hd, Accu), Tail);
 foldlEx(F, Accu, []) when is_function(F, 2) -> Accu.
 
-getCompileServer(1) -> gs;
-getCompileServer(2) -> gs;
-getCompileServer(23) -> gs;
-getCompileServer(11) -> gsD;
-getCompileServer(24) -> gsD;
-getCompileServer(_) -> gsD.
+getCompileServer(1) -> release;
+getCompileServer(2) -> release;
+getCompileServer(23) -> release;
+getCompileServer(11) -> debug;
+getCompileServer(24) -> debug;
+getCompileServer(_) -> debug.
 
 jump_package() ->
 	os:cmd(" cd ../../scripts/ && start escript.exe cpk.ers pkg"),
 	ok.
 
-compile(Lang, 1) ->
+compile(ServerType, Lang, 1) ->
 	warnLog("now path:~p", [file:get_cwd()]),
 	%% 先生成版本文件
-    set_title(Lang, getCompileServer(1), allCompile),
+    set_title(ServerType, Lang, getCompileServer(1), allCompile),
 	Ret=os:cmd("start /B escript.exe version.ers"),
 	io:format("~ts~n",[Ret]),
 	waitATime(5000),
@@ -270,27 +289,27 @@ compile(Lang, 1) ->
 			errorLog("***compile [~p,~p] ERROR ERROR ERROR !!!*** ~ts ~n", [Lang, Target, time_format()])
 	end,
 
-	menu2(Lang);
-compile(Lang, V) ->
+	menu2(ServerType, Lang);
+compile(ServerType, Lang, V) ->
 	warnLog("now path:~p~n", [file:get_cwd()]),
 	Target = getCompileServer(V),
 	ets:delete_all_objects(?CompileEts),
 	ets:insert(?CompileFilesEts,{1,0}),
 
-	{Schedulers, LogFile, Opts, FileList} = make_cfg(Lang, Target, V), 
-	{TaskNum, Ms} = make_worker(FileList, Schedulers, LogFile, Lang, Target, Opts),
+	{Schedulers, LogFile, Opts, FileList} = make_cfg(ServerType, Lang, Target, V),
+	{TaskNum, Ms} = make_worker(ServerType, FileList, Schedulers, LogFile, Lang, Target, Opts),
 
 	try
 		loop_wait(TaskNum),
 
-		compile_done(Ms, LogFile, Lang, Target)
+		compile_done(ServerType, Ms, LogFile, Lang, Target)
 	catch
 		_:Why:St->
 			errorLog("***compile [~p,~p] ERROR ERROR ERROR !!!*** ~ts ~p,~p ~n",
 				[Lang, Target, time_format(), Why, St])
 	end,
 
-	menu2(Lang).
+	menu2(ServerType, Lang).
 
 checkCompileError(FileName)->
 	{ok,Binary} = file:read_file(FileName),
@@ -323,14 +342,14 @@ loop_wait(N) ->
 	end,
 	loop_wait(N - 1).
 
-compile2(SrcFile, Opts, LogFile, FileNumbers) ->
+compile2(ServerType, SrcFile, Opts, LogFile, FileNumbers) ->
 	Ret = compile:file(SrcFile, [return, report_errors, error_summary, bin_opt_info | Opts]), %% report,
 	{CompileResult, Str} = check_return(SrcFile, Ret),
 
 	case CompileResult =/= error of
 		true ->
 			CurChangeTime = getFileChangeTime(SrcFile),
-			dets:insert(?CompileListDEts, #rec_serverfile{fileName = SrcFile, changeTime = CurChangeTime});
+			dets:insert(get_dets_name(ServerType), #rec_serverfile{fileName = SrcFile, changeTime = CurChangeTime});
 		_ ->
 			skip
 	end,
@@ -362,9 +381,9 @@ check_return(SrcFile, _Reason) ->
 check_compile_error(_FileName) ->
 	ets:info(?CompileEts, size).
 
-make_worker([], _Schedulers, _LogFile, _Lang, _Target, _Opts) ->
+make_worker(_, [], _Schedulers, _LogFile, _Lang, _Target, _Opts) ->
 	{0, os:system_time(milli_seconds)};
-make_worker(FileList, Schedulers, LogFile, Lang, Target, Opts) ->
+make_worker(ServerType, FileList, Schedulers, LogFile, Lang, Target, Opts) ->
 
 	FileNumbers = erlang:length(FileList),
 	Once = trunc(FileNumbers / Schedulers),
@@ -393,7 +412,7 @@ make_worker(FileList, Schedulers, LogFile, Lang, Target, Opts) ->
 						fun(File) ->
 						    case check_compile_error(LogFile) of
 						        0 ->
-						            compile2(File, Opts, LogFile, FileNumbers);
+						            compile2(ServerType, File, Opts, LogFile, FileNumbers);
 						        _ ->
 						            skip
 						    end
@@ -407,7 +426,7 @@ make_worker(FileList, Schedulers, LogFile, Lang, Target, Opts) ->
 		end, 1, L1),
 	{TaskNum, StartTime}.
 
-compile_done(StartTime, LogFile, Lang, Target) ->
+compile_done(ServerType, StartTime, LogFile, Lang, Target) ->
 	DiffMs = os:system_time(milli_seconds) - StartTime,
 	Now = time_format(),
 
@@ -421,7 +440,7 @@ compile_done(StartTime, LogFile, Lang, Target) ->
 					F =
 						fun(File) ->
 							CurChangeTime = getFileChangeTime(File),
-							dets:insert(?CompileListDEts, #rec_serverfile{fileName = File, changeTime = CurChangeTime})
+							dets:insert(get_dets_name(ServerType), #rec_serverfile{fileName = File, changeTime = CurChangeTime})
 						end,
 					case getCompileFastParam() of
 						{_, _FileList, _Opts, HrlList} ->
@@ -429,7 +448,7 @@ compile_done(StartTime, LogFile, Lang, Target) ->
 							lists:foreach(F, HrlList);
 						_ ->
 							%% 全部编译成功，更新头文件
-							{HrlFileList, _ErlFileList, _Opts} = scan_all_files(),
+							{HrlFileList, _ErlFileList, _Opts} = scan_all_files(ServerType),
 							lists:foreach(F, HrlFileList)
 					end;
 				_ ->
@@ -451,26 +470,25 @@ compile_done(StartTime, LogFile, Lang, Target) ->
 	dLog(LogFile, "~n^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^~n~n", ok),
 	ok.
 
-make_cfg(Lang, Target, _V) ->
-	FileName = io_lib:format("compile_~p_~p.txt", [Lang, Target]),
+make_cfg(ServerType, Lang, Target, _V) ->
+	FileName = io_lib:format("compile_~p_~p_~p.txt", [ServerType, Lang, Target]),
 	file:write_file(FileName, ""),
 
-	{CompileType, FileList, Opts} = scan_files(getCompileFastParam()),
+	{CompileType, FileList, Opts} = scan_files(ServerType, getCompileFastParam()),
 	Schedulers = erlang:min(schedulers(), erlang:length(FileList)),
 
-	set_title(Lang, Target, CompileType),
+	set_title(ServerType, Lang, Target, CompileType),
 	{Schedulers, FileName, make_opts(Opts, Lang, Target), FileList}.
 
-scan_files({IsFast, FileList, Opts, _})->
+scan_files(_ServerType, {IsFast, FileList, Opts, _})->
 	case IsFast of
 		true ->
 			{fastCompile, FileList, Opts};
 		_ ->
 			{allCompile, FileList, Opts}
 	end;
-scan_files(undefined)->
-	{ok, Config} = file:consult("./mm.config"),
-	[{ SrcList, Opts} | _] = Config,
+scan_files(ServerType, undefined)->
+	{_, SrcList, Opts}  = get_server_config(ServerType),
 
 	SrcFileList =
 	    lists:foldl(
@@ -479,9 +497,8 @@ scan_files(undefined)->
 	    end, [], SrcList),
 	{allCompile, SrcFileList, Opts}.
 
-scan_all_files()->
-	{ok, Config} = file:consult("./mm.config"),
-	[{ SrcList, Opts} | _] = Config,
+scan_all_files(ServerType)->
+	{_, SrcList, Opts} = get_server_config(ServerType),
 
 	SrcFileList =
 	    lists:foldl(
@@ -497,6 +514,18 @@ scan_all_files()->
 
 	{IncFileList, SrcFileList, Opts}.
 
+
+get_server_config(ServerType) ->
+	{ok, [Config]} = file:consult("./mm.config"),
+	do_get_server_config(ServerType, Config).
+
+do_get_server_config(_, []) ->
+	[];
+do_get_server_config(ServerType, [{ServerType, _, _} = Config | _]) ->
+	Config;
+do_get_server_config(ServerType, [_ | Configs]) ->
+	do_get_server_config(ServerType, Configs).
+
 schedulers()->
 	case catch erlang:system_info(schedulers_online) of
 		{'EXIT', _} ->
@@ -507,16 +536,16 @@ schedulers()->
 			Cpu
 	end.
 
-make_opts(Opts, Lang, gsD) ->
+make_opts(Opts, Lang, debug) ->
 	[{d, 'Region', Lang}, debug_info | Opts];
-make_opts(Opts, Lang, gs) ->
+make_opts(Opts, Lang, release) ->
 	[{d, 'Region', Lang},{d,'RELEASE'} | Opts].
 
-set_title(Lang, Mode, CompileType) ->
+set_title(ServerType, Lang, Mode, CompileType) ->
 	case os:type() of
 		{win32, _} ->
 			{_, Cwd} = file:get_cwd(),
-			os:cmd(io_lib:format('title \"~p <<~p>> <<~p>> <<~p>>\"', [erlang:list_to_binary(Cwd), Lang, Mode,CompileType]));
+			os:cmd(io_lib:format('title \"~p <<~p>> <<~p>> <<~p>> <<~p>>\"', [erlang:list_to_binary(Cwd), ServerType, Lang, Mode,CompileType]));
 		_ ->
 			skip
 	end.
@@ -611,12 +640,12 @@ list_errors(F, [{Mod, E} | Es], Acc) ->
 	list_errors(F, Es, [Msg | Acc]);
 list_errors(_F, [], Acc) -> Acc.
 
-getChangeFileList() ->
-	{HrlFileList, ErlFileList, Opts} = scan_all_files(),
+getChangeFileList(ServerType) ->
+	{HrlFileList, ErlFileList, Opts} = scan_all_files(ServerType),
 	warnLog("===> scan files number include[~p] scr[~p]", [erlang:length(HrlFileList), erlang:length(ErlFileList)]),
-	HrlChangeList = saveFileChangeTime(HrlFileList),
+	HrlChangeList = saveFileChangeTime(ServerType, HrlFileList),
 	warnLog("===> hrl changs number:~p", [erlang:length(HrlChangeList)]),
-	ErlChangeList = saveFileChangeTime(ErlFileList),
+	ErlChangeList = saveFileChangeTime(ServerType, ErlFileList),
 	warnLog("===> erl changs number:~p", [erlang:length(ErlChangeList)]),
 	case HrlChangeList of
 		[] ->
@@ -627,11 +656,11 @@ getChangeFileList() ->
 			{false, ErlFileList, Opts, HrlFileList}
 	end.
 
-saveFileChangeTime(List) ->
+saveFileChangeTime(ServerType, List) ->
 	F =
 		fun(File, AccL) ->
 			CurChangeTime = getFileChangeTime(File),
-			case dets:lookup(?CompileListDEts, File) of
+			case dets:lookup(get_dets_name(ServerType), File) of
 				[#rec_serverfile{changeTime = ChangeTime}] when CurChangeTime =:= ChangeTime ->
 					AccL;
 				_ ->
@@ -697,3 +726,18 @@ dLog(File,Fmt, Args, Flag)->
 		_ ->
 			log(Str)
 	end.
+
+ensure_dets(ServerType) ->
+    dets:open_file(get_dets_name(ServerType),
+        [
+            {keypos, #rec_serverfile.fileName},
+            {type, set},
+            {auto_save, 1000},
+            {file, get_dets_file(ServerType)}
+        ]).
+
+get_dets_name(ServerType) ->
+    list_to_atom(lists:concat([compileServerFileListDEts,"_", ServerType])).
+
+get_dets_file(ServerType) ->
+    lists:flatten(io_lib:format("compileListDEtsFile.~p.data", [ServerType])).
