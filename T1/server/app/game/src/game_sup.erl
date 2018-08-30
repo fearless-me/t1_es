@@ -51,7 +51,7 @@ start() ->
         misc:fn_wrapper({"login window",            ?Wrap(misc:start_otp(SupPid, login_otp, worker))}),
         misc:fn_wrapper({"serv_cache",              ?Wrap(misc:start_otp(SupPid, gs_cache_otp, worker))}),
         misc:fn_wrapper({"broadcast mod",           ?Wrap(misc:start_otp(SupPid, gs_broadcast_otp, worker))}),
-        misc:fn_wrapper({"serv data loader",        ?Wrap(misc:start_otp(SupPid, gs_loader_otp, worker))}),
+        misc:fn_wrapper({"serv data loader",        ?Wrap(misc:start_otp(SupPid, gs_data_loader, worker))}),
         misc:fn_wrapper({"all logic process",       ?Wrap(misc:start_otp(SupPid, gs_logic_sup, supervisor))}),
         misc:fn_wrapper({"center window process",   ?Wrap(misc:start_otp(SupPid, gs_cs_otp, worker))}),
             

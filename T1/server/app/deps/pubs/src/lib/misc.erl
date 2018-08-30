@@ -15,7 +15,7 @@
 -export([
     start_app/1, start_all_app/1, os_type/0, halt/1, halt/2, nnl/0,  nnl/1,
     system_info/0, set_system_time/1, fn_wrapper/1, master_node/0,
-    b2i/1, i2b/1, ntoa/1, ntoab/1,
+    b2i/1, i2b/1, ntoa/1, ntoab/1, fib/1, 
     atom_to_binary/1, to_atom/1, create_atom/2, list_to_string_suffix/2,
     register_process/2, register_process/3, registered_name/0, registered_name/1,
     process_node/1,  whereis_lg/1, allow_node/1,
@@ -485,3 +485,12 @@ start_otp(SupPid, Name, Module, Type, Params) ->
     {ok, _} = ?CHILD(SupPid, Name, Module, Type, Params),
     ok.
 
+
+%%
+fib(0) -> 1;
+fib(1) -> 1;
+fib(N) -> do_fib(N, 0, 1).
+
+do_fib(0, _, B) -> B;
+do_fib(N, A, B) -> do_fib(N-1, B, A+B).
+    

@@ -21,5 +21,5 @@ start_link() ->
 
 task_list() ->
     [
-        ?WATCHDOG_TASK(fun cs_loader:is_task_all_done/0, "load all data")
+        ?WATCHDOG_TASK(fun cs_data_loader:task_all_done/0, "load all data")
     ].

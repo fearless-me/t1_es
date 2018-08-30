@@ -42,7 +42,7 @@ start() ->
         misc:fn_wrapper({"auto compile and load",   ?Wrap(fly:start())}),
 
         misc:fn_wrapper({"dist monitor otp",        ?Wrap(misc:start_otp(SupPid, cs_dist_monitor, worker))}),
-        misc:fn_wrapper({"serv data loader",        ?Wrap(misc:start_otp(SupPid, cs_loader_otp, worker))}),
+        misc:fn_wrapper({"serv data loader",        ?Wrap(misc:start_otp(SupPid, cs_data_loader, worker))}),
         misc:fn_wrapper({"watchdog",                ?Wrap(misc:start_otp(SupPid, cs_watchdog, worker))}),
         misc:fn_wrapper({"monitor/gc/vms",          ?Wrap(misc:start_otp(SupPid, background_gc, worker))}),
         misc:fn_wrapper({"monitor/gc/vms",          ?Wrap(misc:start_otp(SupPid, vm_memory_monitor, worker, [0.5]))}),

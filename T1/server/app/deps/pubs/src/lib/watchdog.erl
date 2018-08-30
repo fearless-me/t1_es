@@ -23,7 +23,7 @@
     ready/1, ready/0,
     add_task/1, add_task_list/1
 ]).
--export([start_link/1, mod_init/1, do_handle_call/3, do_handle_info/2, do_handle_cast/2]).
+-export([start_link/1, start_link/2, mod_init/1, do_handle_call/3, do_handle_info/2, do_handle_cast/2]).
 
 
 %%%===================================================================
@@ -83,6 +83,9 @@ wrapper_check(Ret, Msg) -> ?WARN("wait ~ts ~p ...", [Msg, Ret]), false.
 
 start_link(Mod) ->
     gen_serverw:start_link({local, ?WATCHDOG_OTP}, ?MODULE, Mod, []).
+
+start_link(Name, Mod) ->
+    gen_serverw:start_link({local, Name}, ?MODULE, Mod, []).
 
 %%%===================================================================
 %%% Internal functions

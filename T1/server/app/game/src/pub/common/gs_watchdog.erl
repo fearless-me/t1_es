@@ -23,6 +23,6 @@ start_link() ->
 
 task_list() ->
     [
-        ?WATCHDOG_TASK(fun gs_loader:is_task_all_done/0, "load all data"),
+        ?WATCHDOG_TASK(fun gs_data_loader:task_all_done/0, "load all data"),
         ?WATCHDOG_TASK(fun gs_cs_interface:is_center_ready/0, "connect to center")
     ].

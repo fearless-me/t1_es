@@ -12,6 +12,11 @@
 -behaviour(gen_server).
 -include("logger.hrl").
 
+%% API
+-export([start_link/1, start_link/2, start_link/3, start_link/4]).
+-export([start_link2/1, start_link2/2, start_link2/3, start_link2/4]).
+-export([init/1, handle_call/3, handle_cast/2, handle_info/2, terminate/2, code_change/3]).
+
 -callback mod_init(Args :: term()) ->
     {ok, State :: term()} | {ok, State :: term(), timeout() | hibernate} |
     {stop, Reason :: term()} | ignore.
@@ -31,15 +36,14 @@
     {noreply, NewState :: term()} |
     {noreply, NewState :: term(), timeout() | hibernate} |
     {stop, Reason :: term(), NewState :: term()}.
+-callback on_terminate(Reason :: (normal | shutdown | {shutdown, term()} | term()),
+    State :: term()) ->
+    term().
+
+-optional_callbacks([on_terminate/2]).
 
 %% define
 -define(LogicModule, myLogicModule).
-
-%% API
--export([start_link/1, start_link/2, start_link/3, start_link/4]).
--export([start_link2/1, start_link2/2, start_link2/3, start_link2/4]).
--export([init/1, handle_call/3, handle_cast/2, handle_info/2,
-    terminate/2, code_change/3]).
 
 %%%===================================================================
 %%% public functions

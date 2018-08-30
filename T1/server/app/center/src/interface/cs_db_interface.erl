@@ -22,43 +22,46 @@
 -include("cs_dbpool_def.hrl").
 
 %%-------------------------------------------------------------------
+
 -export([
 %% 玩家数据库
-    action_p_/3, action_p_/4, action_p_all_/2, action_p_all_/3,
+    action_data_/3, action_data_/4,
+%%    action_data_all_/2, action_data_all_/3,
 %% 账号库
-    action_a_/3, action_a_/4, action_a_all_/2, action_a_all_/3,
+    action_account_/3, action_account_/4,
+%%    action_account_all_/2, action_account_all_/3,
 %% 公共库
-    action_pub_/3, action_pub_/4, action_pub_all_/2, action_pub_all_/3
+    action_public_/3, action_public_/4
+%%    action_public_all_/2, action_public_all_/3
 ]).
 
+-spec action_data_(HashKey :: integer(), MsgId :: atom(), Msg :: any()) -> ok.
+-spec action_data_(HashKey :: integer(), MsgId :: atom(), Msg :: any(), FromPid :: pid()) -> ok.
+%%-spec action_data_all_(MsgId :: atom(), Msg :: any()) -> integer().
+%%-spec action_data_all_(MsgId :: atom(), Msg :: any(), FromPid :: pid()) -> integer().
 
--spec action_p_(HashKey :: integer(), MsgId :: atom(), Msg :: any()) -> ok.
--spec action_p_(HashKey :: integer(), MsgId :: atom(), Msg :: any(), FromPid :: pid()) -> ok.
--spec action_p_all_(MsgId :: atom(), Msg :: any()) -> integer().
--spec action_p_all_(MsgId :: atom(), Msg :: any(), FromPid :: pid()) -> integer().
+-spec action_account_(HashKey :: integer(), MsgId :: atom(), Msg :: any()) -> ok.
+-spec action_account_(HashKey :: integer(), MsgId :: atom(), Msg :: any(), FromPid :: pid()) -> ok.
+%%-spec action_account_all_(MsgId :: atom(), Msg :: any()) -> integer().
+%%-spec action_account_all_(MsgId :: atom(), Msg :: any(), FromPid :: pid()) -> integer().
 
--spec action_a_(HashKey :: integer(), MsgId :: atom(), Msg :: any()) -> ok.
--spec action_a_(HashKey :: integer(), MsgId :: atom(), Msg :: any(), FromPid :: pid()) -> ok.
--spec action_a_all_(MsgId :: atom(), Msg :: any()) -> integer().
--spec action_a_all_(MsgId :: atom(), Msg :: any(), FromPid :: pid()) -> integer().
-
--spec action_pub_(HashKey :: integer(), MsgId :: atom(), Msg :: any()) -> ok.
--spec action_pub_(HashKey :: integer(), MsgId :: atom(), Msg :: any(), FromPid :: pid()) -> ok.
--spec action_pub_all_(MsgId :: atom(), Msg :: any()) -> integer().
--spec action_pub_all_(MsgId :: atom(), Msg :: any(), FromPid :: pid()) -> integer().
+-spec action_public_(HashKey :: integer(), MsgId :: atom(), Msg :: any()) -> ok.
+-spec action_public_(HashKey :: integer(), MsgId :: atom(), Msg :: any(), FromPid :: pid()) -> ok.
+%%-spec action_public_all_(MsgId :: atom(), Msg :: any()) -> integer().
+%%-spec action_public_all_(MsgId :: atom(), Msg :: any(), FromPid :: pid()) -> integer().
 
 %%-------------------------------------------------------------------
 %% 玩家数据库
-action_p_(HashKey, MsgId, Msg) ->
+action_data_(HashKey, MsgId, Msg) ->
     Mgr = db_proxy:checkout_pool(?DATA_DB_POOL_NAME),
     db_mgr:scheduler_(Mgr, HashKey, {MsgId, Msg, self()}).
 
-action_p_(HashKey, MsgId, Msg, FromPid) ->
+action_data_(HashKey, MsgId, Msg, FromPid) ->
     Mgr = db_proxy:checkout_pool(?DATA_DB_POOL_NAME),
     db_mgr:scheduler_(Mgr, HashKey, {MsgId, Msg, FromPid}).
 
 %%-------------------------------------------------------------------
-action_p_all_(MsgId, Msg) ->
+action_data_all_(MsgId, Msg) ->
     PoolRef = db_proxy:pool_pg(?DATA_DB_POOL_NAME),
     Members = pg_local:get_members(PoolRef),
     lists:foreach(
@@ -67,7 +70,7 @@ action_p_all_(MsgId, Msg) ->
         end,Members),
     erlang:length(Members).
 
-action_p_all_(MsgId, Msg, FromPid) ->
+action_data_all_(MsgId, Msg, FromPid) ->
     PoolRef = db_proxy:pool_pg(?DATA_DB_POOL_NAME),
     Members = pg_local:get_members(PoolRef),
     lists:foreach(
@@ -79,16 +82,16 @@ action_p_all_(MsgId, Msg, FromPid) ->
 
 %%-------------------------------------------------------------------
 %% 账号库
-action_a_(HashKey, MsgId, Msg) ->
+action_account_(HashKey, MsgId, Msg) ->
     Mgr = db_proxy:checkout_pool(?ACCOUNT_DB_POOL_NAME),
     db_mgr:scheduler_(Mgr, HashKey, {MsgId, Msg, self()}).
 
-action_a_(HashKey, MsgId, Msg, FromPid) ->
+action_account_(HashKey, MsgId, Msg, FromPid) ->
     Mgr = db_proxy:checkout_pool(?ACCOUNT_DB_POOL_NAME),
     db_mgr:scheduler_(Mgr, HashKey, {MsgId, Msg, FromPid}).
 
 %%-------------------------------------------------------------------
-action_a_all_(MsgId, Msg) ->
+action_account_all_(MsgId, Msg) ->
     PoolRef = db_proxy:pool_pg(?ACCOUNT_DB_POOL_NAME),
     Members = pg_local:get_members(PoolRef),
     lists:foreach(
@@ -98,7 +101,7 @@ action_a_all_(MsgId, Msg) ->
     ),
     erlang:length(Members).
 
-action_a_all_(MsgId, Msg, FromPid) ->
+action_account_all_(MsgId, Msg, FromPid) ->
     PoolRef = db_proxy:pool_pg(?ACCOUNT_DB_POOL_NAME),
     Members = pg_local:get_members(PoolRef),
     lists:foreach(
@@ -111,16 +114,16 @@ action_a_all_(MsgId, Msg, FromPid) ->
 
 %%-------------------------------------------------------------------
 %% 公共库
-action_pub_(HashKey, MsgId, Msg) ->
+action_public_(HashKey, MsgId, Msg) ->
     Mgr = db_proxy:checkout_pool(?PUBLIC_DB_POOL_NAME),
     db_mgr:scheduler_(Mgr, HashKey, {MsgId, Msg, self()}).
 
-action_pub_(HashKey, MsgId, Msg, FromPid) ->
+action_public_(HashKey, MsgId, Msg, FromPid) ->
     Mgr = db_proxy:checkout_pool(?PUBLIC_DB_POOL_NAME),
     db_mgr:scheduler_(Mgr, HashKey, {MsgId, Msg, FromPid}).
 
 %%-------------------------------------------------------------------
-action_pub_all_(MsgId, Msg) ->
+action_public_all_(MsgId, Msg) ->
     PoolRef = db_proxy:pool_pg(?PUBLIC_DB_POOL_NAME),
     Members = pg_local:get_members(PoolRef),
     lists:foreach(
@@ -130,7 +133,7 @@ action_pub_all_(MsgId, Msg) ->
     ),
     erlang:length(Members).
 
-action_pub_all_(MsgId, Msg, FromPid) ->
+action_public_all_(MsgId, Msg, FromPid) ->
     PoolRef = db_proxy:pool_pg(?PUBLIC_DB_POOL_NAME),
     Members = pg_local:get_members(PoolRef),
     lists:foreach(
