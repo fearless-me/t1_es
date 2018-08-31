@@ -27,6 +27,7 @@ _gsdata_
 /T1/server/callg.raw
 /T1/server/dialyzer-game.out
 *.ilk
+*.raw
 /T1/tools/NetProtor/out
 /T1/server/scripts/_____package_____.txt
 /T1/server/app/center/scripts/compileListDEtsFile.data
