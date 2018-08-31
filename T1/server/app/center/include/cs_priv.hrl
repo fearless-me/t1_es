@@ -11,7 +11,6 @@
 -ifndef(CS_PRIV_HRL).
 -define(CS_PRIV_HRL, true).
 
--define(CS_SERVERS_CHECK_ETS,csAllServerCheckEts_).
 -define(CROSS_SELECT_POLICY_ETS,csCGSSelcectEts_).
 -define(CS_GLOBAL_PLAYER_INFO_ETS, csAllPlayerEts_).
 

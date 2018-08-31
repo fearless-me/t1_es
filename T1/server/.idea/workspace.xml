@@ -6,6 +6,8 @@
       <change afterPath="$PROJECT_DIR$/scripts/version.ers" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/__开发__.bat" beforeDir="false" afterPath="$PROJECT_DIR$/__开发__.bat" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/center/include/cs_priv.hrl" beforeDir="false" afterPath="$PROJECT_DIR$/app/center/include/cs_priv.hrl" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/center/src/cahce/cs_cache.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/center/src/cahce/cs_cache.erl" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/lib/llist.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/lib/llist.erl" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/scripts/cc_fast.ers" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/cc_fast.ers" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/scripts/cpk.ers" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/cpk.ers" afterDir="false" />
@@ -104,7 +106,7 @@
           <entry key="erl" value="1267" />
           <entry key="err" value="1" />
           <entry key="ers" value="19" />
-          <entry key="hrl" value="175" />
+          <entry key="hrl" value="176" />
           <entry key="html" value="1" />
           <entry key="ini" value="1" />
           <entry key="log" value="8" />
@@ -118,7 +120,7 @@
           <entry key="BEAM" value="6" />
           <entry key="Batch" value="1" />
           <entry key="Erlang" value="1267" />
-          <entry key="Erlang Header" value="175" />
+          <entry key="Erlang Header" value="176" />
           <entry key="Erlang Terms" value="6" />
           <entry key="Erlang/OTP app" value="30" />
           <entry key="HTML" value="1" />
@@ -138,7 +140,7 @@
         <entry file="file://$PROJECT_DIR$/app/deps/pubs/src/lib/llist.erl">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="368">
-              <caret line="82" column="54" lean-forward="true" selection-start-line="82" selection-start-column="54" selection-end-line="82" selection-end-column="54" />
+              <caret line="82" column="52" selection-start-line="82" selection-start-column="52" selection-end-line="82" selection-end-column="52" />
             </state>
           </provider>
         </entry>
@@ -146,7 +148,18 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app/center/src/cahce/cs_cache.erl">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-72" />
+            <state relative-caret-position="144">
+              <caret line="16" column="9" selection-start-line="16" selection-start-column="9" selection-end-line="16" selection-end-column="9" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/center/include/cs_priv.hrl">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="264">
+              <caret line="12" lean-forward="true" selection-start-line="12" selection-end-line="12" />
+            </state>
           </provider>
         </entry>
       </file>
@@ -163,7 +176,7 @@
         <entry file="file://C:/Program Files/erl10.0/lib/tools-3.0/src/xref_base.erl">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="628">
-              <caret line="485" column="30" lean-forward="true" selection-start-line="485" selection-start-column="30" selection-end-line="485" selection-end-column="30" />
+              <caret line="485" column="30" selection-start-line="485" selection-start-column="30" selection-end-line="485" selection-end-column="30" />
             </state>
           </provider>
         </entry>
@@ -267,8 +280,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/app/game/src/interface/gs_share.erl" />
-        <option value="$PROJECT_DIR$/app/deps/pubs/src/lib/misc_dist.erl" />
         <option value="$PROJECT_DIR$/app/deps/dist-otp/src/dist_sup.erl" />
         <option value="$PROJECT_DIR$/app/deps/dist-otp/src/dist.erl" />
         <option value="$PROJECT_DIR$/app/center/src/svr/svr_mgr_priv.erl" />
@@ -318,6 +329,8 @@
         <option value="$PROJECT_DIR$/scripts/cc_fast.ers" />
         <option value="$PROJECT_DIR$/scripts/xref_runner/xref.config" />
         <option value="$PROJECT_DIR$/app/deps/pubs/src/lib/llist.erl" />
+        <option value="$PROJECT_DIR$/app/center/include/cs_priv.hrl" />
+        <option value="$PROJECT_DIR$/app/center/src/cahce/cs_cache.erl" />
       </list>
     </option>
   </component>
@@ -366,6 +379,13 @@
               <item name="Server" type="462c0819:PsiDirectoryNode" />
               <item name="app" type="462c0819:PsiDirectoryNode" />
               <item name="center" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="Server" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Server" type="462c0819:PsiDirectoryNode" />
+              <item name="app" type="462c0819:PsiDirectoryNode" />
+              <item name="center" type="462c0819:PsiDirectoryNode" />
+              <item name="include" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="Server" type="b2602c69:ProjectViewProjectNode" />
@@ -484,7 +504,7 @@
     <property name="SearchEverywhereHistoryKey" value="&#9;FILE&#9;file://C:/Program Files/erl10.0/lib/erts-10.0/src/erlang.erl" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1535703495149" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1535705015559" />
     <property name="last_opened_file_path" value="E:/other/RabbitMQ" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
@@ -1006,12 +1026,12 @@
       <workItem from="1535684709666" duration="2913000" />
       <workItem from="1535687663178" duration="985000" />
       <workItem from="1535694634036" duration="408000" />
-      <workItem from="1535695085149" duration="6832000" />
+      <workItem from="1535695085149" duration="7598000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="1763797000" />
+    <option name="totallyTimeSpent" value="1764563000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -1108,13 +1128,6 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/app/center/src/dist/cs_dist_share.erl">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="182">
-          <caret line="7" column="50" selection-start-line="7" selection-start-column="50" selection-end-line="7" selection-end-column="50" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/center/include/cs_ps_def.hrl">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="416">
@@ -1400,20 +1413,29 @@
     <entry file="file://C:/Program Files/erl10.0/lib/tools-3.0/src/xref_base.erl">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="628">
-          <caret line="485" column="30" lean-forward="true" selection-start-line="485" selection-start-column="30" selection-end-line="485" selection-end-column="30" />
+          <caret line="485" column="30" selection-start-line="485" selection-start-column="30" selection-end-line="485" selection-end-column="30" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/deps/pubs/src/lib/llist.erl">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="368">
-          <caret line="82" column="54" lean-forward="true" selection-start-line="82" selection-start-column="54" selection-end-line="82" selection-end-column="54" />
+          <caret line="82" column="52" selection-start-line="82" selection-start-column="52" selection-end-line="82" selection-end-column="52" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/center/include/cs_priv.hrl">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="264">
+          <caret line="12" lean-forward="true" selection-start-line="12" selection-end-line="12" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/center/src/cahce/cs_cache.erl">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-72" />
+        <state relative-caret-position="144">
+          <caret line="16" column="9" selection-start-line="16" selection-start-column="9" selection-end-line="16" selection-end-column="9" />
+        </state>
       </provider>
     </entry>
   </component>
