@@ -277,7 +277,6 @@ jump_package(?ST_CS) ->
 	ok.
 
 compile(ServerType, Lang, 1) ->
-	color:warn_log("now path:~p", [file:get_cwd()]),
 	%% 先生成版本文件
     set_title(ServerType, Lang, getCompileServer(1), allCompile),
 	Ret=os:cmd("start /B escript.exe version.ers"),

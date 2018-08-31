@@ -3,6 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="354d5196-8a2e-476f-8af6-71424480c5e1" name="Default" comment="">
       <change afterPath="$PROJECT_DIR$/scripts/color.erl" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/scripts/version.ers" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/__开发__.bat" beforeDir="false" afterPath="$PROJECT_DIR$/__开发__.bat" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/scripts/cc_fast.ers" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/cc_fast.ers" afterDir="false" />
@@ -71,7 +72,7 @@
         <counts>
           <entry key="app" value="12" />
           <entry key="erl" value="20525" />
-          <entry key="ers" value="633" />
+          <entry key="ers" value="636" />
           <entry key="ft" value="2" />
           <entry key="hrl" value="1551" />
           <entry key="md" value="174" />
@@ -84,7 +85,7 @@
           <entry key="Erlang Header" value="1551" />
           <entry key="Erlang/OTP app" value="30" />
           <entry key="Markdown" value="174" />
-          <entry key="PLAIN_TEXT" value="633" />
+          <entry key="PLAIN_TEXT" value="636" />
           <entry key="VTL" value="2" />
         </counts>
       </usages-collector>
@@ -146,8 +147,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/scripts/cc_fast.ers">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="388">
-              <caret line="288" column="66" selection-start-line="288" selection-start-column="66" selection-end-line="288" selection-end-column="66" />
+            <state relative-caret-position="128">
+              <caret line="278" column="31" selection-start-line="278" selection-start-column="31" selection-end-line="278" selection-end-column="31" />
             </state>
           </provider>
         </entry>
@@ -533,7 +534,7 @@
     <property name="SearchEverywhereHistoryKey" value="&#9;FILE&#9;file://C:/Program Files/erl10.0/lib/erts-10.0/src/erlang.erl" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1535699054010" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1535699327859" />
     <property name="last_opened_file_path" value="E:/other/RabbitMQ" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
@@ -1055,12 +1056,12 @@
       <workItem from="1535684709666" duration="2913000" />
       <workItem from="1535687663178" duration="985000" />
       <workItem from="1535694634036" duration="408000" />
-      <workItem from="1535695085149" duration="3647000" />
+      <workItem from="1535695085149" duration="3921000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="1760612000" />
+    <option name="totallyTimeSpent" value="1760886000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -1072,10 +1073,10 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
+    <frame x="46" y="360" width="3860" height="686" extended-state="0" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.8431591" visible="true" weight="0.1359275" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.8431591" visible="true" weight="0.06710526" />
       <window_info id="Structure" order="1" sideWeight="0.15684094" side_tool="true" weight="0.22547974" />
       <window_info id="Image Layers" order="2" />
       <window_info id="Designer" order="3" />
@@ -1462,8 +1463,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/scripts/cc_fast.ers">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="388">
-          <caret line="288" column="66" selection-start-line="288" selection-start-column="66" selection-end-line="288" selection-end-column="66" />
+        <state relative-caret-position="128">
+          <caret line="278" column="31" selection-start-line="278" selection-start-column="31" selection-end-line="278" selection-end-column="31" />
         </state>
       </provider>
     </entry>
