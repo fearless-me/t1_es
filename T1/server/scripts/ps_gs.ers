@@ -32,7 +32,7 @@ menu() ->
 
 
 %%location() ->
-%%	io:format(
+%%	color:info_log(
 %%		"~n##########################################################~n"
 %%		"\t\tLUNA multi-language package~n#~n"
 %%		"\t1.(chs) China~n"
@@ -53,7 +53,7 @@ menu() ->
 %%	dispatchInput(InputNo).
 
 fastSel() ->
-	io:format(
+	color:info_log(
 		"~n##########################################################~n"
 		"\t\tLUNA PACKAGE [GameServer] TOOLS~n"
 %%		"~n#region~n"
@@ -128,7 +128,7 @@ getPlatform(_) -> menu().
 %%
 %%menu2(Lang) ->
 %%	set_title(Lang, "gs"),
-%%	io:format(
+%%	color:info_log(
 %%		"~n##########################################################~n"
 %%		"\t\tselect version~n#~n"
 %%		"\t1.ios~n"
@@ -150,7 +150,7 @@ getPlatform(_) -> menu().
 %%
 %%menu3(Lang, Platform) ->
 %%	set_title(Lang, "gs"),
-%%	io:format(
+%%	color:info_log(
 %%		"~n##########################################################~n"
 %%		"\t1.install~n"
 %%		"\t2.hotUpdate~n"
@@ -200,7 +200,7 @@ doWork(?SqlUpdateAtom, _Lang, _Platform, _CopyFileCfg) ->
 				true ->
 					zipAndMd5(makeSqlOutTempDir(BaseName, SvnVer), TargetDir, ZipName);
 				_ ->
-					io:format("file[~s] not exsits ~n", [SqlDir ++ "/" ++ SqlFile])
+					color:error_log("file[~s] not exsits ~n", [SqlDir ++ "/" ++ SqlFile])
 			end
 		end,
 	lists:foreach(F, FileList1),
@@ -216,7 +216,7 @@ doWork(Type, Lang, Platform, CopyFileCfg) ->
 			catch waitContinue(),
 			doWorkZip(Type, Lang, Platform, ModList, SvnVer, RevisionA, RevisionB);
 		_ ->
-			io:format("~n $$ No server compression package is created $$ ~n"),
+			color:error_log("~n $$ No server compression package is created $$ ~n"),
 			ok
 	end,
 	ok.
@@ -224,7 +224,7 @@ doWork(Type, Lang, Platform, CopyFileCfg) ->
 goWork(true, _,_,_) ->
 	true;
 goWork(_, HrlFileList, RevisionA, RevisionB) ->
-	io:format(
+	color:warn_log(
 		"~n^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^~n"
 		"^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^~n"
 		"~p -> ~p | *hotupdate* | ~p files(*.hrl) is modified!~n~n"
@@ -253,10 +253,10 @@ reDir(?HotUpdateAtom) ->
 			fun(FileName) ->
 				[FileExt | _] = lists:reverse(string:tokens(FileName, "/")),
 				[Mod | _] = string:tokens(FileExt, "."),
-				io:format("module [~ts]~n", [Mod]),
+				color:info_log("module [~ts]~n", [Mod]),
 				Mod
 			end, FileList),
-	io:format("[~p] modules~n",[erlang:length(ModList)]),
+	color:warn_log("[~p] modules~n",[erlang:length(ModList)]),
 	case hotUpdateGuard(RevisionA, RevisionB) of
 		[] ->
 			{true, RevisionA, RevisionB, [], FileList, ModList};
@@ -274,9 +274,9 @@ hotUpdateGuard(RevisionA, RevisionB) ->
 
 
 waitContinue() ->
-	io:format("~n################################~n"),
-	io:get_line("Press Enter to zip:"),
-	io:format("~n################################~n~n"),
+	color:info_log("~n################################~n"),
+	color:warn_log("Press Enter to zip:"),
+	color:info_log("~n################################~n~n"),
 	ok.
 
 %%makeHotMod(Lang, Platform, _Type, Ver, L)->
@@ -298,7 +298,8 @@ doWorkZip(Type, Lang, Platform, HotList, SvnVer, SvnA, SvnB) ->
 
 zipAndMd5(SourcePath, DestPath, ZipName) ->
 	TempDir = getTempDir(),
-	io:format("zip [~ts]~n ~ts", [ZipName, TempDir]),
+	
+	color:warn_log("zip [~ts]~n", [ZipName]),
 	CmdStr = io_lib:format("cd ~ts && tar -czf ~ts ./~ts/",
 		[TempDir, ZipName, SourcePath]),
 	os:cmd(CmdStr),
@@ -310,9 +311,9 @@ zipAndMd5(SourcePath, DestPath, ZipName) ->
 	NewZipName = io_lib:format("~ts.~ts", [ZipName, MD5String]),
 	NewZipPath = TempDir ++ "/" ++ NewZipName,
 	ok = file:rename(ZipPath, NewZipPath),
-	io:format("rename [~ts] -> [~ts]~n", [ZipName, NewZipName]),
+	color:warn_log("rename [~ts] -> [~ts]~n", [ZipName, NewZipName]),
 	Str = "copy " ++ pathConvert(NewZipPath) ++ " " ++ pathConvert(DestPath),
-	io:format("copy [~ts]~n", [NewZipName]),
+	color:warn_log("copy [~ts]~n", [NewZipName]),
 	os:cmd(Str),
 
 	NewZipName.
@@ -465,12 +466,12 @@ copyFile(?HotUpdateAtom, WorkDir, TargetDir, _ServerCopyCfgs, FileList) ->
 				true ->
 					FileCount + 1;
 				_ ->
-					io:format("file[~s] not exsits ~n", [WorkDir ++ "/" ++ FilePath]),
+					color:error_log("file[~s] not exsits ~n", [WorkDir ++ "/" ++ FilePath]),
 					FileCount
 			end
 		end,
 	CopyFileNum = lists:foldl(Fun, 0, FileList),
-	io:format("copy [~p] file~n", [CopyFileNum]),
+	color:warn_log("copy [~p] file~n", [CopyFileNum]),
 	ok;
 copyFile(_, WorkDir, TargetDir, ServerCopyCfgs, _FileList) ->
 	copyFileFull(WorkDir, TargetDir, ServerCopyCfgs).
@@ -489,7 +490,7 @@ copyFileFull(WorkDir, TargetDir, ServerCopyCfgs) ->
 						CopyDest1 = pathConvert(CopyDest),
 
 						Str = "copy " ++ F1 ++ " " ++ CopyDest1,
-						io:format("copy [~ts]~n", [F1]),
+						color:info_log("copy [~ts]~n", [F1]),
 						os:cmd(Str),
 						AccCount3 + 1
 					end,
@@ -500,7 +501,7 @@ copyFileFull(WorkDir, TargetDir, ServerCopyCfgs) ->
 		AccCount1 + Count3
 	       end,
 	FileCount = lists:foldl(Fun2, 0, ServerCopyCfgs),
-	io:format("copy [~p] files ok! ~n", [FileCount]).
+	color:info_log("copy [~p] files ok! ~n", [FileCount]).
 
 
 %%拷文件
@@ -517,7 +518,7 @@ copy1(CopySource, CopyDest) ->
 	case filelib:is_file(CopySource1) of
 		true ->
 			Str = "copy " ++ CopySource1 ++ " " ++ CopyDest1,
-			io:format("copy [~ts]~n", [CopySource1]),
+			color:info_log("copy [~ts]~n", [CopySource1]),
 			os:cmd(Str),
 			true;
 		_ ->
@@ -546,7 +547,7 @@ split_to_line(Data, Pos, Len) ->
 	{LineData, Left}.
 
 read_two_version() ->
-	io:format("~nwarn: Compile's file is the updated SVN version, the version number just sure change's file!!! ~n~n"),
+	color:warn_log("~nwarn: Compile's file is the updated SVN version, the version number just sure change's file!!! ~n~n"),
 	StrA = io:get_line("Please enter revision A(default is head version):"),
 	RevisionA = case string:equal(StrA, "\n") of
 		            true ->

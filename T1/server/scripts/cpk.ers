@@ -23,7 +23,7 @@ main([Ops | _Args]) ->
 	ok.
 
 menu(Op) ->
-	io:format(
+	color:info_log(
 		"~n##########################################################~n"
 		%%"\t\tLUNA PACKAGE TOOLS~n"
 		"~n#selectServer to ~p ~n"

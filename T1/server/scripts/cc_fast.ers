@@ -23,15 +23,15 @@ main(Args) ->
 	ok.
 	
 main1([ServerType]) ->
-	dispatchInput0(ServerType);
+	dispatchInput0(list_to_integer(ServerType));
 main1(_Any) ->	
- menu0(),
+	menu0(),
 	ok.
 	
 	
 
 menu0() ->
-    log(
+	color:info_log(
         "~n##########################################################~n"
         "~n"
         "\t1.~p~n"
@@ -60,7 +60,7 @@ menu1(ServerType) ->
 -else.
 menu1(ServerType) ->
     ensure_dets(ServerType),
-	log(
+	color:info_log(
 		"~n##########################################################~n"
 		"\t\tLUNA multi-language compile~n"
 		"~n"
@@ -102,7 +102,7 @@ dispatchInput(ServerType, 888) ->
 dispatchInput(ServerType, _) -> menu1(ServerType).
 
 menu2(ServerType, Lang) ->
-	log(
+	color:info_log(
 		"~n##########################################################~n"
 		"\t\tselect compile sub order~n"
 		"~n"
@@ -154,7 +154,7 @@ dispatchInput2(_ServerType, _Lang, 9) ->
 dispatchInput2(ServerType, Lang, 8) ->
 	dets:delete_all_objects(get_dets_name(ServerType)),
 	os:cmd("cd ../ebin/ && del /q /s *.*"),
-	warnLog("===> clean success!! <===~n~n"),
+	color:warn_log("===> clean success!! <===~n~n"),
 	menu2(ServerType, Lang);
 %%dispatchInput2(ServerType, Lang, 23) ->
 %%	setSearchFileData(undefined),
@@ -166,7 +166,7 @@ dispatchInput2(ServerType, Lang, _) ->
 	menu2(ServerType, Lang).
 
 searchFile(ServerType, false, {Lang, _XH} = Param1, {_HrlFileList, ErlFileList, _Opts} = Param2) ->
-	log("\t[0] ===> return to main menu~n", []),
+	color:info_log("\t[0] ===> return to main menu~n", []),
 	InputNoStr1 = io:get_line("Input search file key words:"),
 	InputNoStr2 = string_strip(string_strip(InputNoStr1), "\n"),
 	case InputNoStr2 of
@@ -195,20 +195,20 @@ searchFile(ServerType, false, {Lang, _XH} = Param1, {_HrlFileList, ErlFileList, 
 				true ->
 					FF =
 						fun({N, File}) ->
-							warnLog("[~p] ===> ~ts", [N, File])
+							color:warn_log("[~p] ===> ~ts", [N, File])
 						end,
 					lists:foreach(FF, lists:reverse(List)),
 					setSearchFileData(List),
 					searchFile(ServerType, true, Param1, Param2);
 				_ ->
-					warnLog("No search~n"),
+					color:warn_log("No search~n"),
 					searchFile(ServerType, false, Param1, Param2)
 			end
 	end;
 	
 searchFile(ServerType, _, {Lang, _XH} = Param1, {_HrlFileList, _ErlFileList, Opts} = Param2) ->
-	warnLog("[*] ===> compile all searched ~p file(s)", [safe_length(getSearchFileData())]),
-	warnLog("[0] ===> return to main menu", []),
+	color:warn_log("[*] ===> compile all searched ~p file(s)", [safe_length(getSearchFileData())]),
+	color:warn_log("[0] ===> return to main menu", []),
 	
 	InputNoStr1 = io:get_line("Input compile file index:"),
 	InputNoStr2 = string_strip(string_strip(InputNoStr1), "\n"),
@@ -277,7 +277,7 @@ jump_package(?ST_CS) ->
 	ok.
 
 compile(ServerType, Lang, 1) ->
-	warnLog("now path:~p", [file:get_cwd()]),
+	color:warn_log("now path:~p", [file:get_cwd()]),
 	%% 先生成版本文件
     set_title(ServerType, Lang, getCompileServer(1), allCompile),
 	Ret=os:cmd("start /B escript.exe version.ers"),
@@ -290,19 +290,19 @@ compile(ServerType, Lang, 1) ->
 	file:write_file(FileName, ""),
 	CmdStr = io_lib:format("cd ../ && make all Region=\"~p\" -j8 > scripts/~ts", [Lang, FileName]),
 
-	warnLog("compile [~p,~p] start [~ts], please wait...~n", [Lang, Target, time_format()]),
+	color:warn_log("compile [~p,~p] start [~ts], please wait...~n", [Lang, Target, time_format()]),
 	os:cmd(CmdStr),
 
 	case checkCompileError(FileName) of
 		0 ->
-			log("@@@compile [~p,~p] success@@@ at ~ts ~n", [Lang, Target, time_format()]);
+			color:info_log("@@@compile [~p,~p] success@@@ at ~ts ~n", [Lang, Target, time_format()]);
 		_ ->
-			errorLog("***compile [~p,~p] ERROR ERROR ERROR !!!*** ~ts ~n", [Lang, Target, time_format()])
+			color:error_log("***compile [~p,~p] ERROR ERROR ERROR !!!*** ~ts ~n", [Lang, Target, time_format()])
 	end,
 
 	menu2(ServerType, Lang);
 compile(ServerType, Lang, V) ->
-	warnLog("now path:~p~n", [file:get_cwd()]),
+	color:warn_log("now path:~p~n", [file:get_cwd()]),
 	Target = getCompileServer(V),
 	ets:delete_all_objects(?CompileEts),
 	ets:insert(?CompileFilesEts,{1,0}),
@@ -316,7 +316,7 @@ compile(ServerType, Lang, V) ->
 		compile_done(ServerType, Ms, LogFile, Lang, Target)
 	catch
 		_:Why:St->
-			errorLog("***compile [~p,~p] ERROR ERROR ERROR !!!*** ~ts ~p,~p ~n",
+			color:error_log("***compile [~p,~p] ERROR ERROR ERROR !!!*** ~ts ~p,~p ~n",
 				[Lang, Target, time_format(), Why, St])
 	end,
 
@@ -347,9 +347,9 @@ loop_wait(N) ->
 		{'DOWN', _MRef, _process, _Pid, normal} ->
 			ok;
 		{'DOWN', MRef, process, Pid, Reason} ->
-			warnLog("~p|~p finished ~p~n",[Pid, MRef, Reason]);
+			color:warn_log("~p|~p finished ~p~n",[Pid, MRef, Reason]);
 		{Pid, Result} ->
-			log("~p finished ~p~n",[Pid,  Result])
+			color:info_log("~p finished ~p~n",[Pid,  Result])
 	end,
 	loop_wait(N - 1).
 
@@ -653,17 +653,17 @@ list_errors(_F, [], Acc) -> Acc.
 
 getChangeFileList(ServerType) ->
 	{HrlFileList, ErlFileList, Opts} = scan_all_files(ServerType),
-	warnLog("===> scan files number include[~p] scr[~p]", [erlang:length(HrlFileList), erlang:length(ErlFileList)]),
+	color:warn_log("===> scan files number include[~p] scr[~p]", [erlang:length(HrlFileList), erlang:length(ErlFileList)]),
 	HrlChangeList = saveFileChangeTime(ServerType, HrlFileList),
-	warnLog("===> hrl changs number:~p", [erlang:length(HrlChangeList)]),
+	color:warn_log("===> hrl changs number:~p", [erlang:length(HrlChangeList)]),
 	ErlChangeList = saveFileChangeTime(ServerType, ErlFileList),
-	warnLog("===> erl changs number:~p", [erlang:length(ErlChangeList)]),
+	color:warn_log("===> erl changs number:~p", [erlang:length(ErlChangeList)]),
 	case HrlChangeList of
 		[] ->
-			warnLog("===> compile fast ...~n"),
+			color:warn_log("===> compile fast ...~n"),
 			{true, ErlChangeList, Opts, []};
 		_ ->
-			warnLog("===> compile all ...~n"),
+			color:warn_log("===> compile all ...~n"),
 			{false, ErlFileList, Opts, HrlFileList}
 	end.
 
@@ -688,7 +688,7 @@ getFileChangeTime(File) ->
 		{ok, Info} ->
 			erlang:element(5, Info);
 		_ ->
-			errorLog("===> read getFileChangeTime:~ts failed~n", [File]),
+			color:error_log("===> read getFileChangeTime:~ts failed~n", [File]),
 			throw(readfileerror)
 	end.
 
@@ -697,7 +697,7 @@ getFileMd5(File) ->
 		{ok, Data} ->
 			erlang:md5(Data);
 		_ ->
-			errorLog("===> read getFileMd5:~ts failed~n", [File]),
+			color:error_log("===> read getFileMd5:~ts failed~n", [File]),
 			throw(readfilemd5error)
 	end.
 
@@ -712,15 +712,7 @@ string_strip(Str, [])->
 	Str;
 string_strip(Str, [CH | L])-> 
 	string_strip(string:strip(Str, both, CH), L).
-	
-log(Fmt)-> log(Fmt, []).	
-log(Fmt, Args)-> cpc:print(green,io_lib:format(Fmt,Args)).	
 
-warnLog(Fmt)-> warnLog(Fmt, []).
-warnLog(Fmt, Args) -> cpc:print(yellow, io_lib:format(Fmt,Args)).
-
-errorLog(Fmt) -> errorLog(Fmt, []).
-errorLog(Fmt, Args)-> cpc:print(red, io_lib:format(Fmt,Args)).
 
 
 dLog(File, Fmt, Flag) ->
@@ -731,11 +723,11 @@ dLog(File,Fmt, Args, Flag)->
 	file:write_file(File, io_lib:format("~ts~n",[Str]), [append]),
 	case Flag of
 		error ->
-		   errorLog(Str);
+			color:error_log(Str);
 		warn ->
-		   warnLog(Str);
+			color:warn_log(Str);
 		_ ->
-			log(Str)
+			color:info_log(Str)
 	end.
 
 ensure_dets(ServerType) ->

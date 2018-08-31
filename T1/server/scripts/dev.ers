@@ -14,92 +14,102 @@
 -define(ST_CS, 2).
 -define(ST_HTTP, 3).
 
--define(OP_EXIT,        0).
--define(OP_REF, 	    1).
--define(OP_DIALYZER, 	2).
--define(OP_DEL_LOG_ALL, 3).
--define(OP_DEL_LOG_GS,  4).
--define(OP_DEL_LOG_CS,  5).
--define(OP_START_GS,    6).
--define(OP_START_CS,    7).
+-define(OP_EXIT, 0).
+-define(OP_COMPILE_GS, 1).
+-define(OP_COMPILE_CS, 2).
 
--define(OP_PK_GS,       111).
--define(OP_PK_CS,       222).
+-define(OP_START_GS, 6).
+-define(OP_START_CS, 7).
 
--define(OP_COMPILE_GS,  555).
--define(OP_COMPILE_CS,  666).
+-define(OP_DEL_LOG_ALL, 11).
+-define(OP_DEL_LOG_GS, 12).
+-define(OP_DEL_LOG_CS, 13).
+
+-define(OP_PK_GS, 111).
+-define(OP_PK_CS, 222).
+
+-define(OP_REF, 666).
+-define(OP_DIALYZER, 777).
+
+
 
 main(_) ->
-	menu(),
-	ok.
+    menu(),
+    ok.
 
 menu() ->
     os:cmd("CHCP 65001"),
-	io:format(
-		"~n##########################################################~n"
-		"\t~-4.w.代码检查(xref)~n"
-		"\t~-4.w.代码检查(dialyzer)~n"
-		"#~n"
-		"\t~-4.w.删除日志(all)~n"
-		"\t~-4.w.删除日志(gs)~n"
-		"\t~-4.w.删除日志(cs)~n"
-		"#~n"
-		"\t~-4.w.开服务器（gs）~n"
-		"\t~-4.w.开服务器（cs）~n"
-		"#~n"
-		"\t~-4.w.打包(gs)~n"
-		"\t~-4.w.打包(cs)~n"
-		"#~n"
-		"\t~-4.w.编译(gs)~n"
-		"\t~-4.w.编译(cs)~n"
-		"\t~-4.w.exit~n"
-		"~n##########################################################~n~n",
-		[
-		    ?OP_REF, ?OP_DIALYZER,
-		    ?OP_DEL_LOG_ALL, ?OP_DEL_LOG_GS, ?OP_DEL_LOG_CS,
-		    ?OP_START_GS,  ?OP_START_CS,
-		    ?OP_PK_GS,  ?OP_PK_CS,
-		    ?OP_COMPILE_GS, ?OP_COMPILE_CS,
 
-		    ?OP_EXIT
-		]
-	),
-	InputNoStr = io:get_line("Please enter your choice:"),
-	[T | _] = string:tokens(string_strip(InputNoStr, "\n"), " "),
-	{IT, _} = string:to_integer(T),
-	dispatchInput2(IT),
-	timer:sleep(3000),
-	menu().
+    color:info_log(
+        "~n##########################################################~n"
 
-dispatchInput2(?OP_EXIT)->
-	erlang:halt();
-dispatchInput2(?OP_REF)->
-	erlang:spawn(fun()-> os:cmd("start xref.bat") end);
-dispatchInput2(?OP_DIALYZER)->
-	erlang:spawn(fun()-> os:cmd("start dialyzer.bat") end);
-dispatchInput2(?OP_DEL_LOG_ALL)->
-	erlang:spawn(fun()-> os:cmd(" cd ..\\ && del /q /s *.log && del /q /s *.err") end);
-dispatchInput2(?OP_DEL_LOG_GS)->
-	erlang:spawn(fun()-> os:cmd(" cd ..\\app\\game && del /q /s *.log && del /q /s *.err") end);
-dispatchInput2(?OP_DEL_LOG_CS)->
-	erlang:spawn(fun()-> os:cmd(" cd ..\\app\\center && del /q /s *.log && del /q /s *.err") end);
-dispatchInput2(?OP_START_GS)->
-	erlang:spawn(fun()-> os:cmd("cd  ..\\app\\game\\scripts && call start.bat") end);
-dispatchInput2(?OP_START_CS)->
-	erlang:spawn(fun()-> os:cmd("cd  ..\\app\\center\\scripts && call start.bat") end);
-dispatchInput2(?OP_PK_GS)->
-	erlang:spawn(fun()-> os:cmd("start /SEPARATE escript.exe ps_gs.ers") end);
-dispatchInput2(?OP_PK_CS)->
-	erlang:spawn(fun()-> os:cmd("start /SEPARATE escript.exe ps_cs.ers") end);
-dispatchInput2(?OP_COMPILE_GS)->
-    erlang:spawn(fun()-> os:cmd("start /SEPARATE escript.exe cc_fast.ers 1") end);
-dispatchInput2(?OP_COMPILE_CS)->
-    erlang:spawn(fun()-> os:cmd("start /SEPARATE escript.exe cc_fast.ers 2") end);
-dispatchInput2(_)->
-     io:format("error retry !!").
+        "\t~-4.w.编译(gs)~n"
+        "\t~-4.w.编译(cs)~n"
+        "#~n"
+        "\t~-4.w.开服务器（gs）~n"
+        "\t~-4.w.开服务器（cs）~n"
+
+        "#~n"
+        "\t~-4.w.删除日志(all)~n"
+        "\t~-4.w.删除日志(gs)~n"
+        "\t~-4.w.删除日志(cs)~n"
+        "#~n"
+        "\t~-4.w.打包(gs)~n"
+        "\t~-4.w.打包(cs)~n"
+        "#~n"
+        "\t~-4.w.代码检查(xref)~n"
+        "\t~-4.w.代码检查(dialyzer)~n"
+        "#~n"
+        "\t~-4.w.exit~n"
+        "~n##########################################################~n~n",
+        [
+            ?OP_COMPILE_GS, ?OP_COMPILE_CS,
+            ?OP_START_GS, ?OP_START_CS,
+
+            ?OP_DEL_LOG_ALL, ?OP_DEL_LOG_GS, ?OP_DEL_LOG_CS,
+
+            ?OP_PK_GS, ?OP_PK_CS,
+            ?OP_REF, ?OP_DIALYZER,
+
+            ?OP_EXIT
+        ]
+    ),
+    InputNoStr = io:get_line("Please enter your choice:"),
+    [T | _] = string:tokens(string_strip(InputNoStr, "\n"), " "),
+    {IT, _} = string:to_integer(T),
+    dispatchInput2(IT),
+    timer:sleep(1000),
+    menu().
+
+dispatchInput2(?OP_EXIT) ->
+    erlang:halt();
+dispatchInput2(?OP_REF) ->
+    erlang:spawn(fun() -> os:cmd("start xref.bat") end);
+dispatchInput2(?OP_DIALYZER) ->
+    erlang:spawn(fun() -> os:cmd("start dialyzer.bat") end);
+dispatchInput2(?OP_DEL_LOG_ALL) ->
+    erlang:spawn(fun() -> os:cmd(" cd ..\\ && del /q /s *.log && del /q /s *.err") end);
+dispatchInput2(?OP_DEL_LOG_GS) ->
+    erlang:spawn(fun() -> os:cmd(" cd ..\\app\\game && del /q /s *.log && del /q /s *.err") end);
+dispatchInput2(?OP_DEL_LOG_CS) ->
+    erlang:spawn(fun() -> os:cmd(" cd ..\\app\\center && del /q /s *.log && del /q /s *.err") end);
+dispatchInput2(?OP_START_GS) ->
+    erlang:spawn(fun() -> os:cmd("cd  ..\\app\\game\\scripts && call start.bat") end);
+dispatchInput2(?OP_START_CS) ->
+    erlang:spawn(fun() -> os:cmd("cd  ..\\app\\center\\scripts && call start.bat") end);
+dispatchInput2(?OP_PK_GS) ->
+    erlang:spawn(fun() -> os:cmd("start escript.exe ps_gs.ers") end);
+dispatchInput2(?OP_PK_CS) ->
+    erlang:spawn(fun() -> os:cmd("start  escript.exe ps_cs.ers") end);
+dispatchInput2(?OP_COMPILE_GS) ->
+    erlang:spawn(fun() -> os:cmd("start escript.exe cc_fast.ers 1") end);
+dispatchInput2(?OP_COMPILE_CS) ->
+    erlang:spawn(fun() -> os:cmd("start escript.exe cc_fast.ers 2") end);
+dispatchInput2(_) ->
+    color:error_log("\t!!! error retry !!!~n~n").
 
 
 string_strip(Str, []) ->
-	Str;
+    Str;
 string_strip(Str, [CH | L]) ->
-	string_strip(string:strip(Str, both, CH), L).
+    string_strip(string:strip(Str, both, CH), L).
