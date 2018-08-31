@@ -16,7 +16,7 @@
 
 
 main(Args) ->
-    file:make_dir("../ebin"),
+    ensure_outdir(),
 	ets:new(?CompileEts, [public, named_table, {keypos, 1}]),
 	ets:new(?CompileFilesEts, [public, named_table, {keypos, 1},{write_concurrency, true},{read_concurrency, true}]),
     main1(Args),
@@ -27,6 +27,12 @@ main1([ServerType]) ->
 main1(_Any) ->	
 	menu0(),
 	ok.
+	
+ensure_outdir()->
+	file:make_dir("../app/game/ebin"),
+	file:make_dir("../app/center/ebin"),
+	ok.
+
 	
 	
 
