@@ -59,11 +59,11 @@ ready() ->
     end.
 
 wait_all_started() ->
-    TaskList = gen_server:call(?MODULE, tasklist),
-    lists:foreach(
-        fun(#watchdog_task{check_fun = F, tip = Tip}) ->
-            wait_all_started_1(F, Tip)
-        end, TaskList),
+%%    TaskList = gen_server:call(?MODULE, tasklist),
+%%    lists:foreach(
+%%        fun(#watchdog_task{check_fun = F, tip = Tip}) ->
+%%            wait_all_started_1(F, Tip)
+%%        end, TaskList),
     ok.
 
 wait_all_started_1(Fun, Tip) ->

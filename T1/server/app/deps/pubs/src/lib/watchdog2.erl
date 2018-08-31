@@ -41,6 +41,12 @@
 
 -optional_callbacks([start_link/0, task_list/0, show_all/0, show_todo/0]).
 
+%%%===================================================================
+%% define
+-record(state, {all = [], todo = [], mod}).
+-define(ServerState, serverStateEts_).
+
+
 wait_all()->
     i_wait_all(),
     status(),
@@ -82,13 +88,16 @@ show_all() ->
     ok.
 
 remove_done() ->
-    ps:send(?MODULE, remove_done),
+    {_, MQueueLen} = erlang:process_info(whereis(?MODULE), message_queue_len),
+    case MQueueLen == 0 of
+        true ->
+            ps:send(?MODULE, remove_done),
+            ok;
+        _ -> skip
+    end,
     ok.
 
-%%%===================================================================
-%% define
--record(state, {all = [], todo = [], mod}).
--define(ServerState, serverStateEts_).
+
 %%%===================================================================
 %%% public functions
 %%%===================================================================
@@ -207,7 +216,7 @@ i_wait_group_do(true, _Priority) ->
 i_wait_group_do(Other, Priority) ->
     ?WARN("wait ~ts ...", [Other]),
     timer:sleep(5000),
-    i_wait_all_do(watchdog2:task_group_done(Priority), Priority).
+    i_wait_group_do(watchdog2:task_group_done(Priority), Priority).
 
 i_group_done([], _Priority) ->
     true;
@@ -222,22 +231,22 @@ i_group_done(Todos, Priority) ->
 
 
 i_remove_done(Todos) ->
-    ok.
+    i_remove_groups(Todos, []).
 
-i_check_groups([], Acc) ->
+i_remove_groups([], Acc) ->
     Acc;
-i_check_groups([#watchdog_task_group{task_list = TL} = Group | Groups], Acc) ->
-    case i_check_tasks_done(TL, []) of
-        [] -> i_check_groups(Groups, Acc);
-
+i_remove_groups([#watchdog_task_group{task_list = TL} = Group | Groups], Acc) ->
+    case i_remove_tasks(TL, []) of
+        [] -> i_remove_groups(Groups, Acc);
+        NTL -> i_remove_groups(Groups,  [Group#watchdog_task_group{task_list = NTL} | Acc])
     end.
 
-i_check_tasks_done([], Acc)->
+i_remove_tasks([], Acc)->
     Acc;
-i_check_tasks_done([#watchdog_task{mfa = {M, F, A}} = Task | Left], Acc)->
+i_remove_tasks([#watchdog_task{mfa = {M, F, A}} = Task | Left], Acc)->
     case catch erlang:apply(M, F, A) of
-        true -> i_check_tasks_done(Left, Acc);
-        _ -> i_check_tasks_done(Left, [Task | Acc])
+        true -> i_remove_tasks(Left, Acc);
+        _ -> i_remove_tasks(Left, [Task | Acc])
     end.
 
 %%--------------------------------------------------------------------
