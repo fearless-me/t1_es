@@ -89,7 +89,7 @@ show_all() ->
 
 remove_done() ->
     {_, MQueueLen} = erlang:process_info(whereis(?MODULE), message_queue_len),
-    case MQueueLen == 0 of
+    case MQueueLen < 10 of
         true ->
             ps:send(?MODULE, remove_done),
             ok;

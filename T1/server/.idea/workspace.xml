@@ -80,7 +80,7 @@
         <counts>
           <entry key="app" value="12" />
           <entry key="config" value="4" />
-          <entry key="erl" value="21702" />
+          <entry key="erl" value="21707" />
           <entry key="ers" value="636" />
           <entry key="ft" value="2" />
           <entry key="hrl" value="1582" />
@@ -90,7 +90,7 @@
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
-          <entry key="Erlang" value="21702" />
+          <entry key="Erlang" value="21707" />
           <entry key="Erlang Header" value="1582" />
           <entry key="Erlang Terms" value="4" />
           <entry key="Erlang/OTP app" value="30" />
@@ -143,8 +143,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app/deps/pubs/src/lib/watchdog2.erl">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="394">
-              <caret line="93" column="42" selection-start-line="93" selection-start-column="42" selection-end-line="93" selection-end-column="42" />
+            <state relative-caret-position="558">
+              <caret line="91" column="21" selection-start-line="91" selection-start-column="21" selection-end-line="91" selection-end-column="21" />
             </state>
           </provider>
         </entry>
@@ -561,7 +561,7 @@
     <property name="SearchEverywhereHistoryKey" value="&#9;FILE&#9;file://C:/Program Files/erl10.0/lib/erts-10.0/src/erlang.erl" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1535709787684" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1535709836781" />
     <property name="last_opened_file_path" value="E:/other/RabbitMQ" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
@@ -1083,12 +1083,12 @@
       <workItem from="1535684709666" duration="2913000" />
       <workItem from="1535687663178" duration="985000" />
       <workItem from="1535694634036" duration="408000" />
-      <workItem from="1535695085149" duration="12367000" />
+      <workItem from="1535695085149" duration="12416000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="1769332000" />
+    <option name="totallyTimeSpent" value="1769381000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -1497,8 +1497,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/app/deps/pubs/src/lib/watchdog2.erl">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="394">
-          <caret line="93" column="42" selection-start-line="93" selection-start-column="42" selection-end-line="93" selection-end-column="42" />
+        <state relative-caret-position="558">
+          <caret line="91" column="21" selection-start-line="91" selection-start-column="21" selection-end-line="91" selection-end-column="21" />
         </state>
       </provider>
     </entry>
