@@ -31,7 +31,5 @@ _gsdata_
 /T1/server/scripts/_____package_____.txt
 /T1/server/app/center/scripts/compileListDEtsFile.data
 /T1/server/app/center/scripts/compile_*.txt
-/T1/server/scripts/compileListDEtsFile.center_server.data
-/T1/server/scripts/compileListDEtsFile.game_server.data
-/T1/server/scripts/compile_center_server_cht_debug.txt
-/T1/server/scripts/compile_game_server_cht_debug.txt
+/T1/server/scripts/*.data
+/T1/server/scripts/*.txt
