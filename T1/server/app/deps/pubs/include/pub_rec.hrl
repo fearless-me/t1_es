@@ -13,8 +13,10 @@
 -record(pub_kv,{key,value}).
 
 %%
--record(watchdog_task,{check_fun, tip}).
--define(WATCHDOG_TASK(FUNC, TIP), #watchdog_task{check_fun = FUNC, tip = TIP}).
+-record(watchdog_task,{mfa, tip}).
+-record(watchdog_task_group,  {priority, ref, task_list=[]}).
+-define(WATCHDOG_TASK(Mfa, Tip), #watchdog_task{mfa = Mfa, tip = Tip}).
+-define(WATCHDOG_TASK_GROUP(Pr, Ref, Tasks), #watchdog_task_group{priority = Pr, ref = Ref,task_list = Tasks}).
 
 %%-------------------------------------------------------------------
 %% @doc

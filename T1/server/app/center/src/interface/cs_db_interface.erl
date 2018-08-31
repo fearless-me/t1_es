@@ -61,24 +61,24 @@ action_data_(HashKey, MsgId, Msg, FromPid) ->
     db_mgr:scheduler_(Mgr, HashKey, {MsgId, Msg, FromPid}).
 
 %%-------------------------------------------------------------------
-action_data_all_(MsgId, Msg) ->
-    PoolRef = db_proxy:pool_pg(?DATA_DB_POOL_NAME),
-    Members = pg_local:get_members(PoolRef),
-    lists:foreach(
-        fun(Mgr) ->
-            db_mgr:scheduler_(Mgr, 0, {MsgId, Msg, self()})
-        end,Members),
-    erlang:length(Members).
-
-action_data_all_(MsgId, Msg, FromPid) ->
-    PoolRef = db_proxy:pool_pg(?DATA_DB_POOL_NAME),
-    Members = pg_local:get_members(PoolRef),
-    lists:foreach(
-        fun(Mgr) ->
-            db_mgr:scheduler_(Mgr, 0, {MsgId, Msg, FromPid})
-        end, Members
-    ),
-    erlang:length(Members).
+%%action_data_all_(MsgId, Msg) ->
+%%    PoolRef = db_proxy:pool_pg(?DATA_DB_POOL_NAME),
+%%    Members = pg_local:get_members(PoolRef),
+%%    lists:foreach(
+%%        fun(Mgr) ->
+%%            db_mgr:scheduler_(Mgr, 0, {MsgId, Msg, self()})
+%%        end,Members),
+%%    erlang:length(Members).
+%%
+%%action_data_all_(MsgId, Msg, FromPid) ->
+%%    PoolRef = db_proxy:pool_pg(?DATA_DB_POOL_NAME),
+%%    Members = pg_local:get_members(PoolRef),
+%%    lists:foreach(
+%%        fun(Mgr) ->
+%%            db_mgr:scheduler_(Mgr, 0, {MsgId, Msg, FromPid})
+%%        end, Members
+%%    ),
+%%    erlang:length(Members).
 
 %%-------------------------------------------------------------------
 %% 账号库
@@ -91,25 +91,25 @@ action_account_(HashKey, MsgId, Msg, FromPid) ->
     db_mgr:scheduler_(Mgr, HashKey, {MsgId, Msg, FromPid}).
 
 %%-------------------------------------------------------------------
-action_account_all_(MsgId, Msg) ->
-    PoolRef = db_proxy:pool_pg(?ACCOUNT_DB_POOL_NAME),
-    Members = pg_local:get_members(PoolRef),
-    lists:foreach(
-        fun(Mgr) ->
-            db_mgr:scheduler_(Mgr, 0, {MsgId, Msg, self()})
-        end, Members
-    ),
-    erlang:length(Members).
-
-action_account_all_(MsgId, Msg, FromPid) ->
-    PoolRef = db_proxy:pool_pg(?ACCOUNT_DB_POOL_NAME),
-    Members = pg_local:get_members(PoolRef),
-    lists:foreach(
-        fun(Mgr) ->
-            db_mgr:scheduler_(Mgr, 0, {MsgId, Msg, FromPid})
-        end, Members
-    ),
-    erlang:length(Members).
+%%action_account_all_(MsgId, Msg) ->
+%%    PoolRef = db_proxy:pool_pg(?ACCOUNT_DB_POOL_NAME),
+%%    Members = pg_local:get_members(PoolRef),
+%%    lists:foreach(
+%%        fun(Mgr) ->
+%%            db_mgr:scheduler_(Mgr, 0, {MsgId, Msg, self()})
+%%        end, Members
+%%    ),
+%%    erlang:length(Members).
+%%
+%%action_account_all_(MsgId, Msg, FromPid) ->
+%%    PoolRef = db_proxy:pool_pg(?ACCOUNT_DB_POOL_NAME),
+%%    Members = pg_local:get_members(PoolRef),
+%%    lists:foreach(
+%%        fun(Mgr) ->
+%%            db_mgr:scheduler_(Mgr, 0, {MsgId, Msg, FromPid})
+%%        end, Members
+%%    ),
+%%    erlang:length(Members).
 
 
 %%-------------------------------------------------------------------
@@ -123,24 +123,24 @@ action_public_(HashKey, MsgId, Msg, FromPid) ->
     db_mgr:scheduler_(Mgr, HashKey, {MsgId, Msg, FromPid}).
 
 %%-------------------------------------------------------------------
-action_public_all_(MsgId, Msg) ->
-    PoolRef = db_proxy:pool_pg(?PUBLIC_DB_POOL_NAME),
-    Members = pg_local:get_members(PoolRef),
-    lists:foreach(
-        fun(Mgr) ->
-            db_mgr:scheduler_(Mgr, 0, {MsgId, Msg, self()})
-        end, Members
-    ),
-    erlang:length(Members).
-
-action_public_all_(MsgId, Msg, FromPid) ->
-    PoolRef = db_proxy:pool_pg(?PUBLIC_DB_POOL_NAME),
-    Members = pg_local:get_members(PoolRef),
-    lists:foreach(
-        fun(Mgr) ->
-            db_mgr:scheduler_(Mgr, 0, {MsgId, Msg, FromPid})
-        end, Members
-    ),
-    erlang:length(Members).
+%%action_public_all_(MsgId, Msg) ->
+%%    PoolRef = db_proxy:pool_pg(?PUBLIC_DB_POOL_NAME),
+%%    Members = pg_local:get_members(PoolRef),
+%%    lists:foreach(
+%%        fun(Mgr) ->
+%%            db_mgr:scheduler_(Mgr, 0, {MsgId, Msg, self()})
+%%        end, Members
+%%    ),
+%%    erlang:length(Members).
+%%
+%%action_public_all_(MsgId, Msg, FromPid) ->
+%%    PoolRef = db_proxy:pool_pg(?PUBLIC_DB_POOL_NAME),
+%%    Members = pg_local:get_members(PoolRef),
+%%    lists:foreach(
+%%        fun(Mgr) ->
+%%            db_mgr:scheduler_(Mgr, 0, {MsgId, Msg, FromPid})
+%%        end, Members
+%%    ),
+%%    erlang:length(Members).
 %%-------------------------------------------------------------------
 
