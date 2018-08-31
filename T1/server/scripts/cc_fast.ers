@@ -286,7 +286,7 @@ compile(ServerType, Lang, 1) ->
 
 	%% 用于Release编译打包
 	Target = getCompileServer(1),
-	FileName = io_lib:format("compile_~p_~p.txt", [Lang, Target]),
+	FileName = io_lib:format("compile_~p_~p_~p.txt", [ServerType, Lang, Target]),
 	file:write_file(FileName, ""),
 	CmdStr = io_lib:format("cd ../ && make all Region=\"~p\" -j8 > scripts/~ts", [Lang, FileName]),
 
