@@ -1,5 +1,5 @@
 cls
 @echo off
-cd ../scripts/xref_runner
+cd xref_runner
 start /B /wait erl -s  xref_runner check
 pause

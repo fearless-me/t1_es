@@ -15,12 +15,20 @@
 }).
 
 
-main(_) ->
+main(Args) ->
     file:make_dir("../ebin"),
 	ets:new(?CompileEts, [public, named_table, {keypos, 1}]),
 	ets:new(?CompileFilesEts, [public, named_table, {keypos, 1},{write_concurrency, true},{read_concurrency, true}]),
-    menu0(),
+    main1(Args),
 	ok.
+	
+main1([ServerType]) ->
+	dispatchInput0(ServerType);
+main1(_Any) ->	
+ menu0(),
+	ok.
+	
+	
 
 menu0() ->
     log(
@@ -88,8 +96,8 @@ dispatchInput(ServerType, 6) -> menu2(ServerType, tha);
 dispatchInput(ServerType, 7) -> menu2(ServerType, rus);
 dispatchInput(ServerType, 8) -> menu2(ServerType, jpn);
 dispatchInput(ServerType, 9) -> menu2(ServerType, vietnam);
-dispatchInput(_, 888) ->
-	jump_package(),
+dispatchInput(ServerType, 888) ->
+	jump_package(ServerType),
 	menu0();
 dispatchInput(ServerType, _) -> menu1(ServerType).
 
@@ -139,7 +147,7 @@ dispatchInput2(ServerType, _, 0) ->
 	dets:close(get_dets_name(ServerType)),
 	erlang:halt();
 dispatchInput2(ServerType, Lang, 888) ->
-	jump_package(),
+	jump_package(ServerType),
 	menu2(ServerType, Lang);
 dispatchInput2(_ServerType, _Lang, 9) ->
 	menu0();
@@ -261,8 +269,11 @@ getCompileServer(11) -> debug;
 getCompileServer(24) -> debug;
 getCompileServer(_) -> debug.
 
-jump_package() ->
-	os:cmd(" cd ../../scripts/ && start escript.exe cpk.ers pkg"),
+jump_package(?ST_GS) ->
+	erlang:spawn(fun()-> os:cmd("start escript.exe ps_gs.ers") end),
+	ok;
+jump_package(?ST_CS) ->
+	erlang:spawn(fun()-> os:cmd("start escript.exe ps_cs.ers") end),
 	ok.
 
 compile(ServerType, Lang, 1) ->
