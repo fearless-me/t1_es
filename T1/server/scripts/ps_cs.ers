@@ -644,14 +644,7 @@ set_title(Title) ->
 
 convertMD5ToHexString(MD5) ->
     lists:flatten(list_to_hex(MD5)).
-%%convertMD5ToHexString(lists:reverse(MD5), []).
 
-convertMD5ToHexString([], AccIn) ->
-	AccIn;
-convertMD5ToHexString([H | T], AccIn) ->
-%%	R = [io_lib:format("~.16B", [H]) | AccIn],
-	R = [io_lib:format("~2.16.0B", [H]) | AccIn],
-	convertMD5ToHexString(T, R).
 
 getTempDir() ->
 	".\\___temp_cs___".

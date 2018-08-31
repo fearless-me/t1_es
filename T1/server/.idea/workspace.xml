@@ -9,8 +9,6 @@
       <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/lib/llist.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/lib/llist.erl" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/scripts/cc_fast.ers" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/cc_fast.ers" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/scripts/cpk.ers" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/cpk.ers" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/dev.ers" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/dev.ers" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/ps_cs.ers" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/ps_cs.ers" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/scripts/ps_gs.ers" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/ps_gs.ers" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/scripts/xref_runner/xref_runner.app" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/xref_runner/xref_runner.app" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/scripts/xref_runner/xref_runner.beam" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/xref_runner/xref_runner.beam" afterDir="false" />
@@ -103,7 +101,7 @@
           <entry key="beam" value="6" />
           <entry key="config" value="6" />
           <entry key="dump" value="1" />
-          <entry key="erl" value="1266" />
+          <entry key="erl" value="1267" />
           <entry key="err" value="1" />
           <entry key="ers" value="19" />
           <entry key="hrl" value="175" />
@@ -119,7 +117,7 @@
         <counts>
           <entry key="BEAM" value="6" />
           <entry key="Batch" value="1" />
-          <entry key="Erlang" value="1266" />
+          <entry key="Erlang" value="1267" />
           <entry key="Erlang Header" value="175" />
           <entry key="Erlang Terms" value="6" />
           <entry key="Erlang/OTP app" value="30" />
@@ -136,12 +134,19 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/deps/pubs/src/lib/llist.erl">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="368">
-              <caret line="82" column="52" selection-start-line="82" selection-start-column="52" selection-end-line="82" selection-end-column="52" />
+              <caret line="82" column="54" lean-forward="true" selection-start-line="82" selection-start-column="54" selection-end-line="82" selection-end-column="54" />
             </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/app/center/src/cahce/cs_cache.erl">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-72" />
           </provider>
         </entry>
       </file>
@@ -159,15 +164,6 @@
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="628">
               <caret line="485" column="30" lean-forward="true" selection-start-line="485" selection-start-column="30" selection-end-line="485" selection-end-column="30" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/scripts/xref_runner/xref.config">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="234">
-              <caret line="9" column="21" selection-start-line="9" selection-start-column="21" selection-end-line="9" selection-end-column="21" />
             </state>
           </provider>
         </entry>
@@ -338,10 +334,10 @@
     </treeState>
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="-2829" />
-    <option name="y" value="97" />
-    <option name="width" value="3860" />
-    <option name="height" value="686" />
+    <option name="x" value="-8" />
+    <option name="y" value="-8" />
+    <option name="width" value="1936" />
+    <option name="height" value="1056" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectView">
@@ -370,6 +366,21 @@
               <item name="Server" type="462c0819:PsiDirectoryNode" />
               <item name="app" type="462c0819:PsiDirectoryNode" />
               <item name="center" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="Server" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Server" type="462c0819:PsiDirectoryNode" />
+              <item name="app" type="462c0819:PsiDirectoryNode" />
+              <item name="center" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="Server" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Server" type="462c0819:PsiDirectoryNode" />
+              <item name="app" type="462c0819:PsiDirectoryNode" />
+              <item name="center" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="cahce" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="Server" type="b2602c69:ProjectViewProjectNode" />
@@ -473,7 +484,7 @@
     <property name="SearchEverywhereHistoryKey" value="&#9;FILE&#9;file://C:/Program Files/erl10.0/lib/erts-10.0/src/erlang.erl" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1535702626241" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1535703495149" />
     <property name="last_opened_file_path" value="E:/other/RabbitMQ" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
@@ -995,12 +1006,12 @@
       <workItem from="1535684709666" duration="2913000" />
       <workItem from="1535687663178" duration="985000" />
       <workItem from="1535694634036" duration="408000" />
-      <workItem from="1535695085149" duration="6225000" />
+      <workItem from="1535695085149" duration="6832000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="1763190000" />
+    <option name="totallyTimeSpent" value="1763797000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -1012,7 +1023,7 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="-1928" y="-8" width="1936" height="1056" extended-state="6" />
+    <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
     <editor active="true" />
     <layout>
       <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.8431591" visible="true" weight="0.1359275" />
@@ -1097,13 +1108,6 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/app/center/src/db/cs_db_starter.erl">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-22">
-          <caret line="9" column="31" lean-forward="true" selection-start-line="9" selection-start-column="31" selection-end-line="9" selection-end-column="31" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/center/src/dist/cs_dist_share.erl">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="182">
@@ -1403,8 +1407,13 @@
     <entry file="file://$PROJECT_DIR$/app/deps/pubs/src/lib/llist.erl">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="368">
-          <caret line="82" column="52" selection-start-line="82" selection-start-column="52" selection-end-line="82" selection-end-column="52" />
+          <caret line="82" column="54" lean-forward="true" selection-start-line="82" selection-start-column="54" selection-end-line="82" selection-end-column="54" />
         </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/center/src/cahce/cs_cache.erl">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-72" />
       </provider>
     </entry>
   </component>
