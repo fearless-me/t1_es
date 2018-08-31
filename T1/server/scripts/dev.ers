@@ -86,7 +86,7 @@ dispatchInput2(?OP_EXIT) ->
 dispatchInput2(?OP_REF) ->
     erlang:spawn(fun() -> os:cmd("start xref.bat") end);
 dispatchInput2(?OP_DIALYZER) ->
-    erlang:spawn(fun() -> os:cmd("start dialyzer.bat") end);
+    erlang:spawn(fun() -> os:cmd("start dialyzer_tool.bat") end);
 dispatchInput2(?OP_DEL_LOG_ALL) ->
     erlang:spawn(fun() -> os:cmd(" cd ..\\ && del /q /s *.log && del /q /s *.err") end);
 dispatchInput2(?OP_DEL_LOG_GS) ->
