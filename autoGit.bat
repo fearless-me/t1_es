@@ -1,6 +1,7 @@
 @echo off
 echo "commit local....."
-CHCP utf8
+chcp 65001
+
 
 git commit -a -m "auto commit"
 
