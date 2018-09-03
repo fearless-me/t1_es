@@ -8,6 +8,7 @@
                     {interval, 5000},
 					{src_dirs,[
                                 "../src",
+								"../../common/src",
                                 "../../deps/pubs",
 								"../../deps/dynamic_compile",
                                 "../../deps/econfig",
@@ -29,7 +30,7 @@
 								"../src/pub/netmsg", 
 								"../../deps/pubs/include", 
 								"../../deps/gen_rpc/include",
-								"../../common_include"
+								"../../common/include"
 							]
 					},
 					{opts,
@@ -40,6 +41,7 @@
 								src_dirs, 
 								[
 									"../src",
+									"../../common/src",
 									"../../deps/pubs",
 									"../../deps/dynamic_compile",
 									"../../deps/econfig",
@@ -57,7 +59,7 @@
 							{i, "../include"},
 							{i, "../src/pub/config"},
 							{i, "../src/pub/netmsg"},
-							{i, "../../common_include"},
+							{i, "../../common/include"},
 							{i, "../../deps/pubs/include"},
 							{i, "../../deps/gen_rpc/include"},
 							{i, "../../deps/mysql-otp/include"}

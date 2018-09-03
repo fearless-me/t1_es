@@ -6,7 +6,7 @@
 
 -include("logger.hrl").
 -include("type.hrl").
--include("cfg_mapsetting.hrl").
+-include("cfg_map.hrl").
 -include("inc_map.hrl").
 -include("mapCfgPrivate.hrl").
 
@@ -28,9 +28,9 @@ loadAllMaps() ->
 			ok;
 		MapSettingCfgList->
 			Fun = fun(First)->
-						  MapID = First#mapsettingCfg.id,
-						  NewArCfg = readMap(MapID,First#mapsettingCfg.res1,get(mapsettingArCfg)),
-						  RetArCfg = readMapInfo(MapID,First#mapsettingCfg.res2,NewArCfg),
+						  MapID = First#mapCfg.id,
+						  NewArCfg = readMap(MapID,First#mapCfg.res1,get(mapsettingArCfg)),
+						  RetArCfg = readMapInfo(MapID,First#mapCfg.res2,NewArCfg),
 						  put(mapsettingArCfg,RetArCfg)
 				  end,
 			lists:foreach(Fun, MapSettingCfgList),

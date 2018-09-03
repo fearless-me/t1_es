@@ -1,8 +1,14 @@
 #!/usr/bin/env escript
--module(cc_fast).
--author(tiancheng).
+%%%-------------------------------------------------------------------
+%%% @author mwh
+%%% @copyright (C) 2017, <COMPANY>
+%%% @doc
+%%%
+%%% @end
+%%% Created : 31. 八月 2018 9:32
+%%%-------------------------------------------------------------------
 
--define(IsOnlyCht, 1).
+-define(OneZone, 1).
 -define(CompileEts, compileEts).
 -define(CompileFilesEts, compileFilesEts).
 -define(CompileListDEts, get_dets_name(ServerType)).
@@ -59,10 +65,10 @@ dispatchInput0(2) -> menu1(?ST_CS);
 dispatchInput0(_) -> menu0().
 
 
--ifdef(IsOnlyCht).
+-ifdef(OneZone).
 menu1(ServerType) ->
     ensure_dets(ServerType),
-	dispatchInput(ServerType, 2).
+	dispatchInput(ServerType, ?OneZone).
 -else.
 menu1(ServerType) ->
     ensure_dets(ServerType),

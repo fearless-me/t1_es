@@ -13,7 +13,7 @@
 -include("pub_def.hrl").
 -include("netmsg.hrl").
 -include("rec_common.hrl").
--include("cfg_mapsetting.hrl").
+-include("cfg_map.hrl").
 -include("inc_map.hrl").
 -include("inc_map_unit.hrl").
 

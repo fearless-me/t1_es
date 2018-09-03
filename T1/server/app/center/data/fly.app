@@ -8,6 +8,7 @@
                     {interval, 5000},
 					{src_dirs,[
                                 "../src",
+								"../../common/src",
                                 "../../deps/pubs",
 								"../../deps/dynamic_compile",
                                 "../../deps/econfig",
@@ -24,7 +25,7 @@
 								"../../deps/db_proxy"
                               ]
                     },
-					{inc_dirs,["../include", "../../deps/pubs/include", "../../deps/gen_rpc/include", "../../common_include"]
+					{inc_dirs,["../include", "../../deps/pubs/include", "../../deps/gen_rpc/include", "../../common/include"]
 					},
 					{opts,
 						[
@@ -34,6 +35,7 @@
 								src_dirs, 
 								[
 									"../src",
+									"../../common/src",
 									"../../deps/pubs",
 									"../../deps/dynamic_compile",
 									"../../deps/econfig",
@@ -51,7 +53,7 @@
                                ]
 							},
 							{i, "../include"},
-							{i, "../../common_include"},
+							{i, "../../common/include"},
 							{i, "../../deps/pubs/include"},
 							{i, "../../deps/gen_rpc/include"},
 							{i, "../../deps/mysql-otp/include"}

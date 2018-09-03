@@ -4,5 +4,5 @@ rem %1 start mshta vbscript:createobject("wscript.shell").run("""%~0"" ::",0)(wi
 
 cls
 cd schemes
-colortool.exe -q -b OneHalfLight
+colortool.exe -q -b campbell
 exit

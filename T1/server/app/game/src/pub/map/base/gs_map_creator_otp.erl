@@ -14,7 +14,7 @@
 -include("pub_def.hrl").
 -include("gs_ps_def.hrl").
 -include("inc_map.hrl").
--include("cfg_mapsetting.hrl").
+-include("cfg_map.hrl").
 
 %%
 -export([start_link/0]).
@@ -61,22 +61,22 @@ do_handle_cast(Request, State) ->
 %%--------------------------------------------------------------------
 load_all_map() ->
     IsCross = gs_conf:is_cross(),
-    L = getCfg:get1KeyList(cfg_mapsetting),
-    _ = [load_one_map(IsCross, getCfg:getCfgByArgs(cfg_mapsetting, MapID)) || MapID <- L],
+    L = getCfg:get1KeyList(cfg_map),
+    _ = [load_one_map(IsCross, getCfg:getCfgByArgs(cfg_map, MapID)) || MapID <- L],
     ok.
 
-load_one_map(true,  #mapsettingCfg{is_cross = 1, id = MapID}) ->
+load_one_map(true,  #mapCfg{is_cross = 1, id = MapID}) ->
     {ok, Pid} = gs_map_mgr_sup:start_child(MapID),
     ets:insert(?MAP_MGR_ETS, #m_map_mgr{map_id = MapID, mgr = Pid}),
     ok;
-load_one_map(true, #mapsettingCfg{is_cross = 0, id = MapID}) ->
+load_one_map(true, #mapCfg{is_cross = 0, id = MapID}) ->
     ?WARN("~p This is a cross-server and does not create normal map mgr ~p ",[node(), MapID]),
     ok;
-load_one_map(false, #mapsettingCfg{is_cross = 0, id = MapID}) ->
+load_one_map(false, #mapCfg{is_cross = 0, id = MapID}) ->
     {ok, Pid} = gs_map_mgr_sup:start_child(MapID),
     ets:insert(?MAP_MGR_ETS, #m_map_mgr{map_id = MapID, mgr = Pid}),
     ok;
-load_one_map(false, #mapsettingCfg{is_cross = 1, id = MapID}) ->
+load_one_map(false, #mapCfg{is_cross = 1, id = MapID}) ->
     ?WARN("~p This is a normal-server and does not create cross-server map mgr ~p ",[node(), MapID]),
     ok.
 

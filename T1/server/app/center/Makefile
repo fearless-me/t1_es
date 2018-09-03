@@ -7,6 +7,7 @@ Region ?= chs
 
 #源文件目录
 SOURCE_DIR = ./src
+SOURCE_DIR += ../common/src
 SOURCE_DIR += ../deps/dynamic_compile
 SOURCE_DIR += ../deps/econfig
 SOURCE_DIR += ../deps/eep
@@ -25,10 +26,10 @@ SOURCE_DIR += ../deps/dist-otp
 
 #文件包含目录
 INCLUDE_DIR = -I ./include
+INCLUDE_DIR += -I ../common/include
 INCLUDE_DIR += -I ../deps/pubs/include
 INCLUDE_DIR += -I ../deps/gen_rpc/include
 INCLUDE_DIR += -I ../deps/mysql-otp/include
-INCLUDE_DIR += -I ../common_include
 
 
 #需要额外定义的宏
