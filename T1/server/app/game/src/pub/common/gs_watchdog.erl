@@ -13,16 +13,17 @@
 -include("pub_rec.hrl").
 
 
-
 %% API
--export([start_link/0, task_list/0]).
+-export([task_list/0]).
 
-
-start_link() ->
-    watchdog:start_link(?MODULE).
 
 task_list() ->
     [
-        ?WATCHDOG_TASK(fun gs_data_loader:task_all_done/0, "load all data"),
-        ?WATCHDOG_TASK(fun gs_cs_interface:is_center_ready/0, "connect to center")
+       ?WATCHDOG_TASK_GROUP(1, base_task, base_task())
+    ].
+
+base_task() ->
+    [
+        ?WATCHDOG_TASK({data_loader, task_all_done, []},     "load all data"),
+        ?WATCHDOG_TASK({gs_cs_interface,is_center_ready,[]}, "connect to center")
     ].

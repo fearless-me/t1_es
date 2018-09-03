@@ -21,12 +21,6 @@
 
 start_master(_SupPid) ->
 
-    watchdog:add_task(
-        ?WATCHDOG_TASK(
-            fun dist_monitor:is_all_slaves_stared/0,
-            "wait start all slave ndoe"
-        )
-    ),
 
     %%/////////////////////////////////////////
     
@@ -41,7 +35,7 @@ start_master(_SupPid) ->
 %%    start_master_slave('127.0.0.1', center_f, lists:concat([Args, Sid+3])),
     
     %%/////////////////////////////////////////
-    watchdog:wait(),
+    watchdog:wait_group(2),
     ?WARN("try to start master node done #"),
     ok.
 

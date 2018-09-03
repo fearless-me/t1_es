@@ -24,9 +24,10 @@
 %%
 
 %% API
--export([start_link/2, task_run/1, task_done/2, task_all_done/1, show_todo/1, show_all/1]).
 -export([start_link/1, task_run/0, task_done/1,  task_all_done/0,  show_todo/0, show_all/0]).
 -export([mod_init/1, on_terminate/2, do_handle_call/3, do_handle_info/2, do_handle_cast/2]).
+
+-export([start_link/2, task_run/1, task_done/2, task_all_done/1, show_todo/1, show_all/1]).
 
 %% 启动进程并且指定进程名字
 -callback start_link() -> {'ok', pid()} | 'ignore' | {'error', term()}.

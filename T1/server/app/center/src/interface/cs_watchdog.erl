@@ -13,13 +13,21 @@
 
 
 %% API
--export([start_link/0, task_list/0]).
+-export([task_list/0]).
 
-
-start_link() ->
-    watchdog:start_link(?MODULE).
 
 task_list() ->
     [
-        ?WATCHDOG_TASK(fun cs_data_loader:task_all_done/0, "load all data")
+        ?WATCHDOG_TASK_GROUP(1, load_all_data,      priority_1()),
+        ?WATCHDOG_TASK_GROUP(2, start_master_slave, priority_2())
+    ].
+
+priority_1() ->
+    [
+        ?WATCHDOG_TASK({data_loader, task_all_done, []}, "load all data")
+    ].
+
+priority_2() ->
+    [
+        ?WATCHDOG_TASK({dist_monitor, is_all_slaves_stared, []}, "wait start all slave ndoe")
     ].
