@@ -44,7 +44,7 @@ rpc_call_player_enter(#r_to_cross_data{
 
 %% @doc
 %% 返回给源服务器时玩家公共数据
-%% @reference cross_dst:player_pub_data_from_cross
+%% @reference cross_src:player_pub_data_from_cross
 %% @end 
 rpc_call_player_leave(Aid, Uid) ->
     gs_cache:offline(Aid, Uid),
@@ -54,7 +54,7 @@ rpc_call_player_leave(Aid, Uid) ->
 
 %% @doc
 %% 玩家在跨服地图下线
-%% @reference cross_dst:player_pub_data_from_cross
+%% @reference cross_src:player_pub_data_from_cross
 %% @end 
 rpc_call_player_offline(Aid, Uid) ->
     gs_cache:offline(Aid, Uid),

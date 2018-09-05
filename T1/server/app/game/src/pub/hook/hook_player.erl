@@ -9,9 +9,11 @@
 -module(hook_player).
 -author("mawenhong").
 -include("logger.hrl").
--include("pub_def.hrl").
--include("gs_cache_inc.hrl").
 -include("netmsg.hrl").
+-include("pub_def.hrl").
+-include("gs_common_rec.hrl").
+-include("gs_cache_inc.hrl").
+
 
 %% API
 -export([on_account_login/3, on_create/1, on_login/1, on_offline/0]).

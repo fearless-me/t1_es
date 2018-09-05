@@ -46,7 +46,7 @@ delete_ebin(?ST_GS)->
 delete_ebin(?ST_CS)->
 	os:cmd("cd ../app/center/ebin/ && del /q /s *.*"),
 	color:warn_log("===> clean success!! <===~n~n"),
-	ok;
+	ok.
 
 	
 	
