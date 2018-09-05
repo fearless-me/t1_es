@@ -6,7 +6,7 @@
 %%% @end
 %%% Created : 05. 九月 2018 10:11
 %%%-------------------------------------------------------------------
--module(lib_player_cross).
+-module(lib_player_cross_priv).
 -author("mawenhong").
 
 -include("logger.hrl").

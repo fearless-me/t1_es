@@ -38,7 +38,7 @@ on_login(Player) ->
     lib_player_base:init(Player),
     lib_player_base:send_init_data(),
     gs_cache_interface:online(Player, self(), lib_player_pub:socket()),
-    lib_player_cross:online(),
+    lib_player_cross_priv:online(),
     lib_player_map_priv:online_call(Player),
     lib_player_alarm:init(),
     lib_player_sub:tick_go(),
@@ -59,7 +59,7 @@ on_offline() ->
 
     %% 2.
     ?TRY_CATCH(lib_player_map_priv:offline_call(Uid, Mid, LineId, MPid), Err1, St1),
-    ?TRY_CATCH(lib_player_cross:offline(), Err2, St2),
+    ?TRY_CATCH(lib_player_cross_priv:offline(), Err2, St2),
     ?TRY_CATCH(gs_cache_interface:offline(Aid, Uid), Err3, St3),
     ?TRY_CATCH(lib_player_alarm:save(), Err4, St4),
     ?TRY_CATCH(lib_player_save:save(Uid), Err5, St5),

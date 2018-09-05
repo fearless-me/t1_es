@@ -160,7 +160,7 @@ handle_1(#pk_GS2U_GetPlayerInitDataEnd{}) ->
     rand_walk(),
     ok;
 handle_1(Msg) ->
-    ?WARN("recv: ~p", [Msg]).
+    ?WARN("recv: ~w", [Msg]).
 
 -define(SocketKey, socketRef___).
 socket(Socket) -> put(?SocketKey, Socket).
@@ -180,9 +180,11 @@ heartbeat() ->
     case get_aid() of
         undefined -> skip;
         _  when ChangeMap, MapId =/= 2 ->
+            ?INFO("##### change map ~p -> 2",[MapId]),
             Msg2 = #pk_U2GS_ChangeMap{map_id = 2, x = 125.5, y=200.5},
             send_msg(socket(), Msg2);
         _  when ChangeMap, MapId =/= 1 ->
+            ?INFO("##### change map ~p -> 1",[MapId]),
             Msg2 = #pk_U2GS_ChangeMap{map_id = 1, x = 125.5, y=200.5},
             send_msg(socket(), Msg2);
         _ ->
