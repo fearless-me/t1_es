@@ -10,7 +10,8 @@
 -author("mawenhong").
 
 -include("logger.hrl").
--include("gs_mem_rec.hrl").
+-include("gs_common_rec.hrl").
+-include("gs_cache_inc.hrl").
 
 %% API
 -export([
@@ -54,6 +55,7 @@ online_action(true) ->
     Uid  = lib_player_rw:get_uid(),
     Node = gs_cross_interface:get_player_cross_node(Aid),
     Data = cross_src:player_pub_data_to_cross(Aid, Uid),
+    gs_cache:add_player_cross(Uid),
     grpc:call(Node, cross_dst, rpc_call_player_enter, [Data]);
 online_action(_) -> ok.
 
@@ -64,6 +66,7 @@ offline_action(true) ->
     Uid  = lib_player_rw:get_uid(),
     Node = gs_cross_interface:get_player_cross_node(Aid),
     %% fixme 跨服回传的数据处理
+    gs_cache:del_player_cross(Uid),
     Ret = grpc:call(Node, cross_dst, rpc_call_player_offline, [Aid, Uid]),
     cross_src:player_pub_data_from_cross(Ret);
 offline_action(_) -> ok.
@@ -74,6 +77,7 @@ change_map_before_action(true, false) ->
     Uid  = lib_player_rw:get_uid(),
     Node = gs_cross_interface:get_player_cross_node(Aid),
     %% fixme 跨服回传的数据处理
+    gs_cache:del_player_cross(Uid),
     Ret = rpc:call(Node, cross_dst, rpc_call_player_leave, [Aid, Uid]),
     cross_src:player_pub_data_from_cross(Ret);
 %% 从普通服到跨服
@@ -82,6 +86,7 @@ change_map_before_action(false, true) ->
     Uid  = lib_player_rw:get_uid(),
     Node = gs_cross_interface:get_player_cross_node(Aid),
     Data = cross_src:player_pub_data_to_cross(Aid, Uid),
+    gs_cache:add_player_cross(Uid),
     Ret  = grpc:call(Node, cross_dst, rpc_call_player_enter, [Data]),
     rpc_check(Ret, ?FUNCTION_NAME);
 change_map_before_action(_IsSrcCross, _IsDstCross) ->
@@ -96,11 +101,13 @@ change_map_after_action(false, true, true) ->
     Uid  = lib_player_rw:get_uid(),
     Node = gs_cross_interface:get_player_cross_node(Aid),
     Data = cross_src:player_pub_data_to_cross(Aid, Uid),
+    gs_cache:add_player_cross(Uid),
     grpc:cast(Node, cross_dst, rpc_call_player_enter, [Data]);
 change_map_after_action(false, true, false) ->
     Aid  = lib_player_rw:get_aid(),
     Uid  = lib_player_rw:get_uid(),
     Node = gs_cross_interface:get_player_cross_node(Aid),
+    gs_cache:del_player_cross(Uid),
     grpc:cast(Node, cross_dst, rpc_call_del_player, [Aid, Uid]);
 change_map_after_action(_IsSrcCross, _IsDstCross, _IsOk) ->
     ok.

@@ -12,8 +12,8 @@
 -behaviour(gen_serverw).
 -include("logger.hrl").
 -include("netconf.hrl").
--include("gs_mem_rec.hrl").
--include("gs_def.hrl").
+-include("gs_cache_inc.hrl").
+
 -include("gs_ps_def.hrl").
 
 %% API
@@ -65,23 +65,23 @@ broadcast_net_msg(NetMsg) ->
 
 broadcast_net_msg_action(true, NetMsg) ->
     ets:foldl(
-        fun(#m_player_pid_sock{pid = Pid}, _) ->
+        fun(#m_cache_player_pid_sock{pid = Pid}, _) ->
             catch gs_interface:send_net_msg(Pid, NetMsg)
-        end, 0, ?ETS_PLAYER_PSOCK),
+        end, 0, ?ETS_CACHE_PLAYER_PID_SOCK),
     ok;
 broadcast_net_msg_action(_Any, NetMsg) ->
     {_Bytes1, IoList} = tcp_codec:encode(NetMsg),
     ets:foldl(
-        fun(#m_player_pid_sock{sock = Sock}, _) ->
+        fun(#m_cache_player_pid_sock{sock = Sock}, _) ->
             catch tcp_handler:direct_send_net_msg(Sock, IoList)
-        end, 0, ?ETS_PLAYER_PSOCK),
+        end, 0, ?ETS_CACHE_PLAYER_PID_SOCK),
     ok.
 
 broadcast_msg(MsgId, Msg) ->
     ets:foldl(
-        fun(#m_player_pid_sock{pid = Pid}, _) ->
+        fun(#m_cache_player_pid_sock{pid = Pid}, _) ->
             ps:send(Pid, MsgId, Msg)
-        end, 0, ?ETS_PLAYER_PSOCK),
+        end, 0, ?ETS_CACHE_PLAYER_PID_SOCK),
     ok.
 
 

@@ -12,7 +12,7 @@
 -include("gs_move_inc.hrl").
 -include("logger.hrl").
 
--include("gs_mem_rec.hrl").
+-include("gs_cache_inc.hrl").
 -include("netmsg.hrl").
 -include_lib("stdlib/include/assert.hrl").
 
@@ -281,7 +281,7 @@ on_obj_pos_change(Uid, Tar) ->
     ok.
 
 on_obj_pos_changed(?OBJ_USR, Uid, Tar) ->
-    gs_cache_interface:update_player_pub(Uid, {#m_player_pub.pos, Tar}),
+    gs_cache:update_player_pub(Uid, {#m_cache_player_pub.pos, Tar}),
     ok.
 
 %%-------------------------------------------------------------------

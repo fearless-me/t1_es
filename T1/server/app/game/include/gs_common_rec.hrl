@@ -11,6 +11,9 @@
 -ifndef(GS_COMMON_RECORD_HRL).
 -define(GS_COMMON_RECORD_HRL, true).
 
+%% 存在玩家进程当前地图的信息
+-record(m_player_map,{map_id, line_id, map_pid}).
+
 %%
 -record(r_login_req, {plat_name="", plat_account_name = "", access_token = "", player_pid = 0}).
 %%

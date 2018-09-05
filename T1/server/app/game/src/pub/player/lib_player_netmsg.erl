@@ -14,7 +14,7 @@
 
 -include("gs_player_status.hrl").
 -include("gs_common_rec.hrl").
--include("gs_mem_rec.hrl").
+-include("gs_cache_inc.hrl").
 
 
 %% API

@@ -9,7 +9,7 @@
 -module(hook_map).
 -author("mawenhong").
 -include("logger.hrl").
--include("gs_mem_rec.hrl").
+-include("gs_cache_inc.hrl").
 -include("gs_map_unit_inc.hrl").
 
 -export([
@@ -58,19 +58,19 @@ on_start_move(_Uid) ->
 on_rw_update(Uid, hp, Hp) ->
     ?lock({Uid, hp}),
     Type = lib_unit_rw:get_type(Uid),
-    on_rw_update_pub_action(Type, Uid, {#m_player_pub.hp, Hp}),
+    on_rw_update_pub_action(Type, Uid, {#m_cache_player_pub.hp, Hp}),
     ?unlock(),
     ok;
 on_rw_update(Uid, attr, Attrs) ->
     ?lock({Uid, attr}),
     Type = lib_unit_rw:get_type(Uid),
-    on_rw_update_priv_action(Type, Uid, {#m_player_private.priv_attrs, Attrs}),
+    on_rw_update_priv_action(Type, Uid, {#m_cache_player_private.priv_attrs, Attrs}),
     ?unlock(),
     ok;
 on_rw_update(Uid, buff_list, BuffList) ->
     ?lock({Uid, buff_list}),
     Type = lib_unit_rw:get_type(Uid),
-    on_rw_update_priv_action(Type, Uid, {#m_player_private.priv_buffs, BuffList}),
+    on_rw_update_priv_action(Type, Uid, {#m_cache_player_private.priv_buffs, BuffList}),
     ?unlock(),
     ok;
 on_rw_update(_Uid, _Key, _Value) ->
@@ -79,14 +79,14 @@ on_rw_update(_Uid, _Key, _Value) ->
 
 %%-------------------------------------------------------------------
 on_rw_update_pub_action(?OBJ_USR, Uid, Element) ->
-    gs_cache_interface:update_player_pub(Uid, Element),
+    gs_cache:update_player_pub(Uid, Element),
     ok;
 on_rw_update_pub_action(_ObjType, _Uid, _Element) ->
     ok.
 
 %%-------------------------------------------------------------------
 on_rw_update_priv_action(?OBJ_USR, Uid, Element) ->
-    gs_cache_interface:update_player_priv(Uid, Element),
+    gs_cache:update_player_priv(Uid, Element),
     ok;
 on_rw_update_priv_action(_ObjType, _Uid, _Element) ->
     ok.

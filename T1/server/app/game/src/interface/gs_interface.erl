@@ -8,7 +8,7 @@
 %%%-------------------------------------------------------------------
 -module(gs_interface).
 -author("mawenhong").
--include("gs_def.hrl").
+
 -include("logger.hrl").
 -include("pub_rec.hrl").
 -include("gs_ps_def.hrl").
@@ -44,7 +44,7 @@
 ]).
 
 total_online() ->
-    ets:info(?ETS_ACCOUNT_PSOCK, size).
+    ets:info(?ETS_CACHE_ACCOUNT_PID_SOCK, size).
     
 %%-------------------------------------------------------------------
 ppid_name(Aid) ->
@@ -66,21 +66,21 @@ kick_account(Aid, Reason) ->
 send_msg(Pid, MsgId) when is_pid(Pid) ->
     ps:send(Pid, MsgId);
 send_msg(Uid, MsgId) when is_number(Uid) ->
-    Pid = gs_cache_interface:get_ppid(Uid),
+    Pid = gs_cache:get_ppid(Uid),
     ps:send(Pid, MsgId).
 
 %%-------------------------------------------------------------------
 send_msg(Pid, MsgId, Msg) when is_pid(Pid) ->
     ps:send(Pid, MsgId, Msg);
 send_msg(Uid, MsgId, Msg) when is_number(Uid) ->
-    Pid = gs_cache_interface:get_ppid(Uid),
+    Pid = gs_cache:get_ppid(Uid),
     ps:send(Pid, MsgId, Msg).
 
 %%-------------------------------------------------------------------
 send_net_msg(Pid, NetMsg) when is_pid(Pid) ->
     ps:send(Pid, net_msg, NetMsg);
 send_net_msg(Uid, NetMsg) when is_number(Uid) ->
-    Pid = gs_cache_interface:get_ppid(Uid),
+    Pid = gs_cache:get_ppid(Uid),
     ps:send(Pid, net_msg, NetMsg).
 
 %%-------------------------------------------------------------------

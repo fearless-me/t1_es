@@ -10,7 +10,7 @@
 -author("mawenhong").
 -include("logger.hrl").
 -include("pub_def.hrl").
--include("gs_mem_rec.hrl").
+-include("gs_cache_inc.hrl").
 -include("netmsg.hrl").
 
 %% API
@@ -20,7 +20,7 @@
 
 %%-------------------------------------------------------------------
 on_account_login(Aid, Pid, Sock) ->
-    gs_cache_interface:add_account_socket(Aid, Pid, Sock),
+    gs_cache:add_account_socket(Aid, Pid, Sock),
     gs_db_interface:action_data_(Aid, load_player_list, Aid),
     ok.
 
@@ -37,7 +37,7 @@ on_login(Player) ->
     gs_cross_interface:assign_cross_for_me(Aid),
     lib_player_base:init(Player),
     lib_player_base:send_init_data(),
-    gs_cache_interface:online(Player, self(), lib_player_pub:socket()),
+    gs_cache:online(Player, self(), lib_player_pub:socket()),
     lib_player_cross_priv:online(),
     lib_player_map_priv:online_call(Player),
     lib_player_alarm:init(),
@@ -60,7 +60,7 @@ on_offline() ->
     %% 2.
     ?TRY_CATCH(lib_player_map_priv:offline_call(Uid, Mid, LineId, MPid), Err1, St1),
     ?TRY_CATCH(lib_player_cross_priv:offline(), Err2, St2),
-    ?TRY_CATCH(gs_cache_interface:offline(Aid, Uid), Err3, St3),
+    ?TRY_CATCH(gs_cache:offline(Aid, Uid), Err3, St3),
     ?TRY_CATCH(lib_player_alarm:save(), Err4, St4),
     ?TRY_CATCH(lib_player_save:save(Uid), Err5, St5),
     ?WARN("player ~p exit map_~p_~p", [Uid, Mid, LineId]),
@@ -104,7 +104,7 @@ on_sharp(Hour) ->
 on_rw_update(level, Level) ->
     ?lock(level),
     Uid = lib_player_rw:get_uid(),
-    gs_cache_interface:update_player_pub(Uid, {#m_player_pub.level, Level}),
+    gs_cache:update_player_pub(Uid, {#m_cache_player_pub.level, Level}),
     ?unlock(),
     ok;
 on_rw_update(_Key, _Value) ->

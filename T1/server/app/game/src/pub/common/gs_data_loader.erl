@@ -57,7 +57,7 @@ info({serv_start_ack, RunNo}) ->
     ok;
 info({load_all_role_info_ack, List}) ->
     lists:foreach(
-        fun(Player) -> gs_cache_interface:add_player_pub(Player) end, List),
+        fun(Player) -> gs_cache:add_player_pub(Player) end, List),
     ok;
 info(load_all_role_info_ack_end) ->
     data_loader:task_done(load_all_role_info),

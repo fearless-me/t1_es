@@ -25,16 +25,21 @@ start() ->
     {_PoolOptions, MySqlOptions} = get_inst_opt(),
     {ok, Pid} = mysql:start_link(MySqlOptions),
 
-    ?INFO("init data db pool ..."),
-    db_pool_init(Pid, get_data_db_conf, [Sid], ?DATA_DB_POOL_NAME, fun gs_db_handler:handler/4),
-    ?INFO("init data db pool done"),
-    ?INFO("#"),
+    case gs_conf:is_cross() of
+        false ->
+            ?INFO("init data db pool ..."),
+            db_pool_init(Pid, get_data_db_conf, [Sid], ?DATA_DB_POOL_NAME, fun gs_db_handler:handler/4),
+            ?INFO("init data db pool done"),
+            ?INFO("#"),
 
-    ?INFO("init account db pool ..."),
-    db_pool_init(Pid, get_account_db_conf, [], ?ACCOUNT_DB_POOL_NAME, fun gs_db_handler:handler/4),
-    ?INFO("init account db pool done"),
-    ?INFO("#"),
-
+            ?INFO("init account db pool ..."),
+            db_pool_init(Pid, get_account_db_conf, [], ?ACCOUNT_DB_POOL_NAME, fun gs_db_handler:handler/4),
+            ?INFO("init account db pool done"),
+            ?INFO("#"),
+            ok;
+        _ -> skip
+    end,
+    
     ?INFO("init public db pool ..."),
     db_pool_init(Pid, get_public_db_conf, [], ?PUBLIC_DB_POOL_NAME, fun gs_db_handler:handler/4),
     ?INFO("init public db pool done"),

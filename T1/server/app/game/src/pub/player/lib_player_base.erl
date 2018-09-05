@@ -11,7 +11,7 @@
 -include("logger.hrl").
 -include("netmsg.hrl").
 -include("gs_db_rec.hrl").
--include("gs_mem_rec.hrl").
+-include("gs_cache_inc.hrl").
 -include("gs_common_rec.hrl").
 
 %% API

@@ -10,7 +10,7 @@
 -author("mawenhong").
 
 -include("logger.hrl").
--include("gs_mem_rec.hrl").
+-include("gs_cache_inc.hrl").
 -include("gs_common_rec.hrl").
 -include("gs_db_rec.hrl").
 
@@ -131,7 +131,7 @@ handler(create_player, {AccId, Req}, FromPid, PoolId) ->
     ),
     ok;
 handler(save_player, Player, _FromPid, PoolId) ->
-    #m_player_pub{
+    #m_cache_player_pub{
         uid = Uid, career = Career, level = Lv,
         mid = Mid, line = Line, pos = Pos,
         old_mid = OMid, old_line = OLine, old_pos = OPos

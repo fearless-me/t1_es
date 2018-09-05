@@ -37,7 +37,7 @@ player_pub_data_to_cross(Aid, Uid) ->
         aid = Aid,
         uid = lib_player_rw:get_uid(),
         sock= lib_player_pub:socket(),
-        player_pub = gs_cache_interface:get_player_pub(Uid)
+        player_pub = gs_cache:get_player_pub(Uid)
     }.
 
 %% @doc
