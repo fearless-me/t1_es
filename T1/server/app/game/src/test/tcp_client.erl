@@ -106,7 +106,7 @@ send_msg(Socket, Msg) ->
 
 
 recv_msg(Socket) ->
-    case ranch_tcp:recv(Socket, 0, 15000) of
+    case ranch_tcp:recv(Socket, 0, 5000) of
         {ok, Any0} ->
             tcp_codec:decode(fun tcp_client:handle/2, Socket, Any0),
             ok;
@@ -146,6 +146,7 @@ handle_1(#pk_GS2U_UserPlayerList{info = Info}) ->
     ok;
 handle_1(#pk_GS2U_GotoNewMap{map_id = MapId}) ->
     set_mid(MapId),
+    ?INFO("~p GS2U_GotoNewMap ~p", [self(), MapId]),
     case get_aid() of
         undefined ->
             send_msg(socket(), #pk_U2GS_GetPlayerInitData{});
@@ -180,11 +181,11 @@ heartbeat() ->
     case get_aid() of
         undefined -> skip;
         _  when ChangeMap, MapId =/= 2 ->
-            ?INFO("##### change map ~p -> 2",[MapId]),
+            ?INFO("##### ~p change map ~p -> 2",[self(), MapId]),
             Msg2 = #pk_U2GS_ChangeMap{map_id = 2, x = 125.5, y=200.5},
             send_msg(socket(), Msg2);
         _  when ChangeMap, MapId =/= 1 ->
-            ?INFO("##### change map ~p -> 1",[MapId]),
+            ?INFO("##### ~p change map ~p -> 1",[self(), MapId]),
             Msg2 = #pk_U2GS_ChangeMap{map_id = 1, x = 125.5, y=200.5},
             send_msg(socket(), Msg2);
         _ ->
