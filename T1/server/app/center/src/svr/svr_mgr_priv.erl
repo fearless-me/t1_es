@@ -12,6 +12,7 @@
 -include("logger.hrl").
 -include("pub_def.hrl").
 -include("pub_rec.hrl").
+-include("common_def.hrl").
 -include("common_rec.hrl").
 -include("cs_priv.hrl").
 %% API
@@ -56,24 +57,24 @@ do_check(NowTime, [#m_all_server_check{id = ServerID, time = ConnectTime} = Info
 
 serv_ack_timeout(ServerID) ->
 	?WARN("wait server[~p] ack timeout",[ServerID]),
-	cs_cache:del_from_check(ServerID),
-	cs_interface:send_msg_2_server_with_sid(ServerID, {ackTimeOut, self()}),
+	cs_cache:del_check_server(ServerID),
+	common_interface:send_msg_2_server_with_sid(ServerID, {ackTimeOut, self()}),
 %%	 worker 心跳自动退出
 %%	csInterface:sendMsg2ServerWorkerWithID(ServerID, ackTimeOut),
 %%	lib_cs_cgs_cache:delServerInfo(ServerID),
-	mne_ex:dirty_delete(m_server_info, ServerID),
+	mne_ex:dirty_delete(?ShareServerInfoName, ServerID),
 	ok.
 
 server_ready(_WorkerPid, {ServerID})->
-	cs_cache:del_from_check(ServerID),
+	cs_cache:del_check_server(ServerID),
 	ok.
 
 %%%-------------------------------------------------------------------
 ack_now(_WindowPid, {ServerID})->
 	case ets:lookup(?CS_SERVERS_CHECK_ETS, ServerID) of
 		[#m_all_server_check{id = ServerID}] ->
-			case mne_ex:dirty_read(m_server_info, ServerID) of
-				[#m_server_info{node = GSNode, worker = WorkerPid}]->
+			case mne_ex:dirty_read(?ShareServerInfoName, ServerID) of
+				[#m_share_server_info{node = GSNode, worker = WorkerPid}]->
 					ps:send(WorkerPid, sync_all_data),
 					?WARN("server[~p] worker[~p|~p], ack ok, start sync",
 						[GSNode, WorkerPid, misc:registered_name(WorkerPid)]),
@@ -89,7 +90,7 @@ ack_now(_WindowPid, {ServerID})->
 %%%-------------------------------------------------------------------
 nodedown({GSNode, ServerID}) ->
 	svr_mgr_pub:on_nodedown(GSNode, ServerID),
-	mne_ex:dirty_delete(m_server_info, ServerID),
+	mne_ex:dirty_delete(?ShareServerInfoName, ServerID),
     mne_mt:remove_node_if_mnesia_running(GSNode),
 	?WARN("server[~p]down, remove s[~p]",[GSNode, ServerID]),
 	ok.
@@ -110,7 +111,7 @@ do_register(FromPid, ServerId, ServerType, ServerName) ->
 	GSNode = erlang:node(FromPid),
 	case svr_sup:start_child([{ServerId, ServerType, FromPid}]) of
 		{ok, Pid} ->
-			Info = #m_server_info{
+			Info = #m_share_server_info{
 				sid = ServerId
 				, name = ServerName
 				, type = ServerType
@@ -122,7 +123,7 @@ do_register(FromPid, ServerId, ServerType, ServerName) ->
 
 %%			lib_cs_cgs_cache:insertServerInfo(Info),
 			mne_ex:dirty_write(Info),
-			cs_cache:add_to_check(ServerId),
+			cs_cache:add_check_server(ServerId),
 			ps:send_with_from(FromPid, registerAck, {true, Pid}),
 			?WARN("server[~p] name[~ts] wnd[~p] worker[~p|~p] registered, wait ack",
 				[GSNode, ServerName, FromPid, Pid, misc:registered_name(Pid)]),
@@ -136,11 +137,11 @@ do_register(FromPid, ServerId, ServerType, ServerName) ->
 	ok.
 
 can_register(FromPid, ServerId) ->
-	case cs_interface:is_center_ready() of
+	case watchdog:ready() of
 		true ->
 			GSNode = erlang:node(FromPid),
-			case mne_ex:dirty_read(m_server_info, ServerId) of
-				[#m_server_info{worker = Worker, node = Node}] when is_pid(Worker) ->
+			case mne_ex:dirty_read(?ShareServerInfoName, ServerId) of
+				[#m_share_server_info{worker = Worker, node = Node}] when is_pid(Worker) ->
 					case erlang:is_process_alive(Worker) of
 						true ->
 							case GSNode =:= Node of

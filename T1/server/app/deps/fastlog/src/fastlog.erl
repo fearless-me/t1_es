@@ -444,9 +444,9 @@ write_console(Level, Stdio, String) ->
     skip.
 -endif.
 
-color_inout(fatal, Msg) -> io:format(user, "~ts", [color:redb(Msg)]);
-color_inout(error, Msg) -> io:format(user, "~ts", [color:redb(Msg)]);
-color_inout(warn, Msg) -> io:format(user, "~ts", [color:yellowb(Msg)]);
+color_inout(fatal, Msg) -> io:format(user, "~ts", [color:red(Msg)]);
+color_inout(error, Msg) -> io:format(user, "~ts", [color:red(Msg)]);
+color_inout(warn, Msg) -> io:format(user, "~ts", [color:yellow(Msg)]);
 color_inout(debug, Msg) -> io:format(user, "~ts", [color:green(Msg)]);
 color_inout(_, Msg) -> io:format(user, "~ts", [Msg]).
 

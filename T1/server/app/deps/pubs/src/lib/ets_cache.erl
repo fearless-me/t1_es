@@ -7,7 +7,7 @@
 %%% Created : 15. 八月 2018 15:37
 %%%-------------------------------------------------------------------
 
--module(cache_interface).
+-module(ets_cache).
 -author("mawenhong").
 %% API
 -export([

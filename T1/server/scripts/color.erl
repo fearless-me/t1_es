@@ -47,10 +47,10 @@ info_log(Fmt)-> info_log(Fmt, []).
 info_log(Fmt, Args)-> io:format("~ts", [color:green(io_lib:format(Fmt,Args))]).
 
 warn_log(Fmt)-> warn_log(Fmt, []).
-warn_log(Fmt, Args) -> io:format("~ts", [color:yellowb(io_lib:format(Fmt,Args))]).
+warn_log(Fmt, Args) -> io:format("~ts", [color:yellow(io_lib:format(Fmt,Args))]).
 
 error_log(Fmt) -> error_log(Fmt, []).
-error_log(Fmt, Args)-> io:format("~ts", [color:redb(io_lib:format(Fmt,Args))]).
+error_log(Fmt, Args)-> io:format("~ts", [color:red(io_lib:format(Fmt,Args))]).
 
 
 black(Text)      -> [color(?BLACK),      Text, reset()].

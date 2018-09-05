@@ -9,15 +9,17 @@
 -module(lib_player_save).
 -author("mawenhong").
 -include("logger.hrl").
--include("rec_mem.hrl").
+-include("gs_mem_rec.hrl").
 
 %% API
 -export([save/1]).
 
 %%-------------------------------------------------------------------
-save(Player) ->
-    #m_player_pub{aid = Aid, uid = Uid, pos = Pos, mid = Mid} = Player,
-    ?DEBUG("save player aid ~w uid ~w",[Aid, Uid]),
+save(Uid) ->
+    #m_player_pub{
+        aid = Aid, pos = Pos, mid = Mid, mpid = MPid
+    } = Player = gs_cache_interface:get_player_pub(Uid),
+    ?DEBUG("save player aid ~w uid ~w in map ~w|~w",[Aid, Uid, Mid, MPid]),
     NewPlayer = case vector3:valid(Pos) of
                     true -> Player;
                     _ ->

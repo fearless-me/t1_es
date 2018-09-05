@@ -9,12 +9,12 @@
 -module(lib_player_map_priv).
 -author("mawenhong").
 -include("logger.hrl").
--include("inc_map.hrl").
+-include("gs_map_inc.hrl").
 -include("pub_rec.hrl").
 
--include("rec_mem.hrl").
--include("rec_db.hrl").
--include("rec_common.hrl").
+-include("gs_mem_rec.hrl").
+-include("gs_db_rec.hrl").
+-include("gs_common_rec.hrl").
 -include("gs_player_status.hrl").
 %% API
 
@@ -81,6 +81,7 @@ serv_change_map_call(DestMapID, DestLineId, TarPos) ->
     lib_player_rw:set_status(?PS_CHANGE_MAP),
     Uid = lib_player_rw:get_uid(),
     #m_player_pub{mid = Mid, line = Line, mpid = MPid, pos = Pos} = gs_cache_interface:get_player_pub(Uid),
+    lib_player_cross:change_map_before(Mid, DestMapID),
     Ack = serv_change_map_call_cation(
         #r_change_map_req{
             uid = Uid, pid = self(),
@@ -153,6 +154,7 @@ serv_change_map_call_ret(
     lib_player_rw:set_map(
         #m_player_map{map_id = Mid, line_id = LineId, map_pid = MPid}
     ),
+    lib_player_cross:change_map_after(OldMid, Mid, true),
     ?WARN("player ~p enter map_~p_~p map_pid ~p", [Uid, Mid, LineId, MPid]),
     hook_player:on_change_map(Mid, Mid),
 
@@ -166,6 +168,7 @@ serv_change_map_call_ret(
         gaming -> lib_player_rw:set_status(?PS_GAME);
         _Flag -> error
     end,
+    lib_player_cross:change_map_after(OldMid, Mid, false),
     ?ERROR("player ~p change from map ~p:~p to map ~p failed with ~p",
         [lib_player_rw:get_uid(), OldMid, OldLineId, Mid, Err]),
     ok.
@@ -208,3 +211,4 @@ goto_born_map(Req) ->
                 [Req#r_change_map_req.uid]),
             #r_change_map_ack{error = -9999, map_id = Mid}
     end.
+

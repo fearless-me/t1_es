@@ -8,8 +8,8 @@
 %%%-------------------------------------------------------------------
 -author("mawenhong").
 
--ifndef(RECORD_COMMON_HRL).
--define(RECORD_COMMON_HRL, true).
+-ifndef(GS_COMMON_RECORD_HRL).
+-define(GS_COMMON_RECORD_HRL, true).
 
 %%
 -record(r_login_req, {plat_name="", plat_account_name = "", access_token = "", player_pid = 0}).

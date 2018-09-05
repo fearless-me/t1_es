@@ -12,7 +12,7 @@
 -behaviour(gen_serverw).
 -include("logger.hrl").
 -include("netmsg.hrl").
--include("rec_common.hrl").
+-include("gs_common_rec.hrl").
 -include("gs_ps_def.hrl").
 
 %% API

@@ -1,5 +1,5 @@
--ifndef(TEAM_HRL).
--define(TEAM_HRL,1).
+-ifndef(COMMON_TEAM_INC_HRL).
+-define(COMMON_TEAM_INC_HRL,1).
 
 %%%-------------------------------------------------------------------
 %%%-------------------------------------------------------------------
@@ -72,7 +72,7 @@
 
 %%%-------------------------------------------------------------------
 %%%-------------------------------------------------------------------
--record(recTeamMemberInfo, {
+-record(m_team_member, {
 	roleID = 0, 			%%角色ID
 	code = 0,				%%角色流水号
 	serverID = 0,			%%
@@ -106,7 +106,8 @@
 	serverName = "" %% 服务器名称
 }).
 
--record(m_team_info,{
+-define(ShareTeamInfoName, m_share_team_info).
+-record(m_share_team_info,{
 	teamID = 0,
 	copyMapID = 0,
 	leaderID = 0,
@@ -117,54 +118,15 @@
 	memberList = []
 }).
 
--record(recTeamMemberInfoGS,{
-	roleID = 0,
-	code = 0,
-	pid = undefined,
-	netPid = undefined,
-	level = 0,
-	assistMapID = 0,
-	serverID = 0
-}).
-
--record(recTeamInfoGS,{
-	teamID = 0,
-	leaderID = 0,
-	copyMapID = 0,
-	canBeSearch = 0,
-	leaderStartCopyTime = 0,
-	memberList = []
-}).
-
-
--record(recSyncMemberInfo,{
-	roleID = 0,
-	code = 0,
-	pid = undefined,
-	netPid = undefined,
-	level = 0,
-	guildID = 0,
-	guildName = "",
-	mapID = 0,
-	mapLine = 0,
-	groupID = 0,            %%组ID
-	mapPID = undefined,
-	posX = 0,				%%X坐标
-	posY = 0,				%%Y坐标
-	hpPc = 0,
-	force = 0,
-	actionPoint = 0,
-	targetMapCount = 0,
-	targetMapStar = 0
-}).
-
--record(m_uid_ref_tid,{
+-define(ShareUidRefTeamIdName, m_share_uid_ref_tid).
+-record(m_share_uid_ref_tid,{
 	roleID = 0,
 	teamID = 0,
 	serverID = 0
 }).
 
--record(m_player_match,{
+-define(ShareUidTeamMatchName, m_share_team_match).
+-record(m_share_team_match,{
 	roleID = 0,
 	pid = undefined,
 	startTime = 0,

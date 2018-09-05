@@ -13,6 +13,7 @@
 -include("logger.hrl").
 -include("pub_def.hrl").
 -include("pub_rec.hrl").
+-include("common_def.hrl").
 -include("common_rec.hrl").
 -include("cs_priv.hrl").
 
@@ -90,8 +91,8 @@ on_terminate(_Reason, _State) ->
 check_alive(State) ->
     ServerID = svr_priv:get_sid(),
     Pid = self(),
-    case cs_interface:get_server_info(ServerID) of
-        #m_server_info{worker = Pid} ->
+    case common_interface:get_server_info(ServerID) of
+        #m_share_server_info{worker = Pid} ->
             tick_msg(),
             {noreply, State};
         V ->

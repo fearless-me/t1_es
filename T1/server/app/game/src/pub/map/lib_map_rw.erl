@@ -8,9 +8,9 @@
 %%%-------------------------------------------------------------------
 -module(lib_map_rw).
 -author("mawenhong").
--include("inc_map.hrl").
--include("inc_map_unit.hrl").
--include("inc_move.hrl").
+-include("gs_map_inc.hrl").
+-include("gs_map_unit_inc.hrl").
+-include("gs_move_inc.hrl").
 
 %%
 -export([init_ets/1]).

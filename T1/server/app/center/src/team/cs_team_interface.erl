@@ -9,7 +9,7 @@
 -module(cs_team_interface).
 -author("mawenhong").
 
--include("team.hrl").
+-include("common_team_inc.hrl").
 
 
 %% API
@@ -24,7 +24,7 @@
 %% 是否是队长
 isTeamLeader(RoleID) ->
     case read_team_info_by_role(RoleID) of
-        #m_team_info{leaderID = RoleID} ->
+        #m_share_team_info{leaderID = RoleID} ->
             true;
         _ ->
             false
@@ -46,7 +46,7 @@ read_team_id_by_role(0) ->
     0;
 read_team_id_by_role(RoleID) ->
     case catch myEts:readRecord(?Ets_RoleIDRefTeamID, RoleID) of
-        #m_uid_ref_tid{teamID = TeamID} ->
+        #m_share_uid_ref_tid{teamID = TeamID} ->
             TeamID;
         _ ->
             0
@@ -57,7 +57,7 @@ read_team_info_by_tid(0) ->
     undefined;
 read_team_info_by_tid(TeamID) ->
     case catch myEts:readRecord(?Ets_TeamList, TeamID) of
-        #m_team_info{} = TeamInfo ->
+        #m_share_team_info{} = TeamInfo ->
             TeamInfo;
         _ ->
             undefined

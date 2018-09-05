@@ -319,6 +319,7 @@ b2i(0) -> 0.
 %%-------------------------------------------------------------------
 i2b(0) -> false;
 i2b(1) -> true;
+i2b(N) when is_integer(N), N > 1 -> true;
 i2b(false) -> false;
 i2b(true) -> true.
 

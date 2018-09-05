@@ -25,29 +25,16 @@
 -define(WATCHDOG_OTP, watchdog).
 -define(DIST_MONITOR_OTP, dist_monitor).
 
-%% 服务器类型
--define(SERVER_TYPE_GS, 1).  % 游戏服
--define(SERVER_TYPE_CGS, 2). % 跨服
-
-%% 服务器状态
--define(SEVER_STATUS_INIT, 0).  % 初始化
--define(SEVER_STATUS_READY, 1). % 连接中
--define(SEVER_STATUS_DONE, 2).  % 启动好
-
-%% 玩家跨服状态
--define(CS_PS_NONE,  0). % 无状态
--define(CS_PS_READY, 1). % 连接好，等待确认
--define(CS_PS_DONE,  2). % 已经完成跨服
-
-
-
-
 %%
 -define(if_else(Cond, True, False), case Cond of true -> True; _ -> False end).
 %% Helper macro for declaring children of supervisor
 -define(CHILD(SupPid, I, Type), supervisor:start_child(SupPid, {I, {I, start_link, []}, permanent, 5000, Type, [I]})).
 -define(CHILD(SupPid, I, Type, Params), supervisor:start_child(SupPid, {I, {I, start_link, Params}, permanent, 5000, Type, [I]})).
 -define(CHILD(SupPid, Name, I, Type, Params), supervisor:start_child(SupPid, {Name, {I, start_link, Params}, permanent, 5000, Type, [Name]})).
+
+-define(CHILD_SPEC(I, Type), {I, {I, start_link, []}, permanent, 5000, Type, [I]}).
+-define(CHILD_SPEC(I, Type, Params), {I, {I, start_link, Params}, permanent, 5000, Type, [I]}).
+-define(CHILD_SPEC(Name, I, Type, Params), {Name, {I, start_link, Params}, permanent, 5000, Type, [Name]}).
 
 %%-------------------------------------------------------------------------------
 -define(TRY_CATCH(Fun, Err, St, Format, Args),

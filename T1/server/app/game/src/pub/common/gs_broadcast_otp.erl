@@ -12,7 +12,7 @@
 -behaviour(gen_serverw).
 -include("logger.hrl").
 -include("netconf.hrl").
--include("rec_mem.hrl").
+-include("gs_mem_rec.hrl").
 -include("gs_def.hrl").
 -include("gs_ps_def.hrl").
 
@@ -60,6 +60,16 @@ do_handle_cast(Request, State) ->
 
 %%--------------------------------------------------------------------
 broadcast_net_msg(NetMsg) ->
+    broadcast_net_msg_action(gs_conf:is_cross(), NetMsg),
+    ok.
+
+broadcast_net_msg_action(true, NetMsg) ->
+    ets:foldl(
+        fun(#m_player_pid_sock{pid = Pid}, _) ->
+            catch gs_interface:send_net_msg(Pid, NetMsg)
+        end, 0, ?ETS_PLAYER_PSOCK),
+    ok;
+broadcast_net_msg_action(_Any, NetMsg) ->
     {_Bytes1, IoList} = tcp_codec:encode(NetMsg),
     ets:foldl(
         fun(#m_player_pid_sock{sock = Sock}, _) ->

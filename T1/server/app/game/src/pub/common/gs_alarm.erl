@@ -8,8 +8,8 @@
 %%%-------------------------------------------------------------------
 -module(gs_alarm).
 -include("pub_def.hrl").
--include("rec_common.hrl").
--include("rec_mem.hrl").
+-include("gs_common_rec.hrl").
+-include("gs_mem_rec.hrl").
 
 %% API
 -export([init/0]).

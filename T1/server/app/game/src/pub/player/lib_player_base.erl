@@ -10,9 +10,9 @@
 -author("mawenhong").
 -include("logger.hrl").
 -include("netmsg.hrl").
--include("rec_db.hrl").
--include("rec_mem.hrl").
--include("rec_common.hrl").
+-include("gs_db_rec.hrl").
+-include("gs_mem_rec.hrl").
+-include("gs_common_rec.hrl").
 
 %% API
 -export([init/1]).
@@ -21,7 +21,7 @@
 %%-------------------------------------------------------------------
 init(Player) ->
     #p_player{
-        uid = Uid, sid = Sid,
+        aid = Aid, uid = Uid, sid = Sid,
         name = Name, level = Level, sex = Sex,
         race = Race, career=Career, head = Head,
         map_id = Mid, line = LineId
@@ -34,7 +34,7 @@ init(Player) ->
     lib_player_rw:set_race(Race),
     lib_player_rw:set_career(Career),
     lib_player_rw:set_head(Head),
-    ?WARN("~p mapid ~p",[Uid, Mid]),
+    ?DEBUG("player ~p of ~p enter map ~p",[Uid, Aid, Mid]),
     lib_player_rw:set_map(#m_player_map{map_id = Mid, line_id = LineId}),
     %% todo 设置buff， cd等等
     ok.

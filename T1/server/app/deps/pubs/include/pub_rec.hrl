@@ -16,7 +16,7 @@
 -record(watchdog_task,{mfa, tip}).
 -record(watchdog_task_group,  {priority, ref, task_list=[]}).
 -define(WATCHDOG_TASK(Mfa, Tip), #watchdog_task{mfa = Mfa, tip = Tip}).
--define(WATCHDOG_TASK_GROUP(Pr, Ref, Tasks), #watchdog_task_group{priority = Pr, ref = Ref,task_list = Tasks}).
+-define(WATCHDOG_TASK_GROUP(Priority, Ref, Tasks), #watchdog_task_group{priority = Priority, ref = Ref,task_list = Tasks}).
 
 %%-------------------------------------------------------------------
 %% @doc
@@ -33,7 +33,7 @@
 -define(TASK_SEQ, seq).
 -define(TASK_PARALLEL,  parallel).
 -define(LOADER_TASK(Ref, Mfa), #loader_task{ref = Ref, mfa = Mfa}).
--define(LOADER_TASK_GROUP(Pr, Ref, Mode, Tasks), #loader_task_group{priority = Pr, ref = Ref, mode = Mode, task_list = Tasks}).
+-define(LOADER_TASK_GROUP(Priority, Ref, Mode, Tasks), #loader_task_group{priority = Priority, ref = Ref, mode = Mode, task_list = Tasks}).
 
 %%-------------------------------------------------------------------
 

@@ -1,10 +1,10 @@
 %% coding: latin-1
--module(cfg_gamemapcfg1).
+-module(cfg_gamemapcfg2).
 -export([getRow/1]).
 -include("gs_map_inc.hrl").
-getRow(1) ->
+getRow(2) ->
 		#recGameMapCfg{
-		mapID = 1,
+		mapID = 2,
 		maxPlayerNum = 10,
 		worldPos = {0.0,0.0,0.0},
 		colCellNum = 118,

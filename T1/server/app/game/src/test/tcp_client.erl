@@ -4,7 +4,7 @@
 -include("pub_def.hrl").
 -include("netmsg.hrl").
 -include("netconf.hrl").
-
+-define(HeartBeat, 15000).
 
 %% API
 -export([ensure/0]).
@@ -29,11 +29,11 @@ move(X, Y) ->
     ok.
 
 
-c(Port) -> c(Port, 1).
+c(Port) -> c(Port, 0).
 
-c(Port, MapID) ->
+c(Port, AccountIdx) ->
     ensure(),
-    spawn(fun() -> tcp_client:connect(Port, MapID) end).
+    spawn(fun() -> tcp_client:connect(Port, AccountIdx) end).
 
 nc(N, Port) ->
     ensure(),
@@ -50,14 +50,18 @@ ensure() ->
     ok.
 
 
-connect(Port, _MapID) ->
+connect(Port, AccountIdx) ->
     try
         tcp_codec:init(#net_conf{}),
 
         {ok, Socket} = ranch_tcp:connect({127, 0, 0, 1}, Port, [{active, false}]),
         socket(Socket),
+        Idx = case AccountIdx of
+                  0 -> misc_time:milli_seconds();
+                  _ -> AccountIdx
+              end,
         Msg1 = #pk_U2GS_Login_Normal{
-            platformAccount = "test_net" ++ integer_to_list(misc_time:milli_seconds()),
+            platformAccount = "test_net" ++ integer_to_list(Idx),
             platformName = "test",
             platformNickName = "",
             time = misc_time:utc_seconds(),
@@ -88,7 +92,7 @@ loop_recv() ->
         exit ->
             gen_tcp:close(socket()),
             ok
-    after 10000 ->
+    after ?HeartBeat ->
         heartbeat(),
         recv_msg(socket()),
         timer:sleep(50),
@@ -140,7 +144,8 @@ handle_1(#pk_GS2U_UserPlayerList{info = Info}) ->
             recv_msg(socket())
     end,
     ok;
-handle_1(#pk_GS2U_GotoNewMap{}) ->
+handle_1(#pk_GS2U_GotoNewMap{map_id = MapId}) ->
+    set_mid(MapId),
     case get_aid() of
         undefined ->
             send_msg(socket(), #pk_U2GS_GetPlayerInitData{});
@@ -164,10 +169,32 @@ socket() -> get(?SocketKey).
 set_aid(Aid) -> put('AID', Aid).
 get_aid() -> get('AID').
 
+set_mid(Mid) -> put('MID', Mid).
+get_mid() -> get('MID').
+
 heartbeat() ->
-    Msg = #pk_GS2U_HearBeat{},
+    Msg = #pk_U2GS_HearBeat{},
     send_msg(socket(), Msg),
+    ChangeMap = heartbeatcount(),
+    MapId = get_mid(),
+    case get_aid() of
+        undefined -> skip;
+        _  when ChangeMap, MapId =/= 2 ->
+            Msg2 = #pk_U2GS_ChangeMap{map_id = 2, x = 125.5, y=200.5},
+            send_msg(socket(), Msg2);
+        _  when ChangeMap, MapId =/= 1 ->
+            Msg2 = #pk_U2GS_ChangeMap{map_id = 1, x = 125.5, y=200.5},
+            send_msg(socket(), Msg2);
+        _ ->
+            rand_walk()
+    end,
     ok.
+
+heartbeatcount() ->
+    case get(heartbeatcount) of
+        undefined -> put(heartbeatcount, 1);
+        V -> put(heartbeatcount, V + 1), V rem (60 * 1000 div ?HeartBeat) == 0
+    end.
 
 rand_walk() ->
     Delta = misc:rand(5, 15) / 1.0,

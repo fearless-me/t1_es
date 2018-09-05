@@ -10,7 +10,7 @@
 
 -ifndef(RW_RECORD_HRL).
 -define(RW_RECORD_HRL, true).
--include("inc_ai.hrl").
+-include("gs_ai_inc.hrl").
 
 %% 进入地图后会动态变
 %% 通过自动生成代码lib_unit_rw

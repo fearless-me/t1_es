@@ -13,6 +13,7 @@
 -include("pub_def.hrl").
 -include("pub_rec.hrl").
 -include("common_rec.hrl").
+-include("common_def.hrl").
 -include("cs_ps_def.hrl").
 -include("cs_priv.hrl").
 
@@ -37,7 +38,7 @@ sync() ->
     Sid = get_sid(),
     Node = erlang:node(get_from_pid()),
     ?WARN("server[~p]sync start...", [Node]),
-    cs_cache:add_to_check(Sid),
+    cs_cache:add_check_server(Sid),
     ps:send_with_from(get_from_pid(), syncAllData),
     cs_share:sync(Node),
     sync_over(Node, Sid),
@@ -49,8 +50,8 @@ sync_over(GSNode, Sid) ->
 
     ?WARN("server[~p] sync done #", [GSNode]),
     all_ready(Sid),
-    [Info] = mne_ex:dirty_read(m_server_info, Sid),
-    mne_ex:dirty_write(Info#m_server_info{status = ?SEVER_STATUS_DONE}),
+    [Info] = mne_ex:dirty_read(?ShareServerInfoName, Sid),
+    mne_ex:dirty_write(?ShareServerInfoName, Info#m_share_server_info{status = ?SEVER_STATUS_DONE}),
     ps:send_with_from(?CS_SVR_MGR_OTP, allReadyNow, {Sid}),
     erlang:garbage_collect(self()),
     ok.

@@ -13,7 +13,7 @@
 -include("logger.hrl").
 -include("cs_ps_def.hrl").
 -include("pub_def.hrl").
--include("team.hrl").
+-include("common_team_inc.hrl").
 
 %% API
 -export([start_link/0]).

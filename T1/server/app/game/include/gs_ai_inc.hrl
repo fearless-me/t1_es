@@ -8,8 +8,8 @@
 %%%-------------------------------------------------------------------
 -author("mawenhong").
 
--ifndef(INC_AI_HRL).
--define(INC_AI_HRL, true).
+-ifndef(GS_AI_INC_HRL).
+-define(GS_AI_INC_HRL, true).
 -compile(nowarn_deprecated_type).
 
 %%-------------------------------------------------------------------

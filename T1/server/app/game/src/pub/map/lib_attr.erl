@@ -9,10 +9,10 @@
 -module(lib_attr).
 -author("mawenhong").
 -include("logger.hrl").
--include("rec_common.hrl").
--include("inc_map_unit.hrl").
+-include("gs_common_rec.hrl").
+-include("gs_map_unit_inc.hrl").
 -include("netmsg.hrl").
--include("inc_combat.hrl").
+-include("gs_combat_inc.hrl").
 -include("pub_rec.hrl").
 %% API
 -export([

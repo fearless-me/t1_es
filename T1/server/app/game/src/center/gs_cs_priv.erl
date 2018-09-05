@@ -11,6 +11,7 @@
 -include("logger.hrl").
 -include("pub_def.hrl").
 -include("pub_rec.hrl").
+-include("common_def.hrl").
 -include("gs_ps_def.hrl").
 -include("gs_cs_def.hrl").
 

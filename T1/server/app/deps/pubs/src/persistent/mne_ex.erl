@@ -23,7 +23,7 @@
     create_table/2, delete_table/1, clear_table/1,
     write/1, s_write/1, write/2, read/2, index_read/3, all_keys/1, delete/2,
     dirty_delete/2, dirty_match/2, dirty_select/2, dirty_read/2, dirty_write/1, dirty_write/2,
-    dirty_all_keys/1, dirty_read_all/1
+    dirty_all_keys/1, dirty_read_all/1, dirty_update_counter/2, dirty_update_counter/3
 ]).
 
 
@@ -246,3 +246,9 @@ dirty_read_all(TabName) ->
 dirty_all_keys(TabName) ->
     mnesia:dirty_all_keys(TabName).
 
+
+dirty_update_counter({Tab, Key}, Incr) ->
+    mnesia:dirty_update_counter({Tab, Key}, Incr).
+
+dirty_update_counter(Tab, Key, Incr) ->
+    mnesia:dirty_update_counter(Tab, Key, Incr).

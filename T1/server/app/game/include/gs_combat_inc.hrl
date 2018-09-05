@@ -8,8 +8,8 @@
 %%%-------------------------------------------------------------------
 -author("mawenhong").
 
--ifndef(INC_COMBAT_HRL).
--define(INC_COMBAT_HRL, true).
+-ifndef(GS_COMBAT_INC_HRL).
+-define(GS_COMBAT_INC_HRL, true).
 
 
 %% 角色HP变化原因

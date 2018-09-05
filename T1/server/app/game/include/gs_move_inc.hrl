@@ -8,8 +8,8 @@
 %%%-------------------------------------------------------------------
 -author("mawenhong").
 
--ifndef(INC_MOVEMENT_HRL).
--define(INC_MOVEMENT_HRL, true).
+-ifndef(GS_MOVEMENT_INC_HRL).
+-define(GS_MOVEMENT_INC_HRL, true).
 
 % @doc 怪物三种移动状态主要用来设置不同的速度
 % 

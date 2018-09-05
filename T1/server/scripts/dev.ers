@@ -16,21 +16,22 @@
 
 -define(OP_EXIT, 0).
 
--define(OP_COMPILE_GS, 11).
--define(OP_START_GS, 12).
--define(OP_DEL_LOG_GS, 13).
--define(OP_PK_GS, 111).
+-define(OP_COMPILE_GS, 1).
+-define(OP_START_GS, 11).
+-define(OP_DEL_LOG_GS, 111).
+-define(OP_PK_GS, 1111).
 
--define(OP_COMPILE_CS, 21).
+-define(OP_COMPILE_CS, 2).
 -define(OP_START_CS, 22).
--define(OP_DEL_LOG_CS, 23).
--define(OP_PK_CS, 222).
+-define(OP_DEL_LOG_CS, 222).
+-define(OP_PK_CS, 2222).
 
--define(OP_DEL_LOG_ALL, 99).
+-define(OP_DEL_LOG_ALL, 9).
 
 -define(OP_REF, 901).
 -define(OP_DIALYZER, 902).
 
+-define(OP_TCP, 992).
 -define(OP_SET_TERMINAL_COLOR, 999).
 
 
@@ -41,6 +42,8 @@ main(_) ->
 
 menu() ->
     os:cmd("CHCP 65001"),
+    {ok, Cwd} = file:get_cwd(),
+    os:cmd(io_lib:format('title \"~ts\"',[Cwd])),
 
     color:info_log(
         "~n##########################################################~n"
@@ -64,6 +67,7 @@ menu() ->
         "\t~-4.w.代码检查(xref)~n"
         "\t~-4.w.代码检查(dialyzer)~n"
         "#~n"
+		"\t~-4.w.tcp测试~n"
         "\t~-4.w.windows控制台支持彩色显示~n"
         "\t~-4.w.退出~n"
         "~n##########################################################~n~n",
@@ -75,7 +79,8 @@ menu() ->
             ?OP_DEL_LOG_ALL, 
     
             ?OP_REF, ?OP_DIALYZER,
-            ?OP_SET_TERMINAL_COLOR,
+			
+            ?OP_TCP, ?OP_SET_TERMINAL_COLOR,
             ?OP_EXIT
         ]
     ),
@@ -110,8 +115,10 @@ dispatchInput2(?OP_COMPILE_GS) ->
     erlang:spawn_monitor(fun() -> os:cmd("start subcall.bat escript.exe fast_compile.ers 1") end);
 dispatchInput2(?OP_COMPILE_CS) ->
     erlang:spawn_monitor(fun() -> os:cmd("start subcall.bat escript.exe fast_compile.ers 2") end);
- dispatchInput2(?OP_SET_TERMINAL_COLOR) ->
-     erlang:spawn_monitor(fun() -> os:cmd("start /WAIT terminal_color.bat") end);
+dispatchInput2(?OP_TCP) ->
+     erlang:spawn_monitor(fun() -> os:cmd("start tcp_test.bat") end);
+dispatchInput2(?OP_SET_TERMINAL_COLOR) ->
+     erlang:spawn_monitor(fun() -> os:cmd("start /WAIT terminal_color.bat") end);	 
 dispatchInput2(_) ->
     color:error_log("\t!!! error retry !!!~n~n").
 

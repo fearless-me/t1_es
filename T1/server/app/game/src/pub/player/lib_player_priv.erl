@@ -12,12 +12,12 @@
 -include("logger.hrl").
 -include("pub_def.hrl").
 -include("netmsg.hrl").
--include("inc_map.hrl").
--include("inc_map_unit.hrl").
+-include("gs_map_inc.hrl").
+-include("gs_map_unit_inc.hrl").
 -include("gs_player_status.hrl").
--include("rec_common.hrl").
--include("rec_db.hrl").
--include("rec_mem.hrl").
+-include("gs_common_rec.hrl").
+-include("gs_db_rec.hrl").
+-include("gs_mem_rec.hrl").
 
 
 
@@ -165,9 +165,7 @@ offline_1(Status, Reason)
     when Status =:= ?PS_GAME; Status =:= ?PS_CHANGE_MAP ->
     Uid = lib_player_rw:get_uid_def(0),
     lib_player_rw:set_status(?PS_OFFLINE),
-    Player = gs_cache_interface:get_player_pub(Uid),
-    ?TRY_CATCH(hook_player:on_offline(Player)),
-    lib_player_save:save(Player),
+    ?TRY_CATCH(hook_player:on_offline()),
     ?INFO("player ~p pid ~p sock ~p player ~w offline status ~p reason ~p",
         [Uid, self(), lib_player_pub:socket(), Uid, Status, Reason]),
     ok;

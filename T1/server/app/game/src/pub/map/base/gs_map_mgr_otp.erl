@@ -12,10 +12,10 @@
 -behaviour(gen_serverw).
 -include("logger.hrl").
 -include("pub_def.hrl").
--include("rec_common.hrl").
+-include("gs_common_rec.hrl").
 -include("gs_ps_def.hrl").
--include("inc_map.hrl").
--include("inc_map_unit.hrl").
+-include("gs_map_inc.hrl").
+-include("gs_map_unit_inc.hrl").
 
 %% API
 -export([start_link/1]).

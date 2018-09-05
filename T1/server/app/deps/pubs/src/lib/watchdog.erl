@@ -48,12 +48,12 @@
 
 
 wait_all()->
-    i_wait_all(),
+    wait_all_loop( watchdog:task_all_done()),
     status(),
     ok.
 
 wait_group(Priority) ->
-    i_wait_group(Priority),
+    wait_group_loop(watchdog:task_group_done(Priority), Priority),
     ok.
 
 
@@ -96,6 +96,23 @@ remove_done() ->
         _ -> skip
     end,
     ok.
+
+
+%%--------------------------------------------------------------------
+wait_all_loop(true) ->
+    ok;
+wait_all_loop(Other) ->
+    ?WARN("wait ~ts ...", [Other]),
+    timer:sleep(5000),
+    wait_all_loop( watchdog:task_all_done()).
+
+%%--------------------------------------------------------------------
+wait_group_loop(true, _Priority) ->
+    ok;
+wait_group_loop(Other, Priority) ->
+    ?WARN("wait ~ts ...", [Other]),
+    timer:sleep(5000),
+    wait_group_loop(watchdog:task_group_done(Priority), Priority).
 
 
 %%%===================================================================
@@ -196,16 +213,6 @@ i_show_1_task(#watchdog_task{tip = Tip}) ->
     ok.
 
 %%--------------------------------------------------------------------
-i_wait_all() ->
-    i_wait_all_do( watchdog:task_all_done()),
-    ok.
-
-i_wait_all_do(true) ->
-    ok;
-i_wait_all_do(Other) ->
-    ?WARN("wait ~ts ...", [Other]),
-    timer:sleep(5000),
-    i_wait_all_do( watchdog:task_all_done()).
 
 i_all_done([]) -> true;
 i_all_done(Todos) ->
@@ -213,17 +220,6 @@ i_all_done(Todos) ->
     #watchdog_task{tip = Tips} = erlang:hd(TL),
     Tips.
 
-%%--------------------------------------------------------------------
-i_wait_group(Priority) ->
-    i_wait_group_do(watchdog:task_group_done(Priority), Priority),
-    ok.
-
-i_wait_group_do(true, _Priority) ->
-    ok;
-i_wait_group_do(Other, Priority) ->
-    ?WARN("wait ~ts ...", [Other]),
-    timer:sleep(5000),
-    i_wait_group_do(watchdog:task_group_done(Priority), Priority).
 
 i_group_done([], _Priority) ->
     true;

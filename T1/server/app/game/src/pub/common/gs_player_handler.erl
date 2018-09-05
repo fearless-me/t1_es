@@ -23,7 +23,7 @@
 -include("pub_def.hrl").
 -include("netconf.hrl").
 -include("netmsg.hrl").
--include("rec_mem.hrl").
+-include("gs_mem_rec.hrl").
 -include("gs_player_status.hrl").
 
 
@@ -114,7 +114,7 @@ on_info_msg({create_player_ack, Ack}, S) ->
 on_info_msg(return_to_pre_map_req, S) ->
     lib_player_map_priv:return_to_old_map_call(),
     S;
-on_info_msg({passive_change_req, DestMapID, LineId, TarPos}, S) ->
+on_info_msg({passive_change_req,{DestMapID, LineId, TarPos}}, S) ->
     lib_player_map_priv:serv_change_map_call(DestMapID, LineId, TarPos),
     S;
 on_info_msg({teleport, NewPos}, S) ->

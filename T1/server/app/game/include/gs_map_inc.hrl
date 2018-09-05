@@ -8,8 +8,8 @@
 %%%-------------------------------------------------------------------
 -author("mawenhong").
 
--ifndef(INC_MAP_HRL).
--define(INC_MAP_HRL, true).
+-ifndef(GS_MAP_INC_HRL).
+-define(GS_MAP_INC_HRL, true).
 
 -include("type.hrl").
 
@@ -33,7 +33,7 @@
 -define(MAP_EXIT,       3).
 
 -define(LINE_LIFETIME, 1 * 60 * 1000).
--define(DEAD_LINE_PROTECT, 60 * 1000).
+-define(DEAD_LINE_PROTECT, 10*60 * 1000).
 
 -define(MAP_CALL_TIMEOUT, 15000).
 -define(MAP_INIT_TIMEOUT, 60000).

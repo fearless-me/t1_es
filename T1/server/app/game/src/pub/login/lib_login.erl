@@ -8,7 +8,7 @@
 %%%-------------------------------------------------------------------
 -module(lib_login).
 -author("mawenhong").
--include("rec_common.hrl").
+-include("gs_common_rec.hrl").
 -include("logger.hrl").
 
 %% API

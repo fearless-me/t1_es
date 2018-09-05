@@ -10,11 +10,11 @@
 -author("mawenhong").
 -include("logger.hrl").
 -include("netmsg.hrl").
--include("inc_map.hrl").
+-include("gs_map_inc.hrl").
 
 -include("gs_player_status.hrl").
--include("rec_common.hrl").
--include("rec_mem.hrl").
+-include("gs_common_rec.hrl").
+-include("gs_mem_rec.hrl").
 
 
 %% API
@@ -24,6 +24,7 @@ handle(#pk_U2GS_ExitGame{}) ->
     lib_player_pub:stop(client_req_exit),
     ok;
 handle(#pk_U2GS_HearBeat{}) ->
+    ?DEBUG("heartbeat"),
     lib_player_pub:send_net_msg(#pk_GS2U_HearBeat{now = misc_time:localtime_seconds()}),
     ok;
 handle(#pk_U2GS_Login_Normal{
@@ -69,6 +70,11 @@ handle(#pk_U2GS_UseSkill{tar_uid = Tar, x = X, y = Y, skill_id = SkillId, serial
     lib_player_combat:use_skill(SkillId, Tar, Pos, Serial),
     ok;
 handle(#pk_U2GS_SkillInterrupt{}) ->
+    ok;
+handle(#pk_U2GS_ChangeMap{map_id = MapId, x = X, y = Y}) ->
+    Pos = vector3:new(X, 0, Y),
+    ?DEBUG("### client request change to map ~p",[MapId]),
+    lib_player_pub:change_map_(MapId, 0, Pos),
     ok;
 handle(_Msg) ->
 %%    ?DEBUG("~p", [Msg]),

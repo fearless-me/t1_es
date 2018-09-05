@@ -11,7 +11,7 @@
 
 -behaviour(gen_serverw).
 -include("logger.hrl").
--include("inc_map.hrl").
+-include("gs_map_inc.hrl").
 
 
 %% API

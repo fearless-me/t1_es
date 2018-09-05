@@ -10,8 +10,8 @@
 -author("mawenhong").
 -include("logger.hrl").
 
--include("inc_map.hrl").
--include("inc_map_unit.hrl").
+-include("gs_map_inc.hrl").
+-include("gs_map_unit_inc.hrl").
 
 
 %% API

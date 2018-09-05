@@ -13,7 +13,7 @@
 -include("logger.hrl").
 -include("pub_def.hrl").
 -include("gs_ps_def.hrl").
--include("inc_map.hrl").
+-include("gs_map_inc.hrl").
 -include("cfg_map.hrl").
 
 %%
@@ -70,14 +70,14 @@ load_one_map(true,  #mapCfg{is_cross = 1, id = MapID}) ->
     ets:insert(?MAP_MGR_ETS, #m_map_mgr{map_id = MapID, mgr = Pid}),
     ok;
 load_one_map(true, #mapCfg{is_cross = 0, id = MapID}) ->
-    ?WARN("~p This is a cross-server and does not create normal map mgr ~p ",[node(), MapID]),
+    ?WARN("~p This is a cross-server won't create normal map mgr ~p ",[node(), MapID]),
     ok;
 load_one_map(false, #mapCfg{is_cross = 0, id = MapID}) ->
     {ok, Pid} = gs_map_mgr_sup:start_child(MapID),
     ets:insert(?MAP_MGR_ETS, #m_map_mgr{map_id = MapID, mgr = Pid}),
     ok;
 load_one_map(false, #mapCfg{is_cross = 1, id = MapID}) ->
-    ?WARN("~p This is a normal-server and does not create cross-server map mgr ~p ",[node(), MapID]),
+    ?WARN("~p This is a normal-server won't create cross-server map mgr ~p ",[node(), MapID]),
     ok.
 
 

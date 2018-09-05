@@ -12,7 +12,7 @@
 -include("pub_def.hrl").
 -include("pub_rec.hrl").
 -include("cs_priv.hrl").
--include("team.hrl").
+-include("common_team_inc.hrl").
 
 %% API
 -export([start/0, sync/1]).
@@ -53,7 +53,7 @@ do_create_n(N) ->
     do_create_n(N - 1).
 
 write_one_team() ->
-    Info = #m_team_info{ teamID = uid_gen:tmp_uid(), leaderID = uid_gen:player_uid()},
+    Info = #m_share_team_info{ teamID = uid_gen:tmp_uid(), leaderID = uid_gen:player_uid()},
     mne_ex:dirty_write(Info),
     ok.
 

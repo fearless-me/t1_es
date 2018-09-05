@@ -8,8 +8,8 @@
 %%%-------------------------------------------------------------------
 -module(rw_code).
 -author("mawenhong").
--include("inc_map_unit.hrl").
--include("rec_db.hrl").
+-include("gs_map_unit_inc.hrl").
+-include("gs_db_rec.hrl").
 -include("rec_rw.hrl").
 -define(LogFileOptions, [exclusive, append, raw, binary]).
 %% API

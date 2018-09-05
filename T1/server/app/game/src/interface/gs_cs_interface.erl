@@ -11,6 +11,7 @@
 
 -include("logger.hrl").
 -include("pub_def.hrl").
+-include("common_def.hrl").
 -include("gs_cs_def.hrl").
 
 %% API
@@ -34,8 +35,7 @@ register(Node) ->
         {badrpc, Reason} ->
             ?WARN("register to center rpc call failed ~p, try later",[Reason]),
             false;
-        _ ->
-            true
+        _ -> true
     end.
 
 allow() ->
@@ -48,8 +48,7 @@ allow() ->
         lists:foreach(fun(Name) -> misc:allow_node(Name) end, NodeList),
         ok
     catch
-        _ : _Err : _ ->
-            skip
+        _ : _Err : _ -> skip
     end,
     ok.
 
@@ -57,10 +56,8 @@ allow() ->
 %%%-------------------------------------------------------------------
 get_server_type() ->
     case gs_conf:is_cross() of
-        true ->
-            ?SERVER_TYPE_CGS;
-        _ ->
-            ?SERVER_TYPE_GS
+        true -> ?SERVER_TYPE_CGS;
+        _ -> ?SERVER_TYPE_GS
     end.
 
 get_center_server_pid() ->

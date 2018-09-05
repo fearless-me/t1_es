@@ -10,9 +10,9 @@
 -author("mawenhong").
 
 -include("logger.hrl").
--include("rec_mem.hrl").
--include("rec_common.hrl").
--include("rec_db.hrl").
+-include("gs_mem_rec.hrl").
+-include("gs_common_rec.hrl").
+-include("gs_db_rec.hrl").
 
 
 %% API

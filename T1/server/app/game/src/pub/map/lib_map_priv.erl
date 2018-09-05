@@ -12,10 +12,10 @@
 -include("logger.hrl").
 -include("pub_def.hrl").
 -include("netmsg.hrl").
--include("rec_common.hrl").
+-include("gs_common_rec.hrl").
 -include("cfg_map.hrl").
--include("inc_map.hrl").
--include("inc_map_unit.hrl").
+-include("gs_map_inc.hrl").
+-include("gs_map_unit_inc.hrl").
 
 
 
@@ -48,7 +48,7 @@
 
 %%-------------------------------------------------------------------
 init(S) ->
-    Conf = gs_map_creator_interface:map_conf(S#m_map_state.map_id),
+    Conf = gs_map_creator_interface:map_data(S#m_map_state.map_id),
     S1 = init_1(S),
     ok = lib_map_rw:init_ets(S1),
     ok = lib_map_view:init_vis_tile(Conf),
