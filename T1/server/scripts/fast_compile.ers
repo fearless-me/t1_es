@@ -38,6 +38,15 @@ ensure_outdir()->
 	file:make_dir("../app/game/ebin"),
 	file:make_dir("../app/center/ebin"),
 	ok.
+	
+delete_ebin(?ST_GS)->
+	os:cmd("cd ../app/game/ebin/ && del /q /s *.*"),
+	color:warn_log("===> clean success!! <===~n~n"),
+	ok;
+delete_ebin(?ST_CS)->
+	os:cmd("cd ../app/center/ebin/ && del /q /s *.*"),
+	color:warn_log("===> clean success!! <===~n~n"),
+	ok;
 
 	
 	
@@ -165,8 +174,7 @@ dispatchInput2(_ServerType, _Lang, 9) ->
 	menu0();
 dispatchInput2(ServerType, Lang, 8) ->
 	dets:delete_all_objects(get_dets_name(ServerType)),
-	os:cmd("cd ../ebin/ && del /q /s *.*"),
-	color:warn_log("===> clean success!! <===~n~n"),
+	delete_ebin(ServerType),
 	menu2(ServerType, Lang);
 %%dispatchInput2(ServerType, Lang, 23) ->
 %%	setSearchFileData(undefined),
