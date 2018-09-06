@@ -10,8 +10,8 @@
 -author("mawenhong").
 -include("logger.hrl").
 -include("pub_def.hrl").
-
 -include("gs_cache_inc.hrl").
+-include("gs_map_unit_inc.hrl").
 -include("gs_db_rec.hrl").
 
 %% API
@@ -40,6 +40,11 @@ init() ->
     ets:new(?ETS_CACHE_ACCOUNT_PID_SOCK,[named_table, public, {keypos, #m_cache_account_pid_sock.aid}, ?ETS_RC, ?ETS_WC]),
     ets:new(?ETS_CACHE_ALARM_POLICY,    [named_table, public, {keypos, #m_cache_alarm_policy.id},      ?ETS_RC, ?ETS_WC]),
     ets:new(?ETS_CACHE_ALARM_PLAYER,    [named_table, public, {keypos, #m_cache_alarm_player.uid},     ?ETS_RC, ?ETS_WC]),
+    %%
+    ets:new(?ETS_CACHE_MAP_PET,         [named_table, public, {keypos, #m_cache_map_unit.uid},         ?ETS_RC, ?ETS_WC]),
+    ets:new(?ETS_CACHE_MAP_NPC,         [named_table, public, {keypos, #m_cache_map_unit.uid},         ?ETS_RC, ?ETS_WC]),
+    ets:new(?ETS_CACHE_MAP_PLAYER,      [named_table, public, {keypos, #m_cache_map_unit.uid},         ?ETS_RC, ?ETS_WC]),
+    ets:new(?ETS_CACHE_MAP_MONSTER,     [named_table, public, {keypos, #m_cache_map_unit.uid},         ?ETS_RC, ?ETS_WC]),
     ok.
 
 %%-------------------------------------------------------------------
@@ -53,6 +58,7 @@ online(#m_cache_player_pub{aid = Aid, uid = Uid} = Player, Pid, Sock) ->
     gs_cache:add_player_pub(Player),
     gs_cache:add_player_priv(Aid, Uid),
     gs_cache:add_socket(Aid, Uid, Pid, Sock),
+    ets:delete(?ETS_CACHE_MAP_PLAYER, Uid),
     ok.
 
 %%-------------------------------------------------------------------

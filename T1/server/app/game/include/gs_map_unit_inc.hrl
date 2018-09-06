@@ -23,9 +23,9 @@
 -type obj_type() :: ?OBJ_MIN .. ?OBJ_MAX.
 
 %% 进入地图后不会变的
--record(m_map_unit, {
+-record(m_cache_map_unit, {
 %% 基础相关
-    uid = 0, pid = 0, did = 0, name = "", owner = 0, type = ?OBJ_ERR :: obj_type()
+    uid = 0, pid = 0, did = 0, name = "", map_id=0, line_id=0, owner = 0, type = ?OBJ_ERR :: obj_type()
 }).
 
 %% 仇恨数据：仇恨目标UID， 仇恨值， 是否激活

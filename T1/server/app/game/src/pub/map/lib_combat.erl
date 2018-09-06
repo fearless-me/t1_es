@@ -123,7 +123,7 @@ tick(Unit) ->
 
 
 %%todo 引导技能、吟唱技能
-tick_cur_skill(#m_map_unit{uid = Uid}) ->
+tick_cur_skill(#m_cache_map_unit{uid = Uid}) ->
     CurSkillId = lib_combat_rw:get_skill_id(Uid),
     tick_cur_skill_action(Uid, CurSkillId),
     ok.
@@ -131,6 +131,7 @@ tick_cur_skill(#m_map_unit{uid = Uid}) ->
 tick_cur_skill_action(_Uid, 0) ->
     ok;
 tick_cur_skill_action(Uid, SkillId) ->
+    ?WARN("uid ~p tick skill ~p", [Uid, SkillId]),
     Serial  = lib_combat_rw:get_skill_serial(Uid),
     OpTime0 = lib_combat_rw:get_operate_time_def(Uid, 0),
     OpTime1 = OpTime0 + ?MAP_TICK,
@@ -158,7 +159,7 @@ check_end_skill_tick(Uid, _SkillId) ->
 
 %%todo 放完就不管的，但是要持续生效的技能
 %%todo 创建了一个 OBJ_STATIC
-tick_skill_queue(#m_map_unit{uid = Uid}) ->
+tick_skill_queue(#m_cache_map_unit{uid = Uid}) ->
     Queue0 = lib_combat_rw:get_skill_queue(Uid),
     Queue1 = tick_skill_queue(Uid, Queue0, []),
     lib_combat_rw:set_skill_queue(Uid, Queue1),

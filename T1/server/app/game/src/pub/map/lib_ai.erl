@@ -107,7 +107,7 @@ can_update_ai(Uid) ->
     AiId > 0.
 
 %%-------------------------------------------------------------------
-update(#m_map_unit{uid = Uid}) ->
+update(#m_cache_map_unit{uid = Uid}) ->
     NeedUpdate = can_update_ai(Uid),
     update_action(Uid, NeedUpdate),
     ok;
@@ -543,7 +543,7 @@ is_in_attack_dist(Uid, TarUid) when is_number(TarUid) ->
     is_in_attack_dist(Uid, Unit);
 is_in_attack_dist(_Uid, undefined)->
     false;
-is_in_attack_dist(Uid, #m_map_unit{uid = TarUid}) ->
+is_in_attack_dist(Uid, #m_cache_map_unit{uid = TarUid}) ->
     VSrc = lib_move_rw:get_cur_pos(Uid),
     VDst = lib_move_rw:get_cur_pos(TarUid),
     Dist_SQ = vector3:dist_sq(VSrc, VDst),

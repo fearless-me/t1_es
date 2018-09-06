@@ -66,10 +66,10 @@ do_handle_info({stop_move, Req}, State) ->
 do_handle_info(stop_immediately, State) ->
     {stop, normal, State};
 do_handle_info({msg_broadcast, Msg}, State) ->
-    lib_map_priv:broadcast_msg(Msg),
+    lib_map_priv:broadcast_msg(State, Msg),
     {noreply, State};
 do_handle_info({net_msg_broadcast, NetMsg}, State) ->
-    lib_map_priv:broadcast_net_msg(NetMsg),
+    lib_map_priv:broadcast_net_msg(State, NetMsg),
     {noreply, State};
 do_handle_info({msg_broadcast_view, Msg}, State) ->
     lib_map_priv:broadcast_msg_view(Msg),

@@ -47,8 +47,10 @@
 %%
 -record(m_vis_tile,{index = 0, player = [], monster = [], npc = [], pet = []}).
 %%
--record(m_map_state,{map_id = 0, line_id = 0, player, monster,
-    npc, pet, respawn = [], hook_mod, status = ?MAP_NORMAL, protect_tick=1000}).
+-record(m_map_state,{
+    map_id = 0, line_id = 0, player=#{}, monster=#{}, npc=#{}, pet=#{},
+    respawn = [], hook_mod, status = ?MAP_NORMAL, protect_tick=1000
+}).
 %%
 -record(m_map_line,{
     map_id = 0, line_id = 0, pid,

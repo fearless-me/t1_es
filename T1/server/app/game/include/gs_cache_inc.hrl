@@ -47,6 +47,13 @@
 -define(ETS_CACHE_ALARM_PLAYER, ets_cache_alarm_player).
 -record(m_cache_alarm_player, {uid, alarm_data}).
 
+%% 地图上所有对象的共享ETS
+%% {@link m_cache_map_unit}
+-define(ETS_CACHE_MAP_PET,      m_cache_map_pet).
+-define(ETS_CACHE_MAP_NPC,      m_cache_map_npc).
+-define(ETS_CACHE_MAP_PLAYER,   m_cache_map_player).
+-define(ETS_CACHE_MAP_MONSTER,  m_cache_map_monster).
+
 
 
 

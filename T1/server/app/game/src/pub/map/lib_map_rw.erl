@@ -9,19 +9,18 @@
 -module(lib_map_rw).
 -author("mawenhong").
 -include("gs_map_inc.hrl").
+-include("gs_cache_inc.hrl").
 -include("gs_map_unit_inc.hrl").
 -include("gs_move_inc.hrl").
 
 %%
--export([init_ets/1]).
--export([add_obj_to_ets/1, del_obj_to_ets/1]).
+-export([init/1]).
+-export([add_obj_to_ets/2, del_obj_to_ets/2]).
 -export([
     get_obj/1,
-    get_player/1, get_player_size/0,
-    get_monster/1, get_monster_size/0,
-    get_npc/1, get_pet/1,
-    get_npc_ets/0, get_monster_ets/0,
-    get_pet_ets/0, get_player_ets/0
+    get_player/1, get_player_size/1,
+    get_monster/1, get_monster_size/1,
+    get_npc/1, get_pet/1
 ]).
 -export([
     get_map_id/0, get_line_id/0,get_map_hook/0,
@@ -43,14 +42,14 @@
 -define(MOVE_TIMER, map_move_timer__).
 
 %%%-------------------------------------------------------------------
-init_ets(State) ->
+init(State) ->
     Now = misc_time:milli_seconds(),
     put(?MAP_ID,        State#m_map_state.map_id),
     put(?LINE_ID,       State#m_map_state.line_id),
-    put(?MAP_NPC_ETS,   State#m_map_state.npc),
-    put(?MAP_PET_ETS,   State#m_map_state.pet),
-    put(?MAP_USR_ETS,   State#m_map_state.player),
-    put(?MAP_MON_ETS,   State#m_map_state.monster),
+%%    put(?MAP_NPC_ETS,   State#m_map_state.npc),
+%%    put(?MAP_PET_ETS,   State#m_map_state.pet),
+%%    put(?MAP_USR_ETS,   State#m_map_state.player),
+%%    put(?MAP_MON_ETS,   State#m_map_state.monster),
     put(?MAP_HOOK,      State#m_map_state.hook_mod),
     put(?MOVE_TIMER,    #m_move_timer{now = Now, latest_up = Now, delta = 0}),
     ok.
@@ -59,12 +58,6 @@ init_ets(State) ->
 get_map_id()        -> get(?MAP_ID).
 get_line_id()       -> get(?LINE_ID).
 get_map_hook()      -> get(?MAP_HOOK).
-
-%%-------------------------------------------------------------------
-get_npc_ets()       -> get(?MAP_NPC_ETS).
-get_pet_ets()       -> get(?MAP_PET_ETS).
-get_player_ets()    -> get(?MAP_USR_ETS).
-get_monster_ets()   -> get(?MAP_MON_ETS).
 
 %%-------------------------------------------------------------------
 get_obj(Uid) ->
@@ -78,13 +71,13 @@ get_obj(Uid) ->
     end.
 %%-------------------------------------------------------------------
 get_player(Uid) ->
-    case ets:lookup(lib_map_rw:get_player_ets(), Uid) of
-        [#m_map_unit{} = Unit | _] -> Unit;
+    case ets:lookup(?ETS_CACHE_MAP_PLAYER, Uid) of
+        [#m_cache_map_unit{} = Unit | _] -> Unit;
         _ -> undefined
     end.
 
-get_player_size() ->
-    ets:info( get_player_ets(), size ).
+get_player_size(S) ->
+    maps:size(S#m_map_state.player).
 
 %%-------------------------------------------------------------------
 %%player_update(Uid, Elements)->
@@ -101,42 +94,46 @@ get_player_size() ->
 
 %%-------------------------------------------------------------------
 get_monster(Uid) ->
-    case ets:lookup(lib_map_rw:get_monster_ets(), Uid) of
-        [#m_map_unit{} = Unit | _] -> Unit;
+    case ets:lookup(?ETS_CACHE_MAP_MONSTER, Uid) of
+        [#m_cache_map_unit{} = Unit | _] -> Unit;
         _ -> undefined
     end.
 
-get_monster_size() ->
-    ets:info( lib_map_rw:get_monster_ets(), size ).
+get_monster_size(S) ->
+    maps:size(S#m_map_state.monster).
 
 %%-------------------------------------------------------------------
 get_npc(Uid) ->
-    case ets:lookup(lib_map_rw:get_npc_ets(), Uid) of
-        [#m_map_unit{} = Unit | _] -> Unit;
+    case ets:lookup(?ETS_CACHE_MAP_NPC, Uid) of
+        [#m_cache_map_unit{} = Unit | _] -> Unit;
         _ -> undefined
     end.
 
 %%-------------------------------------------------------------------
 get_pet(Uid) ->
-    case ets:lookup(lib_map_rw:get_pet_ets(), Uid) of
-        [#m_map_unit{} = Unit | _] -> Unit;
+    case ets:lookup(?ETS_CACHE_MAP_PET, Uid) of
+        [#m_cache_map_unit{} = Unit | _] -> Unit;
         _ -> undefined
     end.
 
 %%-------------------------------------------------------------------
-add_obj_to_ets(#m_map_unit{type = ?OBJ_MON} = Unit) ->
-    ets:insert(lib_map_rw:get_monster_ets(), Unit);
-add_obj_to_ets(#m_map_unit{type = ?OBJ_USR} = Unit) ->
-    ets:insert(lib_map_rw:get_player_ets(), Unit);
-add_obj_to_ets(_) ->
-    ok.
+add_obj_to_ets(#m_map_state{ monster = Monster } = S, #m_cache_map_unit{type = ?OBJ_MON, uid = Uid} = Unit) ->
+    catch ets:insert(?ETS_CACHE_MAP_MONSTER, Unit),
+    S#m_map_state{monster = maps:put(Uid, Uid, Monster)};
+add_obj_to_ets(#m_map_state{ player =  Player } = S, #m_cache_map_unit{type = ?OBJ_USR, uid = Uid} = Unit) ->
+    catch ets:insert(?ETS_CACHE_MAP_PLAYER, Unit),
+    S#m_map_state{player = maps:put(Uid, Uid, Player)};
+add_obj_to_ets(S, _) ->
+    S.
 
-del_obj_to_ets(#m_map_unit{uid = Uid, type = ?OBJ_MON}) ->
-    ets:delete(lib_map_rw:get_monster_ets(), Uid);
-del_obj_to_ets(#m_map_unit{uid = Uid, type = ?OBJ_USR}) ->
-    ets:delete(lib_map_rw:get_player_ets(), Uid);
-del_obj_to_ets(_) ->
-    ok.
+del_obj_to_ets(#m_map_state{ monster = Monster } = S, #m_cache_map_unit{uid = Uid, type = ?OBJ_MON}) ->
+    catch ets:delete(?ETS_CACHE_MAP_MONSTER, Uid),
+    S#m_map_state{monster = maps:remove(Uid, Monster)};
+del_obj_to_ets(#m_map_state{ player =  Player } = S, #m_cache_map_unit{uid = Uid, type = ?OBJ_USR}) ->
+    catch ets:update_element(?ETS_CACHE_MAP_PLAYER, Uid, [{#m_cache_map_unit.map_id, 0}, {#m_cache_map_unit.line_id, 0}]),
+    S#m_map_state{monster = maps:remove(Uid, Player)};
+del_obj_to_ets(S, _) ->
+    S.
 %%-------------------------------------------------------------------
 update_move_timer() ->
     Now = misc_time:milli_seconds(),

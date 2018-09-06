@@ -90,12 +90,19 @@ new(Type, Pid, Uid, Did, Owner, Group, Pos, Face) ->
     lib_unit_rw:set_group(Uid, Group),
     lib_unit_rw:set_pid(Uid, Pid),
     lib_unit_rw:set_type(Uid, Type),
-    #m_map_unit{uid = Uid, pid = Pid, did = Did, owner = Owner, type = Type}.
+
+    #m_cache_map_unit{
+        map_id  = lib_map_rw:get_map_id(),
+        line_id = lib_map_rw:get_line_id(),
+        uid = Uid, pid = Pid, did = Did,
+        owner = Owner, type = Type
+    }.
 
 
 %%-------------------------------------------------------------------
 %%-------------------------------------------------------------------
 init_rw_default(Uid)->
+    ?WARN("init_rw_default(~p)",[Uid]),
     lib_ai_rw:init_default(Uid),
     lib_move_rw:init_default(Uid),
     lib_unit_rw:init_default(Uid),
@@ -103,6 +110,7 @@ init_rw_default(Uid)->
     ok.
 
 del_all_rw(Uid) ->
+    ?WARN("del_all_rw(~p)",[Uid]),
     lib_ai_rw:del(Uid),
     lib_move_rw:del(Uid),
     lib_unit_rw:del(Uid),
@@ -114,9 +122,9 @@ del_all_rw(Uid) ->
 
 
 %%-------------------------------------------------------------------
-get_uid(Unit) -> Unit#m_map_unit.uid.
-get_pid(Unit) -> Unit#m_map_unit.pid.
-get_did(Unit) -> Unit#m_map_unit.did.
-get_owner(Unit) -> Unit#m_map_unit.owner.
-get_type(Unit) -> Unit#m_map_unit.type.
+get_uid(Unit) -> Unit#m_cache_map_unit.uid.
+get_pid(Unit) -> Unit#m_cache_map_unit.pid.
+get_did(Unit) -> Unit#m_cache_map_unit.did.
+get_owner(Unit) -> Unit#m_cache_map_unit.owner.
+get_type(Unit) -> Unit#m_cache_map_unit.type.
 %%-------------------------------------------------------------------

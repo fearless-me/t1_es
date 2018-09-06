@@ -34,3 +34,6 @@ _gsdata_
 /T1/server/app/center/scripts/compile_*.txt
 /T1/server/scripts/*.data
 /T1/server/scripts/*.txt
+/T1/server/app/center/scripts/center_chs_release.txt
+/T1/server/app/game/scripts/game_chs_release.txt
+/T1/server/app/game/scripts/game_server_chs_release.txt

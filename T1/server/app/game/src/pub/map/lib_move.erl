@@ -158,15 +158,15 @@ make_move_r(Start, End, Speed) ->
 update(Unit) -> update_dispatcher(Unit).
 
 %%-------------------------------------------------------------------
-update_dispatcher(#m_map_unit{type = ?OBJ_USR, uid = Uid} = Unit) ->
+update_dispatcher(#m_cache_map_unit{type = ?OBJ_USR, uid = Uid} = Unit) ->
     update_player_move(Unit, lib_move_rw:get_cur_move(Uid));
-update_dispatcher(#m_map_unit{type = ?OBJ_MON, uid = Uid} = Unit) ->
+update_dispatcher(#m_cache_map_unit{type = ?OBJ_MON, uid = Uid} = Unit) ->
     update_monster_move(Unit, lib_move_rw:get_cur_move(Uid));
 update_dispatcher(_Obj) -> skip.
 
 %%-------------------------------------------------------------------
 update_player_move(Unit, ?EMS_WALK) ->
-    #m_map_unit{uid = Uid} = Unit,
+    #m_cache_map_unit{uid = Uid} = Unit,
 
     CurPos = lib_move_rw:get_cur_pos(Uid),
     PathList = lib_move_rw:get_path_list(Uid),
@@ -178,7 +178,7 @@ update_player_move(_Obj, _Move) -> skip.
 
 %%-------------------------------------------------------------------
 update_monster_move(Unit, ?EMS_WALK) ->
-    #m_map_unit{uid = Uid} = Unit,
+    #m_cache_map_unit{uid = Uid} = Unit,
 
     CurPos = lib_move_rw:get_cur_pos(Uid),
     PathList = lib_move_rw:get_path_list(Uid),
