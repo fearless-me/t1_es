@@ -12,8 +12,8 @@
 -define(CompileEts, compileEts).
 -define(CompileFilesEts, compileFilesEts).
 -define(CompileListDEts, get_dets_name(ServerType)).
--define(ST_GS, game_server).
--define(ST_CS, center_server).
+-define(ST_GS, game).
+-define(ST_CS, center).
 
 -record(rec_serverfile, {
 	fileName = "",
@@ -22,7 +22,6 @@
 
 
 main(Args) ->
-    ensure_outdir(),
 	ets:new(?CompileEts, [public, named_table, {keypos, 1}]),
 	ets:new(?CompileFilesEts, [public, named_table, {keypos, 1},{write_concurrency, true},{read_concurrency, true}]),
     main1(Args),
@@ -34,20 +33,20 @@ main1(_Any) ->
 	menu0(),
 	ok.
 	
-ensure_outdir()->
-	file:make_dir("../app/game/ebin"),
-	file:make_dir("../app/center/ebin"),
+ensure_outdir(ServerType)->
+	file:make_dir( root_dir(ServerType) ++ "ebin"),
 	ok.
 	
-delete_ebin(?ST_GS)->
-	os:cmd("cd ../app/game/ebin/ && del /q /s *.*"),
-	color:warn_log("===> clean success!! <===~n~n"),
-	ok;
-delete_ebin(?ST_CS)->
-	os:cmd("cd ../app/center/ebin/ && del /q /s *.*"),
-	color:warn_log("===> clean success!! <===~n~n"),
-	ok.
-
+	
+	
+root_dir(ServerType)->
+    case get({ServerType, root_dir}) of
+        undefined ->
+            {_, {root_dir, Dir}, _, _}  = get_server_config(ServerType),
+            Dir;
+        RootDir ->
+            RootDir
+    end.
 	
 	
 
@@ -76,10 +75,12 @@ dispatchInput0(_) -> menu0().
 
 -ifdef(OneZone).
 menu1(ServerType) ->
+	ensure_outdir(ServerType),
     ensure_dets(ServerType),
 	dispatchInput(ServerType, ?OneZone).
 -else.
 menu1(ServerType) ->
+	ensure_outdir(ServerType),
     ensure_dets(ServerType),
 	color:info_log(
 		"~n##########################################################~n"
@@ -174,7 +175,8 @@ dispatchInput2(_ServerType, _Lang, 9) ->
 	menu0();
 dispatchInput2(ServerType, Lang, 8) ->
 	dets:delete_all_objects(get_dets_name(ServerType)),
-	delete_ebin(ServerType),
+	os:cmd("cd " ++ root_dir(ServerType) ++ "ebin/ && del /q /s *.*"),
+	color:warn_log("===> clean success!! <===~n~n"),
 	menu2(ServerType, Lang);
 %%dispatchInput2(ServerType, Lang, 23) ->
 %%	setSearchFileData(undefined),
@@ -305,9 +307,9 @@ compile(ServerType, Lang, 1) ->
 
 	%% 用于Release编译打包
 	Target = getCompileServer(1),
-	FileName = io_lib:format("compile_~p_~p_~p.txt", [ServerType, Lang, Target]),
+	FileName = io_lib:format("~p_~p_~p.txt", [ServerType, Lang, Target]),
 	file:write_file(FileName, ""),
-	CmdStr = io_lib:format("cd ../ && make all Region=\"~p\" -j8 > scripts/~ts", [Lang, FileName]),
+	CmdStr = io_lib:format("cd " ++ root_dir(ServerType) ++ " && make all Region=\"~p\" -j8 > scripts/~ts", [Lang, FileName]),
 
 	color:warn_log("compile [~p,~p] start [~ts], please wait...~n", [Lang, Target, time_format()]),
 	os:cmd(CmdStr),
@@ -385,8 +387,8 @@ compile2(ServerType, SrcFile, Opts, LogFile, FileNumbers) ->
 	end,
 
 	CompiledFileNumber = ets:update_counter(?CompileFilesEts, 1, {2, 1}),
-	dLog(LogFile, "[~ts] compiled[~w%] ~s ~p ~ts",
-		[time_format(), erlang:trunc(CompiledFileNumber/FileNumbers * 1000)/10, filename:basename(SrcFile), CompileResult =/= error,  Str], CompileResult),
+	dLog(LogFile, "[~ts] compiled[~.2f%] ~s ~p ~ts",
+		[time_format(), CompiledFileNumber/FileNumbers * 100, filename:basename(SrcFile), CompileResult =/= error,  Str], CompileResult),
 	ok.
 
 check_return(_SrcFile, {ok,_}) ->
@@ -501,7 +503,7 @@ compile_done(ServerType, StartTime, LogFile, Lang, Target) ->
 	ok.
 
 make_cfg(ServerType, Lang, Target, _V) ->
-	FileName = io_lib:format("compile_~p_~p_~p.txt", [ServerType, Lang, Target]),
+	FileName = io_lib:format("~p_~p_~p.txt", [ServerType, Lang, Target]),
 	file:write_file(FileName, ""),
 
 	{CompileType, FileList, Opts} = scan_files(ServerType, getCompileFastParam()),
@@ -518,7 +520,7 @@ scan_files(_ServerType, {IsFast, FileList, Opts, _})->
 			{allCompile, FileList, Opts}
 	end;
 scan_files(ServerType, undefined)->
-	{_, SrcList, Opts}  = get_server_config(ServerType),
+	{_, _, SrcList, Opts}  = get_server_config(ServerType),
 
 	SrcFileList =
 	    lists:foldl(
@@ -528,7 +530,7 @@ scan_files(ServerType, undefined)->
 	{allCompile, SrcFileList, Opts}.
 
 scan_all_files(ServerType)->
-	{_, SrcList, Opts} = get_server_config(ServerType),
+	{_, _, SrcList, Opts} = get_server_config(ServerType),
 
 	SrcFileList =
 	    lists:foldl(
@@ -551,7 +553,7 @@ get_server_config(ServerType) ->
 
 do_get_server_config(_, []) ->
 	[];
-do_get_server_config(ServerType, [{ServerType, _, _} = Config | _]) ->
+do_get_server_config(ServerType, [{ServerType, _, _, _} = Config | _]) ->
 	Config;
 do_get_server_config(ServerType, [_ | Configs]) ->
 	do_get_server_config(ServerType, Configs).
@@ -762,4 +764,4 @@ get_dets_name(ServerType) ->
     list_to_atom(lists:concat([compileServerFileListDEts,"_", ServerType])).
 
 get_dets_file(ServerType) ->
-    lists:flatten(io_lib:format("compileListDEtsFile.~p.data", [ServerType])).
+    lists:flatten(io_lib:format("~p.dets.data", [ServerType])).

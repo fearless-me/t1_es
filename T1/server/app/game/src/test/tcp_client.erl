@@ -82,7 +82,7 @@ connect(Port, AccountIdx) ->
         ok
     catch
         _ : Err: _ ->
-            ?WARN("socket ~p, pid ~p err ~p bye~~!", [socket(), self(), Err])
+            ?ERROR("socket ~p, pid ~p err ~p bye~~!", [socket(), self(), Err])
     end,
 
     ok.
@@ -101,7 +101,7 @@ loop_recv() ->
 
 send_msg(Socket, Msg) ->
     {_Bytes1, IoList1} = tcp_codec:encode(Msg),
-    ?DEBUG("send: ~p", [Msg]),
+    ?DEBUG("send: ~w", [Msg]),
     ranch_tcp:send(Socket, IoList1).
 
 
@@ -110,6 +110,8 @@ recv_msg(Socket) ->
         {ok, Any0} ->
             tcp_codec:decode(fun tcp_client:handle/2, Socket, Any0),
             ok;
+        {error, Reason} when Reason =/= timeout ->
+            throw(Reason);
         _ ->
             skip
     end.

@@ -24,10 +24,10 @@ task_list() ->
 
 priority_1() ->
     [
-        ?WATCHDOG_TASK({data_loader, task_all_done, []}, "load all data")
+        ?WATCHDOG_TASK(fun data_loader:is_all_done/0, "load all data")
     ].
 
 priority_2() ->
     [
-        ?WATCHDOG_TASK({dist_monitor, is_all_slaves_stared, []}, "wait start all slave ndoe")
+        ?WATCHDOG_TASK(fun dist_monitor:is_all_slaves_stared/0, "wait start all slave ndoe")
     ].

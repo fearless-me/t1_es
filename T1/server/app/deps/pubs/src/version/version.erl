@@ -1,10 +1,9 @@
-%%NewVersion:114895
-%%OldVersion:111250
+%%NewVersion:114902
+%%OldVersion:114901
 %%this file auto generate !!!
 %%this file auto generate !!!
 %%this file auto generate !!!
-%%UpdateTime:2018-09-03 18:05:58
+%%UpdateTime:2018-09-06 14:31:46
 -module(version).
--author(tiancheng).
 -export([getVersion/0]).
-getVersion() -> 114895.
+getVersion() -> 114902.

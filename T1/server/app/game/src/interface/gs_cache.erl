@@ -49,6 +49,7 @@ online(#p_player{aid = Aid, uid = Uid} = Player, Pid, Sock) ->
     gs_cache:add_socket(Aid, Uid, Pid, Sock),
     ok;
 online(#m_cache_player_pub{aid = Aid, uid = Uid} = Player, Pid, Sock) ->
+    gs_cache:add_account_socket(Aid, Pid, Sock),
     gs_cache:add_player_pub(Player),
     gs_cache:add_player_priv(Aid, Uid),
     gs_cache:add_socket(Aid, Uid, Pid, Sock),

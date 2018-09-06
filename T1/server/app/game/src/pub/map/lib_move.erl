@@ -190,7 +190,7 @@ update_monster_move(_Obj, _Move) -> skip.
 
 %%-------------------------------------------------------------------
 update_role_walk(Uid, CurPos, [], _MoveTime) ->
-    ?WARN("mapid ~p player ~w arrived ~w", [self(), Uid, CurPos]),
+%%    ?WARN("mapid ~p player ~w arrived ~w", [self(), Uid, CurPos]),
     lib_move_rw:set_cur_move(Uid, ?EMS_STAND),
     lib_move_rw:set_next_move(Uid, ?EMS_STAND),
     lib_move_rw:set_start_time(Uid, lib_map_rw:get_move_timer_now()),

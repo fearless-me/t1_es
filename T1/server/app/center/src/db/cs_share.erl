@@ -32,7 +32,7 @@ sync(Node) ->
     true = mne_ex:sync(Node),
     lists:foreach(
         fun({Tab, _Arg}) ->
-            ?INFO("\tadd table copy ~-20w to ~p ...", [Tab, Node]),
+            ?INFO("\tadd table copy ~-40w to ~p ...", [Tab, Node]),
             mne_ex:add_table_copy(Tab, Node, ram_copies)
         end, cs_share_pub:share_tables()),
     mne_ex:wait_for_tables(),

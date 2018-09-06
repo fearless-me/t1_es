@@ -13,18 +13,18 @@
 
 %% API
 -export([
-    start_app/1, start_all_app/1, os_type/0, halt/1, halt/2, nnl/0,  nnl/1,
-    system_info/0, set_system_time/1, fn_wrapper/1, master_node/0,
-    b2i/1, i2b/1, ntoa/1, ntoab/1, fib/1, 
+    start_app/1, start_all_app/1, os_type/0, halt/1, halt/2, nnl/0, nnl/1,
+    system_info/0, set_system_time/1, fn_wrapper/1, master_node/0, decompiled/1,
+    b2i/1, i2b/1, ntoa/1, ntoab/1, fib/1, apply_fun/1,
     atom_to_binary/1, to_atom/1, create_atom/2, list_to_string_suffix/2,
     register_process/2, register_process/3, registered_name/0, registered_name/1,
-    process_node/1,  whereis_lg/1, allow_node/1,
+    process_node/1, whereis_lg/1, allow_node/1,
     is_alive/1, is_alive_g/1, is_alive_lg/1,
     ip/0, peername/1, ip_string/1,
     crc32/1, mod_1/2, clamp/3, rand/2,
     get_value/3, callstack/0,
     interval_operation/5, parse_information_unit/1,
-    get_dict_def/2, md5/1,  int_to_hex/1,
+    get_dict_def/2, md5/1, int_to_hex/1,
     lists_rand_get/1, lists_shuffle/1, lists_rand_get_n/2, list_to_hex/1,
     string_to_term/1, term_to_string/1
 ]).
@@ -68,7 +68,7 @@ registered_name() -> registered_name(self()).
 
 registered_name(Pid) ->
     case erlang:process_info(Pid, registered_name) of
-        {registered_name,Name} -> Name;
+        {registered_name, Name} -> Name;
         _ -> unknown
     end.
 
@@ -108,7 +108,7 @@ whereis_lg(PsName) when is_atom(PsName) ->
 
 %%-------------------------------------------------------------------
 %% local
-is_alive(0)-> false;
+is_alive(0) -> false;
 is_alive(undefined) -> false;
 is_alive(Name) when is_atom(Name) ->
     case erlang:whereis(Name) of
@@ -120,7 +120,7 @@ is_alive(Pid) when is_pid(Pid) ->
 
 %%-------------------------------------------------------------------
 %% global
-is_alive_g(0)-> false;
+is_alive_g(0) -> false;
 is_alive_g(undefined) -> false;
 is_alive_g(Name) when is_atom(Name) ->
     case global:whereis_name(Name) of
@@ -132,7 +132,7 @@ is_alive_g(Pid) when is_pid(Pid) ->
 
 %%-------------------------------------------------------------------
 %% local and global
-is_alive_lg(0)-> false;
+is_alive_lg(0) -> false;
 is_alive_lg(undefined) -> false;
 is_alive_lg(Name) when is_atom(Name) ->
     case whereis_lg(Name) of
@@ -158,14 +158,14 @@ to_atom(_) ->
     throw(other_value).  %%list_to_atom("").
 
 list_to_atom2(List) when is_list(List) ->
-    case catch(list_to_existing_atom(List)) of
+    case catch (list_to_existing_atom(List)) of
         {'EXIT', _} -> erlang:list_to_atom(List);
         Atom when is_atom(Atom) -> Atom
     end.
 
 %%-------------------------------------------------------------------
-list_to_string_suffix([], SuffixStr)-> SuffixStr;
-list_to_string_suffix(List, SuffixStr)-> string:join(List, SuffixStr).
+list_to_string_suffix([], SuffixStr) -> SuffixStr;
+list_to_string_suffix(List, SuffixStr) -> string:join(List, SuffixStr).
 
 %%-------------------------------------------------------------------
 lists_rand_get([]) ->
@@ -185,11 +185,11 @@ lists_rand_get_n([], _N) ->
 lists_rand_get_n([_] = List, _N) ->
     List;
 lists_rand_get_n(List, N) ->
-    lists:sublist( misc:lists_shuffle(List), N).
+    lists:sublist(misc:lists_shuffle(List), N).
 
 
 %%-------------------------------------------------------------------
--spec lists_shuffle(ListIn::list()) -> ListOut::list().
+-spec lists_shuffle(ListIn :: list()) -> ListOut :: list().
 lists_shuffle([]) ->
     [];
 lists_shuffle([_] = L) ->
@@ -200,7 +200,7 @@ lists_shuffle(L) ->
     [E || {_, E} <- List2].
 %%-------------------------------------------------------------------
 md5(S) ->
-    Md5_bin =  erlang:md5(S),
+    Md5_bin = erlang:md5(S),
     Md5_list = binary_to_list(Md5_bin),
     lists:flatten(list_to_hex(Md5_list)).
 
@@ -214,11 +214,11 @@ int_to_hex(N) when N < 256 ->
     less_256_hex(N).
 
 hex(N) when N < 10 ->
-    $0+N;
+    $0 + N;
 hex(N) when N >= 10, N < 16 ->
-    $A + (N-10).
+    $A + (N - 10).
 
-less_256_hex(N)->
+less_256_hex(N) ->
     [hex(N div 16), hex(N rem 16)].
 
 int_to_hex_1(N, Acc) when N < 256 ->
@@ -229,16 +229,16 @@ int_to_hex_1(N, Acc) ->
     int_to_hex_1(X, [less_256_hex(M) | Acc]).
 
 %%-------------------------------------------------------------------
-rand(Min, Min)-> Min;
-rand(Min, Max)-> Min + rand:uniform(Max - Min).
+rand(Min, Min) -> Min;
+rand(Min, Max) -> Min + rand:uniform(Max - Min).
 
 %%-------------------------------------------------------------------
--spec clamp(X,Min,Max) -> Min | X | Max when X::number(),Min::number(),Max::number().
-clamp(X,Min,Max) when Min =< Max andalso X < Min ->
+-spec clamp(X, Min, Max) -> Min | X | Max when X :: number(), Min :: number(), Max :: number().
+clamp(X, Min, Max) when Min =< Max andalso X < Min ->
     Min;
-clamp(X,Min,Max) when Min =< Max andalso X > Max ->
+clamp(X, Min, Max) when Min =< Max andalso X > Max ->
     Max;
-clamp(X,Min,Max) when Min =< Max ->
+clamp(X, Min, Max) when Min =< Max ->
     X.
 
 
@@ -251,12 +251,12 @@ get_value(Key, Opts, Default) ->
     end.
 
 %%-------------------------------------------------------------------
-callstack()->
-   try erlang:error(callStack) catch _ : _ : ST -> ST end.
+callstack() ->
+    try erlang:error(callStack) catch _ : _ : ST -> ST end.
 %%-------------------------------------------------------------------
 %% Format IPv4-mapped IPv6 addresses as IPv4, since they're what we see
 %% when IPv6 is enabled but not used (i.e. 99% of the time).
-ntoa({0,0,0,0,0,16#ffff,AB,CD}) ->
+ntoa({0, 0, 0, 0, 0, 16#ffff, AB, CD}) ->
     inet_parse:ntoa({AB bsr 8, AB rem 256, CD bsr 8, CD rem 256});
 ntoa(IP) ->
     inet_parse:ntoa(IP).
@@ -273,38 +273,38 @@ ntoab(IP) ->
 -spec ip() -> string().
 ip() ->
     {ok, Hostname} = inet:gethostname(),
-    {ok, Address}  = inet:getaddr(Hostname, inet),
+    {ok, Address} = inet:getaddr(Hostname, inet),
     ip_string(Address).
 %%-------------------------------------------------------------------
--spec peername(Socket) -> {IP,Port} when
-    Socket::port(),IP::string(),Port::integer().
+-spec peername(Socket) -> {IP, Port} when
+    Socket :: port(), IP :: string(), Port :: integer().
 peername(Socket) ->
     case inet:peername(Socket) of
         {ok, {Address, Port}} ->
-            {ip_string(Address),Port};
+            {ip_string(Address), Port};
         _ ->
-            {"0.0.0.0",0}
+            {"0.0.0.0", 0}
     end.
 
 %%-------------------------------------------------------------------
-ip_string(Address)->
+ip_string(Address) ->
     AList = tuple_to_list(Address),
-    [A1,A2,A3,A4 | _] = AList,
-    io_lib:format( "~w.~w.~w.~w", [A1,A2,A3,A4] ).
+    [A1, A2, A3, A4 | _] = AList,
+    io_lib:format("~w.~w.~w.~w", [A1, A2, A3, A4]).
 
 %%-------------------------------------------------------------------
-start_app(App)->
+start_app(App) ->
     case application:start(App) of
         ok -> true;
-        {error,{already_started,App}}-> true;
-        {error,Reason} -> Reason
+        {error, {already_started, App}} -> true;
+        {error, Reason} -> Reason
     end.
 
 %%-------------------------------------------------------------------
 start_all_app(App) ->
     case application:ensure_all_started(App) of
-        {ok,_} -> true;
-        {error,Reason} -> Reason
+        {ok, _} -> true;
+        {error, Reason} -> Reason
     end.
 
 %%-------------------------------------------------------------------
@@ -324,11 +324,11 @@ i2b(false) -> false;
 i2b(true) -> true.
 
 %%-------------------------------------------------------------------
--spec string_to_term(String) ->term() when String::string().
+-spec string_to_term(String) -> term() when String :: string().
 string_to_term([]) ->
     [];
 string_to_term(String) when erlang:is_list(String) ->
-    case erl_scan:string(String++".") of
+    case erl_scan:string(String ++ ".") of
         {ok, Tokens, _} ->
             case erl_parse:parse_term(Tokens) of
                 {ok, Term} -> Term;
@@ -355,12 +355,12 @@ interval_operation({M, F, A}, MaxRatio, MaxInterval, IdealInterval, LastInterval
     {Micros, Res} = timer:tc(M, F, A),
     {Res, Micros, case {Micros > 1000 * (MaxRatio * IdealInterval),
         Micros > 1000 * (MaxRatio * LastInterval)} of
-              {true,  true}  -> lists:min([MaxInterval,
-                  round(LastInterval * 1.5)]);
-              {true,  false} -> LastInterval;
-              {false, false} -> lists:max([IdealInterval,
-                  round(LastInterval / 1.5)])
-          end}.
+                      {true, true} -> lists:min([MaxInterval,
+                          round(LastInterval * 1.5)]);
+                      {true, false} -> LastInterval;
+                      {false, false} -> lists:max([IdealInterval,
+                          round(LastInterval / 1.5)])
+                  end}.
 
 parse_information_unit(Value) when is_integer(Value) -> {ok, Value};
 parse_information_unit(Value) when is_list(Value) ->
@@ -374,11 +374,13 @@ parse_information_unit(Value) when is_list(Value) ->
         {match, [Num, Unit]} ->
             Multiplier = case Unit of
                              KiB when KiB =:= "k";  KiB =:= "kiB"; KiB =:= "K"; KiB =:= "KIB"; KiB =:= "kib" -> 1024;
-                             MiB when MiB =:= "m";  MiB =:= "MiB"; MiB =:= "M"; MiB =:= "MIB"; MiB =:= "mib" -> 1024*1024;
-                             GiB when GiB =:= "g";  GiB =:= "GiB"; GiB =:= "G"; GiB =:= "GIB"; GiB =:= "gib" -> 1024*1024*1024;
-                             KB  when KB  =:= "KB"; KB  =:= "kB"; KB =:= "kb"; KB =:= "Kb"  -> 1000;
-                             MB  when MB  =:= "MB"; MB  =:= "mB"; MB =:= "mb"; MB =:= "Mb"  -> 1000000;
-                             GB  when GB  =:= "GB"; GB  =:= "gB"; GB =:= "gb"; GB =:= "Gb"  -> 1000000000
+                             MiB when MiB =:= "m";  MiB =:= "MiB"; MiB =:= "M"; MiB =:= "MIB"; MiB =:= "mib" ->
+                                 1024 * 1024;
+                             GiB when GiB =:= "g";  GiB =:= "GiB"; GiB =:= "G"; GiB =:= "GIB"; GiB =:= "gib" ->
+                                 1024 * 1024 * 1024;
+                             KB when KB =:= "KB"; KB =:= "kB"; KB =:= "kb"; KB =:= "Kb" -> 1000;
+                             MB when MB =:= "MB"; MB =:= "mB"; MB =:= "mb"; MB =:= "Mb" -> 1000000;
+                             GB when GB =:= "GB"; GB =:= "gB"; GB =:= "gb"; GB =:= "Gb" -> 1000000000
                          end,
             {ok, list_to_integer(Num) * Multiplier};
         nomatch ->
@@ -405,6 +407,24 @@ nnl() ->
     S = lists:duplicate(15, "\n"),
     ?DEBUG("~ts", [lists:flatten(S)]).
 
+decompiled(Module) ->
+    do_decompiled(code:which(Module)).
+
+do_decompiled(non_existing) ->
+    non_existing;
+do_decompiled(BeamFile) ->
+    FileName = lists:concat([filename:basename(BeamFile, ".beam"), ".dc.erl"]),
+    case beam_lib:chunks(BeamFile, [abstract_code]) of
+        {ok, {_, [{abstract_code, {_, AC}}]}} ->
+            file:write_file(
+                FileName,
+                [erl_prettypr:format(erl_syntax:form_list(AC))]
+            ),
+            FileName;
+        Error -> Error
+    end.
+
+
 %%-------------------------------------------------------------------
 system_info() ->
     %% observer_backend:sys_info
@@ -423,12 +443,12 @@ system_info() ->
     "sytem monitor                          :   ~w~n"
     "======================================================================================================~n",
         [
-            erlang:system_info(port_count),                     erlang:system_info(port_limit),
-            erlang:system_info(process_count),                  erlang:system_info(process_limit),
-            erlang:system_info(atom_count),                     erlang:system_info(atom_limit),
-            length(ets:all()),                                  erlang:system_info(ets_limit),
-            erlang:system_info(schedulers_online),              erlang:system_info(schedulers),
-            erlang:system_info(dirty_cpu_schedulers_online),    erlang:system_info(dirty_cpu_schedulers),
+            erlang:system_info(port_count), erlang:system_info(port_limit),
+            erlang:system_info(process_count), erlang:system_info(process_limit),
+            erlang:system_info(atom_count), erlang:system_info(atom_limit),
+            length(ets:all()), erlang:system_info(ets_limit),
+            erlang:system_info(schedulers_online), erlang:system_info(schedulers),
+            erlang:system_info(dirty_cpu_schedulers_online), erlang:system_info(dirty_cpu_schedulers),
             erlang:system_info(dirty_io_schedulers),
             erlang:system_info(thread_pool_size),
             erlang:system_info(otp_release),
@@ -458,7 +478,7 @@ do_set_system_time(win32, Date) ->
 master_node() ->
     case init:get_argument(master) of
         error -> undefined;
-        {ok,[[MasterNode]]} -> erlang:list_to_atom(MasterNode)
+        {ok, [[MasterNode]]} -> erlang:list_to_atom(MasterNode)
     end.
 
 fn_wrapper({Msg, stdio, Thunk}) ->
@@ -475,15 +495,15 @@ fn_wrapper({Msg, Thunk}) ->
     ok.
 
 start_otp(SupPid, Module, Type) ->
-    {ok, _} = ?CHILD(SupPid, Module, Type),
+    {ok, _} = ?CHILD_START(SupPid, Module, Type),
     ok.
 
 start_otp(SupPid, Module, Type, Params) ->
-    {ok, _} = ?CHILD(SupPid, Module, Type, Params),
+    {ok, _} = ?CHILD_START(SupPid, Module, Type, Params),
     ok.
 
 start_otp(SupPid, Name, Module, Type, Params) ->
-    {ok, _} = ?CHILD(SupPid, Name, Module, Type, Params),
+    {ok, _} = ?CHILD_START(SupPid, Name, Module, Type, Params),
     ok.
 
 
@@ -493,5 +513,20 @@ fib(1) -> 1;
 fib(N) -> do_fib(N, 0, 1).
 
 do_fib(0, _, B) -> B;
-do_fib(N, A, B) -> do_fib(N-1, B, A+B).
-    
+do_fib(N, A, B) -> do_fib(N - 1, B, A + B).
+
+
+
+%%
+apply_fun(F) when erlang:is_function(F) ->
+    erlang:apply(F, []);
+apply_fun({F}) when erlang:is_function(F) ->
+    erlang:apply(F, []);
+apply_fun({F, Args}) when erlang:is_function(F), erlang:is_list(Args) ->
+    erlang:apply(F, Args);
+apply_fun({M,F}) when erlang:is_atom(M), erlang:is_atom(F) ->
+    erlang:apply(M, F, []);
+apply_fun({M,F,Args}) when erlang:is_atom(M), erlang:is_atom(F), erlang:is_list(Args) ->
+    erlang:apply(M, F, Args);
+apply_fun(F) ->
+    erlang:error(badarg, [F]).

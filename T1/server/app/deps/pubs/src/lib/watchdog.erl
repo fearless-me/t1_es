@@ -26,7 +26,7 @@
 
 %% API
 -export([wait_all/0, wait_group/1, status/0, status_/0, ready/1, ready/0]).
--export([start_link/1, task_group_done/1, task_all_done/0, show_todo/0, show_all/0]).
+-export([start_link/1, is_group_done/1, is_all_done/0, show_todo/0, show_all/0]).
 -export([mod_init/1, on_terminate/2, do_handle_call/3, do_handle_info/2, do_handle_cast/2, remove_done/0]).
 
 %% 启动进程并且指定进程名字
@@ -48,12 +48,12 @@
 
 
 wait_all()->
-    wait_all_loop( watchdog:task_all_done()),
+    wait_all_loop( watchdog:is_all_done()),
     status(),
     ok.
 
 wait_group(Priority) ->
-    wait_group_loop(watchdog:task_group_done(Priority), Priority),
+    wait_group_loop(watchdog:is_group_done(Priority), Priority),
     ok.
 
 
@@ -72,10 +72,10 @@ ready() ->
         _ -> false
     end.
 
-task_all_done() ->
+is_all_done() ->
     gen_server:call(?MODULE, task_all_done).
 
-task_group_done(Priority) ->
+is_group_done(Priority) ->
     gen_server:call(?MODULE, {task_group_done, Priority}).
 
 
@@ -102,17 +102,17 @@ remove_done() ->
 wait_all_loop(true) ->
     ok;
 wait_all_loop(Other) ->
-    ?WARN("wait ~ts ...", [Other]),
+    ?WARN("wait current task done => ~ts ...", [Other]),
     timer:sleep(5000),
-    wait_all_loop( watchdog:task_all_done()).
+    wait_all_loop( watchdog:is_all_done()).
 
 %%--------------------------------------------------------------------
 wait_group_loop(true, _Priority) ->
     ok;
 wait_group_loop(Other, Priority) ->
-    ?WARN("wait ~ts ...", [Other]),
+    ?WARN("wait current task done => ~ts ...", [Other]),
     timer:sleep(5000),
-    wait_group_loop(watchdog:task_group_done(Priority), Priority).
+    wait_group_loop(watchdog:is_group_done(Priority), Priority).
 
 
 %%%===================================================================
@@ -138,11 +138,9 @@ do_handle_call(status, _From, State) ->
     i_print_status(),
     {reply, ok, State};
 do_handle_call(task_all_done, _From, State) ->
-    #state{todo = Todos} = State,
-    {reply, i_all_done(Todos), State};
+    {reply, i_all_done(State#state.todo), State};
 do_handle_call( {task_group_done, Priority}, _From, State) ->
-    #state{todo = Todos} = State,
-    {reply, i_group_done(Todos, Priority), State};
+    {reply, i_group_done(State#state.todo, Priority), State};
 do_handle_call(Request, From, State) ->
     ?ERROR("undeal call ~w from ~w", [Request, From]),
     {reply, ok, State}.
@@ -217,8 +215,8 @@ i_show_1_task(#watchdog_task{tip = Tip}) ->
 i_all_done([]) -> true;
 i_all_done(Todos) ->
     #watchdog_task_group{task_list = TL} = erlang:hd(Todos),
-    #watchdog_task{tip = Tips} = erlang:hd(TL),
-    Tips.
+    #watchdog_task{tip = Tips, fun_ret = Ret} = erlang:hd(TL),
+    lists:concat([Tips, ":", Ret]).
 
 
 i_group_done([], _Priority) ->
@@ -246,11 +244,21 @@ i_remove_groups([#watchdog_task_group{task_list = TL} = Group | Groups], Acc) ->
 
 i_remove_tasks([], Acc)->
     Acc;
-i_remove_tasks([#watchdog_task{mfa = {M, F, A}} = Task | Left], Acc)->
-    case catch erlang:apply(M, F, A) of
-        true -> i_remove_tasks(Left, Acc);
-        _ -> i_remove_tasks(Left, [Task | Acc])
+i_remove_tasks([#watchdog_task{mfa =Mfa} = Task | Left], Acc)->
+    case catch misc:apply_fun(Mfa) of
+        true ->
+            i_remove_tasks(Left, Acc);
+        Else ->
+            Ret = i_check_apply(Else, Task),
+            i_remove_tasks(Left, [Task#watchdog_task{fun_ret = Ret} | Acc])
     end.
+
+i_check_apply({'EXIT', Error}, Task) ->
+    ?FATAL("check task ~p error ~p", [Task, Error]),
+     error;
+i_check_apply(Else, _) -> Else.
+
+
 
 %%--------------------------------------------------------------------
 i_print_status() ->

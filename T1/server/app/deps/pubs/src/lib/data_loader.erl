@@ -24,10 +24,10 @@
 %%
 
 %% API
--export([start_link/1, task_run/0, task_done/1,  task_all_done/0,  show_todo/0, show_all/0]).
+-export([start_link/1, task_run/0, task_over/1, is_group_done/1,  is_all_done/0,  show_todo/0, show_all/0]).
 -export([mod_init/1, on_terminate/2, do_handle_call/3, do_handle_info/2, do_handle_cast/2]).
 
--export([start_link/2, task_run/1, task_done/2, task_all_done/1, show_todo/1, show_all/1]).
+-export([start_link/2, task_run/1, task_over/2, is_group_done/2, is_all_done/1, show_todo/1, show_all/1]).
 
 %% 启动进程并且指定进程名字
 -callback start_link() -> {'ok', pid()} | 'ignore' | {'error', term()}.
@@ -36,7 +36,7 @@
 %% 处理加载进程发回的消息
 -callback info(Msg :: term()) -> ok.
 %% 用于外部检查任务是否全部完成
--callback task_all_done() -> boolean().
+-callback is_all_done() -> boolean().
 %% 输出进行中的任务列表
 -callback show_todo() -> ok.
 %% 输出所有任务列表
@@ -44,7 +44,7 @@
 %%
 
 -optional_callbacks(
-    [start_link/0, task_list/0, task_all_done/0, show_all/0, show_todo/0]).
+    [start_link/0, task_list/0, is_all_done/0, show_all/0, show_todo/0]).
 
 
 task_run() ->
@@ -55,20 +55,26 @@ task_run(PidOrName) ->
     ps:send(PidOrName, run),
     ok.
 
-task_done(TaskRef) ->
-    ps:send(?MODULE, {task_done, TaskRef}),
+task_over(TaskRef) ->
+    ps:send(?MODULE, {task_over, TaskRef}),
     ok.
 
-task_done(PidOrName, TaskRef) ->
-    ps:send(PidOrName, {task_done, TaskRef}),
+task_over(PidOrName, TaskRef) ->
+    ps:send(PidOrName, {task_over, TaskRef}),
     ok.
 
-task_all_done() ->
+is_all_done() ->
     gen_server:call(?MODULE, task_all_done).
 
-task_all_done(PidOrName) ->
+is_all_done(PidOrName) ->
     gen_server:call(PidOrName, task_all_done).
 
+
+is_group_done(Priority) ->
+    gen_server:call(?MODULE, {task_group_done, Priority}).
+
+is_group_done(PidOrName, Priority) ->
+    gen_server:call(PidOrName, {task_group_done, Priority}).
 
 show_todo() ->
     ps:send(?MODULE, show_todo),
@@ -113,7 +119,9 @@ mod_init(Mod) ->
 
 %%--------------------------------------------------------------------
 do_handle_call(task_all_done, _From, State) ->
-    {reply, State#state.todo =:= [], State};
+    {reply, i_all_done(State#state.todo), State};
+do_handle_call( {task_group_done, Priority}, _From, State) ->
+    {reply, i_group_done(State#state.todo, Priority), State};
 do_handle_call(Request, From, State) ->
     ?ERROR("undeal call ~w from ~w", [Request, From]),
     {reply, ok, State}.
@@ -128,9 +136,9 @@ do_handle_info(show_all, State) ->
 do_handle_info(run, State) ->
     #state{todo = Tasks} = State,
     {noreply, State#state{todo = i_start_task(Tasks)}};
-do_handle_info({task_done, TaskRef}, State) ->
+do_handle_info({task_over, TaskRef}, State) ->
     #state{todo = TaskGroups} = State,
-    {noreply, State#state{todo = i_1_task_done(TaskRef, TaskGroups)}};
+    {noreply, State#state{todo = i_1_task_over(TaskRef, TaskGroups)}};
 do_handle_info(Info, #state{mod = Mod} = State) ->
     Mod:info(Info),
     {noreply, State}.
@@ -175,30 +183,53 @@ i_start_task_group(#loader_task_group{mode = ?TASK_SEQ, ref = GRef, task_list = 
 i_start_task_group(#loader_task_group{mode = ?TASK_PARALLEL, ref = GRef, task_list = TaskList}) ->
     lists:foreach(fun(Task) -> i_start_1_task(GRef, Task) end, TaskList).
 %%
-i_start_1_task(GRef, #loader_task{ref = TRef, mfa = {M, F, A}}) ->
+i_start_1_task(GRef, #loader_task{ref = TRef, mfa = Mfa} = Task) ->
     ?WARN("\ttask group ~p task ~p ...", [GRef, TRef]),
-    erlang:apply(M, F, A),
+    case catch misc:apply_fun(Mfa) of
+    {'EXIT', Error} -> i_check_apply(Error, Task);
+    _ -> skip
+    end,
     ok.
 
+i_check_apply(Error, Task) ->
+    ?FATAL("check task ~p error ~p", [Task, Error]);
+i_check_apply(_, _) -> skip.
+
+
+i_all_done([]) -> true;
+i_all_done(Todos) ->
+    #loader_task_group{task_list = TL} = erlang:hd(Todos),
+    #loader_task{ref = Ref} = erlang:hd(TL),
+    Ref.
+
+i_group_done([], _Priority) ->
+    true;
+i_group_done(Todos, Priority) ->
+    case lists:keyfind(Priority, #loader_task_group.priority, Todos) of
+        false -> true;
+        #loader_task_group{task_list = []} -> true;
+        #loader_task_group{task_list = [#loader_task{ref = Ref} | _]} ->
+            Ref
+    end.
 
 %%
-i_1_task_done(TaskRef, [TaskGroup | _] = GroupList) ->
+i_1_task_over(TaskRef, [TaskGroup | _] = GroupList) ->
     #loader_task_group{ref = Ref, task_list = GroupTaskList} = TaskGroup,
     ?WARN("\ttask group ~p task ~p done #", [Ref, TaskRef]),
     GroupTaskLeft = lists:keydelete(TaskRef, #loader_task.ref, GroupTaskList),
-    i_on_task_done(GroupTaskLeft, GroupList).
+    i_on_task_over(GroupTaskLeft, GroupList).
 
 %% 开始下一个任务组
-i_on_task_done([], [#loader_task_group{ref = Ref, priority = PR, mode = Mode} | LeftGroups]) ->
+i_on_task_over([], [#loader_task_group{ref = Ref, priority = PR, mode = Mode} | LeftGroups]) ->
     ?WARN("task group ~p priority ~p mode ~p done #", [Ref, PR, Mode]),
     data_loader:task_run(self()),
     LeftGroups;
 %% 开始当前组的下一个任务
-i_on_task_done(LeftTasks, [#loader_task_group{mode = ?TASK_SEQ} = TaskGroup | LeftGroups]) ->
+i_on_task_over(LeftTasks, [#loader_task_group{mode = ?TASK_SEQ} = TaskGroup | LeftGroups]) ->
     data_loader:task_run(self()),
     [TaskGroup#loader_task_group{task_list = LeftTasks} | LeftGroups];
 %% 并行任务等待整组完成
-i_on_task_done(_, [#loader_task_group{mode = ?TASK_PARALLEL} | _] = TaskGroups) ->
+i_on_task_over(_, [#loader_task_group{mode = ?TASK_PARALLEL} | _] = TaskGroups) ->
     TaskGroups.
 
 

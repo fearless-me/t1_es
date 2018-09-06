@@ -33,7 +33,7 @@ task_list() ->
 seq_base_load() ->
     Sid = cs_conf:get_sid(),
     [
-        ?LOADER_TASK(serv_start, {cs_db_interface, action_public_, [1, serv_start, Sid]})
+        ?LOADER_TASK(serv_start, {fun cs_db_interface:action_public_/3, [1, serv_start, Sid]})
     ].
 
 parallel_load() -> [].
@@ -46,7 +46,7 @@ info({serv_start_ack, RunNo}) ->
         AreaId = cs_conf:get_area(),
         Sid = cs_conf:get_sid(),
         uid_gen:init(AreaId, Sid, RunNo),
-        data_loader:task_done(serv_start)
+        data_loader:task_over(serv_start)
     catch _:Err:ST ->
         misc:halt("save serv_start failed, error ~p, current stack ~p", [Err, ST])
     end,

@@ -24,21 +24,24 @@
 %%-------------------------------------------------------------------
 %% 任务列表
 task_list() ->
+    IsCross = gs_conf:is_cross(),
     [
-        ?LOADER_TASK_GROUP(1, serv_start, ?TASK_SEQ, seq_base_load()),
-        ?LOADER_TASK_GROUP(2, load_all_role_info, ?TASK_PARALLEL, parallel_load())
+        ?LOADER_TASK_GROUP(1, serv_start, ?TASK_SEQ, seq_base_load(IsCross)),
+        ?LOADER_TASK_GROUP(2, load_all_role_info, ?TASK_PARALLEL, parallel_load(IsCross))
     ].
 
-seq_base_load() ->
+seq_base_load(_IsCross) ->
     Sid = gs_conf:get_sid(),
     [
-        ?LOADER_TASK(serv_start,            {gs_db_interface, action_public_, [1, serv_start, Sid]})
+        ?LOADER_TASK(serv_start,            {fun gs_db_interface:action_public_/3, [1, serv_start, Sid]})
     ].
 
-parallel_load() ->
+parallel_load(true) ->
+    [];
+parallel_load(_IsCross) ->
     Sid = gs_conf:get_sid(),
     [
-        ?LOADER_TASK(load_all_role_info,    {gs_db_interface, action_data_,   [1, load_all_role_info, Sid]})
+        ?LOADER_TASK(load_all_role_info,    {fun gs_db_interface:action_data_/3,   [1, load_all_role_info, Sid]})
     ].
 
 
@@ -50,7 +53,7 @@ info({serv_start_ack, RunNo}) ->
         AreaId = gs_conf:get_area(),
         Sid = gs_conf:get_sid(),
         uid_gen:init(AreaId, Sid, RunNo),
-        data_loader:task_done(serv_start)
+        data_loader:task_over(serv_start)
     catch _:Err:ST ->
         misc:halt("save serv_start failed, error ~p, current stack ~p", [Err, ST])
     end,
@@ -60,7 +63,7 @@ info({load_all_role_info_ack, List}) ->
         fun(Player) -> gs_cache:add_player_pub(Player) end, List),
     ok;
 info(load_all_role_info_ack_end) ->
-    data_loader:task_done(load_all_role_info),
+    data_loader:task_over(load_all_role_info),
     ok;
 info(Info) ->
     ?ERROR("undeal info ~w", [Info]).

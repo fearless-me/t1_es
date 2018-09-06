@@ -24,6 +24,6 @@ task_list() ->
 
 base_task() ->
     [
-        ?WATCHDOG_TASK({data_loader, task_all_done, []},     "load all data"),
-        ?WATCHDOG_TASK({gs_cs_interface,is_center_ready,[]}, "connect to center")
+        ?WATCHDOG_TASK(fun data_loader:is_all_done/0,     "load all data"),
+        ?WATCHDOG_TASK(fun gs_cs_interface:is_center_ready/0, "connect to center")
     ].

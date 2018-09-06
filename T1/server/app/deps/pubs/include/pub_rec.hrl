@@ -13,7 +13,7 @@
 -record(pub_kv,{key,value}).
 
 %%
--record(watchdog_task,{mfa, tip}).
+-record(watchdog_task,{mfa, tip, fun_ret=unknown}).
 -record(watchdog_task_group,  {priority, ref, task_list=[]}).
 -define(WATCHDOG_TASK(Mfa, Tip), #watchdog_task{mfa = Mfa, tip = Tip}).
 -define(WATCHDOG_TASK_GROUP(Priority, Ref, Tasks), #watchdog_task_group{priority = Priority, ref = Ref,task_list = Tasks}).

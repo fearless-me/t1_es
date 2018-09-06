@@ -48,28 +48,28 @@ menu() ->
     color:info_log(
         "~n##########################################################~n"
 
-        "\t~-4.w.编译(gs)~n"
-		"\t~-4.w.开服(gs)~n"
-		"\t~-4.w.删除日志(gs)~n"
-		"\t~-4.w.打包(gs)~n"
+        "\t~-10.w编译(gs)~n"
+		"\t~-10.w开服(gs)~n"
+		"\t~-10.w删除日志(gs)~n"
+		"\t~-10.w打包(gs)~n"
         
         "#~n"
-        "\t~-4.w.编译(cs)~n"
-        "\t~-4.w.开服(cs)~n"
-		"\t~-4.w.删除日志(cs)~n"
-		"\t~-4.w.打包(cs)~n"
+        "\t~-10.w编译(cs)~n"
+        "\t~-10.w开服(cs)~n"
+		"\t~-10.w删除日志(cs)~n"
+		"\t~-10.w打包(cs)~n"
 		"#~n"
 		  
-        "\t~-4.w.删除日志(all)~n"
+        "\t~-10.w删除日志(all)~n"
     
         "#~n"
   
-        "\t~-4.w.代码检查(xref)~n"
-        "\t~-4.w.代码检查(dialyzer)~n"
+        "\t~-10.w代码检查(xref)~n"
+        "\t~-10.w代码检查(dialyzer)~n"
         "#~n"
-		"\t~-4.w.tcp测试~n"
-        "\t~-4.w.windows控制台支持彩色显示~n"
-        "\t~-4.w.退出~n"
+		"\t~-10.wtcp测试~n"
+        "\t~-10.wwindows控制台支持彩色显示~n"
+        "\t~-10.w退出~n"
         "~n##########################################################~n~n",
         [
             ?OP_COMPILE_GS,?OP_START_GS, ?OP_DEL_LOG_GS, ?OP_PK_GS, 
@@ -98,7 +98,8 @@ dispatchInput2(?OP_REF) ->
 dispatchInput2(?OP_DIALYZER) ->
     erlang:spawn_monitor(fun() -> os:cmd("start dialyzer_tool.bat") end);
 dispatchInput2(?OP_DEL_LOG_ALL) ->
-    erlang:spawn_monitor(fun() -> os:cmd(" cd ..\\ && del /q /s *.log && del /q /s *.err") end);
+    erlang:spawn_monitor(fun() -> os:cmd(" cd ..\\ && del /q /s *.log && del /q /s *.err") end),
+    color:warn_log("->delete *.log done!<-~n");
 dispatchInput2(?OP_DEL_LOG_GS) ->
     erlang:spawn_monitor(fun() -> os:cmd(" cd ..\\app\\game && del /q /s *.log && del /q /s *.err") end);
 dispatchInput2(?OP_DEL_LOG_CS) ->

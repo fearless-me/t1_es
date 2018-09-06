@@ -28,13 +28,13 @@
 %%
 -define(if_else(Cond, True, False), case Cond of true -> True; _ -> False end).
 %% Helper macro for declaring children of supervisor
--define(CHILD(SupPid, I, Type), supervisor:start_child(SupPid, {I, {I, start_link, []}, permanent, 5000, Type, [I]})).
--define(CHILD(SupPid, I, Type, Params), supervisor:start_child(SupPid, {I, {I, start_link, Params}, permanent, 5000, Type, [I]})).
--define(CHILD(SupPid, Name, I, Type, Params), supervisor:start_child(SupPid, {Name, {I, start_link, Params}, permanent, 5000, Type, [Name]})).
+-define(CHILD_START(SupPid, I, Type), supervisor:start_child(SupPid, {I, {I, start_link, []}, permanent, 5000, Type, [I]})).
+-define(CHILD_START(SupPid, I, Type, Params), supervisor:start_child(SupPid, {I, {I, start_link, Params}, permanent, 5000, Type, [I]})).
+-define(CHILD_START(SupPid, Name, I, Type, Params), supervisor:start_child(SupPid, {Name, {I, start_link, Params}, permanent, 5000, Type, [Name]})).
 
--define(CHILD_SPEC(I, Type), {I, {I, start_link, []}, permanent, 5000, Type, [I]}).
--define(CHILD_SPEC(I, Type, Params), {I, {I, start_link, Params}, permanent, 5000, Type, [I]}).
--define(CHILD_SPEC(Name, I, Type, Params), {Name, {I, start_link, Params}, permanent, 5000, Type, [Name]}).
+-define(CHILD(I, Type), {I, {I, start_link, []}, permanent, 5000, Type, [I]}).
+-define(CHILD(I, Type, Params), {I, {I, start_link, Params}, permanent, 5000, Type, [I]}).
+-define(CHILD(Name, I, Type, Params), {Name, {I, start_link, Params}, permanent, 5000, Type, [Name]}).
 
 %%-------------------------------------------------------------------------------
 -define(TRY_CATCH(Fun, Err, St, Format, Args),
