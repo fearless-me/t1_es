@@ -1,6 +1,7 @@
 # Created by .ignore support plugin (hsz.mobi)
 ### Erlang template
 .eunit
+*.log
 *.o
 *.beam
 *.plt
@@ -15,3 +16,7 @@ rel/example_project
 /scripts/center.dets.data
 /scripts/game_chs_debug.txt
 /scripts/game_chs_release.txt
+/scripts/game.dets.data
+elog
+__gs_pkg_sql__
+_gsdata_
