@@ -32,10 +32,11 @@
 -define(OP_DIALYZER, 902).
 
 -define(OP_GEN_NETMSG, 911).
--define(OP_GEN_ERRORCODE, 912).
--define(OP_GEN_LOGDEFINE, 913).
--define(OP_EXPORT_DBSTRUCT, 914).
--define(OP_BAK_DBSTRUCT, 915).
+-define(OP_GEN_RW_CODE, 912).
+-define(OP_GEN_ERRORCODE, 913).
+-define(OP_GEN_LOGDEFINE, 914).
+-define(OP_EXPORT_DBSTRUCT, 915).
+-define(OP_BAK_DBSTRUCT, 916).
 
 -define(OP_TCP, 992).
 -define(OP_SET_TERMINAL_COLOR, 999).
@@ -55,33 +56,33 @@ show_cmd(?DEV_MODE) ->
     color:info_log(
             "~n##########################################################~n"
 
-    		"\t~-10.w开服(gs)~n"
-            "\t~-10.w编译(gs)~n"
-    		"\t~-10.w删除日志(gs)~n"
-    		"\t~-10.w打包(gs)~n"
+    		"\t~-10.wgs_开服~n"
+            "\t~-10.wgs_编译~n"
+    		"\t~-10.wgs_删除日志~n"
+    		"\t~-10.wgs_打包~n"
+            " #~n"
 
-            "#~n"
-    		"\t~-10.w开服(cs)~n"
-            "\t~-10.w编译(cs)~n"
-    		"\t~-10.w删除日志(cs)~n"
-    		"\t~-10.w打包(cs)~n"
-    		"#~n"
+    		"\t~-10.wcs_开服~n"
+            "\t~-10.wcs_编译~n"
+    		"\t~-10.wcs_删除日志~n"
+    		"\t~-10.wcs_打包~n"
+            " #~n"
 
             "\t~-10.w删除日志(all)~n"
-
-            "#~n"
+            " #~n"
 
             "\t~-10.w代码检查(xref)~n"
             "\t~-10.w代码检查(dialyzer)~n"
+            " #~n"
 
-            "#~n"
-
-            "\t~-10.w生成网络消息代码~n"
-            "\t~-10.w生成error code代码~n"
-            "\t~-10.w生成log define代码~n"
-            "\t~-10.w导出数据库结构代码~n"
+            "\t~-10.w生成代码_成网络消息~n"
+            "\t~-10.w生成代码_*_rw(根据rec_rw.hrl)~n"
+            "\t~-10.w生成代码_error code~n"
+            "\t~-10.w生成代码_log define~n"
+            "\t~-10.w生成代码_数据库结构~n"
             "\t~-10.w备份数据库表结构~n"
-            "#~n"
+            " #~n"
+            
     		"\t~-10.wtcp测试~n"
             "\t~-10.wwindows控制台支持彩色显示~n"
             "\t~-10.w退出~n"
@@ -95,7 +96,7 @@ show_cmd(?DEV_MODE) ->
 
                 ?OP_REF, ?OP_DIALYZER,
 
-                ?OP_GEN_NETMSG, ?OP_GEN_ERRORCODE, ?OP_GEN_LOGDEFINE, ?OP_EXPORT_DBSTRUCT, ?OP_BAK_DBSTRUCT,
+                ?OP_GEN_NETMSG, ?OP_GEN_RW_CODE, ?OP_GEN_ERRORCODE, ?OP_GEN_LOGDEFINE, ?OP_EXPORT_DBSTRUCT, ?OP_BAK_DBSTRUCT,
 
                 ?OP_TCP, ?OP_SET_TERMINAL_COLOR,
                 ?OP_EXIT
@@ -105,19 +106,19 @@ show_cmd(_) ->
     color:info_log(
             "~n##########################################################~n"
 
-    		"\t~-10.w开服(gs)~n"
-            "\t~-10.w编译(gs)~n"
-    		"\t~-10.w删除日志(gs)~n"
+            "\t~-10.wgs_开服~n"
+            "\t~-10.wgs_编译~n"
+    		"\t~-10.wgs_删除日志~n"
+            " #~n"
 
-            "#~n"
-    		"\t~-10.w开服(cs)~n"
-            "\t~-10.w编译(cs)~n"
-    		"\t~-10.w删除日志(cs)~n"
-    		"#~n"
+    		"\t~-10.wcs_开服~n"
+            "\t~-10.wcs_编译~n"
+    		"\t~-10.wcs_删除日志~n"
+    		" #~n"
 
             "\t~-10.w删除日志(all)~n"
+            " #~n"
 
-            "#~n"
             "\t~-10.wwindows控制台支持彩色显示~n"
             "\t~-10.w退出~n"
             "~n##########################################################~n~n",
@@ -181,6 +182,8 @@ dispatchInput2(?OP_GEN_ERRORCODE) ->
      erlang:spawn_monitor(fun() -> os:cmd("start subcall.bat escript.exe log_define.ers") end);
 dispatchInput2(?OP_GEN_NETMSG) ->
     erlang:spawn_monitor(fun() -> os:cmd("start netmsg.bat") end);
+ dispatchInput2(?OP_GEN_RW_CODE) ->
+     erlang:spawn_monitor(fun() -> os:cmd("start subcall.bat rw_code.bat") end);
 dispatchInput2(?OP_EXPORT_DBSTRUCT) ->
     erlang:spawn_monitor(fun() -> os:cmd("start export_db.bat") end);
 dispatchInput2(?OP_BAK_DBSTRUCT) ->

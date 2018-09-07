@@ -1,4 +1,5 @@
 -module(color).
+-export([info_log/1, info_log/2, warn_log/1, warn_log/2, error_log/1, error_log/2]).
 -export([black/1, blackb/1, red/1, redb/1, green/1, greenb/1, blue/1, blueb/1]).
 -export([yellow/1, yellowb/1, magenta/1, magentab/1, cyan/1, cyanb/1, white/1, whiteb/1]).
 -export([on_black/1, on_red/1, on_green/1, on_blue/1, on_yellow/1, on_magenta/1, on_cyan/1, on_white/1]).
@@ -40,6 +41,17 @@
 %% True 24-bit colors
 -define(TRUE_COLOR_FG, [<<"38">>, ?SEP, <<"2">>]).
 -define(TRUE_COLOR_BG, [<<"48">>, ?SEP, <<"2">>]).
+
+
+info_log(Fmt)-> info_log(Fmt, []).
+info_log(Fmt, Args)-> io:format("~ts~n", [color:green(io_lib:format(Fmt,Args))]).
+
+warn_log(Fmt)-> warn_log(Fmt, []).
+warn_log(Fmt, Args) -> io:format("~ts~n", [color:yellow(io_lib:format(Fmt,Args))]).
+
+error_log(Fmt) -> error_log(Fmt, []).
+error_log(Fmt, Args)-> io:format("~ts~n", [color:red(io_lib:format(Fmt,Args))]).
+
 
 black(Text)      -> [color(?BLACK),      Text, reset()].
 blackb(Text)     -> [colorb(?BLACK),     Text, reset()].

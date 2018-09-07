@@ -36,6 +36,11 @@
 %% ---> lib_map_obj_rw:set_map_obj_pid(Uid, Pid)/ get_map_obj_pid(Uid)
 %%
 %%
+-export([run_halt/1]).
+run_halt([run_from_scripts_ket])->
+    run(),
+    halt().
+
 run() ->
     try
         multi_to_code(
@@ -90,7 +95,7 @@ run() ->
         ),
         ok
     catch _:Err:ST ->
-        io:format("~p,~p~n", [Err, ST])
+        color:error_log("~p,~p~n", [Err, ST])
     end,
     ok.
 
@@ -157,6 +162,7 @@ multi_to_code(Fname, ModName, [IncFiles, Cfgs]) ->
 
 
     file:close(Fname),
+    color:info_log("write ~s ok!",[Fname]),
     ok.
 
 inc_files(Fd, Incs) ->
