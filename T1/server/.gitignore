@@ -1,0 +1,17 @@
+# Created by .ignore support plugin (hsz.mobi)
+### Erlang template
+.eunit
+*.o
+*.beam
+*.plt
+erl_crash.dump
+ebin/*.beam
+rel/example_project
+.concrete/DEV_MODE
+.rebar
+
+/scripts/center_chs_debug.txt
+/scripts/center_chs_release.txt
+/scripts/center.dets.data
+/scripts/game_chs_debug.txt
+/scripts/game_chs_release.txt
