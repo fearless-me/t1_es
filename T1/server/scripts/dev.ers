@@ -75,7 +75,7 @@ show_cmd(?DEV_MODE) ->
             "\t~-10.w代码检查(dialyzer)~n"
             " #~n"
 
-            "\t~-10.w生成代码_成网络消息~n"
+            "\t~-10.w生成代码_网络消息~n"
             "\t~-10.w生成代码_*_rw(根据rec_rw.hrl)~n"
             "\t~-10.w生成代码_error code~n"
             "\t~-10.w生成代码_log define~n"
