@@ -156,12 +156,12 @@ is_behind(Src, SrcFace, Tar) ->
 behind(Src, Dst, Dist) ->
     % dir
     Dir = vector3:subtract(Src, Dst),
-    behind_dir_action(Src, Dir, Dist).
+    do_behind_dir(Src, Dir, Dist).
 
 behind_dir(Src, Dir, Dist) ->
-    behind_dir_action(Src, Dir, Dist).
+    do_behind_dir(Src, Dir, Dist).
 
-behind_dir_action(Src, Dir, Dist) ->
+do_behind_dir(Src, Dir, Dist) ->
     % normalize
     Normal = vector3:normalized(Dir),
     % *
@@ -173,13 +173,13 @@ behind_dir_action(Src, Dir, Dist) ->
 front(Src, Dst, Dist) ->
     % dir
     Dir = vector3:subtract(Src, Dst),
-    front_dir_action(Src, Dir, Dist).
+    do_front_dir(Src, Dir, Dist).
 
 %%
 front_dir(Src, Dir, Dist) ->
-    front_dir_action(Src, Dir, Dist).
+    do_front_dir(Src, Dir, Dist).
 
-front_dir_action(Src, Dir, Dist) ->
+do_front_dir(Src, Dir, Dist) ->
     % normalize
     Normal = vector3:normalized(Dir),
     % *

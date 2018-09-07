@@ -46,7 +46,7 @@ init(Uid, AiType) ->
 %%-------------------------------------------------------------------
 init_patrol(Uid, PathList) ->
     % todo 根据怪物巡逻的配置
-    _Did = lib_unit_rw:get_did(Uid),
+    _Did = lib_unit_rw:get_data_id(Uid),
     PatrolType = ?ECPT_Path,
     case PatrolType of
         ?ECPT_Path ->
@@ -61,7 +61,7 @@ init_patrol(Uid, PathList) ->
 
 %%-------------------------------------------------------------------
 init_ai(Uid) ->
-    _Did = lib_unit_rw:get_did(Uid),
+    _Did = lib_unit_rw:get_data_id(Uid),
     CreateType = ?EACT_Indicate,
     case CreateType of
         ?EACT_NoAI ->
@@ -109,13 +109,13 @@ can_update_ai(Uid) ->
 %%-------------------------------------------------------------------
 update(#m_cache_map_unit{uid = Uid}) ->
     NeedUpdate = can_update_ai(Uid),
-    update_action(Uid, NeedUpdate),
+    do_update(Uid, NeedUpdate),
     ok;
 update(_Any) ->
     ok.
 
 %%-------------------------------------------------------------------
-update_action(Uid, true) ->
+do_update(Uid, true) ->
     %% todo 获取怪物AI配置
     AiAction = ?AIAT_Null,
     State = lib_ai_rw:get_ai_state(Uid),
@@ -125,7 +125,7 @@ update_action(Uid, true) ->
     ?TRY_CATCH(update_state(Uid, State), Err3, Stk3),
     ?TRY_CATCH(update_trigger(Uid), Err4, Stk4),
     ok;
-update_action(_Uid, _Any) -> ok.
+do_update(_Uid, _Any) -> ok.
 
 
 %%-------------------------------------------------------------------
@@ -170,19 +170,19 @@ change_state(Uid, OldState, NewState) ->
 %% 巡逻
 %%-------------------------------------------------------------------
 update_patrol(Uid) ->
-    _Did = lib_unit_rw:get_did(Uid),
+    _Did = lib_unit_rw:get_data_id(Uid),
     PatrolType = ?ECPT_Wood,
     case PatrolType of
         ?ECPT_Wood -> skip;
         _ ->
             IsPatrol = lib_ai_rw:get_is_patrol(Uid),
             PatrolTick = lib_ai_rw:get_patrol_rest_tick(Uid),
-            update_patrol_action(Uid, IsPatrol, PatrolTick)
+            do_update_patrol(Uid, IsPatrol, PatrolTick)
     end,
     ok.
 
 %% 巡逻结束
-update_patrol_action(Uid, true, _ResetTick) ->
+do_update_patrol(Uid, true, _ResetTick) ->
     CurMove = lib_move_rw:get_cur_move(Uid),
     case CurMove of
         ?EMS_STAND ->
@@ -194,21 +194,21 @@ update_patrol_action(Uid, true, _ResetTick) ->
     end,
     ok;
 %% 等待重启
-update_patrol_action(Uid, _IsPatrol, ResetTick) when ResetTick > 0 ->
+do_update_patrol(Uid, _IsPatrol, ResetTick) when ResetTick > 0 ->
     lib_ai_rw:set_patrol_rest_tick(Uid, ResetTick - 1),
     ok;
 %% 更新巡逻
-update_patrol_action(Uid, _IsPatrol, _ResetTick) ->
+do_update_patrol(Uid, _IsPatrol, _ResetTick) ->
     start_patrol(Uid),
     ok.
 %%-------------------------------------------------------------------
 start_patrol(Uid) ->
     % todo 根据怪物的配置来启动
     PatrolType = ?ECPT_Wood,
-    start_patrol_action(Uid, PatrolType),
+    do_start_patrol(Uid, PatrolType),
     ok.
 
-start_patrol_action(Uid, ?ECPT_Path) ->
+do_start_patrol(Uid, ?ECPT_Path) ->
     WPNum = lib_ai_rw:get_wp_num(Uid),
     WPIdx = lib_ai_rw:get_wp_idx(Uid),
 
@@ -238,9 +238,9 @@ start_patrol_action(Uid, ?ECPT_Path) ->
     TarPos = lists:nth(NewWPIdx, WPList),
 
     % 怪物开始跑路
-    started_patrol_action_1(Uid, TarPos),
+    do_started_patrol_1(Uid, TarPos),
     ok;
-start_patrol_action(Uid, ?ECPT_Range) ->
+do_start_patrol(Uid, ?ECPT_Range) ->
     Diameter = ?AI_PATROL_RADIUS * 2,
     NowPos = lib_move_rw:get_cur_pos(Uid),
     X = vector3:x(NowPos) + ((rand_tool:rand() rem Diameter) - ?AI_PATROL_RADIUS),
@@ -248,13 +248,13 @@ start_patrol_action(Uid, ?ECPT_Range) ->
     TarPos = vector3:new(X, 0, Z),
 
     % 怪物开始跑路
-    started_patrol_action_1(Uid, TarPos),
+    do_started_patrol_1(Uid, TarPos),
     ok;
-start_patrol_action(_Uid, _AnyType) ->
+do_start_patrol(_Uid, _AnyType) ->
     ok.
 
 %%
-started_patrol_action_1(Uid, TarPos) ->
+do_started_patrol_1(Uid, TarPos) ->
     Ret = lib_move:start_monster_walk(Uid, TarPos, ?EMS_MONSTER_PATROL, true),
     case Ret of
         true -> lib_ai_rw:set_is_patrol(Uid, true);
@@ -301,7 +301,7 @@ sort_max_enmity(Uid, []) ->
     ok;
 sort_max_enmity(Uid, EnList0) ->
     EnList1 = filter_enmity_list(EnList0, []),
-    TarUid = sort_max_enmity_action(EnList1, 0, 0),
+    TarUid = do_sort_max_enmity(EnList1, 0, 0),
     lib_ai_rw:set_enmity_list(Uid, EnList1),
     lib_ai_rw:set_max_enmity_uid(Uid, TarUid),
     ok.
@@ -316,15 +316,15 @@ filter_enmity_list([#m_unit_enmity{uid = Uid} = Enmity | EnList], Acc) ->
             filter_enmity_list(EnList, [Enmity#m_unit_enmity{active = false} | Acc])
     end.
 
-sort_max_enmity_action([], TarUid, _TarEnVal) ->
+do_sort_max_enmity([], TarUid, _TarEnVal) ->
     TarUid;
-sort_max_enmity_action(
+do_sort_max_enmity(
     [#m_unit_enmity{uid = Uid, enmity = EnVal, active = true} | EnList],
     _TarUid, TarEnVal
 ) when EnVal > TarEnVal ->
-    sort_max_enmity_action(EnList, Uid, EnVal);
-sort_max_enmity_action([_H | EnList], TarUid, TarEnVal) ->
-    sort_max_enmity_action(EnList, TarUid, TarEnVal).
+    do_sort_max_enmity(EnList, Uid, EnVal);
+do_sort_max_enmity([_H | EnList], TarUid, TarEnVal) ->
+    do_sort_max_enmity(EnList, TarUid, TarEnVal).
 
 
 %%-------------------------------------------------------------------
@@ -342,12 +342,12 @@ clear_enmity(Uid, TarUid, _SetMaxEnmity) ->
 update_look_for_enemy(Uid) ->
     T = lib_ai_rw:get_look_for_target_tick(Uid),
     R = can_look_for_enemy(Uid, T),
-    update_look_for_enemy_action(Uid, R).
+    do_update_look_for_enemy(Uid, R).
 
-update_look_for_enemy_action(Uid, true) ->
+do_update_look_for_enemy(Uid, true) ->
     reset_look_for_target_tick(Uid),
     start_look_for_enemy(Uid);
-update_look_for_enemy_action(_Uid, _) -> skip.
+do_update_look_for_enemy(_Uid, _) -> skip.
 
 %%-------------------------------------------------------------------
 can_look_for_enemy(_Uid, V) when V =< 0 -> true;
@@ -601,23 +601,23 @@ start_flee(Uid, Dst) ->
 update_flee(Uid) ->
     IsFailed = lib_ai_rw:get_pursue_failed(Uid),
     IsCantPursue = lib_ai_rw:get_cant_pursue(Uid),
-    update_flee_action(Uid, IsFailed, IsCantPursue),
+    do_update_flee(Uid, IsFailed, IsCantPursue),
     ok.
 
 %% 巡逻结束
-update_flee_action(Uid, true, _Cant) ->
+do_update_flee(Uid, true, _Cant) ->
     rand_flee_pos(Uid),
     start_flee(Uid, lib_ai_rw:get_flee_dst(Uid)),
     ok;
 %% 等待重启
-update_flee_action(Uid, _Failed, true)  ->
+do_update_flee(Uid, _Failed, true)  ->
     case lib_unit:is_unit_cant_move_state(Uid) of
         false -> start_flee(Uid, lib_ai_rw:get_flee_dst(Uid));
         _ -> skip
     end,
     ok;
 %% 更新巡逻
-update_flee_action(Uid, _Failed, _Cant) ->
+do_update_flee(Uid, _Failed, _Cant) ->
     case lib_unit:is_unit_cant_move_state(Uid) of
         true ->
             lib_ai_rw:set_cant_pursue(Uid, true);

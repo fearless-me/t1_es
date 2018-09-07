@@ -27,19 +27,19 @@ change_attr(#r_player_change_prop_req{
     add = AddList, multi = MultiList,
     add_del = AddList_Del, multi_del = MultiList_Del
 }) ->
-    change_attr_action(Uid, AddList, MultiList, AddList_Del, MultiList_Del),
+    do_change_attr(Uid, AddList, MultiList, AddList_Del, MultiList_Del),
     ok.
 
 %%-------------------------------------------------------------------
 change_attr(Uid, AddList, MultiList) ->
-    change_attr_action(Uid, AddList, MultiList, [], []),
+    do_change_attr(Uid, AddList, MultiList, [], []),
     ok.
 
 change_attr(Uid, AddList, MultiList, AddList_Del, MultiList_Del) ->
-    change_attr_action(Uid, AddList, MultiList, AddList_Del, MultiList_Del),
+    do_change_attr(Uid, AddList, MultiList, AddList_Del, MultiList_Del),
     ok.
 
-change_attr_action(Uid, AddList, MultiList, AddList_Del, MultiList_Del) ->
+do_change_attr(Uid, AddList, MultiList, AddList_Del, MultiList_Del) ->
     PropList = lib_unit_rw:get_attr(Uid),
     lib_attr:calc(PropList, AddList, MultiList, AddList_Del, MultiList_Del),
     ok.

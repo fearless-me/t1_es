@@ -9,7 +9,6 @@
 -include("logger.hrl").
 -include("gs_ai_inc.hrl").
 -include("rec_rw.hrl").
-
 %%-------------------------------------------------------------------
 
 -export([

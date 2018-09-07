@@ -25,43 +25,43 @@
 online() ->
     #m_player_map{map_id = Mid} = lib_player_rw:get_map(),
     IsDstCross = gs_map_creator_interface:is_cross_map(Mid),
-    Ret = online_action(IsDstCross),
+    Ret = do_online(IsDstCross),
     rpc_check(Ret, ?FUNCTION_NAME).
 
 %% 在跨服下线
 offline( ) ->
     #m_player_map{map_id = Mid} = lib_player_rw:get_map(),
     IsInCross = gs_map_creator_interface:is_cross_map(Mid),
-    offline_action(IsInCross).
+    do_offline(IsInCross).
 
 %% 从跨服到普通服 / 从普通服到跨服 (切地图前)
 change_map_before(SrcMid, DstMid) ->
     IsSrcCross = gs_map_creator_interface:is_cross_map(SrcMid),
     IsDstCross = gs_map_creator_interface:is_cross_map(DstMid),
-    change_map_before_action(IsSrcCross, IsDstCross),
+    do_change_map_before(IsSrcCross, IsDstCross),
     ok.
 %% 从跨服到普通服 / 从普通服到跨服 (切地图后)
 change_map_after(SrcMid, DstMid, IsOk) ->
     IsSrcCross = gs_map_creator_interface:is_cross_map(SrcMid),
     IsDstCross = gs_map_creator_interface:is_cross_map(DstMid),
-    change_map_after_action(IsSrcCross, IsDstCross, IsOk),
+    do_change_map_after(IsSrcCross, IsDstCross, IsOk),
     ok.
 
 %%-------------------------------------------------------------------
 
 %% 在跨服上线
-online_action(true) ->
+do_online(true) ->
     Aid  = lib_player_rw:get_aid(),
     Uid  = lib_player_rw:get_uid(),
     Node = gs_cross_interface:get_player_cross_node(Aid),
     Data = cross_src:player_pub_data_to_cross(Aid, Uid),
     gs_cache:add_player_cross(Uid),
     grpc:call(Node, cross_dst, rpc_call_player_enter, [Data]);
-online_action(_) -> ok.
+do_online(_) -> ok.
 
 
 %% 在跨服下线
-offline_action(true) ->
+do_offline(true) ->
     Aid  = lib_player_rw:get_aid(),
     Uid  = lib_player_rw:get_uid(),
     Node = gs_cross_interface:get_player_cross_node(Aid),
@@ -69,10 +69,10 @@ offline_action(true) ->
     gs_cache:del_player_cross(Uid),
     Ret = grpc:call(Node, cross_dst, rpc_call_player_offline, [Aid, Uid]),
     cross_src:player_pub_data_from_cross(Ret);
-offline_action(_) -> ok.
+do_offline(_) -> ok.
 
 %% 从跨服到普通服
-change_map_before_action(true, false) ->
+do_change_map_before(true, false) ->
     Aid  = lib_player_rw:get_aid(),
     Uid  = lib_player_rw:get_uid(),
     Node = gs_cross_interface:get_player_cross_node(Aid),
@@ -81,7 +81,7 @@ change_map_before_action(true, false) ->
     Ret = rpc:call(Node, cross_dst, rpc_call_player_leave, [Aid, Uid]),
     cross_src:player_pub_data_from_cross(Ret);
 %% 从普通服到跨服
-change_map_before_action(false, true) ->
+do_change_map_before(false, true) ->
     Aid  = lib_player_rw:get_aid(),
     Uid  = lib_player_rw:get_uid(),
     Node = gs_cross_interface:get_player_cross_node(Aid),
@@ -89,27 +89,27 @@ change_map_before_action(false, true) ->
     gs_cache:add_player_cross(Uid),
     Ret  = grpc:call(Node, cross_dst, rpc_call_player_enter, [Data]),
     rpc_check(Ret, ?FUNCTION_NAME);
-change_map_before_action(_IsSrcCross, _IsDstCross) ->
+do_change_map_before(_IsSrcCross, _IsDstCross) ->
     ok.
 
 %% 从跨服到普通服
-change_map_after_action(true, false, _IsOk) ->
+do_change_map_after(true, false, _IsOk) ->
     ok;
 %% 从普通服到跨服
-change_map_after_action(false, true, true) ->
+do_change_map_after(false, true, true) ->
     Aid  = lib_player_rw:get_aid(),
     Uid  = lib_player_rw:get_uid(),
     Node = gs_cross_interface:get_player_cross_node(Aid),
     Data = cross_src:player_pub_data_to_cross(Aid, Uid),
     gs_cache:add_player_cross(Uid),
     grpc:cast(Node, cross_dst, rpc_call_player_enter, [Data]);
-change_map_after_action(false, true, false) ->
+do_change_map_after(false, true, false) ->
     Aid  = lib_player_rw:get_aid(),
     Uid  = lib_player_rw:get_uid(),
     Node = gs_cross_interface:get_player_cross_node(Aid),
     gs_cache:del_player_cross(Uid),
     grpc:cast(Node, cross_dst, rpc_call_del_player, [Aid, Uid]);
-change_map_after_action(_IsSrcCross, _IsDstCross, _IsOk) ->
+do_change_map_after(_IsSrcCross, _IsDstCross, _IsOk) ->
     ok.
 
 

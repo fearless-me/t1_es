@@ -23,7 +23,7 @@
     new_static/3, del_static/1,
 
     get_uid/1, get_pid/1,
-    get_did/1, get_owner/1, get_type/1,
+    get_data_id/1, get_owner/1, get_type/1,
     
     is_unit_cant_move_state/1, is_dead/1
 ]).
@@ -86,7 +86,7 @@ del_monster(Uid) ->
 %%-------------------------------------------------------------------
 new(Type, Pid, Uid, Did, Owner, Group, Pos, Face) ->
     lib_move:init(Uid, Pos, Face),
-    lib_unit_rw:set_did(Uid, Did),
+    lib_unit_rw:set_data_id(Uid, Did),
     lib_unit_rw:set_group(Uid, Group),
     lib_unit_rw:set_pid(Uid, Pid),
     lib_unit_rw:set_type(Uid, Type),
@@ -94,7 +94,7 @@ new(Type, Pid, Uid, Did, Owner, Group, Pos, Face) ->
     #m_cache_map_unit{
         map_id  = lib_map_rw:get_map_id(),
         line_id = lib_map_rw:get_line_id(),
-        uid = Uid, pid = Pid, did = Did,
+        uid = Uid, pid = Pid, data_id = Did,
         owner = Owner, type = Type
     }.
 
@@ -124,7 +124,7 @@ del_all_rw(Uid) ->
 %%-------------------------------------------------------------------
 get_uid(Unit) -> Unit#m_cache_map_unit.uid.
 get_pid(Unit) -> Unit#m_cache_map_unit.pid.
-get_did(Unit) -> Unit#m_cache_map_unit.did.
+get_data_id(Unit) -> Unit#m_cache_map_unit.data_id.
 get_owner(Unit) -> Unit#m_cache_map_unit.owner.
 get_type(Unit) -> Unit#m_cache_map_unit.type.
 %%-------------------------------------------------------------------

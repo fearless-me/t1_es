@@ -52,13 +52,13 @@ init_1(_Uid, _Cfg) ->
 %%-------------------------------------------------------------------
 update(Uid) ->
     Triggers0 = lib_ai_rw:get_triggers_def(Uid, []),
-    Triggers1 = lists:map(fun(Trigger) -> update_action(Uid, Trigger) end, Triggers0),
+    Triggers1 = lists:map(fun(Trigger) -> do_update(Uid, Trigger) end, Triggers0),
     lib_ai_rw:set_triggers(Uid, Triggers1),
     ok.
 
-update_action(_Uid, #m_ai_trigger{is_active = false} = Trigger) ->
+do_update(_Uid, #m_ai_trigger{is_active = false} = Trigger) ->
     Trigger;
-update_action(Uid, #m_ai_trigger{active_tick = Tick, target_type = Type} = Trigger) ->
+do_update(Uid, #m_ai_trigger{active_tick = Tick, target_type = Type} = Trigger) ->
     case test_interval(Trigger) of
         true ->
             TarUid = lib_ai:get_target_by_type(Uid, Type),

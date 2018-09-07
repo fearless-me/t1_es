@@ -21,7 +21,8 @@
 %%
 -record(r_create_player_req, {sid, name, camp, career, race, sex, head, x, y, mid}).
 %%
--record(r_create_player_ack, {error = 0, uid = 0, acc_id = 0, name = "", camp = 0, career = 0, race = 0, sex = 0, head = 0}).
+-record(r_create_player_ack, {error = 0, uid = 0, acc_id = 0, name = "",
+    camp = 0, career = 0, race = 0, sex = 0, head = 0}).
 %%
 -record(r_player_change_prop_req, {uid, add, multi, add_del, multi_del}).
 %%
@@ -29,11 +30,8 @@
 %%
 -record(r_exit_map_req,{uid = 0, map_id = 0, line_id=0, map_pid}).
 %%
--record(r_change_map_req,{
-    uid = 0, name, group =0, pid,
-    map_id = 0, line_id = 0, map_pid,
-    tar_map_id = 0, tar_line_id = 0, tar_pos, force=false
-}).
+-record(r_change_map_req,{uid = 0, name, group =0, pid,
+    map_id = 0, line_id = 0, map_pid, tar_map_id = 0, tar_line_id = 0, tar_pos, force=false}).
 %%
 -record(r_change_map_ack,{map_id = 0, line_id = 0, pos, map_pid, error = 0}).
 %%

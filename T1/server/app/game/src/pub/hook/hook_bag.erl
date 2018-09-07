@@ -34,24 +34,24 @@
 ]).
 
 
--record(m_item, {uid = 0, owner = 0, did = 0, num = 1, bind = false}).
+-record(m_item, {uid = 0, owner = 0, data_id = 0, num = 1, bind = false}).
 
 %%-------------------------------------------------------------------
 make(_Type, Uid, Did, Num) ->
-    #m_item{uid = Uid, did = Did, num = Num}.
+    #m_item{uid = Uid, data_id = Did, num = Num}.
 
 
 %%-------------------------------------------------------------------
-on_deleted(Type, #m_item{uid = Uid, did = Did, num = Have} = _Olds, Num) ->
+on_deleted(Type, #m_item{uid = Uid, data_id = Did, num = Have} = _Olds, Num) ->
     %% todo 记日志什么的
     ?DEBUG("deleted ~p have/del ~p/~p in bag ~p ",[{Uid, Did}, Have, Num, Type]),
     ok.
 
-on_added(Type, #m_item{uid = Uid, did = Did} = _News, Num) ->
+on_added(Type, #m_item{uid = Uid, data_id = Did} = _News, Num) ->
     ?DEBUG("added new item ~p, num ~p in bag ~p",[{Uid, Did}, Num, Type]),
     ok.
 
-on_overlapped(Type, #m_item{uid = Uid, did = Did, num = Have} = _News, From, Num) ->
+on_overlapped(Type, #m_item{uid = Uid, data_id = Did, num = Have} = _News, From, Num) ->
     ?DEBUG("overlapped ~p item(s) to ~p from ~p, total ~p in bag ~p",
         [Num, {Uid, Did}, From, Have, Type]),
     ok.
@@ -84,10 +84,10 @@ overlap_num(_Rs) -> 0.
 
 can_be_overlapped(#m_item{bind = true}, _Did) ->
     false;
-can_be_overlapped(#m_item{uid = Uid, num = Have, did = Did}, Did) ->
+can_be_overlapped(#m_item{uid = Uid, num = Have, data_id = Did}, Did) ->
     Max = max_overlapped(Did),
     ?if_else(Max > Have, {Uid, Max - Have}, false);
-can_be_overlapped(#m_item{uid = Uid, num = Have, did = Did}, #m_item{did = Did}) ->
+can_be_overlapped(#m_item{uid = Uid, num = Have, data_id = Did}, #m_item{data_id = Did}) ->
     Max = max_overlapped(Did),
     ?if_else(Max > Have, {Uid, Max - Have}, false);
 can_be_overlapped(_Org, _DidOrItem) ->
@@ -106,15 +106,15 @@ did_can_overlap(_Did) ->
 
 
 %%-------------------------------------------------------------------
-find_check(#m_item{did = Did1, num = Have}, Did, Need) when Have >= Need, Did1 =:= Did ->
+find_check(#m_item{data_id = Did1, num = Have}, Did, Need) when Have >= Need, Did1 =:= Did ->
     {all, Need};
-find_check(#m_item{did = Did1, num = Have}, Did, Need) when Did1 =:= Did ->
+find_check(#m_item{data_id = Did1, num = Have}, Did, Need) when Did1 =:= Did ->
     {more, Have, Need - Have};
 find_check(_Rs, _Dis, _Need) ->
     skip.
 
 %%-------------------------------------------------------------------
-is_did(#m_item{did = Did}, Did) ->
+is_did(#m_item{data_id = Did}, Did) ->
     true;
 is_did(_Rs, _Did) ->
     false.

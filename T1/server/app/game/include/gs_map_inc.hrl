@@ -25,15 +25,15 @@
 -define(ED_LeftBottom, 6).
 -define(ED_RightTop, 7).
 -define(ED_RightBottom, 8).
--define(ED_End,9).
+-define(ED_End, 9).
 -type direction() :: ?ED_Center ..  ?ED_End.
 
--define(MAP_NORMAL,     1).
+-define(MAP_NORMAL, 1).
 -define(MAP_READY_EXIT, 2).
--define(MAP_EXIT,       3).
+-define(MAP_EXIT, 3).
 
 -define(LINE_LIFETIME, 1 * 60 * 1000).
--define(DEAD_LINE_PROTECT, 10*60 * 1000).
+-define(DEAD_LINE_PROTECT, 10 * 60 * 1000).
 
 -define(MAP_CALL_TIMEOUT, 15000).
 -define(MAP_INIT_TIMEOUT, 60000).
@@ -45,18 +45,11 @@
 -define(MAP_MGR_ETS, map_mgr_ets__).
 
 %%
--record(m_vis_tile,{index = 0, player = [], monster = [], npc = [], pet = []}).
+-record(m_vis_tile, {index = 0, player = [], monster = [], npc = [], pet = []}).
 %%
--record(m_map_state,{
-    map_id = 0, line_id = 0, player=#{}, monster=#{}, npc=#{}, pet=#{},
-    respawn = [], hook_mod, status = ?MAP_NORMAL, protect_tick=1000
-}).
+-record(m_map_state, {map_id = 0, line_id = 0, respawn = [], hook_mod, status = ?MAP_NORMAL, protect_tick = 1000}).
 %%
--record(m_map_line,{
-    map_id = 0, line_id = 0, pid,
-    limits = 5, in = 0, reserve = 10,
-    dead_line = 0, status = ?MAP_NORMAL
-}).
+-record(m_map_line, {map_id = 0, line_id = 0, pid, limits = 5, in = 0, reserve = 10, dead_line = 0, status = ?MAP_NORMAL}).
 
 
 %地图中的复活点

@@ -31,13 +31,13 @@ assign_cross_for_me(Aid) ->
         _ ->
             QS = ets:fun2ms(fun(Info) when Info#m_share_server_info.type =:= ?SERVER_TYPE_CGS -> Info#m_share_server_info.sid end),
             SL = mne_ex:dirty_select(?ShareServerInfoName, QS),
-            assign_cross_for_me_action(Aid, SL)
+            do_assign_cross_for_me(Aid, SL)
     end,
     ok.
 
-assign_cross_for_me_action(_Aid, []) ->
+do_assign_cross_for_me(_Aid, []) ->
     ok;
-assign_cross_for_me_action(Aid, [CrossSid | _]) ->
+do_assign_cross_for_me(Aid, [CrossSid | _]) ->
     force_assign_cross_for_me(Aid, CrossSid),
     ok.
 

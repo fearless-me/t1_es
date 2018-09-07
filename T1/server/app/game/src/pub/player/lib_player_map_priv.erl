@@ -24,7 +24,7 @@
 %% todo teleport_call / offline_call 是需要call调用，等后面来确定
 
 -export([
-    online_call/1, offline_call/4, serv_change_map_call/3,
+    online_call/1, offline_call/4, serve_change_map_call/3,
     teleport_call/1, return_to_old_map_call/0
 ]).
 
@@ -77,12 +77,12 @@ do_online_call_1(Mgr, Req) ->
 
 
 %%-------------------------------------------------------------------
-serv_change_map_call(DestMapID, DestLineId, TarPos) ->
+serve_change_map_call(DestMapID, DestLineId, TarPos) ->
     lib_player_rw:set_status(?PS_CHANGE_MAP),
     Uid = lib_player_rw:get_uid(),
     #m_cache_player_pub{mid = Mid, line = Line, mpid = MPid, pos = Pos} = gs_cache:get_player_pub(Uid),
     lib_player_cross_priv:change_map_before(Mid, DestMapID),
-    Ack = serv_change_map_call_cation(
+    Ack = do_serve_change_map_call(
         #r_change_map_req{
             uid = Uid, pid = self(),
             map_id = Mid, line_id = Line, map_pid = MPid,
@@ -94,7 +94,7 @@ serv_change_map_call(DestMapID, DestLineId, TarPos) ->
     ok.
 
 %%-------------------------------------------------------------------
-serv_change_map_call_cation(Req) ->
+do_serve_change_map_call(Req) ->
     #r_change_map_req{
         uid = Uid, tar_map_id = TMid,
         map_id = Mid, line_id = LineId, map_pid = Mpid
@@ -107,26 +107,25 @@ serv_change_map_call_cation(Req) ->
     ExitRet =
         case CurMgr of
             undefined ->
-                ?FATAL("player[~p] cur map[~p] not exists", [Uid, Mid]),
+                ?FATAL("player[~p] cur map[~p] mgr not exists", [Uid, Mid]),
                 error;
             _ ->
                 gs_map_mgr_interface:player_exit_map_call(CurMgr,
                     #r_exit_map_req{map_id = Mid, line_id = LineId, map_pid = Mpid, uid = Uid})
         end,
     case ExitRet of
-        error ->
-            #r_change_map_ack{error = -1, map_id = Mid};
+        error -> #r_change_map_ack{error = -1, map_id = Mid};
         _ ->
-            case TarMgr of
-                undefined ->
-                    ?ERROR("player[~p] tar map[~p] not exists", [Uid, TMid]),
-                    goto_born_map(Req);
-                _ ->
-                    case gs_map_mgr_interface:player_join_map_call(TarMgr, Req) of
-                        #r_change_map_ack{} = Ack -> Ack;
-                        _ -> goto_born_map(Req)
-                    end
-            end
+        case TarMgr of
+            undefined ->
+                ?ERROR("player[~p] tar map[~p] not exists, goto born map", [Uid, TMid]),
+                goto_born_map(Req);
+            _ ->
+                case gs_map_mgr_interface:player_join_map_call(TarMgr, Req) of
+                    #r_change_map_ack{} = Ack -> Ack;
+                    _ -> goto_born_map(Req)
+                end
+        end
     end.
 
 
@@ -171,6 +170,7 @@ serv_change_map_call_ret(
     lib_player_cross_priv:change_map_after(OldMid, Mid, false),
     ?ERROR("player ~p change from map ~p:~p to map ~p failed with ~p",
         [lib_player_rw:get_uid(), OldMid, OldLineId, Mid, Err]),
+    %% todo 告诉客户端切地图失败
     ok.
 
 %%-------------------------------------------------------------------
@@ -180,7 +180,7 @@ return_to_old_map_call() ->
         mpid = Mid, old_mid = OMid, old_line = OLineId, old_pos = OPos
     } = gs_cache:get_player_pub(Uid),
     ?DEBUG("player ~p return_to_pre_map from ~p to ~p", [Uid, Mid, OMid]),
-    serv_change_map_call(OMid, OLineId, OPos),
+    serve_change_map_call(OMid, OLineId, OPos),
     ok.
 
 %%-------------------------------------------------------------------

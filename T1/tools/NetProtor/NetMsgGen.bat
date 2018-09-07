@@ -1,4 +1,5 @@
 echo off
+cls
 
 echo delete client message sources...
 del "..\\..\\Client\\Assets\\Code\\Base\\Net\\Messages\\*.cs" /s /q

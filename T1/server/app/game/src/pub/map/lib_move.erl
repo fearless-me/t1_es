@@ -70,6 +70,7 @@ start_player_walk(Uid, Start, End) ->
         _ -> error
     end.
 
+-ifdef(TEST).
 test_path() ->
     [
         vector3:new(150.0, 0, 150.0),
@@ -89,6 +90,7 @@ test_dir() ->
     S = vector3:new(150.0, 0, 150.0),
     E = vector3:new(200.0, 0, 150.0),
     vector3:subtract(E, S).
+-endif.
 
 start_player_walk_1(Uid, Start, End) ->
 %%    Dir = test_dir(),
@@ -189,7 +191,7 @@ update_monster_move(Unit, ?EMS_WALK) ->
 update_monster_move(_Obj, _Move) -> skip.
 
 %%-------------------------------------------------------------------
-update_role_walk(Uid, CurPos, [], _MoveTime) ->
+update_role_walk(Uid, _CurPos, [], _MoveTime) ->
 %%    ?WARN("mapid ~p player ~w arrived ~w", [self(), Uid, CurPos]),
     lib_move_rw:set_cur_move(Uid, ?EMS_STAND),
     lib_move_rw:set_next_move(Uid, ?EMS_STAND),
@@ -282,6 +284,9 @@ on_obj_pos_change(Uid, Tar) ->
 
 on_obj_pos_changed(?OBJ_USR, Uid, Tar) ->
     gs_cache:update_player_pub(Uid, {#m_cache_player_pub.pos, Tar}),
+    ok;
+on_obj_pos_changed(Type, Uid, Tar) ->
+    ?ERROR("on_obj_pos_changed(~w,~w,~w)", [Type, Uid, Tar]),
     ok.
 
 %%-------------------------------------------------------------------
@@ -331,11 +336,11 @@ do_cal_move_msg(_S, _Uid) ->
 %%-------------------------------------------------------------------
 start_monster_walk(Uid, Dst, MoveState, NeedCheck) ->
     case is_can_monster_walk(Uid, Dst, MoveState, NeedCheck) of
-        true -> start_monster_walk_action(Uid, Dst, MoveState);
+        true -> do_start_monster_walk(Uid, Dst, MoveState);
         _ -> false
     end.
 
-start_monster_walk_action(Uid, Dst, MoveState) ->
+do_start_monster_walk(Uid, Dst, MoveState) ->
     Way = [Dst],
     Start = lib_move_rw:get_cur_pos(Uid),
     Dir = vector3:subtract(Dst, Start),

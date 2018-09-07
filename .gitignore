@@ -37,3 +37,5 @@ _gsdata_
 /T1/server/app/center/scripts/center_chs_release.txt
 /T1/server/app/game/scripts/game_chs_release.txt
 /T1/server/app/game/scripts/game_server_chs_release.txt
+/T1/tools/ErrorCode/deps/base/*.pyc
+*.pyc

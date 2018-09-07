@@ -9,7 +9,6 @@
 -include("logger.hrl").
 -include("gs_player_status.hrl").
 -include("rec_rw.hrl").
-
 %%-------------------------------------------------------------------
 
 -export([

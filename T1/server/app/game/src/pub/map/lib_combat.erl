@@ -44,28 +44,28 @@ use_skill(Aer, Der, SkillId, Serial) ->
     SkillOpType = ?ESOT_Channel,
 
     lib_combat_rw:set_skill_serial(Aer, Serial),
-    skill_action_dispatcher(SkillOpType, Aer, TarUid, SkillId, Serial),
+    use_skill_dispatcher(SkillOpType, Aer, TarUid, SkillId, Serial),
     ?DEBUG("~p use skill ~p tar ~p", [Aer, Der, SkillId]),
     ok.
 
-skill_action_dispatcher(?ESOT_Instant, Aer, Tar, SkillId, Serial) ->
-    instant_skill_action(Aer, Tar, SkillId, Serial);
-skill_action_dispatcher(?ESOT_Channel, Aer, Tar, SkillId, Serial) ->
-    channel_skill_action(Aer, Tar, SkillId, Serial);
-skill_action_dispatcher(?ESOT_Spell, Aer, Tar, SkillId, Serial) ->
-    spell_skill_action(Aer, Tar, SkillId, Serial).
+use_skill_dispatcher(?ESOT_Instant, Aer, Tar, SkillId, Serial) ->
+    instant_skill(Aer, Tar, SkillId, Serial);
+use_skill_dispatcher(?ESOT_Channel, Aer, Tar, SkillId, Serial) ->
+    channel_skill(Aer, Tar, SkillId, Serial);
+use_skill_dispatcher(?ESOT_Spell, Aer, Tar, SkillId, Serial) ->
+    spell_skill(Aer, Tar, SkillId, Serial).
 
 %% todo 引导类型技能
-channel_skill_action(Aer, Tar, SkillId, Serial) ->
+channel_skill(Aer, Tar, SkillId, Serial) ->
     active_skill_once(Aer, lib_move_rw:get_cur_pos(Tar), SkillId, Serial),
     ok.
 
 %% todo 吟唱技能
-spell_skill_action(_Aer, _Tar, _SkillId, _Serial) ->
+spell_skill(_Aer, _Tar, _SkillId, _Serial) ->
     ok.
 
 %% todo 瞬发技能
-instant_skill_action(Aer, Tar, SkillId, Serial) ->
+instant_skill(Aer, Tar, SkillId, Serial) ->
     active_skill_once(Aer, lib_move_rw:get_cur_pos(Tar), SkillId, Serial),
     ok.
 
@@ -125,12 +125,12 @@ tick(Unit) ->
 %%todo 引导技能、吟唱技能
 tick_cur_skill(#m_cache_map_unit{uid = Uid}) ->
     CurSkillId = lib_combat_rw:get_skill_id(Uid),
-    tick_cur_skill_action(Uid, CurSkillId),
+    do_tick_cur_skill(Uid, CurSkillId),
     ok.
 
-tick_cur_skill_action(_Uid, 0) ->
+do_tick_cur_skill(_Uid, 0) ->
     ok;
-tick_cur_skill_action(Uid, SkillId) ->
+do_tick_cur_skill(Uid, SkillId) ->
     ?WARN("uid ~p tick skill ~p", [Uid, SkillId]),
     Serial  = lib_combat_rw:get_skill_serial(Uid),
     OpTime0 = lib_combat_rw:get_operate_time_def(Uid, 0),

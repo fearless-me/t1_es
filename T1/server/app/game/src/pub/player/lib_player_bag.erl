@@ -80,12 +80,12 @@ add_2(Type, Did, Num) ->
     FreeSlot = remain_slots(Type),
     case FreeSlot >= NeedSlot of
         true ->
-            add_action(Type, Did, Num);
+            do_add(Type, Did, Num);
         _ ->
             erlang:error(need_more_slot)
     end.
 
-add_action(Type, Did, Num) ->
+do_add(Type, Did, Num) ->
     Uid = uid_gen:item_uid(),
     Bag0 = get_bag(Type),
     Item = hook_bag:make(Type, Uid, Did, Num),
@@ -115,19 +115,19 @@ overlap_items(Type, Maps, [{Uid, Added} | Rs]) ->
 add_instance(Type, Uid, Item) ->
     case remain_slots(Type) of
         Free when Free > 0 ->
-            add_instance_action(Type, Uid, Item);
+            do_add_instance(Type, Uid, Item);
         _ ->
             erlang:error(need_more_slot)
     end.
 
 
-add_instance_action(Type, Uid, Item) when is_tuple(Item) ->
+do_add_instance(Type, Uid, Item) when is_tuple(Item) ->
     Bag0 = get_bag(Type),
     Bag1 = Bag0#player_bag{items = maps:put(Uid, Item, Bag0#player_bag.items)},
     set_bag(Type, Bag1),
     ?TRY_CATCH(hook_bag:on_added(Type, Item, hook_bag:overlap_num(Item))),
     true;
-add_instance_action(Type, _Uid, Item) ->
+do_add_instance(Type, _Uid, Item) ->
     ?ERROR("player ~p add ~p to ~p",
         [lib_player_rw:get_uid(), Item, Type]),
     erlang:error(bad_agrs),
@@ -137,7 +137,7 @@ add_instance_action(Type, _Uid, Item) ->
 del_uid(Type, Uid, Num) ->
     Bag = get_bag(Type),
     Res = find_from_bag_uid(Bag, Uid),
-    del_uid_action(Type, Bag, Uid, Res, Num).
+    do_del_uid(Type, Bag, Uid, Res, Num).
 
 %%-------------------------------------------------------------------
 del_uid(Type, Uid) ->
@@ -176,9 +176,9 @@ del_did(Type, Did, Num) ->
 
 %%-------------------------------------------------------------------
 %%-------------------------------------------------------------------
-del_uid_action(_Type, _Bag, _Uid, error, _Num) ->
+do_del_uid(_Type, _Bag, _Uid, error, _Num) ->
     false;
-del_uid_action(Type, Bag, Uid, Res, Num) ->
+do_del_uid(Type, Bag, Uid, Res, Num) ->
     ?TRY_CATCH_RET
     (
         begin

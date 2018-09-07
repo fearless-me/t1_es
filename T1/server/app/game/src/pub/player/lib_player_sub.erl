@@ -35,14 +35,14 @@ tick_me()->
     Now = misc_time:milli_seconds(),
     %
     ?TRY_CATCH(hook_player:on_tick()),
-    S = second_action(Now),
-    M = minute_action(S, Now),
-    H = hour_action(M, Now),
-    _ = sharp_action(H, Now),
+    S = do_second(Now),
+    M = do_minute(S, Now),
+    H = do_hour(M, Now),
+    _ = do_sharp(H, Now),
     ok.
 
 %%-------------------------------------------------------------------
-second_action(Now) ->
+do_second(Now) ->
     Latest = lib_player_rw:get_last_second_tick(),
     case Now - Latest >= ?ONS_SECOND_MS of
         true ->
@@ -53,7 +53,7 @@ second_action(Now) ->
     end.
 
 %%-------------------------------------------------------------------
-minute_action(true, Now) ->
+do_minute(true, Now) ->
     Latest = lib_player_rw:get_last_minute_tick(),
     case Now - Latest >= ?ONE_MINUTE_MS of
         true ->
@@ -62,10 +62,10 @@ minute_action(true, Now) ->
             true;
         _ -> false
     end;
-minute_action(_, _Now) -> false.
+do_minute(_, _Now) -> false.
 
 %%-------------------------------------------------------------------
-hour_action(true, Now) ->
+do_hour(true, Now) ->
     Latest = lib_player_rw:get_last_hour_tick(),
     case Now - Latest >= ?ONT_HOUR_MS of
         true ->
@@ -74,14 +74,14 @@ hour_action(true, Now) ->
             true;
         _ -> false
     end;
-hour_action(_, _Now) -> false.
+do_hour(_, _Now) -> false.
 
 %%-------------------------------------------------------------------
-sharp_action(true, _Now) ->
+do_sharp(true, _Now) ->
     {{_,_,_}, {H,M,_S}} = calendar:local_time(),
     case M =:= 0 of
         true ->
             ?TRY_CATCH(hook_player:on_sharp(H)), true;
         _ -> false
     end;
-sharp_action(_, _Now) -> false.
+do_sharp(_, _Now) -> false.

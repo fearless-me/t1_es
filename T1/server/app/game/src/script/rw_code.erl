@@ -72,7 +72,7 @@ run() ->
             "..\\src\\pub\\map\\lib_ai_rw.erl",
             lib_ai_rw,
             [
-                ["logger.hrl", "inc_ai.hrl", "rec_rw.hrl", "vector3.hrl"],
+                ["logger.hrl", "gs_ai_inc.hrl", "rec_rw.hrl"],
                 [
                     {m_map_unit_ai_rw, record_info(fields, m_map_unit_ai_rw), none, ["Uid"], ""}
                 ]
@@ -82,7 +82,7 @@ run() ->
             "..\\src\\pub\\player\\lib_player_rw.erl",
             lib_player_rw,
             [
-                ["logger.hrl", "gs_player_status.hrl", "rec_rw.hrl", "vector3.hrl"],
+                ["logger.hrl", "gs_player_status.hrl", "rec_rw.hrl"],
                 [
                     {m_player_rw, record_info(fields, m_player_rw), none, [], "hook_player:on_rw_update"}
                 ]

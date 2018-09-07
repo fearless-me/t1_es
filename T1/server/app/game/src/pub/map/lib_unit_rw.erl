@@ -12,7 +12,7 @@
 
 -export([
 	get_pid/1, get_pid_def/2, set_pid/2, set_pid_direct/2, % #m_map_unit_rw.pid
-	get_did/1, get_did_def/2, set_did/2, set_did_direct/2, % #m_map_unit_rw.did
+	get_data_id/1, get_data_id_def/2, set_data_id/2, set_data_id_direct/2, % #m_map_unit_rw.data_id
 	get_group/1, get_group_def/2, set_group/2, set_group_direct/2, % #m_map_unit_rw.group
 	get_owner/1, get_owner_def/2, set_owner/2, set_owner_direct/2, % #m_map_unit_rw.owner
 	get_type/1, get_type_def/2, set_type/2, set_type_direct/2, % #m_map_unit_rw.type
@@ -43,20 +43,20 @@ set_pid(Uid, V)->
 set_pid_direct(Uid, V)-> put({pid,Uid}, V).
 
 %%-------------------------------------------------------------------
-%% #m_map_unit_rw.did
-get_did(Uid)-> get({did,Uid}).
+%% #m_map_unit_rw.data_id
+get_data_id(Uid)-> get({data_id,Uid}).
 
-get_did_def(Uid, Def)->
-	case get({did,Uid}) of
+get_data_id_def(Uid, Def)->
+	case get({data_id,Uid}) of
 		undefined -> Def;
 		V -> V
 	end.
 
-set_did(Uid, V)->
-	put({did,Uid}, V),
-	hook_map:on_rw_update(Uid, did, V).
+set_data_id(Uid, V)->
+	put({data_id,Uid}, V),
+	hook_map:on_rw_update(Uid, data_id, V).
 
-set_did_direct(Uid, V)-> put({did,Uid}, V).
+set_data_id_direct(Uid, V)-> put({data_id,Uid}, V).
 
 %%-------------------------------------------------------------------
 %% #m_map_unit_rw.group
@@ -189,7 +189,7 @@ set_skill_queue_direct(Uid, V)-> put({skill_queue,Uid}, V).
 %%-------------------------------------------------------------------
 del(Uid)->
 	erase({pid, Uid}),
-	erase({did, Uid}),
+	erase({data_id, Uid}),
 	erase({group, Uid}),
 	erase({owner, Uid}),
 	erase({type, Uid}),
@@ -203,7 +203,7 @@ del(Uid)->
 to_record(Uid)->
 	#m_map_unit_rw{
 		pid = get_pid(Uid),
-		did = get_did(Uid),
+		data_id = get_data_id(Uid),
 		group = get_group(Uid),
 		owner = get_owner(Uid),
 		type = get_type(Uid),
@@ -216,7 +216,7 @@ to_record(Uid)->
 %%-------------------------------------------------------------------
 init_from(Uid, Rec)->
 	set_pid_direct(Uid, Rec#m_map_unit_rw.pid),
-	set_did_direct(Uid, Rec#m_map_unit_rw.did),
+	set_data_id_direct(Uid, Rec#m_map_unit_rw.data_id),
 	set_group_direct(Uid, Rec#m_map_unit_rw.group),
 	set_owner_direct(Uid, Rec#m_map_unit_rw.owner),
 	set_type_direct(Uid, Rec#m_map_unit_rw.type),
@@ -230,7 +230,7 @@ init_from(Uid, Rec)->
 init_default(Uid)->
 	Rec = #m_map_unit_rw{},
 	set_pid_direct(Uid, Rec#m_map_unit_rw.pid),
-	set_did_direct(Uid, Rec#m_map_unit_rw.did),
+	set_data_id_direct(Uid, Rec#m_map_unit_rw.data_id),
 	set_group_direct(Uid, Rec#m_map_unit_rw.group),
 	set_owner_direct(Uid, Rec#m_map_unit_rw.owner),
 	set_type_direct(Uid, Rec#m_map_unit_rw.type),

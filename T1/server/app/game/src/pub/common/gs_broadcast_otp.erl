@@ -60,16 +60,16 @@ do_handle_cast(Request, State) ->
 
 %%--------------------------------------------------------------------
 broadcast_net_msg(NetMsg) ->
-    broadcast_net_msg_action(gs_conf:is_cross(), NetMsg),
+    do_broadcast_net_msg(gs_conf:is_cross(), NetMsg),
     ok.
 
-broadcast_net_msg_action(true, NetMsg) ->
+do_broadcast_net_msg(true, NetMsg) ->
     ets:foldl(
         fun(#m_cache_player_pid_sock{pid = Pid}, _) ->
             catch gs_interface:send_net_msg(Pid, NetMsg)
         end, 0, ?ETS_CACHE_PLAYER_PID_SOCK),
     ok;
-broadcast_net_msg_action(_Any, NetMsg) ->
+do_broadcast_net_msg(_Any, NetMsg) ->
     {_Bytes1, IoList} = tcp_codec:encode(NetMsg),
     ets:foldl(
         fun(#m_cache_player_pid_sock{sock = Sock}, _) ->

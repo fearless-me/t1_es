@@ -58,19 +58,19 @@ on_start_move(_Uid) ->
 on_rw_update(Uid, hp, Hp) ->
     ?lock({Uid, hp}),
     Type = lib_unit_rw:get_type(Uid),
-    on_rw_update_pub_action(Type, Uid, {#m_cache_player_pub.hp, Hp}),
+    do_on_rw_update_pub(Type, Uid, {#m_cache_player_pub.hp, Hp}),
     ?unlock(),
     ok;
 on_rw_update(Uid, attr, Attrs) ->
     ?lock({Uid, attr}),
     Type = lib_unit_rw:get_type(Uid),
-    on_rw_update_priv_action(Type, Uid, {#m_cache_player_private.priv_attrs, Attrs}),
+    do_on_rw_update_priv(Type, Uid, {#m_cache_player_private.priv_attrs, Attrs}),
     ?unlock(),
     ok;
 on_rw_update(Uid, buff_list, BuffList) ->
     ?lock({Uid, buff_list}),
     Type = lib_unit_rw:get_type(Uid),
-    on_rw_update_priv_action(Type, Uid, {#m_cache_player_private.priv_buffs, BuffList}),
+    do_on_rw_update_priv(Type, Uid, {#m_cache_player_private.priv_buffs, BuffList}),
     ?unlock(),
     ok;
 on_rw_update(_Uid, _Key, _Value) ->
@@ -78,17 +78,17 @@ on_rw_update(_Uid, _Key, _Value) ->
 
 
 %%-------------------------------------------------------------------
-on_rw_update_pub_action(?OBJ_USR, Uid, Element) ->
+do_on_rw_update_pub(?OBJ_USR, Uid, Element) ->
     gs_cache:update_player_pub(Uid, Element),
     ok;
-on_rw_update_pub_action(_ObjType, _Uid, _Element) ->
+do_on_rw_update_pub(_ObjType, _Uid, _Element) ->
     ok.
 
 %%-------------------------------------------------------------------
-on_rw_update_priv_action(?OBJ_USR, Uid, Element) ->
+do_on_rw_update_priv(?OBJ_USR, Uid, Element) ->
     gs_cache:update_player_priv(Uid, Element),
     ok;
-on_rw_update_priv_action(_ObjType, _Uid, _Element) ->
+do_on_rw_update_priv(_ObjType, _Uid, _Element) ->
     ok.
 
 

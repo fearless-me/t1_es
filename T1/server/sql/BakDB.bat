@@ -1,4 +1,5 @@
-cls 
+echo off
+cls
 del /S /Q t1_account.sql
 del /S /Q t1_conf.sql
 del /S /Q t1_player.sql

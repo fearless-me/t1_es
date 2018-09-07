@@ -87,7 +87,7 @@ on_close(Socket, Reason, S) ->
 
 %%-------------------------------------------------------------------
 on_info_msg(check_net, S) ->
-    check_idle_action(),
+    check_idle(),
     S;
 on_info_msg({kick_role, Reason}, S) ->
     gs_player_handler:stop(Reason),
@@ -115,7 +115,7 @@ on_info_msg(return_to_pre_map_req, S) ->
     lib_player_map_priv:return_to_old_map_call(),
     S;
 on_info_msg({passive_change_req,{DestMapID, LineId, TarPos}}, S) ->
-    lib_player_map_priv:serv_change_map_call(DestMapID, LineId, TarPos),
+    lib_player_map_priv:serve_change_map_call(DestMapID, LineId, TarPos),
     S;
 on_info_msg({teleport, NewPos}, S) ->
     lib_player_map_priv:teleport_call(NewPos),
@@ -182,7 +182,7 @@ socket()-> get(?SocketKey).
 %%-------------------------------------------------------------------
 set_latest_net_time() -> put('RECV_NETMSG_LATEST', misc_time:milli_seconds()).
 check_idle_msg() -> erlang:send_after(?NET_IDLE_TIME, self(), check_net).
-check_idle_action() ->
+check_idle() ->
     try
         case misc_time:milli_seconds() - get('RECV_NETMSG_LATEST') > ?NET_IDLE_TIME of
             true -> gs_player_handler:stop(net_heartbeat_stop);

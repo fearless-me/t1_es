@@ -16,13 +16,13 @@
 
 -define(OP_EXIT, 0).
 
--define(OP_COMPILE_GS, 1).
--define(OP_START_GS, 11).
+-define(OP_START_GS, 1).
+-define(OP_COMPILE_GS, 11).
 -define(OP_DEL_LOG_GS, 111).
 -define(OP_PK_GS, 1111).
 
--define(OP_COMPILE_CS, 2).
--define(OP_START_CS, 22).
+-define(OP_START_CS, 2).
+-define(OP_COMPILE_CS, 22).
 -define(OP_DEL_LOG_CS, 222).
 -define(OP_PK_CS, 2222).
 
@@ -31,72 +31,125 @@
 -define(OP_REF, 901).
 -define(OP_DIALYZER, 902).
 
+-define(OP_GEN_NETMSG, 911).
+-define(OP_GEN_ERRORCODE, 912).
+-define(OP_GEN_LOGDEFINE, 913).
+-define(OP_EXPORT_DBSTRUCT, 914).
+-define(OP_BAK_DBSTRUCT, 915).
+
 -define(OP_TCP, 992).
 -define(OP_SET_TERMINAL_COLOR, 999).
 
 
+-define(DEV_MODE, dev).
+-define(USR_MODE, usr).
 
-main(_) ->
-    menu(),
+main(Args) ->
+    case Args of
+    [] -> menu(?DEV_MODE);
+    [Mode | _] -> menu(list_to_atom(Mode))
+    end,
     ok.
 
-menu() ->
+show_cmd(?DEV_MODE) ->
+    color:info_log(
+            "~n##########################################################~n"
+
+    		"\t~-10.w开服(gs)~n"
+            "\t~-10.w编译(gs)~n"
+    		"\t~-10.w删除日志(gs)~n"
+    		"\t~-10.w打包(gs)~n"
+
+            "#~n"
+    		"\t~-10.w开服(cs)~n"
+            "\t~-10.w编译(cs)~n"
+    		"\t~-10.w删除日志(cs)~n"
+    		"\t~-10.w打包(cs)~n"
+    		"#~n"
+
+            "\t~-10.w删除日志(all)~n"
+
+            "#~n"
+
+            "\t~-10.w代码检查(xref)~n"
+            "\t~-10.w代码检查(dialyzer)~n"
+
+            "#~n"
+
+            "\t~-10.w生成网络消息代码~n"
+            "\t~-10.w生成error code代码~n"
+            "\t~-10.w生成log define代码~n"
+            "\t~-10.w导出数据库结构代码~n"
+            "\t~-10.w备份数据库表结构~n"
+            "#~n"
+    		"\t~-10.wtcp测试~n"
+            "\t~-10.wwindows控制台支持彩色显示~n"
+            "\t~-10.w退出~n"
+            "~n##########################################################~n~n",
+            [
+                ?OP_START_GS, ?OP_COMPILE_GS, ?OP_DEL_LOG_GS, ?OP_PK_GS,
+
+    			?OP_START_CS, ?OP_COMPILE_CS, ?OP_DEL_LOG_CS, ?OP_PK_CS,
+
+                ?OP_DEL_LOG_ALL,
+
+                ?OP_REF, ?OP_DIALYZER,
+
+                ?OP_GEN_NETMSG, ?OP_GEN_ERRORCODE, ?OP_GEN_LOGDEFINE, ?OP_EXPORT_DBSTRUCT, ?OP_BAK_DBSTRUCT,
+
+                ?OP_TCP, ?OP_SET_TERMINAL_COLOR,
+                ?OP_EXIT
+            ]
+        );
+show_cmd(_) ->
+    color:info_log(
+            "~n##########################################################~n"
+
+    		"\t~-10.w开服(gs)~n"
+            "\t~-10.w编译(gs)~n"
+    		"\t~-10.w删除日志(gs)~n"
+
+            "#~n"
+    		"\t~-10.w开服(cs)~n"
+            "\t~-10.w编译(cs)~n"
+    		"\t~-10.w删除日志(cs)~n"
+    		"#~n"
+
+            "\t~-10.w删除日志(all)~n"
+
+            "#~n"
+            "\t~-10.wwindows控制台支持彩色显示~n"
+            "\t~-10.w退出~n"
+            "~n##########################################################~n~n",
+            [
+                ?OP_START_GS, ?OP_COMPILE_GS, ?OP_DEL_LOG_GS,
+
+    			?OP_START_CS, ?OP_COMPILE_CS, ?OP_DEL_LOG_CS,
+
+                ?OP_DEL_LOG_ALL,
+
+
+                ?OP_SET_TERMINAL_COLOR,
+                ?OP_EXIT
+            ]
+        ).
+
+menu(Mode) ->
     os:cmd("CHCP 65001"),
     {ok, Cwd} = file:get_cwd(),
     os:cmd(io_lib:format('title \"~ts\"',[Cwd])),
 
-    color:info_log(
-        "~n##########################################################~n"
+    show_cmd(Mode),
 
-        "\t~-10.w编译(gs)~n"
-		"\t~-10.w开服(gs)~n"
-		"\t~-10.w删除日志(gs)~n"
-		"\t~-10.w打包(gs)~n"
-        
-        "#~n"
-        "\t~-10.w编译(cs)~n"
-        "\t~-10.w开服(cs)~n"
-		"\t~-10.w删除日志(cs)~n"
-		"\t~-10.w打包(cs)~n"
-		"#~n"
-		  
-        "\t~-10.w删除日志(all)~n"
-    
-        "#~n"
-  
-        "\t~-10.w代码检查(xref)~n"
-        "\t~-10.w代码检查(dialyzer)~n"
-        "#~n"
-		"\t~-10.wtcp测试~n"
-        "\t~-10.wwindows控制台支持彩色显示~n"
-        "\t~-10.w退出~n"
-        "~n##########################################################~n~n",
-        [
-            ?OP_COMPILE_GS,?OP_START_GS, ?OP_DEL_LOG_GS, ?OP_PK_GS, 
-			
-			?OP_COMPILE_CS,?OP_START_CS,?OP_DEL_LOG_CS,?OP_PK_CS,
-
-            ?OP_DEL_LOG_ALL, 
-    
-            ?OP_REF, ?OP_DIALYZER,
-			
-            ?OP_TCP, ?OP_SET_TERMINAL_COLOR,
-            ?OP_EXIT
-        ]
-    ),
     InputNoStr = io:get_line("Please enter your choice:"),
     [T | _] = string:tokens(string_strip(InputNoStr, "\n"), " "),
     {IT, _} = string:to_integer(T),
     Ret = dispatchInput2(IT),
     wait(Ret),
-    menu().
+    menu(Mode).
 
 dispatchInput2(?OP_EXIT) ->
     erlang:halt();
-dispatchInput2(?OP_REF) ->
-    erlang:spawn_monitor(fun() -> os:cmd("start xref.bat") end);
-dispatchInput2(?OP_DIALYZER) ->
-    erlang:spawn_monitor(fun() -> os:cmd("start dialyzer_tool.bat") end);
 dispatchInput2(?OP_DEL_LOG_ALL) ->
     erlang:spawn_monitor(fun() -> os:cmd(" cd ..\\ && del /q /s *.log && del /q /s *.err") end),
     color:warn_log("->delete *.log done!<-~n");
@@ -116,8 +169,22 @@ dispatchInput2(?OP_COMPILE_GS) ->
     erlang:spawn_monitor(fun() -> os:cmd("start subcall.bat escript.exe fast_compile.ers 1") end);
 dispatchInput2(?OP_COMPILE_CS) ->
     erlang:spawn_monitor(fun() -> os:cmd("start subcall.bat escript.exe fast_compile.ers 2") end);
+dispatchInput2(?OP_REF) ->
+    erlang:spawn_monitor(fun() -> os:cmd("start xref.bat") end);
+dispatchInput2(?OP_DIALYZER) ->
+    erlang:spawn_monitor(fun() -> os:cmd("start dialyzer_tool.bat") end);
 dispatchInput2(?OP_TCP) ->
      erlang:spawn_monitor(fun() -> os:cmd("start tcp_test.bat") end);
+dispatchInput2(?OP_GEN_ERRORCODE) ->
+    erlang:spawn_monitor(fun() -> os:cmd("start errorcode.bat") end);
+ dispatchInput2(?OP_GEN_LOGDEFINE) ->
+     erlang:spawn_monitor(fun() -> os:cmd("start subcall.bat escript.exe log_define.ers") end);
+dispatchInput2(?OP_GEN_NETMSG) ->
+    erlang:spawn_monitor(fun() -> os:cmd("start netmsg.bat") end);
+dispatchInput2(?OP_EXPORT_DBSTRUCT) ->
+    erlang:spawn_monitor(fun() -> os:cmd("start export_db.bat") end);
+dispatchInput2(?OP_BAK_DBSTRUCT) ->
+    erlang:spawn_monitor(fun() -> os:cmd("start bak_db.bat") end);
 dispatchInput2(?OP_SET_TERMINAL_COLOR) ->
      erlang:spawn_monitor(fun() -> os:cmd("start /WAIT terminal_color.bat") end);	 
 dispatchInput2(_) ->

@@ -26,14 +26,14 @@ get_server_port() -> get_config(node()).
 
 %%-------------------------------------------------------------------
 get_config(Node) ->
-    Port = node_port_action(Node),
+    Port = do_node_port(Node),
     ?WARN("gen_rpc get port for node ~p port ~p", [Node, Port]),
     Port.
 
 %%-------------------------------------------------------------------
-node_port_action(Node) when is_atom(Node) ->
+do_node_port(Node) when is_atom(Node) ->
     ?PORT_BASE + erlang:adler32(atom_to_list(Node)) rem ?PORT_MOD;
-node_port_action(Node) when is_list(Node) ->
+do_node_port(Node) when is_list(Node) ->
     ?PORT_BASE + erlang:adler32(Node) rem ?PORT_MOD.
 
 %%-------------------------------------------------------------------

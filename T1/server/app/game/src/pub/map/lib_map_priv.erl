@@ -49,23 +49,14 @@
 %%-------------------------------------------------------------------
 init(S) ->
     Conf = gs_map_creator_interface:map_data(S#m_map_state.map_id),
-    S1 = init_1(S),
-    ok = lib_map_rw:init(S1),
+    ok = lib_map_rw:init(S),
     ok = lib_map_view:init_vis_tile(Conf),
-    S2 = init_npc(S1, Conf),
-    S3 = init_monster(S2, Conf),
+    ok = init_npc(Conf),
+    ok = init_monster(Conf),
     tick_msg(),
     catch hook_map:on_map_create(),
-    S3.
+    S.
 
-%%-------------------------------------------------------------------
-init_1(State) -> State.
-%%    State#m_map_state{
-%%        npc = ets:new(npc, [protected, {keypos, #m_cache_map_unit.uid}, ?ETS_RC]),
-%%        pet = ets:new(pet, [protected, {keypos, #m_cache_map_unit.uid}, ?ETS_RC]),
-%%        player = ets:new(player, [protected, {keypos, #m_cache_map_unit.uid}, ?ETS_RC]),
-%%        monster = ets:new(monster, [protected, {keypos, #m_cache_map_unit.uid}, ?ETS_RC])
-%%    }.
 
 %%-------------------------------------------------------------------
 %% WARNING!!! WARNING!!! WARNING!!!
@@ -80,16 +71,16 @@ do_player_exit_call(S, Uid, #m_cache_map_unit{} = Unit) ->
     ?INFO("player ~p exit map ~p:~p:~p",
         [Uid, lib_map_rw:get_map_id(), lib_map_rw:get_line_id(), self()]),
 
-    S1 = lib_map_rw:del_obj_to_ets(S, Unit),
+    lib_map_rw:del_obj_to_ets(Unit),
     catch lib_map_view:sync_player_exit_map(Unit),
     Data = lib_unit_rw:to_record(Uid),
     catch hook_map:on_player_exit(Uid),
-    {Data, S1};
+    {Data, S};
 do_player_exit_call(S, Uid, _Obj) ->
     ?ERROR("~w req exit map ~w ~w, but obj not exists!",
         [Uid, self(), misc:registered_name()]),
-    NewPlayers = maps:remove(Uid, S#m_map_state.player),
-    {error, S#m_map_state{player = NewPlayers}}.
+    lib_map_rw:set_player_map( maps:remove(Uid, lib_map_rw:get_player_map())),
+    {error, S}.
 
 %%-------------------------------------------------------------------
 %% WARNING!!! WARNING!!! WARNING!!!
@@ -102,14 +93,14 @@ player_join_call(
         ?DEBUG("player ~p to ~p", [Uid, Pos]),
         Unit = lib_unit:new_player(Pid, Uid, Group, Pos, vector3:new(0.1, 0, 0.5)),
         send_goto_map_msg(Uid, Pos),
-        S1 = lib_map_rw:add_obj_to_ets(S, Unit),
+        lib_map_rw:add_obj_to_ets(Unit),
         lib_map_view:sync_player_join_map(Unit),
         catch hook_map:on_player_join(Uid),
         ?DEBUG("uid ~p, join map ~w, name ~p",
             [lib_unit:get_uid(Unit), self(), misc:registered_name()]),
-        {ok, S1}
-    catch _ : Error : _ ->
-        ?ERROR("player join map ~w, name ~p, error ~p", [self(), misc:registered_name(), Error]),
+        {ok, S}
+    catch _ : Error : ST ->
+        ?ERROR("player join map ~w, name ~p, error ~p, ~p", [self(), misc:registered_name(), Error, ST]),
         {error, S}
     end;
 player_join_call(S, Any) ->
@@ -133,36 +124,36 @@ force_teleport_call(S, #r_teleport_req{
 
 
 %%-------------------------------------------------------------------
-init_monster(S, #recGameMapCfg{
+init_monster(#recGameMapCfg{
     mapMonster = MonsterList
 }) ->
-    lists:foldl(
-        fun(MData, State) ->
-            init_all_monster_1(State, MData)
-        end, S, MonsterList).
+    lists:foreach(
+        fun(MData) ->
+            init_all_monster_1(MData)
+        end, MonsterList).
 
-init_all_monster_1(State, Mdata) ->
+init_all_monster_1(Mdata) ->
     Unit = lib_unit:new_monster(Mdata),
-    init_all_monster_2(State, Unit).
+    init_all_monster_2(Unit).
 
-init_all_monster_2(State, Unit) ->
+init_all_monster_2(Unit) ->
     Uid = lib_unit:get_uid(Unit),
     VisIndex = lib_map_view:pos_to_vis_index(lib_move_rw:get_cur_pos(Uid)),
-    NewState = lib_map_rw:add_obj_to_ets(State, Unit),
+    lib_map_rw:add_obj_to_ets(Unit),
     lib_map_view:add_obj_to_vis_tile(Unit, VisIndex),
     hook_map:on_monster_create(Uid),
     ?DEBUG("map ~p:~p create monster ~p, uid ~p, visIndex ~p",
-        [lib_map_rw:get_map_id(), lib_map_rw:get_line_id(), lib_unit:get_did(Unit), Uid, VisIndex]),
-    NewState.
+        [lib_map_rw:get_map_id(), lib_map_rw:get_line_id(), lib_unit:get_data_id(Unit), Uid, VisIndex]),
+    ok.
 
 %%-------------------------------------------------------------------
-init_npc(S, #recGameMapCfg{
+init_npc(#recGameMapCfg{
     mapNpc = NpcList
 }) ->
-    init_all_npc(S, NpcList).
+    init_all_npc(NpcList).
 
-init_all_npc(S, _NL) ->
-    S.
+init_all_npc(_NL) ->
+    ok.
 
 %%-------------------------------------------------------------------
 tick_msg() -> erlang:send_after(?MAP_TICK, self(), tick_now).
@@ -172,13 +163,13 @@ tick(S) ->
     tick_1(S).
 
 tick_1(#m_map_state{status = ?MAP_READY_EXIT, protect_tick = Tick} = S) when Tick =< 0 ->
-    PlayerSize = lib_map_rw:get_player_size(S),
+    PlayerSize = lib_map_rw:get_player_size(),
     ?FATAL("map_~p_~p destroy error, player size ~p, force stop now",
         [lib_map_rw:get_map_id(), lib_map_rw:get_line_id(), PlayerSize]),
     ?TRY_CATCH(real_stop_now(0)),
     S;
 tick_1(#m_map_state{status = ?MAP_READY_EXIT, protect_tick = TickMax} = S) ->
-    PlayerSize = lib_map_rw:get_player_size(S),
+    PlayerSize = lib_map_rw:get_player_size(),
     ?TRY_CATCH(real_stop_now(PlayerSize)),
     S#m_map_state{protect_tick = TickMax - 1};
 tick_1(S) ->
@@ -200,11 +191,11 @@ tick_obj(S) ->
     ok.
 
 %%-------------------------------------------------------------------
-tick_player(S) ->
+tick_player(_S) ->
     maps:fold(
         fun(_, Uid, _)->
             tick_player_1(lib_map_rw:get_player(Uid), Uid)
-        end, 0, S#m_map_state.player).
+        end, 0, lib_map_rw:get_player_map()).
 
 tick_player_1(undefined, Uid) ->
     ?ERROR("player ~p may be leave map",[Uid]);
@@ -214,14 +205,14 @@ tick_player_1(Unit, _) ->
     ok.
 
 %%-------------------------------------------------------------------
-tick_monster(S) ->
+tick_monster(_S) ->
     maps:fold(
         fun(_, Uid, _)->
             tick_monster_1(lib_map_rw:get_monster(Uid), Uid)
-        end, 0, S#m_map_state.monster).
+        end, 0, lib_map_rw:get_monster_map()).
 
 tick_monster_1(undefined, Uid) ->
-    ?ERROR("monster ~p not exists",[Uid]);
+    ?ERROR("monster ~p  ~p not exists",[Uid, lib_unit_rw:get_data_id(Uid)]);
 tick_monster_1(Unit, _) ->
     ?TRY_CATCH(lib_move:update(Unit), Err1, Stk1),
     ?TRY_CATCH(lib_ai:update(Unit),   Err2, Stk2),
@@ -229,11 +220,11 @@ tick_monster_1(Unit, _) ->
     ok.
 
 %%-------------------------------------------------------------------
-tick_pet(S) ->
+tick_pet(_S) ->
     maps:fold(
         fun(_, Uid, _)->
             tick_pet_1(lib_map_rw:get_pet(Uid), Uid)
-        end, 0, S#m_map_state.pet).
+        end, 0, lib_map_rw:get_pet_map()).
 
 tick_pet_1(undefined, Uid) ->
     ?ERROR("pet ~p not exists",[Uid]);
@@ -263,11 +254,11 @@ start_stop_now(S) ->
     ?TRY_CATCH(kick_all_player(S), Err2, Stk2),
     S#m_map_state{status = ?MAP_READY_EXIT}.
 
-kick_all_player(S) ->
+kick_all_player(_S) ->
     maps:fold(
         fun(_, Uid, _)->
             catch gs_interface:send_msg(Uid, return_to_pre_map_req)
-        end, 0, S#m_map_state.player),
+        end, 0, lib_map_rw:get_player_map()),
     ok.
 
 %%-------------------------------------------------------------------
@@ -290,24 +281,24 @@ send_goto_map_msg(Uid, Pos) ->
     ok.
 
 %%-------------------------------------------------------------------
-broadcast_msg(S, {MsgId}) ->
+broadcast_msg(_S, {MsgId}) ->
     maps:fold(
         fun(_, Uid, _)->
             gs_interface:send_msg(Uid, MsgId)
-        end, 0, S#m_map_state.player),
+        end, 0, lib_map_rw:get_player_map()),
     ok;
-broadcast_msg(S, {MsgId, Msg}) ->
+broadcast_msg(_S, {MsgId, Msg}) ->
     maps:fold(
         fun(_, Uid, _)->
             gs_interface:send_msg(Uid, MsgId, Msg)
-        end, 0, S#m_map_state.player),
+        end, 0, lib_map_rw:get_player_map()),
     ok.
 
-broadcast_net_msg(S, NetMsg) ->
+broadcast_net_msg(_S, NetMsg) ->
     maps:fold(
         fun(_, Uid, _)->
             gs_interface:send_net_msg(Uid, NetMsg)
-        end, 0, S#m_map_state.player),
+        end, 0, lib_map_rw:get_player_map()),
     ok.
 
 %%-------------------------------------------------------------------
