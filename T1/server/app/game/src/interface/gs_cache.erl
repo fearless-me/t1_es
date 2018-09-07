@@ -58,7 +58,6 @@ online(#m_cache_player_pub{aid = Aid, uid = Uid} = Player, Pid, Sock) ->
     gs_cache:add_player_pub(Player),
     gs_cache:add_player_priv(Aid, Uid),
     gs_cache:add_socket(Aid, Uid, Pid, Sock),
-    ets:delete(?ETS_CACHE_MAP_PLAYER, Uid),
     ok.
 
 %%-------------------------------------------------------------------
@@ -67,6 +66,7 @@ offline(Aid, Uid) ->
     gs_cache:del_socket(Uid),
     gs_cache:del_account_socket(Aid),
     gs_cache:del_player_priv(Uid),
+    ets:delete(?ETS_CACHE_MAP_PLAYER, Uid),
     ok.
 
 

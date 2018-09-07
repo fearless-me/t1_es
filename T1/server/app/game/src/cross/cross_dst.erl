@@ -20,7 +20,7 @@
 
 %% API
 -export([
-    rpc_call_player_enter/1, rpc_call_player_leave/2,
+    rpc_call_player_enter/1, rpc_call_player_prepare_leave/2, rpc_call_player_leave/2,
     rpc_call_player_offline/2, rpc_call_del_player/2,
     rpc_update_player/1
 ]).
@@ -42,14 +42,24 @@ rpc_call_player_enter(#r_to_cross_data{
     ?INFO("player ~w of account ~p enter cross",[Uid, Aid]),
     ok.
 
+
+
 %% @doc
 %% 返回给源服务器时玩家公共数据
 %% @reference cross_src:player_pub_data_from_cross
-%% @end 
+%% @end
+rpc_call_player_prepare_leave(Aid, Uid) ->
+    %%
+    %% todo  返回给普通服的数据
+    ?WARN("player ~w of account ~p prpare to leave cross",[Uid, Aid]),
+    ok.
+
+%% @doc
+%% 成功离开跨服
+%% @end
 rpc_call_player_leave(Aid, Uid) ->
     gs_cache:offline(Aid, Uid),
-    %%fixme 返回给普通服的数据
-    ?INFO("player ~w of account ~p leave cross",[Uid, Aid]),
+    ?WARN("player ~w of account ~p leave cross",[Uid, Aid]),
     ok.
 
 %% @doc

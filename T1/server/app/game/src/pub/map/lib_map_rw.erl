@@ -135,22 +135,22 @@ get_pet(Uid) ->
 
 %%-------------------------------------------------------------------
 add_obj_to_ets(#m_cache_map_unit{type = ?OBJ_MON, uid = Uid} = Unit) ->
-    catch ets:insert(?ETS_CACHE_MAP_MONSTER, Unit),
+    ets:insert(?ETS_CACHE_MAP_MONSTER, Unit),
     lib_map_rw:set_monster_map( maps:put(Uid, Uid, lib_map_rw:get_monster_map()) ),
     ok;
 add_obj_to_ets(#m_cache_map_unit{type = ?OBJ_USR, uid = Uid} = Unit) ->
-    catch ets:insert(?ETS_CACHE_MAP_PLAYER, Unit),
+    ets:insert(?ETS_CACHE_MAP_PLAYER, Unit),
     lib_map_rw:set_player_map( maps:put(Uid, Uid, lib_map_rw:get_player_map()) ),
     ok;
 add_obj_to_ets(_) ->
     ok.
 
 del_obj_to_ets(#m_cache_map_unit{uid = Uid, type = ?OBJ_MON}) ->
-    catch ets:delete(?ETS_CACHE_MAP_MONSTER, Uid),
+    ets:delete(?ETS_CACHE_MAP_MONSTER, Uid),
     lib_map_rw:set_monster_map( maps:remove(Uid, lib_map_rw:get_monster_map()) ),
     ok;
 del_obj_to_ets(#m_cache_map_unit{uid = Uid, type = ?OBJ_USR}) ->
-    catch ets:update_element(?ETS_CACHE_MAP_PLAYER, Uid, [{#m_cache_map_unit.map_id, 0}, {#m_cache_map_unit.line_id, 0}]),
+    ets:update_element(?ETS_CACHE_MAP_PLAYER, Uid, [{#m_cache_map_unit.map_id, 0}, {#m_cache_map_unit.line_id, 0}]),
     lib_map_rw:set_player_map( maps:remove(Uid, lib_map_rw:get_player_map()) ),
     ok;
 del_obj_to_ets(_) ->

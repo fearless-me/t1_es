@@ -43,7 +43,7 @@ player_pub_data_to_cross(Aid, Uid) ->
 %% @doc
 %% 跨服回源服务器时带回来的玩家公共数据
 %% ** 该函数咋玩家进程调用要快速返回 **
-%% @reference cross_dst:rpc_call_player_leave
+%% @reference cross_dst:rpc_call_player_prepare_leave
 %% @end
 player_pub_data_from_cross({badrpc, _} = X) ->
     ?ERROR("~p error: ~p ", [?FUNCTION_NAME, X]);
