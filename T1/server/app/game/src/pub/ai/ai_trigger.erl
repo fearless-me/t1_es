@@ -21,9 +21,9 @@
 
 %%-------------------------------------------------------------------
 init(Uid) ->
-    AIid = lib_ai_rw:get_ai_id(Uid),
+    AIid = ai_rw:get_ai_id(Uid),
     Triggers = init_1(Uid, AIid),
-    lib_ai_rw:set_triggers(Uid, Triggers),
+    ai_rw:set_triggers(Uid, Triggers),
     ok.
 
 
@@ -51,9 +51,9 @@ init_1(_Uid, _Cfg) ->
 
 %%-------------------------------------------------------------------
 update(Uid) ->
-    Triggers0 = lib_ai_rw:get_triggers_def(Uid, []),
+    Triggers0 = ai_rw:get_triggers_def(Uid, []),
     Triggers1 = lists:map(fun(Trigger) -> do_update(Uid, Trigger) end, Triggers0),
-    lib_ai_rw:set_triggers(Uid, Triggers1),
+    ai_rw:set_triggers(Uid, Triggers1),
     ok.
 
 do_update(_Uid, #m_ai_trigger{is_active = false} = Trigger) ->
@@ -61,7 +61,7 @@ do_update(_Uid, #m_ai_trigger{is_active = false} = Trigger) ->
 do_update(Uid, #m_ai_trigger{active_tick = Tick, target_type = Type} = Trigger) ->
     case test_interval(Trigger) of
         true ->
-            TarUid = lib_ai:get_target_by_type(Uid, Type),
+            TarUid = ai_mod:get_target_by_type(Uid, Type),
             case
                 test_trigger_state(Uid, Trigger, TarUid) andalso
                     test_trigger_event(Uid, Trigger)
@@ -81,7 +81,7 @@ on_trigger(
     #m_ai_trigger{skill_id = SkillId, active_tick = Tick, trigger_times = Times} = Trigger,
     TarUid
 ) ->
-    case lib_ai:ai_use_skill(Uid, SkillId, TarUid) of
+    case ai_mod:ai_use_skill(Uid, SkillId, TarUid) of
         true ->
             Trigger#m_ai_trigger{active_tick = Tick + 1, trigger_times = Times + 1, is_active = true};
         _ ->
@@ -91,17 +91,17 @@ on_trigger(
 
 %%-------------------------------------------------------------------
 refresh(Uid) ->
-    Triggers0 = lib_ai_rw:get_triggers_def(Uid, []),
+    Triggers0 = ai_rw:get_triggers_def(Uid, []),
     Triggers1 = lists:map(
         fun(Trigger) ->
             Trigger#m_ai_trigger{is_active = false, active_tick = 0, trigger_times = 0}
         end, Triggers0),
-    lib_ai_rw:set_triggers(Uid, Triggers1),
+    ai_rw:set_triggers(Uid, Triggers1),
     ok.
 
 %%-------------------------------------------------------------------
 set_active(Uid, EventType) ->
-    Triggers0 = lib_ai_rw:get_triggers_def(Uid, []),
+    Triggers0 = ai_rw:get_triggers_def(Uid, []),
     Triggers1 = lists:map(
         fun(#m_ai_trigger{cfg_id = Id} = Trigger) ->
             IsNeedActive = can_active(Id, EventType),
@@ -111,7 +111,7 @@ set_active(Uid, EventType) ->
                 true -> Trigger
             end
         end, Triggers0),
-    lib_ai_rw:set_triggers(Uid, Triggers1),
+    ai_rw:set_triggers(Uid, Triggers1),
     ok.
 
 can_active(_CfgId, EventType) ->
@@ -141,14 +141,14 @@ test_trigger_event(_Uid, #m_ai_trigger_cfg{prob = Prob}) ->
 test_trigger_state(_Uid, _Trigger, 0) ->
     false;
 test_trigger_state(Uid, Trigger, TarUid) when is_integer(TarUid) ->
-    Unit = lib_map_rw:get_obj(TarUid),
+    Unit = map_rw:get_obj(TarUid),
     test_trigger_state(Uid, Trigger, Unit);
 test_trigger_state(_Uid, _Trigger, undefined) ->
     false;
 test_trigger_state(Uid, #m_ai_trigger{cfg_id = _Id}, #m_cache_map_unit{uid = TarUid} = Obj) ->
     case
-        lib_unit:is_dead(Uid) orelse
-            lib_unit:is_dead(TarUid)
+        unit_mod:is_dead(Uid) orelse
+            unit_mod:is_dead(TarUid)
     of
         true ->
             false;
@@ -166,12 +166,12 @@ test_trigger_state(_Uid, _Any, _None) ->
 
 %%-------------------------------------------------------------------
 on_event(Uid, EventType) ->
-    Triggers0 = lib_ai_rw:get_triggers_def(Uid, []),
+    Triggers0 = ai_rw:get_triggers_def(Uid, []),
     Triggers1 = lists:map(
         fun(Trigger) ->
             on_event_1(Uid, Trigger, EventType)
         end, Triggers0),
-    lib_ai_rw:set_triggers(Uid, Triggers1),
+    ai_rw:set_triggers(Uid, Triggers1),
     ok.
 
 on_event_1(Uid, #m_ai_trigger{cfg_id = _Id} = Trigger, EventType) ->
@@ -181,7 +181,7 @@ on_event_1(Uid, #m_ai_trigger{cfg_id = _Id} = Trigger, EventType) ->
 
 on_event_2(Uid, #m_ai_trigger_cfg{event = EventType}, Trigger, EventType) ->
     #m_ai_trigger{target_type = TarType, active_tick = Tick} = Trigger,
-    TarUid = lib_ai:get_target_by_type(Uid, TarType),
+    TarUid = ai_mod:get_target_by_type(Uid, TarType),
     case test_trigger_event(Uid, Trigger) of
         true ->
             ?TRY_CATCH_RET(on_trigger(Uid, Trigger, TarUid), Trigger);

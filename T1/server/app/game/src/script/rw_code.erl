@@ -44,8 +44,8 @@ run_halt([run_from_scripts_ket])->
 run() ->
     try
         multi_to_code(
-            "..\\src\\pub\\map\\lib_unit_rw.erl",
-            lib_unit_rw,
+            "..\\src\\pub\\map\\unit_rw.erl",
+            unit_rw,
             [
                 ["logger.hrl", "rec_rw.hrl"],
                 [
@@ -54,8 +54,8 @@ run() ->
             ]
         ),
         multi_to_code(
-            "..\\src\\pub\\map\\lib_combat_rw.erl",
-            lib_combat_rw,
+            "..\\src\\pub\\map\\combat_rw.erl",
+            combat_rw,
             [
                 ["logger.hrl", "rec_rw.hrl"],
                 [
@@ -64,8 +64,8 @@ run() ->
             ]
         ),
         multi_to_code(
-            "..\\src\\pub\\map\\lib_move_rw.erl",
-            lib_move_rw,
+            "..\\src\\pub\\map\\move_rw.erl",
+            move_rw,
             [
                 ["logger.hrl", "rec_rw.hrl"],
                 [
@@ -74,8 +74,8 @@ run() ->
             ]
         ),
         multi_to_code(
-            "..\\src\\pub\\map\\lib_ai_rw.erl",
-            lib_ai_rw,
+            "..\\src\\pub\\map\\ai_rw.erl",
+            ai_rw,
             [
                 ["logger.hrl", "gs_ai_inc.hrl", "rec_rw.hrl"],
                 [
@@ -84,8 +84,8 @@ run() ->
             ]
         ),
         multi_to_code(
-            "..\\src\\pub\\player\\lib_player_rw.erl",
-            lib_player_rw,
+            "..\\src\\pub\\player\\player_rw.erl",
+            player_rw,
             [
                 ["logger.hrl", "gs_player_status.hrl", "rec_rw.hrl"],
                 [

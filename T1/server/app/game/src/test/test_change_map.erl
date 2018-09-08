@@ -13,5 +13,5 @@
 -export([run/0]).
 
 run() ->
-    lib_player_bag:new(1, 100),
+    player_bag:new(1, 100),
     ok.

@@ -2,7 +2,7 @@
 %%% @author mawenhong
 %%% @copyright (C) 2018, <COMPANY>
 %%% @doc
-%%%
+%%% 在玩家进程内部调用，要快速返回
 %%% @end
 %%% Created : 28. 八月 2018 10:48
 %%%-------------------------------------------------------------------
@@ -10,13 +10,6 @@
 -author("mawenhong").
 -include("logger.hrl").
 -include("common_cross_inc.hrl").
-%%
-%% @doc
-%%
-%% 在玩家进程内部调用，要快速返回
-%%
-%% @end
-%%
 
 %% API
 -export([
@@ -26,10 +19,10 @@
 ]).
 
 
-%% @doc
+%%
 %% 玩家跨服时传过来的公共数据
-%% @reference cross_src:player_pub_data_to_cross
-%% @end
+%% {@link cross_src:player_pub_data_to_cross}
+%%
 rpc_call_player_enter(#r_to_cross_data{
     pid = Pid,
     aid = Aid,
@@ -44,28 +37,28 @@ rpc_call_player_enter(#r_to_cross_data{
 
 
 
-%% @doc
+%%
 %% 返回给源服务器时玩家公共数据
-%% @reference cross_src:player_pub_data_from_cross
-%% @end
+%% {@link cross_src:player_pub_data_from_cross}
+%%
 rpc_call_player_prepare_leave(Aid, Uid) ->
     %%
     %% todo  返回给普通服的数据
     ?WARN("player ~w of account ~p prpare to leave cross",[Uid, Aid]),
     ok.
 
-%% @doc
+%%
 %% 成功离开跨服
-%% @end
+%%
 rpc_call_player_leave(Aid, Uid) ->
     gs_cache:offline(Aid, Uid),
     ?WARN("player ~w of account ~p leave cross",[Uid, Aid]),
     ok.
 
-%% @doc
+%%
 %% 玩家在跨服地图下线
-%% @reference cross_src:player_pub_data_from_cross
-%% @end 
+%% {@link cross_src:player_pub_data_from_cross}
+%%
 rpc_call_player_offline(Aid, Uid) ->
     gs_cache:offline(Aid, Uid),
     %%fixme 返回给普通服的数据

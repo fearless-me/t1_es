@@ -14,12 +14,12 @@
 
 %%-------------------------------------------------------------------
 on_enter(Uid) ->
-    lib_ai:clear_all_enmity(Uid),
-    lib_ai:reset_patrol_tick(Uid),
-    lib_ai:reset_look_for_target_tick(Uid),
-    lib_ai_rw:set_is_patrol(Uid, false),
-    lib_ai_rw:set_is_reverse_patrol(Uid, false),
-    lib_ai_rw:set_enter_combat_time(Uid, 0),
+    ai_mod:clear_all_enmity(Uid),
+    ai_mod:reset_patrol_tick(Uid),
+    ai_mod:reset_look_for_target_tick(Uid),
+    ai_rw:set_is_patrol(Uid, false),
+    ai_rw:set_is_reverse_patrol(Uid, false),
+    ai_rw:set_enter_combat_time(Uid, 0),
     ok.
 
 %%-------------------------------------------------------------------
@@ -29,8 +29,8 @@ on_exit(_Uid) ->
 
 %%-------------------------------------------------------------------
 update(Uid) ->
-    lib_ai:update_patrol(Uid),
-    lib_ai:update_look_for_enemy(Uid),
+    ai_mod:update_patrol(Uid),
+    ai_mod:update_look_for_enemy(Uid),
     ok.
 
 %%-------------------------------------------------------------------

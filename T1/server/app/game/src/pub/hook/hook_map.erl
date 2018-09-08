@@ -35,14 +35,14 @@ on_player_join(_Uid) ->
     ok.
 
 on_player_exit(Uid) ->
-    lib_unit:del_player(Uid),
+    unit_mod:del_player(Uid),
     ok.
 %%-------------------------------------------------------------------
 on_monster_create(_Uid) ->
     ok.
 
 on_monster_dead(Uid) ->
-    lib_unit:del_monster(Uid),
+    unit_mod:del_monster(Uid),
     ok.
 
 on_start_move(_Uid) ->
@@ -57,19 +57,19 @@ on_start_move(_Uid) ->
 
 on_rw_update(Uid, hp, Hp) ->
     ?lock({Uid, hp}),
-    Type = lib_unit_rw:get_type(Uid),
+    Type = unit_rw:get_type(Uid),
     do_on_rw_update_pub(Type, Uid, {#m_cache_player_pub.hp, Hp}),
     ?unlock(),
     ok;
 on_rw_update(Uid, attr, Attrs) ->
     ?lock({Uid, attr}),
-    Type = lib_unit_rw:get_type(Uid),
+    Type = unit_rw:get_type(Uid),
     do_on_rw_update_priv(Type, Uid, {#m_cache_player_private.priv_attrs, Attrs}),
     ?unlock(),
     ok;
 on_rw_update(Uid, buff_list, BuffList) ->
     ?lock({Uid, buff_list}),
-    Type = lib_unit_rw:get_type(Uid),
+    Type = unit_rw:get_type(Uid),
     do_on_rw_update_priv(Type, Uid, {#m_cache_player_private.priv_buffs, BuffList}),
     ?unlock(),
     ok;

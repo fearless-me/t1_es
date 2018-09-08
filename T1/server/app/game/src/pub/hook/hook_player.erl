@@ -28,24 +28,24 @@ on_account_login(Aid, Pid, Sock) ->
 
 %%-------------------------------------------------------------------
 on_create(Uid) ->
-    lib_player_pub:send_net_msg(#pk_GS2U_CreatePlayerResult{uid = Uid}),
+    player_pub:send_net_msg(#pk_GS2U_CreatePlayerResult{uid = Uid}),
     ?DEBUG("[hook]Aid ~p create new player ~w",
-        [lib_player_rw:get_aid(), Uid]),
+        [player_rw:get_aid(), Uid]),
     ok.
 
 %%-------------------------------------------------------------------
 on_login(Player) ->
-    Aid = lib_player_rw:get_aid(),
-    gs_cross_interface:assign_cross_for_me(Aid),
-    lib_player_base:init(Player),
-    lib_player_base:send_init_data(),
-    gs_cache:online(Player, self(), lib_player_pub:socket()),
-    lib_player_cross_priv:online(),
-    lib_player_map_priv:online_call(Player),
-    lib_player_alarm:init(),
-    lib_player_sub:tick_go(),
+    Aid = player_rw:get_aid(),
+    cross_interface:assign_cross_for_me(Aid),
+    player_base:init(Player),
+    player_base:send_init_data(),
+    gs_cache:online(Player, self(), player_pub:socket()),
+    player_cross_priv:online(),
+    player_map_priv:online_call(Player),
+    player_alarm:init(),
+    player_sub:tick_go(),
     ?DEBUG("[hook]Aid ~p player login ~w",
-        [lib_player_rw:get_aid(), lib_player_rw:get_uid()]),
+        [player_rw:get_aid(), player_rw:get_uid()]),
     ok.
 
 %%-------------------------------------------------------------------
@@ -55,23 +55,23 @@ on_offline() ->
         map_id = Mid,
         map_pid = MPid,
         line_id = LineId
-    } = lib_player_rw:get_map(),
-    Uid = lib_player_rw:get_uid(),
-    Aid = lib_player_rw:get_aid(),
+    } = player_rw:get_map(),
+    Uid = player_rw:get_uid(),
+    Aid = player_rw:get_aid(),
 
     %% 2.
-    ?TRY_CATCH(lib_player_map_priv:offline_call(Uid, Mid, LineId, MPid), Err1, St1),
-    ?TRY_CATCH(lib_player_cross_priv:offline(), Err2, St2),
+    ?TRY_CATCH(player_map_priv:offline_call(Uid, Mid, LineId, MPid), Err1, St1),
+    ?TRY_CATCH(player_cross_priv:offline(), Err2, St2),
     ?TRY_CATCH(gs_cache:offline(Aid, Uid), Err3, St3),
-    ?TRY_CATCH(lib_player_alarm:save(), Err4, St4),
-    ?TRY_CATCH(lib_player_save:save(Uid), Err5, St5),
+    ?TRY_CATCH(player_alarm:save(), Err4, St4),
+    ?TRY_CATCH(player_save:save(Uid), Err5, St5),
     ?WARN("player ~p exit map_~p_~p", [Uid, Mid, LineId]),
     ok.
 
 %%-------------------------------------------------------------------
 on_change_map(OldMap, NewMap) ->
     ?DEBUG("[hook]Aid ~p  player ~p change map from ~w to ~w",
-        [lib_player_rw:get_aid(), lib_player_rw:get_uid(), OldMap, NewMap]),
+        [player_rw:get_aid(), player_rw:get_uid(), OldMap, NewMap]),
     ok.
 
 %%-------------------------------------------------------------------
@@ -90,12 +90,12 @@ on_minute() ->
 
 %%-------------------------------------------------------------------
 on_hour() ->
-    ?INFO("player ~p on_hour", [lib_player_rw:get_uid()]),
+    ?INFO("player ~p on_hour", [player_rw:get_uid()]),
     ok.
 
 %%-------------------------------------------------------------------
 on_sharp(Hour) ->
-    ?INFO("player ~p on_sharp ~p", [lib_player_rw:get_uid(), Hour]),
+    ?INFO("player ~p on_sharp ~p", [player_rw:get_uid(), Hour]),
     ok.
 
 %%-------------------------------------------------------------------
@@ -105,7 +105,7 @@ on_sharp(Hour) ->
 %%不要在调用lib_player_rw:set_xxx
 on_rw_update(level, Level) ->
     ?lock(level),
-    Uid = lib_player_rw:get_uid(),
+    Uid = player_rw:get_uid(),
     gs_cache:update_player_pub(Uid, {#m_cache_player_pub.level, Level}),
     ?unlock(),
     ok;
