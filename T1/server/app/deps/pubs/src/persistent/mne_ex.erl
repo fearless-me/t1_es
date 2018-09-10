@@ -16,6 +16,8 @@
 %% todo 3. 在处理异常
 %% todo 4. 在优化效率
 
+-define(WAIT_TABLES_TIMEOUT, 3*60*1000).
+
 %% API
 -export([
     start/0, stop/0, sync/1, is_local_content/1,table_node/1,
@@ -116,7 +118,7 @@ clear_table(TabName) ->
 
 wait_for_tables() ->
     Tables = mnesia:system_info(tables),
-    mnesia:wait_for_tables(Tables, infinity),
+    mnesia:wait_for_tables(Tables, ?WAIT_TABLES_TIMEOUT),
     ok.
 
 

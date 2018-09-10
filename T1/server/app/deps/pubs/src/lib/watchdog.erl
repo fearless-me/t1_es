@@ -58,7 +58,7 @@ wait_group(Priority) ->
 
 
 status() ->
-    gen_server:call(?MODULE, status, infinity).
+    gen_server:call(?MODULE, status).
 
 status_() ->
     ps:send(?MODULE, status).

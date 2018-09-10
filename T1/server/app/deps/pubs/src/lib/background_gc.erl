@@ -33,8 +33,7 @@
 
 %%----------------------------------------------------------------------------
 
-start_link() -> gen_server2:start_link({local, ?MODULE}, ?MODULE, [],
-    [{timeout, infinity}]).
+start_link() -> gen_server2:start_link({local, ?MODULE}, ?MODULE, [], []).
 
 run() -> gen_server2:cast(?MODULE, run).
 
