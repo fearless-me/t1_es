@@ -15,7 +15,7 @@
 %%% @end
 %%% Created : 11. 五月 2018 14:27
 %%%-------------------------------------------------------------------
--module(gs_player_handler).
+-module(player_tcp_handler).
 -author("mawenhong").
 -behaviour(tcp_behaviour).
 
@@ -76,7 +76,7 @@ on_init(Socket) ->
 %%-------------------------------------------------------------------
 on_data(Socket, Data, S)->
     set_latest_net_time(),
-    tcp_codec:decode(fun gs_player_handler:on_net_msg/2, Socket, Data),
+    tcp_codec:decode(fun player_tcp_handler:on_net_msg/2, Socket, Data),
     S.
 
 %%-------------------------------------------------------------------
@@ -90,10 +90,10 @@ on_info_msg(check_net, S) ->
     check_idle(),
     S;
 on_info_msg({kick_role, Reason}, S) ->
-    gs_player_handler:stop(Reason),
+    player_tcp_handler:stop(Reason),
     S;
 on_info_msg({net_msg, NetMsg}, S) ->
-    gs_player_handler:send_net_msg(NetMsg),
+    player_tcp_handler:send_net_msg(NetMsg),
     S;
 on_info_msg({login_ack, Msg}, S) ->
     ?DEBUG("login_ack:~p",[Msg]),
@@ -185,9 +185,9 @@ check_idle_msg() -> erlang:send_after(?NET_IDLE_TIME, self(), check_net).
 check_idle() ->
     try
         case misc_time:milli_seconds() - get('RECV_NETMSG_LATEST') > ?NET_IDLE_TIME of
-            true -> gs_player_handler:stop(net_heartbeat_stop);
+            true -> player_tcp_handler:stop(net_heartbeat_stop);
             false -> check_idle_msg()
         end
     catch _ : _ : _ ->
-        gs_player_handler:stop(net_heartbeat_stop)
+        player_tcp_handler:stop(net_heartbeat_stop)
     end.

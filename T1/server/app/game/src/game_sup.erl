@@ -75,7 +75,7 @@ start_tcp_listener(_SupPid) ->
                 gs_player_listen_server,
                 10,
                 [{port, Port}, {max_connections, MaxConnection}, {linger, {false, 0}}],
-                gs_player_handler
+                player_tcp_handler
             )
     end.
 

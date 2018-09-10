@@ -494,7 +494,31 @@ decode(?U2GS_SelPlayerEnterGame,Bin0) ->
 	{ #pk_U2GS_SelPlayerEnterGame {
 		uid = V_uid
 		},
-	Bin1 }.
+	Bin1 };
+
+%GENERATED from file:player.h => GS2U_Chat
+decode(?GS2U_Chat,Bin0) ->
+	{ V_channel, Bin1 } = read_int8( Bin0 ),
+	{ V_uid, Bin2 } = read_uint64( Bin1 ),
+	{ V_content, Bin3 } = read_string( Bin2 ),
+	{ #pk_GS2U_Chat {
+		channel = V_channel,
+		uid = V_uid,
+		content = V_content
+		},
+	Bin3 };
+
+%GENERATED from file:player.h => U2GS_Chat
+decode(?U2GS_Chat,Bin0) ->
+	{ V_channel, Bin1 } = read_int8( Bin0 ),
+	{ V_receiver, Bin2 } = read_uint64( Bin1 ),
+	{ V_content, Bin3 } = read_string( Bin2 ),
+	{ #pk_U2GS_Chat {
+		channel = V_channel,
+		receiver = V_receiver,
+		content = V_content
+		},
+	Bin3 }.
 
 %GENERATED from file:login.h => LookInfoMonster
 -spec decode_LookInfoMonster(Bin0) -> { #pk_LookInfoMonster{},LeftBin }
@@ -1056,6 +1080,30 @@ encode(#pk_U2GS_SelPlayerEnterGame{} = P) ->
 		Bin_uid
 	];
 
+%GENERATED from file:player.h => GS2U_Chat
+encode(#pk_GS2U_Chat{} = P) ->
+	Bin_channel = write_int8( P#pk_GS2U_Chat.channel ),
+	Bin_uid = write_uint64( P#pk_GS2U_Chat.uid ),
+	Bin_content = write_string( P#pk_GS2U_Chat.content ),
+	[
+		<<?GS2U_Chat:?U16>>,
+		Bin_channel,
+		Bin_uid,
+		Bin_content
+	];
+
+%GENERATED from file:player.h => U2GS_Chat
+encode(#pk_U2GS_Chat{} = P) ->
+	Bin_channel = write_int8( P#pk_U2GS_Chat.channel ),
+	Bin_receiver = write_uint64( P#pk_U2GS_Chat.receiver ),
+	Bin_content = write_string( P#pk_U2GS_Chat.content ),
+	[
+		<<?U2GS_Chat:?U16>>,
+		Bin_channel,
+		Bin_receiver,
+		Bin_content
+	];
+
 encode(_) -> noMatch.
 
 %GENERATED from file:login.h => LookInfoMonster
@@ -1186,6 +1234,8 @@ name(?U2GS_PlayerWalk) -> "U2GS_PlayerWalk";
 name(?U2GS_RequestCreatePlayer) -> "U2GS_RequestCreatePlayer";
 name(?U2GS_RequestDeletePlayer) -> "U2GS_RequestDeletePlayer";
 name(?U2GS_SelPlayerEnterGame) -> "U2GS_SelPlayerEnterGame";
+name(?GS2U_Chat) -> "GS2U_Chat";
+name(?U2GS_Chat) -> "U2GS_Chat";
 name(MsgID) -> "ErrorNetMsg_" ++ erlang:integer_to_list(MsgID).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1227,5 +1277,7 @@ cmd_list()->
 		,?U2GS_RequestCreatePlayer
 		,?U2GS_RequestDeletePlayer
 		,?U2GS_SelPlayerEnterGame
+		,?GS2U_Chat
+		,?U2GS_Chat
 
 	].

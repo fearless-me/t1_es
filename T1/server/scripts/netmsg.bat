@@ -3,6 +3,6 @@ rem %1 start mshta vbscript:createobject("wscript.shell").run("""%~0"" ::",0)(wi
 @echo off
 
 cls
-cd ../../Tools\NetProtor
-start NetMsgGen.bat
+cd ../../Tools/NetProtor
+call NetMsgGen.bat
 exit

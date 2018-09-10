@@ -58,7 +58,7 @@ online_call(Player) ->
         #r_change_map_req{uid = Uid, pid = self(), tar_map_id = Mid, tar_pos = Tar}
     ),
 
-    serv_change_map_call_ret(OldMid, OldLine, vector3:new(OX, 0, OY), Ack, login),
+    serve_change_map_call_ret(OldMid, OldLine, vector3:new(OX, 0, OY), Ack, login),
     ok.
 
 do_online_call(MapID, Req) ->
@@ -90,7 +90,7 @@ serve_change_map_call(DestMapID, DestLineId, TarPos) ->
         }
     ),
 
-    serv_change_map_call_ret(Mid, Line, Pos, Ack, gaming),
+    serve_change_map_call_ret(Mid, Line, Pos, Ack, gaming),
     ok.
 
 %%-------------------------------------------------------------------
@@ -130,7 +130,7 @@ do_serve_change_map_call(Req) ->
 
 
 %%-------------------------------------------------------------------
-serv_change_map_call_ret(
+serve_change_map_call_ret(
     OldMid, OldLineId, OldPos,
     #r_change_map_ack{
         error = 0,
@@ -159,7 +159,7 @@ serv_change_map_call_ret(
 
     player_rw:set_status(?PS_GAME),
     ok;
-serv_change_map_call_ret(
+serve_change_map_call_ret(
     OldMid, OldLineId, _OldPos,
     #r_change_map_ack{error = Err, map_id = Mid}, Flag
 ) ->

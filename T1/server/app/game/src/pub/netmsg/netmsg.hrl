@@ -544,4 +544,39 @@
 	oldMapID = 0
 }).
 
+%% 
+%% //////////////////////////////////////////////////////////////////////////
+%% //<-发出去     ;      ->收消息
+%% //不用使用int uint long 
+%% //
+%% /////////////////////////////////////////////////////////////////////////
+%% //不用使用int uint long 
+%% //不用使用int uint long 
+%% //不用使用int uint long 
+%% //不用使用int uint long 
+%% //不用使用int uint long 
+%% //不用使用int uint long 
+%% // 聊天消息(服务端发送)
+-define(GS2U_Chat,14728).
+-record(pk_GS2U_Chat,{
+	%% SByte频道
+	channel = 0,
+	%% UInt64发送者ID
+	uid = 0,
+	%% String内容
+	content = ""
+}).
+
+%% 
+%% // 聊天消息(客户端发送)
+-define(U2GS_Chat,11258).
+-record(pk_U2GS_Chat,{
+	%% SByte频道
+	channel = 0,
+	%% UInt64接收者ID
+	receiver = 0,
+	%% String内容
+	content = ""
+}).
+
 -endif. %%NetmsgRecords

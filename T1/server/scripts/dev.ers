@@ -31,12 +31,18 @@
 -define(OP_REF, 901).
 -define(OP_DIALYZER, 902).
 
+-define(OP_EDIT_NETMSG, 903).
+-define(OP_EDIT_ERRORCODE, 904).
+-define(OP_EDIT_LOGDEFINE, 905).
+
 -define(OP_GEN_NETMSG, 911).
 -define(OP_GEN_RW_CODE, 912).
 -define(OP_GEN_ERRORCODE, 913).
 -define(OP_GEN_LOGDEFINE, 914).
 -define(OP_EXPORT_DBSTRUCT, 915).
 -define(OP_BAK_DBSTRUCT, 916).
+
+
 
 -define(OP_TCP, 992).
 -define(OP_SET_TERMINAL_COLOR, 999).
@@ -71,9 +77,17 @@ show_cmd(?DEV_MODE) ->
             "\t~-10.w删除日志(all)~n"
             " #~n"
 
+			"\t********************************************************~n"
+			"\t** 请确保编辑器(notepad++)安装路径已经加入环境变量(path)~n"
+			"\t********************************************************~n"
+
             "\t~-10.w代码检查(xref)~n"
             "\t~-10.w代码检查(dialyzer)~n"
-            " #~n"
+            "~n"
+			"\t~-10.w编辑_网络消息()~n"
+            "\t~-10.w编辑_ErrorCode~n"
+			"\t~-10.w编辑_Logdefine~n"
+            "~n"
 
             "\t~-10.w生成代码_网络消息~n"
             "\t~-10.w生成代码_*_rw(根据rec_rw.hrl)~n"
@@ -95,6 +109,8 @@ show_cmd(?DEV_MODE) ->
                 ?OP_DEL_LOG_ALL,
 
                 ?OP_REF, ?OP_DIALYZER,
+				
+				?OP_EDIT_NETMSG, ?OP_EDIT_ERRORCODE,  ?OP_EDIT_LOGDEFINE,
 
                 ?OP_GEN_NETMSG, ?OP_GEN_RW_CODE, ?OP_GEN_ERRORCODE, ?OP_GEN_LOGDEFINE, ?OP_EXPORT_DBSTRUCT, ?OP_BAK_DBSTRUCT,
 
@@ -188,6 +204,15 @@ dispatchInput2(?OP_EXPORT_DBSTRUCT) ->
     erlang:spawn_monitor(fun() -> os:cmd("start export_db.bat") end);
 dispatchInput2(?OP_BAK_DBSTRUCT) ->
     erlang:spawn_monitor(fun() -> os:cmd("start bak_db.bat") end);
+
+%% 
+dispatchInput2(?OP_EDIT_NETMSG) ->
+    erlang:spawn_monitor(fun() -> os:cmd("start subcall.bat notepad++.exe ../../Tools/NetProtor/msg/*.h") end);
+dispatchInput2(?OP_EDIT_ERRORCODE) ->
+    erlang:spawn_monitor(fun() -> os:cmd("start subcall.bat notepad++.exe ../../Tools/ErrorCode/ErrorCode.h") end);	
+dispatchInput2(?OP_EDIT_LOGDEFINE) ->
+    erlang:spawn_monitor(fun() -> os:cmd("start subcall.bat notepad++.exe Logdefine.config") end);	
+	
 dispatchInput2(?OP_SET_TERMINAL_COLOR) ->
      erlang:spawn_monitor(fun() -> os:cmd("start /WAIT terminal_color.bat") end);	 
 dispatchInput2(_) ->

@@ -75,6 +75,12 @@ handle(#pk_U2GS_ChangeMap{map_id = MapId, x = X, y = Y}) ->
     ?DEBUG("### client request change to map ~p",[MapId]),
     player_pub:change_map_(MapId, 0, Pos),
     ok;
+handle(#pk_U2GS_Chat{content = Content}) ->
+    case player_gm:is_gm(Content) of
+    true -> player_gm:on_gm(Content);
+    _Any -> skip
+    end,
+    ok;
 handle(_Msg) ->
 %%    ?DEBUG("~p", [Msg]),
     ok.
