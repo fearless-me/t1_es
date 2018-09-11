@@ -20,9 +20,9 @@
 %%    
     online/3, offline/2,
 %% ETS_CACHE_PLAYER_PUB
-    add_player_pub/1, del_player_pub/1, get_player_pub/1, update_player_pub/2,
+    add_player_pub/1,  del_player_pub/1,  get_player_pub/1,  update_player_pub/2,
 %% ETS_CACHE_PLAYER_PRIV
-    add_player_priv/2, del_player_priv/1, update_player_priv/2,
+    add_player_priv/2, del_player_priv/1, get_player_priv/1, update_player_priv/2,
 %% ETS_CACHE_PLAYER_PID_SOCK
     add_socket/4,  del_socket/1, get_ppid/1, get_socket/1,
 %% ETS_CACHE_ACCOUNT_PID_SOCK
@@ -116,6 +116,13 @@ update_player_pub(Uid, Elements)->
 add_player_priv(Aid, Uid) ->
     ets:insert(?ETS_CACHE_PLAYER_PRIV,
         #m_cache_player_private{aid = Aid, uid = Uid}).
+
+%%-------------------------------------------------------------------
+get_player_priv(Uid) ->
+    case ets:lookup(?ETS_CACHE_PLAYER_PRIV, Uid) of
+        [Player] -> Player;
+        _ -> undefined
+    end.
 
 %%-------------------------------------------------------------------
 del_player_priv(Uid)->

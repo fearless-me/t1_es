@@ -35,14 +35,14 @@ on_player_join(_Uid) ->
     ok.
 
 on_player_exit(Uid) ->
-    unit_mod:del_player(Uid),
+    unit:del_player(Uid),
     ok.
 %%-------------------------------------------------------------------
 on_monster_create(_Uid) ->
     ok.
 
 on_monster_dead(Uid) ->
-    unit_mod:del_monster(Uid),
+    unit:del_monster(Uid),
     ok.
 
 on_start_move(_Uid) ->
@@ -78,14 +78,14 @@ on_rw_update(_Uid, _Key, _Value) ->
 
 
 %%-------------------------------------------------------------------
-do_on_rw_update_pub(?OBJ_USR, Uid, Element) ->
+do_on_rw_update_pub(?UNIT_PLAYER, Uid, Element) ->
     gs_cache:update_player_pub(Uid, Element),
     ok;
 do_on_rw_update_pub(_ObjType, _Uid, _Element) ->
     ok.
 
 %%-------------------------------------------------------------------
-do_on_rw_update_priv(?OBJ_USR, Uid, Element) ->
+do_on_rw_update_priv(?UNIT_PLAYER, Uid, Element) ->
     gs_cache:update_player_priv(Uid, Element),
     ok;
 do_on_rw_update_priv(_ObjType, _Uid, _Element) ->

@@ -17,12 +17,17 @@
 %% API
 -export([start_link/1]).
 -export([mod_init/1, do_handle_call/3, do_handle_info/2, do_handle_cast/2]).
+-export([call_reply/2]).
 
 %%%===================================================================
 %%% public functions
 %%%===================================================================
 start_link(Params) ->
     gen_serverw:start_link(?MODULE, Params, [{timeout, ?MAP_INIT_TIMEOUT}]).
+
+call_reply(FromPid, Ret) ->
+    gen_server:reply(FromPid, Ret),
+    ok.
 
 %%%===================================================================
 %%% Internal functions
@@ -33,23 +38,23 @@ mod_init([MapID, MapLine]) ->
     ProcessName = misc:create_atom(?MODULE, [MapID, MapLine]),
     true = erlang:register(ProcessName, self()),
     ?INFO("map ~p:~p started", [ProcessName, self()]),
-    {ok, map_mod_priv:init(#m_map_state{map_id = MapID, line_id = MapLine})}.
+    ps:send(self(), init),
+    {ok, #m_map_state{map_id = MapID, line_id = MapLine}}.
 
 %%--------------------------------------------------------------------
-do_handle_call({player_join, Unit}, _From, State) ->
-    {Ret, NewState} = map_mod_priv:player_join_call(State, Unit),
-    {reply, Ret, NewState};
-do_handle_call({player_exit, Req}, _From, State) ->
-    {Ret, NewState} = map_mod_priv:player_exit_call(State, Req),
-    {reply, Ret, NewState};
-do_handle_call({player_teleport, Req}, _From, State) ->
-    {Ret, NewState} = map_mod_priv:force_teleport_call(State, Req),
-    {reply, Ret, NewState};
+do_handle_call({player_join, Unit}, From, State) ->
+    map_mod_priv:player_join_call(State, From, Unit);
+do_handle_call({player_exit, Req}, From, State) ->
+    map_mod_priv:player_exit_call(State, From, Req);
+do_handle_call({player_teleport, Req}, From, State) ->
+    map_mod_priv:force_teleport_call(State, From, Req);
 do_handle_call(Request, From, State) ->
     Ret = map_mod:on_call_msg(Request, From),
     {reply, Ret, State}.
 
 %%--------------------------------------------------------------------
+do_handle_info(init, State) ->
+    {noreply, map_mod_priv:init(State)};
 do_handle_info(status, State) ->
     catch show_status(),
     {noreply, State};

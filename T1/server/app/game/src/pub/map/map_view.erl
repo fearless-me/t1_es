@@ -10,7 +10,7 @@
 -author("mawenhong").
 
 -include("logger.hrl").
-
+-include("pub_def.hrl").
 -include("map_core.hrl").
 -include("map_unit_cache.hrl").
 -include("netmsg.hrl").
@@ -41,7 +41,7 @@
 %%-------------------------------------------------------------------
 sync_player_join_map(Unit) ->
     %1.
-    Uid = unit_mod:get_uid(Unit),
+    Uid = unit:get_uid(Unit),
     Pos = move_rw:get_cur_pos(Uid),
     Index = pos_to_vis_index(Pos, get(?VIS_W), ?VIS_DIST),
     Tiles = get_vis_tile_around(Index),
@@ -54,11 +54,11 @@ sync_player_join_map(Unit) ->
 %%-------------------------------------------------------------------
 sync_player_exit_map(Unit) ->
     %1.
-    Uid = unit_mod:get_uid(Unit),
+    Uid = unit:get_uid(Unit),
     Index = pos_to_vis_index(move_rw:get_cur_pos(Uid), get(?VIS_W), ?VIS_DIST),
 
     %2.
-    del_obj_from_vis_tile(Unit, Index),
+    ?TRY_CATCH(del_obj_from_vis_tile(Unit, Index)),
 
     %3.
     Tiles = get_vis_tile_around(Index),
@@ -205,7 +205,7 @@ add_obj_to_vis_tile(Unit, VisTileIndex) ->
 
     VisTile = get_vis_tile(VisTileIndex),
     add_to_vis_tile_1(
-        unit_mod:get_type(Unit), unit_mod:get_uid(Unit), VisTileIndex, VisTile),
+        unit:get_type(Unit), unit:get_uid(Unit), VisTileIndex, VisTile),
     ok.
 
 %%
@@ -213,22 +213,22 @@ add_to_vis_tile_1(Type, Uid, VisTileIndex, undefined) ->
     W = get(?VIS_W), H = get(?VIS_H),
     ?ERROR("map ~p add t ~p  code ~p to visIdx ~p invalid ~p, W ~p H ~p",
         [map_rw:get_map_id(), Type, Uid, VisTileIndex, W * H, W, H]);
-add_to_vis_tile_1(?OBJ_USR, Uid, VisTileIndex, VisTile) ->
+add_to_vis_tile_1(?UNIT_PLAYER, Uid, VisTileIndex, VisTile) ->
     set_vis_tile(
         VisTileIndex,
         VisTile#m_vis_tile{player = [Uid | VisTile#m_vis_tile.player]}
     );
-add_to_vis_tile_1(?OBJ_MON, Uid, VisTileIndex, VisTile) ->
+add_to_vis_tile_1(?UNIT_MON, Uid, VisTileIndex, VisTile) ->
     set_vis_tile(
         VisTileIndex,
         VisTile#m_vis_tile{monster = [Uid | VisTile#m_vis_tile.monster]}
     );
-add_to_vis_tile_1(?OBJ_PET, Uid, VisTileIndex, VisTile) ->
+add_to_vis_tile_1(?UNIT_PET, Uid, VisTileIndex, VisTile) ->
     set_vis_tile(
         VisTileIndex,
         VisTile#m_vis_tile{pet = [Uid | VisTile#m_vis_tile.pet]}
     );
-add_to_vis_tile_1(?OBJ_NPC, Uid, VisTileIndex, VisTile) ->
+add_to_vis_tile_1(?UNIT_NPC, Uid, VisTileIndex, VisTile) ->
     set_vis_tile(
         VisTileIndex,
         VisTile#m_vis_tile{npc = [Uid | VisTile#m_vis_tile.npc]}
@@ -243,7 +243,7 @@ del_obj_from_vis_tile(Unit, VisTileIndex) ->
 
 %%    ?DEBUG("del ~p from vis index ~p", [Unit#m_map_obj.uid, VisTileIndex]),
     VisTile = get_vis_tile(VisTileIndex),
-    del_from_vis_tile_1(unit_mod:get_type(Unit), unit_mod:get_uid(Unit), VisTileIndex, VisTile),
+    del_from_vis_tile_1(unit:get_type(Unit), unit:get_uid(Unit), VisTileIndex, VisTile),
     ok.
 
 %%
@@ -251,22 +251,22 @@ del_from_vis_tile_1(Type, Uid, VisTileIndex, undefined) ->
     W = get(?VIS_W), H = get(?VIS_H),
     ?ERROR("del t ~p, code ~p to visIdx ~p invalid ~p, W ~p H ~p",
         [Type, Uid, VisTileIndex, W * H, W, H]);
-del_from_vis_tile_1(?OBJ_USR, Uid, VisTileIndex, VisTile) ->
+del_from_vis_tile_1(?UNIT_PLAYER, Uid, VisTileIndex, VisTile) ->
     set_vis_tile(
         VisTileIndex,
         VisTile#m_vis_tile{player = lists:delete(Uid, VisTile#m_vis_tile.player)}
     );
-del_from_vis_tile_1(?OBJ_MON, Uid, VisTileIndex, VisTile) ->
+del_from_vis_tile_1(?UNIT_MON, Uid, VisTileIndex, VisTile) ->
     set_vis_tile(
         VisTileIndex,
         VisTile#m_vis_tile{monster = lists:delete(Uid, VisTile#m_vis_tile.monster)}
     );
-del_from_vis_tile_1(?OBJ_PET, Uid, VisTileIndex, VisTile) ->
+del_from_vis_tile_1(?UNIT_PET, Uid, VisTileIndex, VisTile) ->
     set_vis_tile(
         VisTileIndex,
         VisTile#m_vis_tile{pet = lists:delete(Uid, VisTile#m_vis_tile.pet)}
     );
-del_from_vis_tile_1(?OBJ_NPC, Uid, VisTileIndex, VisTile) ->
+del_from_vis_tile_1(?UNIT_NPC, Uid, VisTileIndex, VisTile) ->
     set_vis_tile(
         VisTileIndex,
         VisTile#m_vis_tile{npc = lists:delete(Uid, VisTile#m_vis_tile.npc)}
@@ -278,12 +278,12 @@ del_from_vis_tile_1(_Type, _Uid, _VisTileIndex, _VisTile) ->
 %%-------------------------------------------------------------------
 %% 同步周围Obj给我
 sync_big_vis_tile_to_me(Unit, VisTileList, Msg) ->
-    Uid = unit_mod:get_uid(Unit),
-    Type = unit_mod:get_type(Unit),
+    Uid = unit:get_uid(Unit),
+    Type = unit:get_type(Unit),
     do_sync_big_vis_tile_to_me(Type, Uid, VisTileList, Msg),
     ok.
 
-do_sync_big_vis_tile_to_me(?OBJ_USR, Uid, VisTileList, del_all) ->
+do_sync_big_vis_tile_to_me(?UNIT_PLAYER, Uid, VisTileList, del_all) ->
     UidList = lists:foldl(
         fun(#m_vis_tile{player = PL, monster = ML, npc = NL, pet = Pets}, Acc) ->
             PL ++ ML ++ NL ++ Pets ++ Acc
@@ -295,7 +295,7 @@ do_sync_big_vis_tile_to_me(?OBJ_USR, Uid, VisTileList, del_all) ->
             gs_interface:send_net_msg(Uid, Msg)
     end,
     ok;
-do_sync_big_vis_tile_to_me(?OBJ_USR, TarUid, VisTileList, add_all) ->
+do_sync_big_vis_tile_to_me(?UNIT_PLAYER, TarUid, VisTileList, add_all) ->
     FC =
         fun(Uid) ->
             Msg = move_mod:cal_move_msg(Uid),
@@ -344,12 +344,12 @@ do_sync_big_vis_tile_to_me(_Type, _Uid, _VisTileList, _Msg) -> skip.
 %%-------------------------------------------------------------------
 %% 把Obj信息广播到九宫格中
 sync_me_to_big_vis_tile(Unit, VisTileList, del_me) ->
-    Uid = unit_mod:get_uid(Unit),
+    Uid = unit:get_uid(Unit),
     Msg = #pk_GS2U_RemoveRemote{uid_list = [Uid]},
     send_net_msg_to_big_visual(VisTileList, Msg),
     ok;
 sync_me_to_big_vis_tile(Unit, VisTileList, add_me) ->
-    Uid = unit_mod:get_uid(Unit),
+    Uid = unit:get_uid(Unit),
     Msg = move_mod:cal_move_msg(Uid),
     send_net_msg_to_big_visual(VisTileList, Msg),
     ok.

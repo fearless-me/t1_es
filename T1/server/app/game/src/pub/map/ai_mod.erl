@@ -612,14 +612,14 @@ do_update_flee(Uid, true, _Cant) ->
     ok;
 %% 等待重启
 do_update_flee(Uid, _Failed, true)  ->
-    case unit_mod:is_unit_cant_move_state(Uid) of
+    case unit:is_unit_cant_move_state(Uid) of
         false -> start_flee(Uid, ai_rw:get_flee_dst(Uid));
         _ -> skip
     end,
     ok;
 %% 更新巡逻
 do_update_flee(Uid, _Failed, _Cant) ->
-    case unit_mod:is_unit_cant_move_state(Uid) of
+    case unit:is_unit_cant_move_state(Uid) of
         true ->
             ai_rw:set_cant_pursue(Uid, true);
         _ ->

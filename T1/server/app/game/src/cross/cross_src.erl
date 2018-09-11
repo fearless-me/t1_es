@@ -30,7 +30,8 @@ player_pub_data_to_cross(Aid, Uid) ->
         aid = Aid,
         uid = player_rw:get_uid(),
         sock= player_pub:socket(),
-        player_pub = gs_cache:get_player_pub(Uid)
+        player_pub = gs_cache:get_player_pub(Uid),
+        player_private = gs_cache:get_player_priv(Uid)
     }.
 
 %%

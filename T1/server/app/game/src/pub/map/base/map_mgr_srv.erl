@@ -130,6 +130,7 @@ do_player_exit_map_call(S, Req) ->
     case ets:lookup(S#state.ets, LineID) of
         [#m_map_line{pid = Pid}] ->
             ets:update_counter(S#state.ets, LineID, {#m_map_line.in, -1}),
+            %% @todo 退出地图失败是否要处理
             map_interface:player_exit_call(Pid, Req);
         _ ->
             ?ERROR("player ~p exit map_~p_~p but line ~p not exists",
@@ -169,7 +170,8 @@ stop_map_line(S, Line) ->
     ok.
 
 force_del_line(S, Line) ->
-    #m_map_line{line_id = LineId, pid = Pid} = Line,
+    #m_map_line{map_id = Mid, line_id = LineId, pid = Pid} = Line,
+    ?WARN("map_~p_~p ~p will be killed", [Mid, LineId, Pid]),
     catch erlang:exit(Pid, normal),
     ets:delete(S#state.ets, LineId),
     ok.

@@ -26,9 +26,9 @@
 %% WARNING!!! WARNING!!! WARNING!!!
 %% call
 %% 基础代码调用的玩家上线，下线、切地图、同地图传送
--export([player_join_call/2]).
--export([player_exit_call/2]).
--export([force_teleport_call/2]).
+-export([player_join_call/3]).
+-export([player_exit_call/3]).
+-export([force_teleport_call/3]).
 %%--------------------------------
 
 %%-------------------------------------------------------------------
@@ -40,70 +40,63 @@ init(S) ->
     ok = init_npc(Conf),
     ok = init_monster(Conf),
     tick_msg(),
-    catch hook_map:on_map_create(),
+    ?TRY_CATCH(hook_map:on_map_create()),
     S.
 
 
 %%-------------------------------------------------------------------
 %% WARNING!!! WARNING!!! WARNING!!!
 %% call
-player_exit_call(S, #r_exit_map_req{
-    uid = Uid
-}) ->
+player_exit_call(S, From, #r_exit_map_req{uid = Uid}) ->
     Unit = map_rw:get_player(Uid),
-    ?TRY_CATCH_RET(do_player_exit_call(S, Uid, Unit), {error, S}).
+    ?TRY_CATCH_RET(do_player_exit_call(S, From, Uid, Unit), {reply, error, S}).
 
-do_player_exit_call(S, Uid, #m_cache_map_unit{} = Unit) ->
+do_player_exit_call(S, _From,  Uid, #m_cache_map_unit{} = Unit) ->
     ?INFO("player ~p exit map ~p:~p:~p",
         [Uid, map_rw:get_map_id(), map_rw:get_line_id(), self()]),
 
     map_rw:del_obj_to_ets(Unit),
-    catch map_view:sync_player_exit_map(Unit),
-    Data = unit_rw:to_record(Uid),
-    catch hook_map:on_player_exit(Uid),
-    {Data, S};
-do_player_exit_call(S, Uid, _Obj) ->
+
+    ?TRY_CATCH(map_view:sync_player_exit_map(Unit)),
+    ?TRY_CATCH(hook_map:on_player_exit(Uid), Err1, St1),
+    {reply, ok, S};
+do_player_exit_call(S, _From, Uid, _Obj) ->
     ?ERROR("~w req exit map ~w ~w, but obj not exists!",
         [Uid, self(), misc:registered_name()]),
-    map_rw:set_player_map( maps:remove(Uid, map_rw:get_player_map())),
-    {error, S}.
+    map_rw:set_player_map( maps:remove(Uid, map_rw:get_player_map()) ),
+    {reply, error, S}.
 
 %%-------------------------------------------------------------------
 %% WARNING!!! WARNING!!! WARNING!!!
 %% call
-player_join_call(
-    S,
-    #r_change_map_req{uid = Uid, name = _Name, pid = Pid, group = Group, tar_pos = Pos}
-) ->
+player_join_call(S, From, #r_change_map_req{uid = Uid, pid = Pid, group = Group, tar_pos = Pos}) ->
     try
         ?DEBUG("player ~p to ~p", [Uid, Pos]),
-        Unit = unit_mod:new_player(Pid, Uid, Group, Pos, vector3:new(0.1, 0, 0.5)),
+        Unit = unit:new_player(Pid, Uid, Group, Pos, vector3:new(0.1, 0, 0.5)),
         send_goto_map_msg(Uid, Pos),
         map_rw:add_obj_to_ets(Unit),
-        map_view:sync_player_join_map(Unit),
-        catch hook_map:on_player_join(Uid),
-        ?DEBUG("uid ~p, join map ~w, name ~p",
-            [unit_mod:get_uid(Unit), self(), misc:registered_name()]),
-        {ok, S}
+        map_srv:call_reply(From, ok),
+        ?TRY_CATCH(map_view:sync_player_join_map(Unit)),
+        ?TRY_CATCH(hook_map:on_player_join(Uid), Err1, St1),
+        ?DEBUG("uid ~p, join map ~w, name ~p", [unit:get_uid(Unit), self(), misc:registered_name()]),
+        {noreply, S}
     catch _ : Error : ST ->
         ?ERROR("player join map ~w, name ~p, error ~p, ~p", [self(), misc:registered_name(), Error, ST]),
-        {error, S}
+        {reply, error, S}
     end;
-player_join_call(S, Any) ->
+player_join_call(S, _From, Any) ->
     ?ERROR("player join map ~w, name ~p, error obj data ~w",
         [self(), misc:registered_name(), Any]),
-    {error, S}.
+    {reply, error, S}.
 
 
 %%-------------------------------------------------------------------
 %% WARNING!!! WARNING!!! WARNING!!!
 %% call
-force_teleport_call(S, #r_teleport_req{
-    uid = Uid,
-    tar = TarPos
-}) ->
+force_teleport_call(S, From, #r_teleport_req{uid = Uid, tar = TarPos}) ->
+    map_srv:call_reply(From, ok),
     Cur = move_rw:get_cur_pos(Uid),
-    move_mod:on_obj_pos_change(Uid, TarPos),
+    ?TRY_CATCH(move_mod:on_obj_pos_change(Uid, TarPos)),
     ?DEBUG("player ~p teleport from ~w to ~w in map ~p_~p",
         [Uid, Cur, TarPos, map_rw:get_map_id(), map_rw:get_line_id()]),
     {ok, S}.
@@ -119,17 +112,17 @@ init_monster(#recGameMapCfg{
         end, MonsterList).
 
 init_all_monster_1(Mdata) ->
-    Unit = unit_mod:new_monster(Mdata),
+    Unit = unit:new_monster(Mdata),
     init_all_monster_2(Unit).
 
 init_all_monster_2(Unit) ->
-    Uid = unit_mod:get_uid(Unit),
+    Uid = unit:get_uid(Unit),
     VisIndex = map_view:pos_to_vis_index(move_rw:get_cur_pos(Uid)),
     map_rw:add_obj_to_ets(Unit),
     map_view:add_obj_to_vis_tile(Unit, VisIndex),
     hook_map:on_monster_create(Uid),
     ?DEBUG("map ~p:~p create monster ~p, uid ~p, visIndex ~p",
-        [map_rw:get_map_id(), map_rw:get_line_id(), unit_mod:get_data_id(Unit), Uid, VisIndex]),
+        [map_rw:get_map_id(), map_rw:get_line_id(), unit:get_data_id(Unit), Uid, VisIndex]),
     ok.
 
 %%-------------------------------------------------------------------

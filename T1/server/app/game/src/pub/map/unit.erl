@@ -6,7 +6,7 @@
 %%% @end
 %%% Created : 14. 五月 2018 14:10
 %%%-------------------------------------------------------------------
--module(unit_mod).
+-module(unit).
 -author("mawenhong").
 
 -include("logger.hrl").
@@ -40,7 +40,7 @@ is_dead(Uid) ->
 %%-------------------------------------------------------------------
 new_player(Pid, Uid, Group, Pos, Face) ->
     init_rw_default(Uid),
-    new(?OBJ_USR, Pid, Uid, 0, 0, Group, Pos, Face).
+    new(?UNIT_PLAYER, Pid, Uid, 0, 0, Group, Pos, Face).
 
 del_player(Uid) ->
     del_all_rw(Uid),
@@ -51,7 +51,7 @@ new_static(Group, Pos, Face) ->
     Pid = self(),
     Uid = uid_gen:mon_uid(),
     init_rw_default(Uid),
-    new(?OBJ_STATIC, Pid, Uid, 0, 0, Group, Pos, Face).
+    new(?UNIT_STATIC, Pid, Uid, 0, 0, Group, Pos, Face).
 
 del_static(Uid) ->
     del_all_rw(Uid),
@@ -76,7 +76,7 @@ new_monster(#recMapObjData{
 
     %% todo 怪物AI配置
     ai_mod:init(Uid, ?AIAT_Active),
-    new(?OBJ_MON, Pid, Uid, Mid, 0, Group, Pos, vector3:new(0.1, 0, 0.5)).
+    new(?UNIT_MON, Pid, Uid, Mid, 0, Group, Pos, vector3:new(0.1, 0, 0.5)).
 
 
 del_monster(Uid) ->

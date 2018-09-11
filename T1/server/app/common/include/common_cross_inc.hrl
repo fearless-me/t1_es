@@ -18,7 +18,7 @@
 -record(m_share_player_cross_lock,{aid=0,src_sid=0, cross_sid=0, assign_time=0}).
 -record(m_cache_player_cross_info,{uid=0, enter_time=0}).
 
--record(r_to_cross_data,{aid, uid, pid, sock, player_pub}).
+-record(r_to_cross_data,{aid, uid, pid, sock, player_pub, player_private}).
 -record(r_from_cross_data,{aid, uid, data}).
 
 

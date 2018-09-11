@@ -160,9 +160,9 @@ make_move_r(Start, End, Speed) ->
 update(Unit) -> update_dispatcher(Unit).
 
 %%-------------------------------------------------------------------
-update_dispatcher(#m_cache_map_unit{type = ?OBJ_USR, uid = Uid} = Unit) ->
+update_dispatcher(#m_cache_map_unit{type = ?UNIT_PLAYER, uid = Uid} = Unit) ->
     update_player_move(Unit, move_rw:get_cur_move(Uid));
-update_dispatcher(#m_cache_map_unit{type = ?OBJ_MON, uid = Uid} = Unit) ->
+update_dispatcher(#m_cache_map_unit{type = ?UNIT_MON, uid = Uid} = Unit) ->
     update_monster_move(Unit, move_rw:get_cur_move(Uid));
 update_dispatcher(_Obj) -> skip.
 
@@ -282,7 +282,7 @@ on_obj_pos_change(Uid, Tar) ->
     on_obj_pos_changed(unit_rw:get_type(Uid), Uid, Tar),
     ok.
 
-on_obj_pos_changed(?OBJ_USR, Uid, Tar) ->
+on_obj_pos_changed(?UNIT_PLAYER, Uid, Tar) ->
     gs_cache:update_player_pub(Uid, {#m_cache_player_pub.pos, Tar}),
     ok;
 on_obj_pos_changed(Type, Uid, Tar) ->
@@ -364,7 +364,7 @@ do_start_monster_walk(Uid, Dst, MoveState) ->
 
 is_can_monster_walk(Uid, _Dst, _MoveState, _NeedCheck) ->
     % todo 检查怪物状态、检查目标点等等
-    unit_mod:is_unit_cant_move_state(Uid),
+    unit:is_unit_cant_move_state(Uid),
     true.
 
 

@@ -202,6 +202,6 @@ heartbeatcount() ->
     end.
 
 rand_walk() ->
-    Delta = misc:rand(5, 15) / 1.0,
+    Delta = misc:rand(5, 20) / 1.0,
     send_msg(socket(), #pk_U2GS_PlayerWalk{dst_x = 324.1 + Delta, dst_y = 233.1 + Delta}),
     ok.

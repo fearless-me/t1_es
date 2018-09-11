@@ -176,11 +176,11 @@ tick_one_skill_queue(_Uid, Elm) ->
     Elm.
 
 %%-------------------------------------------------------------------
-dispatcher(?OBJ_USR, ?OBJ_USR, Aer, Der, SkillId) ->
+dispatcher(?UNIT_PLAYER, ?UNIT_PLAYER, Aer, Der, SkillId) ->
     player_vs_player(Aer, Der, SkillId);
-dispatcher(?OBJ_USR, ?OBJ_MON, Aer, Der, SkillId) ->
+dispatcher(?UNIT_PLAYER, ?UNIT_MON, Aer, Der, SkillId) ->
     player_vs_mon(Aer, Der, SkillId);
-dispatcher(?OBJ_MON, ?OBJ_USR, Aer, Der, SkillId) ->
+dispatcher(?UNIT_MON, ?UNIT_PLAYER, Aer, Der, SkillId) ->
     mon_vs_player(Aer, Der, SkillId);
 dispatcher(AType, DType, Aer, Der, SkillId) ->
     ?WARN("~p(~p) vs ~p(~p) skill", [Aer, AType, Der, DType, SkillId]).
