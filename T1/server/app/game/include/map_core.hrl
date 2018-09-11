@@ -42,6 +42,7 @@
 %% @todo 要让地图来配置
 -define(LINE_LIFETIME, 5 * 60 * 1000).
 %% 地图进程退出状态保护时间，让玩家加退出等等
+%% 超过这个时间强杀
 -define(DEAD_LINE_PROTECT, 2 * 60 * 1000).
 
 %% 地图call调用超时时间
@@ -61,7 +62,7 @@
 %% 视图
 -record(m_vis_tile, {index = 0, player = [], monster = [], npc = [], pet = []}).
 %% 地图进程状态
--record(m_map_state, {map_id = 0, line_id = 0, respawn = [], hook_mod, status = ?MAP_NORMAL, protect_tick = 1000}).
+-record(m_map_state, {map_id = 0, line_id = 0, respawn = [], hook_mod, status = ?MAP_NORMAL, protect_tick = ?DEAD_LINE_PROTECT div ?MAP_TICK}).
 %% 地图线路
 -record(m_map_line, {map_id = 0, line_id = 0, pid, limits = 50, in = 0, reserve = 10, dead_line = 0, status = ?MAP_NORMAL}).
 
