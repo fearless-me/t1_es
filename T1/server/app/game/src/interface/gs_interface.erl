@@ -11,7 +11,7 @@
 
 -include("logger.hrl").
 -include("pub_rec.hrl").
--include("gs_cache_inc.hrl").
+-include("gs_cache.hrl").
 -include("gs_ps_def.hrl").
 
 

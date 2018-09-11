@@ -9,7 +9,7 @@
 -module(player_combat).
 -author("mawenhong").
 -include("logger.hrl").
--include("gs_cache_inc.hrl").
+-include("gs_cache.hrl").
 -include("gs_common_rec.hrl").
 
 %% API

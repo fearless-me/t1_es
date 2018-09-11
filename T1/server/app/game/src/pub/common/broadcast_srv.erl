@@ -12,7 +12,7 @@
 -behaviour(gen_serverw).
 -include("logger.hrl").
 -include("netconf.hrl").
--include("gs_cache_inc.hrl").
+-include("gs_cache.hrl").
 
 -include("gs_ps_def.hrl").
 

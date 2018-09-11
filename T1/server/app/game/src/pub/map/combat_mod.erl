@@ -12,9 +12,9 @@
 -include("pub_def.hrl").
 -include("netmsg.hrl").
 -include("gs_common_rec.hrl").
--include("gs_map_inc.hrl").
--include("gs_map_unit_inc.hrl").
--include("gs_combat_inc.hrl").
+-include("map_core.hrl").
+-include("map_unit_cache.hrl").
+-include("combat.hrl").
 
 %% 瞬发技能放完就结束
 %% 吟唱技能设置到当前技能

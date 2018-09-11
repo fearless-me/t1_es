@@ -10,11 +10,11 @@
 -author("mawenhong").
 -include("logger.hrl").
 -include("netmsg.hrl").
--include("gs_map_inc.hrl").
+-include("map_core.hrl").
 
--include("gs_player_status.hrl").
+-include("player_status.hrl").
 -include("gs_common_rec.hrl").
--include("gs_cache_inc.hrl").
+-include("gs_cache.hrl").
 
 
 %% API

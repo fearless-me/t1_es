@@ -10,9 +10,9 @@
 -author("mawenhong").
 -include("logger.hrl").
 -include("pub_def.hrl").
--include("gs_cache_inc.hrl").
--include("gs_map_unit_inc.hrl").
--include("gs_db_rec.hrl").
+-include("gs_cache.hrl").
+-include("db_record.hrl").
+-include("map_unit_cache.hrl").
 
 %% API
 -export([

@@ -9,13 +9,13 @@
 -module(player_map_priv).
 -author("mawenhong").
 -include("logger.hrl").
--include("gs_map_inc.hrl").
+-include("map_core.hrl").
 -include("pub_rec.hrl").
 
--include("gs_cache_inc.hrl").
--include("gs_db_rec.hrl").
+-include("gs_cache.hrl").
+-include("db_record.hrl").
 -include("gs_common_rec.hrl").
--include("gs_player_status.hrl").
+-include("player_status.hrl").
 %% API
 
 %%--------------------------------

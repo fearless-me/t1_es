@@ -11,10 +11,11 @@
 -author("mawenhong").
 -include("logger.hrl").
 -include("pub_def.hrl").
--include("gs_map_unit_inc.hrl").
--include("gs_move_inc.hrl").
--include("gs_ai_inc.hrl").
--include("gs_trigger_inc.hrl").
+-include("gs_cache.hrl").
+-include("movement.hrl").
+-include("ai.hrl").
+-include("ai_trigger.hrl").
+-include("map_unit_cache.hrl").
 
 %% API
 -export([

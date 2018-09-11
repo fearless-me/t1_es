@@ -67,7 +67,7 @@ do_gm(GmLevel, AccessLevel, Call, Params) when GmLevel >= AccessLevel ->
 do_gm(_,_,_,_) -> skip.
 
 change_map([MapId | _]) ->
-    Delta = misc:rand(-5, 15) / 1.0,
-    Pos = vector3:new(152.5, 0, 245.5 + Delta),
+%%    Delta = misc:rand(-5, 15) / 1.0,
+    Pos = vector3:new(324.1, 0, 233.1 ),
     player_pub:change_map_(list_to_integer(MapId), 0, Pos),
     ok.

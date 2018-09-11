@@ -9,8 +9,8 @@
 -module(hook_map).
 -author("mawenhong").
 -include("logger.hrl").
--include("gs_cache_inc.hrl").
--include("gs_map_unit_inc.hrl").
+-include("gs_cache.hrl").
+-include("map_core.hrl").
 
 -export([
     on_map_create/0, on_map_destroy/0,

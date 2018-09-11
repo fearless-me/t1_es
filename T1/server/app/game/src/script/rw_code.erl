@@ -8,8 +8,8 @@
 %%%-------------------------------------------------------------------
 -module(rw_code).
 -author("mawenhong").
--include("gs_map_unit_inc.hrl").
--include("gs_db_rec.hrl").
+-include("map_unit_cache.hrl").
+-include("db_record.hrl").
 -include("rec_rw.hrl").
 -define(LogFileOptions, [exclusive, append, raw, binary]).
 %% API
@@ -77,7 +77,7 @@ run() ->
             "..\\src\\pub\\map\\ai_rw.erl",
             ai_rw,
             [
-                ["logger.hrl", "gs_ai_inc.hrl", "rec_rw.hrl"],
+                ["logger.hrl", "ai.hrl", "rec_rw.hrl"],
                 [
                     {m_map_unit_ai_rw, record_info(fields, m_map_unit_ai_rw), none, ["Uid"], ""}
                 ]
@@ -87,7 +87,7 @@ run() ->
             "..\\src\\pub\\player\\player_rw.erl",
             player_rw,
             [
-                ["logger.hrl", "gs_player_status.hrl", "rec_rw.hrl"],
+                ["logger.hrl", "player_status.hrl", "rec_rw.hrl"],
                 [
                     {m_player_rw, record_info(fields, m_player_rw), none, [], "hook_player:on_rw_update"}
                 ]

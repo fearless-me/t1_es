@@ -184,11 +184,11 @@ heartbeat() ->
         undefined -> skip;
         _  when ChangeMap, MapId =/= 2 ->
             ?INFO("##### ~p change map ~p -> 2",[self(), MapId]),
-            Msg2 = #pk_U2GS_ChangeMap{map_id = 2, x = 125.5, y=200.5},
+            Msg2 = #pk_U2GS_ChangeMap{map_id = 2, x = 324.1, y=233.5},
             send_msg(socket(), Msg2);
         _  when ChangeMap, MapId =/= 1 ->
             ?INFO("##### ~p change map ~p -> 1",[self(), MapId]),
-            Msg2 = #pk_U2GS_ChangeMap{map_id = 1, x = 125.5, y=200.5},
+            Msg2 = #pk_U2GS_ChangeMap{map_id = 1, x = 324.1, y=233.5},
             send_msg(socket(), Msg2);
         _ ->
             rand_walk()
@@ -203,5 +203,5 @@ heartbeatcount() ->
 
 rand_walk() ->
     Delta = misc:rand(5, 15) / 1.0,
-    send_msg(socket(), #pk_U2GS_PlayerWalk{dst_x = 234.1 + Delta, dst_y = 250.1 + Delta}),
+    send_msg(socket(), #pk_U2GS_PlayerWalk{dst_x = 324.1 + Delta, dst_y = 233.1 + Delta}),
     ok.

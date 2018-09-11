@@ -64,4 +64,7 @@
 
 -define(AI_PATROL_RADIUS, 50).    %% 生物巡逻半径 todo 怪物配置表
 
+%% 仇恨数据：仇恨目标UID， 仇恨值， 是否激活
+-record(m_unit_enmity,{uid=0,enmity=0,active=true}).
+
 -endif.

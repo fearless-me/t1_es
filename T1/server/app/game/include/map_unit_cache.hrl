@@ -4,13 +4,13 @@
 %%% @doc
 %%%
 %%% @end
-%%% Created : 18. 五月 2018 10:11
+%%% Created : 11. 九月 2018 11:17
 %%%-------------------------------------------------------------------
 -author("mawenhong").
 
--ifndef(DEF_GS_HRL).
--define(DEF_GS_HRL, true).
+-ifndef(MAP_UNIT_CACHE_HRL).
+-define(MAP_UNIT_CACHE_HRL, true).
 
-
+-record(m_cache_map_unit, {uid = 0, pid = 0, data_id = 0, name = "", map_id=0, line_id=0, owner = 0, type =0}).
 
 -endif.

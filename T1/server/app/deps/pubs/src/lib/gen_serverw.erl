@@ -44,34 +44,49 @@
 
 %% define
 -define(LogicModule, myLogicModule).
+-define(FULL_SWEEP, {fullsweep_after, 20}).
+-define(FULL_SWEEP_OPTIONS, {spawn_opt,[?FULL_SWEEP]}).
 
 %%%===================================================================
 %%% public functions
 %%%===================================================================	
 start_link(Module) ->
-    gen_server:start_link({local, ?MODULE}, ?MODULE, [Module, []], []).
+    gen_server:start_link({local, ?MODULE}, ?MODULE, [Module, []], [?FULL_SWEEP_OPTIONS]).
 
 start_link(Module, Args) ->
-    gen_server:start_link({local, ?MODULE}, ?MODULE, [Module, Args], []).
+    gen_server:start_link({local, ?MODULE}, ?MODULE, [Module, Args], [?FULL_SWEEP_OPTIONS]).
 
 start_link(Module, Args, Options) ->
-    gen_server:start_link(?MODULE, [Module, Args], Options).
+    gen_server:start_link(?MODULE, [Module, Args], sweep_options(Options)).
 
 start_link(Name, Module, Args, Options) ->
-    gen_server:start_link(Name, ?MODULE, [Module, Args], Options).
+    gen_server:start_link(Name, ?MODULE, [Module, Args], sweep_options(Options)).
 
 %%--------------------------------------------------------------------
 start_link2(Module) ->
-    gen_server2:start_link({local, ?MODULE}, ?MODULE, [Module], []).
+    gen_server2:start_link({local, ?MODULE}, ?MODULE, [Module], [?FULL_SWEEP_OPTIONS]).
 
 start_link2(Module, Args) ->
-    gen_server2:start_link({local, ?MODULE}, ?MODULE, [Module, Args], []).
+    gen_server2:start_link({local, ?MODULE}, ?MODULE, [Module, Args], [?FULL_SWEEP_OPTIONS]).
 
 start_link2(Module, Args, Options) ->
-    gen_server2:start_link(?MODULE, [Module, Args], Options).
+    gen_server2:start_link(?MODULE, [Module, Args], sweep_options(Options)).
 
 start_link2(Name, Module, Args, Options) ->
-    gen_server2:start_link(Name, ?MODULE, [Module, Args], Options).
+    gen_server2:start_link(Name, ?MODULE, [Module, Args], sweep_options(Options)).
+
+
+sweep_options(Options) ->
+    case lists:keyfind(spawn_opt, 1, Options) of
+    false -> [?FULL_SWEEP_OPTIONS | Options ];
+    {spawn_opt, SpawnOptions} ->  add_sweep_options(Options, SpawnOptions)
+    end.
+
+add_sweep_options(Options, SpawnOptions) ->
+    case lists:keyfind(fullsweep_after, 1, SpawnOptions) of
+        false -> lists:keyreplace(spawn_opt, 1, Options, {spawn_opt,[?FULL_SWEEP | SpawnOptions]});
+        _ ->  Options
+    end.
 
 %%--------------------------------------------------------------------
 %% @private

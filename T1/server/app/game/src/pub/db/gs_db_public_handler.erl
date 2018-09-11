@@ -11,9 +11,9 @@
 
 
 -include("logger.hrl").
--include("gs_cache_inc.hrl").
+-include("gs_cache.hrl").
 -include("gs_common_rec.hrl").
--include("gs_db_rec.hrl").
+-include("db_record.hrl").
 
 -define(DB_QUERY_TIMEOUT, 15*1000).
 

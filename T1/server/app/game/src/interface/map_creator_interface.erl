@@ -9,7 +9,7 @@
 -module(map_creator_interface).
 -author("mawenhong").
 -include("logger.hrl").
--include("gs_map_inc.hrl").
+-include("map_core.hrl").
 -include("pub_rec.hrl").
 -include("cfg_map.hrl").
 

@@ -10,8 +10,8 @@
 -author("mawenhong").
 -include("logger.hrl").
 -include("netmsg.hrl").
--include("gs_db_rec.hrl").
--include("gs_cache_inc.hrl").
+-include("db_record.hrl").
+-include("gs_cache.hrl").
 -include("gs_common_rec.hrl").
 
 %% API

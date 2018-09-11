@@ -8,12 +8,12 @@
 %%%-------------------------------------------------------------------
 -module(move_mod).
 -author("mawenhong").
--include("gs_map_unit_inc.hrl").
--include("gs_move_inc.hrl").
 -include("logger.hrl").
-
--include("gs_cache_inc.hrl").
 -include("netmsg.hrl").
+-include("gs_cache.hrl").
+-include("map_core.hrl").
+-include("map_unit_cache.hrl").
+-include("movement.hrl").
 -include_lib("stdlib/include/assert.hrl").
 
 %% API

@@ -9,7 +9,7 @@
 -module(ai_transition).
 -author("mawenhong").
 -include("logger.hrl").
--include("gs_ai_inc.hrl").
+-include("ai.hrl").
 
 %% API
 -export([transition/2]).
