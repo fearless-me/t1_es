@@ -11,7 +11,7 @@
 
 -include("logger.hrl").
 -include("map_core.hrl").
--include("map_unit_cache.hrl").
+-include("map_cache.hrl").
 -include("cfg_monster.hrl").
 -include("ai.hrl").
 

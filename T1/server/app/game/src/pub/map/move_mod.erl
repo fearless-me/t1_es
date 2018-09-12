@@ -12,7 +12,7 @@
 -include("netmsg.hrl").
 -include("gs_cache.hrl").
 -include("map_core.hrl").
--include("map_unit_cache.hrl").
+-include("map_cache.hrl").
 -include("movement.hrl").
 -include_lib("stdlib/include/assert.hrl").
 

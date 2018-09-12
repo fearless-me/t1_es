@@ -64,13 +64,13 @@ on_rw_update(Uid, hp, Hp) ->
 on_rw_update(Uid, attr, Attrs) ->
     ?lock({Uid, attr}),
     Type = unit_rw:get_type(Uid),
-    do_on_rw_update_priv(Type, Uid, {#m_cache_player_private.priv_attrs, Attrs}),
+    do_on_rw_update_priv(Type, Uid, {#m_cache_unit_combat.priv_attrs, Attrs}),
     ?unlock(),
     ok;
 on_rw_update(Uid, buff_list, BuffList) ->
     ?lock({Uid, buff_list}),
     Type = unit_rw:get_type(Uid),
-    do_on_rw_update_priv(Type, Uid, {#m_cache_player_private.priv_buffs, BuffList}),
+    do_on_rw_update_priv(Type, Uid, {#m_cache_unit_combat.priv_buffs, BuffList}),
     ?unlock(),
     ok;
 on_rw_update(_Uid, _Key, _Value) ->
@@ -86,7 +86,7 @@ do_on_rw_update_pub(_ObjType, _Uid, _Element) ->
 
 %%-------------------------------------------------------------------
 do_on_rw_update_priv(?UNIT_PLAYER, Uid, Element) ->
-    gs_cache:update_player_priv(Uid, Element),
+    gs_cache:update_unit_combat(Uid, Element),
     ok;
 do_on_rw_update_priv(_ObjType, _Uid, _Element) ->
     ok.

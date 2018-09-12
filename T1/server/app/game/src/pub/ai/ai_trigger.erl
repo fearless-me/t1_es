@@ -12,7 +12,7 @@
 -include("pub_def.hrl").
 -include("gs_cache.hrl").
 -include("ai_trigger.hrl").
--include("map_unit_cache.hrl").
+-include("map_cache.hrl").
 
 %% API
 

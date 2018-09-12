@@ -15,7 +15,7 @@
 -include("movement.hrl").
 -include("ai.hrl").
 -include("ai_trigger.hrl").
--include("map_unit_cache.hrl").
+-include("map_cache.hrl").
 
 %% API
 -export([

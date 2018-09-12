@@ -12,7 +12,7 @@
 -include("pub_def.hrl").
 -include("gs_cache.hrl").
 -include("db_record.hrl").
--include("map_unit_cache.hrl").
+-include("map_cache.hrl").
 
 %% API
 -export([
@@ -21,8 +21,8 @@
     online/3, offline/2,
 %% ETS_CACHE_PLAYER_PUB
     add_player_pub/1,  del_player_pub/1,  get_player_pub/1,  update_player_pub/2,
-%% ETS_CACHE_PLAYER_PRIV
-    add_player_priv/2, del_player_priv/1, get_player_priv/1, update_player_priv/2,
+%% ETS_CACHE_UNIT_COMBAT
+    add_unit_combat/2, del_unit_combat/1, get_unit_combat/1, update_unit_combat/2,
 %% ETS_CACHE_PLAYER_PID_SOCK
     add_socket/4,  del_socket/1, get_ppid/1, get_socket/1,
 %% ETS_CACHE_ACCOUNT_PID_SOCK
@@ -35,7 +35,6 @@
 init() ->
     ets:new(?ETS_CACHE_PLAYER_PUB,      [named_table, public, {keypos, #m_cache_player_pub.uid},       ?ETS_RC, ?ETS_WC]),
     ets:new(?ETS_CACHE_PLAYER_CROSS,    [named_table, public, {keypos, #m_cache_player_cross.uid},     ?ETS_RC, ?ETS_WC]),
-    ets:new(?ETS_CACHE_PLAYER_PRIV,     [named_table, public, {keypos, #m_cache_player_private.uid},   ?ETS_RC, ?ETS_WC]),
     ets:new(?ETS_CACHE_PLAYER_PID_SOCK, [named_table, public, {keypos, #m_cache_player_pid_sock.uid},  ?ETS_RC, ?ETS_WC]),
     ets:new(?ETS_CACHE_ACCOUNT_PID_SOCK,[named_table, public, {keypos, #m_cache_account_pid_sock.aid}, ?ETS_RC, ?ETS_WC]),
     ets:new(?ETS_CACHE_ALARM_POLICY,    [named_table, public, {keypos, #m_cache_alarm_policy.id},      ?ETS_RC, ?ETS_WC]),
@@ -45,18 +44,19 @@ init() ->
     ets:new(?ETS_CACHE_MAP_NPC,         [named_table, public, {keypos, #m_cache_map_unit.uid},         ?ETS_RC, ?ETS_WC]),
     ets:new(?ETS_CACHE_MAP_PLAYER,      [named_table, public, {keypos, #m_cache_map_unit.uid},         ?ETS_RC, ?ETS_WC]),
     ets:new(?ETS_CACHE_MAP_MONSTER,     [named_table, public, {keypos, #m_cache_map_unit.uid},         ?ETS_RC, ?ETS_WC]),
+    ets:new(?ETS_CACHE_UNIT_COMBAT,     [named_table, public, {keypos, #m_cache_unit_combat.uid},      ?ETS_RC, ?ETS_WC]),
     ok.
 
 %%-------------------------------------------------------------------
 online(#p_player{aid = Aid, uid = Uid} = Player, Pid, Sock) ->
     gs_cache:add_player_pub(Player),
-    gs_cache:add_player_priv(Aid, Uid),
+    gs_cache:add_unit_combat(Aid, Uid),
     gs_cache:add_socket(Aid, Uid, Pid, Sock),
     ok;
 online(#m_cache_player_pub{aid = Aid, uid = Uid} = Player, Pid, Sock) ->
     gs_cache:add_account_socket(Aid, Pid, Sock),
     gs_cache:add_player_pub(Player),
-    gs_cache:add_player_priv(Aid, Uid),
+    gs_cache:add_unit_combat(Aid, Uid),
     gs_cache:add_socket(Aid, Uid, Pid, Sock),
     ok.
 
@@ -65,7 +65,7 @@ offline(Aid, Uid) ->
     ?INFO("player ~w of account ~p offline", [Uid, Aid]),
     gs_cache:del_socket(Uid),
     gs_cache:del_account_socket(Aid),
-    gs_cache:del_player_priv(Uid),
+    gs_cache:del_unit_combat(Uid),
     ets:delete(?ETS_CACHE_MAP_PLAYER, Uid),
     ok.
 
@@ -113,24 +113,24 @@ update_player_pub(Uid, Elements)->
 
 %%-------------------------------------------------------------------
 %%-------------------------------------------------------------------
-add_player_priv(Aid, Uid) ->
-    ets:insert(?ETS_CACHE_PLAYER_PRIV,
-        #m_cache_player_private{aid = Aid, uid = Uid}).
+add_unit_combat(Aid, Uid) ->
+    ets:insert(?ETS_CACHE_UNIT_COMBAT,
+        #m_cache_unit_combat{aid = Aid, uid = Uid}).
 
 %%-------------------------------------------------------------------
-get_player_priv(Uid) ->
-    case ets:lookup(?ETS_CACHE_PLAYER_PRIV, Uid) of
+get_unit_combat(Uid) ->
+    case ets:lookup(?ETS_CACHE_UNIT_COMBAT, Uid) of
         [Player] -> Player;
         _ -> undefined
     end.
 
 %%-------------------------------------------------------------------
-del_player_priv(Uid)->
-    ets:delete(?ETS_CACHE_PLAYER_PRIV, Uid).
+del_unit_combat(Uid)->
+    ets:delete(?ETS_CACHE_UNIT_COMBAT, Uid).
 
 %%-------------------------------------------------------------------
-update_player_priv(Uid, Elements)->
-    ets:update_element(?ETS_CACHE_PLAYER_PRIV, Uid, Elements),
+update_unit_combat(Uid, Elements)->
+    ets:update_element(?ETS_CACHE_UNIT_COMBAT, Uid, Elements),
     ok.
 
 %%-------------------------------------------------------------------

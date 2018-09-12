@@ -15,7 +15,7 @@
 -include("gs_common_rec.hrl").
 -include("cfg_map.hrl").
 -include("map_core.hrl").
--include("map_unit_cache.hrl").
+-include("map_cache.hrl").
 
 %% 初始化， tick， 开始终止进程
 -export([init/1, tick/1, start_stop_now/1]).

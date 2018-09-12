@@ -13,7 +13,7 @@
 -include("pub_def.hrl").
 -include("netmsg.hrl").
 -include("map_core.hrl").
--include("map_unit_cache.hrl").
+-include("map_cache.hrl").
 -include("player_status.hrl").
 -include("gs_common_rec.hrl").
 -include("db_record.hrl").

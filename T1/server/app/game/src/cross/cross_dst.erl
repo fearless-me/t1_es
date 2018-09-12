@@ -29,11 +29,11 @@ rpc_call_player_enter(#r_to_cross_data{
     uid = Uid,
     sock= Sock,
     player_pub = Pub,
-    player_private = Private
+    player_combat = Combat
 }) ->
     %% fixme 初始化数据
     gs_cache:online(Pub, Pid, Sock),
-    gs_cache:add_player_priv(Uid, Private),
+    gs_cache:add_unit_combat(Uid, Combat),
     ?INFO("player ~w of account ~p enter cross",[Uid, Aid]),
     ok.
 

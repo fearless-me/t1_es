@@ -22,13 +22,6 @@
     state=0, hp=0
 }).
 
-
-%%一些核心模块用的东西
--define(ETS_CACHE_PLAYER_PRIV, ets_cache_player_private).
--record(m_cache_player_private,{
-    uid, aid, priv_attrs=[], priv_buffs=[]
-}).
-
 %% 记录跨服玩家
 -define(ETS_CACHE_PLAYER_CROSS, ets_cache_player_cross).
 -record(m_cache_player_cross, {uid, time}).
@@ -53,6 +46,10 @@
 -define(ETS_CACHE_MAP_NPC,      m_cache_map_npc).
 -define(ETS_CACHE_MAP_PLAYER,   m_cache_map_player).
 -define(ETS_CACHE_MAP_MONSTER,  m_cache_map_monster).
+
+%%一些核心模块用的东西
+-define(ETS_CACHE_UNIT_COMBAT, ets_cache_unit_combat).
+
 
 
 

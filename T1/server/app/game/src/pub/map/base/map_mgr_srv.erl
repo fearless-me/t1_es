@@ -15,7 +15,7 @@
 -include("gs_common_rec.hrl").
 -include("gs_ps_def.hrl").
 -include("map_core.hrl").
--include("map_unit_cache.hrl").
+-include("map_cache.hrl").
 
 %% API
 -export([start_link/1]).
