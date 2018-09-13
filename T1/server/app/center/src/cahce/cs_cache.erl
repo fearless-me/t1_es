@@ -21,15 +21,15 @@
 
 
 init() ->
-	ets:new(?CS_SERVERS_CHECK_ETS,    [public, named_table, {keypos, #m_all_server_check.id}, ?ETS_WC, ?ETS_RC]),
+	ets_cache:new(?ETS_CACHE_SERVER_CHECK,    [public, named_table, {keypos, #m_cache_server_check.id}, ?ETS_WC, ?ETS_RC]),
 	ok.
 
 
 add_check_server(ServerID)->
-	ets:insert
+	ets_cache:write
 	(
-		?CS_SERVERS_CHECK_ETS,
-		#m_all_server_check{
+		?ETS_CACHE_SERVER_CHECK,
+		#m_cache_server_check{
 			id = ServerID,
 			time = misc_time:milli_seconds()
 		}
@@ -37,9 +37,9 @@ add_check_server(ServerID)->
 	ok.
 
 del_check_server(ServerID)->
-	ets:delete
+	ets_cache:delete
 	(
-		?CS_SERVERS_CHECK_ETS,
+		?ETS_CACHE_SERVER_CHECK,
 		ServerID
 	),
 	ok.

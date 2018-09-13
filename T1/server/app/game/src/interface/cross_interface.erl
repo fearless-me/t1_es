@@ -14,6 +14,7 @@
 -include("common_def.hrl").
 -include("common_rec.hrl").
 -include("common_cross_inc.hrl").
+-include("gs_cache.hrl").
 
 %% API
 -export([
@@ -22,38 +23,53 @@
     get_player_cross_sid/1, get_player_cross_node/1,
 
     %% 
-    assign_cross_for_me/1, force_assign_cross_for_me/2
+    assign_cross_for_player/1, force_assign_cross_for_player/2,
+
+    %%
+    update_player_cross/2,
+
+    %%
+    is_player_in_cross/1
 ]).
 
-assign_cross_for_me(Aid) ->
-    case is_assign_cross(Aid) of
+
+is_player_in_cross(Uid) ->
+     ets_cache:member(?ETS_CACHE_PLAYER_CROSS, Uid).
+
+update_player_cross(Uid, Params) ->
+    IsCross = gs_conf:is_cross(),
+    inner_update_player_cross(IsCross, Uid, Params),
+    ok.
+
+assign_cross_for_player(Uid) ->
+    case is_assign_cross(Uid) of
         true -> skip;
         _ ->
             QS = ets:fun2ms(fun(Info) when Info#m_share_server_info.type =:= ?SERVER_TYPE_CGS -> Info#m_share_server_info.sid end),
             SL = mne_ex:dirty_select(?ShareServerInfoName, QS),
-            do_assign_cross_for_me(Aid, SL)
+            do_assign_cross_for_player(Uid, SL)
     end,
     ok.
 
-do_assign_cross_for_me(_Aid, []) ->
+do_assign_cross_for_player(_Uid, []) ->
     ok;
-do_assign_cross_for_me(Aid, [CrossSid | _]) ->
-    force_assign_cross_for_me(Aid, CrossSid),
+do_assign_cross_for_player(Uid, [CrossSid | _]) ->
+    force_assign_cross_for_player(Uid, CrossSid),
     ok.
 
-is_assign_cross(Aid) ->
-    case mne_ex:dirty_read(?SharePlayerCrossLock, Aid) of
+is_assign_cross(Uid) ->
+    case mne_ex:dirty_read(?SharePlayerCrossLock, Uid) of
         [#m_share_player_cross_lock{cross_sid = Sid}] when Sid > 0 ->
             true;
         _ -> false
     end.
 %%-------------------------------------------------------------------
-force_assign_cross_for_me(Aid, CrossSid) ->
+force_assign_cross_for_player(Uid, CrossSid) ->
     Sid = gs_conf:get_sid(),
     mne_ex:write(
         ?SharePlayerCrossLock,
         #m_share_player_cross_lock{
-        aid = Aid,
+        uid = Uid,
         src_sid = Sid,
         cross_sid = CrossSid,
         assign_time = misc_time:milli_seconds()
@@ -61,17 +77,17 @@ force_assign_cross_for_me(Aid, CrossSid) ->
     ok.
 
 %%-------------------------------------------------------------------
-get_player_src_sid(Aid) -> inner_get_player_src_sid(Aid).
+get_player_src_sid(Uid) -> inner_get_player_src_sid(Uid).
 
 %%-------------------------------------------------------------------
-get_player_src_node(Aid) -> inner_get_player_src_node(Aid).
+get_player_src_node(Uid) -> inner_get_player_src_node(Uid).
 
 
 %%-------------------------------------------------------------------
-get_player_cross_sid(Aid) -> inner_get_player_cross_sid(Aid).
+get_player_cross_sid(Uid) -> inner_get_player_cross_sid(Uid).
 
 %%-------------------------------------------------------------------
-get_player_cross_node(Aid) -> inner_get_player_cross_node(Aid).
+get_player_cross_node(Uid) -> inner_get_player_cross_node(Uid).
 
 %%-------------------------------------------------------------------
 get_remote_server_map_mgr(Node, MapID)
@@ -81,30 +97,30 @@ get_remote_server_map_mgr(_Node, _MapID) -> undefined.
 
 %%-------------------------------------------------------------------
 %%-------------------------------------------------------------------
-inner_get_player_src_node(Aid) ->
-    Sid = inner_get_player_src_sid(Aid),
+inner_get_player_src_node(Uid) ->
+    Sid = inner_get_player_src_sid(Uid),
     inner_get_server_node(Sid).
 
 %%-------------------------------------------------------------------
-inner_get_player_cross_node(Aid) ->
-    Sid = inner_get_player_cross_sid(Aid),
+inner_get_player_cross_node(Uid) ->
+    Sid = inner_get_player_cross_sid(Uid),
     inner_get_server_node(Sid).
 
 %%-------------------------------------------------------------------
-inner_get_player_src_sid(Aid) when is_number(Aid), Aid > 0 ->
-    case mne_ex:dirty_read(?SharePlayerCrossLock, Aid) of
+inner_get_player_src_sid(Uid) when is_number(Uid), Uid > 0 ->
+    case mne_ex:dirty_read(?SharePlayerCrossLock, Uid) of
         [#m_share_player_cross_lock{src_sid = SrcSid}] -> SrcSid;
         _ -> undefined
     end;
-inner_get_player_src_sid(_Aid) -> undefined.
+inner_get_player_src_sid(_Uid) -> undefined.
 
 %%-------------------------------------------------------------------
-inner_get_player_cross_sid(Aid) when is_number(Aid), Aid > 0 ->
-    case mne_ex:dirty_read(?SharePlayerCrossLock, Aid) of
+inner_get_player_cross_sid(Uid) when is_number(Uid), Uid > 0 ->
+    case mne_ex:dirty_read(?SharePlayerCrossLock, Uid) of
         [#m_share_player_cross_lock{cross_sid = DstSid}] -> DstSid;
         _ -> undefined
     end;
-inner_get_player_cross_sid(_Aid) -> undefined.
+inner_get_player_cross_sid(_Uid) -> undefined.
 
 
 %%-------------------------------------------------------------------
@@ -114,5 +130,16 @@ inner_get_server_node(Sid) when is_number(Sid), Sid > 0 ->
         _ -> undefined
     end;
 inner_get_server_node(_Sid) -> undefined.
+
+%%-------------------------------------------------------------------
+inner_update_player_cross(false, Uid, Params) ->
+    case cross_interface:is_player_in_cross(Uid) of
+        true ->
+            Node = cross_interface:get_player_cross_node(Uid),
+            grpc:cast(Node, cross_dst, rpc_cast_update_player, [Params]);
+        _Any -> skip
+    end,
+    ok;
+inner_update_player_cross(_Any, _Uid, _Params) -> skip.
 
 

@@ -11,14 +11,33 @@
 -ifndef(EVENT_CONDITION_HRL).
 -define(EVENT_CONDITION_HRL, true).
 
-%% 模块列表
--define(EC_MODULE_1,0).
+%%-------------------------------------------------------------------
+%%-------------------------------------------------------------------
+%% 事件上下文限定
+-define(EVENT_SYSTEM, 1).
+-define(EVENT_MAP, 2).
+-define(EVENT_PLAYER, 3).
 
-%% 类型
--define(EC_TYPE_1, 1).
+%% 事件主类型
+-define(EVENT_MAIN_RESERVE, 1).
 
-%% 子类型
--define(EC_SUB_1, 1).
+%% 事件子类型
+-define(EVENT_SUB_RESERVE, 1).
+
+
+%%-------------------------------------------------------------------
+%%-------------------------------------------------------------------
+%% 条件上下文限定
+-define(CONDITION_SYSTEM, 1).
+-define(CONDITION_MAP, 2).
+-define(CONDITION_PLAYER, 3).
+
+%% 条件主类型
+-define(CONDITION_MAIN_RESERVE, 1).
+
+%% 条件子类型
+-define(CONDITION_SUB_RESERVE, 1).
+
 
 
 

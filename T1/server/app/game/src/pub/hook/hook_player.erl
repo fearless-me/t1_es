@@ -35,8 +35,8 @@ on_create(Uid) ->
 
 %%-------------------------------------------------------------------
 on_login(Player) ->
-    Aid = player_rw:get_aid(),
-    cross_interface:assign_cross_for_me(Aid),
+    Uid = player_rw:get_uid(),
+    cross_interface:assign_cross_for_player(Uid),
     %% @todo 在初始化数据之后需要计算属性
     player_base:init(Player),
     player_base:send_init_data(),

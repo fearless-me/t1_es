@@ -47,7 +47,8 @@
 -define(ETS_CACHE_MAP_PLAYER,   m_cache_map_player).
 -define(ETS_CACHE_MAP_MONSTER,  m_cache_map_monster).
 
-%%一些核心模块用的东西
+%%战斗模块用的东西
+%% {@link m_cache_unit_combat}
 -define(ETS_CACHE_UNIT_COMBAT, ets_cache_unit_combat).
 
 

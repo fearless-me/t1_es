@@ -11,6 +11,7 @@
 -include("logger.hrl").
 -include("gs_cache.hrl").
 -include("map_core.hrl").
+-include("map_cache.hrl").
 
 -export([
     on_map_create/0, on_map_destroy/0,

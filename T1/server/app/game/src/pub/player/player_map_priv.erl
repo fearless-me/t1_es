@@ -62,8 +62,8 @@ online_call(Player) ->
     ok.
 
 do_online_call(MapID, Req) ->
-    Aid = player_rw:get_aid(),
-    Mgr = map_creator_interface:map_mgr_lr(Aid, MapID),
+    Uid = player_rw:get_uid(),
+    Mgr = map_creator_interface:map_mgr_lr(Uid, MapID),
     do_online_call_1(Mgr, Req).
 
 %%
@@ -99,9 +99,8 @@ do_serve_change_map_call(Req) ->
         uid = Uid, tar_map_id = TMid,
         map_id = Mid, line_id = LineId, map_pid = Mpid
     } = Req,
-    Aid = player_rw:get_aid(),
-    CurMgr = map_creator_interface:map_mgr_lr(Aid, Mid),
-    TarMgr = map_creator_interface:map_mgr_lr(Aid, TMid),
+    CurMgr = map_creator_interface:map_mgr_lr(Uid, Mid),
+    TarMgr = map_creator_interface:map_mgr_lr(Uid, TMid),
     ?INFO("player ~p, changeMap map_~p_~p:~p -> map ~p",
         [Uid, Mid, LineId, Mpid, TMid]),
     ExitRet =
@@ -163,13 +162,14 @@ serve_change_map_call_ret(
     OldMid, OldLineId, _OldPos,
     #r_change_map_ack{error = Err, map_id = Mid}, Flag
 ) ->
-    case Flag of
-        gaming -> player_rw:set_status(?PS_GAME);
-        _Flag -> error
-    end,
     player_cross_priv:change_map_after(OldMid, Mid, false),
+
     ?ERROR("player ~p change from map ~p:~p to map ~p failed with ~p",
         [player_rw:get_uid(), OldMid, OldLineId, Mid, Err]),
+    case Flag of
+        gaming -> player_rw:set_status(?PS_GAME);
+        _Flag -> player_pub:stop("online can't join map")
+    end,
     %% todo 告诉客户端切地图失败
     ok.
 
@@ -185,8 +185,7 @@ return_to_old_map_call() ->
 
 %%-------------------------------------------------------------------
 offline_call(Uid, MapID, LineId, MapPid) ->
-    Aid = player_rw:get_aid(),
-    Mgr = map_creator_interface:map_mgr_lr(Aid, MapID),
+    Mgr = map_creator_interface:map_mgr_lr(Uid, MapID),
     map_mgr_interface:player_exit_map_call(
         Mgr,
         #r_exit_map_req{map_id = MapID, line_id = LineId, map_pid = MapPid, uid = Uid}
@@ -195,10 +194,10 @@ offline_call(Uid, MapID, LineId, MapPid) ->
 
 %%-------------------------------------------------------------------
 goto_born_map(Req) ->
-    Aid = player_rw:get_aid(),
+    Uid = player_rw:get_aid(),
     Mid = map_creator_interface:born_map_id(),
     Pos = map_creator_interface:born_map_pos(),
-    Mgr = map_creator_interface:map_mgr_lr(Aid, Mid),
+    Mgr = map_creator_interface:map_mgr_lr(Uid, Mid),
     ?WARN("kick player[~p] to born map", [Req#r_change_map_req.uid]),
 
     case map_mgr_interface:player_join_map_call(

@@ -37,13 +37,13 @@ tick() ->
 
 check() ->
 	NowTime = misc_time:milli_seconds(),
-	ServerList = ets:tab2list(?CS_SERVERS_CHECK_ETS),
+	ServerList = ets:tab2list(?ETS_CACHE_SERVER_CHECK),
 	do_check(NowTime, ServerList, []),
 	ok.
 
 do_check(_NowTime, [], Acc) ->
 	Acc;
-do_check(NowTime, [#m_all_server_check{id = ServerID, time = ConnectTime} = Info | List], Acc) ->
+do_check(NowTime, [#m_cache_server_check{id = ServerID, time = ConnectTime} = Info | List], Acc) ->
 	NewAcc =
 		case NowTime > ConnectTime + ?ServerAckTime of
 			true ->
@@ -71,8 +71,8 @@ server_ready(_WorkerPid, {ServerID})->
 
 %%%-------------------------------------------------------------------
 ack_now(_WindowPid, {ServerID})->
-	case ets:lookup(?CS_SERVERS_CHECK_ETS, ServerID) of
-		[#m_all_server_check{id = ServerID}] ->
+	case ets:lookup(?ETS_CACHE_SERVER_CHECK, ServerID) of
+		[#m_cache_server_check{id = ServerID}] ->
 			case mne_ex:dirty_read(?ShareServerInfoName, ServerID) of
 				[#m_share_server_info{node = GSNode, worker = WorkerPid}]->
 					ps:send(WorkerPid, sync_all_data),

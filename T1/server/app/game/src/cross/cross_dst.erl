@@ -10,12 +10,13 @@
 -author("mawenhong").
 -include("logger.hrl").
 -include("common_cross_inc.hrl").
+-include("gs_cache.hrl").
 
 %% API
 -export([
     rpc_call_player_enter/1, rpc_call_player_prepare_leave/2, rpc_call_player_leave/2,
     rpc_call_player_offline/2, rpc_call_del_player/2,
-    rpc_update_player/1
+    rpc_cast_update_player/1
 ]).
 
 
@@ -74,5 +75,6 @@ rpc_call_del_player(Aid, Uid) ->
     ok.
 
 
-rpc_update_player(Data) ->
+rpc_cast_update_player({?ETS_CACHE_PLAYER_PUB, Uid, Elements}) ->
+    ets_cache:update_element(?ETS_CACHE_PLAYER_PUB, Uid, Elements),
     ok.

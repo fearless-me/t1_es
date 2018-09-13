@@ -11,6 +11,6 @@
 -ifndef(MAP_UNIT_CACHE_HRL).
 -define(MAP_UNIT_CACHE_HRL, true).
 
--record(m_cache_map_unit, {uid = 0, pid = 0, data_id = 0, name = "", map_id=0, line_id=0, owner = 0, type =0}).
--record(m_cache_unit_combat,{uid, aid, priv_attrs=[], priv_buffs=[]}).
+-record(m_cache_map_unit, {uid= 0, pid = 0, data_id = 0, name = "", map_id=0, line_id=0, owner = 0, type =0}).
+-record(m_cache_unit_combat,{uid=0, aid=0, priv_attrs=[], priv_buffs=[]}).
 -endif.

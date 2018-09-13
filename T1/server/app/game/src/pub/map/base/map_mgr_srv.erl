@@ -111,13 +111,14 @@ do_player_join_map_call(S, Req) ->
     #m_map_line{pid = MapPid, map_id = MapID, line_id = LineID} = Line,
 
     %3. 加入
-    map_interface:player_join_call(MapPid, Req),
-
-    %4. 更新
-    ets:update_counter(S#state.ets, LineID, {#m_map_line.in, 1}),
-
-    %5. ack
-    #r_change_map_ack{map_id = MapID, line_id = LineID, map_pid = MapPid, pos = Pos}.
+    case map_interface:player_join_call(MapPid, Req) of
+        ok ->
+            %4. 更新
+            ets:update_counter(S#state.ets, LineID, {#m_map_line.in, 1}),
+            #r_change_map_ack{map_id = MapID, line_id = LineID, map_pid = MapPid, pos = Pos};
+        _ ->
+            #r_change_map_ack{map_id = MapID, line_id = LineID, map_pid = MapPid, error = -1}
+    end.
 
 %%--------------------------------------------------------------------
 do_player_exit_map_call(S, Req) ->

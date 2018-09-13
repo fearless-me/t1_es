@@ -11,12 +11,15 @@
 -author("mawenhong").
 %% API
 -export([
+    new/2,
     member/2,
     read/2, read/3, read_element/3,
     write/2, replace/3, update_element/3, delete/2,
     select/2, match/2, match_object/2, match_object/3
 ]).
 
+new(Name, Options) ->
+    ets:new(Name, Options).
 
 %%-------------------------------------------------------------------
 member(Tab, Key) ->

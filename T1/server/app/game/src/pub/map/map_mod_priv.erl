@@ -55,7 +55,7 @@ do_player_exit_call(S, _From,  Uid, #m_cache_map_unit{} = Unit) ->
     ?INFO("player ~p exit map ~p:~p:~p",
         [Uid, map_rw:get_map_id(), map_rw:get_line_id(), self()]),
 
-    map_rw:del_obj_to_ets(Unit),
+    map_rw:del_obj_to_map(Unit),
 
     ?TRY_CATCH(map_view:sync_player_exit_map(Unit)),
     ?TRY_CATCH(hook_map:on_player_exit(Uid), Err1, St1),
@@ -74,7 +74,7 @@ player_join_call(S, From, #r_change_map_req{uid = Uid, pid = Pid, group = Group,
         ?DEBUG("player ~p to ~p", [Uid, Pos]),
         Unit = unit:new_player(Pid, Uid, Group, Pos, vector3:new(0.1, 0, 0.5)),
         send_goto_map_msg(Uid, Pos),
-        map_rw:add_obj_to_ets(Unit),
+        map_rw:add_obj_to_map(Unit),
         map_srv:call_reply(From, ok),
         ?TRY_CATCH(map_view:sync_player_join_map(Unit)),
         ?TRY_CATCH(hook_map:on_player_join(Uid), Err1, St1),
@@ -118,7 +118,7 @@ init_all_monster_1(Mdata) ->
 init_all_monster_2(Unit) ->
     Uid = unit:get_uid(Unit),
     VisIndex = map_view:pos_to_vis_index(move_rw:get_cur_pos(Uid)),
-    map_rw:add_obj_to_ets(Unit),
+    map_rw:add_obj_to_map(Unit),
     map_view:add_obj_to_vis_tile(Unit, VisIndex),
     hook_map:on_monster_create(Uid),
     ?DEBUG("map ~p:~p create monster ~p, uid ~p, visIndex ~p",

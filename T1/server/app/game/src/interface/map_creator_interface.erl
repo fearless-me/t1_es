@@ -28,13 +28,13 @@ map_mgr_l(MapID) ->
         _ -> undefined
     end.
 %%-------------------------------------------------------------------
-map_mgr_lr(Aid, MapID) ->
-    do_map_mgr_lr(gs_conf:is_cross(), Aid, getCfg:getCfgByArgs(cfg_map, MapID)).
+map_mgr_lr(Uid, MapID) ->
+    do_map_mgr_lr(gs_conf:is_cross(), Uid, getCfg:getCfgByArgs(cfg_map, MapID)).
 
 
 %% 在跨服上找非跨服地图
-do_map_mgr_lr(true, Aid, #mapCfg{is_cross = 0, id = MapID}) ->
-    Node = cross_interface:get_player_src_node(Aid),
+do_map_mgr_lr(true, Uid, #mapCfg{is_cross = 0, id = MapID}) ->
+    Node = cross_interface:get_player_src_node(Uid),
     case cross_interface:get_remote_server_map_mgr(Node, MapID) of
         MgrPid when is_pid(MgrPid) -> MgrPid;
         Error ->
@@ -42,8 +42,8 @@ do_map_mgr_lr(true, Aid, #mapCfg{is_cross = 0, id = MapID}) ->
             undefined
     end;
 %% 在普通服务器招跨服地图
-do_map_mgr_lr(false, Aid, #mapCfg{is_cross = 1, id = MapID}) ->
-    Node = cross_interface:get_player_cross_node(Aid),
+do_map_mgr_lr(false, Uid, #mapCfg{is_cross = 1, id = MapID}) ->
+    Node = cross_interface:get_player_cross_node(Uid),
     case cross_interface:get_remote_server_map_mgr(Node, MapID) of
         MgrPid when is_pid(MgrPid) -> MgrPid;
         Error ->
@@ -51,7 +51,7 @@ do_map_mgr_lr(false, Aid, #mapCfg{is_cross = 1, id = MapID}) ->
             undefined
     end;
 %% 在跨服上找跨服地图/在普通副找非跨服地图
-do_map_mgr_lr(_Any, _Aid, #mapCfg{id = MapID}) ->
+do_map_mgr_lr(_Any, _Uid, #mapCfg{id = MapID}) ->
     case ets:lookup(?MAP_MGR_ETS, MapID) of
         [#m_map_mgr{mgr = Mgr} | _] -> Mgr;
         _ -> undefined

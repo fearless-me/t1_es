@@ -15,7 +15,7 @@
 
 %%
 -export([init/1]).
--export([add_obj_to_ets/1, del_obj_to_ets/1]).
+-export([add_obj_to_map/1, del_obj_to_map/1]).
 -export([
     get_obj/1,
     get_player/1, get_player_size/0,
@@ -134,26 +134,27 @@ get_pet(Uid) ->
     end.
 
 %%-------------------------------------------------------------------
-add_obj_to_ets(#m_cache_map_unit{type = ?UNIT_MON, uid = Uid} = Unit) ->
-    ets:insert(?ETS_CACHE_MAP_MONSTER, Unit),
+add_obj_to_map(#m_cache_map_unit{type = ?UNIT_MON, uid = Uid} = Unit) ->
+    ets_cache:write(?ETS_CACHE_MAP_MONSTER, Unit),
     map_rw:set_monster_map( maps:put(Uid, Uid, map_rw:get_monster_map()) ),
     ok;
-add_obj_to_ets(#m_cache_map_unit{type = ?UNIT_PLAYER, uid = Uid} = Unit) ->
-    ets:insert(?ETS_CACHE_MAP_PLAYER, Unit),
+add_obj_to_map(#m_cache_map_unit{type = ?UNIT_PLAYER, uid = Uid} = Unit) ->
+    ets_cache:write(?ETS_CACHE_MAP_PLAYER, Unit),
     map_rw:set_player_map( maps:put(Uid, Uid, map_rw:get_player_map()) ),
     ok;
-add_obj_to_ets(_) ->
+add_obj_to_map(_) ->
     ok.
 
-del_obj_to_ets(#m_cache_map_unit{uid = Uid, type = ?UNIT_MON}) ->
-    ets:delete(?ETS_CACHE_MAP_MONSTER, Uid),
+del_obj_to_map(#m_cache_map_unit{uid = Uid, type = ?UNIT_MON}) ->
+    ets_cache:delete(?ETS_CACHE_MAP_MONSTER, Uid),
+    ets_cache:delete(?ETS_CACHE_UNIT_COMBAT, Uid),
     map_rw:set_monster_map( maps:remove(Uid, map_rw:get_monster_map()) ),
     ok;
-del_obj_to_ets(#m_cache_map_unit{uid = Uid, type = ?UNIT_PLAYER}) ->
-    ets:update_element(?ETS_CACHE_MAP_PLAYER, Uid, [{#m_cache_map_unit.map_id, 0}, {#m_cache_map_unit.line_id, 0}]),
+del_obj_to_map(#m_cache_map_unit{uid = Uid, type = ?UNIT_PLAYER}) ->
+    ets_cache:update_element(?ETS_CACHE_MAP_PLAYER, Uid, [{#m_cache_map_unit.map_id, 0}, {#m_cache_map_unit.line_id, 0}]),
     map_rw:set_player_map( maps:remove(Uid, map_rw:get_player_map()) ),
     ok;
-del_obj_to_ets(_) ->
+del_obj_to_map(_) ->
     ok.
 %%-------------------------------------------------------------------
 update_move_timer() ->
