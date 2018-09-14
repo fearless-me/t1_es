@@ -49,7 +49,7 @@ run() ->
             [
                 ["logger.hrl", "pub_def.hrl", "rec_rw.hrl"],
                 [
-                    {m_map_unit_rw, record_info(fields, m_map_unit_rw), [], ["Uid"], "hook_map:on_rw_update"}
+                    {m_unit_rw, record_info(fields, m_unit_rw), [], ["Uid"], "hook_map:on_rw_update"}
                 ]
             ]
         ),
@@ -64,12 +64,22 @@ run() ->
             ]
         ),
         multi_to_code(
+            "..\\src\\pub\\core\\attr_rw.erl",
+            attr_rw,
+            [
+                ["logger.hrl", "pub_def.hrl", "rec_rw.hrl"],
+                [
+                    {m_attr_rw, record_info(fields, m_attr_rw), [], ["Uid"], []}
+                ]
+            ]
+        ),
+        multi_to_code(
             "..\\src\\pub\\map\\move_rw.erl",
             move_rw,
             [
                 ["logger.hrl", "pub_def.hrl", "rec_rw.hrl"],
                 [
-                    {m_map_unit_move_rw, record_info(fields, m_map_unit_move_rw), [], ["Uid"], "hook_map:on_rw_update"}
+                    {m_move_rw, record_info(fields, m_move_rw), [], ["Uid"], "hook_map:on_rw_update"}
                 ]
             ]
         ),
@@ -79,7 +89,7 @@ run() ->
             [
                 ["logger.hrl", "pub_def.hrl", "ai.hrl", "rec_rw.hrl"],
                 [
-                    {m_map_unit_ai_rw, record_info(fields, m_map_unit_ai_rw), [], ["Uid"], []}
+                    {m_ai_rw, record_info(fields, m_ai_rw), [], ["Uid"], []}
                 ]
             ]
         ),

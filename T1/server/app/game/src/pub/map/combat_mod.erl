@@ -41,18 +41,18 @@ use_skill(Aer, Der, SkillId, Serial) ->
     map_view:send_net_msg_to_visual(Aer, NetMsg),
 
     %% 根据类型
-    SkillOpType = ?ESOT_Channel,
+    SkillOpType = ?SKILL_OP_CHANNEL,
 
     combat_rw:set_skill_serial(Aer, Serial),
     use_skill_dispatcher(SkillOpType, Aer, TarUid, SkillId, Serial),
     ?DEBUG("~p use skill ~p tar ~p", [Aer, Der, SkillId]),
     ok.
 
-use_skill_dispatcher(?ESOT_Instant, Aer, Tar, SkillId, Serial) ->
+use_skill_dispatcher(?SKILL_OP_INSTANT, Aer, Tar, SkillId, Serial) ->
     instant_skill(Aer, Tar, SkillId, Serial);
-use_skill_dispatcher(?ESOT_Channel, Aer, Tar, SkillId, Serial) ->
+use_skill_dispatcher(?SKILL_OP_CHANNEL, Aer, Tar, SkillId, Serial) ->
     channel_skill(Aer, Tar, SkillId, Serial);
-use_skill_dispatcher(?ESOT_Spell, Aer, Tar, SkillId, Serial) ->
+use_skill_dispatcher(?SKILL_OP_SPELL, Aer, Tar, SkillId, Serial) ->
     spell_skill(Aer, Tar, SkillId, Serial).
 
 %% todo 引导类型技能
@@ -85,12 +85,12 @@ active_skill_once(Aer, Pos, SkillId, Serial)->
 %%-------------------------------------------------------------------
 calculate_dmg(Uid, SkillId, TargetUid, Serial) ->
     HitMsg = #pk_GS2U_HitTarget{
-        uid = TargetUid, src_uid = Uid, cause = ?EHTC_Skill, misc = SkillId, serial = Serial
+        uid = TargetUid, src_uid = Uid, cause = ?HIT_REASON_SKILL, misc = SkillId, serial = Serial
     },
     map_view:send_net_msg_to_visual(TargetUid, HitMsg),
 
     HpMsg = #pk_GS2U_HPChange{
-        uid = TargetUid, src_uid = Uid, cause = ?RHPCC_SkillDamage, result = ?ESR_Critical, hp_change = -1000,
+        uid = TargetUid, src_uid = Uid, cause = ?HP_CHANGE_SKILL, result = ?ESR_CRITICAL, hp_change = -1000,
         misc1 = SkillId, misc2 = 0, serial = Serial
     },
     map_view:send_net_msg_to_visual(TargetUid, HpMsg),

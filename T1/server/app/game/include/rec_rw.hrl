@@ -10,19 +10,23 @@
 
 -ifndef(RW_RECORD_HRL).
 -define(RW_RECORD_HRL, true).
-%%-include("ai.hrl").
 
 %% 进入地图后会动态变
 %% 通过自动生成代码lib_unit_rw
--record(m_map_unit_rw,{
-    pid = 0, data_id = 0, group = 0, owner = 0, type=-1,
+-record(m_unit_rw,{
+    pid = 0, data_id = 0, group = 0, owner = 0, type=0,
 %%  战斗相关
     hp = 1, max_hp = 1, attr= [], buff_list = [], skill_queue=[]
 }).
 
+%% 战斗属性
+-record(m_attr_rw,{
+    max_hp, speed, attack
+}).
+
 %% 移动相关
-%% 通过自动生成代码lib_move_rw
--record(m_map_unit_move_rw,{
+%% 通过自动生成代码move_rw
+-record(m_move_rw,{
 
     move_speed = 20,
     cur_move=0, next_move=0,  vis_tile_idx=-1,
@@ -33,8 +37,8 @@
 }).
 
 %% AI相关
-%% 通过自动生成代码lib_ai_rw
--record(m_map_unit_ai_rw,{
+%% 通过自动生成代码ai_rw
+-record(m_ai_rw,{
     ai_state=0, pre_ai_state=0, ai_transition=1,
     triggers=[], pause=false,
     %
@@ -60,7 +64,7 @@
 }).
 
 %% player
-%% 通过自动生成代码lib_player_rw
+%% 通过自动生成代码player_rw
 -record(m_player_rw, {
 %%  这些信息将由基础代码来维护
     aid=0, uid=0, sid=0,
@@ -74,7 +78,7 @@
 
 
 %% player
-%% 通过自动生成代码lib_player_rw
+%% 通过自动生成代码combat_rw
 -record(m_combat_rw, {
     %% 基础信息
     skill_id=0, target_uid=0, skill_serial=0,

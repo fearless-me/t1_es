@@ -6,7 +6,7 @@
 %%% @end
 %%% Created : 06. 十月 2017 11:00
 %%%-------------------------------------------------------------------
--module(svr_mgr_priv).
+-module(server_mgr_priv).
 -author("mawenhong").
 
 -include("logger.hrl").
@@ -89,7 +89,7 @@ ack_now(_WindowPid, {ServerID})->
 	ok.
 %%%-------------------------------------------------------------------
 nodedown({GSNode, ServerID}) ->
-	svr_mgr_pub:on_nodedown(GSNode, ServerID),
+	server_mgr_pub:on_nodedown(GSNode, ServerID),
 	mne_ex:dirty_delete(?ShareServerInfoName, ServerID),
     mne_mt:remove_node_if_mnesia_running(GSNode),
 	?WARN("server[~p]down, remove s[~p]",[GSNode, ServerID]),
@@ -109,7 +109,7 @@ register(FromPid, {ServerId, ServerType, ServerName}) ->
 
 do_register(FromPid, ServerId, ServerType, ServerName) ->
 	GSNode = erlang:node(FromPid),
-	case svr_sup:start_child([{ServerId, ServerType, FromPid}]) of
+	case server_sup:start_child([{ServerId, ServerType, FromPid}]) of
 		{ok, Pid} ->
 			Info = #m_share_server_info{
 				sid = ServerId

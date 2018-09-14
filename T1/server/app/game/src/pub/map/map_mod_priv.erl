@@ -32,7 +32,7 @@
 %%--------------------------------
 
 %%-------------------------------------------------------------------
--spec init(S ::#m_map_state{}) -> #m_map_state{}.
+-spec init(S :: #m_map_state{}) -> #m_map_state{}.
 init(S) ->
     Conf = map_creator_interface:map_data(S#m_map_state.map_id),
     ok = map_rw:init(S),
@@ -51,7 +51,7 @@ player_exit_call(S, From, #r_exit_map_req{uid = Uid}) ->
     Unit = map_rw:get_player(Uid),
     ?TRY_CATCH_RET(do_player_exit_call(S, From, Uid, Unit), {reply, error, S}).
 
-do_player_exit_call(S, _From,  Uid, #m_cache_map_unit{} = Unit) ->
+do_player_exit_call(S, _From, Uid, #m_cache_map_unit{} = Unit) ->
     ?INFO("player ~p exit map ~p:~p:~p",
         [Uid, map_rw:get_map_id(), map_rw:get_line_id(), self()]),
 
@@ -63,7 +63,7 @@ do_player_exit_call(S, _From,  Uid, #m_cache_map_unit{} = Unit) ->
 do_player_exit_call(S, _From, Uid, _Obj) ->
     ?ERROR("~w req exit map ~w ~w, but obj not exists!",
         [Uid, self(), misc:registered_name()]),
-    map_rw:set_player_map( maps:remove(Uid, map_rw:get_player_map()) ),
+    map_rw:set_player_map(maps:remove(Uid, map_rw:get_player_map())),
     {reply, error, S}.
 
 %%-------------------------------------------------------------------
@@ -137,7 +137,7 @@ init_all_npc(_NL) ->
 %%-------------------------------------------------------------------
 tick_msg() -> erlang:send_after(?MAP_TICK, self(), tick_now).
 
--spec tick(S ::#m_map_state{}) -> #m_map_state{}.
+-spec tick(S :: #m_map_state{}) -> #m_map_state{}.
 tick(S) ->
     map_rw:update_move_timer(),
     tick_1(S).
@@ -159,26 +159,26 @@ tick_1(S) ->
 
 tick_obj(S) ->
     ?TRY_CATCH(tick_update_before(S), Err1, Stk1),
-    
+
     % 更新各个对象
     %------------------
-    ?TRY_CATCH(tick_player(S),        Err2, Stk2),
-    ?TRY_CATCH(tick_monster(S),       Err3, Stk3),
-    ?TRY_CATCH(tick_pet(S),           Err4, Stk4),
+    ?TRY_CATCH(tick_player(S), Err2, Stk2),
+    ?TRY_CATCH(tick_monster(S), Err3, Stk3),
+    ?TRY_CATCH(tick_pet(S), Err4, Stk4),
     %------------------
-    
-    ?TRY_CATCH(tick_update_after(S),  Err5, Stk5),
+
+    ?TRY_CATCH(tick_update_after(S), Err5, Stk5),
     ok.
 
 %%-------------------------------------------------------------------
 tick_player(_S) ->
     maps:fold(
-        fun(_, Uid, _)->
+        fun(_, Uid, _) ->
             tick_player_1(map_rw:get_player(Uid), Uid)
         end, 0, map_rw:get_player_map()).
 
 tick_player_1(undefined, Uid) ->
-    ?ERROR("player ~p may be leave map",[Uid]);
+    ?ERROR("player ~p may be leave map", [Uid]);
 tick_player_1(Unit, _) ->
     ?TRY_CATCH(move_mod:update(Unit), Err1, Stk1),
     ?TRY_CATCH(combat_mod:tick(Unit), Err2, Stk2),
@@ -187,27 +187,27 @@ tick_player_1(Unit, _) ->
 %%-------------------------------------------------------------------
 tick_monster(_S) ->
     maps:fold(
-        fun(_, Uid, _)->
+        fun(_, Uid, _) ->
             tick_monster_1(map_rw:get_monster(Uid), Uid)
         end, 0, map_rw:get_monster_map()).
 
 tick_monster_1(undefined, Uid) ->
-    ?ERROR("monster ~p  ~p not exists",[Uid, unit_rw:get_data_id(Uid)]);
+    ?ERROR("monster ~p  ~p not exists", [Uid, unit_rw:get_data_id(Uid)]);
 tick_monster_1(Unit, _) ->
     ?TRY_CATCH(move_mod:update(Unit), Err1, Stk1),
-    ?TRY_CATCH(ai_mod:update(Unit),   Err2, Stk2),
+    ?TRY_CATCH(ai_mod:update(Unit), Err2, Stk2),
     ?TRY_CATCH(combat_mod:tick(Unit), Err3, Stk3),
     ok.
 
 %%-------------------------------------------------------------------
 tick_pet(_S) ->
     maps:fold(
-        fun(_, Uid, _)->
+        fun(_, Uid, _) ->
             tick_pet_1(map_rw:get_pet(Uid), Uid)
         end, 0, map_rw:get_pet_map()).
 
 tick_pet_1(undefined, Uid) ->
-    ?ERROR("pet ~p not exists",[Uid]);
+    ?ERROR("pet ~p not exists", [Uid]);
 tick_pet_1(Unit, _) ->
     ?TRY_CATCH(move_mod:update(Unit), Err1, Stk1),
     ?TRY_CATCH(combat_mod:tick(Unit), Err2, Stk2),
@@ -237,7 +237,7 @@ start_stop_now(S) ->
 
 kick_all_player(_S) ->
     maps:fold(
-        fun(_, Uid, _)->
+        fun(_, Uid, _) ->
             catch gs_interface:send_msg(Uid, return_to_pre_map_req)
         end, 0, map_rw:get_player_map()),
     ok.
@@ -249,7 +249,7 @@ player_start_move(Req) ->
     move_mod:start_player_walk(Uid, move_rw:get_cur_pos(Uid), Dst).
 
 %%-------------------------------------------------------------------
--spec player_stop_move(Req :: #r_player_stop_move_req{})  -> ok | error.
+-spec player_stop_move(Req :: #r_player_stop_move_req{}) -> ok | error.
 player_stop_move(Req) ->
     #r_player_stop_move_req{uid = Uid, pos = Pos} = Req,
     move_mod:stop_player_move(Uid, Pos).
@@ -264,30 +264,30 @@ send_goto_map_msg(Uid, Pos) ->
     ok.
 
 %%-------------------------------------------------------------------
--spec broadcast_msg(S ::#m_map_state{}, {MsgId :: term()} | {MsgId :: term(), Msg :: term()}) -> ok.
+-spec broadcast_msg(S :: #m_map_state{}, {MsgId :: term()} | {MsgId :: term(), Msg :: term()}) -> ok.
 broadcast_msg(_S, {MsgId}) ->
     maps:fold(
-        fun(_, Uid, _)->
+        fun(_, Uid, _) ->
             gs_interface:send_msg(Uid, MsgId)
         end, 0, map_rw:get_player_map()),
     ok;
 broadcast_msg(_S, {MsgId, Msg}) ->
     maps:fold(
-        fun(_, Uid, _)->
+        fun(_, Uid, _) ->
             gs_interface:send_msg(Uid, MsgId, Msg)
         end, 0, map_rw:get_player_map()),
     ok.
 
--spec broadcast_net_msg(S ::#m_map_state{}, NetMsg :: tuple()) -> ok.
+-spec broadcast_net_msg(S :: #m_map_state{}, NetMsg :: tuple()) -> ok.
 broadcast_net_msg(_S, NetMsg) ->
     maps:fold(
-        fun(_, Uid, _)->
+        fun(_, Uid, _) ->
             gs_interface:send_net_msg(Uid, NetMsg)
         end, 0, map_rw:get_player_map()),
     ok.
 
 %%-------------------------------------------------------------------
--spec broadcast_msg_view({Uid :: integer(), MsgId :: term()} | {Uid :: integer(), MsgId :: term(), Msg :: term()} ) -> ok.
+-spec broadcast_msg_view({Uid :: integer(), MsgId :: term()} | {Uid :: integer(), MsgId :: term(), Msg :: term()}) -> ok.
 broadcast_msg_view({Uid, MsgId}) ->
     map_view:send_msg_to_visual(Uid, MsgId),
     ok;

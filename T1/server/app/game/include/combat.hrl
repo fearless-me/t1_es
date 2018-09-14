@@ -12,37 +12,45 @@
 -define(GS_COMBAT_INC_HRL, true).
 
 
-%% 角色HP变化原因
+%% 属性定义
+%% @todo 看看是否能自动生成
+%% 可以让策划配置的不是数值比如 策划配置的是 max_hp 而不是数字1
+%% 程序这边要封装好属性相关的结构，方便读、打包、存、更新
+%%
+-define(ATTR_MIN,    1).
+-define(ATTR_MAX_HP, 1). %%最大生命
+-define(ATTR_ATTACK, 2). %%攻击
+-define(ATTR_SPEED,  3). %%速度
+-define(ATTR_MAX,    4).
 
--define(RHPCC_SkillDamage, 0). %% 技能伤害引起
--define(RHPCC_BuffDamage,  1). %% Buff伤害引起
--define(RHPCC_Other,	   2). %% 其它原因
--type hp_change_cause() ::   ?RHPCC_SkillDamage ..  ?RHPCC_Other.
+
+%% 角色HP变化原因
+-define(HP_CHANGE_SKILL, 0). %% 技能伤害引起
+-define(HP_CHANGE_BUFF,  1). %% Buff伤害引起
+-define(HP_CHANGE_OTHER, 2). %% 其它原因
+
 
 
 %% 角色死亡原因
--define(ERDC_Skill,	0). %% 技能伤害引起
--define(ERDC_Buff,	1). %% Buff伤害引起
--define(ERDC_Other,	2). %% 其它原因
--type dead_cause() :: ?ERDC_Skill .. ?ERDC_Other.
+-define(DEATH_REASON_SKILL,	0). %% 技能伤害引起
+-define(DEATH_REASON_BUFF,	1). %% Buff伤害引起
+-define(DEATH_REASON_OTHER,	2). %% 其它原因
 
 
 %% 命中目标原因
--define(EHTC_Skill,	0).	%% 使用技能
--define(EHTC_Item,	1).	%% 使用物品
--type hit_cause() :: ?EHTC_Skill .. ?EHTC_Item.
+-define(HIT_REASON_SKILL,	0).	%% 使用技能
+-define(HIT_REASON_ITEM,	1).	%% 使用物品
 
 %% 技能结果
--define(ESR_Dodge,	    0).	%% 闪避
--define(ESR_Critical,	1).	%% 暴击
--define(ESR_Blocked,	2).	%% 格挡
--type skill_result() :: ?ESR_Dodge .. ?ESR_Blocked.
+-define(ESR_DODGE,	    0).	%% 闪避
+-define(ESR_CRITICAL,	1).	%% 暴击
+-define(ESR_BLOCKED,	2).	%% 格挡
 
 
--define(ESOT_Instant, 1).  %% 瞬发
--define(ESOT_Channel, 2).  %% 引导
--define(ESOT_Spell, 3).    %% 吟唱
--type skill_optype() :: ?ESOT_Instant ..  ?ESOT_Spell.
+%%
+-define(SKILL_OP_INSTANT, 1).  %% 瞬发
+-define(SKILL_OP_CHANNEL, 2).  %% 引导
+-define(SKILL_OP_SPELL, 3).    %% 吟唱
 
 
 -endif.

@@ -6,7 +6,7 @@
 %%% @end
 %%% Created : 03. 十一月 2017 16:36
 %%%-------------------------------------------------------------------
--module(svr_root_sup).
+-module(server_root_sup).
 -author("mawenhong").
 
 -behaviour(supervisor).
@@ -61,8 +61,8 @@ init([]) ->
         {
             {one_for_one, 5, 10},
             [
-                ?CHILD(svr_mgr_otp, worker),
-                ?CHILD(svr_sup, supervisor)
+                ?CHILD(server_mgr_srv, worker),
+                ?CHILD(server_sup, supervisor)
             ]
         }
     }.

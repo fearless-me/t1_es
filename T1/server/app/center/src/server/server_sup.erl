@@ -6,7 +6,7 @@
 %%% @end
 %%% Created : 27. 九月 2017 19:29
 %%%-------------------------------------------------------------------
--module(svr_sup).
+-module(server_sup).
 -author("mawenhong").
 
 -behaviour(supervisor).
@@ -45,7 +45,7 @@ init([]) ->
             {simple_one_for_one, 5, 10},
             [
                 {   undefind,                               	% Id       = internal id
-                    {svr_otp, start_link, []},             % StartFun = {M, F, A}
+                    {server_srv, start_link, []},             % StartFun = {M, F, A}
                     temporary,                               	% Restart  = permanent | transient | temporary (不会重启)
                     2000,                                    	% Shutdown = brutal_kill | int() >= 0 | infinity
                     worker,                                  	% Type     = worker | supervisor

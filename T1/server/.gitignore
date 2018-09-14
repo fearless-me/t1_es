@@ -24,3 +24,6 @@ _gsdata_
 /_gsdata_/
 /__gs_pkg_sql__/
 /.idea/
+/app/_gsdata_/
+/app/center/ebin/
+/app/game/ebin/

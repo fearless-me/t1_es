@@ -6,7 +6,7 @@
 %%% @end
 %%% Created : 15. 八月 2018 11:41
 %%%-------------------------------------------------------------------
--module(svr_otp).
+-module(server_srv).
 -author("mawenhong").
 
 -behaviour(gen_serverw).
@@ -40,7 +40,7 @@ mod_init({DBId, SeverType, FromPid}) ->
         GSNode = erlang:node(FromPid),
         NameAtom = makeName(SeverType, DBId),
         true = erlang:register(NameAtom, self()),
-        svr_priv:set_id_pid(DBId, FromPid),
+        server_priv:set_id_pid(DBId, FromPid),
         erlang:monitor_node(GSNode, true),
         erlang:process_flag(priority, high),
         tick_msg(),
@@ -55,7 +55,7 @@ mod_init({DBId, SeverType, FromPid}) ->
 
 %%--------------------------------------------------------------------	
 do_handle_call(Request, From, State) ->
-    Ret = svr_logic:call(Request, From),
+    Ret = server_logic:call(Request, From),
     {reply, Ret, State}.
 
 %%--------------------------------------------------------------------
@@ -66,13 +66,13 @@ do_handle_info({ackTimeOut, _MgrPid}, State) ->
         [self(), State#state.register_name]),
     {stop, normal, State};
 do_handle_info({nodedown, NodeName}, State) ->
-    svr_priv:nodedown(NodeName, State#state.register_name),
+    server_priv:nodedown(NodeName, State#state.register_name),
     {stop, normal, State};
 do_handle_info(sync_all_data, State) ->
-    svr_priv:sync(),
+    server_priv:sync(),
     {noreply, State};
 do_handle_info(Info, State) ->
-    svr_logic:info(Info),
+    server_logic:info(Info),
     {noreply, State}.
 
 
@@ -89,7 +89,7 @@ on_terminate(_Reason, _State) ->
 %%--------------------------------------------------------------------
 %%--------------------------------------------------------------------
 check_alive(State) ->
-    ServerID = svr_priv:get_sid(),
+    ServerID = server_priv:get_sid(),
     Pid = self(),
     case common_interface:get_server_info(ServerID) of
         #m_share_server_info{worker = Pid} ->

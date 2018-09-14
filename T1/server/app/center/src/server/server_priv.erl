@@ -6,7 +6,7 @@
 %%% @end
 %%% Created : 09. 十月 2017 10:12
 %%%-------------------------------------------------------------------
--module(svr_priv).
+-module(server_priv).
 -author("mawenhong").
 
 -include("logger.hrl").
@@ -65,7 +65,7 @@ all_ready(_ServerID) ->
 
 %%-------------------------------------------------------------------
 nodedown(GSNode, OtpName) ->
-    ps:send(?CS_SVR_MGR_OTP, nodedown, {GSNode, svr_priv:get_sid()}),
+    ps:send(?CS_SVR_MGR_OTP, nodedown, {GSNode, server_priv:get_sid()}),
     ?WARN("server[~p], stop worker[~p][~p] now", [GSNode, self(), OtpName]),
     ok.
 

@@ -9,7 +9,7 @@
 -module(misc_time).
 -author("mawenhong").
 %% API
--export([milli_seconds/0, utc_seconds/0, tz_seconds/0, localtime_seconds/0]).
+-export([micro_seconds/0, milli_seconds/0, utc_seconds/0, tz_seconds/0, localtime_seconds/0]).
 -export([localtime_str/0, utc_str/0]).
 -export([day_of_the_week/0, day_of_the_week/1, day_of_the_week/3]).
 
@@ -18,6 +18,8 @@
 -define(SECONDS_PER_DAY, 86400).
 -define(SECONDS_FROM_0_TO_1970, ?DAYS_FROM_0_TO_1970 * ?SECONDS_PER_DAY).
 -define(TIME_FMT, "~.4w-~.2.0w-~.2.0w ~.2.0w:~.2.0w:~.2.0w").
+
+micro_seconds() -> os:system_time(microsecond).
 
 milli_seconds() -> os:system_time(milli_seconds).
 

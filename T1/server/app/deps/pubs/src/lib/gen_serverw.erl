@@ -2,7 +2,12 @@
 %%% @author mawenhong
 %%% @copyright (C) 2018, <COMPANY>
 %%% @doc
-%%%
+%%% 为什么要提供一个对gen_server(2)的封装
+%%% 是因为我可以方面的统一做控制
+%%% 比如针对GC，消息量、处理时间的监控，
+%%% 而不需要去改动任何逻辑层的代码
+%%% 而付出的代价是性能的些许损耗，但是在可接受范围之类
+%%% 参考测试数据: {@link test:*_apply , *_fun, *_call}
 %%% @end
 %%% Created : 07. 五月 2018 11:34
 %%%-------------------------------------------------------------------
@@ -46,6 +51,18 @@
 -define(LogicModule, myLogicModule).
 -define(FULL_SWEEP, {fullsweep_after, 20}).
 -define(FULL_SWEEP_OPTIONS, {spawn_opt,[?FULL_SWEEP]}).
+-define(TC(F, Request), tc(fun()-> F end, Request)).
+-define(TIMELINE_MICROSECOND, 500).
+%% 假设帧率是 20MS那么是50个消息/client/秒, 服务50client，
+%% 那么每个消息  1000*1000/2500 = 400micro seconds
+%% 所以每个消息最大处理时间(micro seconds)= 100000 / ClientCount / 1000 / frame_time
+%% client count tick_time(milli seconds)  per msg time(micro seconds)
+%%    50                20                     400
+%%    50                25                     500
+%%    50                50                     1000
+%%    50                100                    2000
+%%    100               20                     200
+%%     **
 
 %%%===================================================================
 %%% public functions
@@ -76,6 +93,7 @@ start_link2(Name, Module, Args, Options) ->
     gen_server2:start_link(Name, ?MODULE, [Module, Args], sweep_options(Options)).
 
 
+%%--------------------------------------------------------------------
 sweep_options(Options) ->
     case lists:keyfind(spawn_opt, 1, Options) of
     false -> [?FULL_SWEEP_OPTIONS | Options ];
@@ -124,7 +142,7 @@ init(Args) ->
 %%--------------------------------------------------------------------
 handle_call(Request, From, State) ->
     Module = get(?LogicModule),
-    try Module:do_handle_call(Request, From, State)
+    try ?TC(Module:do_handle_call(Request, From, State), {Request, From})
     catch T : E : ST ->
         ?ERROR("call ~w:~p,stack:~p", [T, E, ST]),
         {reply, E, State}
@@ -142,7 +160,7 @@ handle_call(Request, From, State) ->
 %%--------------------------------------------------------------------
 handle_cast(Request, State) ->
     Module = get(?LogicModule),
-    try Module:do_handle_cast(Request, State)
+    try ?TC(Module:do_handle_cast(Request, State), Request)
     catch T : E : ST ->
         ?ERROR("cast ~w:~p,stack:~p", [T, E, ST]),
         {noreply, State}
@@ -159,7 +177,7 @@ handle_cast(Request, State) ->
 %%--------------------------------------------------------------------
 handle_info(Info, State) ->
     Module = get(?LogicModule),
-    try Module:do_handle_info(Info, State)
+    try ?TC(Module:do_handle_info(Info, State), Info)
     catch T : E : ST ->
         ?ERROR("~p info ~p:~p,stack:~p", [node(), T, E, ST]),
         {noreply, State}
@@ -181,3 +199,18 @@ terminate(Reason, State) ->
 %% @spec code_change(OldVsn, State, Extra) -> {ok, NewState}
 %%--------------------------------------------------------------------
 code_change(_OldVsn, State, _Extra) -> {ok, State}.
+
+
+tc(F, Request) ->
+    T1 = misc_time:micro_seconds(),
+    Val = F(),
+    T2 = misc_time:micro_seconds(),
+    case T2 - T1  of
+    Time when Time > ?TIMELINE_MICROSECOND ->
+        ?WARN(
+            "~p,~p|~p deal ~w use time ~p micro seconds",
+            [get(?LogicModule), self(), misc:registered_name(), Request, Time]
+        );
+    _Any -> skip
+    end,
+    Val.

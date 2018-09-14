@@ -53,7 +53,7 @@ start() ->
         watchdog:wait_group(1),
 
         misc:fn_wrapper({"distritbution",           ?Wrap(start_dist(SupPid))}),
-        misc:fn_wrapper({"server mgr",              ?Wrap(misc:start_otp(SupPid, svr_root_sup, supervisor))}),
+        misc:fn_wrapper({"server mgr",              ?Wrap(misc:start_otp(SupPid, server_root_sup, supervisor))}),
             
         watchdog:ready(true),
         ok

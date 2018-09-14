@@ -6,7 +6,7 @@
 %%% @end
 %%% Created : 06. 十月 2017 15:18
 %%%-------------------------------------------------------------------
--module(svr_logic).
+-module(server_logic).
 -author("mawenhong").
 -include("logger.hrl").
 

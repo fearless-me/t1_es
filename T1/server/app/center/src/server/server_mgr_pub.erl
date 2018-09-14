@@ -6,7 +6,7 @@
 %%% @end
 %%% Created : 15. 八月 2018 14:36
 %%%-------------------------------------------------------------------
--module(svr_mgr_pub).
+-module(server_mgr_pub).
 -author("mawenhong").
 
 %% API
