@@ -33,7 +33,7 @@ dispatch({_1, ?CONDITION_PLAYER, ?CONDITION_PLAYER_SUB_HP_PERCENT, _P1, P2, P3},
 %% 参数1：	对象	1.自身 2.目标
 %% 参数2：	值（int）
 %% 参数3：	逻辑	1.等于 2.大于 3.小于
-dispatch({_1, ?CONDITION_PLAYER, ?CONDITION_PLAYER_SUB_HP_PERCENT, _P1, P2, P3},[Uid]) ->
+dispatch({_1, ?CONDITION_PLAYER, ?CONDITION_PLAYER_SUB_HP, _P1, P2, P3},[Uid]) ->
     Hp = player_interface:get_hp(Uid),
     condition_op:op(P3, Hp, P2);
 
