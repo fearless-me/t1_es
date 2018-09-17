@@ -60,7 +60,7 @@ getRow(6, 2, 3) ->
 		drop_group_id = 2,
 		item_id = 3,
 		array_test1 = [],
-		array_test2 = []
+		array_test2 = [1,2,3,4]
 	};
 getRow(7, 3, 98) ->
 	#drop_tableCfg{
