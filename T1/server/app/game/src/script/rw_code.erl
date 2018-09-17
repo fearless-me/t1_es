@@ -8,7 +8,7 @@
 %%%-------------------------------------------------------------------
 -module(rw_code).
 -author("mawenhong").
--include("map_cache.hrl").
+
 -include("db_record.hrl").
 -include("rec_rw.hrl").
 -define(LogFileOptions, [exclusive, append, raw, binary]).

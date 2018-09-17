@@ -4,13 +4,14 @@
 %%% @doc
 %%%
 %%% @end
-%%% Created : 13. 九月 2018 10:38
+%%% Created : 13. 六月 2018 15:25
 %%%-------------------------------------------------------------------
--module(sys_condition).
+-module(attr_mod).
 -author("mawenhong").
-
 -include("logger.hrl").
--include("event_condition.hrl").
 
 %% API
--export([]).
+-export([calc/5]).
+
+calc(_PropList, _AddList, _MultiList, _AddList_Del, _MultiList_Del) ->
+    ok.

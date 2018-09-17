@@ -25,16 +25,13 @@
 %% {@link cross_src:player_pub_data_to_cross}
 %%
 rpc_call_player_enter(#r_to_cross_data{
-    pid = Pid,
     aid = Aid,
     uid = Uid,
-    sock= Sock,
     player_pub = Pub,
-    player_combat = Combat
+    player_online = PlayerOnline
 }) ->
     %% fixme 初始化数据
-    gs_cache:online(Pub, Pid, Sock),
-    gs_cache:add_unit_combat(Uid, Combat),
+    gs_cache:online_cross(Pub, PlayerOnline),
     ?INFO("player ~w of account ~p enter cross",[Uid, Aid]),
     ok.
 
@@ -76,5 +73,8 @@ rpc_call_del_player(Aid, Uid) ->
 
 
 rpc_cast_update_player({?ETS_CACHE_PLAYER_PUB, Uid, Elements}) ->
-    ets_cache:update_element(?ETS_CACHE_PLAYER_PUB, Uid, Elements),
+    gs_cache:update_player_pub(Uid, Elements),
+    ok;
+rpc_cast_update_player({?ETS_CACHE_ONLINE_PLAYER, Uid, Elements}) ->
+    gs_cache:update_online_player(Uid, Elements),
     ok.

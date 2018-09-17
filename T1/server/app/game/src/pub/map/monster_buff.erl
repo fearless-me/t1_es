@@ -4,14 +4,10 @@
 %%% @doc
 %%%
 %%% @end
-%%% Created : 13. 九月 2018 10:39
+%%% Created : 14. 九月 2018 17:59
 %%%-------------------------------------------------------------------
--module(map_event).
+-module(monster_buff).
 -author("mawenhong").
-
--include("logger.hrl").
--include("event_condition.hrl").
-
 
 %% API
 -export([]).

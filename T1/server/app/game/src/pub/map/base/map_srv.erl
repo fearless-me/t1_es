@@ -82,6 +82,9 @@ do_handle_info({msg_broadcast_view, Msg}, State) ->
 do_handle_info({net_msg_broadcast_view, ViewNetMsg}, State) ->
     map_mod_priv:broadcast_net_msg_view(ViewNetMsg),
     {noreply, State};
+do_handle_info({condition_event, ConditionEventMsg}, State) ->
+    map_condition_event:on_event(ConditionEventMsg),
+    {noreply, State};
 do_handle_info(Info, State) ->
     map_mod:on_info_msg(Info),
     {noreply, State}.

@@ -4,13 +4,10 @@
 %%% @doc
 %%%
 %%% @end
-%%% Created : 13. 九月 2018 10:38
+%%% Created : 14. 九月 2018 17:59
 %%%-------------------------------------------------------------------
--module(player_condition).
+-module(monster_attr).
 -author("mawenhong").
-
--include("logger.hrl").
--include("event_condition.hrl").
 
 %% API
 -export([]).

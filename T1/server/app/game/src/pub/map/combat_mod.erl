@@ -11,9 +11,9 @@
 -include("logger.hrl").
 -include("pub_def.hrl").
 -include("netmsg.hrl").
+-include("gs_cache.hrl").
 -include("gs_common_rec.hrl").
 -include("map_core.hrl").
--include("map_cache.hrl").
 -include("combat.hrl").
 
 %% 瞬发技能放完就结束

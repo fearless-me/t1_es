@@ -67,21 +67,21 @@ kick_account(Aid, Reason) ->
 send_msg(Pid, MsgId) when is_pid(Pid) ->
     ps:send(Pid, MsgId);
 send_msg(Uid, MsgId) when is_number(Uid) ->
-    Pid = gs_cache:get_ppid(Uid),
+    Pid = gs_cache:get_online_player_pid(Uid),
     ps:send(Pid, MsgId).
 
 %%-------------------------------------------------------------------
 send_msg(Pid, MsgId, Msg) when is_pid(Pid) ->
     ps:send(Pid, MsgId, Msg);
 send_msg(Uid, MsgId, Msg) when is_number(Uid) ->
-    Pid = gs_cache:get_ppid(Uid),
+    Pid = gs_cache:get_online_player_pid(Uid),
     ps:send(Pid, MsgId, Msg).
 
 %%-------------------------------------------------------------------
 send_net_msg(Pid, NetMsg) when is_pid(Pid) ->
     ps:send(Pid, net_msg, NetMsg);
 send_net_msg(Uid, NetMsg) when is_number(Uid) ->
-    Pid = gs_cache:get_ppid(Uid),
+    Pid = gs_cache:get_online_player_pid(Uid),
     ps:send(Pid, net_msg, NetMsg).
 
 %%-------------------------------------------------------------------

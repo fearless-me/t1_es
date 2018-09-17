@@ -89,10 +89,10 @@ handler(create_player, {AccId, Req}, FromPid, PoolId) ->
     ),
     ok;
 handler(save_player, Player, _FromPid, PoolId) ->
-    #m_cache_player_pub{
+    #m_cache_online_player{
         uid = Uid, career = Career, level = Lv,
-        mid = Mid, line = Line, pos = Pos,
-        old_mid = OMid, old_line = OLine, old_pos = OPos
+        map_id = Mid, line = Line, pos = Pos,
+        old_map_id = OMid, old_line = OLine, old_pos = OPos
     } = Player,
     Sql = gs_db_sql:sql(save_player),
     Params = [Career, Lv, Mid, Line, vector3:x(Pos), vector3:z(Pos),

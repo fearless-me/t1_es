@@ -13,30 +13,41 @@
 
 %%-------------------------------------------------------------------
 %%-------------------------------------------------------------------
-%% 事件上下文限定
--define(EVENT_SYSTEM, 1).
--define(EVENT_MAP, 2).
--define(EVENT_PLAYER, 3).
+-define(CONDITION_OR,  0).
+-define(CONDITION_AND, 1).
 
+%% 逻辑判断
+-define(LOGIC_EQ, 1). % =
+-define(LOGIC_GT, 2). % >
+-define(LOGIC_LT, 3). % <
+-define(LOGIC_GE, 4). % >=
+-define(LOGIC_LE, 5). % =<
+-define(LOGIC_NEQ,6). % !=
+
+
+%%
+-define(CFG_TARGET_SELF,  1).
+-define(CFG_TARGET_OTHER, 2).
+
+
+%%-------------------------------------------------------------------
+%%-------------------------------------------------------------------
 %% 事件主类型
--define(EVENT_MAIN_RESERVE, 1).
+-define(EVENT_DAMAGE, 1).
 
 %% 事件子类型
--define(EVENT_SUB_RESERVE, 1).
+-define(EVENT_DAMAGE_SUB_PERCENT, 1).
+-define(EVENT_DAMAGE_SUB_FIX,     2).
 
 
 %%-------------------------------------------------------------------
 %%-------------------------------------------------------------------
-%% 条件上下文限定
--define(CONDITION_SYSTEM, 1).
--define(CONDITION_MAP, 2).
--define(CONDITION_PLAYER, 3).
-
 %% 条件主类型
--define(CONDITION_MAIN_RESERVE, 1).
+-define(CONDITION_PLAYER, 1).
 
 %% 条件子类型
--define(CONDITION_SUB_RESERVE, 1).
+-define(CONDITION_PLAYER_SUB_HP_PERCENT, 1).
+-define(CONDITION_PLAYER_SUB_HP,         2).
 
 
 

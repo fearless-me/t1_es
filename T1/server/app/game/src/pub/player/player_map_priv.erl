@@ -32,7 +32,7 @@
 %%-------------------------------------------------------------------
 teleport_call(NewPos) ->
     Uid = player_rw:get_uid(),
-    #m_cache_player_pub{mpid = MPid} = gs_cache:get_player_pub(Uid),
+    #m_player_map{map_pid = MPid} = player_rw:get_map(),
     do_teleport_call(MPid, NewPos).
 
 do_teleport_call(undefined, _NewPos) ->
@@ -80,7 +80,7 @@ do_online_call_1(Mgr, Req) ->
 serve_change_map_call(DestMapID, DestLineId, TarPos) ->
     player_rw:set_status(?PS_CHANGE_MAP),
     Uid = player_rw:get_uid(),
-    #m_cache_player_pub{mid = Mid, line = Line, mpid = MPid, pos = Pos} = gs_cache:get_player_pub(Uid),
+    #m_cache_online_player{map_id = Mid, line = Line, map_pid = MPid, pos = Pos} = gs_cache:get_online_player(Uid),
     player_cross_priv:change_map_before(Mid, DestMapID),
     Ack = do_serve_change_map_call(
         #r_change_map_req{
@@ -137,16 +137,16 @@ serve_change_map_call_ret(
         map_pid = MPid, pos = Pos
     }, _Flag) ->
     Uid = player_rw:get_uid(),
-    gs_cache:update_player_pub(
+    gs_cache:update_online_player(
         Uid,
         [
-            {#m_cache_player_pub.old_mid, OldMid},
-            {#m_cache_player_pub.old_line, OldLineId},
-            {#m_cache_player_pub.old_pos, OldPos},
-            {#m_cache_player_pub.mid, Mid},
-            {#m_cache_player_pub.line, LineId},
-            {#m_cache_player_pub.mpid, MPid},
-            {#m_cache_player_pub.pos, Pos}
+            {#m_cache_online_player.old_map_id, OldMid},
+            {#m_cache_online_player.old_line, OldLineId},
+            {#m_cache_online_player.old_pos, OldPos},
+            {#m_cache_online_player.map_id, Mid},
+            {#m_cache_online_player.line, LineId},
+            {#m_cache_online_player.map_pid, MPid},
+            {#m_cache_online_player.pos, Pos}
         ]
     ),
     player_rw:set_map(
@@ -176,9 +176,9 @@ serve_change_map_call_ret(
 %%-------------------------------------------------------------------
 return_to_old_map_call() ->
     Uid = player_rw:get_uid(),
-    #m_cache_player_pub{
-        mpid = Mid, old_mid = OMid, old_line = OLineId, old_pos = OPos
-    } = gs_cache:get_player_pub(Uid),
+    #m_cache_online_player{
+        map_pid = Mid, old_map_id = OMid, old_line = OLineId, old_pos = OPos
+    } = gs_cache:get_online_player(Uid),
     ?DEBUG("player ~p return_to_pre_map from ~p to ~p", [Uid, Mid, OMid]),
     serve_change_map_call(OMid, OLineId, OPos),
     ok.

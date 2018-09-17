@@ -13,9 +13,7 @@
 -include("gs_common_rec.hrl").
 
 %% API
--export([
-    use_skill/4,  add_buff/2,
-    change_attr/2, change_attr/4]).
+-export([use_skill/4]).
 
 
 %%-------------------------------------------------------------------
@@ -67,26 +65,3 @@ check_target(ErrAndFalse, _SkillId, _Tar) ->
     ErrAndFalse.
 
 
-%%-------------------------------------------------------------------
-change_attr(AddList, MultiList) ->
-    change_attr(AddList, MultiList, [], []),
-    ok.
-
-change_attr(AddList, MultiList, AddList_Del, MultiList_Del) ->
-    Uid = player_rw:get_uid(),
-    #m_player_map{map_pid = Pid} = player_rw:get_map(),
-    map_interface:player_change_attr_(
-        Pid,
-        #r_player_change_prop_req{
-            uid = Uid, add = AddList,
-            multi = MultiList, add_del = AddList_Del, multi_del = MultiList_Del
-        }
-    ),
-    ok.
-
-%%-------------------------------------------------------------------
-add_buff(BuffId, Level) ->
-    Uid = player_rw:get_uid(),
-    Req = #r_player_add_buff_req{uid = Uid, buff_id = BuffId, level = Level},
-    player_pub:send_map_msg_(player_use_skill, Req),
-    ok.

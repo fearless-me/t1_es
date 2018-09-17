@@ -12,10 +12,11 @@
 -include("logger.hrl").
 -include("pub_def.hrl").
 -include("netmsg.hrl").
+-include("gs_cache.hrl").
 -include("gs_common_rec.hrl").
 -include("cfg_map.hrl").
 -include("map_core.hrl").
--include("map_cache.hrl").
+
 
 %% 初始化， tick， 开始终止进程
 -export([init/1, tick/1, start_stop_now/1]).
@@ -178,6 +179,7 @@ tick_player(_S) ->
         end, 0, map_rw:get_player_map()).
 
 tick_player_1(undefined, Uid) ->
+    %% @todo 加入异常处理删除该玩家
     ?ERROR("player ~p may be leave map", [Uid]);
 tick_player_1(Unit, _) ->
     ?TRY_CATCH(move_mod:update(Unit), Err1, Stk1),

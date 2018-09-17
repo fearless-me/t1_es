@@ -10,7 +10,7 @@
 -author("mawenhong").
 -include("map_core.hrl").
 -include("gs_cache.hrl").
--include("map_cache.hrl").
+
 -include("movement.hrl").
 
 %%
@@ -147,11 +147,10 @@ add_obj_to_map(_) ->
 
 del_obj_to_map(#m_cache_map_unit{uid = Uid, type = ?UNIT_MON}) ->
     ets_cache:delete(?ETS_CACHE_MAP_MONSTER, Uid),
-    ets_cache:delete(?ETS_CACHE_UNIT_COMBAT, Uid),
     map_rw:set_monster_map( maps:remove(Uid, map_rw:get_monster_map()) ),
     ok;
 del_obj_to_map(#m_cache_map_unit{uid = Uid, type = ?UNIT_PLAYER}) ->
-    ets_cache:update_element(?ETS_CACHE_MAP_PLAYER, Uid, [{#m_cache_map_unit.map_id, 0}, {#m_cache_map_unit.line_id, 0}]),
+    ets_cache:delete(?ETS_CACHE_MAP_PLAYER, Uid),
     map_rw:set_player_map( maps:remove(Uid, map_rw:get_player_map()) ),
     ok;
 del_obj_to_map(_) ->

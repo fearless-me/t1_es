@@ -26,12 +26,10 @@
 player_pub_data_to_cross(Aid, Uid) ->
     Aid = player_rw:get_aid(),
     #r_to_cross_data{
-        pid = self(),
         aid = Aid,
         uid = player_rw:get_uid(),
-        sock= player_pub:socket(),
         player_pub = gs_cache:get_player_pub(Uid),
-        player_combat = gs_cache:get_unit_combat(Uid)
+        player_online = gs_cache:get_online_player(Uid)
     }.
 
 %%

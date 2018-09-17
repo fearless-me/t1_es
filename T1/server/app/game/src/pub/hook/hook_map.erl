@@ -11,7 +11,7 @@
 -include("logger.hrl").
 -include("gs_cache.hrl").
 -include("map_core.hrl").
--include("map_cache.hrl").
+
 
 -export([
     on_map_create/0, on_map_destroy/0,
@@ -50,48 +50,14 @@ on_start_move(_Uid) ->
     ok.
 
 %%-------------------------------------------------------------------
-%% 不要在调用lib_obj_rw:set_xxx
+%% 不要在调用unit_rw:set_xxx
 %% 逻辑代码必须要喊在 ?lock() 与 ?unlock 之间
 %%-------------------------------------------------------------------
 -define(lock(X), lock_transaction(X)).
 -define(unlock(), unlock_transaction()).
 
-on_rw_update(Uid, hp, Hp) ->
-    ?lock({Uid, hp}),
-    Type = unit_rw:get_type(Uid),
-    do_on_rw_update_pub(Type, Uid, {#m_cache_player_pub.hp, Hp}),
-    ?unlock(),
-    ok;
-on_rw_update(Uid, attr, Attrs) ->
-    ?lock({Uid, attr}),
-    Type = unit_rw:get_type(Uid),
-    do_on_rw_update_priv(Type, Uid, {#m_cache_unit_combat.priv_attrs, Attrs}),
-    ?unlock(),
-    ok;
-on_rw_update(Uid, buff_list, BuffList) ->
-    ?lock({Uid, buff_list}),
-    Type = unit_rw:get_type(Uid),
-    do_on_rw_update_priv(Type, Uid, {#m_cache_unit_combat.priv_buffs, BuffList}),
-    ?unlock(),
-    ok;
 on_rw_update(_Uid, _Key, _Value) ->
     ok.
-
-
-%%-------------------------------------------------------------------
-do_on_rw_update_pub(?UNIT_PLAYER, Uid, Element) ->
-    gs_cache:update_player_pub(Uid, Element),
-    ok;
-do_on_rw_update_pub(_ObjType, _Uid, _Element) ->
-    ok.
-
-%%-------------------------------------------------------------------
-do_on_rw_update_priv(?UNIT_PLAYER, Uid, Element) ->
-    gs_cache:update_unit_combat(Uid, Element),
-    ok;
-do_on_rw_update_priv(_ObjType, _Uid, _Element) ->
-    ok.
-
 
 %%-------------------------------------------------------------------
 lock_transaction(Key)->

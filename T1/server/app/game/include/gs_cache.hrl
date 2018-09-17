@@ -15,21 +15,22 @@
 -define(ETS_CACHE_PLAYER_PUB, ets_cache_player_pub).
 -record(m_cache_player_pub,{
     % 玩家进程上线是初始化、运行时更新
-    uid, aid, sid, name, sex, career, race, camp, level,
-    % 进入地图进程同步更新
-    mid, line, pos, mpid,
-    old_mid, old_line, old_pos,
-    state=0, hp=0
+    uid, aid, sid, name, sex, career, race, camp, level
+}).
+
+%% 在线玩家的实时数据
+-define(ETS_CACHE_ONLINE_PLAYER, ets_cache_player_online).
+-record(m_cache_online_player,{
+    uid, aid, pid, socket, level, career = 0,
+    old_map_id, old_line, old_pos, map_id, line, map_pid, pos,
+    state = 0, hp = 0, attr = [], buff_list = []
 }).
 
 %% 记录跨服玩家
 -define(ETS_CACHE_PLAYER_CROSS, ets_cache_player_cross).
 -record(m_cache_player_cross, {uid, time}).
 
-%% 在线玩家的socket列表
--define(ETS_CACHE_PLAYER_PID_SOCK, ets_cache_player_pid_sock).
--record(m_cache_player_pid_sock,{uid, aid, pid, sock}).
-
+%% 在线账号
 -define(ETS_CACHE_ACCOUNT_PID_SOCK, ets_cache_account_pid_sock).
 -record(m_cache_account_pid_sock,{aid, pid, sock}).
 
@@ -42,14 +43,12 @@
 
 %% 地图上所有对象的共享ETS
 %% {@link m_cache_map_unit}
+-record(m_cache_map_unit, {uid= 0, pid = 0, data_id = 0, map_id=0, line_id=0, owner = 0, type =0}).
 -define(ETS_CACHE_MAP_PET,      m_cache_map_pet).
 -define(ETS_CACHE_MAP_NPC,      m_cache_map_npc).
 -define(ETS_CACHE_MAP_PLAYER,   m_cache_map_player).
 -define(ETS_CACHE_MAP_MONSTER,  m_cache_map_monster).
 
-%%战斗模块用的东西
-%% {@link m_cache_unit_combat}
--define(ETS_CACHE_UNIT_COMBAT, ets_cache_unit_combat).
 
 
 

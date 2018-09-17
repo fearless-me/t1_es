@@ -35,7 +35,7 @@ read(Tab, Key, Def) ->
 
 %%-------------------------------------------------------------------
 read_element(Tab, Key, Pos)->
-    ets:read_element(Tab, Key, Pos).
+    ets:lookup_element(Tab, Key, Pos).
 
 %%-------------------------------------------------------------------
 write(Tab,Val) ->   ets:insert(Tab, Val).

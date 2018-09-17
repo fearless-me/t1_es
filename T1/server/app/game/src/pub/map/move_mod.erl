@@ -12,7 +12,7 @@
 -include("netmsg.hrl").
 -include("gs_cache.hrl").
 -include("map_core.hrl").
--include("map_cache.hrl").
+
 -include("movement.hrl").
 -include_lib("stdlib/include/assert.hrl").
 
@@ -283,7 +283,7 @@ on_obj_pos_change(Uid, Tar) ->
     ok.
 
 on_obj_pos_changed(?UNIT_PLAYER, Uid, Tar) ->
-    gs_cache:update_player_pub(Uid, {#m_cache_player_pub.pos, Tar}),
+    gs_cache:update_online_player(Uid, {#m_cache_online_player.pos, Tar}),
     ok;
 on_obj_pos_changed(Type, Uid, Tar) ->
     ?ERROR("on_obj_pos_changed(~w,~w,~w)", [Type, Uid, Tar]),

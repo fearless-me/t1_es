@@ -21,6 +21,10 @@
 	get_spell_time/1,get_spell_time_def/2,set_spell_time/2, % #m_combat_rw.spell_time
 	get_channel_cd/1,get_channel_cd_def/2,set_channel_cd/2, % #m_combat_rw.channel_cd
 	get_skill_queue/1,get_skill_queue_def/2,set_skill_queue/2, % #m_combat_rw.skill_queue
+	get_hp/1,get_hp_def/2,set_hp/2, % #m_combat_rw.hp
+	get_max_hp/1,get_max_hp_def/2,set_max_hp/2, % #m_combat_rw.max_hp
+	get_attr/1,get_attr_def/2,set_attr/2, % #m_combat_rw.attr
+	get_buff_list/1,get_buff_list_def/2,set_buff_list/2, % #m_combat_rw.buff_list
 	% common function 
 	del/1,to_record/1,set/2,set_fields/2,init_default/1,init_default/2
 ]).
@@ -151,6 +155,62 @@ get_skill_queue_def(Uid,Def)->
 set_skill_queue(Uid,V)->
 	R = erlang:get({Uid,m_combat_rw}),
 	erlang:put({Uid,m_combat_rw}, R#m_combat_rw{skill_queue = V}).
+
+%%-------------------------------------------------------------------
+%% #m_combat_rw.hp
+get_hp(Uid)-> get_hp_def(Uid,undefined).
+
+get_hp_def(Uid,Def)->
+	case erlang:get({Uid,m_combat_rw}) of
+	undefined -> Def; 
+	V -> V#m_combat_rw.hp 
+	end.
+
+set_hp(Uid,V)->
+	R = erlang:get({Uid,m_combat_rw}),
+	erlang:put({Uid,m_combat_rw}, R#m_combat_rw{hp = V}).
+
+%%-------------------------------------------------------------------
+%% #m_combat_rw.max_hp
+get_max_hp(Uid)-> get_max_hp_def(Uid,undefined).
+
+get_max_hp_def(Uid,Def)->
+	case erlang:get({Uid,m_combat_rw}) of
+	undefined -> Def; 
+	V -> V#m_combat_rw.max_hp 
+	end.
+
+set_max_hp(Uid,V)->
+	R = erlang:get({Uid,m_combat_rw}),
+	erlang:put({Uid,m_combat_rw}, R#m_combat_rw{max_hp = V}).
+
+%%-------------------------------------------------------------------
+%% #m_combat_rw.attr
+get_attr(Uid)-> get_attr_def(Uid,undefined).
+
+get_attr_def(Uid,Def)->
+	case erlang:get({Uid,m_combat_rw}) of
+	undefined -> Def; 
+	V -> V#m_combat_rw.attr 
+	end.
+
+set_attr(Uid,V)->
+	R = erlang:get({Uid,m_combat_rw}),
+	erlang:put({Uid,m_combat_rw}, R#m_combat_rw{attr = V}).
+
+%%-------------------------------------------------------------------
+%% #m_combat_rw.buff_list
+get_buff_list(Uid)-> get_buff_list_def(Uid,undefined).
+
+get_buff_list_def(Uid,Def)->
+	case erlang:get({Uid,m_combat_rw}) of
+	undefined -> Def; 
+	V -> V#m_combat_rw.buff_list 
+	end.
+
+set_buff_list(Uid,V)->
+	R = erlang:get({Uid,m_combat_rw}),
+	erlang:put({Uid,m_combat_rw}, R#m_combat_rw{buff_list = V}).
 
 %%-------------------------------------------------------------------
 del(Uid)-> erlang:erase({Uid,m_combat_rw}).
@@ -297,6 +357,58 @@ i_set_field(_Uid,{#m_combat_rw.skill_queue, Val, add}, R) ->
 	R#m_combat_rw{skill_queue = R#m_combat_rw.skill_queue + Val};
 i_set_field(_Uid,{#m_combat_rw.skill_queue, Val, sub}, R) ->
 	R#m_combat_rw{skill_queue = R#m_combat_rw.skill_queue - Val};
+%%#m_combat_rw.hp
+i_set_field(_Uid,{hp, Val}, R) ->
+	R#m_combat_rw{hp = Val};
+i_set_field(_Uid,{hp, Val, add}, R) ->
+	R#m_combat_rw{hp = R#m_combat_rw.hp + Val};
+i_set_field(_Uid,{hp, Val, sub}, R) ->
+	R#m_combat_rw{hp = R#m_combat_rw.hp - Val};
+i_set_field(_Uid,{#m_combat_rw.hp, Val}, R) ->
+	R#m_combat_rw{hp = Val};
+i_set_field(_Uid,{#m_combat_rw.hp, Val, add}, R) ->
+	R#m_combat_rw{hp = R#m_combat_rw.hp + Val};
+i_set_field(_Uid,{#m_combat_rw.hp, Val, sub}, R) ->
+	R#m_combat_rw{hp = R#m_combat_rw.hp - Val};
+%%#m_combat_rw.max_hp
+i_set_field(_Uid,{max_hp, Val}, R) ->
+	R#m_combat_rw{max_hp = Val};
+i_set_field(_Uid,{max_hp, Val, add}, R) ->
+	R#m_combat_rw{max_hp = R#m_combat_rw.max_hp + Val};
+i_set_field(_Uid,{max_hp, Val, sub}, R) ->
+	R#m_combat_rw{max_hp = R#m_combat_rw.max_hp - Val};
+i_set_field(_Uid,{#m_combat_rw.max_hp, Val}, R) ->
+	R#m_combat_rw{max_hp = Val};
+i_set_field(_Uid,{#m_combat_rw.max_hp, Val, add}, R) ->
+	R#m_combat_rw{max_hp = R#m_combat_rw.max_hp + Val};
+i_set_field(_Uid,{#m_combat_rw.max_hp, Val, sub}, R) ->
+	R#m_combat_rw{max_hp = R#m_combat_rw.max_hp - Val};
+%%#m_combat_rw.attr
+i_set_field(_Uid,{attr, Val}, R) ->
+	R#m_combat_rw{attr = Val};
+i_set_field(_Uid,{attr, Val, add}, R) ->
+	R#m_combat_rw{attr = R#m_combat_rw.attr + Val};
+i_set_field(_Uid,{attr, Val, sub}, R) ->
+	R#m_combat_rw{attr = R#m_combat_rw.attr - Val};
+i_set_field(_Uid,{#m_combat_rw.attr, Val}, R) ->
+	R#m_combat_rw{attr = Val};
+i_set_field(_Uid,{#m_combat_rw.attr, Val, add}, R) ->
+	R#m_combat_rw{attr = R#m_combat_rw.attr + Val};
+i_set_field(_Uid,{#m_combat_rw.attr, Val, sub}, R) ->
+	R#m_combat_rw{attr = R#m_combat_rw.attr - Val};
+%%#m_combat_rw.buff_list
+i_set_field(_Uid,{buff_list, Val}, R) ->
+	R#m_combat_rw{buff_list = Val};
+i_set_field(_Uid,{buff_list, Val, add}, R) ->
+	R#m_combat_rw{buff_list = R#m_combat_rw.buff_list + Val};
+i_set_field(_Uid,{buff_list, Val, sub}, R) ->
+	R#m_combat_rw{buff_list = R#m_combat_rw.buff_list - Val};
+i_set_field(_Uid,{#m_combat_rw.buff_list, Val}, R) ->
+	R#m_combat_rw{buff_list = Val};
+i_set_field(_Uid,{#m_combat_rw.buff_list, Val, add}, R) ->
+	R#m_combat_rw{buff_list = R#m_combat_rw.buff_list + Val};
+i_set_field(_Uid,{#m_combat_rw.buff_list, Val, sub}, R) ->
+	R#m_combat_rw{buff_list = R#m_combat_rw.buff_list - Val};
 i_set_field(_Uid,_Elem,R)-> R.
 
 %%-------------------------------------------------------------------

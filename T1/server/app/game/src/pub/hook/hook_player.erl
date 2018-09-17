@@ -36,11 +36,11 @@ on_create(Uid) ->
 %%-------------------------------------------------------------------
 on_login(Player) ->
     Uid = player_rw:get_uid(),
+    gs_cache:online(Player, self(), player_pub:socket()),
     cross_interface:assign_cross_for_player(Uid),
     %% @todo 在初始化数据之后需要计算属性
     player_base:init(Player),
     player_base:send_init_data(),
-    gs_cache:online(Player, self(), player_pub:socket()),
     player_cross_priv:online(),
     player_map_priv:online_call(Player),
     player_alarm:init(),
@@ -63,9 +63,9 @@ on_offline() ->
     %% 2.
     ?TRY_CATCH(player_map_priv:offline_call(Uid, Mid, LineId, MPid), Err1, St1),
     ?TRY_CATCH(player_cross_priv:offline(), Err2, St2),
-    ?TRY_CATCH(gs_cache:offline(Aid, Uid), Err3, St3),
     ?TRY_CATCH(player_alarm:save(), Err4, St4),
     ?TRY_CATCH(player_save:save(Uid), Err5, St5),
+    ?TRY_CATCH(gs_cache:offline(Aid, Uid), Err3, St3),
     ?WARN("player ~p exit map_~p_~p", [Uid, Mid, LineId]),
     ok.
 

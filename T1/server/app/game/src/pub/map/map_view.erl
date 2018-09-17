@@ -12,7 +12,6 @@
 -include("logger.hrl").
 -include("pub_def.hrl").
 -include("map_core.hrl").
--include("map_cache.hrl").
 -include("netmsg.hrl").
 -include_lib("stdlib/include/assert.hrl").
 

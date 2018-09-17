@@ -52,7 +52,7 @@
 -define(FULL_SWEEP, {fullsweep_after, 20}).
 -define(FULL_SWEEP_OPTIONS, {spawn_opt,[?FULL_SWEEP]}).
 -define(TC(F, Request), tc(fun()-> F end, Request)).
--define(TIMELINE_MICROSECOND, 500).
+-define(TIMELINE_MICROSECOND, 5000).
 %% 假设帧率是 20MS那么是50个消息/client/秒, 服务50client，
 %% 那么每个消息  1000*1000/2500 = 400micro seconds
 %% 所以每个消息最大处理时间(micro seconds)= 100000 / ClientCount / 1000 / frame_time

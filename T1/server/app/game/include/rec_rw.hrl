@@ -12,12 +12,9 @@
 -define(RW_RECORD_HRL, true).
 
 %% 进入地图后会动态变
-%% 通过自动生成代码lib_unit_rw
--record(m_unit_rw,{
-    pid = 0, data_id = 0, group = 0, owner = 0, type=0,
-%%  战斗相关
-    hp = 1, max_hp = 1, attr= [], buff_list = [], skill_queue=[]
-}).
+%% 通过自动生成代码unit_rw
+
+-record(m_unit_rw,{pid = 0, data_id = 0, group = 0, owner = 0, type=0}).
 
 %% 战斗属性
 -record(m_attr_rw,{
@@ -27,7 +24,6 @@
 %% 移动相关
 %% 通过自动生成代码move_rw
 -record(m_move_rw,{
-
     move_speed = 20,
     cur_move=0, next_move=0,  vis_tile_idx=-1,
     cur_pos, start_pos, dest_pos, face, dir,
@@ -89,7 +85,8 @@
     %% 引导技能
     channel_cd=0,
     %%
-    skill_queue=[]
+    skill_queue=[],
+    hp = 1, max_hp = 1, attr= [], buff_list = []
 }).
 
 

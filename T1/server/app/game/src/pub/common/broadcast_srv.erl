@@ -65,23 +65,23 @@ broadcast_net_msg(NetMsg) ->
 
 do_broadcast_net_msg(true, NetMsg) ->
     ets:foldl(
-        fun(#m_cache_player_pid_sock{pid = Pid}, _) ->
+        fun(#m_cache_online_player{pid = Pid}, _) ->
             catch gs_interface:send_net_msg(Pid, NetMsg)
-        end, 0, ?ETS_CACHE_PLAYER_PID_SOCK),
+        end, 0, ?ETS_CACHE_ONLINE_PLAYER),
     ok;
 do_broadcast_net_msg(_Any, NetMsg) ->
     {_Bytes1, IoList} = tcp_codec:encode(NetMsg),
     ets:foldl(
-        fun(#m_cache_player_pid_sock{sock = Sock}, _) ->
+        fun(#m_cache_online_player{socket = Sock}, _) ->
             catch tcp_handler:direct_send_net_msg(Sock, IoList)
-        end, 0, ?ETS_CACHE_PLAYER_PID_SOCK),
+        end, 0, ?ETS_CACHE_ONLINE_PLAYER),
     ok.
 
 broadcast_msg(MsgId, Msg) ->
     ets:foldl(
-        fun(#m_cache_player_pid_sock{pid = Pid}, _) ->
+        fun(#m_cache_online_player{pid = Pid}, _) ->
             ps:send(Pid, MsgId, Msg)
-        end, 0, ?ETS_CACHE_PLAYER_PID_SOCK),
+        end, 0, ?ETS_CACHE_ONLINE_PLAYER),
     ok.
 
 

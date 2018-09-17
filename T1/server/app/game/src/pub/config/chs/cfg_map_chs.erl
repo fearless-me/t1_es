@@ -13,7 +13,7 @@ getRow(1) ->
 		desc__ = "新手村",
 		id = 1,
 		type = 0,
-		subtype = 0,
+		subtype = 3,
 		is_cross = 0,
 		name = "新手村",
 		res1 = "maps/map330_PathGrid.bytes",

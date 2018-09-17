@@ -13,7 +13,7 @@
 -include("pub_def.hrl").
 -include("netmsg.hrl").
 -include("map_core.hrl").
--include("map_cache.hrl").
+
 -include("player_status.hrl").
 -include("gs_common_rec.hrl").
 -include("db_record.hrl").
@@ -32,6 +32,7 @@
 
 %%-------------------------------------------------------------------
 init() ->
+    attr_rw:init_default(0),
     player_rw:init_default(),
     player_rw:set_status(?PS_INIT),
     ok.
