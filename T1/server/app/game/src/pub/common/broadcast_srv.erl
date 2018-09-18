@@ -1,4 +1,4 @@
-%%%-------------------------------------------------------------------
+%-------------------------------------------------------------------
 %%% @author mawenhong
 %%% @copyright (C) 2018, <COMPANY>
 %%% @doc
@@ -62,6 +62,7 @@ do_handle_cast(Request, State) ->
 %% @todo 不要集中这样做
 %% tcp_handler:direct_send_net_msg(Sock, IoList)
 %% http://blog.yufeng.info/archives/1581
+%% http://blog.yufeng.info/archives/336
 broadcast_net_msg(NetMsg) ->
     Ms = ets:fun2ms(fun(#m_cache_online_player{pid = Pid})-> Pid end),
     F =
