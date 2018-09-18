@@ -55,6 +55,8 @@ register_slave_node(Node) ->
     ps:send(?DIST_MONITOR_OTP, slave_register, Node),
     ok.
 
+start_slave(SupPid, allin) ->
+    misc:fn_wrapper({"start logic otp", ?Wrap(start_slave_otp(allin, node(), SupPid))});
 start_slave(SupPid, Mode) ->
     try
         misc:fn_wrapper({"logger", stdio,   ?Wrap(loggerS:start())}),

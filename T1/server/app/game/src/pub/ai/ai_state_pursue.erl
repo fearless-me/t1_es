@@ -13,7 +13,7 @@
 -export([on_enter/1, on_exit/1, update/1, on_event/2]).
 
 on_enter(Uid) ->
-    CurPos = move_rw:get_cur_pos(Uid),
+    CurPos = object_rw:get_cur_pos(Uid),
     TarUid = ai_rw:get_max_enmity_uid(Uid),
     ai_mod:reset_lock_target_time(Uid),
     ai_rw:set_target_uid(Uid, TarUid),

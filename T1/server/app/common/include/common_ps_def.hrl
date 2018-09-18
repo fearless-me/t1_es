@@ -12,7 +12,7 @@
 -define(COMMON_PS_DEF_HRL, true).
 
 %% cs 服务器窗口管理进程
--define(CS_SVR_MGR_OTP, csSvrMgr___).
+-define(CS_SVR_MGR_OTP, server_mgr_srv).
 -define(CS_TEAM_OTP, csTeamOtp___).
 
 -endif.

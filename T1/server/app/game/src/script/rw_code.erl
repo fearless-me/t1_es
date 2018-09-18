@@ -44,25 +44,25 @@ run_halt([run_from_scripts_ket]) ->
 run() ->
     try
         multi_to_code(
-            "..\\src\\pub\\map\\unit_rw.erl",
-            unit_rw,
+            "..\\src\\pub\\map\\object_rw.erl",
+            object_rw,
             [
                 ["logger.hrl", "pub_def.hrl", "rec_rw.hrl"],
                 [
-                    {m_unit_rw, record_info(fields, m_unit_rw), [], ["Uid"], "hook_map:on_rw_update"}
+                    {m_object_rw, record_info(fields, m_object_rw), [], ["Uid"], "hook_map:on_rw_update"}
                 ]
             ]
         ),
-        multi_to_code(
-            "..\\src\\pub\\map\\combat_rw.erl",
-            combat_rw,
-            [
-                ["logger.hrl", "pub_def.hrl", "rec_rw.hrl"],
-                [
-                    {m_combat_rw, record_info(fields, m_combat_rw), [], ["Uid"], []}
-                ]
-            ]
-        ),
+%%        multi_to_code(
+%%            "..\\src\\pub\\map\\combat_rw.erl",
+%%            combat_rw,
+%%            [
+%%                ["logger.hrl", "pub_def.hrl", "rec_rw.hrl"],
+%%                [
+%%                    {m_combat_rw, record_info(fields, m_combat_rw), [], ["Uid"], []}
+%%                ]
+%%            ]
+%%        ),
         multi_to_code(
             "..\\src\\pub\\core\\attr_rw.erl",
             attr_rw,
@@ -73,16 +73,16 @@ run() ->
                 ]
             ]
         ),
-        multi_to_code(
-            "..\\src\\pub\\map\\move_rw.erl",
-            move_rw,
-            [
-                ["logger.hrl", "pub_def.hrl", "rec_rw.hrl"],
-                [
-                    {m_move_rw, record_info(fields, m_move_rw), [], ["Uid"], "hook_map:on_rw_update"}
-                ]
-            ]
-        ),
+%%        multi_to_code(
+%%            "..\\src\\pub\\map\\move_rw.erl",
+%%            move_rw,
+%%            [
+%%                ["logger.hrl", "pub_def.hrl", "rec_rw.hrl"],
+%%                [
+%%                    {m_move_rw, record_info(fields, m_move_rw), [], ["Uid"], "hook_map:on_rw_update"}
+%%                ]
+%%            ]
+%%        ),
         multi_to_code(
             "..\\src\\pub\\map\\ai_rw.erl",
             ai_rw,

@@ -31,7 +31,7 @@ rpc_call_player_enter(#r_to_cross_data{
     player_online = PlayerOnline
 }) ->
     %% fixme 初始化数据
-    gs_cache:online_cross(Pub, PlayerOnline),
+    gs_cache_interface:online_cross(Pub, PlayerOnline),
     ?INFO("player ~w of account ~p enter cross",[Uid, Aid]),
     ok.
 
@@ -51,7 +51,7 @@ rpc_call_player_prepare_leave(Aid, Uid) ->
 %% 成功离开跨服
 %%
 rpc_call_player_leave(Aid, Uid) ->
-    gs_cache:offline(Aid, Uid),
+    gs_cache_interface:offline(Aid, Uid),
     ?WARN("player ~w of account ~p leave cross",[Uid, Aid]),
     ok.
 
@@ -60,21 +60,21 @@ rpc_call_player_leave(Aid, Uid) ->
 %% {@link cross_src:player_pub_data_from_cross}
 %%
 rpc_call_player_offline(Aid, Uid) ->
-    gs_cache:offline(Aid, Uid),
+    gs_cache_interface:offline(Aid, Uid),
     %%fixme 返回给普通服的数据
     ?INFO("player ~w of account ~p offline in cross",[Uid, Aid]),
     ok.
 
 
 rpc_call_del_player(Aid, Uid) ->
-    gs_cache:offline(Aid, Uid),
+    gs_cache_interface:offline(Aid, Uid),
     ?INFO("player ~w of account ~p del in cross",[Uid, Aid]),
     ok.
 
 
 rpc_cast_update_player({?ETS_CACHE_PLAYER_PUB, Uid, Elements}) ->
-    gs_cache:update_player_pub(Uid, Elements),
+    gs_cache_interface:update_player_pub(Uid, Elements),
     ok;
 rpc_cast_update_player({?ETS_CACHE_ONLINE_PLAYER, Uid, Elements}) ->
-    gs_cache:update_online_player(Uid, Elements),
+    gs_cache_interface:update_online_player(Uid, Elements),
     ok.

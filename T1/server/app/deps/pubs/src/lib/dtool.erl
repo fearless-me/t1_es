@@ -11,18 +11,49 @@
 
 %% API
 -export([
-    proc_info/1, proc_basic_info/1, proc_backtrace/1,
+    proc_info/1, proc_basic_info/1, proc_backtrace/1, proc_statistics/2,
     proc_signal/1, proc_reduction/1, proc_binary/1, proc_memory/1, proc_gc/1,
 
     proc_top/2, proc_top_memory/1, proc_top_message_queue/1,
     proc_top_bin_leak/1, proc_unlink/0,
 
+    node_port/1,
     node_stats/0, node_stats_print/2,
     node_memory/1, node_memory/2,
     node_allocator_snapshot/0, node_allocator_snapshot_save/1,
     node_cache_hit/0, node_avg_block_size/1, node_sbcs_to_mbcs/1,
     node_fragmentation/1, node_scheduler_usage/1
 ]).
+
+
+
+proc_statistics(Name, Milliseconds) ->
+    sys:statistics(Name, true),
+    receive proc_statistics -> skip
+    after Milliseconds -> skip
+    end,
+    Info =
+    case sys:statistics(Name, get) of
+        {ok, Statistics} ->
+            lists:foldl(
+                fun
+                    ({Key,{{_,_,_},{_,_,_}} = DataTime}, Acc) ->
+                        Acc ++ lists:concat([Key, ":", misc_time:format_datatime(DataTime), "\n"]);
+                    ({Key, Val}, Acc) ->
+                        Acc ++ lists:concat([Key, ":", Val, "\n"])
+                end, [], Statistics);
+        Other ->
+            lists:concat([Other])
+    end,
+    sys:statistics(Name, false),
+    io:format
+    (
+        "~n****** system statistics ******~n"
+        "process:~p~n"
+        "~s"
+        "*********************************~n", [Name, Info]
+    ),
+    ok.
 
 %%-------------------------------------------------------------------
 proc_info(PidTerm) ->
@@ -88,6 +119,10 @@ node_stats() ->
 
 node_stats_print(N, Interval) ->
     recon:node_stats_print(N, Interval).
+
+node_port(Node)->
+    {_, Owner}=lists:keyfind(owner, 1, element(2, net_kernel:node_info(Node))),
+    hd([P|| P<-erlang:ports(), erlang:port_info(P, connected) == {connected,Owner}]).
 
 %%-------------------------------------------------------------------
 node_allocator_snapshot() ->

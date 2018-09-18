@@ -44,9 +44,27 @@
     fix_pos/2
 ]).
 
+-export([
+    is_cross/0, get_server_port/0, get_max_connection/0,
+    get_area/0,get_sid/0, get_server_name/0, get_server_type/0,  get_run_no/0, get_center_node/0
+]).
+
+
+%%-------------------------------------------------------------------
+is_cross() -> gs_econfig:is_cross().
+get_server_port() -> gs_econfig:get_server_port().
+get_server_name() -> gs_econfig:get_server_name().
+get_server_type() -> gs_econfig:get_server_type().
+get_max_connection() -> gs_econfig:get_max_connection().
+get_area() -> gs_econfig:get_area().
+get_sid() -> gs_econfig:get_sid().
+get_run_no()-> gs_econfig:get_run_no().
+get_center_node() -> gs_econfig:get_center_node().
+
+%%-------------------------------------------------------------------
 total_online() ->
     ets:info(?ETS_CACHE_ACCOUNT_PID_SOCK, size).
-    
+
 %%-------------------------------------------------------------------
 ppid_name(Aid) ->
     misc:create_atom(player, [Aid]).
@@ -67,21 +85,21 @@ kick_account(Aid, Reason) ->
 send_msg(Pid, MsgId) when is_pid(Pid) ->
     ps:send(Pid, MsgId);
 send_msg(Uid, MsgId) when is_number(Uid) ->
-    Pid = gs_cache:get_online_player_pid(Uid),
+    Pid = gs_cache_interface:get_online_player_pid(Uid),
     ps:send(Pid, MsgId).
 
 %%-------------------------------------------------------------------
 send_msg(Pid, MsgId, Msg) when is_pid(Pid) ->
     ps:send(Pid, MsgId, Msg);
 send_msg(Uid, MsgId, Msg) when is_number(Uid) ->
-    Pid = gs_cache:get_online_player_pid(Uid),
+    Pid = gs_cache_interface:get_online_player_pid(Uid),
     ps:send(Pid, MsgId, Msg).
 
 %%-------------------------------------------------------------------
 send_net_msg(Pid, NetMsg) when is_pid(Pid) ->
     ps:send(Pid, net_msg, NetMsg);
 send_net_msg(Uid, NetMsg) when is_number(Uid) ->
-    Pid = gs_cache:get_online_player_pid(Uid),
+    Pid = gs_cache_interface:get_online_player_pid(Uid),
     ps:send(Pid, net_msg, NetMsg).
 
 %%-------------------------------------------------------------------

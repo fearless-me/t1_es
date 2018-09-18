@@ -142,14 +142,14 @@ test_trigger_event(_Uid, #m_ai_trigger_cfg{prob = Prob}) ->
 test_trigger_state(_Uid, _Trigger, 0) ->
     false;
 test_trigger_state(Uid, Trigger, TarUid) when is_integer(TarUid) ->
-    Unit = map_rw:get_obj(TarUid),
-    test_trigger_state(Uid, Trigger, Unit);
+    Obj = map_rw:get_unit(TarUid),
+    test_trigger_state(Uid, Trigger, Obj);
 test_trigger_state(_Uid, _Trigger, undefined) ->
     false;
-test_trigger_state(Uid, #m_ai_trigger{cfg_id = _Id}, #m_cache_map_unit{uid = TarUid} = Obj) ->
+test_trigger_state(Uid, #m_ai_trigger{cfg_id = _Id}, #m_cache_map_object{uid = TarUid} = Obj) ->
     case
-        unit:is_dead(Uid) orelse
-            unit:is_dead(TarUid)
+        object_core:is_dead(Uid) orelse
+            object_core:is_dead(TarUid)
     of
         true ->
             false;
@@ -159,7 +159,7 @@ test_trigger_state(Uid, #m_ai_trigger{cfg_id = _Id}, #m_cache_map_unit{uid = Tar
             test_trigger_state(Uid, Cfg, Obj)
     end;
 %% todo 持续增加判断
-test_trigger_state(_Uid, #m_ai_trigger_cfg{state = ?ETST_HPLower}, _Unit) ->
+test_trigger_state(_Uid, #m_ai_trigger_cfg{state = ?ETST_HPLower}, _Obj) ->
     true;
 test_trigger_state(_Uid, _Any, _None) ->
     false.

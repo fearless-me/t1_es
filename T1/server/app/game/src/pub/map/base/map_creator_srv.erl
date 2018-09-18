@@ -60,7 +60,7 @@ do_handle_cast(Request, State) ->
 
 %%--------------------------------------------------------------------
 load_all_map() ->
-    IsCross = gs_conf:is_cross(),
+    IsCross = gs_interface:is_cross(),
     L = getCfg:get1KeyList(cfg_map),
     _ = [load_one_map(IsCross, getCfg:getCfgByArgs(cfg_map, MapID)) || MapID <- L],
     ok.

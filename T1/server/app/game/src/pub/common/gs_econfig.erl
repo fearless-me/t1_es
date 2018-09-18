@@ -6,7 +6,7 @@
 %%% @end
 %%% Created : 30. 五月 2018 10:58
 %%%-------------------------------------------------------------------
--module(gs_conf).
+-module(gs_econfig).
 -author("mawenhong").
 
 %% API

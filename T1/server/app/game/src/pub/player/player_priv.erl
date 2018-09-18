@@ -174,7 +174,7 @@ offline_1(Status, Reason) ->
     Uid = player_rw:get_uid_def(0),
     Aid = player_rw:get_aid_def(0),
     player_rw:set_status(?PS_OFFLINE),
-    gs_cache:offline(Aid, Uid),
+    gs_cache_interface:offline(Aid, Uid),
     ?INFO("player ~p pid ~p sock ~p player ~w offline status ~p reason ~p",
         [Uid, self(), player_pub:socket(), Uid, Status, Reason]),
 

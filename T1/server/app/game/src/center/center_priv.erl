@@ -33,7 +33,7 @@ init() ->
 
 %%-------------------------------------------------------------------
 register_ack(MgrPid, {true, WorkerPid}) ->
-    DbID = gs_conf:get_sid(),
+    DbID = gs_interface:get_sid(),
     ps:send_with_from(MgrPid, ackMeNow, {DbID}),
     ?WARN("[~p][~p]register to centerServer[~p] ok, worker[~p],wait sync",
         [self(), DbID, erlang:node(MgrPid), WorkerPid]),
@@ -52,7 +52,7 @@ register_ack(MgrPid, Data) ->
 nodedown(NodeName) ->
     ?WARN("centerServer Node[~p] is down", [NodeName]),
     ets:insert(?CenterServerEts, #recCenterInfo{}),
-    center_nodedown(gs_conf:is_cross()),
+    center_nodedown(gs_interface:is_cross()),
     ps:send(teamGSCacheOtp, centerNodeDown),
     ok.
 %%%-------------------------------------------------------------------
@@ -71,7 +71,7 @@ ack_timeout(MgrPid) ->
     ok.
 %%%-------------------------------------------------------------------
 sync_all_data(CsWorkerPid) ->
-    DBId = gs_conf:get_sid(),
+    DBId = gs_interface:get_sid(),
     ?WARN("[~p][~p]start syncAllData cs worker ~p...", [self(), DBId, CsWorkerPid]),
     ok.
 
@@ -112,8 +112,8 @@ connect_cs_node() ->
         [#recCenterInfo{status = ?SEVER_STATUS_READY, dead_line = DeadLine }]  when DeadLine >= Now ->
             skip;
         _ ->
-            DbID = gs_conf:get_sid(),
-            Node = gs_conf:get_center_node(),
+            DbID = gs_interface:get_sid(),
+            Node = gs_interface:get_center_node(),
             connect_cs_node(DbID, Node),
             ok
     end,

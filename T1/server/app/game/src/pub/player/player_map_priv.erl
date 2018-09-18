@@ -80,7 +80,7 @@ do_online_call_1(Mgr, Req) ->
 serve_change_map_call(DestMapID, DestLineId, TarPos) ->
     player_rw:set_status(?PS_CHANGE_MAP),
     Uid = player_rw:get_uid(),
-    #m_cache_online_player{map_id = Mid, line = Line, map_pid = MPid, pos = Pos} = gs_cache:get_online_player(Uid),
+    #m_cache_online_player{map_id = Mid, line = Line, map_pid = MPid, pos = Pos} = gs_cache_interface:get_online_player(Uid),
     player_cross_priv:change_map_before(Mid, DestMapID),
     Ack = do_serve_change_map_call(
         #r_change_map_req{
@@ -137,7 +137,7 @@ serve_change_map_call_ret(
         map_pid = MPid, pos = Pos
     }, _Flag) ->
     Uid = player_rw:get_uid(),
-    gs_cache:update_online_player(
+    gs_cache_interface:update_online_player(
         Uid,
         [
             {#m_cache_online_player.old_map_id, OldMid},
@@ -178,7 +178,7 @@ return_to_old_map_call() ->
     Uid = player_rw:get_uid(),
     #m_cache_online_player{
         map_pid = Mid, old_map_id = OMid, old_line = OLineId, old_pos = OPos
-    } = gs_cache:get_online_player(Uid),
+    } = gs_cache_interface:get_online_player(Uid),
     ?DEBUG("player ~p return_to_pre_map from ~p to ~p", [Uid, Mid, OMid]),
     serve_change_map_call(OMid, OLineId, OPos),
     ok.

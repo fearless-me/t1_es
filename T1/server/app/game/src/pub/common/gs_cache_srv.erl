@@ -28,7 +28,7 @@ start_link() ->
 %%%===================================================================	
 mod_init(_Args) ->
     erlang:process_flag(trap_exit, true),
-    gs_cache:init(),
+    gs_cache_interface:init(),
     {ok, ok}.
 
 %%--------------------------------------------------------------------	

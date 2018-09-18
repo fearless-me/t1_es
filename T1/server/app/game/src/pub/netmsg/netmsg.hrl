@@ -411,8 +411,8 @@
 
 %% 
 %% //
--define(U2GS_GetRemoteUnitInfo,52192).
--record(pk_U2GS_GetRemoteUnitInfo,{
+-define(U2GS_GetRemoteObjInfo,16443).
+-record(pk_U2GS_GetRemoteObjInfo,{
 	%% UInt64 唯一ID列表
 	uids = []
 }).

@@ -42,8 +42,7 @@
 -record(m_cache_alarm_player, {uid, alarm_data}).
 
 %% 地图上所有对象的共享ETS
-%% {@link m_cache_map_unit}
--record(m_cache_map_unit, {uid= 0, pid = 0, data_id = 0, map_id=0, line_id=0, owner = 0, type =0}).
+-record(m_cache_map_object, {uid= 0, pid = 0, data_id = 0, map_id=0, line_id=0, owner = 0, type =0}).
 -define(ETS_CACHE_MAP_PET,      m_cache_map_pet).
 -define(ETS_CACHE_MAP_NPC,      m_cache_map_npc).
 -define(ETS_CACHE_MAP_PLAYER,   m_cache_map_player).

@@ -530,3 +530,6 @@ apply_fun({M,F,Args}) when erlang:is_atom(M), erlang:is_atom(F), erlang:is_list(
     erlang:apply(M, F, Args);
 apply_fun(F) ->
     erlang:error(badarg, [F]).
+
+
+

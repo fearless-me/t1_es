@@ -17,7 +17,7 @@
 -export([init/1]).
 -export([add_obj_to_map/1, del_obj_to_map/1]).
 -export([
-    get_obj/1,
+    get_unit/1,
     get_player/1, get_player_size/0,
     get_monster/1,  get_monster_size/0,
     get_npc/1, get_pet/1
@@ -61,12 +61,12 @@ init(State) ->
     ok.
 
 get_obj_maps(Uid) ->
-    Type = unit_rw:get_type(Uid),
+    Type = object_rw:get_type(Uid),
     case Type of
-        ?UNIT_PLAYER -> get_player_map();
-        ?UNIT_MON -> get_monster_map();
-        ?UNIT_PET -> get_pet_map();
-        ?UNIT_NPC -> get_npc_map();
+        ?OBJ_PLAYER -> get_player_map();
+        ?OBJ_MON -> get_monster_map();
+        ?OBJ_PET -> get_pet_map();
+        ?OBJ_NPC -> get_npc_map();
         _ -> undefined
     end.
 
@@ -90,19 +90,19 @@ get_line_id()       -> get(?LINE_ID).
 get_map_hook()      -> get(?MAP_HOOK).
 
 %%-------------------------------------------------------------------
-get_obj(Uid) ->
-    Type = unit_rw:get_type(Uid),
+get_unit(Uid) ->
+    Type = object_rw:get_type(Uid),
     case Type of
-        ?UNIT_PLAYER -> get_player(Uid);
-        ?UNIT_MON -> get_monster(Uid);
-        ?UNIT_PET -> get_pet(Uid);
-        ?UNIT_NPC -> get_npc(Uid);
+        ?OBJ_PLAYER -> get_player(Uid);
+        ?OBJ_MON -> get_monster(Uid);
+        ?OBJ_PET -> get_pet(Uid);
+        ?OBJ_NPC -> get_npc(Uid);
         _ -> undefined
     end.
 %%-------------------------------------------------------------------
 get_player(Uid) ->
     case ets:lookup(?ETS_CACHE_MAP_PLAYER, Uid) of
-        [#m_cache_map_unit{} = Unit | _] -> Unit;
+        [#m_cache_map_object{} = Obj | _] -> Obj;
         _ -> undefined
     end.
 
@@ -112,7 +112,7 @@ get_player_size() ->
 %%-------------------------------------------------------------------
 get_monster(Uid) ->
     case ets:lookup(?ETS_CACHE_MAP_MONSTER, Uid) of
-        [#m_cache_map_unit{} = Unit | _] -> Unit;
+        [#m_cache_map_object{} = Obj | _] -> Obj;
         _ -> undefined
     end.
 
@@ -122,34 +122,34 @@ get_monster_size() ->
 %%-------------------------------------------------------------------
 get_npc(Uid) ->
     case ets:lookup(?ETS_CACHE_MAP_NPC, Uid) of
-        [#m_cache_map_unit{} = Unit | _] -> Unit;
+        [#m_cache_map_object{} = Obj | _] -> Obj;
         _ -> undefined
     end.
 
 %%-------------------------------------------------------------------
 get_pet(Uid) ->
     case ets:lookup(?ETS_CACHE_MAP_PET, Uid) of
-        [#m_cache_map_unit{} = Unit | _] -> Unit;
+        [#m_cache_map_object{} = Obj | _] -> Obj;
         _ -> undefined
     end.
 
 %%-------------------------------------------------------------------
-add_obj_to_map(#m_cache_map_unit{type = ?UNIT_MON, uid = Uid} = Unit) ->
-    ets_cache:write(?ETS_CACHE_MAP_MONSTER, Unit),
+add_obj_to_map(#m_cache_map_object{type = ?OBJ_MON, uid = Uid} = Obj) ->
+    ets_cache:write(?ETS_CACHE_MAP_MONSTER, Obj),
     map_rw:set_monster_map( maps:put(Uid, Uid, map_rw:get_monster_map()) ),
     ok;
-add_obj_to_map(#m_cache_map_unit{type = ?UNIT_PLAYER, uid = Uid} = Unit) ->
-    ets_cache:write(?ETS_CACHE_MAP_PLAYER, Unit),
+add_obj_to_map(#m_cache_map_object{type = ?OBJ_PLAYER, uid = Uid} = Obj) ->
+    ets_cache:write(?ETS_CACHE_MAP_PLAYER, Obj),
     map_rw:set_player_map( maps:put(Uid, Uid, map_rw:get_player_map()) ),
     ok;
 add_obj_to_map(_) ->
     ok.
 
-del_obj_to_map(#m_cache_map_unit{uid = Uid, type = ?UNIT_MON}) ->
+del_obj_to_map(#m_cache_map_object{uid = Uid, type = ?OBJ_MON}) ->
     ets_cache:delete(?ETS_CACHE_MAP_MONSTER, Uid),
     map_rw:set_monster_map( maps:remove(Uid, map_rw:get_monster_map()) ),
     ok;
-del_obj_to_map(#m_cache_map_unit{uid = Uid, type = ?UNIT_PLAYER}) ->
+del_obj_to_map(#m_cache_map_object{uid = Uid, type = ?OBJ_PLAYER}) ->
     ets_cache:delete(?ETS_CACHE_MAP_PLAYER, Uid),
     map_rw:set_player_map( maps:remove(Uid, map_rw:get_player_map()) ),
     ok;

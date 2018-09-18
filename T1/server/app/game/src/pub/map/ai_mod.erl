@@ -47,7 +47,7 @@ init(Uid, AiType) ->
 %%-------------------------------------------------------------------
 init_patrol(Uid, PathList) ->
     % todo 根据怪物巡逻的配置
-    _Did = unit_rw:get_data_id(Uid),
+    _Did = object_rw:get_data_id(Uid),
     PatrolType = ?ECPT_Path,
     case PatrolType of
         ?ECPT_Path ->
@@ -62,7 +62,7 @@ init_patrol(Uid, PathList) ->
 
 %%-------------------------------------------------------------------
 init_ai(Uid) ->
-    _Did = unit_rw:get_data_id(Uid),
+    _Did = object_rw:get_data_id(Uid),
     CreateType = ?EACT_Indicate,
     case CreateType of
         ?EACT_NoAI ->
@@ -108,7 +108,7 @@ can_update_ai(Uid) ->
     AiId > 0.
 
 %%-------------------------------------------------------------------
-update(#m_cache_map_unit{uid = Uid}) ->
+update(#m_cache_map_object{uid = Uid}) ->
     NeedUpdate = can_update_ai(Uid),
     do_update(Uid, NeedUpdate),
     ok;
@@ -171,7 +171,7 @@ change_state(Uid, OldState, NewState) ->
 %% 巡逻
 %%-------------------------------------------------------------------
 update_patrol(Uid) ->
-    _Did = unit_rw:get_data_id(Uid),
+    _Did = object_rw:get_data_id(Uid),
     PatrolType = ?ECPT_Wood,
     case PatrolType of
         ?ECPT_Wood -> skip;
@@ -184,7 +184,7 @@ update_patrol(Uid) ->
 
 %% 巡逻结束
 do_update_patrol(Uid, true, _ResetTick) ->
-    CurMove = move_rw:get_cur_move(Uid),
+    CurMove = object_rw:get_cur_move(Uid),
     case CurMove of
         ?EMS_STAND ->
             ai_rw:set_is_patrol(Uid, false),
@@ -243,7 +243,7 @@ do_start_patrol(Uid, ?ECPT_Path) ->
     ok;
 do_start_patrol(Uid, ?ECPT_Range) ->
     Diameter = ?AI_PATROL_RADIUS * 2,
-    NowPos = move_rw:get_cur_pos(Uid),
+    NowPos = object_rw:get_cur_pos(Uid),
     X = vector3:x(NowPos) + ((rand_tool:rand() rem Diameter) - ?AI_PATROL_RADIUS),
     Z = vector3:z(NowPos) + ((rand_tool:rand() rem Diameter) - ?AI_PATROL_RADIUS),
     TarPos = vector3:new(X, 0, Z),
@@ -436,7 +436,7 @@ count_down_attack_tick(Uid) ->
 %%-------------------------------------------------------------------
 get_pursue_unit(Uid) ->
     TarUid = ai_rw:get_target_uid(Uid),
-    map_rw:get_obj(TarUid).
+    map_rw:get_unit(TarUid).
 
 %%-------------------------------------------------------------------
 start_pursue(Uid, TarUid) when is_integer(TarUid), TarUid > 0 ->
@@ -444,7 +444,7 @@ start_pursue(Uid, TarUid) when is_integer(TarUid), TarUid > 0 ->
     ai_rw:set_cant_pursue(Uid, false),
     reset_check_pursue_tick(Uid),
 
-    Pos = move_rw:get_cur_pos(TarUid),
+    Pos = object_rw:get_cur_pos(TarUid),
     Ret = move_mod:is_can_monster_walk(Uid, Pos, ?EMS_MONSTER_WALK, true),
     case Ret of
         true ->
@@ -497,8 +497,8 @@ update_pursue_2(Uid, _TarUid, NoEnmityTick) when NoEnmityTick > ?AI_RETURN_TICK 
     ai_rw:set_pursue_failed(Uid, true),
     ok;
 update_pursue_2(Uid, TarUid, _NoEnmityTick) ->
-    CurMove = move_rw:get_cur_move(Uid),
-    IsStop = move_rw:get_force_stopped(Uid),
+    CurMove = object_rw:get_cur_move(Uid),
+    IsStop = object_rw:get_force_stopped(Uid),
     case CurMove of
         ?EMS_STAND when IsStop ->
             start_pursue(Uid, TarUid);
@@ -512,8 +512,8 @@ update_pursue_2(Uid, TarUid, _NoEnmityTick) ->
 %%-------------------------------------------------------------------
 update_pursue_3(Uid, TarUid, CheckTick) when CheckTick =< 0 ->
     reset_check_pursue_tick(Uid),
-    CurPos = move_rw:get_cur_pos(Uid),
-    TarPos = move_rw:get_cur_pos(TarUid),
+    CurPos = object_rw:get_cur_pos(Uid),
+    TarPos = object_rw:get_cur_pos(TarUid),
     Diff_X = vector3:x(CurPos) - vector3:x(TarPos),
     Diff_Z = vector3:z(CurPos) - vector3:z(TarPos),
     if
@@ -540,13 +540,13 @@ on_ai_event(_Uid, _Event) ->
 is_in_attack_dist(_Uid, TarUid) when TarUid =< 0 ->
     false;
 is_in_attack_dist(Uid, TarUid) when is_number(TarUid) ->
-    Unit = map_rw:get_obj(TarUid),
-    is_in_attack_dist(Uid, Unit);
+    Obj = map_rw:get_unit(TarUid),
+    is_in_attack_dist(Uid, Obj);
 is_in_attack_dist(_Uid, undefined)->
     false;
-is_in_attack_dist(Uid, #m_cache_map_unit{uid = TarUid}) ->
-    VSrc = move_rw:get_cur_pos(Uid),
-    VDst = move_rw:get_cur_pos(TarUid),
+is_in_attack_dist(Uid, #m_cache_map_object{uid = TarUid}) ->
+    VSrc = object_rw:get_cur_pos(Uid),
+    VDst = object_rw:get_cur_pos(TarUid),
     Dist_SQ = vector3:dist_sq(VSrc, VDst),
     %% todo 根据普攻来检查距离， AI使用的技能可能需要动态选择
     Dist_SQ >= 100;
@@ -576,7 +576,7 @@ rand_flee_pos(Uid) ->
     Ang  = (rand_tool:rand() rem 360)/1.0,
     Dir1 = vector3:new(V_X, 0, 0),
     Dir2 = vector3:rotate_around_origin_2d(Dir1, Ang),
-    Pos1 = move_rw:get_cur_pos(Uid),
+    Pos1 = object_rw:get_cur_pos(Uid),
     Pos2 = vector3:add(Pos1, Dir2),
     % todo 检查目标是否可以走，不可走多随机几次
     ai_rw:set_flee_dir(Uid, Dir2),
@@ -612,19 +612,19 @@ do_update_flee(Uid, true, _Cant) ->
     ok;
 %% 等待重启
 do_update_flee(Uid, _Failed, true)  ->
-    case unit:is_unit_cant_move_state(Uid) of
+    case object_core:is_unit_cant_move_state(Uid) of
         false -> start_flee(Uid, ai_rw:get_flee_dst(Uid));
         _ -> skip
     end,
     ok;
 %% 更新巡逻
 do_update_flee(Uid, _Failed, _Cant) ->
-    case unit:is_unit_cant_move_state(Uid) of
+    case object_core:is_unit_cant_move_state(Uid) of
         true ->
             ai_rw:set_cant_pursue(Uid, true);
         _ ->
-            CurMove = move_rw:get_cur_move(Uid),
-            IsStop = move_rw:get_force_stopped(Uid),
+            CurMove = object_rw:get_cur_move(Uid),
+            IsStop = object_rw:get_force_stopped(Uid),
             case CurMove of
                 ?EMS_STAND when IsStop ->
                     start_flee(Uid, ai_rw:get_flee_dst(Uid));

@@ -24,14 +24,14 @@
 %%-------------------------------------------------------------------
 %% 任务列表
 task_list() ->
-    IsCross = gs_conf:is_cross(),
+    IsCross = gs_interface:is_cross(),
     [
         ?LOADER_TASK_GROUP(1, serv_start, ?TASK_SEQ, seq_base_load(IsCross)),
         ?LOADER_TASK_GROUP(2, load_all_role_info, ?TASK_PARALLEL, parallel_load(IsCross))
     ].
 
 seq_base_load(_IsCross) ->
-    Sid = gs_conf:get_sid(),
+    Sid = gs_interface:get_sid(),
     [
         ?LOADER_TASK(serv_start,            {fun gs_db_interface:action_public_/3, [1, serv_start, Sid]})
     ].
@@ -39,7 +39,7 @@ seq_base_load(_IsCross) ->
 parallel_load(true) ->
     [];
 parallel_load(_IsCross) ->
-    Sid = gs_conf:get_sid(),
+    Sid = gs_interface:get_sid(),
     [
         ?LOADER_TASK(load_all_role_info,    {fun gs_db_interface:action_data_/3,   [1, load_all_role_info, Sid]})
     ].
@@ -49,9 +49,9 @@ parallel_load(_IsCross) ->
 %% 消息处理
 info({serv_start_ack, RunNo}) ->
     try
-        gs_conf:set_run_no(RunNo),
-        AreaId = gs_conf:get_area(),
-        Sid = gs_conf:get_sid(),
+        gs_econfig:set_run_no(RunNo),
+        AreaId = gs_interface:get_area(),
+        Sid = gs_interface:get_sid(),
         uid_gen:init(AreaId, Sid, RunNo),
         data_loader:task_over(serv_start)
     catch _:Err:ST ->
@@ -60,7 +60,7 @@ info({serv_start_ack, RunNo}) ->
     ok;
 info({load_all_role_info_ack, List}) ->
     lists:foreach(
-        fun(Player) -> gs_cache:add_player_pub(Player) end, List),
+        fun(Player) -> gs_cache_interface:add_player_pub(Player) end, List),
     ok;
 info(load_all_role_info_ack_end) ->
     data_loader:task_over(load_all_role_info),

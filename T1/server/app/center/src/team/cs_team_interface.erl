@@ -45,8 +45,8 @@ isInTeam(RoleID) ->
 read_team_id_by_role(0) ->
     0;
 read_team_id_by_role(RoleID) ->
-    case catch myEts:readRecord(?Ets_RoleIDRefTeamID, RoleID) of
-        #m_share_uid_ref_tid{teamID = TeamID} ->
+    case catch ets:lookup(?Ets_RoleIDRefTeamID, RoleID) of
+        [#m_share_uid_ref_tid{teamID = TeamID}] ->
             TeamID;
         _ ->
             0
@@ -56,8 +56,8 @@ read_team_id_by_role(RoleID) ->
 read_team_info_by_tid(0) ->
     undefined;
 read_team_info_by_tid(TeamID) ->
-    case catch myEts:readRecord(?Ets_TeamList, TeamID) of
-        #m_share_team_info{} = TeamInfo ->
+    case catch ets:lookup(?Ets_TeamList, TeamID) of
+        [#m_share_team_info{} = TeamInfo] ->
             TeamInfo;
         _ ->
             undefined

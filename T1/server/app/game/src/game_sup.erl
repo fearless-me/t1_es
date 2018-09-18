@@ -37,7 +37,7 @@ start() ->
         misc:fn_wrapper({"logger", stdio,           ?Wrap(loggerS:start())}),
         misc:fn_wrapper({"error Logger",            ?Wrap(common_error_logger:start(game_sup, game))}),
         misc:fn_wrapper({"gen rpc app",             ?Wrap(misc:start_all_app(gen_rpc))}),
-        misc:fn_wrapper({"config init",             ?Wrap(gs_conf:start("game.ini"))}),
+        misc:fn_wrapper({"config init",             ?Wrap(gs_econfig:start("game.ini"))}),
         misc:fn_wrapper({"db share",                ?Wrap(gs_share:start())}),
         misc:fn_wrapper({"db window",               ?Wrap(gs_db_starter:start())}),
         misc:fn_wrapper({"auto compile and load",   ?Wrap(fly:start())}),
@@ -66,11 +66,11 @@ start() ->
     {ok, SupPid}.
 
 start_tcp_listener(_SupPid) ->
-    case gs_conf:is_cross() of
+    case gs_interface:is_cross() of
         true -> ok;
         _ ->
-            Port = gs_conf:get_server_port(),
-            MaxConnection = gs_conf:get_max_connection(),
+            Port = gs_interface:get_server_port(),
+            MaxConnection = gs_interface:get_max_connection(),
             tcp_listener:start_listener(
                 gs_player_listen_server,
                 10,

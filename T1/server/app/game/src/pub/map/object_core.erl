@@ -6,7 +6,7 @@
 %%% @end
 %%% Created : 14. 五月 2018 14:10
 %%%-------------------------------------------------------------------
--module(unit).
+-module(object_core).
 -author("mawenhong").
 
 -include("logger.hrl").
@@ -34,13 +34,13 @@ is_unit_cant_move_state(_Uid) ->
 
 
 is_dead(Uid) ->
-    unit_rw:get_hp(Uid) =< 0.
+    object_rw:get_hp(Uid) =< 0.
 
 
 %%-------------------------------------------------------------------
 new_player(Pid, Uid, Group, Pos, Face) ->
     init_rw_default(Uid),
-    new(?UNIT_PLAYER, Pid, Uid, 0, 0, Group, Pos, Face).
+    new(?OBJ_PLAYER, Pid, Uid, 0, 0, Group, Pos, Face).
 
 del_player(Uid) ->
     del_all_rw(Uid),
@@ -51,7 +51,7 @@ new_static(Group, Pos, Face) ->
     Pid = self(),
     Uid = uid_gen:mon_uid(),
     init_rw_default(Uid),
-    new(?UNIT_STATIC, Pid, Uid, 0, 0, Group, Pos, Face).
+    new(?OBJ_STATIC, Pid, Uid, 0, 0, Group, Pos, Face).
 
 del_static(Uid) ->
     del_all_rw(Uid),
@@ -76,7 +76,7 @@ new_monster(#recMapObjData{
 
     %% todo 怪物AI配置
     ai_mod:init(Uid, ?AIAT_Active),
-    new(?UNIT_MON, Pid, Uid, Mid, 0, Group, Pos, vector3:new(0.1, 0, 0.5)).
+    new(?OBJ_MON, Pid, Uid, Mid, 0, Group, Pos, vector3:new(0.1, 0, 0.5)).
 
 
 del_monster(Uid) ->
@@ -85,12 +85,12 @@ del_monster(Uid) ->
 %%-------------------------------------------------------------------
 new(Type, Pid, Uid, Did, Owner, Group, Pos, Face) ->
     move_mod:init(Uid, Pos, Face),
-    unit_rw:set_data_id(Uid, Did),
-    unit_rw:set_group(Uid, Group),
-    unit_rw:set_pid(Uid, Pid),
-    unit_rw:set_type(Uid, Type),
+    object_rw:set_data_id(Uid, Did),
+    object_rw:set_group(Uid, Group),
+    object_rw:set_pid(Uid, Pid),
+    object_rw:set_type(Uid, Type),
 
-    #m_cache_map_unit{
+    #m_cache_map_object{
         map_id  = map_rw:get_map_id(),
         line_id = map_rw:get_line_id(),
         uid = Uid, pid = Pid, data_id = Did,
@@ -101,19 +101,17 @@ new(Type, Pid, Uid, Did, Owner, Group, Pos, Face) ->
 %%-------------------------------------------------------------------
 %%-------------------------------------------------------------------
 init_rw_default(Uid)->
-    ?WARN("init_rw_default(~p)",[Uid]),
     ai_rw:init_default(Uid),
-    move_rw:init_default(Uid),
-    unit_rw:init_default(Uid),
-    combat_rw:init_default(Uid),
+    object_rw:init_default(Uid),
+    attr_rw:init_default(Uid),
+    ?WARN("init_rw_default(~p)",[Uid]),
     ok.
 
 del_all_rw(Uid) ->
-    ?WARN("del_all_rw(~p)",[Uid]),
     ai_rw:del(Uid),
-    move_rw:del(Uid),
-    unit_rw:del(Uid),
-    combat_rw:del(Uid),
+    object_rw:del(Uid),
+    attr_rw:del(Uid),
+    ?WARN("del_all_rw(~p)",[Uid]),
     ok.
 
 %%-------------------------------------------------------------------
@@ -121,9 +119,9 @@ del_all_rw(Uid) ->
 
 
 %%-------------------------------------------------------------------
-get_uid(Unit) -> Unit#m_cache_map_unit.uid.
-get_pid(Unit) -> Unit#m_cache_map_unit.pid.
-get_data_id(Unit) -> Unit#m_cache_map_unit.data_id.
-get_owner(Unit) -> Unit#m_cache_map_unit.owner.
-get_type(Unit) -> Unit#m_cache_map_unit.type.
+get_uid(Obj) -> Obj#m_cache_map_object.uid.
+get_pid(Obj) -> Obj#m_cache_map_object.pid.
+get_data_id(Obj) -> Obj#m_cache_map_object.data_id.
+get_owner(Obj) -> Obj#m_cache_map_object.owner.
+get_type(Obj) -> Obj#m_cache_map_object.type.
 %%-------------------------------------------------------------------

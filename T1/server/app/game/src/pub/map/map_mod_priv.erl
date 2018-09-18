@@ -49,16 +49,16 @@ init(S) ->
 %% WARNING!!! WARNING!!! WARNING!!!
 %% call
 player_exit_call(S, From, #r_exit_map_req{uid = Uid}) ->
-    Unit = map_rw:get_player(Uid),
-    ?TRY_CATCH_RET(do_player_exit_call(S, From, Uid, Unit), {reply, error, S}).
+    Obj = map_rw:get_player(Uid),
+    ?TRY_CATCH_RET(do_player_exit_call(S, From, Uid, Obj), {reply, error, S}).
 
-do_player_exit_call(S, _From, Uid, #m_cache_map_unit{} = Unit) ->
+do_player_exit_call(S, _From, Uid, #m_cache_map_object{} = Obj) ->
     ?INFO("player ~p exit map ~p:~p:~p",
         [Uid, map_rw:get_map_id(), map_rw:get_line_id(), self()]),
 
-    map_rw:del_obj_to_map(Unit),
+    map_rw:del_obj_to_map(Obj),
 
-    ?TRY_CATCH(map_view:sync_player_exit_map(Unit)),
+    ?TRY_CATCH(map_view:sync_player_exit_map(Obj)),
     ?TRY_CATCH(hook_map:on_player_exit(Uid), Err1, St1),
     {reply, ok, S};
 do_player_exit_call(S, _From, Uid, _Obj) ->
@@ -73,13 +73,13 @@ do_player_exit_call(S, _From, Uid, _Obj) ->
 player_join_call(S, From, #r_change_map_req{uid = Uid, pid = Pid, group = Group, tar_pos = Pos}) ->
     try
         ?DEBUG("player ~p to ~p", [Uid, Pos]),
-        Unit = unit:new_player(Pid, Uid, Group, Pos, vector3:new(0.1, 0, 0.5)),
+        Obj = object_core:new_player(Pid, Uid, Group, Pos, vector3:new(0.1, 0, 0.5)),
         send_goto_map_msg(Uid, Pos),
-        map_rw:add_obj_to_map(Unit),
+        map_rw:add_obj_to_map(Obj),
         map_srv:call_reply(From, ok),
-        ?TRY_CATCH(map_view:sync_player_join_map(Unit)),
+        ?TRY_CATCH(map_view:sync_player_join_map(Obj)),
         ?TRY_CATCH(hook_map:on_player_join(Uid), Err1, St1),
-        ?DEBUG("uid ~p, join map ~w, name ~p", [unit:get_uid(Unit), self(), misc:registered_name()]),
+        ?DEBUG("uid ~p, join map ~w, name ~p", [object_core:get_uid(Obj), self(), misc:registered_name()]),
         {noreply, S}
     catch _ : Error : ST ->
         ?ERROR("player join map ~w, name ~p, error ~p, ~p", [self(), misc:registered_name(), Error, ST]),
@@ -96,7 +96,7 @@ player_join_call(S, _From, Any) ->
 %% call
 force_teleport_call(S, From, #r_teleport_req{uid = Uid, tar = TarPos}) ->
     map_srv:call_reply(From, ok),
-    Cur = move_rw:get_cur_pos(Uid),
+    Cur = object_rw:get_cur_pos(Uid),
     ?TRY_CATCH(move_mod:on_obj_pos_change(Uid, TarPos)),
     ?DEBUG("player ~p teleport from ~w to ~w in map ~p_~p",
         [Uid, Cur, TarPos, map_rw:get_map_id(), map_rw:get_line_id()]),
@@ -113,17 +113,17 @@ init_monster(#recGameMapCfg{
         end, MonsterList).
 
 init_all_monster_1(Mdata) ->
-    Unit = unit:new_monster(Mdata),
-    init_all_monster_2(Unit).
+    Obj = object_core:new_monster(Mdata),
+    init_all_monster_2(Obj).
 
-init_all_monster_2(Unit) ->
-    Uid = unit:get_uid(Unit),
-    VisIndex = map_view:pos_to_vis_index(move_rw:get_cur_pos(Uid)),
-    map_rw:add_obj_to_map(Unit),
-    map_view:add_obj_to_vis_tile(Unit, VisIndex),
+init_all_monster_2(Obj) ->
+    Uid = object_core:get_uid(Obj),
+    VisIndex = map_view:pos_to_vis_index(object_rw:get_cur_pos(Uid)),
+    map_rw:add_obj_to_map(Obj),
+    map_view:add_obj_to_vis_tile(Obj, VisIndex),
     hook_map:on_monster_create(Uid),
     ?DEBUG("map ~p:~p create monster ~p, uid ~p, visIndex ~p",
-        [map_rw:get_map_id(), map_rw:get_line_id(), unit:get_data_id(Unit), Uid, VisIndex]),
+        [map_rw:get_map_id(), map_rw:get_line_id(), object_core:get_data_id(Obj), Uid, VisIndex]),
     ok.
 
 %%-------------------------------------------------------------------
@@ -181,9 +181,9 @@ tick_player(_S) ->
 tick_player_1(undefined, Uid) ->
     %% @todo 加入异常处理删除该玩家
     ?ERROR("player ~p may be leave map", [Uid]);
-tick_player_1(Unit, _) ->
-    ?TRY_CATCH(move_mod:update(Unit), Err1, Stk1),
-    ?TRY_CATCH(combat_mod:tick(Unit), Err2, Stk2),
+tick_player_1(Obj, _) ->
+    ?TRY_CATCH(move_mod:update(Obj), Err1, Stk1),
+    ?TRY_CATCH(combat_mod:tick(Obj), Err2, Stk2),
     ok.
 
 %%-------------------------------------------------------------------
@@ -194,11 +194,11 @@ tick_monster(_S) ->
         end, 0, map_rw:get_monster_map()).
 
 tick_monster_1(undefined, Uid) ->
-    ?ERROR("monster ~p  ~p not exists", [Uid, unit_rw:get_data_id(Uid)]);
-tick_monster_1(Unit, _) ->
-    ?TRY_CATCH(move_mod:update(Unit), Err1, Stk1),
-    ?TRY_CATCH(ai_mod:update(Unit), Err2, Stk2),
-    ?TRY_CATCH(combat_mod:tick(Unit), Err3, Stk3),
+    ?ERROR("monster ~p  ~p not exists", [Uid, object_rw:get_data_id(Uid)]);
+tick_monster_1(Obj, _) ->
+    ?TRY_CATCH(move_mod:update(Obj), Err1, Stk1),
+    ?TRY_CATCH(ai_mod:update(Obj), Err2, Stk2),
+    ?TRY_CATCH(combat_mod:tick(Obj), Err3, Stk3),
     ok.
 
 %%-------------------------------------------------------------------
@@ -210,9 +210,9 @@ tick_pet(_S) ->
 
 tick_pet_1(undefined, Uid) ->
     ?ERROR("pet ~p not exists", [Uid]);
-tick_pet_1(Unit, _) ->
-    ?TRY_CATCH(move_mod:update(Unit), Err1, Stk1),
-    ?TRY_CATCH(combat_mod:tick(Unit), Err2, Stk2),
+tick_pet_1(Obj, _) ->
+    ?TRY_CATCH(move_mod:update(Obj), Err1, Stk1),
+    ?TRY_CATCH(combat_mod:tick(Obj), Err2, Stk2),
     ok.
 
 %%-------------------------------------------------------------------
@@ -248,7 +248,7 @@ kick_all_player(_S) ->
 -spec player_start_move(Req :: #r_player_start_move_req{}) -> ok | error.
 player_start_move(Req) ->
     #r_player_start_move_req{uid = Uid, tar = Dst} = Req,
-    move_mod:start_player_walk(Uid, move_rw:get_cur_pos(Uid), Dst).
+    move_mod:start_player_walk(Uid, object_rw:get_cur_pos(Uid), Dst).
 
 %%-------------------------------------------------------------------
 -spec player_stop_move(Req :: #r_player_stop_move_req{}) -> ok | error.

@@ -12,6 +12,8 @@
 -export([micro_seconds/0, milli_seconds/0, utc_seconds/0, tz_seconds/0, localtime_seconds/0]).
 -export([localtime_str/0, utc_str/0]).
 -export([day_of_the_week/0, day_of_the_week/1, day_of_the_week/3]).
+-export([format_datatime/1]).
+
 
 
 -define(DAYS_FROM_0_TO_1970, 719528).
@@ -52,3 +54,9 @@ day_of_the_week() ->
 
 day_of_the_week(Year, Month, Day) -> calendar:day_of_the_week(Year, Month, Day).
 day_of_the_week({Year, Month, Day}) -> calendar:day_of_the_week(Year, Month, Day).
+
+
+format_datatime({{Y, MO, D}, {H, MU, S}}) ->
+    io_lib:format(?TIME_FMT, [Y, MO, D, H, MU, S]);
+format_datatime(Other) ->
+    io_lib:format("~p",[Other]).

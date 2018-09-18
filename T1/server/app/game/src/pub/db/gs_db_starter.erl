@@ -21,11 +21,11 @@
 %%--------------------------------------------------------------------
 start() ->
     true = misc:start_all_app(db_proxy),
-    Sid = gs_conf:get_sid(),
+    Sid = gs_interface:get_sid(),
     {_PoolOptions, MySqlOptions} = get_inst_opt(),
     {ok, Pid} = mysql:start_link(MySqlOptions),
 
-    case gs_conf:is_cross() of
+    case gs_interface:is_cross() of
         false ->
             ?INFO("init data db pool ..."),
             db_pool_init(Pid, get_data_db_conf, [Sid], ?DATA_DB_POOL_NAME, fun gs_db_data_handler:handler/4),
@@ -62,7 +62,7 @@ do_db_pool_init([Ins | _], PoolRef, Func) ->
     db_proxy:add_pool(PoolRef, Conf, ?INIT_DB_POOL_TIMEOUT);
 do_db_pool_init(_, PoolRef, _Func) ->
     ?FATAL("node ~p sid ~p init db pool ~p, but config not exists",
-        [node(), gs_conf:get_sid(), PoolRef]),
+        [node(), gs_interface:get_sid(), PoolRef]),
     throw(db_pool_config_error).
 
 
@@ -104,7 +104,7 @@ modify_record(R) -> R.
 %%-------------------------------------------------------------------
 get_inst_opt() ->
     PoolOptions = [{size, 1}, {max_overflow, 1}],
-    Conf1 = gs_conf:get_db_conf(),
+    Conf1 = gs_econfig:get_db_conf(),
     Conf2 = case lists:keyfind(port, 1, Conf1) of
                 {port, Port} when is_number(Port) ->
                     Conf1;

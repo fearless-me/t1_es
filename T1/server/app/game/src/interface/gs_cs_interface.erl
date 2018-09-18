@@ -23,9 +23,9 @@
 
 
 register(Node) ->
-    Sid = gs_conf:get_sid(),
+    Sid = gs_interface:get_sid(),
     ServerType = get_server_type(),
-    ServerName = gs_conf:get_server_name(),
+    ServerName = gs_interface:get_server_name(),
     case rpc:call(
         Node,
         cs_gs_rpc,
@@ -41,7 +41,7 @@ register(Node) ->
 allow() ->
     try
         CurNode = erlang:node(),
-        CsNode = gs_conf:get_center_node(),
+        CsNode = gs_interface:get_center_node(),
         [_CurNodeName, IP | _] = string:tokens(atom_to_list(CurNode), "@"),
         NodeList = ["stopgs@" ++ IP, "reload@" ++ IP, "entopGS@" ++ IP, "dbgEmc@" ++ IP],
         misc:allow_node(CsNode),
@@ -55,7 +55,7 @@ allow() ->
 
 %%%-------------------------------------------------------------------
 get_server_type() ->
-    case gs_conf:is_cross() of
+    case gs_interface:is_cross() of
         true -> ?SERVER_TYPE_CGS;
         _ -> ?SERVER_TYPE_GS
     end.

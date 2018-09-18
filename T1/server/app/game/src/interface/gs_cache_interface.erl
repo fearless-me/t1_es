@@ -6,7 +6,7 @@
 %%% @end
 %%% Created : 30. 五月 2018 19:31
 %%%-------------------------------------------------------------------
--module(gs_cache).
+-module(gs_cache_interface).
 -author("mawenhong").
 -include("logger.hrl").
 -include("pub_def.hrl").
@@ -39,10 +39,10 @@ init() ->
     ets_cache:new(?ETS_CACHE_ALARM_POLICY,    [named_table, public, {keypos, #m_cache_alarm_policy.id},      ?ETS_RC, ?ETS_WC]),
     ets_cache:new(?ETS_CACHE_ALARM_PLAYER,    [named_table, public, {keypos, #m_cache_alarm_player.uid},     ?ETS_RC, ?ETS_WC]),
     %%
-    ets_cache:new(?ETS_CACHE_MAP_PET,         [named_table, public, {keypos, #m_cache_map_unit.uid},         ?ETS_RC, ?ETS_WC]),
-    ets_cache:new(?ETS_CACHE_MAP_NPC,         [named_table, public, {keypos, #m_cache_map_unit.uid},         ?ETS_RC, ?ETS_WC]),
-    ets_cache:new(?ETS_CACHE_MAP_PLAYER,      [named_table, public, {keypos, #m_cache_map_unit.uid},         ?ETS_RC, ?ETS_WC]),
-    ets_cache:new(?ETS_CACHE_MAP_MONSTER,     [named_table, public, {keypos, #m_cache_map_unit.uid},         ?ETS_RC, ?ETS_WC]),
+    ets_cache:new(?ETS_CACHE_MAP_PET,         [named_table, public, {keypos, #m_cache_map_object.uid},         ?ETS_RC, ?ETS_WC]),
+    ets_cache:new(?ETS_CACHE_MAP_NPC,         [named_table, public, {keypos, #m_cache_map_object.uid},         ?ETS_RC, ?ETS_WC]),
+    ets_cache:new(?ETS_CACHE_MAP_PLAYER,      [named_table, public, {keypos, #m_cache_map_object.uid},         ?ETS_RC, ?ETS_WC]),
+    ets_cache:new(?ETS_CACHE_MAP_MONSTER,     [named_table, public, {keypos, #m_cache_map_object.uid},         ?ETS_RC, ?ETS_WC]),
     ok.
 
 %%-------------------------------------------------------------------
@@ -54,16 +54,16 @@ online_cross(
     #m_cache_player_pub{}=PlayerPub,
     #m_cache_online_player{aid = Aid, pid = Pid, socket = Sock} = OnlinePlayer
 ) ->
-    gs_cache:add_account_socket(Aid, Pid, Sock),
-    gs_cache:add_player_pub(PlayerPub),
-    gs_cache:add_online_player(OnlinePlayer),
+    gs_cache_interface:add_account_socket(Aid, Pid, Sock),
+    gs_cache_interface:add_player_pub(PlayerPub),
+    gs_cache_interface:add_online_player(OnlinePlayer),
     ok.
 
 %%-------------------------------------------------------------------
 offline(Aid, Uid) ->
     ?INFO("player ~w of account ~p offline", [Uid, Aid]),
-    gs_cache:del_online_player(Uid),
-    gs_cache:del_account_socket(Aid),
+    gs_cache_interface:del_online_player(Uid),
+    gs_cache_interface:del_account_socket(Aid),
     ok.
 
 

@@ -5,7 +5,7 @@
               {applications,[kernel,stdlib,mysql_poolboy,mysql,poolboy,
                              econfig,dynamic_compile,recon]},
               {mod,{center,[]}},
-              {env,[{mode, dist}]},
+              {env,[{mode, allin}]},
               {modules,[acceptor_SUITE,active_echo_protocol,background_gc,
                         behaviour_example,binary_lib,center,center_sup,
                         check_tcp_options,code_gen,color,common_error_logger,

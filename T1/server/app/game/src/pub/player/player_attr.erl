@@ -34,7 +34,7 @@ get_hp() ->
 
 set_hp(Hp) ->
     Uid = player_rw:get_uid(),
-    gs_cache:read_element(
+    gs_cache_interface:read_element(
         ?ETS_CACHE_ONLINE_PLAYER, Uid, {#m_cache_online_player.hp, Hp}),
     ok.
 

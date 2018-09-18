@@ -50,6 +50,4 @@
 -define(CONDITION_PLAYER_SUB_HP,         2).
 
 
-
-
 -endif.

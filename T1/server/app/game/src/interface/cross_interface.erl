@@ -37,7 +37,7 @@ is_player_in_cross(Uid) ->
      ets_cache:member(?ETS_CACHE_PLAYER_CROSS, Uid).
 
 update_player_cross(Uid, Params) ->
-    IsCross = gs_conf:is_cross(),
+    IsCross = gs_interface:is_cross(),
     inner_update_player_cross(IsCross, Uid, Params),
     ok.
 
@@ -65,7 +65,7 @@ is_assign_cross(Uid) ->
     end.
 %%-------------------------------------------------------------------
 force_assign_cross_for_player(Uid, CrossSid) ->
-    Sid = gs_conf:get_sid(),
+    Sid = gs_interface:get_sid(),
     mne_ex:write(
         ?SharePlayerCrossLock,
         #m_share_player_cross_lock{

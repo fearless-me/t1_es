@@ -66,7 +66,7 @@ start() ->
 start_dist(SupPid) ->
     case application:get_env(center, mode, allin) of
         dist -> cs_dist_interface:start_master(SupPid);
-        _ -> cs_dist_interface:start_independence()
+        _ -> cs_dist_interface:start_independence(SupPid)
     end,
     ok.
 

@@ -389,10 +389,10 @@ decode(?U2GS_GetPlayerInitData,Bin0) ->
 		},
 	Bin0 };
 
-%GENERATED from file:login.h => U2GS_GetRemoteUnitInfo
-decode(?U2GS_GetRemoteUnitInfo,Bin0) ->
+%GENERATED from file:login.h => U2GS_GetRemoteObjInfo
+decode(?U2GS_GetRemoteObjInfo,Bin0) ->
 	{ V_uids, Bin1 } = read_array(Bin0, fun(X) -> read_uint64( X ) end),
-	{ #pk_U2GS_GetRemoteUnitInfo {
+	{ #pk_U2GS_GetRemoteObjInfo {
 		uids = V_uids
 		},
 	Bin1 };
@@ -973,11 +973,11 @@ encode(#pk_U2GS_GetPlayerInitData{}) ->
 
 	];
 
-%GENERATED from file:login.h => U2GS_GetRemoteUnitInfo
-encode(#pk_U2GS_GetRemoteUnitInfo{} = P) ->
-	Bin_uids = write_array(P#pk_U2GS_GetRemoteUnitInfo.uids, fun(X) -> write_uint64( X ) end),
+%GENERATED from file:login.h => U2GS_GetRemoteObjInfo
+encode(#pk_U2GS_GetRemoteObjInfo{} = P) ->
+	Bin_uids = write_array(P#pk_U2GS_GetRemoteObjInfo.uids, fun(X) -> write_uint64( X ) end),
 	[
-		<<?U2GS_GetRemoteUnitInfo:?U16>>,
+		<<?U2GS_GetRemoteObjInfo:?U16>>,
 		Bin_uids
 	];
 
@@ -1226,7 +1226,7 @@ name(?GS2U_UserPlayerList) -> "GS2U_UserPlayerList";
 name(?U2GS_ChangeMap) -> "U2GS_ChangeMap";
 name(?U2GS_ExitGame) -> "U2GS_ExitGame";
 name(?U2GS_GetPlayerInitData) -> "U2GS_GetPlayerInitData";
-name(?U2GS_GetRemoteUnitInfo) -> "U2GS_GetRemoteUnitInfo";
+name(?U2GS_GetRemoteObjInfo) -> "U2GS_GetRemoteObjInfo";
 name(?U2GS_HearBeat) -> "U2GS_HearBeat";
 name(?U2GS_Login_Normal) -> "U2GS_Login_Normal";
 name(?U2GS_PlayerStopWalk) -> "U2GS_PlayerStopWalk";
@@ -1269,7 +1269,7 @@ cmd_list()->
 		,?U2GS_ChangeMap
 		,?U2GS_ExitGame
 		,?U2GS_GetPlayerInitData
-		,?U2GS_GetRemoteUnitInfo
+		,?U2GS_GetRemoteObjInfo
 		,?U2GS_HearBeat
 		,?U2GS_Login_Normal
 		,?U2GS_PlayerStopWalk

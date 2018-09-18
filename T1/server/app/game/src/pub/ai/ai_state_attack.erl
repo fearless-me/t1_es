@@ -16,7 +16,7 @@ on_enter(Uid) ->
     case ai_rw:get_enter_combat_time(Uid) of
         0 ->
             ai_rw:set_enter_combat_time(Uid, misc_time:utc_seconds()),
-            ai_rw:set_enter_combat_pos(Uid, move_rw:get_cur_pos(Uid)),
+            ai_rw:set_enter_combat_pos(Uid, object_rw:get_cur_pos(Uid)),
             ok;
         _ -> skip
     end,

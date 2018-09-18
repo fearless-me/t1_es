@@ -44,7 +44,11 @@ send_net_msg(DataBinaryList) when is_list(DataBinaryList) ->
     ok.
 
 direct_send_net_msg(Socket, DataBinaryList) when is_list(DataBinaryList) ->
-    ranch_tcp:send(Socket, DataBinaryList),
+    case ranch_tcp:send(Socket, DataBinaryList) of
+        ok -> skip;
+        {error, Reason} ->
+            ?WARN("**EXCEPTION** socket ~p send error ~p", [Socket, Reason])
+    end,
     ok.
 %%%===================================================================
 %%% public functions
@@ -101,7 +105,7 @@ do_handle_info(
     {tcp_error, Socket, Reason},
     #state{handler = Handler, cli_data = S} = State
 ) ->
-    ?TRY_CATCH(Handler:on_close(Socket, {tcp_error,Reason}, S)),
+    ?TRY_CATCH(Handler:on_close(Socket, {tcp_error, Reason}, S)),
     {stop, Reason, State};
 do_handle_info(
     {active_stop, Reason},

@@ -14,7 +14,7 @@
 
 
 start() ->
-    MasterNode = gs_conf:get_center_node(),
+    MasterNode = gs_interface:get_center_node(),
     true = mne_ex:start(),
     mnesia:set_master_nodes([MasterNode]),
     ok.

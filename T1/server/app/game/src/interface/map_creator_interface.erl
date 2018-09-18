@@ -29,7 +29,7 @@ map_mgr_l(MapID) ->
     end.
 %%-------------------------------------------------------------------
 map_mgr_lr(Uid, MapID) ->
-    do_map_mgr_lr(gs_conf:is_cross(), Uid, getCfg:getCfgByArgs(cfg_map, MapID)).
+    do_map_mgr_lr(gs_interface:is_cross(), Uid, getCfg:getCfgByArgs(cfg_map, MapID)).
 
 
 %% 在跨服上找非跨服地图

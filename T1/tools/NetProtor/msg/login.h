@@ -212,7 +212,7 @@ struct GS2U_SyncStand <-
 };
 
 //
-struct U2GS_GetRemoteUnitInfo ->
+struct U2GS_GetRemoteObjInfo ->
 {
 	vector<uint64> uids; // 唯一ID列表
 };

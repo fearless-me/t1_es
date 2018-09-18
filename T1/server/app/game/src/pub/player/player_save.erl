@@ -19,7 +19,7 @@
 save(Uid) ->
     #m_cache_online_player{
         aid = Aid, pos = Pos, map_id = Mid, map_pid = MPid
-    } = Player = gs_cache:get_online_player(Uid),
+    } = Player = gs_cache_interface:get_online_player(Uid),
     ?DEBUG("save player aid ~w uid ~w in map ~w|~w",[Aid, Uid, Mid, MPid]),
     NewPlayer = case vector3:valid(Pos) of
                     true -> Player;

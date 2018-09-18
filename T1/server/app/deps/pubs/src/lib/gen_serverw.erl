@@ -92,7 +92,6 @@ start_link2(Module, Args, Options) ->
 start_link2(Name, Module, Args, Options) ->
     gen_server2:start_link(Name, ?MODULE, [Module, Args], sweep_options(Options)).
 
-
 %%--------------------------------------------------------------------
 sweep_options(Options) ->
     case lists:keyfind(spawn_opt, 1, Options) of

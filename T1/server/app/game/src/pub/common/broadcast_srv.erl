@@ -59,22 +59,21 @@ do_handle_cast(Request, State) ->
 
 
 %%--------------------------------------------------------------------
+%% @todo 不要集中这样做
+%% tcp_handler:direct_send_net_msg(Sock, IoList)
+%% http://blog.yufeng.info/archives/1581
 broadcast_net_msg(NetMsg) ->
-    do_broadcast_net_msg(gs_conf:is_cross(), NetMsg),
-    ok.
-
-do_broadcast_net_msg(true, NetMsg) ->
-    ets:foldl(
-        fun(#m_cache_online_player{pid = Pid}, _) ->
-            catch gs_interface:send_net_msg(Pid, NetMsg)
-        end, 0, ?ETS_CACHE_ONLINE_PLAYER),
-    ok;
-do_broadcast_net_msg(_Any, NetMsg) ->
-    {_Bytes1, IoList} = tcp_codec:encode(NetMsg),
-    ets:foldl(
-        fun(#m_cache_online_player{socket = Sock}, _) ->
-            catch tcp_handler:direct_send_net_msg(Sock, IoList)
-        end, 0, ?ETS_CACHE_ONLINE_PLAYER),
+    Ms = ets:fun2ms(fun(#m_cache_online_player{pid = Pid})-> Pid end),
+    F =
+        fun() ->
+            {_Bytes1, IoList} = tcp_codec:encode(NetMsg),
+            L = ets:select(?ETS_CACHE_ONLINE_PLAYER, Ms),
+            lists:foreach(
+                fun(Pid)->
+                    catch gs_interface:send_net_msg(Pid, IoList)
+                end, L)
+        end,
+    erlang:spawn(F),
     ok.
 
 broadcast_msg(MsgId, Msg) ->

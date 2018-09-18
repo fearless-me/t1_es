@@ -42,8 +42,8 @@ mod_init([MapID, MapLine]) ->
     {ok, #m_map_state{map_id = MapID, line_id = MapLine}}.
 
 %%--------------------------------------------------------------------
-do_handle_call({player_join, Unit}, From, State) ->
-    map_mod_priv:player_join_call(State, From, Unit);
+do_handle_call({player_join, Obj}, From, State) ->
+    map_mod_priv:player_join_call(State, From, Obj);
 do_handle_call({player_exit, Req}, From, State) ->
     map_mod_priv:player_exit_call(State, From, Req);
 do_handle_call({player_teleport, Req}, From, State) ->

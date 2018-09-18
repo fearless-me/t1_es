@@ -36,14 +36,14 @@ on_player_join(_Uid) ->
     ok.
 
 on_player_exit(Uid) ->
-    unit:del_player(Uid),
+    object_core:del_player(Uid),
     ok.
 %%-------------------------------------------------------------------
 on_monster_create(_Uid) ->
     ok.
 
 on_monster_dead(Uid) ->
-    unit:del_monster(Uid),
+    object_core:del_monster(Uid),
     ok.
 
 on_start_move(_Uid) ->
@@ -55,7 +55,6 @@ on_start_move(_Uid) ->
 %%-------------------------------------------------------------------
 -define(lock(X), lock_transaction(X)).
 -define(unlock(), unlock_transaction()).
-
 on_rw_update(_Uid, _Key, _Value) ->
     ok.
 
