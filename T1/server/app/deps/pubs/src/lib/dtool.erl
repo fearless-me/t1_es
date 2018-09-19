@@ -29,9 +29,7 @@
 
 proc_statistics(Name, Milliseconds) ->
     sys:statistics(Name, true),
-    receive proc_statistics -> skip
-    after Milliseconds -> skip
-    end,
+    timer:sleep(Milliseconds),
     Info =
     case sys:statistics(Name, get) of
         {ok, Statistics} ->

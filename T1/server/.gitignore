@@ -20,7 +20,6 @@ rel/example_project
 elog
 __gs_pkg_sql__
 _gsdata_
-
 /_gsdata_/
 /__gs_pkg_sql__/
 /.idea/

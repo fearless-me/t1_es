@@ -3,6 +3,13 @@
 %%% @copyright (C) 2018, <COMPANY>
 %%% @doc
 %%%
+%%% -record(slave_info, {name,socket,client}).
+%%% Match = #slave_info{name='$1',socket=Sock,client='$2',_='_'},
+%%% ets:match(slave_tab,Match) ->  [[Node,_Client]] | [].
+%%%
+%%% Ms = ets:fun2ms(fun(#slave_info{socket = Sock})-> Sock end),
+%%% ets:select(slave_tab, Ms) -> [Socket1] | [].
+%%%
 %%% @end
 %%% Created : 15. 八月 2018 15:37
 %%%-------------------------------------------------------------------
@@ -11,14 +18,27 @@
 -author("mawenhong").
 %% API
 -export([
-    new/2,  delete/1,
-    clear/1, info/1, size/1, exists/1,
-    member/2, to_list/1, foldl/3,
+    new/2, %% 创建ets
+    delete/1,  %% 删除ets
+    clear/1, %% 清空ets数据
+    info/1, %% ets信息
+    size/1, %% ets size
+    exists/1, %% ets是否存在
+    to_list/1, %% ets 转成成list
+    foldl/3,   %% ets 遍历
+    member/2, %% 查看key是在ets中
+    %% 按key取值, ... , 读取值的某个元素
     read/2, read/3, read_element/3,
-    write/2,
-    delete/2,
-    update_element/3, update_counter/3,
-    select/2, select/3, match/2, match/3, match_object/2, match_object/3
+    write/2,%% 插入ets
+    delete/2, %% 按key删除值
+    %% 按key更新值的某个字段
+    update_element/3,
+    %% 某个字段自增
+    update_counter/3,
+    %% 匹配
+    select/2, select/3,
+    match/2, match/3,
+    match_object/2, match_object/3
 ]).
 
 info(Name) -> ets:info(Name).
