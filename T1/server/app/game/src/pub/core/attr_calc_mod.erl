@@ -6,7 +6,7 @@
 %%% @end
 %%% Created : 13. 六月 2018 15:25
 %%%-------------------------------------------------------------------
--module(attr_mod).
+-module(attr_calc_mod).
 -author("mawenhong").
 -include("logger.hrl").
 

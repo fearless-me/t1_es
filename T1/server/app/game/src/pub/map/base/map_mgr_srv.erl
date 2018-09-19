@@ -40,7 +40,7 @@ mod_init([MapID]) ->
     erlang:process_flag(trap_exit, true),
     erlang:process_flag(priority, high),
     EtsAtom = misc:create_atom(?MAP_LINES, [MapID]),
-    Ets = ets:new(EtsAtom, [named_table, protected, {keypos, #m_map_line.line_id}, ?ETS_RC]),
+    Ets = my_ets:new(EtsAtom, [named_table, protected, {keypos, #m_map_line.line_id}, ?ETS_RC]),
     ?INFO("mapMgr ~p started, line ets:~p,mapID:~p", [ProcessName, Ets, MapID]),
     ps:send(?GS_MAP_CREATOR_OTP, map_mgr_line_ets, {MapID, EtsAtom}),
     {ok, #state{ets = Ets, map_id = MapID}}.
@@ -100,7 +100,7 @@ do_player_join_map_call(S, Req) ->
             end
         ),
     Line =
-        case ets:select(S#state.ets, MS, 1) of
+        case my_ets:select(S#state.ets, MS, 1) of
             {[Line1 | _], _Continue} ->
                 Line1;
             _ ->
@@ -114,7 +114,7 @@ do_player_join_map_call(S, Req) ->
     case map_interface:player_join_call(MapPid, Req) of
         ok ->
             %4. 更新
-            ets:update_counter(S#state.ets, LineID, {#m_map_line.in, 1}),
+            my_ets:update_counter(S#state.ets, LineID, {#m_map_line.in, 1}),
             #r_change_map_ack{map_id = MapID, line_id = LineID, map_pid = MapPid, pos = Pos};
         _ ->
             #r_change_map_ack{map_id = MapID, line_id = LineID, map_pid = MapPid, error = -1}
@@ -128,9 +128,9 @@ do_player_exit_map_call(S, Req) ->
     ?WARN("player ~p exit map_~p_~p", [Uid, S#state.map_id, LineID]),
 
     %2.
-    case ets:lookup(S#state.ets, LineID) of
+    case my_ets:read(S#state.ets, LineID) of
         [#m_map_line{pid = Pid}] ->
-            ets:update_counter(S#state.ets, LineID, {#m_map_line.in, -1}),
+            my_ets:update_counter(S#state.ets, LineID, {#m_map_line.in, -1}),
             %% @todo 退出地图失败是否要处理
             map_interface:player_exit_call(Pid, Req);
         _ ->
@@ -147,7 +147,7 @@ create_new_line(S, MapID, LineID) ->
         dead_line = misc_time:milli_seconds() + ?LINE_LIFETIME
     },
     erlang:send_after(?LINE_LIFETIME, self(), {stop_line, Line}),
-    ets:insert(S#state.ets, Line),
+    my_ets:write(S#state.ets, Line),
     ?WARN("map_~p_~p ~p start, mgr ets ~p", [MapID, LineID, Pid, S#state.ets]),
     Line.
 
@@ -166,7 +166,7 @@ stop_map_line(S, Line) ->
     ?WARN("map_~p_~p ~p will be stopped", [Mid, LineId, Pid]),
     % 预留保护时间让玩家退出
     erlang:send_after(?DEAD_LINE_PROTECT, self(), {force_del_line_now, Line}),
-    ets:update_element(S#state.ets, LineId, {#m_map_line.status, ?MAP_READY_EXIT}),
+    my_ets:update_element(S#state.ets, LineId, {#m_map_line.status, ?MAP_READY_EXIT}),
     ps:send(Pid, start_stop_now),
     ok.
 
@@ -174,5 +174,5 @@ force_del_line(S, Line) ->
     #m_map_line{map_id = Mid, line_id = LineId, pid = Pid} = Line,
     ?WARN("map_~p_~p ~p will be killed", [Mid, LineId, Pid]),
     catch erlang:exit(Pid, normal),
-    ets:delete(S#state.ets, LineId),
+    my_ets:delete(S#state.ets, LineId),
     ok.

@@ -61,13 +61,13 @@ get_server_type() ->
     end.
 
 get_center_server_pid() ->
-    case ets:lookup(?CenterServerEts, ?CenterServerKey) of
+    case my_ets:read(?CenterServerEts, ?CenterServerKey) of
         [#recCenterInfo{pid = Pid}] -> Pid;
         _ -> undefined
     end.
 
 is_center_ready() ->
-    case ets:lookup(?CenterServerEts, ?CenterServerKey) of
+    case my_ets:read(?CenterServerEts, ?CenterServerKey) of
         [#recCenterInfo{status = ?SEVER_STATUS_DONE}] -> true;
         _ -> false
     end.

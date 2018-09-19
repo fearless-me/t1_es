@@ -32,7 +32,6 @@
 
 %%-------------------------------------------------------------------
 init() ->
-    attr_rw:init_default(0),
     player_rw:init_default(),
     player_rw:set_status(?PS_INIT),
     ok.

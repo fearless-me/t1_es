@@ -7,19 +7,45 @@
 %%% Created : 15. 八月 2018 15:37
 %%%-------------------------------------------------------------------
 
--module(ets_cache).
+-module(my_ets).
 -author("mawenhong").
 %% API
 -export([
     new/2,
-    member/2,
+    clear/1, info/1, size/1, exists/1,
+    member/2, to_list/1, foldl/3,
     read/2, read/3, read_element/3,
-    write/2, replace/3, update_element/3, delete/2,
+    write/2,
+    delete/2,
+    update_element/3, update_counter/3,
     select/2, match/2, match_object/2, match_object/3
 ]).
 
+info(Name) -> ets:info(Name).
+
+size(Name) ->
+    case ets:info(Name, size) of
+        undefined -> 0;
+        V -> V
+    end.
+
+clear(Name) ->
+    ets:delete_all_objects(Name).
+
+to_list(Name) ->
+    ets:tab2list(Name).
+
+foldl(F, Acc, T) ->
+    ets:foldl(F, Acc, T).
+
+exists(Name) ->
+    ets:info(Name, named_table) =/= undefined.
+
 new(Name, Options) ->
     ets:new(Name, Options).
+
+update_counter(Tab, Key, UpdateOp)->
+    ets:update_counter(Tab, Key, UpdateOp).
 
 %%-------------------------------------------------------------------
 member(Tab, Key) ->
@@ -39,13 +65,6 @@ read_element(Tab, Key, Pos)->
 
 %%-------------------------------------------------------------------
 write(Tab,Val) ->   ets:insert(Tab, Val).
-
-%%-------------------------------------------------------------------
-replace(Tab, Key, Val) ->
-    case ets:member(Tab, Key) of
-        true -> ets:insert(Tab, Val);
-        _ -> ets:insert_new(Tab, Val)
-    end.
 
 %%-------------------------------------------------------------------
 update_element(Tab, Key, ElementSpec) ->

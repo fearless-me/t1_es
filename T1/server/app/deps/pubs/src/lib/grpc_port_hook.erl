@@ -50,7 +50,7 @@ get_config_rehash(_Node, Port) ->
 -define(RPC_PORT_ETS, gen_rpc_node_port).
 test() ->
     catch ensure_ets(),
-    ets:delete_all_objects(?RPC_PORT_ETS),
+    my_ets:clear(?RPC_PORT_ETS),
     CS = "t1_center@10.1.1.253",
     GS1 = lists:map(
         fun(X) ->
@@ -74,20 +74,20 @@ test() ->
 
 port_print(Node) ->
     Port = get_config(Node),
-    ets:insert(?RPC_PORT_ETS, {Port, Node}).
+    my_ets:write(?RPC_PORT_ETS, {Port, Node}).
 
 
 ensure_ets() ->
-    case ets:info(?RPC_PORT_ETS, size) of
-        undefined ->
-            ets:new(?RPC_PORT_ETS, [named_table, {keypos, 1}, bag, public]);
+    case my_ets:exists(?RPC_PORT_ETS) of
+        false ->
+            my_ets:new(?RPC_PORT_ETS, [named_table, {keypos, 1}, public]);
         _ ->
             ok
     end.
 
 check_conflict() ->
     X =
-        ets:foldl(
+        my_ets:foldl(
             fun
                 (V, Conflict) when is_list(V) ->
                     case length(V) > 1 of

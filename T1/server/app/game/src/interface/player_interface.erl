@@ -20,10 +20,10 @@ get_attr(_Uid, _AttrId) ->
     100.
 
 get_hp(Uid) ->
-    ets_cache:read_element(?ETS_CACHE_ONLINE_PLAYER, Uid, #m_cache_online_player.hp).
+    my_ets:read_element(?ETS_CACHE_ONLINE_PLAYER, Uid, #m_cache_online_player.hp).
 
 get_hp_percent(_Uid) ->
     1.0.
 
 get_map_pid(Uid) ->
-    ets_cache:read_element(?ETS_CACHE_ONLINE_PLAYER, Uid, #m_cache_online_player.map_pid).
+    my_ets:read_element(?ETS_CACHE_ONLINE_PLAYER, Uid, #m_cache_online_player.map_pid).

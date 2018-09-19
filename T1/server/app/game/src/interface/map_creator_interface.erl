@@ -23,7 +23,7 @@
 
 %%-------------------------------------------------------------------
 map_mgr_l(MapID) ->
-    case ets:lookup(?MAP_MGR_ETS, MapID) of
+    case my_ets:read(?MAP_MGR_ETS, MapID) of
         [#m_map_mgr{mgr = Mgr} | _] -> Mgr;
         _ -> undefined
     end.
@@ -52,7 +52,7 @@ do_map_mgr_lr(false, Uid, #mapCfg{is_cross = 1, id = MapID}) ->
     end;
 %% 在跨服上找跨服地图/在普通副找非跨服地图
 do_map_mgr_lr(_Any, _Uid, #mapCfg{id = MapID}) ->
-    case ets:lookup(?MAP_MGR_ETS, MapID) of
+    case my_ets:read(?MAP_MGR_ETS, MapID) of
         [#m_map_mgr{mgr = Mgr} | _] -> Mgr;
         _ -> undefined
     end.
@@ -86,7 +86,7 @@ is_cross_map(MapId) ->
 %%--------------------------------
 map_line_info(line_count, all) ->
     QS = ets:fun2ms(fun(Info) -> {Info#m_map_mgr.map_id, Info#m_map_mgr.line_ets} end),
-    List = ets:select(?MAP_MGR_ETS),
+    List = my_ets:select(?MAP_MGR_ETS),
     lists:map(
         fun({MapId, Ets}) ->
             ok

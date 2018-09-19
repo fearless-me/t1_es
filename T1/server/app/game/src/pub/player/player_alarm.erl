@@ -11,10 +11,10 @@
 -include("logger.hrl").
 
 %% API
--export([init/0, save/0]).
+-export([online/0, save/0]).
 
 %%
-init() ->
+online() ->
     ?DEBUG("load player ~p alarm data from ets",
         [player_rw:get_uid()]),
     ok.

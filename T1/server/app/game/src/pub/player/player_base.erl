@@ -15,11 +15,11 @@
 -include("gs_common_rec.hrl").
 
 %% API
--export([init/1]).
+-export([online/1]).
 -export([send_init_data/0]).
 -export([start_walk/1, stop_move/1]).
 %%-------------------------------------------------------------------
-init(Player) ->
+online(Player) ->
     #p_player{
         aid = Aid, uid = Uid, sid = Sid,
         name = Name, level = Level, sex = Sex,
@@ -37,6 +37,7 @@ init(Player) ->
     ?DEBUG("player ~p of ~p enter map ~p",[Uid, Aid, Mid]),
     player_rw:set_map(#m_player_map{map_id = Mid, line_id = LineId}),
     %% todo 设置buff， cd等等
+
     ok.
 
 %%-------------------------------------------------------------------

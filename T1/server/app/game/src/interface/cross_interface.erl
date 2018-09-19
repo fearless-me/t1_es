@@ -34,7 +34,7 @@
 
 
 is_player_in_cross(Uid) ->
-     ets_cache:member(?ETS_CACHE_PLAYER_CROSS, Uid).
+     my_ets:member(?ETS_CACHE_PLAYER_CROSS, Uid).
 
 update_player_cross(Uid, Params) ->
     IsCross = gs_interface:is_cross(),

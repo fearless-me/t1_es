@@ -35,16 +35,16 @@ try_select(Sid, Policy) -> select_cross(Policy, Sid).
 %%-------------------------------------------------------------------
 -define(CROSS_SELECT_POLICY_ETS, cross_selector_ets).
 init() ->
-    ets:new(?CROSS_SELECT_POLICY_ETS, [public, named_table, {keypos, #pub_kv.key}, ?ETS_WC, ?ETS_RC]),
-    ets:insert(?CROSS_SELECT_POLICY_ETS, #pub_kv{key = ?SelectPolicy_Turn, value = 0}),
-    ets:insert(?CROSS_SELECT_POLICY_ETS, #pub_kv{key = ?SelectPolicy_Full, value = 0}),
-    ets:insert(?CROSS_SELECT_POLICY_ETS, #pub_kv{key = ?SelectPolicy_Rand, value = 0}),
+    my_ets:new(?CROSS_SELECT_POLICY_ETS, [public, named_table, {keypos, #pub_kv.key}, ?ETS_WC, ?ETS_RC]),
+    my_ets:write(?CROSS_SELECT_POLICY_ETS, #pub_kv{key = ?SelectPolicy_Turn, value = 0}),
+    my_ets:write(?CROSS_SELECT_POLICY_ETS, #pub_kv{key = ?SelectPolicy_Full, value = 0}),
+    my_ets:write(?CROSS_SELECT_POLICY_ETS, #pub_kv{key = ?SelectPolicy_Rand, value = 0}),
     ok.
 
 %%-------------------------------------------------------------------
 select_cross(?SelectPolicy_Turn) ->
     L = common_interface:sel_server_id(?SERVER_TYPE_CGS),
-    N = ets:update_counter(?CROSS_SELECT_POLICY_ETS, ?SelectPolicy_Turn, {#pub_kv.value, 1}),
+    N = my_ets:update_counter(?CROSS_SELECT_POLICY_ETS, ?SelectPolicy_Turn, {#pub_kv.value, 1}),
     get_n(L, N);
 select_cross(?SelectPolicy_Full) ->
     Q = ets:fun2ms(

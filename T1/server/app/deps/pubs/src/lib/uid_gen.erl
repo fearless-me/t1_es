@@ -102,14 +102,14 @@ init_1(AreaID, Sid, UIDIndex) ->
              throw(fatal_error)
      end,
 
-    ets:new(?UIDEts, [public, named_table, {keypos, #recUID.type}, ?ETS_WC, ?ETS_RC]),
+    my_ets:new(?UIDEts, [public, named_table, {keypos, #recUID.type}, ?ETS_WC, ?ETS_RC]),
     List = lists:seq(?UID_TYPE_START, ?UID_TYPE_END),
     Fun =
         fun(UIDType) ->
             MinUID = gen(UIDType, AreaID, Sid, UIDIndex, 0),
             MaxUID = gen(UIDType, AreaID, Sid, UIDIndex, (1 bsl ?BIT_ACCU) - 1),
 
-            ets:insert(?UIDEts, #recUID{type = UIDType,curUID = MinUID,minUID = MinUID,maxUID = MaxUID}),
+            my_ets:write(?UIDEts, #recUID{type = UIDType,curUID = MinUID,minUID = MinUID,maxUID = MaxUID}),
 
             ?INFO("UIDType:~.2.0w, MinUID:~.19.0w, MaxUID:~.19.0w, Count:~.10.0w",
                 [
@@ -202,8 +202,8 @@ parse(UID) ->
 %%当达到最大UID值时，会自动从最小值再次开始
 -spec gen_1(Type) -> uint32() when Type::uid_type().
 gen_1(Type) ->
-    [#recUID{minUID = MinUID, maxUID = MaxUID}] = ets:lookup(?UIDEts, Type),
-    ets:update_counter(?UIDEts, Type, {#recUID.curUID, 1, MaxUID, MinUID}).
+    [#recUID{minUID = MinUID, maxUID = MaxUID}] = my_ets:read(?UIDEts, Type),
+    my_ets:update_counter(?UIDEts, Type, {#recUID.curUID, 1, MaxUID, MinUID}).
 
 %% ================以下两个方法仅针对角色UID================
 %% 角色UID转换为短UID

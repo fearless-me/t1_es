@@ -107,7 +107,7 @@ leaveTeam({RoleID, Pid, NetPid, IsNotify}) ->
 canLeaveTeam(RoleID) ->
     case cs_team_interface:getTeamID(RoleID) of
         TeamID when TeamID > 0 ->
-            {true, ets:lookup(?Ets_TeamList, TeamID)};
+            {true, my_ets:read(?Ets_TeamList, TeamID)};
         _ ->
             {false, -999}
     end.

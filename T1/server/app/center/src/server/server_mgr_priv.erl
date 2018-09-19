@@ -37,7 +37,7 @@ tick() ->
 
 check() ->
 	NowTime = misc_time:milli_seconds(),
-	ServerList = ets:tab2list(?ETS_CACHE_SERVER_CHECK),
+	ServerList = my_ets:to_list(?ETS_CACHE_SERVER_CHECK),
 	do_check(NowTime, ServerList, []),
 	ok.
 
@@ -71,7 +71,7 @@ server_ready(_WorkerPid, {ServerID})->
 
 %%%-------------------------------------------------------------------
 ack_now(_WindowPid, {ServerID})->
-	case ets:lookup(?ETS_CACHE_SERVER_CHECK, ServerID) of
+	case my_ets:read(?ETS_CACHE_SERVER_CHECK, ServerID) of
 		[#m_cache_server_check{id = ServerID}] ->
 			case mne_ex:dirty_read(?ShareServerInfoName, ServerID) of
 				[#m_share_server_info{node = GSNode, worker = WorkerPid}]->

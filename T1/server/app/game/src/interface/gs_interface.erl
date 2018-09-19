@@ -62,8 +62,7 @@ get_run_no()-> gs_econfig:get_run_no().
 get_center_node() -> gs_econfig:get_center_node().
 
 %%-------------------------------------------------------------------
-total_online() ->
-    ets:info(?ETS_CACHE_ACCOUNT_PID_SOCK, size).
+total_online() -> my_ets:size(?ETS_CACHE_ACCOUNT_PID_SOCK).
 
 %%-------------------------------------------------------------------
 ppid_name(Aid) ->
