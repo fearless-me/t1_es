@@ -44,8 +44,9 @@
 
 
 
--define(OP_TCP, 992).
--define(OP_SET_TERMINAL_COLOR, 999).
+-define(OP_TCP, 991).
+-define(OP_SET_TERMINAL_COLOR, 998).
+-define(OP_SET_WINDOW_RSH, 999).
 
 
 -define(DEV_MODE, dev).
@@ -99,6 +100,7 @@ show_cmd(?DEV_MODE) ->
             
     		"\t~-10.wtcp测试~n"
             "\t~-10.wwindows控制台支持彩色显示~n"
+			"\t~-10.wwindows支持部署分布式服务器~n"
             "\t~-10.w退出~n"
             "~n##########################################################~n~n",
             [
@@ -114,7 +116,7 @@ show_cmd(?DEV_MODE) ->
 
                 ?OP_GEN_NETMSG, ?OP_GEN_RW_CODE, ?OP_GEN_ERRORCODE, ?OP_GEN_LOGDEFINE, ?OP_EXPORT_DBSTRUCT, ?OP_BAK_DBSTRUCT,
 
-                ?OP_TCP, ?OP_SET_TERMINAL_COLOR,
+                ?OP_TCP, ?OP_SET_TERMINAL_COLOR, ?OP_SET_WINDOW_RSH,
                 ?OP_EXIT
             ]
         );
@@ -214,7 +216,9 @@ dispatchInput2(?OP_EDIT_LOGDEFINE) ->
     erlang:spawn_monitor(fun() -> os:cmd("start subcall.bat notepad++.exe Logdefine.config") end);	
 	
 dispatchInput2(?OP_SET_TERMINAL_COLOR) ->
-     erlang:spawn_monitor(fun() -> os:cmd("start /WAIT terminal_color.bat") end);	 
+     erlang:spawn_monitor(fun() -> os:cmd("start /WAIT terminal_color.bat") end);	
+dispatchInput2(?OP_SET_WINDOW_RSH) ->
+     erlang:spawn_monitor(fun() -> os:cmd("start /WAIT win_rsh.bat") end);		 
 dispatchInput2(_) ->
     color:error_log("\t!!! error retry !!!~n~n").
 

@@ -1,6 +1,7 @@
 @echo off
 if "%1" == "h" goto begin
-mshta vbscript:createobject("wscript.shell").run("""%~nx0"" h",0)(window.close)&&exit
+%1 mshta vbscript:CreateObject("Shell.Application").ShellExecute("cmd.exe","/c %~s0 ::","","runas",1)(window.close)&&exit
+cd /d "%~dp0"
 :begin
 cd ../../../
 TortoiseProc.exe /command:add /path:"tools/NetProtor/msg*Server\\app\\game\\src\\pub\\netmsg*Client\\Assets\\Code\\Base\\Net\\Messages" /closeonend:0

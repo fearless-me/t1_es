@@ -478,7 +478,7 @@ do_set_system_time(win32, Date) ->
 master_node() ->
     case init:get_argument(master) of
         error -> undefined;
-        {ok, [[MasterNode]]} -> erlang:list_to_atom(MasterNode)
+        {ok, [[MasterNode]]} -> misc:to_atom(MasterNode)
     end.
 
 fn_wrapper({Msg, stdio, Thunk}) ->
