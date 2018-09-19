@@ -209,7 +209,7 @@ getGoodsChangeStr(?ItemDeleteReasonRoleAwake) ->"角色觉醒激活消耗";
 getGoodsChangeStr(?ItemDeleteChangeName) ->"使用道具改名";
 getGoodsChangeStr(?ItemDeletePassiveSkillUp) ->"被动技能升级消耗";
 getGoodsChangeStr(Reason) ->
-	?ERROR("getGoodsChangeStr:unknow[~w] ~p",[Reason, misc:getStackTrace()]),
+	?ERROR("getGoodsChangeStr:unknow[~w] ~p",[Reason, misc:callstack()]),
 	"未知".
 
 getCoinChangeResonStr(?CoinSourceMail) ->"邮件获得";

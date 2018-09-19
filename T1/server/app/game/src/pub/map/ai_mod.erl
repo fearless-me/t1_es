@@ -163,7 +163,7 @@ change_state(Uid, OldState, NewState) ->
     % 先退出旧状态
     ai_state:on_exit(Uid, OldState),
     %在更新状态
-    ai_rw:set_ai_state(NewState),
+    ai_rw:set_ai_state(Uid, NewState),
     ai_state:on_enter(Uid, NewState),
     ok.
 

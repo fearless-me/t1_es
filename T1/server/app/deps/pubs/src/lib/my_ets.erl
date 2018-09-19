@@ -11,14 +11,14 @@
 -author("mawenhong").
 %% API
 -export([
-    new/2,
+    new/2,  delete/1,
     clear/1, info/1, size/1, exists/1,
     member/2, to_list/1, foldl/3,
     read/2, read/3, read_element/3,
     write/2,
     delete/2,
     update_element/3, update_counter/3,
-    select/2, match/2, match_object/2, match_object/3
+    select/2, select/3, match/2, match/3, match_object/2, match_object/3
 ]).
 
 info(Name) -> ets:info(Name).
@@ -40,6 +40,9 @@ foldl(F, Acc, T) ->
 
 exists(Name) ->
     ets:info(Name, named_table) =/= undefined.
+
+delete(Name) ->
+    ets:delete(Name).
 
 new(Name, Options) ->
     ets:new(Name, Options).
@@ -77,8 +80,11 @@ delete(Tab, Key) ->
 %%-------------------------------------------------------------------
 select(Tab, QS) -> ets:select(Tab, QS).
 
+select(Tab, QS, Limit) -> ets:select(Tab, QS, Limit).
+
 %%-------------------------------------------------------------------
 match(Tab, Pattern) -> ets:match(Tab, Pattern).
+match(Tab, Pattern, Limit) -> ets:match(Tab, Pattern, Limit).
 
 %%-------------------------------------------------------------------
 match_object(Tab, Pattern) -> ets:match_object(Tab, Pattern).

@@ -43,7 +43,7 @@ init() ->
 
 %%-------------------------------------------------------------------
 select_cross(?SelectPolicy_Turn) ->
-    L = common_interface:sel_server_id(?SERVER_TYPE_CGS),
+    L = common_interface:get_all_sid(?SERVER_TYPE_CGS),
     N = my_ets:update_counter(?CROSS_SELECT_POLICY_ETS, ?SelectPolicy_Turn, {#pub_kv.value, 1}),
     get_n(L, N);
 select_cross(?SelectPolicy_Full) ->
@@ -63,7 +63,7 @@ select_cross(?SelectPolicy_Full) ->
         end,
     get_n(E, 1);
 select_cross(_) ->
-    L = common_interface:sel_server_id(?SERVER_TYPE_CGS),
+    L = common_interface:get_all_sid(?SERVER_TYPE_CGS),
     get_n(L, misc:rand(1, 1000)).
 
 get_n([], _N) ->

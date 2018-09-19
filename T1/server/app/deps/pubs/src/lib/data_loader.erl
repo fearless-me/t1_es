@@ -186,14 +186,10 @@ i_start_task_group(#loader_task_group{mode = ?TASK_PARALLEL, ref = GRef, task_li
 i_start_1_task(GRef, #loader_task{ref = TRef, mfa = Mfa} = Task) ->
     ?WARN("\ttask group ~p task ~p ...", [GRef, TRef]),
     case catch misc:apply_fun(Mfa) of
-    {'EXIT', Error} -> i_check_apply(Error, Task);
+    {'EXIT', Error} -> ?FATAL("check task ~p error ~p", [Task, Error]);
     _ -> skip
     end,
     ok.
-
-i_check_apply(Error, Task) ->
-    ?FATAL("check task ~p error ~p", [Task, Error]);
-i_check_apply(_, _) -> skip.
 
 
 i_all_done([]) -> true;

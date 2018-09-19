@@ -26,9 +26,9 @@ on_info_msg({player_use_skill, Req}) ->
     #r_player_use_skill_req{uid=Aer, skill_id=SkillId, tar=Der, serial = Serial} = Req,
     combat_mod:use_skill(Aer, Der, SkillId, Serial),
     ok;
-on_info_msg({player_use_skill, Req}) ->
+on_info_msg({player_add_buff, Req}) ->
     #r_player_add_buff_req{uid = Aer, buff_id = BuffId, level = Level} = Req,
-    combat_mod:add_buff(Aer, BuffId, Level),
+    buff_mod:add_buff(Aer, BuffId, Level),
     ok;
 on_info_msg(Info) ->
     ?DEBUG("info:~p",[Info]),

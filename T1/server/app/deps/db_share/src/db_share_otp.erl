@@ -33,11 +33,11 @@ add_tab(Sid, Tab, TabName) ->
         sid = Sid,
         tab_name = TabName
     },
-    my_ets:write(?ETS_SHARE_TABLE_NAME, Info),
+    ets:insert(?ETS_SHARE_TABLE_NAME, Info),
     ok.
 
 get_tab(Sid, Tab) ->
-    my_ets:lookup_element(
+    ets:lookup_element(
         ?ETS_SHARE_TABLE_NAME, {Sid, Tab}, #share_table_name.tab_name).
 
 
@@ -54,7 +54,7 @@ start_link() ->
 mod_init(_Args) ->
     erlang:process_flag(trap_exit, true),
     erlang:process_flag(priority, high),
-    my_ets:new(
+    ets:new(
         ?ETS_SHARE_TABLE_NAME,
         [
             named_table,

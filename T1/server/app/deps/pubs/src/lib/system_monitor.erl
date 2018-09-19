@@ -110,10 +110,10 @@ do_handle_cast(Request, State) ->
 %%--------------------------------------------------------------------
 remove_monitor_set([], _Key, Acc) ->
     Acc;
+remove_monitor_set([{Key, _X} | Left], Key, Acc) ->
+    lists:append(Left, Acc);
 remove_monitor_set([Key | Left], Key, Acc) ->
     [Left | Acc];
-remove_monitor_set([{Key, _X} | Left], Key, Acc) ->
-   lists:append(Left, Acc);
 remove_monitor_set([Conf | Left], Key, Acc) ->
     remove_monitor_set(Left, Key, [Conf | Acc]).
 

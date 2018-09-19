@@ -200,8 +200,8 @@ dirty_read(Table, Key) ->
     case mnesia:dirty_read(Table, Key) of
         List when erlang:is_list(List) ->
             List;
-        _Error ->
-            ?ERROR("dirty_read:~p,~p", [Table, Key]),
+        Error ->
+            ?ERROR("dirty_read(~p,~p) error:~p", [Table, Key, Error]),
             []
     end.
 
@@ -209,8 +209,8 @@ dirty_match(Table, Match) ->
     case mnesia:dirty_match_object(Table, Match) of
         List when erlang:is_list(List) ->
             List;
-        _Error ->
-            ?ERROR("dirty_match:~p,~p", [Table, Match]),
+        Error ->
+            ?ERROR("dirty_match(~p,~p) error:~p", [Table, Match, Error]),
             []
     end.
 
@@ -218,8 +218,8 @@ dirty_select(Table, Spec) ->
     case mnesia:dirty_select(Table, Spec) of
         List when erlang:is_list(List) ->
             List;
-        _Error ->
-            ?ERROR("dirty_select:~p,~p", [Table, Spec]),
+        Error ->
+            ?ERROR("dirty_select(~p,~p) error:~p", [Table, Spec, Error]),
             []
     end.
 

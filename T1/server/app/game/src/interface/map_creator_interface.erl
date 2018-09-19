@@ -86,7 +86,7 @@ is_cross_map(MapId) ->
 %%--------------------------------
 map_line_info(line_count, all) ->
     QS = ets:fun2ms(fun(Info) -> {Info#m_map_mgr.map_id, Info#m_map_mgr.line_ets} end),
-    List = my_ets:select(?MAP_MGR_ETS),
+    List = my_ets:select(?MAP_MGR_ETS, QS),
     lists:map(
         fun({MapId, Ets}) ->
             ok
