@@ -97,7 +97,7 @@
         <counts>
           <entry key="app" value="12" />
           <entry key="config" value="14" />
-          <entry key="erl" value="47697" />
+          <entry key="erl" value="47720" />
           <entry key="ers" value="1725" />
           <entry key="ft" value="2" />
           <entry key="gitignore" value="1" />
@@ -108,7 +108,7 @@
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
-          <entry key="Erlang" value="47697" />
+          <entry key="Erlang" value="47720" />
           <entry key="Erlang Header" value="4390" />
           <entry key="Erlang Terms" value="14" />
           <entry key="Erlang/OTP app" value="30" />
@@ -163,11 +163,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/game/src/pub/condition_event/event_action.erl">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="254">
-              <caret line="23" column="69" selection-start-line="23" selection-start-column="69" selection-end-line="23" selection-end-column="69" />
+            <state relative-caret-position="290">
+              <caret line="23" selection-start-line="23" selection-end-line="23" />
             </state>
           </provider>
         </entry>
@@ -184,8 +184,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/game/src/pub/config/cfg_skill.hrl">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="534">
-              <caret line="99" column="13" selection-start-line="99" selection-start-column="4" selection-end-line="99" selection-end-column="13" />
+            <state relative-caret-position="612">
+              <caret line="102" column="7" selection-start-line="102" selection-start-column="7" selection-end-line="102" selection-end-column="7" />
             </state>
           </provider>
         </entry>
@@ -193,8 +193,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/game/src/pub/config/chs/cfg_skill_chs.erl">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="758">
-              <caret line="64" column="8" selection-start-line="64" selection-start-column="8" selection-end-line="64" selection-end-column="8" />
+            <state relative-caret-position="290">
+              <caret line="95" column="8" selection-start-line="95" selection-start-column="8" selection-end-line="95" selection-end-column="8" />
             </state>
           </provider>
         </entry>
@@ -212,16 +212,16 @@
         <entry file="file://$PROJECT_DIR$/app/game/src/pub/config/cfg_conditional_event.hrl">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="456">
-              <caret line="29" column="9" lean-forward="true" selection-start-line="29" selection-start-column="9" selection-end-line="29" selection-end-column="9" />
+              <caret line="29" column="9" selection-start-line="29" selection-start-column="9" selection-end-line="29" selection-end-column="9" />
             </state>
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app/game/src/pub/map/mod_combat.erl">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="472">
-              <caret line="88" column="64" lean-forward="true" selection-start-line="88" selection-start-column="64" selection-end-line="88" selection-end-column="64" />
+            <state relative-caret-position="290">
+              <caret line="151" column="66" selection-start-line="151" selection-start-column="66" selection-end-line="151" selection-end-column="66" />
             </state>
           </provider>
         </entry>
@@ -230,7 +230,7 @@
         <entry file="file://$PROJECT_DIR$/app/game/src/pub/map/mod_buff.erl">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="444">
-              <caret line="29" column="37" lean-forward="true" selection-start-line="29" selection-start-column="37" selection-end-line="29" selection-end-column="37" />
+              <caret line="29" selection-start-line="29" selection-end-line="29" />
             </state>
           </provider>
         </entry>
@@ -388,9 +388,9 @@
         <option value="$PROJECT_DIR$/app/game/src/pub/map/mod_map_priv.erl" />
         <option value="$PROJECT_DIR$/app/game/src/pub/map/mod_copy.erl" />
         <option value="$PROJECT_DIR$/app/game/src/pub/map/mod_buff.erl" />
-        <option value="$PROJECT_DIR$/app/game/src/pub/map/mod_combat.erl" />
         <option value="$PROJECT_DIR$/app/game/src/pub/condition_event/condition_event.erl" />
         <option value="$PROJECT_DIR$/app/game/src/pub/condition_event/event_action.erl" />
+        <option value="$PROJECT_DIR$/app/game/src/pub/map/mod_combat.erl" />
       </list>
     </option>
   </component>
@@ -744,7 +744,7 @@
     <property name="SearchEverywhereHistoryKey" value="&#9;FILE&#9;file://C:/Program Files/erl10.0/lib/erts-10.0/src/erlang.erl" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1537414514740" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1537414935082" />
     <property name="last_opened_file_path" value="E:/DataTool/Server" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
@@ -1316,13 +1316,13 @@
       <workItem from="1537270286968" duration="4531000" />
       <workItem from="1537325291321" duration="5481000" />
       <workItem from="1537335154805" duration="9021000" />
-      <workItem from="1537356335326" duration="7082000" />
+      <workItem from="1537356335326" duration="7509000" />
     </task>
     <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="2071569000" />
+    <option name="totallyTimeSpent" value="2071996000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -1691,31 +1691,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/game/src/pub/config/cfg_skill.hrl">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="534">
-          <caret line="99" column="13" selection-start-line="99" selection-start-column="4" selection-end-line="99" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/game/src/pub/map/mod_buff.erl">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="444">
-          <caret line="29" column="37" lean-forward="true" selection-start-line="29" selection-start-column="37" selection-end-line="29" selection-end-column="37" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/game/src/pub/map/mod_combat.erl">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="472">
-          <caret line="88" column="64" lean-forward="true" selection-start-line="88" selection-start-column="64" selection-end-line="88" selection-end-column="64" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/game/src/pub/config/chs/cfg_skill_chs.erl">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="758">
-          <caret line="64" column="8" selection-start-line="64" selection-start-column="8" selection-end-line="64" selection-end-column="8" />
+          <caret line="29" selection-start-line="29" selection-end-line="29" />
         </state>
       </provider>
     </entry>
@@ -1729,7 +1708,7 @@
     <entry file="file://$PROJECT_DIR$/app/game/src/pub/config/cfg_conditional_event.hrl">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="456">
-          <caret line="29" column="9" lean-forward="true" selection-start-line="29" selection-start-column="9" selection-end-line="29" selection-end-column="9" />
+          <caret line="29" column="9" selection-start-line="29" selection-start-column="9" selection-end-line="29" selection-end-column="9" />
         </state>
       </provider>
     </entry>
@@ -1742,8 +1721,29 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/app/game/src/pub/condition_event/event_action.erl">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="254">
-          <caret line="23" column="69" selection-start-line="23" selection-start-column="69" selection-end-line="23" selection-end-column="69" />
+        <state relative-caret-position="290">
+          <caret line="23" selection-start-line="23" selection-end-line="23" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/game/src/pub/config/chs/cfg_skill_chs.erl">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="290">
+          <caret line="95" column="8" selection-start-line="95" selection-start-column="8" selection-end-line="95" selection-end-column="8" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/game/src/pub/config/cfg_skill.hrl">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="612">
+          <caret line="102" column="7" selection-start-line="102" selection-start-column="7" selection-end-line="102" selection-end-column="7" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/game/src/pub/map/mod_combat.erl">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="290">
+          <caret line="151" column="66" selection-start-line="151" selection-start-column="66" selection-end-line="151" selection-end-column="66" />
         </state>
       </provider>
     </entry>

@@ -74,12 +74,10 @@ instant_skill(Aer, Tar, SkillId, Serial) ->
     ok.
 
 active_skill_once(Aer, Tar, Pos, SkillId, Serial)->
+
+    trigger_before_hit_event(Aer, Tar, SkillId),
+    
     TargetList = calculate_target_list(Aer, SkillId, Pos),
-
-    #skillCfg{beforehit = EventList} = getCfg:getCfgByArgs(cfg_skill, SkillId),
-    condition_event:action_all(EventList, [Aer, Tar]),
-
-    trigger_cast_tick_event(Aer, Tar, SkillId),
 
     %% todo 是否可以优化，因为这个是视野广播，不用给每个人发一次
     %% todo 一次性广播给所有同样的消息，让客户端呢判断下
@@ -93,7 +91,8 @@ active_skill_once(Aer, Tar, Pos, SkillId, Serial)->
 
 %%-------------------------------------------------------------------
 calculate_dmg(Uid, SkillId, TargetUid, Serial) ->
-    trigger_before_hit_event(Uid, TargetUid, SkillId),
+
+    trigger_hit_event(Uid, TargetUid, SkillId),
     
     HitMsg = #pk_GS2U_HitTarget{
         uid = TargetUid, src_uid = Uid, cause = ?HIT_REASON_SKILL, misc = SkillId, serial = Serial
@@ -150,6 +149,7 @@ do_tick_cur_skill(Uid, SkillId) ->
     case can_skill_active_tick(Uid, SkillId) of
         true ->
             Pos = object_rw:get_persist_pos(Uid),
+            ?TRY_CATCH(trigger_cast_tick_event(Uid, Uid, SkillId)),
             ?TRY_CATCH(active_skill_once(Uid, Uid, Pos, SkillId,  Serial), Err1, Stk1),
             ?TRY_CATCH(check_end_skill_tick(Uid, SkillId), Err2, Stk2),
             ok;
@@ -226,11 +226,14 @@ trigger_before_cast_event(Aer, Der, SkillId) ->
     #skillCfg{beforecast = EventList} = getCfg:getCfgByArgs(cfg_skill, SkillId),
     condition_event:action_all(EventList, [Aer, Der]).
 
-
 trigger_cast_tick_event(Aer, Der, SkillId) ->
     #skillCfg{castingtick = EventList} = getCfg:getCfgByArgs(cfg_skill, SkillId),
     condition_event:action_all(EventList, [Aer, Der]).
 
 trigger_before_hit_event(Aer, Der, SkillId) ->
+    #skillCfg{beforehit = EventList} = getCfg:getCfgByArgs(cfg_skill, SkillId),
+    condition_event:action_all(EventList, [Aer, Der]).
+
+trigger_hit_event(Aer, Der, SkillId) ->
     #skillCfg{beforehit = EventList} = getCfg:getCfgByArgs(cfg_skill, SkillId),
     condition_event:action_all(EventList, [Aer, Der]).
