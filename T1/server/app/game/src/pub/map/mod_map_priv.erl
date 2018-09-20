@@ -6,7 +6,7 @@
 %%% @end
 %%% Created : 10. 五月 2018 19:57
 %%%-------------------------------------------------------------------
--module(map_mod_priv).
+-module(mod_map_priv).
 -author("mawenhong").
 
 -include("logger.hrl").
@@ -97,7 +97,7 @@ player_join_call(S, _From, Any) ->
 force_teleport_call(S, From, #r_teleport_req{uid = Uid, tar = TarPos}) ->
     map_srv:call_reply(From, ok),
     Cur = object_rw:get_cur_pos(Uid),
-    ?TRY_CATCH(move_mod:on_obj_pos_change(Uid, TarPos)),
+    ?TRY_CATCH(mod_move:on_obj_pos_change(Uid, TarPos)),
     ?DEBUG("player ~p teleport from ~w to ~w in map ~p_~p",
         [Uid, Cur, TarPos, map_rw:get_map_id(), map_rw:get_line_id()]),
     {ok, S}.
@@ -182,8 +182,8 @@ tick_player_1(undefined, Uid) ->
     %% @todo 加入异常处理删除该玩家
     ?ERROR("player ~p may be leave map", [Uid]);
 tick_player_1(Obj, _) ->
-    ?TRY_CATCH(move_mod:update(Obj), Err1, Stk1),
-    ?TRY_CATCH(combat_mod:tick(Obj), Err2, Stk2),
+    ?TRY_CATCH(mod_move:update(Obj), Err1, Stk1),
+    ?TRY_CATCH(mod_combat:tick(Obj), Err2, Stk2),
     ok.
 
 %%-------------------------------------------------------------------
@@ -196,9 +196,9 @@ tick_monster(_S) ->
 tick_monster_1(undefined, Uid) ->
     ?ERROR("monster ~p  ~p not exists", [Uid, object_rw:get_data_id(Uid)]);
 tick_monster_1(Obj, _) ->
-    ?TRY_CATCH(move_mod:update(Obj), Err1, Stk1),
-    ?TRY_CATCH(ai_mod:update(Obj), Err2, Stk2),
-    ?TRY_CATCH(combat_mod:tick(Obj), Err3, Stk3),
+    ?TRY_CATCH(mod_move:update(Obj), Err1, Stk1),
+    ?TRY_CATCH(mod_ai:update(Obj), Err2, Stk2),
+    ?TRY_CATCH(mod_combat:tick(Obj), Err3, Stk3),
     ok.
 
 %%-------------------------------------------------------------------
@@ -211,8 +211,8 @@ tick_pet(_S) ->
 tick_pet_1(undefined, Uid) ->
     ?ERROR("pet ~p not exists", [Uid]);
 tick_pet_1(Obj, _) ->
-    ?TRY_CATCH(move_mod:update(Obj), Err1, Stk1),
-    ?TRY_CATCH(combat_mod:tick(Obj), Err2, Stk2),
+    ?TRY_CATCH(mod_move:update(Obj), Err1, Stk1),
+    ?TRY_CATCH(mod_combat:tick(Obj), Err2, Stk2),
     ok.
 
 %%-------------------------------------------------------------------
@@ -248,13 +248,13 @@ kick_all_player(_S) ->
 -spec player_start_move(Req :: #r_player_start_move_req{}) -> ok | error.
 player_start_move(Req) ->
     #r_player_start_move_req{uid = Uid, tar = Dst} = Req,
-    move_mod:start_player_walk(Uid, object_rw:get_cur_pos(Uid), Dst).
+    mod_move:start_player_walk(Uid, object_rw:get_cur_pos(Uid), Dst).
 
 %%-------------------------------------------------------------------
 -spec player_stop_move(Req :: #r_player_stop_move_req{}) -> ok | error.
 player_stop_move(Req) ->
     #r_player_stop_move_req{uid = Uid, pos = Pos} = Req,
-    move_mod:stop_player_move(Uid, Pos).
+    mod_move:stop_player_move(Uid, Pos).
 
 %%-------------------------------------------------------------------
 send_goto_map_msg(Uid, Pos) ->

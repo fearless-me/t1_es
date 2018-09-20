@@ -7,7 +7,7 @@
 %%% @end
 %%% Created : 15. 六月 2018 14:49
 %%%-------------------------------------------------------------------
--module(ai_mod).
+-module(mod_ai).
 -author("mawenhong").
 -include("logger.hrl").
 -include("pub_def.hrl").
@@ -256,7 +256,7 @@ do_start_patrol(_Uid, _AnyType) ->
 
 %%
 do_started_patrol_1(Uid, TarPos) ->
-    Ret = move_mod:start_monster_walk(Uid, TarPos, ?EMS_MONSTER_PATROL, true),
+    Ret = mod_move:start_monster_walk(Uid, TarPos, ?EMS_MONSTER_PATROL, true),
     case Ret of
         true -> ai_rw:set_is_patrol(Uid, true);
         _ -> skip
@@ -445,11 +445,11 @@ start_pursue(Uid, TarUid) when is_integer(TarUid), TarUid > 0 ->
     reset_check_pursue_tick(Uid),
 
     Pos = object_rw:get_cur_pos(TarUid),
-    Ret = move_mod:is_can_monster_walk(Uid, Pos, ?EMS_MONSTER_WALK, true),
+    Ret = mod_move:is_can_monster_walk(Uid, Pos, ?EMS_MONSTER_WALK, true),
     case Ret of
         true ->
             ai_rw:set_pursue_tar_pos(Uid, Pos),
-            move_mod:start_monster_walk(Uid, Pos, ?EMS_MONSTER_WALK, false);
+            mod_move:start_monster_walk(Uid, Pos, ?EMS_MONSTER_WALK, false);
         _ ->
             ai_rw:set_pursue_failed(Uid, true)
     end,
@@ -555,7 +555,7 @@ is_in_attack_dist(_Uid, _Any) ->
 
 ai_use_skill(Uid, SkillId, TarUid)->
     Serial = ai_rw:get_skill_serial(Uid),
-    Ret = combat_mod:use_skill(Uid, TarUid, SkillId, Serial),
+    Ret = mod_combat:use_skill(Uid, TarUid, SkillId, Serial),
     case Ret =:= ok of
         true ->
             ai_rw:set_skill_serial(Uid, Serial + 1);
@@ -588,11 +588,11 @@ start_flee(Uid, Dst) ->
     ai_rw:set_pursue_failed(Uid, false),
     ai_rw:set_cant_pursue(Uid, false),
     
-    Ret = move_mod:is_can_monster_walk(Uid, Dst, ?EMS_MONSTER_FLEE, true),
+    Ret = mod_move:is_can_monster_walk(Uid, Dst, ?EMS_MONSTER_FLEE, true),
     case Ret of
         true ->
             ai_rw:set_flee_dst(Uid, Dst),
-            move_mod:start_monster_walk(Uid, Dst, ?EMS_MONSTER_FLEE, false);
+            mod_move:start_monster_walk(Uid, Dst, ?EMS_MONSTER_FLEE, false);
         _ ->
             ai_rw:set_pursue_failed(Uid, true)
     end,

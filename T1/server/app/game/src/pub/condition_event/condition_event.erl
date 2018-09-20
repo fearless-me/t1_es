@@ -15,7 +15,17 @@
 -include("cfg_conditional_event.hrl").
 
 %% API
--export([action/2]).
+-export([action_all/2, action/2]).
+
+
+action_all(EventList, Params) when is_list(EventList) ->
+    lists:foreach(
+        fun(EventID ) ->
+            condition_event:action(EventID, Params)
+        end, EventList),
+    ok;
+action_all(_EventList, _Params) ->
+    skip.
 
 
 action(EventID, Params) ->
@@ -40,12 +50,12 @@ do_action(
 
 
 %%-------------------------------------------------------------------
-%%    [{逻辑关系，主分类，分类的ID，参数1，参数2，参数3}]
+%%    [[逻辑关系，主分类，分类的ID，参数1，参数2，参数3]]
 condition_loop(Result, [], _Params) ->
     Result;
 condition_loop(
     _Result,
-    [{?CONDITION_OR, _1, _2, _3, _4, _5} = Condition | Conditions],
+    [[?CONDITION_OR | _] = Condition | Conditions],
     Params
 ) ->
     case condition_check:check(Condition, Params) of
@@ -54,7 +64,7 @@ condition_loop(
     end;
 condition_loop(
     _Result,
-    [{?CONDITION_AND, _1, _2, _3, _4, _5} = Condition | Conditions],
+    [[?CONDITION_AND | _] = Condition | Conditions],
     Params
 ) ->
     case condition_check:check(Condition, Params) of

@@ -15,10 +15,10 @@
 on_enter(Uid) ->
     CurPos = object_rw:get_cur_pos(Uid),
     TarUid = ai_rw:get_max_enmity_uid(Uid),
-    ai_mod:reset_lock_target_time(Uid),
+    mod_ai:reset_lock_target_time(Uid),
     ai_rw:set_target_uid(Uid, TarUid),
     case TarUid > 0 of
-        true -> ai_mod:start_pursue(Uid, TarUid);
+        true -> mod_ai:start_pursue(Uid, TarUid);
         _ -> ai_rw:set_pursue_tar_pos(Uid, CurPos)
     end,
 
@@ -31,12 +31,12 @@ on_enter(Uid) ->
     ok.
 
 update(Uid) ->
-    ai_mod:count_down_attack_tick(Uid),
-    Ret = ai_mod:update_lock_target(Uid),
+    mod_ai:count_down_attack_tick(Uid),
+    Ret = mod_ai:update_lock_target(Uid),
     Tar = ai_rw:get_target_uid(Uid),
     case Tar > 0 of
-        true when Ret =:= true -> ai_mod:start_pursue(Uid, Tar);
-        true when Ret =:= false-> ai_mod:update_pursue(Uid, Tar);
+        true when Ret =:= true -> mod_ai:start_pursue(Uid, Tar);
+        true when Ret =:= false-> mod_ai:update_pursue(Uid, Tar);
         _ -> skip
     end,
     ok.

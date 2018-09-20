@@ -38,7 +38,8 @@ change_attr(AddList, MultiList) ->
     ok.
 
 change_attr(AddList, MultiList, AddList_Del, MultiList_Del) ->
-    attr_calc_mod:calc([], AddList, MultiList, AddList_Del, MultiList_Del),
+    Uid = player_rw:get_uid(),
+    player_pub:send_map_msg_(player_change_attr, {Uid, AddList, MultiList, AddList_Del, MultiList_Del} ),
     ok.
 
 

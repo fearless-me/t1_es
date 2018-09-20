@@ -6,7 +6,7 @@
 %%% @end
 %%% Created : 22. 五月 2018 17:32
 %%%-------------------------------------------------------------------
--module(combat_mod).
+-module(mod_combat).
 -author("mawenhong").
 -include("logger.hrl").
 -include("pub_def.hrl").
@@ -15,6 +15,7 @@
 -include("gs_common_rec.hrl").
 -include("map_core.hrl").
 -include("combat.hrl").
+-include("cfg_skill.hrl").
 
 %% 瞬发技能放完就结束
 %% 吟唱技能设置到当前技能
@@ -40,6 +41,9 @@ use_skill(Aer, Der, SkillId, Serial) ->
     },
     map_view:send_net_msg_to_visual(Aer, NetMsg),
 
+    %% 触发事件
+    trigger_before_cast_event(Aer, Der, SkillId),
+
     %% 根据类型
     SkillOpType = ?SKILL_OP_CHANNEL,
 
@@ -57,7 +61,7 @@ use_skill_dispatcher(?SKILL_OP_SPELL, Aer, Tar, SkillId, Serial) ->
 
 %% todo 引导类型技能
 channel_skill(Aer, Tar, SkillId, Serial) ->
-    active_skill_once(Aer, object_rw:get_cur_pos(Tar), SkillId, Serial),
+    active_skill_once(Aer, Tar, object_rw:get_cur_pos(Tar), SkillId, Serial),
     ok.
 
 %% todo 吟唱技能
@@ -66,11 +70,16 @@ spell_skill(_Aer, _Tar, _SkillId, _Serial) ->
 
 %% todo 瞬发技能
 instant_skill(Aer, Tar, SkillId, Serial) ->
-    active_skill_once(Aer, object_rw:get_cur_pos(Tar), SkillId, Serial),
+    active_skill_once(Aer, Tar, object_rw:get_cur_pos(Tar), SkillId, Serial),
     ok.
 
-active_skill_once(Aer, Pos, SkillId, Serial)->
+active_skill_once(Aer, Tar, Pos, SkillId, Serial)->
     TargetList = calculate_target_list(Aer, SkillId, Pos),
+
+    #skillCfg{beforehit = EventList} = getCfg:getCfgByArgs(cfg_skill, SkillId),
+    condition_event:action_all(EventList, [Aer, Tar]),
+
+    trigger_cast_tick_event(Aer, Tar, SkillId),
 
     %% todo 是否可以优化，因为这个是视野广播，不用给每个人发一次
     %% todo 一次性广播给所有同样的消息，让客户端呢判断下
@@ -84,6 +93,8 @@ active_skill_once(Aer, Pos, SkillId, Serial)->
 
 %%-------------------------------------------------------------------
 calculate_dmg(Uid, SkillId, TargetUid, Serial) ->
+    trigger_before_hit_event(Uid, TargetUid, SkillId),
+    
     HitMsg = #pk_GS2U_HitTarget{
         uid = TargetUid, src_uid = Uid, cause = ?HIT_REASON_SKILL, misc = SkillId, serial = Serial
     },
@@ -139,7 +150,7 @@ do_tick_cur_skill(Uid, SkillId) ->
     case can_skill_active_tick(Uid, SkillId) of
         true ->
             Pos = object_rw:get_persist_pos(Uid),
-            ?TRY_CATCH(active_skill_once(Uid, Pos, SkillId,  Serial), Err1, Stk1),
+            ?TRY_CATCH(active_skill_once(Uid, Uid, Pos, SkillId,  Serial), Err1, Stk1),
             ?TRY_CATCH(check_end_skill_tick(Uid, SkillId), Err2, Stk2),
             ok;
         _ ->
@@ -208,3 +219,18 @@ can_ai_use_skill(_Aer) ->
 
 is_using_skill(Aer) ->
     object_rw:get_skill_id(Aer) > 0.
+
+
+%%
+trigger_before_cast_event(Aer, Der, SkillId) ->
+    #skillCfg{beforecast = EventList} = getCfg:getCfgByArgs(cfg_skill, SkillId),
+    condition_event:action_all(EventList, [Aer, Der]).
+
+
+trigger_cast_tick_event(Aer, Der, SkillId) ->
+    #skillCfg{castingtick = EventList} = getCfg:getCfgByArgs(cfg_skill, SkillId),
+    condition_event:action_all(EventList, [Aer, Der]).
+
+trigger_before_hit_event(Aer, Der, SkillId) ->
+    #skillCfg{beforehit = EventList} = getCfg:getCfgByArgs(cfg_skill, SkillId),
+    condition_event:action_all(EventList, [Aer, Der]).

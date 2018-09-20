@@ -62,7 +62,7 @@ do_update(_Uid, #m_ai_trigger{is_active = false} = Trigger) ->
 do_update(Uid, #m_ai_trigger{active_tick = Tick, target_type = Type} = Trigger) ->
     case test_interval(Trigger) of
         true ->
-            TarUid = ai_mod:get_target_by_type(Uid, Type),
+            TarUid = mod_ai:get_target_by_type(Uid, Type),
             case
                 test_trigger_state(Uid, Trigger, TarUid) andalso
                     test_trigger_event(Uid, Trigger)
@@ -82,7 +82,7 @@ on_trigger(
     #m_ai_trigger{skill_id = SkillId, active_tick = Tick, trigger_times = Times} = Trigger,
     TarUid
 ) ->
-    case ai_mod:ai_use_skill(Uid, SkillId, TarUid) of
+    case mod_ai:ai_use_skill(Uid, SkillId, TarUid) of
         true ->
             Trigger#m_ai_trigger{active_tick = Tick + 1, trigger_times = Times + 1, is_active = true};
         _ ->
@@ -182,7 +182,7 @@ on_event_1(Uid, #m_ai_trigger{cfg_id = _Id} = Trigger, EventType) ->
 
 on_event_2(Uid, #m_ai_trigger_cfg{event = EventType}, Trigger, EventType) ->
     #m_ai_trigger{target_type = TarType, active_tick = Tick} = Trigger,
-    TarUid = ai_mod:get_target_by_type(Uid, TarType),
+    TarUid = mod_ai:get_target_by_type(Uid, TarType),
     case test_trigger_event(Uid, Trigger) of
         true ->
             ?TRY_CATCH_RET(on_trigger(Uid, Trigger, TarUid), Trigger);

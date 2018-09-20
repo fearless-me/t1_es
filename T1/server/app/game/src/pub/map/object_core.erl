@@ -79,7 +79,7 @@ new_monster(#recMapObjData{
     init_rw_default(Uid),
 
     %% todo 怪物AI配置
-    ai_mod:init(Uid, ?AIAT_Active),
+    mod_ai:init(Uid, ?AIAT_Active),
     new(?OBJ_MON, Pid, Uid, Mid, 0, Group, Pos, vector3:new(0.1, 0, 0.5)).
 
 
@@ -88,7 +88,7 @@ del_monster(Uid) ->
     ok.
 %%-------------------------------------------------------------------
 new(Type, Pid, Uid, Did, Owner, Group, Pos, Face) ->
-    move_mod:init(Uid, Pos, Face),
+    mod_move:init(Uid, Pos, Face),
     object_rw:set_data_id(Uid, Did),
     object_rw:set_group(Uid, Group),
     object_rw:set_pid(Uid, Pid),

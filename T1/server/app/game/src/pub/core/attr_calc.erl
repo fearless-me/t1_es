@@ -4,10 +4,14 @@
 %%% @doc
 %%%
 %%% @end
-%%% Created : 14. 五月 2018 14:12
+%%% Created : 13. 六月 2018 15:25
 %%%-------------------------------------------------------------------
--module(pet_mod).
+-module(attr_calc).
 -author("mawenhong").
+-include("logger.hrl").
 
 %% API
--export([]).
+-export([calc/5]).
+
+calc(_PropList, _AddList, _MultiList, _AddList_Del, _MultiList_Del) ->
+    ok.

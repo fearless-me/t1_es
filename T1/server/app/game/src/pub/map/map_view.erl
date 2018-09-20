@@ -120,7 +120,7 @@ send_msg_to_visual(Uid, MsgId, Msg) ->
 %%-------------------------------------------------------------------
 %% 开始移动广播
 sync_movement_to_big_visual_tile(Uid) ->
-    Msg = move_mod:cal_move_msg(Uid),
+    Msg = mod_move:cal_move_msg(Uid),
     VisTileIndex = object_rw:get_vis_tile_idx(Uid),
     sync_movement_to_big_visual_tile(VisTileIndex, Msg),
     ok.
@@ -297,7 +297,7 @@ do_sync_big_vis_tile_to_me(?OBJ_PLAYER, Uid, VisTileList, del_all) ->
 do_sync_big_vis_tile_to_me(?OBJ_PLAYER, TarUid, VisTileList, add_all) ->
     FC =
         fun(Uid) ->
-            Msg = move_mod:cal_move_msg(Uid),
+            Msg = mod_move:cal_move_msg(Uid),
             if
                 Msg =:= undefined -> skip;
                 true -> gs_interface:send_net_msg(TarUid, Msg)
@@ -349,7 +349,7 @@ sync_me_to_big_vis_tile(Obj, VisTileList, del_me) ->
     ok;
 sync_me_to_big_vis_tile(Obj, VisTileList, add_me) ->
     Uid = object_core:get_uid(Obj),
-    Msg = move_mod:cal_move_msg(Uid),
+    Msg = mod_move:cal_move_msg(Uid),
     send_net_msg_to_big_visual(VisTileList, Msg),
     ok.
 %%-------------------------------------------------------------------

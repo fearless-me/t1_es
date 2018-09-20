@@ -6,7 +6,7 @@
 %%% @end
 %%% Created : 06. 七月 2018 10:56
 %%%-------------------------------------------------------------------
--module(skill_mod).
+-module(mod_skill).
 -author("mawenhong").
 
 %% API

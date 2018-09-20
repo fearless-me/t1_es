@@ -4,9 +4,9 @@
 %%% @doc
 %%%
 %%% @end
-%%% Created : 14. 九月 2018 17:59
+%%% Created : 14. 五月 2018 14:12
 %%%-------------------------------------------------------------------
--module(monster_buff).
+-module(mod_pet).
 -author("mawenhong").
 
 %% API

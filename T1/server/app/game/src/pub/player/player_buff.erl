@@ -17,5 +17,5 @@
 add_buff(BuffId, Level) ->
     Uid = player_rw:get_uid(),
     Req = #r_player_add_buff_req{uid = Uid, buff_id = BuffId, level = Level},
-    player_pub:send_map_msg_(player_use_skill, Req),
+    player_pub:send_map_msg_(player_add_buff, Req),
     ok.

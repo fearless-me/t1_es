@@ -43,55 +43,55 @@ mod_init([MapID, MapLine]) ->
 
 %%--------------------------------------------------------------------
 do_handle_call({player_join, Obj}, From, State) ->
-    map_mod_priv:player_join_call(State, From, Obj);
+    mod_map_priv:player_join_call(State, From, Obj);
 do_handle_call({player_exit, Req}, From, State) ->
-    map_mod_priv:player_exit_call(State, From, Req);
+    mod_map_priv:player_exit_call(State, From, Req);
 do_handle_call({player_teleport, Req}, From, State) ->
-    map_mod_priv:force_teleport_call(State, From, Req);
+    mod_map_priv:force_teleport_call(State, From, Req);
 do_handle_call(Request, From, State) ->
-    Ret = map_mod:on_call_msg(Request, From),
+    Ret = mod_map:on_call_msg(Request, From),
     {reply, Ret, State}.
 
 %%--------------------------------------------------------------------
 do_handle_info(init, State) ->
-    {noreply, map_mod_priv:init(State)};
+    {noreply, mod_map_priv:init(State)};
 do_handle_info(status, State) ->
     catch show_status(),
     {noreply, State};
 do_handle_info(tick_now, State) ->
-    {noreply, map_mod_priv:tick(State)};
+    {noreply, mod_map_priv:tick(State)};
 do_handle_info(start_stop_now, State) ->
-    {noreply, map_mod_priv:start_stop_now(State)};
+    {noreply, mod_map_priv:start_stop_now(State)};
 do_handle_info({start_move, Req}, State) ->
-    map_mod_priv:player_start_move(Req),
+    mod_map_priv:player_start_move(Req),
     {noreply, State};
 do_handle_info({stop_move, Req}, State) ->
-    map_mod_priv:player_stop_move(Req),
+    mod_map_priv:player_stop_move(Req),
     {noreply, State};
 do_handle_info(stop_immediately, State) ->
     {stop, normal, State};
 do_handle_info({msg_broadcast, Msg}, State) ->
-    map_mod_priv:broadcast_msg(State, Msg),
+    mod_map_priv:broadcast_msg(State, Msg),
     {noreply, State};
 do_handle_info({net_msg_broadcast, NetMsg}, State) ->
-    map_mod_priv:broadcast_net_msg(State, NetMsg),
+    mod_map_priv:broadcast_net_msg(State, NetMsg),
     {noreply, State};
 do_handle_info({msg_broadcast_view, Msg}, State) ->
-    map_mod_priv:broadcast_msg_view(Msg),
+    mod_map_priv:broadcast_msg_view(Msg),
     {noreply, State};
 do_handle_info({net_msg_broadcast_view, ViewNetMsg}, State) ->
-    map_mod_priv:broadcast_net_msg_view(ViewNetMsg),
+    mod_map_priv:broadcast_net_msg_view(ViewNetMsg),
     {noreply, State};
 do_handle_info({condition_event, ConditionEventMsg}, State) ->
     map_condition_event:on_event(ConditionEventMsg),
     {noreply, State};
 do_handle_info(Info, State) ->
-    map_mod:on_info_msg(Info),
+    mod_map:on_info_msg(Info),
     {noreply, State}.
 
 %%--------------------------------------------------------------------
 do_handle_cast(Request, State) ->
-    map_mod:on_cast_msg(Request),
+    mod_map:on_cast_msg(Request),
     {noreply, State}.
 
 show_status() ->

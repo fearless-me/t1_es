@@ -21,22 +21,22 @@ on_enter(Uid) ->
         _ -> skip
     end,
     %% todo xx
-    ai_mod:on_ai_event(Uid, <<"enter combat">>),
+    mod_ai:on_ai_event(Uid, <<"enter combat">>),
     ok.
 on_exit(_Uid) ->
     ok.
 
 update(Uid) ->
-    ai_mod:update_lock_target(Uid),
-    case combat_mod:can_ai_use_skill(Uid) of
+    mod_ai:update_lock_target(Uid),
+    case mod_combat:can_ai_use_skill(Uid) of
         false ->
-            ai_mod:count_down_attack_tick(Uid),
+            mod_ai:count_down_attack_tick(Uid),
             TarUid = ai_rw:get_target_uid(Uid),
             IsUseSkillNow = ai_rw:get_attack_wait_tick(Uid) =< 0,
             NowSkillId =  ai_rw:get_use_skill_id(Uid),
             case TarUid > 0 andalso IsUseSkillNow of
                 true ->
-                    ai_mod:ai_use_skill(Uid, TarUid, NowSkillId);
+                    mod_ai:ai_use_skill(Uid, TarUid, NowSkillId);
                 _ ->
                     skip
             end,

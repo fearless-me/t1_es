@@ -6,7 +6,7 @@
 %%% @end
 %%% Created : 22. 五月 2018 8:54
 %%%-------------------------------------------------------------------
--module(move_mod).
+-module(mod_move).
 -author("mawenhong").
 -include("logger.hrl").
 -include("netmsg.hrl").

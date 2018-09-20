@@ -4,9 +4,9 @@
 %%% @doc
 %%%
 %%% @end
-%%% Created : 14. 九月 2018 17:59
+%%% Created : 15. 六月 2018 14:49
 %%%-------------------------------------------------------------------
--module(monster_attr).
+-module(mod_copy).
 -author("mawenhong").
 
 %% API

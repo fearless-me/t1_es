@@ -4,14 +4,12 @@
 %%% @doc
 %%%
 %%% @end
-%%% Created : 13. 六月 2018 15:25
+%%% Created : 20. 九月 2018 10:44
 %%%-------------------------------------------------------------------
--module(attr_calc_mod).
+-module(buff_effect).
 -author("mawenhong").
--include("logger.hrl").
 
 %% API
--export([calc/5]).
+-export([active/2]).
 
-calc(_PropList, _AddList, _MultiList, _AddList_Del, _MultiList_Del) ->
-    ok.
+active(_Uid, _Buff) -> ok.

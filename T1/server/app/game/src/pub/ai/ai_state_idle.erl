@@ -14,9 +14,9 @@
 
 %%-------------------------------------------------------------------
 on_enter(Uid) ->
-    ai_mod:clear_all_enmity(Uid),
-    ai_mod:reset_patrol_tick(Uid),
-    ai_mod:reset_look_for_target_tick(Uid),
+    mod_ai:clear_all_enmity(Uid),
+    mod_ai:reset_patrol_tick(Uid),
+    mod_ai:reset_look_for_target_tick(Uid),
     ai_rw:set_is_patrol(Uid, false),
     ai_rw:set_is_reverse_patrol(Uid, false),
     ai_rw:set_enter_combat_time(Uid, 0),
@@ -29,8 +29,8 @@ on_exit(_Uid) ->
 
 %%-------------------------------------------------------------------
 update(Uid) ->
-    ai_mod:update_patrol(Uid),
-    ai_mod:update_look_for_enemy(Uid),
+    mod_ai:update_patrol(Uid),
+    mod_ai:update_look_for_enemy(Uid),
     ok.
 
 %%-------------------------------------------------------------------

@@ -21,7 +21,7 @@
 %% 3.千分比（int）
 %% 4.常数（int）
 %% 5.伤害类型： 1.伤害 2.治疗
-action({?EVENT_DAMAGE, ?EVENT_DAMAGE_SUB_PERCENT, P1, P2, P3, P4, P5}, [SrcUid, TarUid]) ->
+action([?EVENT_DAMAGE, ?EVENT_DAMAGE_SUB_PERCENT, P1, P2, P3, P4, P5], [SrcUid, TarUid]) ->
     {RealTarUid, BaseValue} =
         case P1 of
             1 -> {SrcUid, player_interface:get_attr(SrcUid, P2)};

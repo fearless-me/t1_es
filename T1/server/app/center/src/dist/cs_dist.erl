@@ -14,7 +14,7 @@
 -include("cs_ps_def.hrl").
 
 %% API
--export([start_master/1, start_independence/1, start_slave/2]).
+-export([start_master/1, start_independence/1, slave_start/2]).
 
 %% Helper macro for declaring children of supervisor
 -define(Wrap(X), fun() -> X end).
@@ -30,9 +30,7 @@ start_master(_SupPid) ->
     Args = lists:concat([" -s dist start  ", " -run_no ", RunNo, " -area_id ", AreaId, " -sid "]),
     gen_server:start({global, pool_master}, pool, [], []),
     start_master_slave('192.168.18.52', center_g, lists:concat([Args, Sid+1])),
-%%    start_master_slave('127.0.0.1', center_t, lists:concat([Args, Sid+2])),
-%%    start_master_slave('127.0.0.1', center_f, lists:concat([Args, Sid+3])),
-    
+
     %%/////////////////////////////////////////
     watchdog:wait_group(2),
     ?WARN("try to start master node done #"),
@@ -40,7 +38,7 @@ start_master(_SupPid) ->
 
 %%-------------------------------------------------------------------
 %%-------------------------------------------------------------------
-start_slave(SupPid, Mode) ->
+slave_start(SupPid, Mode) ->
     try
         misc:fn_wrapper({"logger", stdio,   ?Wrap(loggerS:start())}),
         misc:fn_wrapper({"error Logger",    ?Wrap(common_error_logger:start(dist_sup, center_dist))}),
@@ -48,7 +46,7 @@ start_slave(SupPid, Mode) ->
         misc:fn_wrapper({"config init",     ?Wrap(cs_conf:start("center.ini"))}),
         misc:fn_wrapper({"db window",       ?Wrap(cs_db_starter:start())}),
         misc:fn_wrapper({"start mnesia",    ?Wrap(cs_dist_share:start())}),
-        misc:fn_wrapper({"start logic otp", ?Wrap(start_slave_otp(Mode, node(), SupPid))}),
+        misc:fn_wrapper({"start logic otp", ?Wrap(slave_start_tree(Mode, node(), SupPid))}),
         ok
     catch _ : Err : ST ->
         misc:halt("start app error ~p, stacktrace ~p", [Err, ST])
@@ -57,15 +55,15 @@ start_slave(SupPid, Mode) ->
     ?WARN("###slave ~p start ok###", [node()]),
     ok.
 
-start_slave_otp(dist, 'center_g@127.0.0.1', SupPid)->
+slave_start_tree(dist, 'center_g@127.0.0.1', SupPid)->
     misc:fn_wrapper({"create team_otp",         ?Wrap(misc:start_otp(SupPid, team_otp, worker))}),
     misc:fn_wrapper({"create dist_exam_otp",    ?Wrap(misc:start_otp(SupPid, dist_exam_otp, worker))}),
-    misc:fn_wrapper({"create cs_dist_sup",         ?Wrap(misc:start_otp(SupPid, cs_dist_sup, supervisor))}),
+    misc:fn_wrapper({"create cs_dist_sup",      ?Wrap(misc:start_otp(SupPid, cs_dist_sup, supervisor))}),
     ok;
-start_slave_otp(dist, _Node, SupPid) ->
-    misc:fn_wrapper({"create cs_dist_sup",         ?Wrap(misc:start_otp(SupPid, cs_dist_sup, supervisor))}),
+slave_start_tree(dist, _Node, SupPid) ->
+    misc:fn_wrapper({"create cs_dist_sup",      ?Wrap(misc:start_otp(SupPid, cs_dist_sup, supervisor))}),
     ok;
-start_slave_otp(_, _Node, _SupPid) ->
+slave_start_tree(_, _Node, _SupPid) ->
     ok.
 
 %%-------------------------------------------------------------------

@@ -6,7 +6,7 @@
 %%% @end
 %%% Created : 13. 六月 2018 15:00
 %%%-------------------------------------------------------------------
--module(map_mod).
+-module(mod_map).
 -author("mawenhong").
 -author("mawenhong").
 
@@ -19,16 +19,17 @@
 -export([on_info_msg/1]).
 
 %%-------------------------------------------------------------------
-on_info_msg({player_change_attr, _Req}) ->
+on_info_msg({player_change_attr, {Uid, AddList, MultiList, AddList_Del, MultiList_Del}}) ->
+    mod_attr:change_attr(Uid, AddList, MultiList, AddList_Del, MultiList_Del),
     ok;
 on_info_msg({player_use_skill, Req}) ->
     ?DEBUG("player_use_skill ~p",[Req]),
     #r_player_use_skill_req{uid=Aer, skill_id=SkillId, tar=Der, serial = Serial} = Req,
-    combat_mod:use_skill(Aer, Der, SkillId, Serial),
+    mod_combat:use_skill(Aer, Der, SkillId, Serial),
     ok;
 on_info_msg({player_add_buff, Req}) ->
     #r_player_add_buff_req{uid = Aer, buff_id = BuffId, level = Level} = Req,
-    buff_mod:add_buff(Aer, BuffId, Level),
+    mod_buff:add_buff(Aer, BuffId, Level),
     ok;
 on_info_msg(Info) ->
     ?DEBUG("info:~p",[Info]),
