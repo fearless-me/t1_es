@@ -26,8 +26,8 @@
 
 
 %%
--define(CFG_TARGET_SELF,  1).
--define(CFG_TARGET_OTHER, 2).
+-define(TARGET_SELF,  1).
+-define(TARGET_OTHER, 2).
 
 
 %%-------------------------------------------------------------------

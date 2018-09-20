@@ -32,7 +32,7 @@ init([]) ->
             [
                 ?CHILD(db_sup, supervisor),
                 ?CHILD(db_mgr_sup, supervisor),
-                ?CHILD(db_proxy_otp, worker)
+                ?CHILD(db_proxy_srv, worker)
             ]
         }
     }.

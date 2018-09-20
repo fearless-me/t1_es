@@ -1,8 +1,8 @@
-{application,dist,
+{application,team,
              [{description,[]},
               {vsn,"1"},
               {registered,[]},
               {applications,[kernel,stdlib]},
-              {mod,{dist,[cs_dist]}},
+              {mod,{team_app,[]}},
               {env,[]},
-              {modules,[dist,dist_sup]}]}.
+              {modules,[team_app,team_sup]}]}.

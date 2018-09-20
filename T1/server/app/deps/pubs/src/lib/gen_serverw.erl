@@ -52,6 +52,7 @@
 -define(FULL_SWEEP, {fullsweep_after, 20}).
 -define(FULL_SWEEP_OPTIONS, {spawn_opt,[?FULL_SWEEP]}).
 -define(TC(F, Request), tc(fun()-> F end, Request)).
+-define(TimeLine, timeline).
 -define(TIMELINE_MICROSECOND, 5000).
 %% 假设帧率是 20MS那么是50个消息/client/秒, 服务50client，
 %% 那么每个消息  1000*1000/2500 = 400micro seconds
@@ -204,12 +205,15 @@ tc(F, Request) ->
     T1 = misc_time:micro_seconds(),
     Val = F(),
     T2 = misc_time:micro_seconds(),
+    Td = misc:get_dict_def(?TimeLine, ?TIMELINE_MICROSECOND),
     case T2 - T1  of
-    Time when Time > ?TIMELINE_MICROSECOND ->
-        ?WARN(
+    Time when Time > Td ->
+        ?WARN
+        (
             "~p,~p|~p deal ~w use time ~p micro seconds",
             [get(?LogicModule), self(), misc:registered_name(), Request, Time]
         );
     _Any -> skip
     end,
     Val.
+

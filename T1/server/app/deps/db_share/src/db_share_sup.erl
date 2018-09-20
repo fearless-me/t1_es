@@ -30,7 +30,7 @@ init([]) ->
         {
             {one_for_one, 5, 10},
             [
-              ?CHILD(db_share_otp, worker)
+              ?CHILD(db_share_srv, worker)
             ]
         }
     }.

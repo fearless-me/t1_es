@@ -31,12 +31,12 @@
 %% func =>  mysql逻辑处理函数  @-callback handler
 
 add_pool(PoolRef, Conf) ->
-    db_proxy_otp:add_pool(PoolRef, Conf).
+    db_proxy_srv:add_pool(PoolRef, Conf).
 
 add_pool(PoolRef, Conf, Timeout) ->
-    db_proxy_otp:add_pool(PoolRef, Conf, Timeout).
+    db_proxy_srv:add_pool(PoolRef, Conf, Timeout).
 
-checkout_pool(PoolRef) -> db_proxy_otp:checkout_pool(PoolRef).
-pool_pg(PoolRef) -> db_proxy_otp:pool_pg(PoolRef).
+checkout_pool(PoolRef) -> db_proxy_srv:checkout_pool(PoolRef).
+pool_pg(PoolRef) -> db_proxy_srv:pool_pg(PoolRef).
 
 

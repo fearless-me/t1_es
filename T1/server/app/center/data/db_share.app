@@ -7,7 +7,7 @@
               {env,[]},
               {modules,[background_gc,behaviour_example,binary_lib,code_gen,
                         color,common_error_logger,common_error_logger_h,db,
-                        db_pool,db_share,db_share_app,db_share_otp,
+                        db_pool,db_share,db_share_app,db_share_srv,
                         db_share_sup,dtool,file_ex,gen_server2,gen_serverw,
                         getCfg,grpc,hot_update,llist,loggerS,lqueue,misc,
                         mne_ex,mnesia_dynamic,mnesia_starter,mnesia_utils,

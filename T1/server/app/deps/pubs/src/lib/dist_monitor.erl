@@ -53,12 +53,18 @@ do_handle_call(Request, From, State) ->
 
 %%--------------------------------------------------------------------
 do_handle_info({slave_register, SlaveNode}, State) ->
+    ?WARN("node ~p slave node register ~p",[node(), SlaveNode]),
+    erlang:monitor_node(SlaveNode, true),
     #state{wait = Wait, slaves = Slaves } = State,
     {noreply, State#state{slaves = [SlaveNode | Slaves], wait = [SlaveNode | Wait]}};
 do_handle_info({slave_started, SlaveNode}, State) ->
+    ?WARN("node ~p slave node started ~p",[node(), SlaveNode]),
     #state{wait = Wait, mod = Mod} = State,
     Mod:slave_started(SlaveNode),
     {noreply, State#state{wait = lists:delete(SlaveNode, Wait)}};
+do_handle_info({nodedown, Node}, State) ->
+    ?FATAL("***** distribution noe ~p down ***",[Node]),
+    {noreply, State};
 do_handle_info(Info, State) ->
     ?ERROR("undeal info ~w", [Info]),
     {noreply, State}.

@@ -64,24 +64,47 @@ do_handle_cast(Request, State) ->
 %% http://blog.yufeng.info/archives/1581
 %% http://blog.yufeng.info/archives/336
 broadcast_net_msg(NetMsg) ->
-    Ms = ets:fun2ms(fun(#m_cache_online_player{pid = Pid})-> Pid end),
-    F =
+    Ms = ets:fun2ms(fun(#m_cache_online_player{socket = Sock}) -> Sock end),
+    Fc =
         fun() ->
             {_Bytes1, IoList} = tcp_codec:encode(NetMsg),
             L = my_ets:select(?ETS_CACHE_ONLINE_PLAYER, Ms),
-            lists:foreach(
-                fun(Pid)->
-                    catch gs_interface:send_net_msg(Pid, IoList)
-                end, L)
+            lists:foreach
+            (
+                fun(Sock) ->
+                    erlang:spawn
+                    (
+                        fun() ->
+                            catch tcp_handler:direct_send_net_msg(Sock, IoList)
+                        end
+                    )
+                end,
+                L
+            )
         end,
-    erlang:spawn(F),
+    erlang:spawn(Fc),
     ok.
 
 broadcast_msg(MsgId, Msg) ->
-    my_ets:foldl(
-        fun(#m_cache_online_player{pid = Pid}, _) ->
-            ps:send(Pid, MsgId, Msg)
-        end, 0, ?ETS_CACHE_ONLINE_PLAYER),
+    Ms = ets:fun2ms(fun(#m_cache_online_player{pid = Pid}) -> Pid end),
+    Fc =
+        fun() ->
+            L = my_ets:select(?ETS_CACHE_ONLINE_PLAYER, Ms),
+            lists:foreach
+            (
+                fun(Pid) ->
+                    erlang:spawn
+                    (
+                        fun() ->
+                            catch ps:send(Pid, MsgId, Msg)
+                        end
+                    )
+                end,
+                L
+            )
+        end,
+
+    erlang:spawn(Fc),
     ok.
 
 

@@ -43,13 +43,13 @@ add_frag_share(Tabs, Sid) ->
 %%-------------------------------------------------------------------
 -spec get_share_table(Tab :: atom(), Sid :: integer()) -> atom() | undefined.
 get_share_table(Tab, Sid) ->
-    db_share_otp:get_tab(Sid, Tab).
+    db_share_srv:get_tab(Sid, Tab).
 
 %%-------------------------------------------------------------------
 %%-------------------------------------------------------------------
 add_one_share({Tab, Arg}) ->
     ?INFO("\tadd share table [~p] ...", [Tab]),
-    db_share_otp:add_tab(0, Tab, Tab),
+    db_share_srv:add_tab(0, Tab, Tab),
     true = mne_ex:create_table(Tab, Arg),
     ?INFO("\tadd share table [~p] done #", [Tab]),
     ok.
@@ -57,7 +57,7 @@ add_one_share({Tab, Arg}) ->
 add_one_frag_share({Tab, Arg}, Sid) ->
     TableName = misc:create_atom(Tab, [Sid]),
     ?INFO("\tadd frag share table [~p] ...", [TableName]),
-    db_share_otp:add_tab(Sid, Tab, TableName),
+    db_share_srv:add_tab(Sid, Tab, TableName),
     true = mne_ex:create_table(TableName, Arg),
     ?INFO("\tadd frag share table [~p] done #", [TableName]),
     ok.

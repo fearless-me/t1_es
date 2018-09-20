@@ -6,7 +6,7 @@
 %%% @end
 %%% Created : 14. 八月 2018 10:49
 %%%-------------------------------------------------------------------
--module(db_share_otp).
+-module(db_share_srv).
 -author("mawenhong").
 
 -behaviour(gen_serverw).

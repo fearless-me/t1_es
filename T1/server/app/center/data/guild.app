@@ -1,8 +1,8 @@
-{application,dist,
+{application,guild,
              [{description,[]},
               {vsn,"1"},
               {registered,[]},
               {applications,[kernel,stdlib]},
-              {mod,{dist,[cs_dist]}},
+              {mod,{guild_app,[]}},
               {env,[]},
-              {modules,[dist,dist_sup]}]}.
+              {modules,[guild_app,guild_sup]}]}.

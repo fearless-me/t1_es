@@ -36,7 +36,7 @@ proc_statistics(Name, Milliseconds) ->
             lists:foldl(
                 fun
                     ({Key,{{_,_,_},{_,_,_}} = DataTime}, Acc) ->
-                        Acc ++ lists:concat([Key, ":", misc_time:format_datatime(DataTime), "\n"]);
+                        Acc ++ lists:concat([Key, ":", misc_time:format_datetime(DataTime), "\n"]);
                     ({Key, Val}, Acc) ->
                         Acc ++ lists:concat([Key, ":", Val, "\n"])
                 end, [], Statistics);

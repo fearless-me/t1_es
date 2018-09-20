@@ -19,7 +19,7 @@
 task_list() ->
     [
         ?WATCHDOG_TASK_GROUP(1, load_all_data,      priority_1()),
-        ?WATCHDOG_TASK_GROUP(2, start_master_slave, priority_2())
+        ?WATCHDOG_TASK_GROUP(2, start_master_slave, priority_2(), true)
     ].
 
 priority_1() ->
@@ -29,5 +29,5 @@ priority_1() ->
 
 priority_2() ->
     [
-        ?WATCHDOG_TASK(fun dist_monitor:is_all_slaves_stared/0, "wait start all slave ndoe")
+        ?WATCHDOG_TASK(fun dist_monitor:is_all_slaves_stared/0, "wait start all slave nodes")
     ].

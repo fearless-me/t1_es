@@ -1,8 +1,8 @@
-{application,dist,
+{application,activity,
              [{description,[]},
               {vsn,"1"},
               {registered,[]},
               {applications,[kernel,stdlib]},
-              {mod,{dist,[cs_dist]}},
+              {mod,{activity_app,[]}},
               {env,[]},
-              {modules,[dist,dist_sup]}]}.
+              {modules,[activity_app,activity_sup]}]}.

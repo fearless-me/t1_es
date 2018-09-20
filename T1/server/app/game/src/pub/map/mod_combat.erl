@@ -42,7 +42,7 @@ use_skill(Aer, Der, SkillId, Serial) ->
     map_view:send_net_msg_to_visual(Aer, NetMsg),
 
     %% 触发事件
-    trigger_before_cast_event(Aer, Der, SkillId),
+    ?TRY_CATCH(trigger_before_cast_event(Aer, Der, SkillId)),
 
     %% 根据类型
     SkillOpType = ?SKILL_OP_CHANNEL,
@@ -75,7 +75,7 @@ instant_skill(Aer, Tar, SkillId, Serial) ->
 
 active_skill_once(Aer, Tar, Pos, SkillId, Serial)->
 
-    trigger_before_hit_event(Aer, Tar, SkillId),
+    ?TRY_CATCH(trigger_before_hit_event(Aer, Tar, SkillId)),
     
     TargetList = calculate_target_list(Aer, SkillId, Pos),
 
@@ -92,7 +92,7 @@ active_skill_once(Aer, Tar, Pos, SkillId, Serial)->
 %%-------------------------------------------------------------------
 calculate_dmg(Uid, SkillId, TargetUid, Serial) ->
 
-    trigger_hit_event(Uid, TargetUid, SkillId),
+    ?TRY_CATCH(trigger_hit_event(Uid, TargetUid, SkillId)),
     
     HitMsg = #pk_GS2U_HitTarget{
         uid = TargetUid, src_uid = Uid, cause = ?HIT_REASON_SKILL, misc = SkillId, serial = Serial

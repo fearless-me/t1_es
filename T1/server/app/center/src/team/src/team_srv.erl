@@ -6,7 +6,7 @@
 %%% @end
 %%% Created : 23. 八月 2018 10:03
 %%%-------------------------------------------------------------------
--module(team_otp).
+-module(team_srv).
 -author("mawenhong").
 
 -behaviour(gen_serverw).

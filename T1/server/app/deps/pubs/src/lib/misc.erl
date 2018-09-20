@@ -22,7 +22,7 @@
     is_alive/1, is_alive_g/1, is_alive_lg/1,
     ip/0, peername/1, ip_string/1,
     crc32/1, mod_1/2, clamp/3, rand/2,
-    get_value/3, callstack/0,
+    get_value/3, callstack/0, sleep/1,
     interval_operation/5, parse_information_unit/1,
     get_dict_def/2, md5/1, int_to_hex/1,
     lists_rand_get/1, lists_shuffle/1, lists_rand_get_n/2, list_to_hex/1,
@@ -397,6 +397,10 @@ halt(Msg) ->
         [Msg, ?CRASH_WAIT_SECONDS]),
     timer:sleep(?CRASH_WAIT_SECONDS * 1000),
     erlang:halt().
+
+
+sleep(Milliseconds)->
+    timer:sleep(Milliseconds).
 
 %%-------------------------------------------------------------------
 nnl(N) ->

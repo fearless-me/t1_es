@@ -48,6 +48,7 @@ start_slave(Host, SlaveName, Args) ->
 
     Rsh = rsh_exe(misc:os_type()),
     Command = lists:concat([
+        Rsh,
         " +S 1 -detached -noinput ", Path,
         " -setcookie ", erlang:get_cookie(), Args]),
     case slave:start_link(misc:to_atom(Host), SlaveName, Command) of

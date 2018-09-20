@@ -6,7 +6,7 @@
 %%% @end
 %%% Created : 30. 五月 2018 10:45
 %%%-------------------------------------------------------------------
--module(db_proxy_otp).
+-module(db_proxy_srv).
 -author("mawenhong").
 
 -behaviour(gen_serverw).

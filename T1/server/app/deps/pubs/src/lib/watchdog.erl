@@ -25,6 +25,7 @@
 %%
 
 %% API
+-export([pause/0, pause_group/1, continue/0, continue_group/1]).
 -export([wait_all/0, wait_group/1, status/0, status_/0, ready/1, ready/0]).
 -export([start_link/1, is_group_done/1, is_all_done/0, show_todo/0, show_all/0]).
 -export([mod_init/1, on_terminate/2, do_handle_call/3, do_handle_info/2, do_handle_cast/2, remove_done/0]).
@@ -43,9 +44,21 @@
 
 %%%===================================================================
 %% define
--record(state, {all = [], todo = [], mod}).
+-record(state, {all = [], todo = [], mod, pause=false}).
 -define(ServerState, serverStateEts_).
+-define(CHECK_TICK,  15000).
 
+pause() ->
+    gen_server:call(?MODULE, pause).
+
+continue() ->
+    gen_server:cast(?MODULE, continue).
+
+pause_group(Priority) ->
+    gen_server:call(?MODULE, {pause, Priority}).
+
+continue_group(Priority) ->
+    gen_server:cast(?MODULE, {continue, Priority}).
 
 wait_all()->
     wait_all_loop( watchdog:is_all_done()),
@@ -103,7 +116,7 @@ wait_all_loop(true) ->
     ok;
 wait_all_loop(Other) ->
     ?WARN("wait current task done => ~ts ...", [Other]),
-    timer:sleep(5000),
+    timer:sleep(?CHECK_TICK),
     wait_all_loop( watchdog:is_all_done()).
 
 %%--------------------------------------------------------------------
@@ -111,7 +124,7 @@ wait_group_loop(true, _Priority) ->
     ok;
 wait_group_loop(Other, Priority) ->
     ?WARN("wait current task done => ~ts ...", [Other]),
-    timer:sleep(5000),
+    timer:sleep(?CHECK_TICK),
     wait_group_loop(watchdog:is_group_done(Priority), Priority).
 
 
@@ -137,6 +150,10 @@ mod_init(Mod) ->
 do_handle_call(status, _From, State) ->
     i_print_status(),
     {reply, ok, State};
+do_handle_call({pause}, _From, State) ->
+    {reply, ok, State#state{pause = true}};
+do_handle_call({pause, Priority}, _From, State) ->
+    {reply, ok, State#state{todo = i_set_group_pause(State#state.todo, Priority, true)}};
 do_handle_call(task_all_done, _From, State) ->
     {reply, i_all_done(State#state.todo), State};
 do_handle_call( {task_group_done, Priority}, _From, State) ->
@@ -156,12 +173,19 @@ do_handle_info(show_all, State) ->
     catch i_show_task_group(State#state.all),
     {noreply, State};
 do_handle_info(remove_done, State) ->
-    {noreply, State#state{todo = i_remove_done(State#state.todo)}};
+    case State#state.pause of
+        true -> {noreply, State};
+        _Ant -> {noreply, State#state{todo = i_remove_done(State#state.todo)}}
+    end;
 do_handle_info(Info, State) ->
     ?ERROR("undeal info ~p", [Info]),
     {noreply, State}.
 
 %%--------------------------------------------------------------------
+do_handle_cast(continue, State) ->
+    {noreply, State#state{pause = false}};
+do_handle_cast({continue, Priority}, State) ->
+    {noreply, State#state{todo = i_set_group_pause(State#state.todo, Priority, false)}};
 do_handle_cast(Request, State) ->
     ?ERROR("undeal cast ~w", [Request]),
     {noreply, State}.
@@ -216,7 +240,7 @@ i_all_done([]) -> true;
 i_all_done(Todos) ->
     #watchdog_task_group{task_list = TL} = erlang:hd(Todos),
     #watchdog_task{tip = Tips, fun_ret = Ret} = erlang:hd(TL),
-    lists:concat([Tips, ":", Ret]).
+    i_format_ret_msg(Tips, Ret).
 
 
 i_group_done([], _Priority) ->
@@ -225,8 +249,20 @@ i_group_done(Todos, Priority) ->
     case lists:keyfind(Priority, #watchdog_task_group.priority, Todos) of
         false -> true;
         #watchdog_task_group{task_list = []} -> true;
-        #watchdog_task_group{task_list = [#watchdog_task{tip = Tips} | _]} ->
-            Tips
+        #watchdog_task_group{task_list = [#watchdog_task{tip = Tips, fun_ret = Ret} | _]} ->
+            i_format_ret_msg(Tips, Ret)
+    end.
+
+i_format_ret_msg(Tips, Ret) ->
+    io_lib:format("~s ~p",[Tips, Ret]).
+
+
+i_set_group_pause([], _Priority, _Pause)->
+    [];
+i_set_group_pause(Todos, Priority, Pause) ->
+    case lists:keyfind(Priority, #watchdog_task_group.priority, Todos) of
+        false -> Todos;
+        Group -> lists:keyreplace(Priority, #watchdog_task_group.priority, Todos, Group#watchdog_task_group{pause = Pause})
     end.
 
 
@@ -236,6 +272,8 @@ i_remove_done(Todos) ->
 
 i_remove_groups([], Acc) ->
     Acc;
+i_remove_groups([#watchdog_task_group{pause = true} = Group | Groups], Acc) ->
+    i_remove_groups(Groups, [Group | Acc]);
 i_remove_groups([#watchdog_task_group{task_list = TL} = Group | Groups], Acc) ->
     case i_remove_tasks(TL, []) of
         [] -> i_remove_groups(Groups, Acc);
@@ -244,9 +282,10 @@ i_remove_groups([#watchdog_task_group{task_list = TL} = Group | Groups], Acc) ->
 
 i_remove_tasks([], Acc)->
     Acc;
-i_remove_tasks([#watchdog_task{mfa =Mfa} = Task | Left], Acc)->
+i_remove_tasks([#watchdog_task{mfa =Mfa, tip = Tips} = Task | Left], Acc)->
     case catch misc:apply_fun(Mfa) of
         true ->
+            ?WARN("task ~ts done#",[Tips]),
             i_remove_tasks(Left, Acc);
         Else ->
             Ret = i_check_apply(Else, Task),
