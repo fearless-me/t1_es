@@ -174,8 +174,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app/deps/pubs/src/lib/vm_memory_monitor.erl">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="259">
-              <caret line="442" column="32" selection-start-line="442" selection-start-column="32" selection-end-line="442" selection-end-column="32" />
+            <state relative-caret-position="590">
+              <caret line="489" column="22" selection-start-line="489" selection-start-column="22" selection-end-line="489" selection-end-column="22" />
             </state>
           </provider>
         </entry>
@@ -643,7 +643,7 @@
     <property name="SearchEverywhereHistoryKey" value="&#9;FILE&#9;file://C:/Program Files/erl10.0/lib/erts-10.0/src/erlang.erl" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1537517901377" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1537518532004" />
     <property name="last_opened_file_path" value="E:/DataTool/Server" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
@@ -1217,13 +1217,13 @@
       <workItem from="1537335154805" duration="9021000" />
       <workItem from="1537356335326" duration="31306000" />
       <workItem from="1537500793376" duration="2346000" />
-      <workItem from="1537508442879" duration="7907000" />
+      <workItem from="1537508442879" duration="8517000" />
     </task>
     <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="2106046000" />
+    <option name="totallyTimeSpent" value="2106656000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -1661,8 +1661,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/app/deps/pubs/src/lib/vm_memory_monitor.erl">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="259">
-          <caret line="442" column="32" selection-start-line="442" selection-start-column="32" selection-end-line="442" selection-end-column="32" />
+        <state relative-caret-position="590">
+          <caret line="489" column="22" selection-start-line="489" selection-start-column="22" selection-end-line="489" selection-end-column="22" />
         </state>
       </provider>
     </entry>
