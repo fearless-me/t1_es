@@ -51,7 +51,6 @@
 -define(LogicModule, myLogicModule).
 -define(FULL_SWEEP, {fullsweep_after, 20}).
 -define(FULL_SWEEP_OPTIONS, {spawn_opt,[?FULL_SWEEP]}).
--define(TC(F, Request), tc(fun()-> F end, Request)).
 -define(TimeLine, timeline).
 -define(TIMELINE_MICROSECOND, 5000).
 %% 假设帧率是 20MS那么是50个消息/client/秒, 服务50client，
@@ -201,9 +200,9 @@ terminate(Reason, State) ->
 code_change(_OldVsn, State, _Extra) -> {ok, State}.
 
 
-tc(F, Request) ->
+tc(M, F, A) ->
     T1 = misc_time:micro_seconds(),
-    Val = F(),
+    Val = erlang:apply(M, F, A),
     T2 = misc_time:micro_seconds(),
     Td = misc:get_dict_def(?TimeLine, ?TIMELINE_MICROSECOND),
     case T2 - T1  of
