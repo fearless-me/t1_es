@@ -45,7 +45,7 @@ assign_cross_for_player(Uid) ->
     case is_assign_cross(Uid) of
         true -> skip;
         _ ->
-            QS = ets:fun2ms(fun(Info) when Info#m_share_server_info.type =:= ?SERVER_TYPE_CGS -> Info#m_share_server_info.sid end),
+            QS = ets:fun2ms(fun(Info) when Info#m_share_server_info.type =:= ?SERVER_TYPE_CROSS -> Info#m_share_server_info.sid end),
             SL = mne_ex:dirty_select(?ShareServerInfoName, QS),
             do_assign_cross_for_player(Uid, SL)
     end,

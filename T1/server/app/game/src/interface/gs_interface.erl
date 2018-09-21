@@ -11,8 +11,10 @@
 
 -include("logger.hrl").
 -include("pub_rec.hrl").
+-include("common_def.hrl").
 -include("gs_cache.hrl").
 -include("gs_ps_def.hrl").
+
 
 
 -export([
@@ -51,7 +53,7 @@
 
 
 %%-------------------------------------------------------------------
-is_cross() -> gs_econfig:is_cross().
+is_cross() -> gs_econfig:get_server_type() =:= ?SERVER_TYPE_CROSS.
 get_server_port() -> gs_econfig:get_server_port().
 get_server_name() -> gs_econfig:get_server_name().
 get_server_type() -> gs_econfig:get_server_type().

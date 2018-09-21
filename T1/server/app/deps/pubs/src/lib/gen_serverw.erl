@@ -18,6 +18,7 @@
 -include("logger.hrl").
 
 %% API
+-export([set_timeline/2]).
 -export([start_link/1, start_link/2, start_link/3, start_link/4]).
 -export([start_link2/1, start_link2/2, start_link2/3, start_link2/4]).
 -export([init/1, handle_call/3, handle_cast/2, handle_info/2, terminate/2, code_change/3]).
@@ -92,6 +93,9 @@ start_link2(Module, Args, Options) ->
 start_link2(Name, Module, Args, Options) ->
     gen_server2:start_link(Name, ?MODULE, [Module, Args], sweep_options(Options)).
 
+set_timeline(Name, Microseconds) ->
+    ps:send(Name, {set_timeline, Microseconds}).
+
 %%--------------------------------------------------------------------
 sweep_options(Options) ->
     case lists:keyfind(spawn_opt, 1, Options) of
@@ -141,7 +145,7 @@ init(Args) ->
 %%--------------------------------------------------------------------
 handle_call(Request, From, State) ->
     Module = get(?LogicModule),
-    try ?TC(Module:do_handle_call(Request, From, State), {Request, From})
+    try tc(Module, do_handle_call, [Request, From, State], {Request, From})
     catch T : E : ST ->
         ?ERROR("call ~w:~p,stack:~p", [T, E, ST]),
         {reply, E, State}
@@ -159,7 +163,7 @@ handle_call(Request, From, State) ->
 %%--------------------------------------------------------------------
 handle_cast(Request, State) ->
     Module = get(?LogicModule),
-    try ?TC(Module:do_handle_cast(Request, State), Request)
+    try tc(Module, do_handle_cast, [Request, State], Request)
     catch T : E : ST ->
         ?ERROR("cast ~w:~p,stack:~p", [T, E, ST]),
         {noreply, State}
@@ -174,9 +178,12 @@ handle_cast(Request, State) ->
 %% 	{noreply, State} | {noreply, State, Timeout} | {stop, Reason, State}
 %% @end
 %%--------------------------------------------------------------------
+handle_info({set_timeline, Microseconds}, State) ->
+    erlang:put(?TimeLine, Microseconds),
+    {noreply, State};
 handle_info(Info, State) ->
     Module = get(?LogicModule),
-    try ?TC(Module:do_handle_info(Info, State), Info)
+    try tc(Module, do_handle_info, [Info, State], Info)
     catch T : E : ST ->
         ?ERROR("~p info ~p:~p,stack:~p", [node(), T, E, ST]),
         {noreply, State}
@@ -200,19 +207,43 @@ terminate(Reason, State) ->
 code_change(_OldVsn, State, _Extra) -> {ok, State}.
 
 
-tc(M, F, A) ->
+%%--------------------------------------------------------------------
+%%--------------------------------------------------------------------
+tc(M, F, A, Msg) ->
     T1 = misc_time:micro_seconds(),
     Val = erlang:apply(M, F, A),
     T2 = misc_time:micro_seconds(),
     Td = misc:get_dict_def(?TimeLine, ?TIMELINE_MICROSECOND),
     case T2 - T1  of
     Time when Time > Td ->
-        ?WARN
+        erlang:spawn
         (
-            "~p,~p|~p deal ~w use time ~p micro seconds",
-            [get(?LogicModule), self(), misc:registered_name(), Request, Time]
+            fun()->
+                Bin = lists:sublist(lists:flatten(io_lib:format("~w", [Msg])), 1, 128),
+                ?WARN
+                (
+                    "~p|~p|~p ** deal ~s use time ~p micro seconds",
+                    [M, self(), misc:registered_name(), Bin, Time]
+                )
+            end
         );
     _Any -> skip
     end,
     Val.
+%%
+%%msg_brief(Msg) when is_atom(Msg) ->
+%%    Msg;
+%%msg_brief({MsgId, Msg}) when is_tuple(Msg) ->
+%%    {MsgId, erlang:element(1, Msg)};
+%%msg_brief({MsgId, Msg}) when is_list(Msg) ->
+%%    MsgId;
+%%msg_brief({MsgId1, {MsgID2, _Data}}) ->
+%%    {MsgId1, MsgID2};
+%%msg_brief({_1, _2} = Request ) ->
+%%    Request;
+%%msg_brief({_1, _2, _3}) ->
+%%    {_1, _2};
+%%msg_brief(Msg) ->
+%%    io:format("**** DBG **** ~n ~p~n~n",[Msg]),
+%%    Msg.
 

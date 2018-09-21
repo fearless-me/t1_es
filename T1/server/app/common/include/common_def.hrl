@@ -13,8 +13,9 @@
 
 
 %% 服务器类型
--define(SERVER_TYPE_GS, 1).  % 游戏服
--define(SERVER_TYPE_CGS, 2). % 跨服
+-define(SERVER_TYPE_GAME,   1). % 游戏服
+-define(SERVER_TYPE_CROSS,  2). % 跨服
+-define(SERVER_TYPE_CENTER, 3). % 中心服
 
 %% 服务器状态
 -define(SEVER_STATUS_INIT, 0).  % 初始化

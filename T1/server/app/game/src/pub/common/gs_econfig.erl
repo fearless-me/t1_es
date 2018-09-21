@@ -8,10 +8,11 @@
 %%%-------------------------------------------------------------------
 -module(gs_econfig).
 -author("mawenhong").
+-include("common_def.hrl").
 
 %% API
 -export([
-    start/1, is_cross/0, get_server_port/0, get_max_connection/0,
+    start/1, get_server_port/0, get_max_connection/0,
     get_area/0,get_sid/0, get_server_name/0, get_server_type/0,
     get_db_conf/0, get_run_no/0, get_center_node/0,
     set_run_no/1
@@ -30,8 +31,6 @@ set_run_no(RunNo)->
     econfig:set_value(?GS_INI_CONF, server, run_no, RunNo, false),
     ok.
 
-is_cross() ->
-    econfig:get_integer(?GS_INI_CONF, server, is_cross, 0) =:= 1.
 %%-------------------------------------------------------------------
 get_server_port() ->
     econfig:get_integer(?GS_INI_CONF, server, server_port).
@@ -56,8 +55,7 @@ get_server_name() ->
     econfig:get_list(?GS_INI_CONF, server, server_name, "unknown").
 
 get_server_type() ->
-    econfig:get_integer(?GS_INI_CONF, server, server_type, 1).
-
+    econfig:get_integer(?GS_INI_CONF, server, server_type).
 
 get_center_node() ->
     Center = econfig:get_value(?GS_INI_CONF, center, center, "center@127.0.0.1"),

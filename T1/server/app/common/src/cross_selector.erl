@@ -43,12 +43,12 @@ init() ->
 
 %%-------------------------------------------------------------------
 select_cross(?SelectPolicy_Turn) ->
-    L = common_interface:get_all_sid(?SERVER_TYPE_CGS),
+    L = common_interface:get_all_sid(?SERVER_TYPE_CROSS),
     N = my_ets:update_counter(?CROSS_SELECT_POLICY_ETS, ?SelectPolicy_Turn, {#pub_kv.value, 1}),
     get_n(L, N);
 select_cross(?SelectPolicy_Full) ->
     Q = ets:fun2ms(
-        fun(#m_share_server_info{online = OL, max_online = Max, type = Type} = Info) when OL < Max, Type =:= ?SERVER_TYPE_CGS ->
+        fun(#m_share_server_info{online = OL, max_online = Max, type = Type} = Info) when OL < Max, Type =:= ?SERVER_TYPE_CROSS ->
             {Info#m_share_server_info.online, Info#m_share_server_info.sid}
         end
     ),
@@ -63,7 +63,7 @@ select_cross(?SelectPolicy_Full) ->
         end,
     get_n(E, 1);
 select_cross(_) ->
-    L = common_interface:get_all_sid(?SERVER_TYPE_CGS),
+    L = common_interface:get_all_sid(?SERVER_TYPE_CROSS),
     get_n(L, misc:rand(1, 1000)).
 
 get_n([], _N) ->
@@ -79,7 +79,7 @@ select_cross(Policy, 0) ->
     select_cross(Policy);
 select_cross(Policy, DstServerID) ->
     case common_interface:get_server_info(DstServerID) of
-        #m_share_server_info{type = ?SERVER_TYPE_CGS} ->
+        #m_share_server_info{type = ?SERVER_TYPE_CROSS} ->
             DstServerID;
         _ ->
             select_cross(Policy)

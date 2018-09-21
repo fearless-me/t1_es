@@ -56,8 +56,8 @@ allow() ->
 %%%-------------------------------------------------------------------
 get_server_type() ->
     case gs_interface:is_cross() of
-        true -> ?SERVER_TYPE_CGS;
-        _ -> ?SERVER_TYPE_GS
+        true -> ?SERVER_TYPE_CROSS;
+        _ -> ?SERVER_TYPE_GAME
     end.
 
 get_center_server_pid() ->

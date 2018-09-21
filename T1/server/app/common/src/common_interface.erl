@@ -60,7 +60,7 @@ get_server_info(ServerID) ->
 %%%-------------------------------------------------------------------
 % 选取所有可用跨服信息
 get_cgs_info() ->
-    Q = ets:fun2ms(fun(Info) when Info#m_share_server_info.type =:= ?SERVER_TYPE_CGS -> Info end),
+    Q = ets:fun2ms(fun(Info) when Info#m_share_server_info.type =:= ?SERVER_TYPE_CROSS -> Info end),
     mne_ex:dirty_select(?ShareServerInfoName, Q).
 
 
@@ -82,22 +82,22 @@ send_msg_2_server_with_sid(ServerID, Msg, MsgData) ->
 
 %%%-------------------------------------------------------------------
 send_msg_2_all_gs(Msg) ->
-    PidList = sel_server_pid_list(?SERVER_TYPE_GS, ?TYPE_WINDOW),
+    PidList = sel_server_pid_list(?SERVER_TYPE_GAME, ?TYPE_WINDOW),
     broadcast_with_msg(PidList, Msg),
     ok.
 
 send_msg_2_all_gs(Msg, MsgData) ->
-    PidList = sel_server_pid_list(?SERVER_TYPE_GS, ?TYPE_WINDOW),
+    PidList = sel_server_pid_list(?SERVER_TYPE_GAME, ?TYPE_WINDOW),
     broadcast_with_msg_data(PidList, Msg, MsgData),
     ok.
 %%%-------------------------------------------------------------------
 send_msg_2_all_cross(Msg) ->
-    PidList = sel_server_pid_list(?SERVER_TYPE_CGS, ?TYPE_WINDOW),
+    PidList = sel_server_pid_list(?SERVER_TYPE_CROSS, ?TYPE_WINDOW),
     broadcast_with_msg(PidList, Msg),
     ok.
 
 send_msg_2_all_cross(Msg, MsgData) ->
-    PidList = sel_server_pid_list(?SERVER_TYPE_CGS, ?TYPE_WINDOW),
+    PidList = sel_server_pid_list(?SERVER_TYPE_CROSS, ?TYPE_WINDOW),
     broadcast_with_msg_data(PidList, Msg, MsgData),
     ok.
 
@@ -134,23 +134,23 @@ send_msg_2_worker_with_sid(ServerID, Msg, MsgData) ->
     ok.
 %%%-------------------------------------------------------------------
 send_msg_2_all_gs_worker(Msg) ->
-    PidList = sel_server_pid_list(?SERVER_TYPE_GS, ?TYPE_WORKER),
+    PidList = sel_server_pid_list(?SERVER_TYPE_GAME, ?TYPE_WORKER),
     broadcast_with_msg(PidList, Msg),
     ok.
 
 send_msg_2_all_gs_worker(Msg, MsgData) ->
-    PidList = sel_server_pid_list(?SERVER_TYPE_GS, ?TYPE_WORKER),
+    PidList = sel_server_pid_list(?SERVER_TYPE_GAME, ?TYPE_WORKER),
     broadcast_with_msg_data(PidList, Msg, MsgData),
     ok.
 
 %%%-------------------------------------------------------------------
 send_msg_2_all_cross_worker(Msg) ->
-    PidList = sel_server_pid_list(?SERVER_TYPE_CGS, ?TYPE_WORKER),
+    PidList = sel_server_pid_list(?SERVER_TYPE_CROSS, ?TYPE_WORKER),
     broadcast_with_msg(PidList, Msg),
     ok.
 
 send_msg_2_all_cross_worker(Msg, MsgData) ->
-    PidList = sel_server_pid_list(?SERVER_TYPE_CGS, ?TYPE_WORKER),
+    PidList = sel_server_pid_list(?SERVER_TYPE_CROSS, ?TYPE_WORKER),
     broadcast_with_msg_data(PidList, Msg, MsgData),
     ok.
 %%%-------------------------------------------------------------------

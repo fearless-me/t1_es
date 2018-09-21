@@ -460,7 +460,7 @@ log_ps_info() ->
                 Heap = proplists:get_value(heap_size, L),
                 Stack = proplists:get_value(stack_size, L),
                 TotalHeap = proplists:get_value(total_heap_size, L),
-                CF = proplists:get_value(current_stacktrace, L),
+                CF = lists:sublist(proplists:get_value(current_stacktrace, L), 4),
 
                 [{Pid, RegName, Red, MQL, Mem, TotalHeap, Heap, Stack, cf_parse(CF, "")} | AccIn]
             catch _ : _ : _ ->

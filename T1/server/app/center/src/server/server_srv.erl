@@ -103,9 +103,9 @@ check_alive(State) ->
 
 %%--------------------------------------------------------------------
 %%--------------------------------------------------------------------
-makeName(?SERVER_TYPE_GS, DBId) ->
+makeName(?SERVER_TYPE_GAME, DBId) ->
     list_to_atom(lists:flatten(io_lib:format("gameServer_~p", [DBId])));
-makeName(?SERVER_TYPE_CGS, DBId) ->
+makeName(?SERVER_TYPE_CROSS, DBId) ->
     list_to_atom(lists:flatten(io_lib:format("gameServerCross_~p", [DBId])));
 makeName(_, _DBId) ->
     "".
