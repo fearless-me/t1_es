@@ -39,3 +39,4 @@ _gsdata_
 /T1/server/app/game/scripts/game_server_chs_release.txt
 /T1/tools/ErrorCode/deps/base/*.pyc
 *.pyc
+/T1/server/app/game/data/GmCmd.txt

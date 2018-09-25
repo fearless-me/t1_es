@@ -23,6 +23,8 @@
 ]).
 
 -export([
+    % 改变分组
+    change_group_/1,
     % 换地图、回之前的地图
     change_map_/3, change_pre_map_/0,
     % 本地图传送、开始移动、停止移动
@@ -100,6 +102,13 @@ change_pre_map_() ->
 %%-------------------------------------------------------------------
 change_map_(DestMapID, LineId, TarPos) ->
     ps:send(self(), passive_change_req, {DestMapID, LineId, TarPos}).
+
+%%-------------------------------------------------------------------
+change_group_(GroupId) ->
+    Uid = player_rw:get_uid(),
+    #m_player_map{map_pid = MapPid} = player_rw:get_map(),
+    ps:send(MapPid, change_group, {Uid, GroupId}),
+    ok.
 
 %%-------------------------------------------------------------------
 teleport_(NewPos) -> ps:send(self(), teleport, NewPos).

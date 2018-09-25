@@ -15,6 +15,7 @@
 -export([tv3/0, a/0, rand/1]).
 -export([test_apply/1, test_apply/2, apply_fun/0, loop_call/1, loop_mfa_call/2, loop_apply_call/2]).
 
+%% test:test_apply({test,apply_fun,[]}).
 test_apply(Mod)->
     io:format("call times           local call                      MFA         apply(microseconds)~n"),
     test_apply(Mod, 10),
@@ -53,6 +54,8 @@ loop_apply_call({M,F,A} = MFA, N) ->
     loop_apply_call(MFA, N - 1).
 
 apply_fun() ->
+    L = lists:seq(1, 100),
+    lists:keydelete(99, 1, L),
     ok.
 
 

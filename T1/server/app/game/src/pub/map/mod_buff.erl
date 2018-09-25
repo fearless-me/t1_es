@@ -16,11 +16,20 @@
 -include("gs_common_rec.hrl").
 
 %% API
--export([add_buff/3, tick/1]).
+-export([
+    add_buff/3, %% 添加buff
+    tick/1,     %% buff 周期触发
+    del_buff/2, %% 删除某个id的buff
+    del_buff_trigger/2, %% 删除某个事件触发的比如 进出地图、上下线
+    del_buff_group/2 %% 删除某个buff组
+]).
 
-%%-------------------------------------------------------------------
+%%-------------------------------------------------------------------        m
 %%-------------------------------------------------------------------
 add_buff(_Uid, _BuffId, _SrcUid) -> ok.
+del_buff(_Uid, _BuffId) -> ok.
+del_buff_trigger(_Uid, _Trigger) -> ok.
+del_buff_group(_Uid, _GroupId) -> ok.
 
 tick(#m_cache_map_object{uid = Uid}) ->
     BuffList = object_rw:get_buff_list_def(Uid, []),

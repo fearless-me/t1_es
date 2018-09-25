@@ -23,6 +23,7 @@
     sync_del_pet/1,
     sync_player_join_map/1,
     sync_player_exit_map/1,
+    sync_player_join_group/2,
     add_obj_to_vis_tile/2,
 
     send_net_msg_to_visual/2, send_msg_to_visual/3, send_msg_to_visual/2
@@ -36,6 +37,26 @@
 -define(VIS_W, map_vis_w__).
 -define(VIS_H, map_vis_h__).
 -define(CELL_SIZE, map_cell_size__).
+
+sync_player_join_group(Uid, Group) ->
+    %1.
+    Obj = map_rw:get_player(Uid),
+    Index = pos_to_vis_index(object_rw:get_cur_pos(Uid), get(?VIS_W), ?VIS_DIST),
+
+    %2.
+    ?TRY_CATCH(del_obj_from_vis_tile(Obj, Index)),
+
+    %3.
+    Tiles = get_vis_tile_around(Index),
+    sync_del_obj(Obj, Tiles),
+
+    %% 4
+    object_rw:set_group(Uid, Group),
+
+    %% 5
+    sync_add_obj(Obj, Tiles),
+    add_obj_to_vis_tile(Obj, Index),
+    ok.
 
 %%-------------------------------------------------------------------
 sync_player_join_map(Obj) ->
@@ -97,69 +118,106 @@ init_vis_tile_1(X) ->
 
 %%-------------------------------------------------------------------
 send_net_msg_to_visual(Uid, NetMsg) ->
+    Group = object_rw:get_group(Uid),
     VisTileIndex = object_rw:get_vis_tile_idx(Uid),
     VisTileList = get_vis_tile_around(VisTileIndex),
-    send_net_msg_to_big_visual(VisTileList, NetMsg),
+    send_net_msg_to_big_visual_with_group(VisTileList, NetMsg, Group),
     ok.
 
 %%-------------------------------------------------------------------
 send_msg_to_visual(Uid, MsgId) ->
+    Group = object_rw:get_group(Uid),
     VisTileIndex = object_rw:get_vis_tile_idx(Uid),
     VisTileList = get_vis_tile_around(VisTileIndex),
-    send_msg_to_big_visual(VisTileList, MsgId),
+    send_msg_to_big_visual_with_group(VisTileList, MsgId, Group),
     ok.
 
 
 %%-------------------------------------------------------------------
 send_msg_to_visual(Uid, MsgId, Msg) ->
+    Group = object_rw:get_group(Uid),
     VisTileIndex = object_rw:get_vis_tile_idx(Uid),
     VisTileList = get_vis_tile_around(VisTileIndex),
-    send_msg_to_big_visual(VisTileList, MsgId, Msg),
+    send_msg_to_big_visual_with_group(VisTileList, MsgId, Msg, Group),
     ok.
 
 %%-------------------------------------------------------------------
 %% 开始移动广播
 sync_movement_to_big_visual_tile(Uid) ->
     Msg = mod_move:cal_move_msg(Uid),
+    Group = object_rw:get_group(Uid),
     VisTileIndex = object_rw:get_vis_tile_idx(Uid),
-    sync_movement_to_big_visual_tile(VisTileIndex, Msg),
+    sync_movement_to_big_visual_tile(VisTileIndex, Msg, Group),
     ok.
 
 %%-------------------------------------------------------------------
-sync_movement_to_big_visual_tile(_VisTileIndex, undefined) ->
+sync_movement_to_big_visual_tile(_VisTileIndex, undefined, _Group) ->
     skip;
-sync_movement_to_big_visual_tile(VisTileIndex, Msg) ->
+sync_movement_to_big_visual_tile(VisTileIndex, Msg, Group) ->
     VisTileList = get_vis_tile_around(VisTileIndex),
-    send_net_msg_to_big_visual(VisTileList, Msg),
+    send_net_msg_to_big_visual_with_group(VisTileList, Msg, Group),
     ok.
 
 
 %%-------------------------------------------------------------------
-send_net_msg_to_big_visual(_VisTileList, undefined) ->
+send_net_msg_to_big_visual_with_group(_VisTileList, undefined, _Group) ->
     skip;
-send_net_msg_to_big_visual(VisTileList, Msg) ->
+send_net_msg_to_big_visual_with_group(VisTileList, Msg, Group) ->
     PlayerList = [Players || #m_vis_tile{player = Players} <- VisTileList],
+
     lists:foreach(
-        fun(Uid) -> gs_interface:send_net_msg(Uid, Msg) end,
-        lists:flatten(PlayerList)
+        fun
+            (UidList) ->
+                lists:foreach(
+                    fun(Uid) ->
+                        case object_rw:get_group(Uid) =:= Group of
+                            true -> gs_interface:send_net_msg(Uid, Msg);
+                            _Any -> skip
+                        end
+                    end, UidList)
+        end,
+        PlayerList
     ),
+
     ok.
 
 
 %%-------------------------------------------------------------------
-send_msg_to_big_visual(VisTileList, MsgId) ->
+%%send_msg_to_big_visual(VisTileList, MsgId) ->
+%%    send_msg_to_big_visual_with_group(VisTileList, MsgId, 0),
+%%    ok.
+
+send_msg_to_big_visual_with_group(VisTileList, MsgId, Group) ->
     PlayerList = [Players || #m_vis_tile{player = Players} <- VisTileList],
     lists:foreach(
-        fun(Uid) -> gs_interface:send_msg(Uid, MsgId) end,
-        lists:flatten(PlayerList)
+        fun(UidList) ->
+            lists:foreach(
+                fun(Uid) ->
+                    case object_rw:get_group(Uid) =:= Group of
+                        true -> gs_interface:send_msg(Uid, MsgId);
+                        _Any -> skip
+                    end
+                end, UidList)
+        end, PlayerList
     ),
     ok.
 
-send_msg_to_big_visual(VisTileList, MsgId, Msg) ->
+%%send_msg_to_big_visual(VisTileList, MsgId, Msg) ->
+%%    send_msg_to_big_visual_with_group(VisTileList, MsgId, Msg, 0),
+%%    ok.
+
+send_msg_to_big_visual_with_group(VisTileList, MsgId, Msg, Group) ->
     PlayerList = [Players || #m_vis_tile{player = Players} <- VisTileList],
     lists:foreach(
-        fun(Uid) -> gs_interface:send_msg(Uid, MsgId, Msg) end,
-        lists:flatten(PlayerList)
+        fun(UidList) ->
+            lists:foreach(
+                fun(Uid) ->
+                    case object_rw:get_group(Uid) =:= Group of
+                        true -> gs_interface:send_msg(Uid, MsgId, Msg);
+                        _Any -> skip
+                    end
+                end, UidList)
+        end, PlayerList
     ),
     ok.
 
@@ -295,12 +353,17 @@ do_sync_big_vis_tile_to_me(?OBJ_PLAYER, Uid, VisTileList, del_all) ->
     end,
     ok;
 do_sync_big_vis_tile_to_me(?OBJ_PLAYER, TarUid, VisTileList, add_all) ->
+    MeGroupId = object_rw:get_group(TarUid),
     FC =
         fun(Uid) ->
-            Msg = mod_move:cal_move_msg(Uid),
-            if
-                Msg =:= undefined -> skip;
-                true -> gs_interface:send_net_msg(TarUid, Msg)
+            case object_rw:get_group(Uid) =:= MeGroupId of
+                true ->
+                    Msg = mod_move:cal_move_msg(Uid),
+                    if
+                        Msg =:= undefined -> skip;
+                        true -> gs_interface:send_net_msg(TarUid, Msg)
+                    end;
+                _ -> skip
             end
         end,
     FV =
@@ -345,12 +408,14 @@ do_sync_big_vis_tile_to_me(_Type, _Uid, _VisTileList, _Msg) -> skip.
 sync_me_to_big_vis_tile(Obj, VisTileList, del_me) ->
     Uid = object_core:get_uid(Obj),
     Msg = #pk_GS2U_RemoveRemote{uid_list = [Uid]},
-    send_net_msg_to_big_visual(VisTileList, Msg),
+    Group = object_rw:get_group(Uid),
+    send_net_msg_to_big_visual_with_group(VisTileList, Msg, Group),
     ok;
 sync_me_to_big_vis_tile(Obj, VisTileList, add_me) ->
     Uid = object_core:get_uid(Obj),
     Msg = mod_move:cal_move_msg(Uid),
-    send_net_msg_to_big_visual(VisTileList, Msg),
+    Group = object_rw:get_group(Uid),
+    send_net_msg_to_big_visual_with_group(VisTileList, Msg, Group),
     ok.
 %%-------------------------------------------------------------------
 %%
