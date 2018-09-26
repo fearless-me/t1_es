@@ -8,9 +8,8 @@
   <component name="ChangeListManager">
     <list default="true" id="354d5196-8a2e-476f-8af6-71424480c5e1" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/persistent/mnesia_cluster.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/persistent/mnesia_cluster.erl" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/scripts/ps_cs.config" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/ps_cs.config" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/ps_cs.ers" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/ps_cs.ers" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/ps_gs.config" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/ps_gs.config" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/scripts/ps_gs.ers" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/ps_gs.ers" afterDir="false" />
     </list>
     <list id="b84605e7-b6a8-415d-8e82-941d3321f10b" name="ignore-on-commit" comment="" />
@@ -123,7 +122,7 @@
           <entry key="beam" value="21" />
           <entry key="config" value="15" />
           <entry key="dump" value="2" />
-          <entry key="erl" value="2863" />
+          <entry key="erl" value="2864" />
           <entry key="err" value="1" />
           <entry key="ers" value="43" />
           <entry key="gitignore" value="6" />
@@ -142,7 +141,7 @@
         <counts>
           <entry key="BEAM" value="21" />
           <entry key="Batch" value="6" />
-          <entry key="Erlang" value="2863" />
+          <entry key="Erlang" value="2864" />
           <entry key="Erlang Header" value="433" />
           <entry key="Erlang Terms" value="15" />
           <entry key="Erlang/OTP app" value="34" />
@@ -161,11 +160,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/scripts/ps_gs.ers">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="394">
-              <caret line="403" column="12" selection-start-line="403" selection-start-column="12" selection-end-line="403" selection-end-column="12" />
+            <state relative-caret-position="420">
+              <caret line="404" column="88" lean-forward="true" selection-start-line="404" selection-start-column="88" selection-end-line="404" selection-end-column="88" />
             </state>
           </provider>
         </entry>
@@ -209,6 +208,15 @@
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="416">
               <caret line="16" column="30" selection-start-line="16" selection-start-column="30" selection-end-line="16" selection-end-column="30" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/app/deps/pubs/src/persistent/mnesia_cluster.erl">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="686">
+              <caret line="59" column="21" selection-start-line="59" selection-start-column="21" selection-end-line="59" selection-end-column="21" />
             </state>
           </provider>
         </entry>
@@ -344,7 +352,6 @@
         <option value="$PROJECT_DIR$/app/deps/pubs/src/persistent/mne_monitor.erl" />
         <option value="$PROJECT_DIR$/app/deps/pubs/src/persistent/mnesia_monitor.erl" />
         <option value="$PROJECT_DIR$/app/deps/pubs/src/persistent/mne_mt.erl" />
-        <option value="$PROJECT_DIR$/app/deps/pubs/src/persistent/mnesia_cluster.erl" />
         <option value="$PROJECT_DIR$/app/deps/pubs/src/persistent/my_mnesia.erl" />
         <option value="$PROJECT_DIR$/app/deps/pubs/src/persistent/mnesia_utils.erl" />
         <option value="$PROJECT_DIR$/app/deps/pubs/src/lib/my_ets.erl" />
@@ -355,6 +362,7 @@
         <option value="$PROJECT_DIR$/scripts/ps_gs.config" />
         <option value="$PROJECT_DIR$/app/deps/pubs/src/lib/task.erl" />
         <option value="$PROJECT_DIR$/scripts/ps_gs.ers" />
+        <option value="$PROJECT_DIR$/app/deps/pubs/src/persistent/mnesia_cluster.erl" />
       </list>
     </option>
   </component>
@@ -401,35 +409,6 @@
               <item name="Server" type="b2602c69:ProjectViewProjectNode" />
               <item name="Server" type="462c0819:PsiDirectoryNode" />
               <item name="app" type="462c0819:PsiDirectoryNode" />
-              <item name="center" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="Server" type="b2602c69:ProjectViewProjectNode" />
-              <item name="Server" type="462c0819:PsiDirectoryNode" />
-              <item name="app" type="462c0819:PsiDirectoryNode" />
-              <item name="center" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="Server" type="b2602c69:ProjectViewProjectNode" />
-              <item name="Server" type="462c0819:PsiDirectoryNode" />
-              <item name="app" type="462c0819:PsiDirectoryNode" />
-              <item name="center" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="dist" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="Server" type="b2602c69:ProjectViewProjectNode" />
-              <item name="Server" type="462c0819:PsiDirectoryNode" />
-              <item name="app" type="462c0819:PsiDirectoryNode" />
-              <item name="center" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="guild" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="Server" type="b2602c69:ProjectViewProjectNode" />
-              <item name="Server" type="462c0819:PsiDirectoryNode" />
-              <item name="app" type="462c0819:PsiDirectoryNode" />
               <item name="deps" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
@@ -454,7 +433,7 @@
               <item name="deps" type="462c0819:PsiDirectoryNode" />
               <item name="pubs" type="462c0819:PsiDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="lib" type="462c0819:PsiDirectoryNode" />
+              <item name="persistent" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="Server" type="b2602c69:ProjectViewProjectNode" />
@@ -494,7 +473,7 @@
     <property name="SearchEverywhereHistoryKey" value="&#9;FILE&#9;file://C:/Program Files/erl10.0/lib/erts-10.0/src/erlang.erl" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1537943470721" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1537944116576" />
     <property name="last_opened_file_path" value="E:/DataTool/Server" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
@@ -1073,13 +1052,13 @@
       <workItem from="1537839793708" duration="7905000" />
       <workItem from="1537853514066" duration="11350000" />
       <workItem from="1537875532807" duration="6864000" />
-      <workItem from="1537940551380" duration="2917000" />
+      <workItem from="1537940551380" duration="3562000" />
     </task>
     <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="2136891000" />
+    <option name="totallyTimeSpent" value="2137536000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -1446,13 +1425,6 @@
     <entry file="file://$PROJECT_DIR$/app/deps/pubs/src/lib/pg_local.erl">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/deps/pubs/src/persistent/mnesia_cluster.erl">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1040">
-          <caret line="40" column="33" selection-start-line="40" selection-start-column="33" selection-end-line="40" selection-end-column="33" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/deps/pubs/src/lib/misc_ets.erl">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="416">
@@ -1495,8 +1467,15 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/scripts/ps_gs.ers">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="394">
-          <caret line="403" column="12" selection-start-line="403" selection-start-column="12" selection-end-line="403" selection-end-column="12" />
+        <state relative-caret-position="420">
+          <caret line="404" column="88" lean-forward="true" selection-start-line="404" selection-start-column="88" selection-end-line="404" selection-end-column="88" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/deps/pubs/src/persistent/mnesia_cluster.erl">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="686">
+          <caret line="59" column="21" selection-start-line="59" selection-start-column="21" selection-end-line="59" selection-end-column="21" />
         </state>
       </provider>
     </entry>

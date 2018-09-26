@@ -10,7 +10,7 @@
 -author("mawenhong").
 
 %% API
--export([is_running/0, leave_cluster/0]).
+-export([leave_cluster/0]).
 -export([remove_node_if_mnesia_running/1]).
 
 
@@ -57,7 +57,7 @@ remove_node_if_mnesia_running(Node) ->
 
 
 cluster_status_from_mnesia() ->
-    case is_running() of
+    case misc_mnesia:is_running() of
         false ->
             {error, mnesia_not_running};
         true ->
