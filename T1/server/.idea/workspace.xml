@@ -3,30 +3,15 @@
   <component name="BookmarkManager">
     <bookmark url="file://$PROJECT_DIR$/scripts/fast_compile.ers" />
     <bookmark url="file://G:/other/code/twcq_server/twcq_server/src/mod/mod_mon_active.erl" description="trace(timeout, [AttObj, Minfo, State])-&gt;" line="376" />
+    <bookmark url="file://$PROJECT_DIR$/scripts/ps_gs.ers" line="320" />
   </component>
   <component name="ChangeListManager">
     <list default="true" id="354d5196-8a2e-476f-8af6-71424480c5e1" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/center/src/db/cs_share.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/center/src/db/cs_share.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/center/src/db/cs_share_pub.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/center/src/db/cs_share_pub.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/center/src/dist/cs_dist_share.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/center/src/dist/cs_dist_share.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/center/src/server/server_mgr_priv.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/center/src/server/server_mgr_priv.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/center/src/server/server_priv.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/center/src/server/server_priv.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/center/src/team/src/team_logic.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/center/src/team/src/team_logic.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/common/src/common_interface.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/common/src/common_interface.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/common/src/cross_selector.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/common/src/cross_selector.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/db_share/src/db_share.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/db_share/src/db_share.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/persistent/mne_ex.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/persistent/my_mnesia.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/persistent/mne_monitor.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/persistent/mnesia_monitor.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/deps/pubs/src/persistent/mne_mt.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/deps/pubs/src/persistent/mnesia_cluster.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/include/gs_cache.hrl" beforeDir="false" afterPath="$PROJECT_DIR$/app/game/include/gs_cache.hrl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/interface/cross_interface.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/game/src/interface/cross_interface.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/pub/common/gs_share.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/game/src/pub/common/gs_share.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/pub/hook/hook_player.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/game/src/pub/hook/hook_player.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/pub/map/map_view.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/game/src/pub/map/map_view.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/pub/player/player_base.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/game/src/pub/player/player_base.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/script/rw_code.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/game/src/script/rw_code.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/game/src/test/test.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/game/src/test/test.erl" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/ps_cs.config" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/ps_cs.config" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/ps_cs.ers" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/ps_cs.ers" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/ps_gs.config" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/ps_gs.config" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/ps_gs.ers" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/ps_gs.ers" afterDir="false" />
     </list>
     <list id="b84605e7-b6a8-415d-8e82-941d3321f10b" name="ignore-on-commit" comment="" />
     <ignored path="$PROJECT_DIR$/out/" />
@@ -82,14 +67,14 @@
     <session id="895199334">
       <usages-collector id="statistics.lifecycle.project">
         <counts>
-          <entry key="project.closed" value="67" />
+          <entry key="project.closed" value="68" />
           <entry key="project.open.time.0" value="2" />
           <entry key="project.open.time.1" value="2" />
           <entry key="project.open.time.10" value="9" />
           <entry key="project.open.time.11" value="11" />
           <entry key="project.open.time.12" value="8" />
           <entry key="project.open.time.13" value="8" />
-          <entry key="project.open.time.14" value="5" />
+          <entry key="project.open.time.14" value="6" />
           <entry key="project.open.time.15" value="3" />
           <entry key="project.open.time.16" value="3" />
           <entry key="project.open.time.17" value="2" />
@@ -100,15 +85,15 @@
           <entry key="project.open.time.7" value="2" />
           <entry key="project.open.time.8" value="4" />
           <entry key="project.open.time.9" value="10" />
-          <entry key="project.opened" value="73" />
+          <entry key="project.opened" value="74" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
           <entry key="app" value="15" />
-          <entry key="config" value="14" />
-          <entry key="erl" value="52262" />
-          <entry key="ers" value="1725" />
+          <entry key="config" value="21" />
+          <entry key="erl" value="52339" />
+          <entry key="ers" value="2156" />
           <entry key="ft" value="2" />
           <entry key="gitignore" value="1" />
           <entry key="hrl" value="4481" />
@@ -119,13 +104,13 @@
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
-          <entry key="Erlang" value="52262" />
+          <entry key="Erlang" value="52339" />
           <entry key="Erlang Header" value="4481" />
-          <entry key="Erlang Terms" value="14" />
+          <entry key="Erlang Terms" value="21" />
           <entry key="Erlang/OTP app" value="33" />
           <entry key="Git file" value="1" />
           <entry key="Markdown" value="518" />
-          <entry key="PLAIN_TEXT" value="1733" />
+          <entry key="PLAIN_TEXT" value="2164" />
           <entry key="VTL" value="2" />
         </counts>
       </usages-collector>
@@ -136,11 +121,11 @@
           <entry key="asciidoc" value="1" />
           <entry key="bat" value="6" />
           <entry key="beam" value="21" />
-          <entry key="config" value="11" />
+          <entry key="config" value="15" />
           <entry key="dump" value="2" />
-          <entry key="erl" value="2855" />
+          <entry key="erl" value="2863" />
           <entry key="err" value="1" />
-          <entry key="ers" value="41" />
+          <entry key="ers" value="43" />
           <entry key="gitignore" value="6" />
           <entry key="hrl" value="433" />
           <entry key="html" value="1" />
@@ -157,15 +142,15 @@
         <counts>
           <entry key="BEAM" value="21" />
           <entry key="Batch" value="6" />
-          <entry key="Erlang" value="2855" />
+          <entry key="Erlang" value="2863" />
           <entry key="Erlang Header" value="433" />
-          <entry key="Erlang Terms" value="11" />
+          <entry key="Erlang Terms" value="15" />
           <entry key="Erlang/OTP app" value="34" />
           <entry key="Git file" value="6" />
           <entry key="HTML" value="1" />
           <entry key="Log" value="8" />
           <entry key="Markdown" value="33" />
-          <entry key="PLAIN_TEXT" value="58" />
+          <entry key="PLAIN_TEXT" value="60" />
           <entry key="Scratch" value="2" />
         </counts>
       </usages-collector>
@@ -176,92 +161,54 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/deps/pubs/src/persistent/my_mnesia.erl">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="316">
-              <caret line="22" column="17" selection-start-line="22" selection-start-column="17" selection-end-line="22" selection-end-column="17" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/deps/pubs/src/persistent/mnesia_monitor.erl">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="208">
-              <caret line="8" column="22" selection-start-line="8" selection-start-column="8" selection-end-line="8" selection-end-column="22" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/deps/pubs/src/persistent/mnesia_utils.erl">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="208">
-              <caret line="8" column="16" lean-forward="true" selection-start-line="8" selection-start-column="16" selection-end-line="8" selection-end-column="16" />
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/app/deps/pubs/src/persistent/mnesia_cluster.erl">
+        <entry file="file://$PROJECT_DIR$/scripts/ps_gs.ers">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="318">
-              <caret line="40" column="31" selection-start-line="40" selection-start-column="31" selection-end-line="40" selection-end-column="31" />
+            <state relative-caret-position="394">
+              <caret line="403" column="12" selection-start-line="403" selection-start-column="12" selection-end-line="403" selection-end-column="12" />
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://C:/Program Files/erl10.0/lib/mnesia-4.15.4/src/mnesia.erl">
+        <entry file="file://$PROJECT_DIR$/scripts/color.erl">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="264">
-              <caret line="2307" column="44" selection-start-line="2307" selection-start-column="44" selection-end-line="2307" selection-end-column="44" />
+            <state relative-caret-position="-36" />
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/deps/pubs/src/lib/task.erl">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="650">
+              <caret line="25" column="24" selection-start-line="25" selection-start-column="24" selection-end-line="25" selection-end-column="24" />
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/game/scripts/compile_game_server_chs_release.txt">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="172">
-              <caret line="281" column="239" selection-start-line="281" selection-start-column="239" selection-end-line="281" selection-end-column="239" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/game/scripts/game_chs_release.txt">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="172">
-              <caret line="283" column="239" selection-start-line="283" selection-start-column="239" selection-end-line="283" selection-end-column="239" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/deps/pubs/src/persistent/mnesia_starter.erl">
+        <entry file="file://C:/Program Files/erl10.0/lib/stdlib-3.5/src/filename.erl">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="290">
-              <caret line="60" column="18" selection-start-line="60" selection-start-column="18" selection-end-line="60" selection-end-column="18" />
+              <caret line="431" selection-start-line="431" selection-end-line="431" />
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/deps/pubs/src/lib/misc.erl">
+        <entry file="file://$PROJECT_DIR$/scripts/ps_gs.config">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-70">
-              <caret line="487" selection-start-line="487" selection-end-line="487" />
+            <state relative-caret-position="262">
+              <caret line="17" column="41" selection-start-line="17" selection-start-column="41" selection-end-line="17" selection-end-column="41" />
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/deps/pubs/src/lib/my_ets.erl">
+        <entry file="file://$PROJECT_DIR$/scripts/mm.config">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="238">
-              <caret line="23" column="58" lean-forward="true" selection-start-line="23" selection-start-column="58" selection-end-line="23" selection-end-column="58" />
+            <state relative-caret-position="416">
+              <caret line="16" column="30" selection-start-line="16" selection-start-column="30" selection-end-line="16" selection-end-column="30" />
             </state>
           </provider>
         </entry>
@@ -282,23 +229,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>whereis</find>
-      <find>dist_monitor</find>
-      <find>slave_started</find>
-      <find>slave_start</find>
-      <find>try</find>
-      <find>error_logger:</find>
-      <find>task_all_done</find>
-      <find>all_slaves_stared</find>
-      <find>task_group_done</find>
-      <find>start</find>
-      <find>pause_group</find>
-      <find>pause</find>
-      <find>i_set_group_pause</find>
-      <find>slave_register</find>
-      <find>master</find>
-      <find>init:get_argument(master)</find>
-      <find>all</find>
       <find>all logic process</find>
       <find>db_share_otp</find>
       <find>db_proxy_otp</find>
@@ -312,6 +242,23 @@
       <find>i_set_fields</find>
       <find>mne_monitor</find>
       <find>mne_mt</find>
+      <find>copyFile</find>
+      <find>copyFile(</find>
+      <find>svn_lastest_file_log</find>
+      <find>Pos</find>
+      <find>reDir</find>
+      <find>BeamPathList</find>
+      <find>reDir(</find>
+      <find>doWork(</find>
+      <find>splitCopyFileCfg</find>
+      <find>getChangeFile(</find>
+      <find>getDiffFileList(</find>
+      <find>changePath(</find>
+      <find>getChangeFile</find>
+      <find>changePath</find>
+      <find>FileList</find>
+      <find>getDiffFileList</find>
+      <find>hotUpdateGuard</find>
     </findStrings>
     <replaceStrings>
       <replace>-include(&quot;gs_ai_inc.hrl&quot;).</replace>
@@ -357,15 +304,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/app/game/include/condition_event.hrl" />
-        <option value="$PROJECT_DIR$/app/game/src/pub/condition_event/condition_check.erl" />
-        <option value="$PROJECT_DIR$/app/game/src/pub/condition_event/event_action.erl" />
-        <option value="$PROJECT_DIR$/app/game/src/pub/common/broadcast_srv.erl" />
-        <option value="$PROJECT_DIR$/app/common/include/common_ps_def.hrl" />
-        <option value="$PROJECT_DIR$/app/center/src/team/src/team_otp.erl" />
-        <option value="$PROJECT_DIR$/app/center/src/team/src/team_srv.erl" />
-        <option value="$PROJECT_DIR$/app/deps/pubs/src/lib/misc_time.erl" />
-        <option value="$PROJECT_DIR$/app/center/src/activity/src/activity_sup.erl" />
         <option value="$PROJECT_DIR$/app/center/src/guild/src/guild_sup.erl" />
         <option value="$PROJECT_DIR$/app/center/src/team/src/team_sup.erl" />
         <option value="$PROJECT_DIR$/app/deps/pubs/src/lib/misc_dist.erl" />
@@ -406,8 +344,17 @@
         <option value="$PROJECT_DIR$/app/deps/pubs/src/persistent/mne_monitor.erl" />
         <option value="$PROJECT_DIR$/app/deps/pubs/src/persistent/mnesia_monitor.erl" />
         <option value="$PROJECT_DIR$/app/deps/pubs/src/persistent/mne_mt.erl" />
-        <option value="$PROJECT_DIR$/app/deps/pubs/src/persistent/my_mnesia.erl" />
         <option value="$PROJECT_DIR$/app/deps/pubs/src/persistent/mnesia_cluster.erl" />
+        <option value="$PROJECT_DIR$/app/deps/pubs/src/persistent/my_mnesia.erl" />
+        <option value="$PROJECT_DIR$/app/deps/pubs/src/persistent/mnesia_utils.erl" />
+        <option value="$PROJECT_DIR$/app/deps/pubs/src/lib/my_ets.erl" />
+        <option value="$PROJECT_DIR$/app/deps/pubs/src/lib/ets_utils.erl" />
+        <option value="$PROJECT_DIR$/app/deps/pubs/src/lib/misc_ets.erl" />
+        <option value="$PROJECT_DIR$/app/deps/pubs/src/lib/mnesia_utils.erl" />
+        <option value="$PROJECT_DIR$/app/deps/pubs/src/lib/misc_mnesia.erl" />
+        <option value="$PROJECT_DIR$/scripts/ps_gs.config" />
+        <option value="$PROJECT_DIR$/app/deps/pubs/src/lib/task.erl" />
+        <option value="$PROJECT_DIR$/scripts/ps_gs.ers" />
       </list>
     </option>
   </component>
@@ -424,8 +371,8 @@
     </treeState>
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="-8" />
-    <option name="y" value="-8" />
+    <option name="x" value="651" />
+    <option name="y" value="151" />
     <option name="width" value="1936" />
     <option name="height" value="1056" />
   </component>
@@ -436,9 +383,8 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="PackagesPane" />
-      <pane id="AndroidView" />
       <pane id="Scope" />
+      <pane id="PackagesPane" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -514,53 +460,12 @@
               <item name="Server" type="b2602c69:ProjectViewProjectNode" />
               <item name="Server" type="462c0819:PsiDirectoryNode" />
               <item name="app" type="462c0819:PsiDirectoryNode" />
-              <item name="deps" type="462c0819:PsiDirectoryNode" />
-              <item name="pubs" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="persistent" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="Server" type="b2602c69:ProjectViewProjectNode" />
-              <item name="Server" type="462c0819:PsiDirectoryNode" />
-              <item name="app" type="462c0819:PsiDirectoryNode" />
               <item name="game" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="Server" type="b2602c69:ProjectViewProjectNode" />
               <item name="Server" type="462c0819:PsiDirectoryNode" />
-              <item name="app" type="462c0819:PsiDirectoryNode" />
-              <item name="game" type="462c0819:PsiDirectoryNode" />
               <item name="scripts" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="Server" type="b2602c69:ProjectViewProjectNode" />
-              <item name="External Libraries" type="cb654da1:ExternalLibrariesNode" />
-            </path>
-            <path>
-              <item name="Server" type="b2602c69:ProjectViewProjectNode" />
-              <item name="External Libraries" type="cb654da1:ExternalLibrariesNode" />
-              <item name="&lt; Erlang 21 &gt;" type="70bed36:NamedLibraryElementNode" />
-            </path>
-            <path>
-              <item name="Server" type="b2602c69:ProjectViewProjectNode" />
-              <item name="External Libraries" type="cb654da1:ExternalLibrariesNode" />
-              <item name="&lt; Erlang 21 &gt;" type="70bed36:NamedLibraryElementNode" />
-              <item name="lib" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="Server" type="b2602c69:ProjectViewProjectNode" />
-              <item name="External Libraries" type="cb654da1:ExternalLibrariesNode" />
-              <item name="&lt; Erlang 21 &gt;" type="70bed36:NamedLibraryElementNode" />
-              <item name="lib" type="462c0819:PsiDirectoryNode" />
-              <item name="mnesia-4.15.4" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="Server" type="b2602c69:ProjectViewProjectNode" />
-              <item name="External Libraries" type="cb654da1:ExternalLibrariesNode" />
-              <item name="&lt; Erlang 21 &gt;" type="70bed36:NamedLibraryElementNode" />
-              <item name="lib" type="462c0819:PsiDirectoryNode" />
-              <item name="mnesia-4.15.4" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="Server" type="b2602c69:ProjectViewProjectNode" />
@@ -581,6 +486,7 @@
           <select />
         </subPane>
       </pane>
+      <pane id="AndroidView" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -588,7 +494,7 @@
     <property name="SearchEverywhereHistoryKey" value="&#9;FILE&#9;file://C:/Program Files/erl10.0/lib/erts-10.0/src/erlang.erl" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1537931565989" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1537943470721" />
     <property name="last_opened_file_path" value="E:/DataTool/Server" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
@@ -599,13 +505,6 @@
     <property name="settings.editor.selected.configurable" value="MarkdownNavigator.Settings.Preview" />
   </component>
   <component name="RecentsManager">
-    <key name="MoveFile.RECENT_KEYS">
-      <recent name="E:\T1\Server\app\game\src\pub\core" />
-      <recent name="E:\T1\Server\app\game\src\pub\map" />
-      <recent name="E:\T1\Server\app\game\src\pub\common" />
-      <recent name="E:\T1\Server\app\game\src\pub\condition_event" />
-      <recent name="E:\T1\Server\app\game\src\pub\condition_event\event" />
-    </key>
     <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
       <recent name="" />
     </key>
@@ -613,6 +512,13 @@
       <recent name="E:\T1\server\app\game\include" />
       <recent name="E:\T1\server\app\game\src\core" />
       <recent name="E:\T1\server\app\deps\pubs\src\lib" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="E:\T1\Server\app\deps\pubs\src\lib" />
+      <recent name="E:\T1\Server\app\game\src\pub\core" />
+      <recent name="E:\T1\Server\app\game\src\pub\map" />
+      <recent name="E:\T1\Server\app\game\src\pub\common" />
+      <recent name="E:\T1\Server\app\game\src\pub\condition_event" />
     </key>
   </component>
   <component name="RunDashboard">
@@ -1166,13 +1072,14 @@
       <workItem from="1537523512415" duration="602000" />
       <workItem from="1537839793708" duration="7905000" />
       <workItem from="1537853514066" duration="11350000" />
-      <workItem from="1537875532807" duration="3480000" />
+      <workItem from="1537875532807" duration="6864000" />
+      <workItem from="1537940551380" duration="2917000" />
     </task>
     <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="2130590000" />
+    <option name="totallyTimeSpent" value="2136891000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -1187,7 +1094,7 @@
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.8431591" visible="true" weight="0.15618336" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.8431591" visible="true" weight="0.15778251" />
       <window_info id="Structure" order="1" sideWeight="0.15684094" side_tool="true" weight="0.22547974" />
       <window_info id="Image Layers" order="2" />
       <window_info id="Designer" order="3" />
@@ -1270,74 +1177,6 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/app/game/src/pub/map/mod_buff.erl">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="676">
-          <caret line="26" column="78" selection-start-line="26" selection-start-column="78" selection-end-line="26" selection-end-column="78" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/game/src/pub/map/object_core.erl">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="3250">
-          <caret line="125" column="41" selection-start-line="125" selection-start-column="41" selection-end-line="125" selection-end-column="41" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/game/src/pub/player/player_pub.erl">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="512">
-          <caret line="109" column="32" selection-start-line="109" selection-start-column="20" selection-end-line="109" selection-end-column="32" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/game/src/pub/map/mod_map_priv.erl">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="280">
-          <caret line="79" column="28" selection-start-line="79" selection-start-column="28" selection-end-line="79" selection-end-column="28" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/game/src/pub/map/map_rw.erl">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="290">
-          <caret line="102" selection-start-line="102" selection-end-line="102" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/game/src/interface/gs_interface.erl">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="330">
-          <caret line="99" selection-start-line="99" selection-end-line="99" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/game/src/pub/player/player_gm.erl">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-864" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/game/src/pub/map/map_view.erl">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="342">
-          <caret line="147" column="28" selection-start-line="147" selection-start-column="28" selection-end-line="147" selection-end-column="28" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/game/include/map_core.hrl">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="290">
-          <caret line="66" column="51" selection-start-line="66" selection-start-column="51" selection-end-line="66" selection-end-column="51" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/game/src/pub/map/base/map_interface.erl">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="290">
-          <caret line="29" selection-start-line="29" selection-end-line="29" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/game/src/pub/map/base/map_sup.erl">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="290">
@@ -1370,13 +1209,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="470">
           <caret line="224" column="45" selection-start-line="224" selection-start-column="45" selection-end-line="224" selection-end-column="45" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://C:/Program Files/erl10.0/lib/stdlib-3.5/src/lists.erl">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="820">
-          <caret line="242" selection-start-line="242" selection-end-line="242" />
         </state>
       </provider>
     </entry>
@@ -1489,9 +1321,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/deps/pubs/src/version/version.erl">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/deps/db_share/src/db_share.erl">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="254">
@@ -1544,45 +1373,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/deps/pubs/src/lib/my_ets.erl">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="238">
-          <caret line="23" column="58" lean-forward="true" selection-start-line="23" selection-start-column="58" selection-end-line="23" selection-end-column="58" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/deps/pubs/src/persistent/mnesia_starter.erl">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="290">
-          <caret line="60" column="18" selection-start-line="60" selection-start-column="18" selection-end-line="60" selection-end-column="18" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/deps/pubs/src/persistent/mnesia_utils.erl">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="208">
-          <caret line="8" column="16" lean-forward="true" selection-start-line="8" selection-start-column="16" selection-end-line="8" selection-end-column="16" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/deps/pubs/src/persistent/mnesia_monitor.erl">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="208">
-          <caret line="8" column="22" selection-start-line="8" selection-start-column="8" selection-end-line="8" selection-end-column="22" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/game/scripts/compile_game_server_chs_release.txt">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="172">
           <caret line="281" column="239" selection-start-line="281" selection-start-column="239" selection-end-line="281" selection-end-column="239" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/game/scripts/game_chs_release.txt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="172">
-          <caret line="283" column="239" selection-start-line="283" selection-start-column="239" selection-end-line="283" selection-end-column="239" />
         </state>
       </provider>
     </entry>
@@ -1593,17 +1387,116 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/deps/pubs/src/persistent/my_mnesia.erl">
+    <entry file="file://$PROJECT_DIR$/app/deps/pubs/src/persistent/mnesia_starter.erl" />
+    <entry file="file://$PROJECT_DIR$/app/game/scripts/game_chs_release.txt">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="316">
-          <caret line="22" column="17" selection-start-line="22" selection-start-column="17" selection-end-line="22" selection-end-column="17" />
+        <state relative-caret-position="172">
+          <caret line="283" column="239" selection-start-line="283" selection-start-column="239" selection-end-line="283" selection-end-column="239" />
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/app/deps/pubs/src/persistent/mnesia_dynamic.erl">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/deps/pubs/src/persistent/mnesia_monitor.erl">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="208">
+          <caret line="8" column="22" selection-start-line="8" selection-start-column="8" selection-end-line="8" selection-end-column="22" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/deps/pubs/src/lib/misc_mnesia.erl">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="690">
+          <caret line="35" column="10" selection-start-line="35" selection-start-column="10" selection-end-line="35" selection-end-column="10" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://C:/Program Files/erl10.0/lib/stdlib-3.5/src/lists.erl">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="31798">
+          <caret line="1223" selection-start-line="1223" selection-end-line="1223" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://C:/Program Files/erl10.0/lib/stdlib-3.5/src/string.erl">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="46540">
+          <caret line="1790" selection-start-line="1790" selection-end-line="1790" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/deps/pubs/rebar.config">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/deps/pubs/src/version/version.erl">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="130">
+          <caret line="5" column="32" selection-start-line="5" selection-start-column="32" selection-end-line="5" selection-end-column="32" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/scripts/ps_cs.ers">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="10504">
+          <caret line="404" column="32" selection-start-line="404" selection-start-column="19" selection-end-line="404" selection-end-column="32" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/deps/pubs/src/lib/pg_local.erl">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
     <entry file="file://$PROJECT_DIR$/app/deps/pubs/src/persistent/mnesia_cluster.erl">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="318">
-          <caret line="40" column="31" selection-start-line="40" selection-start-column="31" selection-end-line="40" selection-end-column="31" />
+        <state relative-caret-position="1040">
+          <caret line="40" column="33" selection-start-line="40" selection-start-column="33" selection-end-line="40" selection-end-column="33" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/deps/pubs/src/lib/misc_ets.erl">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="416">
+          <caret line="16" column="16" selection-start-line="16" selection-start-column="16" selection-end-line="16" selection-end-column="16" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/scripts/color.erl">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-36" />
+      </provider>
+    </entry>
+    <entry file="file://C:/Program Files/erl10.0/lib/stdlib-3.5/src/filename.erl">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="290">
+          <caret line="431" selection-start-line="431" selection-end-line="431" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/deps/pubs/src/lib/task.erl">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="650">
+          <caret line="25" column="24" selection-start-line="25" selection-start-column="24" selection-end-line="25" selection-end-column="24" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/scripts/ps_gs.config">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="262">
+          <caret line="17" column="41" selection-start-line="17" selection-start-column="41" selection-end-line="17" selection-end-column="41" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/scripts/mm.config">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="416">
+          <caret line="16" column="30" selection-start-line="16" selection-start-column="30" selection-end-line="16" selection-end-column="30" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/scripts/ps_gs.ers">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="394">
+          <caret line="403" column="12" selection-start-line="403" selection-start-column="12" selection-end-line="403" selection-end-column="12" />
         </state>
       </provider>
     </entry>

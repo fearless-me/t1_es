@@ -181,13 +181,13 @@ work(Lang, Platform, Type) ->
 	doWork(Type, Lang, Platform, CopyFileCfg),
 	menu().
 
-doWork(?SqlUpdateAtom, _Lang, _Platform, _CopyFileCfg) ->
+doWork(?SqlUpdateAtom, _Lang, _Platform, CopyFileCfg) ->
 	SqlDir = getSqlDir(),
 	SvnVer = svn_version(),
 	TargetDir = getTargetDir(),
 	FileList1 = filelib:fold_files(SqlDir, ".sql$$", true, fun(File, Acc) -> [File | Acc] end, []),
 	%%
-	reDir(?SqlUpdateAtom),
+	reDir(?SqlUpdateAtom, CopyFileCfg),
 	F =
 		fun(SqlFile) ->
 			BaseName = filename:basename(SqlFile, ".sql"),
@@ -208,7 +208,7 @@ doWork(?SqlUpdateAtom, _Lang, _Platform, _CopyFileCfg) ->
 doWork(Type, Lang, Platform, CopyFileCfg) ->
 	WorkDir = getWorkDir(),
 	SvnVer = svn_version(),
-	{CanGo, RevisionA, RevisionB, HrlFileList, FileList, ModList} = reDir(Type),
+	{CanGo, RevisionA, RevisionB, HrlFileList, FileList, ModList} = reDir(Type, CopyFileCfg),
 	case goWork(CanGo, HrlFileList, RevisionA, RevisionB) of
 		true ->
 			TempDir = io_lib:format("~ts/~ts/", [getTempDir(), makeOutTempDir(Type, Lang, Platform, SvnVer)]),
@@ -241,36 +241,36 @@ goWork(_, HrlFileList, RevisionA, RevisionB) ->
 			false
 	end.
 
-reDir(?HotUpdateAtom) ->
+reDir(?HotUpdateAtom, CopyFileCfg) ->
 	TempDir1 = getTempDir(),
 	TempDir = pathConvert(TempDir1),
 	redirectCreateDir(TempDir),
 
 	{RevisionA, RevisionB} = read_two_version(),
-	FileList = getDiffFileList(RevisionA, RevisionB, ".erl", false),
+	FileList = getDiffFileList(CopyFileCfg, RevisionA, RevisionB, ".erl", false),
 	ModList =
 		lists:map(
 			fun(FileName) ->
 				[FileExt | _] = lists:reverse(string:tokens(FileName, "/")),
 				[Mod | _] = string:tokens(FileExt, "."),
-				color:info_log("module [~ts]~n", [Mod]),
+				color:info_log("module [~ts]", [Mod]),
 				Mod
 			end, FileList),
 	color:warn_log("[~p] modules~n",[erlang:length(ModList)]),
-	case hotUpdateGuard(RevisionA, RevisionB) of
+	case hotUpdateGuard(CopyFileCfg, RevisionA, RevisionB) of
 		[] ->
 			{true, RevisionA, RevisionB, [], FileList, ModList};
 		Hrl ->
 			{false, RevisionA, RevisionB, Hrl, FileList, ModList}
 	end;
-reDir(_Type) ->
+reDir(_Type, _) ->
 	TempDir1 = getTempDir(),
 	TempDir = pathConvert(TempDir1),
 	redirectCreateDir(TempDir),
 	{true, "0", "head", [], [], []}.
 
-hotUpdateGuard(RevisionA, RevisionB) ->
-	getDiffFileList(RevisionA, RevisionB, ".hrl", true).
+hotUpdateGuard(CopyFileCfg, RevisionA, RevisionB) ->
+	getDiffFileList(CopyFileCfg, RevisionA, RevisionB, ".hrl", true).
 
 
 waitContinue() ->
@@ -329,8 +329,8 @@ splitCopyFileCfg(?InstallAtom, {{install, Cfg}, _}) ->
 	Cfg;
 splitCopyFileCfg(?UpdateAtom, {_, {update, Cfg}}) ->
 	Cfg;
-splitCopyFileCfg(_, _) ->
-	[].
+splitCopyFileCfg(?HotUpdateAtom, {_, _,{hotupdate, Cfg}}) ->
+	Cfg.
 
 makeSqlOutTempDir(BaseName, SvnVer) ->
 	LocalYMD = localTimeYMD(),
@@ -394,7 +394,8 @@ redirectCreateDir(Dir) ->
 	file:make_dir(Dir).
 
 
-getDiffFileList(RA, RB, Ext, DirectReturn) ->
+getDiffFileList(CopyFileCfg, RA, RB, Ext, DirectReturn) ->
+    [{_, AddPath},{_, SrcFileDirList}] = splitCopyFileCfg(?HotUpdateAtom,CopyFileCfg),
 	Data = case RA =:= "head" andalso RB =:= "head" of
 		       true ->
 			       erlang:list_to_binary(svn_lastest_file_log());
@@ -402,19 +403,19 @@ getDiffFileList(RA, RB, Ext, DirectReturn) ->
 			       erlang:list_to_binary(svn_diff_file_log(RA, RB))
 	       end,
 
-	CodeFileList = getChangeFile(Data, Ext, []),
+	CodeFileList = getChangeFile(Data, Ext, SrcFileDirList, []),
 	case DirectReturn of
 		true ->
 			CodeFileList;
 		_ ->
 			BeamFileList = changeExt(CodeFileList, ".beam"),
-			BeamFileList1 = changePath(BeamFileList, "ebin/"),
+			BeamFileList1 = changePath(BeamFileList,AddPath),
 			BeamFileList1
 	end.
 
 
 %%找出被改变的文件
-getChangeFile(Data, Ext, ResultList) ->
+getChangeFile(Data, Ext, BeamPathList, ResultList) ->
 	%%先解析成一行一行的
 	Found = binary:match(Data, [<<"\r\n">>, <<"\n">>, <<"\r">>]),
 	case Found of
@@ -423,39 +424,40 @@ getChangeFile(Data, Ext, ResultList) ->
 			LineData1 = string:strip(erlang:binary_to_list(LineData), left),
 			ResultList1 = case string:equal(string:substr(LineData1, 1, 1), "M") orelse string:equal(string:substr(LineData1, 1, 1), "A") of
 				              true ->
-%%					              Pos1 = string:str(LineData1, "/server/centerServer/"),
-					              Pos1 = string:str(LineData1, "/server/"),
+					            %%  Pos1 = string:str(LineData1, "/Server/game/"),
 					              %% 是server目录下的文件
-					              case Pos1 > 0 of
-						              true ->
-							              case string:str(LineData1, Ext) > 0 of
-								              true ->
-									              FilePath = string:substr(LineData1, Pos1 + 8),
-									              [FilePath | ResultList];
-								              _ ->
-									              ResultList
-							              end;
-						              _ ->
-							              ResultList
-					              end;
+					              PosList = [ string:str(LineData1, BeamPath) || BeamPath <- BeamPathList, string:str(LineData1, BeamPath) > 0 ],
+
+					              case PosList  of
+                                      [Pos1 | _] ->
+                                          case string:str(LineData1, Ext) > 0 of
+                                              true ->
+                                                  FilePath = string:substr(LineData1, Pos1 + 8),
+                                                  [filename:basename(FilePath) | ResultList];
+                                              _ ->
+                                                  ResultList
+                                          end;
+                                      _ ->
+                                          ResultList
+                                  end;
+
 				              _ ->
 					              ResultList
 			              end,
-			getChangeFile(Left, Ext, ResultList1);
+			getChangeFile(Left, Ext, BeamPathList, ResultList1);
 		nomatch ->
 			ResultList
 	end.
 %%更改文件路径
-changePath(FilePathList, AddPath) ->
+changePath(BeamFileList, AddPath) ->
 	Fun =
-		fun(FilePath, AccList) ->
-			List1 = string:tokens(FilePath, "/"),
+		fun(BeamFile, AccList) ->
+			List1 = string:tokens(BeamFile, "/"),
 
-%%			FilePath1 = lists:nth(1, List1) ++ "/" ++ AddPath ++ lists:nth(erlang:length(List1), List1),
-			FilePath1 = "centerServer/" ++ AddPath ++ lists:nth(erlang:length(List1), List1),
+			FilePath1 = filename:join( [AddPath] ++ List1),
 			[FilePath1 | AccList]
 		end,
-	lists:foldl(Fun, [], FilePathList).
+	lists:foldl(Fun, [], BeamFileList).
 %%给文件名换上特定的扩展名
 -spec changeExt(FilePathList :: list(), Ext :: string()) -> ResultList :: list().
 changeExt(FilePathList, Ext) ->
@@ -497,7 +499,7 @@ copyFileFull(WorkDir, TargetDir, ServerCopyCfgs) ->
 						CopyDest1 = pathConvert(CopyDest),
 
 						Str = "copy " ++ F1 ++ " " ++ CopyDest1,
-						color:info_log("copy [~ts]~n", [F1]),
+						color:info_log("copy [~ts]", [F1]),
 						os:cmd(Str),
 						AccCount3 + 1
 					end,
@@ -525,7 +527,7 @@ copy1(CopySource, CopyDest) ->
 	case filelib:is_file(CopySource1) of
 		true ->
 			Str = "copy " ++ CopySource1 ++ " " ++ CopyDest1,
-			color:info_log("copy [~ts]~n", [CopySource1]),
+			color:info_log("copy [~ts]", [CopySource1]),
 			os:cmd(Str),
 			true;
 		_ ->
