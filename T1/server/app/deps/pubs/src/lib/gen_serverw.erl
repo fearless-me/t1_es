@@ -54,6 +54,8 @@
 -define(FULL_SWEEP_OPTIONS, {spawn_opt,[?FULL_SWEEP]}).
 -define(TimeLine, timeline).
 -define(TIMELINE_MICROSECOND, 5000).
+-define(TIMELINE_KEY, msg_deal_timer).
+-define(TC(MFA, Msg), catch tc_start(), RetVal = MFA, catch  tc_end(Msg), RetVal ).
 %% 假设帧率是 20MS那么是50个消息/client/秒, 服务50client，
 %% 那么每个消息  1000*1000/2500 = 400micro seconds
 %% 所以每个消息最大处理时间(micro seconds)= 100000 / ClientCount / 1000 / frame_time
@@ -145,7 +147,7 @@ init(Args) ->
 %%--------------------------------------------------------------------
 handle_call(Request, From, State) ->
     Module = get(?LogicModule),
-    try tc(Module, do_handle_call, [Request, From, State], {Request, From})
+    try ?TC(Module:do_handle_call(Request, From, State), {Request, From})
     catch T : E : ST ->
         ?ERROR("call ~w:~p,stack:~p", [T, E, ST]),
         {reply, E, State}
@@ -163,7 +165,7 @@ handle_call(Request, From, State) ->
 %%--------------------------------------------------------------------
 handle_cast(Request, State) ->
     Module = get(?LogicModule),
-    try tc(Module, do_handle_cast, [Request, State], Request)
+    try ?TC(Module:do_handle_cast(Request, State), Request)
     catch T : E : ST ->
         ?ERROR("cast ~w:~p,stack:~p", [T, E, ST]),
         {noreply, State}
@@ -183,7 +185,7 @@ handle_info({set_timeline, Microseconds}, State) ->
     {noreply, State};
 handle_info(Info, State) ->
     Module = get(?LogicModule),
-    try tc(Module, do_handle_info, [Info, State], Info)
+    try ?TC(Module:do_handle_info(Info, State), Info)
     catch T : E : ST ->
         ?ERROR("~p info ~p:~p,stack:~p", [node(), T, E, ST]),
         {noreply, State}
@@ -209,41 +211,28 @@ code_change(_OldVsn, State, _Extra) -> {ok, State}.
 
 %%--------------------------------------------------------------------
 %%--------------------------------------------------------------------
-tc(M, F, A, Msg) ->
-    T1 = misc_time:micro_seconds(),
-    Val = erlang:apply(M, F, A),
-    T2 = misc_time:micro_seconds(),
-    Td = misc:get_dict_def(?TimeLine, ?TIMELINE_MICROSECOND),
-    case T2 - T1  of
-    Time when Time > Td ->
-        erlang:spawn
-        (
-            fun()->
-                Bin = lists:sublist(lists:flatten(io_lib:format("~w", [Msg])), 1, 128),
-                ?WARN
-                (
-                    "~p|~p|~p ** deal ~s use time ~p micro seconds",
-                    [M, self(), misc:registered_name(), Bin, Time]
-                )
-            end
-        );
-    _Any -> skip
-    end,
-    Val.
-%%
-%%msg_brief(Msg) when is_atom(Msg) ->
-%%    Msg;
-%%msg_brief({MsgId, Msg}) when is_tuple(Msg) ->
-%%    {MsgId, erlang:element(1, Msg)};
-%%msg_brief({MsgId, Msg}) when is_list(Msg) ->
-%%    MsgId;
-%%msg_brief({MsgId1, {MsgID2, _Data}}) ->
-%%    {MsgId1, MsgID2};
-%%msg_brief({_1, _2} = Request ) ->
-%%    Request;
-%%msg_brief({_1, _2, _3}) ->
-%%    {_1, _2};
-%%msg_brief(Msg) ->
-%%    io:format("**** DBG **** ~n ~p~n~n",[Msg]),
-%%    Msg.
+tc_start() ->
+    put(?TIMELINE_KEY,  misc_time:micro_seconds()).
 
+tc_end(Msg) ->
+    Td = misc:get_dict_def(?TimeLine, ?TIMELINE_MICROSECOND),
+    Tf = case get(?TIMELINE_KEY) of
+        undefine -> 0;
+        StartTime -> misc_time:micro_seconds() - StartTime
+    end,
+    i_tc_warn(Msg, Tf, Td).
+
+i_tc_warn(_, Time, DeadLine) when Time < DeadLine ->
+    skip;
+i_tc_warn(Msg, Time, _) ->
+    erlang:spawn
+    (
+        fun()->
+            Bin = lists:sublist(lists:flatten(io_lib:format("~w", [Msg])), 1, 128),
+            ?WARN
+            (
+                "~p|~p|~p ** ~s ** use time ~p micro seconds",
+                [ get(?LogicModule), self(), misc:registered_name(), Bin, Time]
+            )
+        end
+    ).

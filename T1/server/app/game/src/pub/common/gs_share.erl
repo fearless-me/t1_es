@@ -16,7 +16,7 @@
 start() ->
     MasterNode = gs_interface:get_center_node(),
     true = misc_mnesia:start(),
-    mnesia:set_master_nodes([MasterNode]),
+    misc_mnesia:set_master_nodes([MasterNode]),
     ok.
 
 restart() ->
