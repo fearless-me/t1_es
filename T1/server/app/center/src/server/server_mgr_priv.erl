@@ -37,7 +37,7 @@ tick() ->
 
 check() ->
 	NowTime = misc_time:milli_seconds(),
-	ServerList = my_ets:to_list(?ETS_CACHE_SERVER_CHECK),
+	ServerList = misc_ets:to_list(?ETS_CACHE_SERVER_CHECK),
 	do_check(NowTime, ServerList, []),
 	ok.
 
@@ -62,7 +62,7 @@ serv_ack_timeout(ServerID) ->
 %%	 worker 心跳自动退出
 %%	csInterface:sendMsg2ServerWorkerWithID(ServerID, ackTimeOut),
 %%	lib_cs_cgs_cache:delServerInfo(ServerID),
-	mne_ex:dirty_delete(?ShareServerInfoName, ServerID),
+	misc_mnesia:dirty_delete(?ShareServerInfoName, ServerID),
 	ok.
 
 server_ready(_WorkerPid, {ServerID})->
@@ -71,9 +71,9 @@ server_ready(_WorkerPid, {ServerID})->
 
 %%%-------------------------------------------------------------------
 ack_now(_WindowPid, {ServerID})->
-	case my_ets:read(?ETS_CACHE_SERVER_CHECK, ServerID) of
+	case misc_ets:read(?ETS_CACHE_SERVER_CHECK, ServerID) of
 		[#m_cache_server_check{id = ServerID}] ->
-			case mne_ex:dirty_read(?ShareServerInfoName, ServerID) of
+			case misc_mnesia:dirty_read(?ShareServerInfoName, ServerID) of
 				[#m_share_server_info{node = GSNode, worker = WorkerPid}]->
 					ps:send(WorkerPid, sync_all_data),
 					?WARN("server[~p] worker[~p|~p], ack ok, start sync",
@@ -90,8 +90,8 @@ ack_now(_WindowPid, {ServerID})->
 %%%-------------------------------------------------------------------
 nodedown({GSNode, ServerID}) ->
 	server_mgr_pub:on_nodedown(GSNode, ServerID),
-	mne_ex:dirty_delete(?ShareServerInfoName, ServerID),
-    mne_mt:remove_node_if_mnesia_running(GSNode),
+	misc_mnesia:dirty_delete(?ShareServerInfoName, ServerID),
+    mnesia_cluster:remove_node_if_mnesia_running(GSNode),
 	?WARN("server[~p]down, remove s[~p]",[GSNode, ServerID]),
 	ok.
 
@@ -122,7 +122,7 @@ do_register(FromPid, ServerId, ServerType, ServerName) ->
 			},
 
 %%			lib_cs_cgs_cache:insertServerInfo(Info),
-			mne_ex:dirty_write(Info),
+			misc_mnesia:dirty_write(Info),
 			cs_cache:add_check_server(ServerId),
 			ps:send_with_from(FromPid, registerAck, {true, Pid}),
 			?WARN("server[~p] name[~ts] wnd[~p] worker[~p|~p] registered, wait ack",
@@ -140,7 +140,7 @@ can_register(FromPid, ServerId) ->
 	case watchdog:ready() of
 		true ->
 			GSNode = erlang:node(FromPid),
-			case mne_ex:dirty_read(?ShareServerInfoName, ServerId) of
+			case misc_mnesia:dirty_read(?ShareServerInfoName, ServerId) of
 				[#m_share_server_info{worker = Worker, node = Node}] when is_pid(Worker) ->
 					case erlang:is_process_alive(Worker) of
 						true ->

@@ -23,7 +23,7 @@
 %% @todo 在初始化数据之后需要计算属性
 online() ->
     Uid = player_rw:get_uid(),
-    case my_ets:read_element(
+    case misc_ets:read_element(
         ?ETS_CACHE_ONLINE_PLAYER,
         Uid, #m_cache_online_player.attr)
     of

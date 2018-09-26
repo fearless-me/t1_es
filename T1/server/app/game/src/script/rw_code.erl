@@ -142,6 +142,7 @@ multi_to_code(Fname, ModName, [IncFiles, Cfgs]) ->
                     {to_record,ExParamN},
                     {set, ExParamN + 1},
                     {set_fields, ExParamN + 1},
+%%                    {set_fields_direct, ExParamN + 1},
                     {init_default,ExParamN},
                     {init_default,ExParamN + 1}
                 ],
@@ -178,6 +179,7 @@ multi_to_code(Fname, ModName, [IncFiles, Cfgs]) ->
             %% Fd, Record,  Suffix, FuncAtom, FieldList,ExParam, HookUpdate
             write_file(Fname, "~ts", [?SPLIT_LINE]),
             set_fields(Fname, Record, SuffixList, set_fields, FieldList,  ExParams, HookUpdate),
+
 
             %%
             write_file(Fname, "~ts", [?SPLIT_LINE]),

@@ -29,13 +29,13 @@ start() ->
 sync(Node) ->
     ?INFO("[~p]sync mnesia to ~p ... ", [node(), Node]),
     true = net_kernel:connect_node(Node),
-    true = mne_ex:sync(Node),
+    true = misc_mnesia:sync(Node),
     lists:foreach(
         fun({Tab, _Arg}) ->
             ?INFO("\tadd table copy ~-40w to ~p ...", [Tab, Node]),
-            mne_ex:add_table_copy(Tab, Node, ram_copies)
+            misc_mnesia:add_table_copy(Tab, Node, ram_copies)
         end, cs_share_pub:share_tables()),
-    mne_ex:wait_for_tables(),
+    misc_mnesia:wait_for_tables(),
     ?INFO("[~p]sync mnesia to ~p done #", [node(), Node]),
     ok.
 
@@ -54,7 +54,7 @@ do_create_n(N) ->
 
 write_one_team() ->
     Info = #m_share_team_info{ teamID = uid_gen:tmp_uid(), leaderID = uid_gen:player_uid()},
-    mne_ex:dirty_write(Info),
+    misc_mnesia:dirty_write(Info),
     ok.
 
 

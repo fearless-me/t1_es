@@ -40,7 +40,7 @@
 
 init(AreaID, ServerID,CodeTypeList)->
     ?INFO("CodeMgr init"),
-    my_ets:new(?CodeEts,
+    misc_ets:new(?CodeEts,
         [public, named_table, {keypos, #rec_code.type},?ETS_RC, ?ETS_WC]),
     lists:foreach(
         fun(CodeType) ->
@@ -62,14 +62,14 @@ code_type(Code) ->
     {CodeType,_,_,_} = parse(Code),
     CodeType.
 
-release()-> my_ets:delete(?CodeEts).
+release()-> misc_ets:delete(?CodeEts).
 
 
 
 init_1(AreaID, ServerID, CodeType) ->
     MinCode = gen_4(CodeType, AreaID, ServerID, 0),
     MaxCode = gen_4(CodeType, AreaID, ServerID, (1 bsl ?Bit_IDRange) - 1),
-    my_ets:write(?CodeEts,#rec_code{
+    misc_ets:write(?CodeEts,#rec_code{
         type = CodeType,curCode = MinCode, minCode = MinCode, maxCode = MaxCode}),
     ?INFO("Type[~w],ADBID[~w],dbid[~w],min[~w],max:[~w]",
         [CodeType,AreaID,ServerID,MinCode,MaxCode]),
@@ -80,8 +80,8 @@ gen_1(Type) ->
     [#rec_code{
         minCode = MinCode
         , maxCode = MaxCode
-    }] = my_ets:read(?CodeEts, Type),
-    my_ets:update_counter(?CodeEts, Type,
+    }] = misc_ets:read(?CodeEts, Type),
+    misc_ets:update_counter(?CodeEts, Type,
         {#rec_code.curCode, 1, MaxCode, MinCode}).
 
 gen_4(CodeType, AreaID, ServerID, BaseCode) ->

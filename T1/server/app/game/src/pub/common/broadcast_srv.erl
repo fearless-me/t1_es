@@ -68,7 +68,7 @@ broadcast_net_msg(NetMsg) ->
     Fc =
         fun() ->
             {_Bytes1, IoList} = tcp_codec:encode(NetMsg),
-            L = my_ets:select(?ETS_CACHE_ONLINE_PLAYER, Ms),
+            L = misc_ets:select(?ETS_CACHE_ONLINE_PLAYER, Ms),
             lists:foreach
             (
                 fun(Sock) ->
@@ -89,7 +89,7 @@ broadcast_msg(MsgId, Msg) ->
     Ms = ets:fun2ms(fun(#m_cache_online_player{pid = Pid}) -> Pid end),
     Fc =
         fun() ->
-            L = my_ets:select(?ETS_CACHE_ONLINE_PLAYER, Ms),
+            L = misc_ets:select(?ETS_CACHE_ONLINE_PLAYER, Ms),
             lists:foreach
             (
                 fun(Pid) ->

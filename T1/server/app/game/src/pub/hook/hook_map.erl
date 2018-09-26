@@ -61,11 +61,11 @@ on_rw_update(Uid, Key, RwRec) ->
 
 %%-------------------------------------------------------------------
 on_rw_update(?OBJ_PLAYER, Uid, hp, R) ->
-    my_ets:update_element(?ETS_CACHE_ONLINE_PLAYER, Uid, {#m_cache_online_player.hp, R#m_object_rw.hp});
+    misc_ets:update_element(?ETS_CACHE_ONLINE_PLAYER, Uid, {#m_cache_online_player.hp, R#m_object_rw.hp});
 on_rw_update(?OBJ_PLAYER, Uid, buff_list, R) ->
-    my_ets:update_element(?ETS_CACHE_ONLINE_PLAYER, Uid, {#m_cache_online_player.buff_list, R#m_object_rw.buff_list});
+    misc_ets:update_element(?ETS_CACHE_ONLINE_PLAYER, Uid, {#m_cache_online_player.buff_list, R#m_object_rw.buff_list});
 on_rw_update(?OBJ_PLAYER, Uid, attr, R) ->
-    my_ets:update_element(?ETS_CACHE_ONLINE_PLAYER, Uid, {#m_cache_online_player.attr, R#m_object_rw.attr});
+    misc_ets:update_element(?ETS_CACHE_ONLINE_PLAYER, Uid, {#m_cache_online_player.attr, R#m_object_rw.attr});
 on_rw_update(_ObjType, _Uid, _Key, _RwRec) ->
     ok.
 

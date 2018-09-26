@@ -101,7 +101,7 @@ get_unit(Uid) ->
     end.
 %%-------------------------------------------------------------------
 get_player(Uid) ->
-    case my_ets:read(?ETS_CACHE_MAP_PLAYER, Uid) of
+    case misc_ets:read(?ETS_CACHE_MAP_PLAYER, Uid) of
         [#m_cache_map_object{} = Obj | _] -> Obj;
         _ -> undefined
     end.
@@ -111,7 +111,7 @@ get_player_size() ->
 
 %%-------------------------------------------------------------------
 get_monster(Uid) ->
-    case my_ets:read(?ETS_CACHE_MAP_MONSTER, Uid) of
+    case misc_ets:read(?ETS_CACHE_MAP_MONSTER, Uid) of
         [#m_cache_map_object{} = Obj | _] -> Obj;
         _ -> undefined
     end.
@@ -121,36 +121,36 @@ get_monster_size() ->
 
 %%-------------------------------------------------------------------
 get_npc(Uid) ->
-    case my_ets:read(?ETS_CACHE_MAP_NPC, Uid) of
+    case misc_ets:read(?ETS_CACHE_MAP_NPC, Uid) of
         [#m_cache_map_object{} = Obj | _] -> Obj;
         _ -> undefined
     end.
 
 %%-------------------------------------------------------------------
 get_pet(Uid) ->
-    case my_ets:read(?ETS_CACHE_MAP_PET, Uid) of
+    case misc_ets:read(?ETS_CACHE_MAP_PET, Uid) of
         [#m_cache_map_object{} = Obj | _] -> Obj;
         _ -> undefined
     end.
 
 %%-------------------------------------------------------------------
 add_obj_to_map(#m_cache_map_object{type = ?OBJ_MON, uid = Uid} = Obj) ->
-    my_ets:write(?ETS_CACHE_MAP_MONSTER, Obj),
+    misc_ets:write(?ETS_CACHE_MAP_MONSTER, Obj),
     map_rw:set_monster_map( maps:put(Uid, Uid, map_rw:get_monster_map()) ),
     ok;
 add_obj_to_map(#m_cache_map_object{type = ?OBJ_PLAYER, uid = Uid} = Obj) ->
-    my_ets:write(?ETS_CACHE_MAP_PLAYER, Obj),
+    misc_ets:write(?ETS_CACHE_MAP_PLAYER, Obj),
     map_rw:set_player_map( maps:put(Uid, Uid, map_rw:get_player_map()) ),
     ok;
 add_obj_to_map(_) ->
     ok.
 
 del_obj_to_map(#m_cache_map_object{uid = Uid, type = ?OBJ_MON}) ->
-    my_ets:delete(?ETS_CACHE_MAP_MONSTER, Uid),
+    misc_ets:delete(?ETS_CACHE_MAP_MONSTER, Uid),
     map_rw:set_monster_map( maps:remove(Uid, map_rw:get_monster_map()) ),
     ok;
 del_obj_to_map(#m_cache_map_object{uid = Uid, type = ?OBJ_PLAYER}) ->
-    my_ets:delete(?ETS_CACHE_MAP_PLAYER, Uid),
+    misc_ets:delete(?ETS_CACHE_MAP_PLAYER, Uid),
     map_rw:set_player_map( maps:remove(Uid, map_rw:get_player_map()) ),
     ok;
 del_obj_to_map(_) ->

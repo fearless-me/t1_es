@@ -31,13 +31,13 @@ add_pool(PoolRef, Conf, Timeout) ->
     gen_server:call(?MODULE, {add_pool, PoolRef, Conf}, Timeout).
 
 checkout_pool(PoolRef) ->
-    case my_ets:read(?ETS_DB_POOL, PoolRef) of
+    case misc_ets:read(?ETS_DB_POOL, PoolRef) of
         [#r_db_pool{mgr = Mgr}] -> Mgr;
         _ -> undefined
     end.
 
 pool_pg(PoolRef) ->
-    case my_ets:read(?ETS_DB_POOL, PoolRef) of
+    case misc_ets:read(?ETS_DB_POOL, PoolRef) of
         [#r_db_pool{pg = PG}] -> PG;
         _ -> undefined
     end.
@@ -56,7 +56,7 @@ start_link() ->
 mod_init(_Args) ->
     erlang:process_flag(trap_exit, true),
     erlang:process_flag(priority, high),
-    my_ets:new(?ETS_DB_POOL, [named_table, public, {keypos, #r_db_pool.pool},  ?ETS_RC]),
+    misc_ets:new(?ETS_DB_POOL, [named_table, public, {keypos, #r_db_pool.pool},  ?ETS_RC]),
     {ok, none}.
 
 %%-------------------------------------------------------------------
@@ -97,7 +97,7 @@ start_db_pool(PoolRef, Conf) ->
     pg_local:join(PoolRef, Pid),
     db_mgr:start_worker(Pid),
 
-    my_ets:write(?ETS_DB_POOL, #r_db_pool{pool = PoolRef, mgr = Pid, conf = Conf, pg = PoolRef}),
+    misc_ets:write(?ETS_DB_POOL, #r_db_pool{pool = PoolRef, mgr = Pid, conf = Conf, pg = PoolRef}),
     ?INFO("create mysql pool ~p done #",[PoolRef]),
     ok.
 

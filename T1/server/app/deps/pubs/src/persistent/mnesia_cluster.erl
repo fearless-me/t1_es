@@ -6,7 +6,7 @@
 %%% @end
 %%% Created : 15. 八月 2018 10:39
 %%%-------------------------------------------------------------------
--module(mne_mt).
+-module(mnesia_cluster).
 -author("mawenhong").
 
 %% API
@@ -25,22 +25,20 @@ leave_cluster() ->
 %% 通知Node节点本节点离开集群
 leave_cluster(Node) ->
     case rpc:call(Node,
-        mne_mt, remove_node_if_mnesia_running, [node()]) of
+        mnesia_cluster, remove_node_if_mnesia_running, [node()]) of
         ok  -> true;
         Any -> {false, Any}
     end.
 
-is_running() -> mnesia:system_info(is_running) =:= yes.
-
 notify_left_cluster(Node) ->
     Nodes = cluster_nodes(running),
-    gen_server:abcast(Nodes, mne_monitor, {left_cluster, Node}),
+    gen_server:abcast(Nodes, mnesia_monitor, {left_cluster, Node}),
     ok.
 
 cluster_nodes(WhichNodes) -> cluster_status(WhichNodes).
 
 remove_node_if_mnesia_running(Node) ->
-    case is_running() of
+    case misc_mnesia:is_running() of
         false ->
             {error, mnesia_not_running};
         true ->

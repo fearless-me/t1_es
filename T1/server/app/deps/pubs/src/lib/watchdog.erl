@@ -77,10 +77,10 @@ status_() ->
     ps:send(?MODULE, status).
 
 ready(V) ->
-    my_ets:write(?ServerState, #pub_kv{key = 1, value = V}).
+    misc_ets:write(?ServerState, #pub_kv{key = 1, value = V}).
 
 ready() ->
-    case catch my_ets:read(?ServerState, 1) of
+    case catch misc_ets:read(?ServerState, 1) of
         [#pub_kv{value = V}] -> misc:i2b(V);
         _ -> false
     end.
@@ -140,7 +140,7 @@ start_link(Mod) ->
 mod_init(Mod) ->
     erlang:process_flag(trap_exit, true),
     erlang:process_flag(priority, high),
-    my_ets:new(?ServerState, [public, named_table, {keypos, #pub_kv.key}, ?ETS_RC]),
+    misc_ets:new(?ServerState, [public, named_table, {keypos, #pub_kv.key}, ?ETS_RC]),
     Tasks = i_init_all_task(Mod),
     i_show_task_group(Tasks),
     timer:apply_interval(1000, ?MODULE, remove_done, []),

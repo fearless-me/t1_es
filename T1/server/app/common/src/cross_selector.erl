@@ -35,16 +35,16 @@ try_select(Sid, Policy) -> select_cross(Policy, Sid).
 %%-------------------------------------------------------------------
 -define(CROSS_SELECT_POLICY_ETS, cross_selector_ets).
 init() ->
-    my_ets:new(?CROSS_SELECT_POLICY_ETS, [public, named_table, {keypos, #pub_kv.key}, ?ETS_WC, ?ETS_RC]),
-    my_ets:write(?CROSS_SELECT_POLICY_ETS, #pub_kv{key = ?SelectPolicy_Turn, value = 0}),
-    my_ets:write(?CROSS_SELECT_POLICY_ETS, #pub_kv{key = ?SelectPolicy_Full, value = 0}),
-    my_ets:write(?CROSS_SELECT_POLICY_ETS, #pub_kv{key = ?SelectPolicy_Rand, value = 0}),
+    misc_ets:new(?CROSS_SELECT_POLICY_ETS, [public, named_table, {keypos, #pub_kv.key}, ?ETS_WC, ?ETS_RC]),
+    misc_ets:write(?CROSS_SELECT_POLICY_ETS, #pub_kv{key = ?SelectPolicy_Turn, value = 0}),
+    misc_ets:write(?CROSS_SELECT_POLICY_ETS, #pub_kv{key = ?SelectPolicy_Full, value = 0}),
+    misc_ets:write(?CROSS_SELECT_POLICY_ETS, #pub_kv{key = ?SelectPolicy_Rand, value = 0}),
     ok.
 
 %%-------------------------------------------------------------------
 select_cross(?SelectPolicy_Turn) ->
     L = common_interface:get_all_sid(?SERVER_TYPE_CROSS),
-    N = my_ets:update_counter(?CROSS_SELECT_POLICY_ETS, ?SelectPolicy_Turn, {#pub_kv.value, 1}),
+    N = misc_ets:update_counter(?CROSS_SELECT_POLICY_ETS, ?SelectPolicy_Turn, {#pub_kv.value, 1}),
     get_n(L, N);
 select_cross(?SelectPolicy_Full) ->
     Q = ets:fun2ms(
@@ -52,7 +52,7 @@ select_cross(?SelectPolicy_Full) ->
             {Info#m_share_server_info.online, Info#m_share_server_info.sid}
         end
     ),
-    L = mne_ex:dirty_select(?ShareServerInfoName, Q),
+    L = misc_mnesia:dirty_select(?ShareServerInfoName, Q),
     S = lists:sort(fun({OL1, _S1}, {OL2, _S2}) -> OL1 > OL2 end, L),
     E =
         case lists:reverse(S) of

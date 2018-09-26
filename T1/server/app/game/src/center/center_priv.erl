@@ -26,7 +26,7 @@
 
 %%%-------------------------------------------------------------------
 init() ->
-    my_ets:new(?CenterServerEts, [set, protected, named_table, {keypos, #recCenterInfo.id}, ?ETS_RC]),
+    misc_ets:new(?CenterServerEts, [set, protected, named_table, {keypos, #recCenterInfo.id}, ?ETS_RC]),
     tick_msg(),
     connect_cs_node(),
     ok.
@@ -51,7 +51,7 @@ register_ack(MgrPid, Data) ->
 %%%-------------------------------------------------------------------
 nodedown(NodeName) ->
     ?WARN("centerServer Node[~p] is down", [NodeName]),
-    my_ets:write(?CenterServerEts, #recCenterInfo{}),
+    misc_ets:write(?CenterServerEts, #recCenterInfo{}),
     center_nodedown(gs_interface:is_cross()),
     ps:send(teamGSCacheOtp, centerNodeDown),
     ok.
@@ -67,7 +67,7 @@ center_nodedown(_IsCrossServer) ->
 ack_timeout(MgrPid) ->
     ?ERROR("ackTimeout to centerServer[~p]",
         [erlang:node(MgrPid)]),
-    my_ets:write(?CenterServerEts, #recCenterInfo{}),
+    misc_ets:write(?CenterServerEts, #recCenterInfo{}),
     ok.
 %%%-------------------------------------------------------------------
 sync_all_data(CsWorkerPid) ->
@@ -77,7 +77,7 @@ sync_all_data(CsWorkerPid) ->
 
 
 start_now(WorkerPid) ->
-    my_ets:write(?CenterServerEts, #recCenterInfo{pid = WorkerPid, status = ?SEVER_STATUS_DONE}),
+    misc_ets:write(?CenterServerEts, #recCenterInfo{pid = WorkerPid, status = ?SEVER_STATUS_DONE}),
     %% game/cross server 成功连接 center server，通知?PublicDataMgr是否要同步真实DBID映射表
 
     ?WARN("####centerServer[~p][ok]####", [erlang:node(WorkerPid)]),
@@ -106,7 +106,7 @@ tick_connect_cs_node() ->
 
 connect_cs_node() ->
     Now = misc_time:utc_seconds(),
-    case my_ets:read(?CenterServerEts, ?CenterServerKey) of
+    case misc_ets:read(?CenterServerEts, ?CenterServerKey) of
         [#recCenterInfo{status = ?SEVER_STATUS_DONE}] ->
             ok;
         [#recCenterInfo{status = ?SEVER_STATUS_READY, dead_line = DeadLine }]  when DeadLine >= Now ->
@@ -135,7 +135,7 @@ connect_cs_node(DBId, Node) ->
             case gs_cs_interface:register(Node) of
                 true ->
                     DeadLine = misc_time:utc_seconds() + ?ConnectTimeoutSec,
-                    my_ets:write(?CenterServerEts, #recCenterInfo{status = ?SEVER_STATUS_READY, dead_line = DeadLine}),
+                    misc_ets:write(?CenterServerEts, #recCenterInfo{status = ?SEVER_STATUS_READY, dead_line = DeadLine}),
                     ?WARN("[~p][~p]wait centerServer regiseter ack", [self(), DBId]),
                     ok;
                 _ ->

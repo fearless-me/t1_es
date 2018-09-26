@@ -32,17 +32,17 @@
 
 %%-------------------------------------------------------------------
 init() ->
-    my_ets:new(?ETS_CACHE_PLAYER_PUB,      [named_table, public, {keypos, #m_cache_player_pub.uid},       ?ETS_RC, ?ETS_WC]),
-    my_ets:new(?ETS_CACHE_ONLINE_PLAYER,    [named_table, public, {keypos, #m_cache_online_player.uid},   ?ETS_RC, ?ETS_WC]),
-    my_ets:new(?ETS_CACHE_PLAYER_CROSS,    [named_table, public, {keypos, #m_cache_player_cross.uid},     ?ETS_RC, ?ETS_WC]),
-    my_ets:new(?ETS_CACHE_ACCOUNT_PID_SOCK,[named_table, public, {keypos, #m_cache_account_pid_sock.aid}, ?ETS_RC, ?ETS_WC]),
-    my_ets:new(?ETS_CACHE_ALARM_POLICY,    [named_table, public, {keypos, #m_cache_alarm_policy.id},      ?ETS_RC, ?ETS_WC]),
-    my_ets:new(?ETS_CACHE_ALARM_PLAYER,    [named_table, public, {keypos, #m_cache_alarm_player.uid},     ?ETS_RC, ?ETS_WC]),
+    misc_ets:new(?ETS_CACHE_PLAYER_PUB,      [named_table, public, {keypos, #m_cache_player_pub.uid},       ?ETS_RC, ?ETS_WC]),
+    misc_ets:new(?ETS_CACHE_ONLINE_PLAYER,    [named_table, public, {keypos, #m_cache_online_player.uid},   ?ETS_RC, ?ETS_WC]),
+    misc_ets:new(?ETS_CACHE_PLAYER_CROSS,    [named_table, public, {keypos, #m_cache_player_cross.uid},     ?ETS_RC, ?ETS_WC]),
+    misc_ets:new(?ETS_CACHE_ACCOUNT_PID_SOCK,[named_table, public, {keypos, #m_cache_account_pid_sock.aid}, ?ETS_RC, ?ETS_WC]),
+    misc_ets:new(?ETS_CACHE_ALARM_POLICY,    [named_table, public, {keypos, #m_cache_alarm_policy.id},      ?ETS_RC, ?ETS_WC]),
+    misc_ets:new(?ETS_CACHE_ALARM_PLAYER,    [named_table, public, {keypos, #m_cache_alarm_player.uid},     ?ETS_RC, ?ETS_WC]),
     %%
-    my_ets:new(?ETS_CACHE_MAP_PET,         [named_table, public, {keypos, #m_cache_map_object.uid},         ?ETS_RC, ?ETS_WC]),
-    my_ets:new(?ETS_CACHE_MAP_NPC,         [named_table, public, {keypos, #m_cache_map_object.uid},         ?ETS_RC, ?ETS_WC]),
-    my_ets:new(?ETS_CACHE_MAP_PLAYER,      [named_table, public, {keypos, #m_cache_map_object.uid},         ?ETS_RC, ?ETS_WC]),
-    my_ets:new(?ETS_CACHE_MAP_MONSTER,     [named_table, public, {keypos, #m_cache_map_object.uid},         ?ETS_RC, ?ETS_WC]),
+    misc_ets:new(?ETS_CACHE_MAP_PET,         [named_table, public, {keypos, #m_cache_map_object.uid},         ?ETS_RC, ?ETS_WC]),
+    misc_ets:new(?ETS_CACHE_MAP_NPC,         [named_table, public, {keypos, #m_cache_map_object.uid},         ?ETS_RC, ?ETS_WC]),
+    misc_ets:new(?ETS_CACHE_MAP_PLAYER,      [named_table, public, {keypos, #m_cache_map_object.uid},         ?ETS_RC, ?ETS_WC]),
+    misc_ets:new(?ETS_CACHE_MAP_MONSTER,     [named_table, public, {keypos, #m_cache_map_object.uid},         ?ETS_RC, ?ETS_WC]),
     ok.
 
 %%-------------------------------------------------------------------
@@ -80,24 +80,24 @@ add_player_pub( #p_player{} = PPlayer) ->
         career= Career, race = Race,
         level= Lv
     },
-    my_ets:write(?ETS_CACHE_PLAYER_PUB, Player),
+    misc_ets:write(?ETS_CACHE_PLAYER_PUB, Player),
     ok;
 add_player_pub(#m_cache_player_pub{} = Player) ->
-    my_ets:write(?ETS_CACHE_PLAYER_PUB, Player),
+    misc_ets:write(?ETS_CACHE_PLAYER_PUB, Player),
     ok.
 
 del_player_pub(Uid) ->
     ?INFO("del player ~w from ETS_PLAYER_PUB", [Uid]),
-    my_ets:delete(?ETS_CACHE_PLAYER_PUB, Uid).
+    misc_ets:delete(?ETS_CACHE_PLAYER_PUB, Uid).
 
 get_player_pub(Uid) ->
-    case my_ets:read(?ETS_CACHE_PLAYER_PUB, Uid) of
+    case misc_ets:read(?ETS_CACHE_PLAYER_PUB, Uid) of
         [Player] -> Player;
         _ -> undefined
     end.
 
 update_player_pub(Uid, Elements)->
-    my_ets:update_element(?ETS_CACHE_PLAYER_PUB, Uid, Elements),
+    misc_ets:update_element(?ETS_CACHE_PLAYER_PUB, Uid, Elements),
     cross_interface:update_player_cross(Uid, {?ETS_CACHE_PLAYER_PUB, Uid, Elements}),
     ok.
 
@@ -113,56 +113,56 @@ add_online_player( #p_player{} = PPlayer, Pid, Socket) ->
         map_id = Mid, line = 0, pos = vector3:new(X, 0, Y),
         old_map_id = OMid, old_line = 1, old_pos = vector3:new(Ox, 0, Oy)
     },
-    my_ets:write(?ETS_CACHE_ONLINE_PLAYER, Player),
+    misc_ets:write(?ETS_CACHE_ONLINE_PLAYER, Player),
     ok.
 
 add_online_player(#m_cache_online_player{} = Player) ->
-    my_ets:write(?ETS_CACHE_ONLINE_PLAYER, Player),
+    misc_ets:write(?ETS_CACHE_ONLINE_PLAYER, Player),
     ok.
 
 del_online_player(Uid) ->
     ?INFO("del player ~w from ETS_CACHE_PLAYER_ONLINE", [Uid]),
-    my_ets:delete(?ETS_CACHE_ONLINE_PLAYER, Uid).
+    misc_ets:delete(?ETS_CACHE_ONLINE_PLAYER, Uid).
 
 get_online_player(Uid) ->
-    case my_ets:read(?ETS_CACHE_ONLINE_PLAYER, Uid) of
+    case misc_ets:read(?ETS_CACHE_ONLINE_PLAYER, Uid) of
         [Player] -> Player;
         _ -> undefined
     end.
 update_online_player(Uid, Elements)->
-    my_ets:update_element(?ETS_CACHE_ONLINE_PLAYER, Uid, Elements),
+    misc_ets:update_element(?ETS_CACHE_ONLINE_PLAYER, Uid, Elements),
     cross_interface:update_player_cross(Uid, {?ETS_CACHE_ONLINE_PLAYER, Uid, Elements}),
     ok.
 
 get_online_player_socket(Uid) ->
-   my_ets:read_element(
+   misc_ets:read_element(
         ?ETS_CACHE_ONLINE_PLAYER, Uid, #m_cache_online_player.socket).
 
 get_online_player_pid(Uid) ->
-    my_ets:read_element(
+    misc_ets:read_element(
         ?ETS_CACHE_ONLINE_PLAYER, Uid, #m_cache_online_player.pid).
 
 get_online_player_map_pid(Uid) ->
-    my_ets:read_element(
+    misc_ets:read_element(
         ?ETS_CACHE_ONLINE_PLAYER, Uid, #m_cache_online_player.map_pid).
 
 %%-------------------------------------------------------------------
 %%-------------------------------------------------------------------
 add_account_socket(Aid, Pid, Socket) ->
-    my_ets:write(?ETS_CACHE_ACCOUNT_PID_SOCK,
+    misc_ets:write(?ETS_CACHE_ACCOUNT_PID_SOCK,
         #m_cache_account_pid_sock{aid = Aid, pid = Pid, sock = Socket}).
 
 del_account_socket(Aid) ->
-    my_ets:delete(?ETS_CACHE_ACCOUNT_PID_SOCK,Aid).
+    misc_ets:delete(?ETS_CACHE_ACCOUNT_PID_SOCK,Aid).
 
 get_account_socket(Aid) ->
-    case my_ets:read(?ETS_CACHE_ACCOUNT_PID_SOCK, Aid) of
+    case misc_ets:read(?ETS_CACHE_ACCOUNT_PID_SOCK, Aid) of
         [#m_cache_account_pid_sock{sock = Sock}] -> Sock;
         _ -> undefined
     end.
 
 get_account_pid(Aid) ->
-    case my_ets:read(?ETS_CACHE_ACCOUNT_PID_SOCK, Aid) of
+    case misc_ets:read(?ETS_CACHE_ACCOUNT_PID_SOCK, Aid) of
         [#m_cache_account_pid_sock{pid = Pid}] -> Pid;
         _ -> undefined
     end.
@@ -170,13 +170,13 @@ get_account_pid(Aid) ->
 %%-------------------------------------------------------------------
 %%-------------------------------------------------------------------
 add_player_cross(Uid)->
-    my_ets:write(?ETS_CACHE_PLAYER_CROSS,
+    misc_ets:write(?ETS_CACHE_PLAYER_CROSS,
         #m_cache_player_cross{uid = Uid, time = misc_time:milli_seconds()}
     ),
     ok.
 
 del_player_cross(Uid) ->
-    my_ets:delete(?ETS_CACHE_PLAYER_CROSS, Uid),
+    misc_ets:delete(?ETS_CACHE_PLAYER_CROSS, Uid),
     ok.
 
 

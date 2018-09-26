@@ -40,8 +40,8 @@ is_dead(Uid) ->
 %%-------------------------------------------------------------------
 new_player(Pid, Uid, Group, Pos, Face) ->
     init_rw_default(Uid),
-    AttrList = my_ets:read_element(?ETS_CACHE_ONLINE_PLAYER, Uid, #m_cache_online_player.attr),
-    BuffList = my_ets:read_element(?ETS_CACHE_ONLINE_PLAYER, Uid, #m_cache_online_player.buff_list),
+    AttrList = misc_ets:read_element(?ETS_CACHE_ONLINE_PLAYER, Uid, #m_cache_online_player.attr),
+    BuffList = misc_ets:read_element(?ETS_CACHE_ONLINE_PLAYER, Uid, #m_cache_online_player.buff_list),
     object_rw:set_attr_direct(Uid, AttrList),
     object_rw:set_buff_list_direct(Uid, BuffList),
     new(?OBJ_PLAYER, Pid, Uid, 0, 0, Group, Pos, Face).

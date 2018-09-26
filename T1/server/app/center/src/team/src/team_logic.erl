@@ -32,7 +32,7 @@ tickMsg() ->
 tick() ->
 	tickMsg(),
 	Now = misc_time:milli_seconds(),
-	L = mne_ex:dirty_all_keys(?ShareUidTeamMatchName),
+	L = misc_mnesia:dirty_all_keys(?ShareUidTeamMatchName),
 	tickMatch(Now, L, ?MatchTickControlMax),
 	ok.
 
@@ -80,10 +80,10 @@ doCreateNewTeam(CopyMapID, TargetRoleID, #m_team_member{
         searchStartTime = time:getSyncTimeFromDBS(),
         memberList = [MemberInfo]
     },
-    mne_ex:dirty_delete(?ShareUidTeamMatchName, RoleID),
-    true = mne_ex:dirty_write(
+    misc_mnesia:dirty_delete(?ShareUidTeamMatchName, RoleID),
+    true = misc_mnesia:dirty_write(
         #m_share_uid_ref_tid{roleID = RoleID, teamID = NewTeamID, serverID = ServerID}),
-    true = mne_ex:dirty_write(?Ets_TeamList, TeamInfo),
+    true = misc_mnesia:dirty_write(?Ets_TeamList, TeamInfo),
 
     ?DEBUG("[~p]create Team[~p] with[~p], leader[~p],targetMap[~p], member[~p]",
         [RoleID, NewTeamID, TargetRoleID, RoleID, CopyMapID, RoleID]),
@@ -107,7 +107,7 @@ leaveTeam({RoleID, Pid, NetPid, IsNotify}) ->
 canLeaveTeam(RoleID) ->
     case cs_team_interface:getTeamID(RoleID) of
         TeamID when TeamID > 0 ->
-            {true, my_ets:read(?Ets_TeamList, TeamID)};
+            {true, misc_ets:read(?Ets_TeamList, TeamID)};
         _ ->
             {false, -999}
     end.
@@ -117,7 +117,7 @@ doLeaveTeam(RoleID, Pid, NetPid,
 ) ->
 
     onMemberLeaveTeam(RoleID, LeaderID, TeamInfo),
-    mne_ex:dirty_delete(?ShareUidRefTeamIdName, RoleID),
+    misc_mnesia:dirty_delete(?ShareUidRefTeamIdName, RoleID),
     ?DEBUG("[~p] leave team[~p],leadre[~p -> 0]",
         [RoleID, TeamID, LeaderID]),
 
@@ -140,13 +140,13 @@ onMemberLeaveTeam(LeaderID, LeaderID,
 
     case NewLeaderID =:= 0 of
         true ->
-            mne_ex:dirty_delete(?ShareTeamInfoName, TeamID);
+            misc_mnesia:dirty_delete(?ShareTeamInfoName, TeamID);
         _ ->
             NewTeamInfo = TeamInfo#m_share_team_info{
                 leaderID = NewLeaderID,
                 memberList = lists:keydelete(LeaderID, #m_team_member.roleID, ML)
             },
-            mne_ex:write(NewTeamInfo),
+            misc_mnesia:write(NewTeamInfo),
             ok
     end,
     ok;
@@ -157,13 +157,13 @@ onMemberLeaveTeam(RoleID, _LeaderID,
     NML = lists:keydelete(RoleID, #m_team_member.roleID, ML),
     case NML of
         [] ->
-            mne_ex:dirty_delete(?ShareTeamInfoName, TeamID),
+            misc_mnesia:dirty_delete(?ShareTeamInfoName, TeamID),
             ok;
         _ ->
             NewTeamInfo = TeamInfo#m_share_team_info{
                 memberList = lists:keydelete(RoleID, #m_team_member.roleID, ML)
             },
-            mne_ex:write(NewTeamInfo),
+            misc_mnesia:write(NewTeamInfo),
             ok
     end,
     ok.

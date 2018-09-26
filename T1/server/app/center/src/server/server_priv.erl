@@ -50,8 +50,8 @@ sync_over(GSNode, Sid) ->
 
     ?WARN("server[~p] sync done #", [GSNode]),
     all_ready(Sid),
-    [Info] = mne_ex:dirty_read(?ShareServerInfoName, Sid),
-    mne_ex:dirty_write(?ShareServerInfoName, Info#m_share_server_info{status = ?SEVER_STATUS_DONE}),
+    [Info] = misc_mnesia:dirty_read(?ShareServerInfoName, Sid),
+    misc_mnesia:dirty_write(?ShareServerInfoName, Info#m_share_server_info{status = ?SEVER_STATUS_DONE}),
     ps:send_with_from(?CS_SVR_MGR_OTP, allReadyNow, {Sid}),
     erlang:garbage_collect(self()),
     ok.

@@ -6,7 +6,7 @@
 %%% @end
 %%% Created : 13. 八月 2018 15:15
 %%%-------------------------------------------------------------------
--module(mne_ex).
+-module(misc_mnesia).
 -author("mawenhong").
 
 -include("logger.hrl").
@@ -20,6 +20,7 @@
 
 %% API
 -export([
+    is_running/0,
     start/0, stop/0, sync/1, is_local_content/1,table_node/1,
     table_size/1, add_table_copy/3, del_table_copy/2,  wait_for_tables/0,
     create_table/2, delete_table/1, clear_table/1,
@@ -28,6 +29,8 @@
     dirty_all_keys/1, dirty_read_all/1, dirty_update_counter/2, dirty_update_counter/3
 ]).
 
+
+is_running() -> mnesia:system_info(is_running) =:= yes.
 
 -spec start() -> boolean().
 start() ->

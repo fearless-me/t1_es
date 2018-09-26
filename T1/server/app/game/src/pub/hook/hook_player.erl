@@ -10,6 +10,7 @@
 -author("mawenhong").
 -include("logger.hrl").
 -include("netmsg.hrl").
+-include("rec_rw.hrl").
 -include("pub_def.hrl").
 -include("gs_common_rec.hrl").
 -include("gs_cache.hrl").
@@ -103,15 +104,15 @@ on_sharp(Hour) ->
 -define(lock(X), lock_transaction(X)).
 -define(unlock(), unlock_transaction()).
 
-%%不要在调用lib_player_rw:set_xxx
-on_rw_update(level, Level) ->
+%%不要在调用player_rw:set_xxx
+on_rw_update(level, RwRec) ->
     ?lock(level),
     Uid = player_rw:get_uid(),
-    gs_cache_interface:update_player_pub(Uid,    {#m_cache_player_pub.level, Level}),
-    gs_cache_interface:update_online_player(Uid, {#m_cache_online_player.level, Level}),
+    gs_cache_interface:update_player_pub(Uid,    {#m_cache_player_pub.level, RwRec#m_player_rw.level}),
+    gs_cache_interface:update_online_player(Uid, {#m_cache_online_player.level, RwRec#m_player_rw.level}),
     ?unlock(),
     ok;
-on_rw_update(_Key, _Value) ->
+on_rw_update(_Key, _RwRec) ->
 %%    ?DEBUG("player ~p key ~p  value ~p", [lib_player_rw:get_uid(), Key, Value]),
     ok.
 

@@ -14,10 +14,10 @@
 
 
 start() ->
-    true = mne_ex:start(),
+    true = misc_mnesia:start(),
     ok.
 
 restart() ->
-    mne_ex:stop(),
-    true = mne_ex:start(),
+    misc_mnesia:stop(),
+    true = misc_mnesia:start(),
     ok.

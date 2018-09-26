@@ -33,7 +33,7 @@ mod_init(_Args) ->
     erlang:process_flag(trap_exit, true),
     erlang:process_flag(priority, high),
 
-    my_ets:new(?MAP_MGR_ETS, [protected, named_table, {keypos, #m_map_mgr.map_id}, ?ETS_RC]),
+    misc_ets:new(?MAP_MGR_ETS, [protected, named_table, {keypos, #m_map_mgr.map_id}, ?ETS_RC]),
 
     load_all_map(),
 
@@ -47,7 +47,7 @@ do_handle_call(Request, From, State) ->
 
 %%--------------------------------------------------------------------
 do_handle_info({map_mgr_line_ets, {MapID, Ets}}, State) ->
-    my_ets:update_element(?MAP_MGR_ETS, MapID, {#m_map_mgr.line_ets, Ets}),
+    misc_ets:update_element(?MAP_MGR_ETS, MapID, {#m_map_mgr.line_ets, Ets}),
     {noreply, State};
 do_handle_info(Info, State) ->
     ?ERROR("undeal info ~w", [Info]),
@@ -67,14 +67,14 @@ load_all_map() ->
 
 load_one_map(true,  #mapCfg{is_cross = 1, id = MapID}) ->
     {ok, Pid} = map_mgr_sup:start_child(MapID),
-    my_ets:write(?MAP_MGR_ETS, #m_map_mgr{map_id = MapID, mgr = Pid}),
+    misc_ets:write(?MAP_MGR_ETS, #m_map_mgr{map_id = MapID, mgr = Pid}),
     ok;
 load_one_map(true, #mapCfg{is_cross = 0, id = MapID}) ->
     ?WARN("~p This is a cross-server won't create normal map mgr ~p ",[node(), MapID]),
     ok;
 load_one_map(false, #mapCfg{is_cross = 0, id = MapID}) ->
     {ok, Pid} = map_mgr_sup:start_child(MapID),
-    my_ets:write(?MAP_MGR_ETS, #m_map_mgr{map_id = MapID, mgr = Pid}),
+    misc_ets:write(?MAP_MGR_ETS, #m_map_mgr{map_id = MapID, mgr = Pid}),
     ok;
 load_one_map(false, #mapCfg{is_cross = 1, id = MapID}) ->
     ?WARN("~p This is a normal-server won't create cross-server map mgr ~p ",[node(), MapID]),

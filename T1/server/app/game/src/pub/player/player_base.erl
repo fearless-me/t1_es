@@ -10,6 +10,7 @@
 -author("mawenhong").
 -include("logger.hrl").
 -include("netmsg.hrl").
+-include("rec_rw.hrl").
 -include("db_record.hrl").
 -include("gs_cache.hrl").
 -include("gs_common_rec.hrl").
@@ -26,16 +27,15 @@ online(Player) ->
         race = Race, career=Career, head = Head,
         map_id = Mid, line = LineId
     } = Player,
-    player_rw:set_uid(Uid),
-    player_rw:set_sid(Sid),
-    player_rw:set_name(Name),
-    player_rw:set_level(Level),
-    player_rw:set_sex(Sex),
-    player_rw:set_race(Race),
-    player_rw:set_career(Career),
-    player_rw:set_head(Head),
+
+    RwRec = player_rw:to_record(),
+    player_rw:init_default(RwRec#m_player_rw{
+        uid = Uid, sid = Sid, aid =  Aid,
+        name = Name, level = Level, sex = Sex,
+        race = Race, career = Career, head = Head,
+        map = #m_player_map{map_id = Mid, line_id = LineId}
+    }),
     ?DEBUG("player ~p of ~p enter map ~p",[Uid, Aid, Mid]),
-    player_rw:set_map(#m_player_map{map_id = Mid, line_id = LineId}),
     %% todo 设置buff， cd等等
 
     ok.

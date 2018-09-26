@@ -14,7 +14,7 @@
 %%% Created : 15. 八月 2018 15:37
 %%%-------------------------------------------------------------------
 
--module(my_ets).
+-module(misc_ets).
 -author("mawenhong").
 %% API
 -export([

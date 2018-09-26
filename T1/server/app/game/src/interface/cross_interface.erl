@@ -34,7 +34,7 @@
 
 
 is_player_in_cross(Uid) ->
-     my_ets:member(?ETS_CACHE_PLAYER_CROSS, Uid).
+     misc_ets:member(?ETS_CACHE_PLAYER_CROSS, Uid).
 
 update_player_cross(Uid, Params) ->
     IsCross = gs_interface:is_cross(),
@@ -46,7 +46,7 @@ assign_cross_for_player(Uid) ->
         true -> skip;
         _ ->
             QS = ets:fun2ms(fun(Info) when Info#m_share_server_info.type =:= ?SERVER_TYPE_CROSS -> Info#m_share_server_info.sid end),
-            SL = mne_ex:dirty_select(?ShareServerInfoName, QS),
+            SL = misc_mnesia:dirty_select(?ShareServerInfoName, QS),
             do_assign_cross_for_player(Uid, SL)
     end,
     ok.
@@ -58,7 +58,7 @@ do_assign_cross_for_player(Uid, [CrossSid | _]) ->
     ok.
 
 is_assign_cross(Uid) ->
-    case mne_ex:dirty_read(?SharePlayerCrossLock, Uid) of
+    case misc_mnesia:dirty_read(?SharePlayerCrossLock, Uid) of
         [#m_share_player_cross_lock{cross_sid = Sid}] when Sid > 0 ->
             true;
         _ -> false
@@ -66,7 +66,7 @@ is_assign_cross(Uid) ->
 %%-------------------------------------------------------------------
 force_assign_cross_for_player(Uid, CrossSid) ->
     Sid = gs_interface:get_sid(),
-    mne_ex:write(
+    misc_mnesia:write(
         ?SharePlayerCrossLock,
         #m_share_player_cross_lock{
         uid = Uid,
@@ -108,7 +108,7 @@ inner_get_player_cross_node(Uid) ->
 
 %%-------------------------------------------------------------------
 inner_get_player_src_sid(Uid) when is_number(Uid), Uid > 0 ->
-    case mne_ex:dirty_read(?SharePlayerCrossLock, Uid) of
+    case misc_mnesia:dirty_read(?SharePlayerCrossLock, Uid) of
         [#m_share_player_cross_lock{src_sid = SrcSid}] -> SrcSid;
         _ -> undefined
     end;
@@ -116,7 +116,7 @@ inner_get_player_src_sid(_Uid) -> undefined.
 
 %%-------------------------------------------------------------------
 inner_get_player_cross_sid(Uid) when is_number(Uid), Uid > 0 ->
-    case mne_ex:dirty_read(?SharePlayerCrossLock, Uid) of
+    case misc_mnesia:dirty_read(?SharePlayerCrossLock, Uid) of
         [#m_share_player_cross_lock{cross_sid = DstSid}] -> DstSid;
         _ -> undefined
     end;
@@ -125,7 +125,7 @@ inner_get_player_cross_sid(_Uid) -> undefined.
 
 %%-------------------------------------------------------------------
 inner_get_server_node(Sid) when is_number(Sid), Sid > 0 ->
-    case mne_ex:dirty_read(?ShareServerInfoName, Sid) of
+    case misc_mnesia:dirty_read(?ShareServerInfoName, Sid) of
         [#m_share_server_info{node = Node}] -> Node;
         _ -> undefined
     end;

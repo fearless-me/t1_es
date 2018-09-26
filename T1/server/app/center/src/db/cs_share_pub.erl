@@ -19,9 +19,9 @@
 %% API
 -export([frag_share_tables/0, share_tables/0]).
 
--define(STORE_ARG,                          {storage_properties, [{ets, [{read_concurrency, true}, {write_concurrency, true}]}]}).
--define(SHARE_SHARE_TABLE(Node, Rec),             {Rec,  [{ram_copies, [Node]}, {attributes, record_info(fields, Rec)}, ?STORE_ARG]}).
--define(SHARE_SHARE_TABLE(Node, Tab, Rec),        {Tab,  [{ram_copies, [Node]}, {attributes, record_info(fields, Rec)}, ?STORE_ARG]}).
+-define(STORE_ARG,                          {storage_properties, [{ets, [{read_concurrency, true}]}]}).
+-define(SHARE_SHARE_TABLE(Node, Rec),       {Rec,  [{ram_copies, [Node]}, {attributes, record_info(fields, Rec)}, ?STORE_ARG]}).
+-define(SHARE_SHARE_TABLE(Node, Tab, Rec),  {Tab,  [{ram_copies, [Node]}, {attributes, record_info(fields, Rec)}, ?STORE_ARG]}).
 -define(SHARE_LOCAL_TABLE(Node, Rec),       {Rec,  [{local_content, true}, {ram_copies, [Node]}, {attributes, record_info(fields, Rec)}, ?STORE_ARG]}).
 -define(SHARE_LOCAL_TABLE(Node, Tab, Rec),  {Tab,  [{local_content, true}, {ram_copies, [Node]}, {attributes, record_info(fields, Rec)}, ?STORE_ARG]}).
 
