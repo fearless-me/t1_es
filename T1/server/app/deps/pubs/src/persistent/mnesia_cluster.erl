@@ -32,7 +32,7 @@ leave_cluster(Node) ->
 
 notify_left_cluster(Node) ->
     Nodes = cluster_nodes(running),
-    gen_server:abcast(Nodes, mnesia_monitor, {left_cluster, Node}),
+    gen_server:abcast(Nodes, mnesia_subscriber, {left_cluster, Node}),
     ok.
 
 cluster_nodes(WhichNodes) -> cluster_status(WhichNodes).

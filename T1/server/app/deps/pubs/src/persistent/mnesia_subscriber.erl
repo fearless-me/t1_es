@@ -6,7 +6,7 @@
 %%% @end
 %%% Created : 15. 八月 2018 10:45
 %%%-------------------------------------------------------------------
--module(mnesia_monitor).
+-module(mnesia_subscriber).
 -author("mawenhong").
 
 -behaviour(gen_serverw).

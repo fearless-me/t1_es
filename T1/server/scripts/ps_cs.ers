@@ -275,7 +275,7 @@ hotUpdateGuard(CopyFileCfg, RevisionA, RevisionB) ->
 
 waitContinue() ->
 	color:info_log("~n################################~n"),
-	color:warn_log("Press Enter to zip:"),
+	_InputNoStr = io:get_line("Press Enter to zip:"),
 	color:info_log("~n################################~n~n"),
 	ok.
 
@@ -306,10 +306,12 @@ zipAndMd5(SourcePath, DestPath, ZipName) ->
 	TempDir = getTempDir(),
 	
 	color:warn_log("zip [~ts]~n", [ZipName]),
-	CmdStr = io_lib:format("cd ~ts && tar -czf ~ts ./~ts/",
+	CmdStr = io_lib:format("cd ~ts && tar -czf ~ts ./~ts/*",
 		[TempDir, ZipName, SourcePath]),
-	os:cmd(CmdStr),
 
+	color:warn_log("zip cmd: ~s~n",[CmdStr]),
+	color:error_log("~s",[os:cmd(CmdStr)]),
+    
 	ZipPath = TempDir ++ "/" ++ ZipName,
 	{ok, Binary} = file:read_file(ZipPath),
 	MD5 = erlang:binary_to_list(erlang:md5(Binary)),
@@ -325,9 +327,9 @@ zipAndMd5(SourcePath, DestPath, ZipName) ->
 	NewZipName.
 
 
-splitCopyFileCfg(?InstallAtom, {{install, Cfg}, _}) ->
+splitCopyFileCfg(?InstallAtom, {{install, Cfg}, _, _}) ->
 	Cfg;
-splitCopyFileCfg(?UpdateAtom, {_, {update, Cfg}}) ->
+splitCopyFileCfg(?UpdateAtom, {_, {update, Cfg}, _}) ->
 	Cfg;
 splitCopyFileCfg(?HotUpdateAtom, {_, _,{hotupdate, Cfg}}) ->
 	Cfg.
