@@ -1,11 +1,23 @@
+
+%%%-------------------------------------------------------------------
+%%% @author mawenhong
+%%% @copyright (C) 2018, <COMPANY>
+%%% @doc
+%%%
+%%% @end
+%%% Created : 27. 九月 2018 15:24
+%%%-------------------------------------------------------------------
+
 -module(hot_update).
 
 -include("logger.hrl").
 
 -export([reload/1, slave_reload_module/3]).
 
-%% todo 重新整理下这个逻辑好安全的更新
+-define(SOFT_PURGE_WAIT_TIME, 500).
+-define(SOFT_PURGE_WAIT_COUNT, 10).
 
+%%-------------------------------------------------------------------
 reload([])->
 	ok;
 reload([Module | T]) ->
@@ -15,10 +27,10 @@ reload(Module) when erlang:is_atom(Module) ->
 	code:purge(Module),
 	case code:get_object_code(Module) of
 		{Module, Binary, Filename} ->
-			case code:load_binary(Module, Filename, Binary) of
+			case try_to_safe_reload(Module, Filename, Binary, ?SOFT_PURGE_WAIT_COUNT) of
             	{module, Module} ->
                     ?WARN("~p: ~p reload.",[Module, node()]),
-					reload_on_slave(Module, Binary, Filename);
+					reload_on_slave(Module, Filename, Binary);
 				{error, What} ->
                     ?ERROR("~p: ~p reload error ~p.",[Module, node(), What])
 			end;		
@@ -27,19 +39,19 @@ reload(Module) when erlang:is_atom(Module) ->
 	end.
 
 
-
-reload_on_slave(Module, Binary, Filename)->
+%%-------------------------------------------------------------------
+reload_on_slave(Module, Filename, Binary)->
     Node = node(),
 	case misc:process_node(pool_master) of
-        Node -> do_reload_on_slave(Module, Binary, Filename);
+        Node -> do_reload_on_slave(Module, Filename, Binary);
 		_ -> skip
 	end,
 	ok.
 
-do_reload_on_slave(Module, Binary, Filename) ->
+do_reload_on_slave(Module, Filename, Binary) ->
 	lists:foreach(
 		fun(Node)->
-			case rpc:call(Node, hot_update,slave_reload_module, [Module, Binary, Filename]) of
+			case rpc:call(Node, hot_update,slave_reload_module, [Module, Filename, Binary]) of
                 {module, Module} ->
                     ?WARN("~p: ~p reload.",[Module, Node]);
                 Error ->
@@ -48,12 +60,27 @@ do_reload_on_slave(Module, Binary, Filename) ->
 		end, nodes_excl_me()).
 
 
+%%-------------------------------------------------------------------
 nodes_excl_me() -> pool:get_nodes() -- [node()].
 
 
-slave_reload_module(Module, Binary, Filename)->
-    code:purge(Module),
-    code:load_binary(Module, Filename, Binary).
+%%-------------------------------------------------------------------
+slave_reload_module(Module, Filename, Binary)->
+	try_to_safe_reload(Module, Filename, Binary, ?SOFT_PURGE_WAIT_COUNT).
+
+
+%%-------------------------------------------------------------------
+try_to_safe_reload(Module, Filename, Binary, N) when N =< 0 ->
+	code:purge(Module),
+	code:load_binary(Module, Filename, Binary);
+try_to_safe_reload(Module, Filename, Binary, N)  ->
+	case code:soft_purge(Module) of
+		true ->
+			code:load_binary(Module, Filename, Binary);
+		false ->
+			misc:sleep(?SOFT_PURGE_WAIT_TIME),
+			try_to_safe_reload(Module, Filename, Binary, N - 1)
+	end.
 
 
 

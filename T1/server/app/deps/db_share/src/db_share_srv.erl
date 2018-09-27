@@ -53,7 +53,6 @@ start_link() ->
 %%%===================================================================	
 mod_init(_Args) ->
     erlang:process_flag(trap_exit, true),
-    erlang:process_flag(priority, high),
     ets:new(
         ?ETS_SHARE_TABLE_NAME,
         [

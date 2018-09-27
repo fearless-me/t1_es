@@ -45,6 +45,7 @@
 
 
 -define(OP_TCP, 991).
+-define(OP_SET_TERMINAL_COLOR_BELOW_WIN10, 997).
 -define(OP_SET_TERMINAL_COLOR, 998).
 -define(OP_SET_WINDOW_RSH, 999).
 
@@ -53,6 +54,7 @@
 -define(USR_MODE, usr).
 
 main(Args) ->
+	os:cmd("chcp 65001"),
     case Args of
     [] -> menu(?DEV_MODE);
     [Mode | _] -> menu(list_to_atom(Mode))
@@ -99,6 +101,7 @@ show_cmd(?DEV_MODE) ->
             " #~n"
             
     		"\t~-10.wtcp测试~n"
+            "\t~-10.wwindows控制台支持彩色显示(win10之前的版本)~n"
             "\t~-10.wwindows控制台支持彩色显示~n"
 			"\t~-10.wwindows支持部署分布式服务器~n"
             "\t~-10.w退出~n"
@@ -116,7 +119,7 @@ show_cmd(?DEV_MODE) ->
 
                 ?OP_GEN_NETMSG, ?OP_GEN_RW_CODE, ?OP_GEN_ERRORCODE, ?OP_GEN_LOGDEFINE, ?OP_EXPORT_DBSTRUCT, ?OP_BAK_DBSTRUCT,
 
-                ?OP_TCP, ?OP_SET_TERMINAL_COLOR, ?OP_SET_WINDOW_RSH,
+                ?OP_TCP, ?OP_SET_TERMINAL_COLOR_BELOW_WIN10, ?OP_SET_TERMINAL_COLOR, ?OP_SET_WINDOW_RSH,
                 ?OP_EXIT
             ]
         );
@@ -137,6 +140,7 @@ show_cmd(_) ->
             "\t~-10.w删除日志(all)~n"
             " #~n"
 
+            "\t~-10.wwindows控制台支持彩色显示(win10之前的版本)~n"
             "\t~-10.wwindows控制台支持彩色显示~n"
             "\t~-10.w退出~n"
             "~n##########################################################~n~n",
@@ -148,7 +152,7 @@ show_cmd(_) ->
                 ?OP_DEL_LOG_ALL,
 
 
-                ?OP_SET_TERMINAL_COLOR,
+                ?OP_SET_TERMINAL_COLOR_BELOW_WIN10, ?OP_SET_TERMINAL_COLOR,
                 ?OP_EXIT
             ]
         ).
@@ -214,7 +218,9 @@ dispatchInput2(?OP_EDIT_ERRORCODE) ->
     erlang:spawn_monitor(fun() -> os:cmd("start subcall.bat notepad++.exe ../../Tools/ErrorCode/ErrorCode.h") end);	
 dispatchInput2(?OP_EDIT_LOGDEFINE) ->
     erlang:spawn_monitor(fun() -> os:cmd("start subcall.bat notepad++.exe Logdefine.config") end);	
-	
+
+dispatchInput2(?OP_SET_TERMINAL_COLOR_BELOW_WIN10) ->
+     erlang:spawn_monitor(fun() -> os:cmd("start /WAIT installColor.bat") end);
 dispatchInput2(?OP_SET_TERMINAL_COLOR) ->
      erlang:spawn_monitor(fun() -> os:cmd("start /WAIT terminal_color.bat") end);	
 dispatchInput2(?OP_SET_WINDOW_RSH) ->

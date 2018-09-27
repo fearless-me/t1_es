@@ -33,7 +33,6 @@ start_link(Args) ->
 mod_init([PoolId, MgrName, X, Func]) ->
     misc:register_process(self(), MgrName, [son, X]),
     erlang:process_flag(trap_exit, true),
-    erlang:process_flag(priority, high),
     {ok, #db_son_state{pool = PoolId, func = Func}}.
 
 %%--------------------------------------------------------------------

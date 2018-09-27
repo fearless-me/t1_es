@@ -55,7 +55,6 @@ start_link() ->
 
 mod_init(_Args) ->
     erlang:process_flag(trap_exit, true),
-    erlang:process_flag(priority, high),
     misc_ets:new(?ETS_DB_POOL, [named_table, public, {keypos, #r_db_pool.pool},  ?ETS_RC]),
     {ok, none}.
 

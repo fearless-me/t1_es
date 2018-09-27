@@ -13,7 +13,7 @@
 
 %% API
 -export([start_link/0]).
--export([start_child/1]).
+-export([start_child/1, start_child/2]).
 
 %% Supervisor callbacks
 -export([init/1]).
@@ -34,6 +34,9 @@ start_link() ->
 
 start_child(CreateMapArg) ->
     supervisor:start_child(?MODULE, [CreateMapArg]).
+
+start_child(CreateMapArg, SpawnOpts) ->
+    supervisor:start_child(?MODULE, [CreateMapArg, SpawnOpts]).
 
 %%%===================================================================
 %%% Supervisor callbacks

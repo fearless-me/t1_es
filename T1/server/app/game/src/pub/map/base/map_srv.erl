@@ -15,7 +15,7 @@
 
 
 %% API
--export([start_link/1]).
+-export([start_link/1,start_link/2]).
 -export([mod_init/1, do_handle_call/3, do_handle_info/2, do_handle_cast/2]).
 -export([call_reply/2]).
 
@@ -24,6 +24,9 @@
 %%%===================================================================
 start_link(Params) ->
     gen_serverw:start_link(?MODULE, Params, [{timeout, ?MAP_INIT_TIMEOUT}]).
+
+start_link(Params, SpawnOpts) ->
+    gen_serverw:start_link(?MODULE, Params, [{timeout, ?MAP_INIT_TIMEOUT}] ++ SpawnOpts).
 
 call_reply(FromPid, Ret) ->
     gen_server:reply(FromPid, Ret),

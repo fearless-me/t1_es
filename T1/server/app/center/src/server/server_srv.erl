@@ -29,7 +29,7 @@
 start_link(Params) ->
     gen_serverw:start_link(
         ?MODULE, Params,
-        [{spawn_opt, [{min_heap_size, 128*1024}, {min_bin_vheap_size, 32*1024}]}]
+        [{spawn_opt, [{min_heap_size, 16*1024}, {min_bin_vheap_size, 16*1024}]}]
     ).
 
 %%%===================================================================
@@ -42,7 +42,6 @@ mod_init({DBId, SeverType, FromPid}) ->
         true = erlang:register(NameAtom, self()),
         server_priv:set_id_pid(DBId, FromPid),
         erlang:monitor_node(GSNode, true),
-        erlang:process_flag(priority, high),
         tick_msg(),
         ?WARN("server[~p][~p] init OK", [GSNode, NameAtom]),
         {ok, #state{sid = DBId, type = SeverType, fromPid = FromPid, register_name = NameAtom}}

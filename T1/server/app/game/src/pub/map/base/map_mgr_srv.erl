@@ -141,6 +141,9 @@ do_player_exit_map_call(S, Req) ->
 
 %%--------------------------------------------------------------------
 create_new_line(S, MapID, LineID) ->
+    %% @todo 此处要根据地图类型的不同来采取不同的策略
+    %% 比如副本地图不用做任何优化
+    %% 但是长时间存在的地图必须要调整内存相关属性，减少GC
     {ok, Pid} = map_sup:start_child([MapID, LineID]),
     Line = #m_map_line{
         map_id = MapID, line_id = LineID, pid = Pid,
