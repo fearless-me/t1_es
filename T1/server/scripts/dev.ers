@@ -94,9 +94,9 @@ show_cmd(?DEV_MODE) ->
 
             "\t~-10.w生成代码_网络消息~n"
             "\t~-10.w生成代码_*_rw(根据rec_rw.hrl)~n"
-            "\t~-10.w生成代码_error code~n"
-            "\t~-10.w生成代码_log define~n"
-            "\t~-10.w生成代码_数据库结构~n"
+            "\t~-10.w生成代码_error_code.hrl~n"
+            "\t~-10.w生成代码_common_logdb_def.hrl~n"
+            "\t~-10.w生成代码_db_record.hrl~n"
             "\t~-10.w备份数据库表结构~n"
             " #~n"
             
@@ -207,7 +207,7 @@ dispatchInput2(?OP_GEN_NETMSG) ->
  dispatchInput2(?OP_GEN_RW_CODE) ->
      erlang:spawn_monitor(fun() -> os:cmd("start subcall.bat rw_code.bat") end);
 dispatchInput2(?OP_EXPORT_DBSTRUCT) ->
-    erlang:spawn_monitor(fun() -> os:cmd("start export_db.bat") end);
+    erlang:spawn_monitor(fun() -> os:cmd("start subcall.bat escript.exe build_db.ers") end);
 dispatchInput2(?OP_BAK_DBSTRUCT) ->
     erlang:spawn_monitor(fun() -> os:cmd("start bak_db.bat") end);
 
