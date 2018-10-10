@@ -1,7 +1,7 @@
 //////////////////////////////////////////////////////////////////////////
 //<-发出去     ;      ->收消息
-//不用使用int uint long 
-//
+// 不用使用int uint long 
+// 支持使用 string float int32 uint32 int64 uint64
 /////////////////////////////////////////////////////////////////////////
 //不用使用int uint long 
 //不用使用int uint long 
@@ -29,7 +29,7 @@ struct U2GS_Login_Normal ->
 
 struct GS2U_LoginResult <-
 {
-	int8	result;				// 0为登录成功，非0为登录失败原因
+	int32	result;				// 0为登录成功，非0为登录失败原因
 	uint64	aid;
 	string	identity;
 	string  msg;					//不为空，手机必须展示
@@ -42,13 +42,13 @@ struct UserPlayerData
 	string	name;			// 角色名
 	int32		level;			// 等级
 	int32	wingLevel;		// 翅膀等级
-	int8	camp;			// 阵营
-	int8	race;			// 种族
+	int32	camp;			// 阵营
+	int32	race;			// 种族
 	uint32	career;			// 职业
-	int8	sex;			// 性别
+	int32	sex;			// 性别
 	int32	head;			// 头
-	uint16	mapID;			// 角色所在当前地图ID
-	uint16	oldMapID;		// 角色之前所在地图ID
+	uint32	mapID;			// 角色所在当前地图ID
+	uint32	oldMapID;		// 角色之前所在地图ID
 };
 
 struct GS2U_UserPlayerList <-
@@ -59,10 +59,10 @@ struct GS2U_UserPlayerList <-
 struct U2GS_RequestCreatePlayer ->
 {
 	string	name;				// 名字
-	int8	camp;				// 阵营
+	int32	camp;				// 阵营
 	uint32	career;				// 职业
-	int8	race;				// 种族
-	int8	sex;				// 性别
+	int32	race;				// 种族
+	int32	sex;				// 性别
 	int32	head;				// 头
 };
 
@@ -103,13 +103,13 @@ struct LookInfoMonster
 	float	targetX;			// 怪物移动的目标点X
 	float	targetY;			// 怪物移动的目标点Y
 	float	move_speed;			// 怪物移动速度
-	uint8	hp_per;				// 当前血量百分比
-	int8	camp;			    // 阵营
+	uint32	hp_per;				// 当前血量百分比
+	int32	camp;			    // 阵营
 	uint64	owner;				// 归属
 	uint64	groupID;			// 怪物所属分组ID
 	uint64	guildID;			// 怪物所属军团ID
 	string  name;				// 名字
-	uint16	level;				//怪物等级
+	uint32	level;				//怪物等级
 };
 
 struct GS2U_MonsterList <-
@@ -123,14 +123,14 @@ struct LookInfoPlayer
 	string  name;				//名字
 	float	x;					//坐标X
 	float	y;					//坐标Y
-	int8	race;				// 种族
+	int32	race;				// 种族
 	uint32	career;				//职业
-	int8	sex;				// 性别
-	int8	camp;			    //阵营
+	int32	sex;				// 性别
+	int32	camp;			    //阵营
 	int32	head;			    //头
 	float	move_speed;			//移动速度
-	int16	level;				//当前等级	
-	uint8   hp_per;				//当前血量百分比
+	int32	level;				//当前等级	
+	uint32   hp_per;				//当前血量百分比
 };
 
 
@@ -149,7 +149,7 @@ struct GS2U_RemoveRemote <-
 // 切地图
 struct U2GS_ChangeMap ->
 {
-	uint16 map_id;
+	uint32 map_id;
 	float x,
 	float y
 };
@@ -173,12 +173,12 @@ struct GS2U_PlayerInitBase <-
 	uint64	uid;	// 角色ID
 	string	name;	// 角色名
 	int32	level;	// 等级
-	int8	camp;	// 阵营
-	int8	race;	// 种族
+	int32	camp;	// 阵营
+	int32	race;	// 种族
 	uint32	career;	// 职业
-	int8	sex;	// 性别
+	int32	sex;	// 性别
 	int32	head;	// 头
-	uint16	mapID;	// 角色所在当前地图ID
+	uint32	mapID;	// 角色所在当前地图ID
 };
 
 // 初始化数据发送完毕
@@ -192,7 +192,7 @@ struct GS2U_GetPlayerInitDataEnd <-
 struct GS2U_SyncWalk <-
 {
 	uint64	uid;	 // 唯一ID
-	uint16  type;	 //1 怪物；2 NPC 3 宠物 4 玩家
+	uint32  type;	 //1 怪物；2 NPC 3 宠物 4 玩家
 	float	src_x;	 //坐标X
 	float	src_y;	 //坐标Y
 	float	dst_x;	 //坐标X
@@ -206,7 +206,7 @@ struct GS2U_SyncWalk <-
 struct GS2U_SyncStand <-
 {
 	uint64  uid;	 //唯一ID
-	uint16  type;	 //1 怪物；2 NPC 3 宠物 4 玩家
+	uint32  type;	 //1 怪物；2 NPC 3 宠物 4 玩家
 	float	cur_x;	 //坐标X
 	float	cur_y;	 //坐标Y
 };
@@ -222,8 +222,8 @@ struct GS2U_RemotePlayer <-
 	uint64  uid;	 //唯一ID
 	int32   level; 	 //等级
 	string  name;	 //名字
-	int16	career;	 //职业
-	int16	race;	 //种族
+	int32	career;	 //职业
+	int32	race;	 //种族
 	float	cur_x;	 //坐标X
 	float	cur_y;	 //坐标Y
 };

@@ -92,7 +92,7 @@
 %% //////////////////////////////////////////////////////////////////////////
 %% //<-发出去     ;      ->收消息
 %% //不用使用int uint long 
-%% //
+%% // 支持使用 string float int32 uint32 int64 uint64
 %% /////////////////////////////////////////////////////////////////////////
 %% //不用使用int uint long 
 %% //不用使用int uint long 
@@ -168,7 +168,7 @@
 %% 
 -define(GS2U_LoginResult,22162).
 -record(pk_GS2U_LoginResult,{
-	%% SByte 0为登录成功，非0为登录失败原因
+	%% Int32 0为登录成功，非0为登录失败原因
 	result = 0,
 	%% UInt64
 	aid = 0,
@@ -203,17 +203,17 @@
 	name = "",
 	%% Int32 等级
 	level = 0,
-	%% SByte 阵营
+	%% Int32 阵营
 	camp = 0,
-	%% SByte 种族
+	%% Int32 种族
 	race = 0,
 	%% UInt32 职业
 	career = 0,
-	%% SByte 性别
+	%% Int32 性别
 	sex = 0,
 	%% Int32 头
 	head = 0,
-	%% UInt16 角色所在当前地图ID
+	%% UInt32 角色所在当前地图ID
 	mapID = 0
 }).
 
@@ -258,9 +258,9 @@
 	level = 0,
 	%% String名字
 	name = "",
-	%% Int16职业
+	%% Int32职业
 	career = 0,
-	%% Int16种族
+	%% Int32种族
 	race = 0,
 	%% Single坐标X
 	cur_x = 0.0,
@@ -289,7 +289,7 @@
 -record(pk_GS2U_SyncStand,{
 	%% UInt64唯一ID
 	uid = 0,
-	%% UInt161 怪物；2 NPC 3 宠物 4 玩家
+	%% UInt321 怪物；2 NPC 3 宠物 4 玩家
 	type = 0,
 	%% Single坐标X
 	cur_x = 0.0,
@@ -303,7 +303,7 @@
 -record(pk_GS2U_SyncWalk,{
 	%% UInt64 唯一ID
 	uid = 0,
-	%% UInt161 怪物；2 NPC 3 宠物 4 玩家
+	%% UInt321 怪物；2 NPC 3 宠物 4 玩家
 	type = 0,
 	%% Single坐标X
 	src_x = 0.0,
@@ -343,9 +343,9 @@
 	targetY = 0.0,
 	%% Single 怪物移动速度
 	move_speed = 0.0,
-	%% Byte 当前血量百分比
+	%% UInt32 当前血量百分比
 	hp_per = 0,
-	%% SByte 阵营
+	%% Int32 阵营
 	camp = 0,
 	%% UInt64 归属
 	owner = 0,
@@ -355,7 +355,7 @@
 	guildID = 0,
 	%% String 名字
 	name = "",
-	%% UInt16怪物等级
+	%% UInt32怪物等级
 	level = 0
 }).
 
@@ -368,21 +368,21 @@
 	x = 0.0,
 	%% Single坐标Y
 	y = 0.0,
-	%% SByte 种族
+	%% Int32 种族
 	race = 0,
 	%% UInt32职业
 	career = 0,
-	%% SByte 性别
+	%% Int32 性别
 	sex = 0,
-	%% SByte阵营
+	%% Int32阵营
 	camp = 0,
 	%% Int32头
 	head = 0,
 	%% Single移动速度
 	move_speed = 0.0,
-	%% Int16当前等级	
+	%% Int32当前等级	
 	level = 0,
-	%% Byte当前血量百分比
+	%% UInt32当前血量百分比
 	hp_per = 0
 }).
 
@@ -390,7 +390,7 @@
 %% // 切地图
 -define(U2GS_ChangeMap,4914).
 -record(pk_U2GS_ChangeMap,{
-	%% UInt16
+	%% UInt32
 	map_id = 0,
 	%% Single
 	x = 0.0,
@@ -425,8 +425,8 @@
 %% 
 %% //////////////////////////////////////////////////////////////////////////
 %% //<-发出去     ;      ->收消息
-%% //不用使用int uint long 
-%% //
+%% // 不用使用int uint long 
+%% // 支持使用 string float int32 uint32 int64 uint64
 %% /////////////////////////////////////////////////////////////////////////
 %% //不用使用int uint long 
 %% //不用使用int uint long 
@@ -493,13 +493,13 @@
 -record(pk_U2GS_RequestCreatePlayer,{
 	%% String 名字
 	name = "",
-	%% SByte 阵营
+	%% Int32 阵营
 	camp = 0,
 	%% UInt32 职业
 	career = 0,
-	%% SByte 种族
+	%% Int32 种族
 	race = 0,
-	%% SByte 性别
+	%% Int32 性别
 	sex = 0,
 	%% Int32 头
 	head = 0
@@ -528,19 +528,19 @@
 	level = 0,
 	%% Int32 翅膀等级
 	wingLevel = 0,
-	%% SByte 阵营
+	%% Int32 阵营
 	camp = 0,
-	%% SByte 种族
+	%% Int32 种族
 	race = 0,
 	%% UInt32 职业
 	career = 0,
-	%% SByte 性别
+	%% Int32 性别
 	sex = 0,
 	%% Int32 头
 	head = 0,
-	%% UInt16 角色所在当前地图ID
+	%% UInt32 角色所在当前地图ID
 	mapID = 0,
-	%% UInt16 角色之前所在地图ID
+	%% UInt32 角色之前所在地图ID
 	oldMapID = 0
 }).
 
@@ -548,7 +548,7 @@
 %% //////////////////////////////////////////////////////////////////////////
 %% //<-发出去     ;      ->收消息
 %% //不用使用int uint long 
-%% //
+%% // 支持使用 string float int32 uint32 int64 uint64
 %% /////////////////////////////////////////////////////////////////////////
 %% //不用使用int uint long 
 %% //不用使用int uint long 
@@ -559,7 +559,7 @@
 %% // 聊天消息(服务端发送)
 -define(GS2U_Chat,14728).
 -record(pk_GS2U_Chat,{
-	%% SByte频道
+	%% Int32频道
 	channel = 0,
 	%% UInt64发送者ID
 	uid = 0,
@@ -571,7 +571,7 @@
 %% // 聊天消息(客户端发送)
 -define(U2GS_Chat,11258).
 -record(pk_U2GS_Chat,{
-	%% SByte频道
+	%% Int32频道
 	channel = 0,
 	%% UInt64接收者ID
 	receiver = 0,
