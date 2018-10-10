@@ -14,7 +14,7 @@
 -include("gs_cache.hrl").
 -include("movement.hrl").
 -include("ai.hrl").
--include("ai_trigger.hrl").
+
 
 
 %% API

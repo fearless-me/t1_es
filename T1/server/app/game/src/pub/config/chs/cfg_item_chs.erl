@@ -1,18 +1,20 @@
 %% coding: latin-1
 %% This File Is AUTO GENERATED, Don't Modify it MANUALLY!!!
-
 -module(cfg_item_chs).
+-author("tiancheng").
+
 -compile(export_all).
 
 -include("cfg_item.hrl").
 -include("logger.hrl").
+-include("battle_prop.hrl").
 
 %% 道具表
 getRow(875) ->
 	#itemCfg{
 		desc__ = "222",
 		item_id = 875,
-		item_type = 0,
+		item_type = 20,
 		item_name = "道具3",
 		drop_id = 1
 	};

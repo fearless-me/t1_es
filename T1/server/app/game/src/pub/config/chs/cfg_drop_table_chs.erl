@@ -1,11 +1,13 @@
 %% coding: latin-1
 %% This File Is AUTO GENERATED, Don't Modify it MANUALLY!!!
-
 -module(cfg_drop_table_chs).
+-author("tiancheng").
+
 -compile(export_all).
 
 -include("cfg_drop_table.hrl").
 -include("logger.hrl").
+-include("battle_prop.hrl").
 
 %% 掉落表
 getRow(1, 0, 2) ->
@@ -19,7 +21,7 @@ getRow(1, 0, 2) ->
 	};
 getRow(1, 10, 0) ->
 	#drop_tableCfg{
-		desc__ = "田诚",
+		desc__ = "假",
 		drop_id = 1,
 		drop_group_id = 10,
 		item_id = 0,
@@ -35,11 +37,11 @@ getRow(1, 10, 1) ->
 		array_test1 = [],
 		array_test2 = []
 	};
-getRow(4, 23, 7) ->
+getRow(4, 24, 7) ->
 	#drop_tableCfg{
 		desc__ = "测试测试",
 		drop_id = 4,
-		drop_group_id = 23,
+		drop_group_id = 24,
 		item_id = 7,
 		array_test1 = [],
 		array_test2 = []
@@ -60,7 +62,7 @@ getRow(6, 2, 3) ->
 		drop_group_id = 2,
 		item_id = 3,
 		array_test1 = [],
-		array_test2 = [1,2,3,4]
+		array_test2 = []
 	};
 getRow(7, 3, 98) ->
 	#drop_tableCfg{
@@ -69,7 +71,7 @@ getRow(7, 3, 98) ->
 		drop_group_id = 3,
 		item_id = 98,
 		array_test1 = [1,2,3,4,5,6,7],
-		array_test2 = [{1,2.0},{2.0,5},{7,1}]
+		array_test2 = [[1,2.0],[2.0,5],[7,6]]
 	};
 getRow(_, _, _) -> {}.
 
@@ -77,7 +79,7 @@ getKeyList() -> [
 	{1,0,2},
 	{1,10,0},
 	{1,10,1},
-	{4,23,7},
+	{4,24,7},
 	{5,3,22},
 	{6,2,3},
 	{7,3,98}
@@ -99,7 +101,7 @@ get2KeyList(1) -> [
 	{10,1}
 ];
 get2KeyList(4) -> [
-	{23,7}
+	{24,7}
 ];
 get2KeyList(5) -> [
 	{3,22}
@@ -119,7 +121,7 @@ get3KeyList(1, 10) -> [
 	0,
 	1
 ];
-get3KeyList(4, 23) -> [
+get3KeyList(4, 24) -> [
 	7
 ];
 get3KeyList(5, 3) -> [

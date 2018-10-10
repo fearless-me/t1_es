@@ -52,5 +52,8 @@
 -define(SKILL_OP_CHANNEL, 2).  %% 引导
 -define(SKILL_OP_SPELL, 3).    %% 吟唱
 
+-record(m_buff,{buff_id=0, lifetime=0, level=0, source=0}).
+
+
 
 -endif.

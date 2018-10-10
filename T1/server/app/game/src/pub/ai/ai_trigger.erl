@@ -11,7 +11,7 @@
 -include("logger.hrl").
 -include("pub_def.hrl").
 -include("gs_cache.hrl").
--include("ai_trigger.hrl").
+-include("ai.hrl").
 
 
 %% API

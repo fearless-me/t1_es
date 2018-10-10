@@ -1,4 +1,5 @@
 %% This File Is AUTO GENERATED, Don't Modify it MANUALLY!!!
+-author("tiancheng").
 
 -ifndef(cfg_item).
 -define(cfg_item, 1).

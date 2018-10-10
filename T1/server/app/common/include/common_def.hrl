@@ -39,4 +39,9 @@
 -define(SelectPolicy_LowLoad, 4).
 
 
+%%
+-define(SYSTEM_GUID_GUILD,  100).
+-define(SYSTEM_GUID_TEAM,   102).
+-define(SYSTEM_GUID_FRIEND, 103).
+
 -endif.

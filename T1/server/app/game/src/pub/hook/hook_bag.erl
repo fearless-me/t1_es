@@ -67,7 +67,7 @@ sync_all(_Type, _Map) ->
 
 %%-------------------------------------------------------------------
 -spec del_one_op(Type :: non_neg_integer(), Rs :: tuple(),
-    Need :: non_neg_integer()) -> {ok, New :: tuple()} | all.
+    Need :: non_neg_integer()) -> {part, New :: tuple()} | all.
 del_one_op(_Type, #m_item{num = Have}, Need) when Need >= Have ->
     all;
 del_one_op(_Type, #m_item{num = Have} = Rs, Need) when Need < Have, Need >= 0 ->

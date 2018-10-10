@@ -26,7 +26,7 @@
 
 %% API
 -export([
-    use_skill/4, tick/1, interrup_skill/1,
+    use_skill/4, tick/1, interrupt_skill/1,
     dispatcher/5, can_ai_use_skill/1, is_using_skill/1
 ]).
 
@@ -121,7 +121,7 @@ end_use_skill(Uid) ->
     object_rw:init_default(Uid),
     ok.
 
-interrup_skill(Uid) ->
+interrupt_skill(Uid) ->
     end_use_skill(Uid),
     ok.
 

@@ -28,8 +28,8 @@ on_info_msg({player_use_skill, Req}) ->
     mod_combat:use_skill(Aer, Der, SkillId, Serial),
     ok;
 on_info_msg({player_add_buff, Req}) ->
-    #r_player_add_buff_req{uid = Aer, buff_id = BuffId, level = Level} = Req,
-    mod_buff:add_buff(Aer, BuffId, Level),
+    #r_player_add_buff_req{uid = Uid, src_uid = SrcUid, buff_id = BuffId, level = Level} = Req,
+    mod_buff:add_buff(Uid, BuffId, Level, SrcUid),
     ok;
 on_info_msg(Info) ->
     ?DEBUG("info:~p",[Info]),
