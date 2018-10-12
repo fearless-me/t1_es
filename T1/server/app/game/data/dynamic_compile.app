@@ -2,7 +2,7 @@
     {description, "dynamic_compile"},
     {vsn, "0.1"},
     {modules, [
-		dynamic_compile
+        dynamic_compile
     ]},
     {registered, []},
     {applications, [compiler, kernel, stdlib]}

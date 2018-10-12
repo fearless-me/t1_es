@@ -19,7 +19,7 @@
 -export([
     get_unit/1,
     get_player/1, get_player_size/0,
-    get_monster/1,  get_monster_size/0,
+    get_monster/1, get_monster_size/0,
     get_npc/1, get_pet/1
 ]).
 
@@ -29,7 +29,7 @@
     set_player_map/1, set_monster_map/1, set_npc_map/1, set_pet_map/1
 ]).
 -export([
-    get_map_id/0, get_line_id/0,get_map_hook/0,
+    get_map_id/0, get_line_id/0, get_map_hook/0,
     update_move_timer/0,
     get_move_timer_delta/0,
     get_move_timer_now/0,
@@ -38,10 +38,10 @@
 
 
 %% define
--define(MAP_MON_MAPS,       monster_maps).
--define(MAP_PLAYER_MAPS,    player_maps).
--define(MAP_NPC_MAPS,      pet_maps).
--define(MAP_PET_MAPS,      pet_maps).
+-define(MAP_MON_MAPS, monster_maps).
+-define(MAP_PLAYER_MAPS, player_maps).
+-define(MAP_NPC_MAPS, pet_maps).
+-define(MAP_PET_MAPS, pet_maps).
 -define(MAP_ID, map_id__).
 -define(LINE_ID, line_id__).
 -define(MAP_HOOK, map_hook__).
@@ -50,10 +50,10 @@
 %%%-------------------------------------------------------------------
 init(State) ->
     Now = misc_time:milli_seconds(),
-    put(?MAP_ID,        State#m_map_state.map_id),
-    put(?LINE_ID,       State#m_map_state.line_id),
-    put(?MAP_HOOK,      State#m_map_state.hook_mod),
-    put(?MOVE_TIMER,    #m_move_timer{now = Now, latest_up = Now, delta = 0}),
+    put(?MAP_ID, State#m_map_state.map_id),
+    put(?LINE_ID, State#m_map_state.line_id),
+    put(?MAP_HOOK, State#m_map_state.hook_mod),
+    put(?MOVE_TIMER, #m_move_timer{now = Now, latest_up = Now, delta = 0}),
     set_player_map(#{}),
     set_monster_map(#{}),
     set_pet_map(#{}),
@@ -71,23 +71,23 @@ get_obj_maps(Uid) ->
     end.
 
 get_player_map() -> get(?MAP_PLAYER_MAPS).
-set_player_map(Maps) -> erlang:put(?MAP_PLAYER_MAPS,   Maps).
+set_player_map(Maps) -> erlang:put(?MAP_PLAYER_MAPS, Maps).
 
 get_monster_map() -> get(?MAP_MON_MAPS).
-set_monster_map(Maps) -> erlang:put(?MAP_MON_MAPS,   Maps).
+set_monster_map(Maps) -> erlang:put(?MAP_MON_MAPS, Maps).
 
 get_pet_map() -> get(?MAP_PET_MAPS).
-set_pet_map(Maps) -> erlang:put(?MAP_PET_MAPS,   Maps).
+set_pet_map(Maps) -> erlang:put(?MAP_PET_MAPS, Maps).
 
 get_npc_map() -> get(?MAP_NPC_MAPS).
-set_npc_map(Maps) -> erlang:put(?MAP_NPC_MAPS,   Maps).
+set_npc_map(Maps) -> erlang:put(?MAP_NPC_MAPS, Maps).
 
 
 
 %%-------------------------------------------------------------------
-get_map_id()        -> get(?MAP_ID).
-get_line_id()       -> get(?LINE_ID).
-get_map_hook()      -> get(?MAP_HOOK).
+get_map_id() -> get(?MAP_ID).
+get_line_id() -> get(?LINE_ID).
+get_map_hook() -> get(?MAP_HOOK).
 
 %%-------------------------------------------------------------------
 get_unit(Uid) ->
@@ -117,7 +117,7 @@ get_monster(Uid) ->
     end.
 
 get_monster_size() ->
-    maps:size( map_rw:get_monster_map() ).
+    maps:size(map_rw:get_monster_map()).
 
 %%-------------------------------------------------------------------
 get_npc(Uid) ->
@@ -136,22 +136,22 @@ get_pet(Uid) ->
 %%-------------------------------------------------------------------
 add_obj_to_map(#m_cache_map_object{type = ?OBJ_MON, uid = Uid} = Obj) ->
     misc_ets:write(?ETS_CACHE_MAP_MONSTER, Obj),
-    map_rw:set_monster_map( maps:put(Uid, Uid, map_rw:get_monster_map()) ),
+    map_rw:set_monster_map(maps:put(Uid, Uid, map_rw:get_monster_map())),
     ok;
 add_obj_to_map(#m_cache_map_object{type = ?OBJ_PLAYER, uid = Uid} = Obj) ->
     misc_ets:write(?ETS_CACHE_MAP_PLAYER, Obj),
-    map_rw:set_player_map( maps:put(Uid, Uid, map_rw:get_player_map()) ),
+    map_rw:set_player_map(maps:put(Uid, Uid, map_rw:get_player_map())),
     ok;
 add_obj_to_map(_) ->
     ok.
 
 del_obj_to_map(#m_cache_map_object{uid = Uid, type = ?OBJ_MON}) ->
     misc_ets:delete(?ETS_CACHE_MAP_MONSTER, Uid),
-    map_rw:set_monster_map( maps:remove(Uid, map_rw:get_monster_map()) ),
+    map_rw:set_monster_map(maps:remove(Uid, map_rw:get_monster_map())),
     ok;
 del_obj_to_map(#m_cache_map_object{uid = Uid, type = ?OBJ_PLAYER}) ->
     misc_ets:delete(?ETS_CACHE_MAP_PLAYER, Uid),
-    map_rw:set_player_map( maps:remove(Uid, map_rw:get_player_map()) ),
+    map_rw:set_player_map(maps:remove(Uid, map_rw:get_player_map())),
     ok;
 del_obj_to_map(_) ->
     ok.

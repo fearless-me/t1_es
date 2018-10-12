@@ -33,7 +33,7 @@ mod_init(_Args) ->
     erlang:process_flag(trap_exit, true),
     erlang:process_flag(priority, high),
     tcp_codec:init(#net_conf{}),
-
+    
     {ok, ok}.
 
 %%--------------------------------------------------------------------	
@@ -103,7 +103,7 @@ broadcast_msg(MsgId, Msg) ->
                 L
             )
         end,
-
+    
     erlang:spawn(Fc),
     ok.
 

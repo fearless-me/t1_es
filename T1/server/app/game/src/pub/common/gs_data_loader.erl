@@ -33,7 +33,7 @@ task_list() ->
 seq_base_load(_IsCross) ->
     Sid = gs_interface:get_sid(),
     [
-        ?LOADER_TASK(serv_start,            {fun gs_db_interface:action_public_/3, [1, serv_start, Sid]})
+        ?LOADER_TASK(serv_start, {fun gs_db_interface:action_public_/3, [1, serv_start, Sid]})
     ].
 
 parallel_load(true) ->
@@ -41,7 +41,7 @@ parallel_load(true) ->
 parallel_load(_IsCross) ->
     Sid = gs_interface:get_sid(),
     [
-        ?LOADER_TASK(load_all_role_info,    {fun gs_db_interface:action_data_/3,   [1, load_all_role_info, Sid]})
+        ?LOADER_TASK(load_all_role_info, {fun gs_db_interface:action_data_/3, [1, load_all_role_info, Sid]})
     ].
 
 

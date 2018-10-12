@@ -51,13 +51,13 @@ online_call(Player) ->
         uid = Uid, map_id = Mid, x = X, y = Y,
         old_map_id = OldMid, old_line = OldLine, old_x = OX, old_y = OY
     } = Player,
-
+    
     Tar = vector3:new(X, 0, Y),
     Ack = do_online_call(
         Mid,
         #r_change_map_req{uid = Uid, pid = self(), tar_map_id = Mid, tar_pos = Tar}
     ),
-
+    
     serve_change_map_call_ret(OldMid, OldLine, vector3:new(OX, 0, OY), Ack, login),
     ok.
 
@@ -89,7 +89,7 @@ serve_change_map_call(DestMapID, DestLineId, TarPos) ->
             tar_map_id = DestMapID, tar_line_id = DestLineId, tar_pos = TarPos
         }
     ),
-
+    
     serve_change_map_call_ret(Mid, Line, Pos, Ack, gaming),
     ok.
 
@@ -115,16 +115,16 @@ do_serve_change_map_call(Req) ->
     case ExitRet of
         error -> #r_change_map_ack{error = -1, map_id = Mid};
         _ ->
-        case TarMgr of
-            undefined ->
-                ?ERROR("player[~p] tar map[~p] not exists, goto born map", [Uid, TMid]),
-                goto_born_map(Req);
-            _ ->
-                case map_mgr_interface:player_join_map_call(TarMgr, Req) of
-                    #r_change_map_ack{} = Ack -> Ack;
-                    _ -> goto_born_map(Req)
-                end
-        end
+            case TarMgr of
+                undefined ->
+                    ?ERROR("player[~p] tar map[~p] not exists, goto born map", [Uid, TMid]),
+                    goto_born_map(Req);
+                _ ->
+                    case map_mgr_interface:player_join_map_call(TarMgr, Req) of
+                        #r_change_map_ack{} = Ack -> Ack;
+                        _ -> goto_born_map(Req)
+                    end
+            end
     end.
 
 
@@ -155,7 +155,7 @@ serve_change_map_call_ret(
     player_cross_priv:change_map_after(OldMid, Mid, true),
     ?WARN("player ~p enter map_~p_~p map_pid ~p", [Uid, Mid, LineId, MPid]),
     hook_player:on_change_map(Mid, Mid),
-
+    
     player_rw:set_status(?PS_GAME),
     ok;
 serve_change_map_call_ret(
@@ -163,7 +163,7 @@ serve_change_map_call_ret(
     #r_change_map_ack{error = Err, map_id = Mid}, Flag
 ) ->
     player_cross_priv:change_map_after(OldMid, Mid, false),
-
+    
     ?ERROR("player ~p change from map ~p:~p to map ~p failed with ~p",
         [player_rw:get_uid(), OldMid, OldLineId, Mid, Err]),
     case Flag of
@@ -199,7 +199,7 @@ goto_born_map(Req) ->
     Pos = map_creator_interface:born_map_pos(),
     Mgr = map_creator_interface:map_mgr_lr(Uid, Mid),
     ?WARN("kick player[~p] to born map", [Req#r_change_map_req.uid]),
-
+    
     case map_mgr_interface:player_join_map_call(
         Mgr,
         Req#r_change_map_req{tar_map_id = Mid, tar_pos = Pos}

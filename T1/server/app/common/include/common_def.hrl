@@ -13,8 +13,8 @@
 
 
 %% 服务器类型
--define(SERVER_TYPE_GAME,   1). % 游戏服
--define(SERVER_TYPE_CROSS,  2). % 跨服
+-define(SERVER_TYPE_GAME, 1). % 游戏服
+-define(SERVER_TYPE_CROSS, 2). % 跨服
 -define(SERVER_TYPE_CENTER, 3). % 中心服
 
 %% 服务器状态
@@ -23,9 +23,9 @@
 -define(SEVER_STATUS_DONE, 2).  % 启动好
 
 %% 玩家跨服状态
--define(CS_PS_NONE,  0). % 无状态
+-define(CS_PS_NONE, 0). % 无状态
 -define(CS_PS_READY, 1). % 连接好，等待确认
--define(CS_PS_DONE,  2). % 已经完成跨服
+-define(CS_PS_DONE, 2). % 已经完成跨服
 
 
 %%选择策略
@@ -40,8 +40,8 @@
 
 
 %%
--define(SYSTEM_GUID_GUILD,  100).
--define(SYSTEM_GUID_TEAM,   102).
+-define(SYSTEM_GUID_GUILD, 100).
+-define(SYSTEM_GUID_TEAM, 102).
 -define(SYSTEM_GUID_FRIEND, 103).
 
 -endif.

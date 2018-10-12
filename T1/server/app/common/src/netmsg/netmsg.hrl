@@ -4,7 +4,39 @@
 
 -define(ProtoVersion,648).
 
+-record(pk_BuffInfo,{
+	%% UInt32
+	buff_id = 0,
+	%% UInt32
+	lifetime = 0,
+	%% UInt32
+	level = 0,
+	%% UInt32
+	wrap = 0
+}).
+
 %% 
+%% // 添加buff
+-define(GS2U_AddBuff,1356).
+-record(pk_GS2U_AddBuff,{
+	%% UInt64 角色ID
+	uid = 0,
+	%% BuffInfo buff	
+	buff
+}).
+
+%% 
+%% // 删除buff
+-define(GS2U_DeleteBuff,52430).
+-record(pk_GS2U_DeleteBuff,{
+	%% UInt64 角色ID
+	uid = 0,
+	%% UInt32 buff id
+	buff_id = 0
+}).
+
+%% 
+%% // 血量变化
 -define(GS2U_HPChange,51252).
 -record(pk_GS2U_HPChange,{
 	%% UInt64角色ID
@@ -26,6 +58,7 @@
 }).
 
 %% 
+%% // 命中目标
 -define(GS2U_HitTarget,35916).
 -record(pk_GS2U_HitTarget,{
 	%% UInt64角色ID
@@ -41,6 +74,7 @@
 }).
 
 %% 
+%% // 技能打断
 -define(GS2U_SkillInterrupt,59398).
 -record(pk_GS2U_SkillInterrupt,{
 	%% UInt64 角色ID
@@ -64,6 +98,17 @@
 }).
 
 %% 
+%% // 更新buff
+-define(GS2U_UpdateBuff,37208).
+-record(pk_GS2U_UpdateBuff,{
+	%% UInt64 角色ID
+	uid = 0,
+	%% BuffInfo buff	
+	buff
+}).
+
+%% 
+%% // 使用技能
 -define(GS2U_UseSkill,61150).
 -record(pk_GS2U_UseSkill,{
 	%% UInt64 角色ID
@@ -78,6 +123,14 @@
 	spell_time = 0,
 	%% UInt32 错误码
 	error_code = 0
+}).
+
+%% 
+%% // 删除buff
+-define(U2GS_DeleteBuff,19504).
+-record(pk_U2GS_DeleteBuff,{
+	%% UInt32 buff id
+	buff_id = 0
 }).
 
 %% 
@@ -134,6 +187,145 @@
 }).
 
 %% 
+-define(GS2U_LoginResult,22162).
+-record(pk_GS2U_LoginResult,{
+	%% Int32 0为登录成功，非0为登录失败原因
+	result = 0,
+	%% UInt64
+	aid = 0,
+	%% String
+	identity = "",
+	%% String不为空，手机必须展示
+	msg = ""
+}).
+
+%% 
+-define(GS2U_SelPlayerResult,42464).
+-record(pk_GS2U_SelPlayerResult,{
+	%% Int32
+	result = 0
+}).
+
+%% 
+-define(GS2U_UserPlayerList,18582).
+-record(pk_GS2U_UserPlayerList,{
+	%% UserPlayerData
+	info = []
+}).
+
+%% 
+%% //////////////////////////////////////////////////////////////////////////
+%% //<-发出去     ;      ->收消息
+%% // 不用使用int uint long 
+%% // 支持使用 string float int32 uint32 int64 uint64
+%% /////////////////////////////////////////////////////////////////////////
+%% //不用使用int uint long 
+%% //不用使用int uint long 
+%% //不用使用int uint long 
+%% //不用使用int uint long 
+%% //不用使用int uint long 
+%% //不用使用int uint long 
+-define(U2GS_Login_Normal,58883).
+-record(pk_U2GS_Login_Normal,{
+	%% String 平台帐号（游戏内帐号用平台id来绑定创建）
+	platformAccount = "",
+	%% String 平台名
+	platformName = "",
+	%% String 平台昵称，没有就填空串
+	platformNickName = "",
+	%% Int64
+	time = 0,
+	%% String
+	sign = "",
+	%% String 程序生成，每个设备不能重复
+	deviceId = "",
+	%% String 手机串号
+	imei = "",
+	%% String 苹果推号
+	idfa = "",
+	%% String 网卡号
+	mac = "",
+	%% String 扩展参数串
+	extParam = "",
+	%% Int32 资源版本
+	versionRes = 0,
+	%% Int32 执行程序版本
+	versionExe = 0,
+	%% Int32 游戏版本？？
+	versionGame = 0,
+	%% Int32 协议版本
+	versionPro = 0
+}).
+
+%% 
+-define(U2GS_RequestCreatePlayer,4022).
+-record(pk_U2GS_RequestCreatePlayer,{
+	%% String 名字
+	name = "",
+	%% Int32 阵营
+	camp = 0,
+	%% UInt32 职业
+	career = 0,
+	%% Int32 种族
+	race = 0,
+	%% Int32 性别
+	sex = 0,
+	%% Int32 头
+	head = 0
+}).
+
+%% 
+-define(U2GS_RequestDeletePlayer,23657).
+-record(pk_U2GS_RequestDeletePlayer,{
+	%% UInt64
+	uid = 0
+}).
+
+%% 
+-define(U2GS_SelPlayerEnterGame,56497).
+-record(pk_U2GS_SelPlayerEnterGame,{
+	%% UInt64
+	uid = 0
+}).
+
+-record(pk_UserPlayerData,{
+	%% UInt64 角色ID
+	uid = 0,
+	%% String 角色名
+	name = "",
+	%% Int32 等级
+	level = 0,
+	%% Int32 翅膀等级
+	wingLevel = 0,
+	%% Int32 阵营
+	camp = 0,
+	%% Int32 种族
+	race = 0,
+	%% UInt32 职业
+	career = 0,
+	%% Int32 性别
+	sex = 0,
+	%% Int32 头
+	head = 0,
+	%% UInt32 角色所在当前地图ID
+	mapID = 0,
+	%% UInt32 角色之前所在地图ID
+	oldMapID = 0
+}).
+
+%% 
+%% // 聊天消息(服务端发送)
+-define(GS2U_Chat,14728).
+-record(pk_GS2U_Chat,{
+	%% Int32频道
+	channel = 0,
+	%% UInt64发送者ID
+	uid = 0,
+	%% String内容
+	content = ""
+}).
+
+%% 
 %% // 初始化数据发送完毕
 -define(GS2U_GetPlayerInitDataEnd,11674).
 -record(pk_GS2U_GetPlayerInitDataEnd,{
@@ -163,19 +355,6 @@
 -record(pk_GS2U_KickByServer,{
 	%% String 1 心跳超时 (后面换成ErrorCode)
 	reason = ""
-}).
-
-%% 
--define(GS2U_LoginResult,22162).
--record(pk_GS2U_LoginResult,{
-	%% Int32 0为登录成功，非0为登录失败原因
-	result = 0,
-	%% UInt64
-	aid = 0,
-	%% String
-	identity = "",
-	%% String不为空，手机必须展示
-	msg = ""
 }).
 
 %% 
@@ -214,7 +393,11 @@
 	%% Int32 头
 	head = 0,
 	%% UInt32 角色所在当前地图ID
-	mapID = 0
+	mapID = 0,
+	%% Int32
+	combat_props = [],
+	%% BuffInfo
+	buff_list = []
 }).
 
 %% 
@@ -277,13 +460,6 @@
 }).
 
 %% 
--define(GS2U_SelPlayerResult,42464).
--record(pk_GS2U_SelPlayerResult,{
-	%% Int32
-	result = 0
-}).
-
-%% 
 %% // 移动
 -define(GS2U_SyncStand,30047).
 -record(pk_GS2U_SyncStand,{
@@ -317,13 +493,6 @@
 	move_time = 0,
 	%% Single移动速度
 	speed = 0.0
-}).
-
-%% 
--define(GS2U_UserPlayerList,18582).
--record(pk_GS2U_UserPlayerList,{
-	%% UserPlayerData
-	info = []
 }).
 
 -record(pk_LookInfoMonster,{
@@ -399,11 +568,34 @@
 }).
 
 %% 
+%% // 聊天消息(客户端发送)
+-define(U2GS_Chat,11258).
+-record(pk_U2GS_Chat,{
+	%% Int32频道
+	channel = 0,
+	%% UInt64接收者ID
+	receiver = 0,
+	%% String内容
+	content = ""
+}).
+
+%% 
 -define(U2GS_ExitGame,62410).
 -record(pk_U2GS_ExitGame,{
 }).
 
 %% 
+%% //////////////////////////////////////////////////////////////////////////
+%% //<-发出去     ;      ->收消息
+%% //不用使用int uint long 
+%% // 支持使用 string float int32 uint32 int64 uint64
+%% /////////////////////////////////////////////////////////////////////////
+%% //不用使用int uint long 
+%% //不用使用int uint long 
+%% //不用使用int uint long 
+%% //不用使用int uint long 
+%% //不用使用int uint long 
+%% //不用使用int uint long
 %% // 请求发送初始化数据
 -define(U2GS_GetPlayerInitData,5543).
 -record(pk_U2GS_GetPlayerInitData,{
@@ -420,50 +612,6 @@
 %% 
 -define(U2GS_HearBeat,7246).
 -record(pk_U2GS_HearBeat,{
-}).
-
-%% 
-%% //////////////////////////////////////////////////////////////////////////
-%% //<-发出去     ;      ->收消息
-%% // 不用使用int uint long 
-%% // 支持使用 string float int32 uint32 int64 uint64
-%% /////////////////////////////////////////////////////////////////////////
-%% //不用使用int uint long 
-%% //不用使用int uint long 
-%% //不用使用int uint long 
-%% //不用使用int uint long 
-%% //不用使用int uint long 
-%% //不用使用int uint long 
--define(U2GS_Login_Normal,58883).
--record(pk_U2GS_Login_Normal,{
-	%% String 平台帐号（游戏内帐号用平台id来绑定创建）
-	platformAccount = "",
-	%% String 平台名
-	platformName = "",
-	%% String 平台昵称，没有就填空串
-	platformNickName = "",
-	%% Int64
-	time = 0,
-	%% String
-	sign = "",
-	%% String 程序生成，每个设备不能重复
-	deviceId = "",
-	%% String 手机串号
-	imei = "",
-	%% String 苹果推号
-	idfa = "",
-	%% String 网卡号
-	mac = "",
-	%% String 扩展参数串
-	extParam = "",
-	%% Int32 资源版本
-	versionRes = 0,
-	%% Int32 执行程序版本
-	versionExe = 0,
-	%% Int32 游戏版本？？
-	versionGame = 0,
-	%% Int32 协议版本
-	versionPro = 0
 }).
 
 %% 
@@ -486,97 +634,6 @@
 	dst_x = 0.0,
 	%% Single坐标Y
 	dst_y = 0.0
-}).
-
-%% 
--define(U2GS_RequestCreatePlayer,4022).
--record(pk_U2GS_RequestCreatePlayer,{
-	%% String 名字
-	name = "",
-	%% Int32 阵营
-	camp = 0,
-	%% UInt32 职业
-	career = 0,
-	%% Int32 种族
-	race = 0,
-	%% Int32 性别
-	sex = 0,
-	%% Int32 头
-	head = 0
-}).
-
-%% 
--define(U2GS_RequestDeletePlayer,23657).
--record(pk_U2GS_RequestDeletePlayer,{
-	%% UInt64
-	uid = 0
-}).
-
-%% 
--define(U2GS_SelPlayerEnterGame,56497).
--record(pk_U2GS_SelPlayerEnterGame,{
-	%% UInt64
-	uid = 0
-}).
-
--record(pk_UserPlayerData,{
-	%% UInt64 角色ID
-	uid = 0,
-	%% String 角色名
-	name = "",
-	%% Int32 等级
-	level = 0,
-	%% Int32 翅膀等级
-	wingLevel = 0,
-	%% Int32 阵营
-	camp = 0,
-	%% Int32 种族
-	race = 0,
-	%% UInt32 职业
-	career = 0,
-	%% Int32 性别
-	sex = 0,
-	%% Int32 头
-	head = 0,
-	%% UInt32 角色所在当前地图ID
-	mapID = 0,
-	%% UInt32 角色之前所在地图ID
-	oldMapID = 0
-}).
-
-%% 
-%% //////////////////////////////////////////////////////////////////////////
-%% //<-发出去     ;      ->收消息
-%% //不用使用int uint long 
-%% // 支持使用 string float int32 uint32 int64 uint64
-%% /////////////////////////////////////////////////////////////////////////
-%% //不用使用int uint long 
-%% //不用使用int uint long 
-%% //不用使用int uint long 
-%% //不用使用int uint long 
-%% //不用使用int uint long 
-%% //不用使用int uint long 
-%% // 聊天消息(服务端发送)
--define(GS2U_Chat,14728).
--record(pk_GS2U_Chat,{
-	%% Int32频道
-	channel = 0,
-	%% UInt64发送者ID
-	uid = 0,
-	%% String内容
-	content = ""
-}).
-
-%% 
-%% // 聊天消息(客户端发送)
--define(U2GS_Chat,11258).
--record(pk_U2GS_Chat,{
-	%% Int32频道
-	channel = 0,
-	%% UInt64接收者ID
-	receiver = 0,
-	%% String内容
-	content = ""
 }).
 
 -endif. %%NetmsgRecords

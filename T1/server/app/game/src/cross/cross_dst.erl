@@ -32,7 +32,7 @@ rpc_call_player_enter(#r_to_cross_data{
 }) ->
     %% fixme 初始化数据
     gs_cache_interface:online_cross(Pub, PlayerOnline),
-    ?INFO("player ~w of account ~p enter cross",[Uid, Aid]),
+    ?INFO("player ~w of account ~p enter cross", [Uid, Aid]),
     ok.
 
 
@@ -44,7 +44,7 @@ rpc_call_player_enter(#r_to_cross_data{
 rpc_call_player_prepare_leave(Aid, Uid) ->
     %%
     %% todo  返回给普通服的数据
-    ?WARN("player ~w of account ~p prpare to leave cross",[Uid, Aid]),
+    ?WARN("player ~w of account ~p prpare to leave cross", [Uid, Aid]),
     ok.
 
 %%
@@ -52,7 +52,7 @@ rpc_call_player_prepare_leave(Aid, Uid) ->
 %%
 rpc_call_player_leave(Aid, Uid) ->
     gs_cache_interface:offline(Aid, Uid),
-    ?WARN("player ~w of account ~p leave cross",[Uid, Aid]),
+    ?WARN("player ~w of account ~p leave cross", [Uid, Aid]),
     ok.
 
 %%
@@ -62,13 +62,13 @@ rpc_call_player_leave(Aid, Uid) ->
 rpc_call_player_offline(Aid, Uid) ->
     gs_cache_interface:offline(Aid, Uid),
     %%fixme 返回给普通服的数据
-    ?INFO("player ~w of account ~p offline in cross",[Uid, Aid]),
+    ?INFO("player ~w of account ~p offline in cross", [Uid, Aid]),
     ok.
 
 
 rpc_call_del_player(Aid, Uid) ->
     gs_cache_interface:offline(Aid, Uid),
-    ?INFO("player ~w of account ~p del in cross",[Uid, Aid]),
+    ?INFO("player ~w of account ~p del in cross", [Uid, Aid]),
     ok.
 
 

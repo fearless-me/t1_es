@@ -20,10 +20,10 @@ get_attr(_Uid, _AttrId) ->
     100.
 
 get_hp(Uid) ->
-    misc_ets:read_element(?ETS_CACHE_ONLINE_PLAYER, Uid, #m_cache_online_player.hp).
+    gs_cache_interface:read_online_player_element(Uid, #m_cache_online_player.hp).
 
 get_hp_percent(_Uid) ->
     1.0.
 
 get_map_pid(Uid) ->
-    misc_ets:read_element(?ETS_CACHE_ONLINE_PLAYER, Uid, #m_cache_online_player.map_pid).
+    gs_cache_interface:read_online_player_element(Uid, #m_cache_online_player.map_pid).

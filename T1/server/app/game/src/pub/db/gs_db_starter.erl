@@ -24,14 +24,14 @@ start() ->
     Sid = gs_interface:get_sid(),
     {_PoolOptions, MySqlOptions} = get_inst_opt(),
     {ok, Pid} = mysql:start_link(MySqlOptions),
-
+    
     case gs_interface:is_cross() of
         false ->
             ?INFO("init data db pool ..."),
             db_pool_init(Pid, get_data_db_conf, [Sid], ?DATA_DB_POOL_NAME, fun gs_db_data_handler:handler/4),
             ?INFO("init data db pool done"),
             ?INFO("#"),
-
+            
             ?INFO("init account db pool ..."),
             db_pool_init(Pid, get_account_db_conf, [], ?ACCOUNT_DB_POOL_NAME, fun gs_db_account_handler:handler/4),
             ?INFO("init account db pool done"),

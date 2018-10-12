@@ -11,14 +11,14 @@
 
 %% API
 -export([
-	start/0,
-	start/1
+    start/0,
+    start/1
 ]).
 
-start()->
-	start([{start_log, "./___sasl_gs___.txt"}]).
+start() ->
+    start([{start_log, "./___sasl_gs___.txt"}]).
 
-start(Options)->
-	rb:start(Options),
-	rb:show(),
-	rb:stop().
+start(Options) ->
+    rb:start(Options),
+    rb:show(),
+    rb:stop().

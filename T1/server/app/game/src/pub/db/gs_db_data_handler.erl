@@ -14,7 +14,7 @@
 -include("gs_common_rec.hrl").
 -include("db_record.hrl").
 
--define(DB_QUERY_TIMEOUT, 15*1000).
+-define(DB_QUERY_TIMEOUT, 15 * 1000).
 
 %% API
 -export([handler/4]).
@@ -24,26 +24,26 @@ handler(load_all_role_info, Sid, FromPid, PoolId) ->
     Sql = gs_db_sql:sql(load_all_role_info_cnt),
     Res = db:query(PoolId, Sql, [Sid], ?DB_QUERY_TIMEOUT),
     check_res(Res, Sql, [Sid]),
-    Load  = 100,
+    Load = 100,
     Count = db:scalar(Res),
     SeqNo =
         case Count rem Load of
             0 when Count > Load -> Count div Load;
             _ -> (Count div Load) + 1
         end,
-
+    
     lists:foreach(
         fun(Batch) ->
             Start = (Batch - 1) * Load,
-            End   = Batch * Load,
+            End = Batch * Load,
             SqlLoad = gs_db_sql:sql(load_all_role_info),
-            ResLoad = db:query(PoolId, SqlLoad, [Sid, Start, End], ?DB_QUERY_TIMEOUT*5),
+            ResLoad = db:query(PoolId, SqlLoad, [Sid, Start, End], ?DB_QUERY_TIMEOUT * 5),
             check_res(ResLoad, SqlLoad, [Sid, Start, End]),
             ResList0 = db:as_record(ResLoad, p_player, record_info(fields, p_player)),
-            ResList1 = [ Player#p_player{name = binary_to_list(Player#p_player.name)} || Player <- ResList0],
+            ResList1 = [Player#p_player{name = binary_to_list(Player#p_player.name)} || Player <- ResList0],
             ps:send(FromPid, load_all_role_info_ack, ResList1)
         end, lists:seq(1, SeqNo)),
-
+    
     ps:send(FromPid, load_all_role_info_ack_end),
     ok;
 handler(load_player_list, AccId, FromPid, PoolId) ->
@@ -76,7 +76,7 @@ handler(create_player, {AccId, Req}, FromPid, PoolId) ->
     Params = [AccId, Uid, Sid, Name, 1, Sex, Camp, Race, Career, Head,
         Mid, 0, X, Y, Mid, 0, X, Y, misc_time:milli_seconds()],
     Res = db:query(PoolId, Sql, Params, ?DB_QUERY_TIMEOUT),
-
+    
     check_res(Res, Sql, Params),
     ps:send(FromPid, create_player_ack,
         #r_create_player_ack{

@@ -25,10 +25,10 @@ tick_go() ->
     ok.
 
 %%-------------------------------------------------------------------
-tick_msg()-> erlang:send_after(100, self(), tick_me).
+tick_msg() -> erlang:send_after(100, self(), tick_me).
 
 %%-------------------------------------------------------------------
-tick_me()->
+tick_me() ->
     %
     tick_msg(),
     
@@ -78,7 +78,7 @@ do_hour(_, _Now) -> false.
 
 %%-------------------------------------------------------------------
 do_sharp(true, _Now) ->
-    {{_,_,_}, {H,M,_S}} = calendar:local_time(),
+    {{_, _, _}, {H, M, _S}} = calendar:local_time(),
     case M =:= 0 of
         true ->
             ?TRY_CATCH(hook_player:on_sharp(H)), true;

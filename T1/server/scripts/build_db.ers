@@ -34,35 +34,29 @@
   "%%% This File Is AUTO GENERATED, Don't Modify it MANUALLY!!!\n"
   "%%% This File Is AUTO GENERATED, Don't Modify it MANUALLY!!!\n"
   "%%% This File Is AUTO GENERATED, Don't Modify it MANUALLY!!!\n"
+  "-author(\"Hello World\").\n\n"
 ).
 
--define(DEFINE_MACRO_S, "-ifndef(GS_DB_RECORD_HRL).\n-define(GS_DB_RECORD_HRL, true).\n").
+-define(DEFINE_MACRO_S, "-ifndef(DB_TABLE_RECORD_HRL).\n-define(DB_TABLE_RECORD_HRL, true).\n").
 -define(DEFINE_MACRO_E, "-endif.\n").
 
 main(_) ->
   os:cmd("chcp 65001"),
-  color:warn_log(
-    "~n##########################################################~n"
-    "~n** 导出代码需要依赖 mysql-otp"
-    "~n** 所以务必确保已经生成 game 项目的代码~n"
-    "~n** 生成数据库表结构 erlang代码~n"
-    "~n** 默认使用: localhost root 1234 为数据库的访问地址、账号、密码~n"
-    "~n** 默认导出: t1_data, t1_public, t1_account~n"
-    "~n** 自定义导出为参数为 $Host $User $Password #Database1 ...#DatabaseN~n"
-    "~n##########################################################~n"
-  ),
   code:add_path("../app/game/ebin"),
-  color:info_log(
+  color:warn_log(
+    "~n##############生成数据库表结构 erlang代码#####################~n~n"
+    "** 导出代码需要依赖 mysql-otp~n"
+    "** 所以务必确保已经生成 game 项目的代码~n"
+    "** 默认使用: localhost root 1234 t1_data, t1_public, t1_account~n"
+    "** 自定义导出为参数为 $Host $User $Password #Database1 ...#DatabaseN~n"
     "~n##########################################################~n"
-    "\t~-10.w默认导出~n"
-    "\t~-10.w定义导出~n"
-    "\t#~n"
-    "\t~-10.w退出~n"
-    "~n##########################################################~n",
-    
-    [?EXPORT_DEFAULT, ?EXPORT_USERDEF, 0]
   ),
-  InputNoStr = io:get_line("Please enter your choice:"),
+  
+  Prompt = color:green(
+  io_lib:format("~-2.w:默认 ~-2.w:自定义,~-2.w:退出 >> ",
+    [?EXPORT_DEFAULT, ?EXPORT_USERDEF, 0]
+  )),
+  InputNoStr = io:get_line(Prompt),
   [T | _] = string:tokens(string_strip(InputNoStr, "\n"), " "),
   {IT, _} = string:to_integer(T),
   dispatchInput2(IT),
@@ -96,25 +90,67 @@ export_all_database([Host, User, Password, Databases]) ->
   ok.
 
 export_database(Host, User, Password, Database) ->
+  color:warn_log("~nexport database ~s...", [Database]),
   {ok, Pid} = mysql:start_link([{host, Host}, {user, User}, {password, Password}, {database, Database}]),
   R3 = mysql:query(Pid, "SHOW TABLE STATUS FROM " ++ Database),
   Ret = db:as_record(R3, rec_db_table, record_info(fields, rec_db_table)),
-  lists:foreach(fun(Rec) -> read_table_fields(Pid, Rec#rec_db_table.'Name') end, Ret),
+  lists:foreach(fun(Rec) -> read_table_fields(Pid, Database, Rec#rec_db_table.'Name') end, Ret),
+  color:warn_log("export database ~s done!~n", [Database]),
   ok.
 
-read_table_fields(Pid, Tab) ->
+read_table_fields(Pid, Database, Tab) ->
   Ret = mysql:query(Pid, "SHOW FULL COLUMNS FROM " ++ Tab),
   FieldList1 = db:as_record(Ret, rec_db_table_field, record_info(fields, rec_db_table_field)),
   FieldList2 = [FieldRecord || FieldRecord <- FieldList1, FieldRecord#rec_db_table_field.'Field' =/= <<"auto_id__">>],
 %%  io:format("~n ~p~n", [FieldList2]),
-  Str = format_fields(FieldList2, length(FieldList2), ""),
-  write_file(?EXPORT_FILE, "%% ~s\n-record(p_~s,{\t~s\n}).\n", [binary_to_list(Tab), binary_to_list(Tab), Str]),
+  Str = format_fields(FieldList2),
+  write_file(?EXPORT_FILE, "~n%% ~s.~s~s\n",
+    [safe_binary_to_list(Database), safe_binary_to_list(Tab), format_fields_desc(FieldList2, "")]),
+  write_file(?EXPORT_FILE, "-record(p_~s,{~s}).\n\n", [safe_binary_to_list(Tab), Str]),
+  color:info_log("\texport table ~s done!", [Tab]),
   ok.
 
-format_fields([#rec_db_table_field{'Field' = Name, 'Type' = Type, 'Comment' = Comment}], 1, Acc) ->
-  Acc ++ "\n\t" ++ binary_to_list(Name) ++ " %% " ++ binary_to_list(Comment) ++ " "  ++  binary_to_list(Type) ;
-format_fields([#rec_db_table_field{'Field' = Name, 'Type' = Type, 'Comment' = Comment} | FieldList], X, Acc) ->
-  format_fields(FieldList, X - 1, Acc ++ "\n\t" ++ binary_to_list(Name) ++ ", %% " ++ binary_to_list(Comment) ++ " "  ++  binary_to_list(Type)).
+format_fields_desc([], Acc) ->
+  Acc;
+format_fields_desc([ Field | FieldList], Acc) ->
+  format_fields_desc(FieldList, Acc ++ "\n" ++   format_field_desc(Field)).
+
+format_field_desc(#rec_db_table_field{'Field' = Name, 'Type' = Type, 'Comment' = Comment, 'Extra' = Extra, 'Key' = Key, 'Default' = Default}) ->
+  string:join(
+    [
+      "%%",
+      safe_binary_to_list(Name),
+      safe_binary_to_list(Type),
+      safe_binary_to_list(Extra),
+      "DEFAULT", safe_binary_to_list(Default),
+      "COMMENT", safe_binary_to_list(Comment),
+      "KEY", safe_binary_to_list(Key)
+    ], " ").
+
+
+format_fields(FieldList) ->
+  NameList1 = [safe_binary_to_list(Rec#rec_db_table_field.'Field') || Rec <- FieldList],
+  {_, NameList2} = lists:foldl(
+    fun
+      (Name, {N, Acc}) when N rem 10 =:= 0 ->
+        {N + 1, ["\n\t"++Name] ++ Acc};
+      (Name, {N, Acc}) ->
+        {N + 1, [Name | Acc]}
+    end, {1, []}, NameList1),
+  string:join(lists:reverse(NameList2), ",").
+
+
+
+safe_binary_to_list(null) ->
+  "\'\'";
+safe_binary_to_list(<<>>) ->
+  "\'\'";
+safe_binary_to_list(Bin) when is_binary(Bin) ->
+  binary_to_list(Bin);
+safe_binary_to_list(List) when is_list(List) ->
+  List;
+safe_binary_to_list(Other) ->
+  io_lib:format("~w",[Other]).
 
 
 
@@ -128,5 +164,5 @@ write_file(FileName, Fmt) ->
   file:write_file(FileName, Fmt, [append]).
 %%-------------------------------------------------------------------
 write_file(FileName, Fmt, Args) ->
-  color:info_log(Fmt, Args),
+%%  color:info_log(Fmt, Args),
   file:write_file(FileName, io_lib:format(Fmt, Args), [append]).

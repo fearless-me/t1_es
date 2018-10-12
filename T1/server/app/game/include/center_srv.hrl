@@ -19,6 +19,6 @@
 -define(ConnectTimeoutSec, 60).
 %%
 -define(CenterServerEts, centerServerEts____).
--record(recCenterInfo, {id = ?CenterServerKey, pid = 0, status = 0, dead_line=0}).
+-record(recCenterInfo, {id = ?CenterServerKey, pid = 0, status = 0, dead_line = 0}).
 
 -endif.

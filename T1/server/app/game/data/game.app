@@ -1,8 +1,8 @@
-{application,game,
-             [{description,[]},
-              {vsn,"1"},
-              {registered,[]},
-              {applications,[kernel,stdlib,mysql_poolboy,mysql,poolboy,econfig,dynamic_compile,recon,db_proxy]},
-              {mod,{game,[]}},
-              {env,[]},
-              {modules,[]}]}.
+{application, game,
+    [{description,[]},
+{vsn, "1"},
+{registered, []},
+{applications, [kernel, stdlib, mysql_poolboy, mysql, poolboy,econfig, dynamic_compile, recon, db_proxy]},
+{mod, {game, []}},
+{env, []},
+{modules, []}]}.

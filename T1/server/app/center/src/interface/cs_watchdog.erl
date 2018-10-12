@@ -18,7 +18,7 @@
 
 task_list() ->
     [
-        ?WATCHDOG_TASK_GROUP(1, load_all_data,      priority_1()),
+        ?WATCHDOG_TASK_GROUP(1, load_all_data, priority_1()),
         ?WATCHDOG_TASK_GROUP(2, start_master_slave, priority_2(), true)
     ].
 

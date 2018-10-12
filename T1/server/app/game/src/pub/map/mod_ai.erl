@@ -27,7 +27,7 @@
     %% pursue
     get_pursue_unit/1, start_pursue/2, update_pursue/2, count_down_attack_tick/1,
     %% skill&combat
-    add_enmity/3, clear_enmity/3, on_ai_event/2,is_in_attack_dist/2, ai_use_skill/3,
+    add_enmity/3, clear_enmity/3, on_ai_event/2, is_in_attack_dist/2, ai_use_skill/3,
     %% flee
     count_down_flee_tick/1, rand_flee_pos/1, start_flee/2, update_flee/1,
     get_target_by_type/2
@@ -120,7 +120,7 @@ do_update(Uid, true) ->
     %% todo 获取怪物AI配置
     AiAction = ?AIAT_Null,
     State = ai_rw:get_ai_state(Uid),
-
+    
     ?TRY_CATCH(update_hook(Uid), Err1, Stk1),
     ?TRY_CATCH(update_transition(Uid, AiAction), Err2, Stk2),
     ?TRY_CATCH(update_state(Uid, State), Err3, Stk3),
@@ -212,7 +212,7 @@ start_patrol(Uid) ->
 do_start_patrol(Uid, ?ECPT_Path) ->
     WPNum = ai_rw:get_wp_num(Uid),
     WPIdx = ai_rw:get_wp_idx(Uid),
-
+    
     %
     IsReversePatrol1 = ai_rw:get_is_reverse_patrol(Uid),
     IsReversePatrol2 =
@@ -229,15 +229,15 @@ do_start_patrol(Uid, ?ECPT_Path) ->
             true ->
                 IsReversePatrol2
         end,
-
+    
     NewWPIdx = if IsReversePatrol3 -> WPIdx - 1; true -> WPIdx + 1 end,
-
+    
     ai_rw:set_wp_idx(Uid, NewWPIdx),
     ai_rw:set_is_patrol(Uid, IsReversePatrol3),
-
+    
     WPList = ai_rw:get_wp_list(Uid),
     TarPos = lists:nth(NewWPIdx, WPList),
-
+    
     % 怪物开始跑路
     do_started_patrol_1(Uid, TarPos),
     ok;
@@ -247,7 +247,7 @@ do_start_patrol(Uid, ?ECPT_Range) ->
     X = vector3:x(NowPos) + ((rand_tool:rand() rem Diameter) - ?AI_PATROL_RADIUS),
     Z = vector3:z(NowPos) + ((rand_tool:rand() rem Diameter) - ?AI_PATROL_RADIUS),
     TarPos = vector3:new(X, 0, Z),
-
+    
     % 怪物开始跑路
     do_started_patrol_1(Uid, TarPos),
     ok;
@@ -352,7 +352,7 @@ do_update_look_for_enemy(_Uid, _) -> skip.
 
 %%-------------------------------------------------------------------
 can_look_for_enemy(_Uid, V) when V =< 0 -> true;
-can_look_for_enemy(Uid,  V) when V > 0 ->
+can_look_for_enemy(Uid, V) when V > 0 ->
     ai_rw:set_look_for_target_tick(Uid, V - 1),
     false;
 can_look_for_enemy(_Uid, _V) ->
@@ -443,7 +443,7 @@ start_pursue(Uid, TarUid) when is_integer(TarUid), TarUid > 0 ->
     ai_rw:set_pursue_failed(Uid, false),
     ai_rw:set_cant_pursue(Uid, false),
     reset_check_pursue_tick(Uid),
-
+    
     Pos = object_rw:get_cur_pos(TarUid),
     Ret = mod_move:is_can_monster_walk(Uid, Pos, ?EMS_MONSTER_WALK, true),
     case Ret of
@@ -542,7 +542,7 @@ is_in_attack_dist(_Uid, TarUid) when TarUid =< 0 ->
 is_in_attack_dist(Uid, TarUid) when is_number(TarUid) ->
     Obj = map_rw:get_unit(TarUid),
     is_in_attack_dist(Uid, Obj);
-is_in_attack_dist(_Uid, undefined)->
+is_in_attack_dist(_Uid, undefined) ->
     false;
 is_in_attack_dist(Uid, #m_cache_map_object{uid = TarUid}) ->
     VSrc = object_rw:get_cur_pos(Uid),
@@ -553,7 +553,7 @@ is_in_attack_dist(Uid, #m_cache_map_object{uid = TarUid}) ->
 is_in_attack_dist(_Uid, _Any) ->
     false.
 
-ai_use_skill(Uid, SkillId, TarUid)->
+ai_use_skill(Uid, SkillId, TarUid) ->
     Serial = ai_rw:get_skill_serial(Uid),
     Ret = mod_combat:use_skill(Uid, TarUid, SkillId, Serial),
     case Ret =:= ok of
@@ -572,8 +572,8 @@ count_down_flee_tick(Uid) ->
     ok.
 
 rand_flee_pos(Uid) ->
-    V_X  = (rand_tool:rand() rem ?AI_RANGE_FLEE_RADIUS) + ?AI_RANGE_FLEE_RADIUS,
-    Ang  = (rand_tool:rand() rem 360)/1.0,
+    V_X = (rand_tool:rand() rem ?AI_RANGE_FLEE_RADIUS) + ?AI_RANGE_FLEE_RADIUS,
+    Ang = (rand_tool:rand() rem 360) / 1.0,
     Dir1 = vector3:new(V_X, 0, 0),
     Dir2 = vector3:rotate_around_origin_2d(Dir1, Ang),
     Pos1 = object_rw:get_cur_pos(Uid),
@@ -611,7 +611,7 @@ do_update_flee(Uid, true, _Cant) ->
     start_flee(Uid, ai_rw:get_flee_dst(Uid)),
     ok;
 %% 等待重启
-do_update_flee(Uid, _Failed, true)  ->
+do_update_flee(Uid, _Failed, true) ->
     case object_core:is_unit_cant_move_state(Uid) of
         false -> start_flee(Uid, ai_rw:get_flee_dst(Uid));
         _ -> skip
@@ -635,7 +635,7 @@ do_update_flee(Uid, _Failed, _Cant) ->
             end
     end,
     ok.
- -spec get_target_by_type(Uid :: integer(), Type :: trigger_target()) -> integer().
+-spec get_target_by_type(Uid :: integer(), Type :: trigger_target()) -> integer().
 get_target_by_type(_Uid, ?CFE_NULL) ->
     0;
 get_target_by_type(Uid, ?CFE_Self) ->

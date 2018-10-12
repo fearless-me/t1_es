@@ -13,9 +13,9 @@
 
 
 -define(SERVER_MGR_TICK, 100).
--define(ServerAckTime, 60*1000).
+-define(ServerAckTime, 60 * 1000).
 
 -define(ETS_CACHE_SERVER_CHECK, m_all_server_check).
--record(m_cache_server_check,{id = 0, time = 0}).
+-record(m_cache_server_check, {id = 0, time = 0}).
 
 -endif.

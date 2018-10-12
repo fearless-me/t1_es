@@ -27,16 +27,16 @@
     send_msg_2_all_cross/1, send_msg_2_all_cross/2,
     send_msg_2_all_server/1, send_msg_2_all_server/2,
     send_msg_2_all_server_excl/2, send_msg_2_all_server_excl/3,
-
+    
     %%
     send_msg_2_worker_with_sid/2, send_msg_2_worker_with_sid/3,
     send_msg_2_all_gs_worker/1, send_msg_2_all_gs_worker/2,
     send_msg_2_all_cross_worker/1, send_msg_2_all_cross_worker/2,
     send_msg_2_all_server_worker/1, send_msg_2_all_server_worker/2,
-
+    
     %%
     is_server_worker_alive/1,
-
+    
     %%
     get_server_info/1, get_cgs_info/0,
     %%
@@ -45,7 +45,7 @@
 
 
 %%%-------------------------------------------------------------------
-get_all_sid(Type)->
+get_all_sid(Type) ->
     sel_server_id(Type).
 
 %%%-------------------------------------------------------------------
@@ -117,7 +117,7 @@ send_msg_2_all_server_excl(Msg, ExceptServerID) ->
     broadcast_with_msg(PidList, Msg),
     ok.
 
-send_msg_2_all_server_excl(Msg, MsgData ,ExceptServerID) ->
+send_msg_2_all_server_excl(Msg, MsgData, ExceptServerID) ->
     PidList = sel_server_pid_list(0, ?TYPE_WINDOW, ExceptServerID),
     broadcast_with_msg_data(PidList, Msg, MsgData),
     ok.
@@ -200,10 +200,12 @@ sel_server_id(SeverType) ->
     misc_mnesia:dirty_select(?ShareServerInfoName, QS).
 
 sel_server_pid_list_1(0, ?TYPE_WINDOW, ExceptServerID) ->
-    QS = ets:fun2ms(fun(Info) when Info#m_share_server_info.sid =/= ExceptServerID -> Info#m_share_server_info.src_pid end),
+    QS = ets:fun2ms(fun(Info) when Info#m_share_server_info.sid =/= ExceptServerID ->
+        Info#m_share_server_info.src_pid end),
     misc_mnesia:dirty_select(?ShareServerInfoName, QS);
 sel_server_pid_list_1(Type, ?TYPE_WINDOW, ExceptServerID) ->
-    QS = ets:fun2ms(fun(Info) when Info#m_share_server_info.sid =/= ExceptServerID andalso Info#m_share_server_info.type =:= Type -> Info#m_share_server_info.src_pid end),
+    QS = ets:fun2ms(fun(Info) when Info#m_share_server_info.sid =/= ExceptServerID andalso Info#m_share_server_info.type =:= Type ->
+        Info#m_share_server_info.src_pid end),
     misc_mnesia:dirty_select(?ShareServerInfoName, QS);
 sel_server_pid_list_1(0, _Type, ExceptServerID) ->
     QS = ets:fun2ms(

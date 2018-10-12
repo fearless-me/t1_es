@@ -13,10 +13,10 @@
 
 -include("common_ps_def.hrl").
 
--define(GS_CS_OTP,          center_srv).
--define(GS_BROADCAST_OTP,   broadcast_srv).
--define(GS_CACHE_OTP,       gs_cache_srv).
--define(GS_LOGIN_OTP,       login_srv).
+-define(GS_CS_OTP, center_srv).
+-define(GS_BROADCAST_OTP, broadcast_srv).
+-define(GS_CACHE_OTP, gs_cache_srv).
+-define(GS_LOGIN_OTP, login_srv).
 -define(GS_MAP_CREATOR_OTP, map_creator_srv).
 
 

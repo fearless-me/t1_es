@@ -143,7 +143,7 @@ rectangle_selector(Aer, Pos, Face, Width, Height) ->
                                     true -> 0;
                                     _ -> Dot_Dist_SQ / Face_SQ
                                 end,
-
+                            
                             case ProjectorDist_SQ > Height_SQ of
                                 true -> Acc;
                                 _ ->

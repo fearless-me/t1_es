@@ -25,7 +25,7 @@
     sync_player_exit_map/1,
     sync_player_join_group/2,
     add_obj_to_vis_tile/2,
-
+    
     send_net_msg_to_visual/2, send_msg_to_visual/3, send_msg_to_visual/2
 ]).
 
@@ -42,17 +42,17 @@ sync_player_join_group(Uid, Group) ->
     %1.
     Obj = map_rw:get_player(Uid),
     Index = pos_to_vis_index(object_rw:get_cur_pos(Uid), get(?VIS_W), ?VIS_DIST),
-
+    
     %2.
     ?TRY_CATCH(del_obj_from_vis_tile(Obj, Index)),
-
+    
     %3.
     Tiles = get_vis_tile_around(Index),
     sync_del_obj(Obj, Tiles),
-
+    
     %% 4
     object_rw:set_group(Uid, Group),
-
+    
     %% 5
     sync_add_obj(Obj, Tiles),
     add_obj_to_vis_tile(Obj, Index),
@@ -65,7 +65,7 @@ sync_player_join_map(Obj) ->
     Pos = object_rw:get_cur_pos(Uid),
     Index = pos_to_vis_index(Pos, get(?VIS_W), ?VIS_DIST),
     Tiles = get_vis_tile_around(Index),
-
+    
     %2.
     sync_add_obj(Obj, Tiles),
     add_obj_to_vis_tile(Obj, Index),
@@ -76,10 +76,10 @@ sync_player_exit_map(Obj) ->
     %1.
     Uid = object_core:get_uid(Obj),
     Index = pos_to_vis_index(object_rw:get_cur_pos(Uid), get(?VIS_W), ?VIS_DIST),
-
+    
     %2.
     ?TRY_CATCH(del_obj_from_vis_tile(Obj, Index)),
-
+    
     %3.
     Tiles = get_vis_tile_around(Index),
     sync_del_obj(Obj, Tiles),
@@ -98,9 +98,9 @@ init_vis_tile(#recGameMapCfg{
     VisW = (erlang:trunc(Col * 1) div ?VIS_DIST) + 1,
     VisH = (erlang:trunc(Row * 1) div ?VIS_DIST) + 1,
     VisT = VisW * VisH,
-
+    
     ?assert(VisT > 1),
-
+    
     put(?VIS_W, VisW),
     put(?VIS_H, VisH),
     put(?CELL_SIZE, CellSize),
@@ -164,7 +164,7 @@ send_net_msg_to_big_visual_with_group(_VisTileList, undefined, _Group) ->
     skip;
 send_net_msg_to_big_visual_with_group(VisTileList, Msg, Group) ->
     PlayerList = [Players || #m_vis_tile{player = Players} <- VisTileList],
-
+    
     lists:foreach(
         fun
             (UidList) ->
@@ -178,7 +178,7 @@ send_net_msg_to_big_visual_with_group(VisTileList, Msg, Group) ->
         end,
         PlayerList
     ),
-
+    
     ok.
 
 
@@ -231,7 +231,7 @@ sync_change_pos_visual_tile(undefined, OldVisTileIndex, OldVisTileIndex) ->
 sync_change_pos_visual_tile(Obj, OldVisTileIndex, NewVisTileIndex) ->
 %%    ?DEBUG("uid ~w vis_tile_index from ~w to ~w",
 %%        [Obj#m_map_obj.uid, OldVisTileIndex, NewVisTileIndex]),
-
+    
     del_obj_from_vis_tile(Obj, OldVisTileIndex),
     {VisTileLeave, VisTileEnter} = vis_tile_intersection(OldVisTileIndex, NewVisTileIndex),
     sync_del_obj(Obj, VisTileLeave),
@@ -259,7 +259,7 @@ add_obj_to_vis_tile(Obj, VisTileIndex) ->
     ?assert(is_number(VisTileIndex) andalso VisTileIndex > 0),
 
 %%    ?DEBUG("add ~p to vis index ~p", [Obj#m_map_obj.uid, VisTileIndex]),
-
+    
     VisTile = get_vis_tile(VisTileIndex),
     add_to_vis_tile_1(
         object_core:get_type(Obj), object_core:get_uid(Obj), VisTileIndex, VisTile),
@@ -430,7 +430,7 @@ pos_to_vis_index(Pos, VisTileWidth, ViewDist) ->
     CellSize = get(?CELL_SIZE),
     IndexX = trunc(vector3:x(Pos) / CellSize / ?TILE_SCALE / ViewDist) + 1,
     IndexZ = trunc(vector3:z(Pos) / CellSize / ?TILE_SCALE / ViewDist) + 1,
-
+    
     (IndexZ * VisTileWidth + IndexX).
 
 %%-------------------------------------------------------------------

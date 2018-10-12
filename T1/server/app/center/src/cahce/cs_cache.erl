@@ -15,34 +15,34 @@
 
 %% API
 -export([
-	init/0, add_check_server/1, del_check_server/1
+    init/0, add_check_server/1, del_check_server/1
 ]).
 
 
 
 init() ->
-	misc_ets:new(?ETS_CACHE_SERVER_CHECK,    [public, named_table, {keypos, #m_cache_server_check.id}, ?ETS_WC, ?ETS_RC]),
-	ok.
+    misc_ets:new(?ETS_CACHE_SERVER_CHECK, [public, named_table, {keypos, #m_cache_server_check.id}, ?ETS_WC, ?ETS_RC]),
+    ok.
 
 
-add_check_server(ServerID)->
-	misc_ets:write
-	(
-		?ETS_CACHE_SERVER_CHECK,
-		#m_cache_server_check{
-			id = ServerID,
-			time = misc_time:milli_seconds()
-		}
-	),
-	ok.
+add_check_server(ServerID) ->
+    misc_ets:write
+    (
+        ?ETS_CACHE_SERVER_CHECK,
+        #m_cache_server_check{
+            id = ServerID,
+            time = misc_time:milli_seconds()
+        }
+    ),
+    ok.
 
-del_check_server(ServerID)->
-	misc_ets:delete
-	(
-		?ETS_CACHE_SERVER_CHECK,
-		ServerID
-	),
-	ok.
+del_check_server(ServerID) ->
+    misc_ets:delete
+    (
+        ?ETS_CACHE_SERVER_CHECK,
+        ServerID
+    ),
+    ok.
 
 
 

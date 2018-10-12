@@ -27,12 +27,12 @@ start() ->
 
 
 %%
-
+    
     ?INFO("init public db pool ..."),
     db_pool_init(Pid, get_public_db_conf, [Sid], ?PUBLIC_DB_POOL_NAME, fun cs_db_handler:handler/4),
     ?INFO("init public db pool done"),
     ?INFO("#"),
-
+    
     erlang:exit(Pid, normal),
     
     ok.

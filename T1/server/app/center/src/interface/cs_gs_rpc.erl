@@ -19,8 +19,8 @@
 register(Sid, ServerType, ServerName, FromPid) ->
 %%    case misc:is_alive(?CS_SVR_MGR_OTP) of
     case watchdog:ready() of
-    true -> ps:send_with_from(?CS_SVR_MGR_OTP, register, {Sid, ServerType, ServerName}, FromPid);
-    _ -> {badrpc, not_ready}
+        true -> ps:send_with_from(?CS_SVR_MGR_OTP, register, {Sid, ServerType, ServerName}, FromPid);
+        _ -> {badrpc, not_ready}
     end.
 
 test_rpc() ->

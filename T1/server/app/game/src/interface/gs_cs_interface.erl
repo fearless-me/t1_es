@@ -33,7 +33,7 @@ register(Node) ->
         [Sid, ServerType, ServerName, self()]
     ) of
         {badrpc, Reason} ->
-            ?WARN("register to center rpc call failed ~p, try later",[Reason]),
+            ?WARN("register to center rpc call failed ~p, try later", [Reason]),
             false;
         _ -> true
     end.

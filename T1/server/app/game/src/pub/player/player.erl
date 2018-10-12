@@ -21,15 +21,15 @@ on_info_msg(tick_me) ->
     player_sub:tick_me(),
     ok;
 on_info_msg(Info) ->
-    ?ERROR("info:~p",[Info]),
+    ?ERROR("info:~p", [Info]),
     ok.
 
 %%-------------------------------------------------------------------
-on_call_msg(Request, From)->
-    ?DEBUG("call ~p from ~p",[Request, From]),
+on_call_msg(Request, From) ->
+    ?DEBUG("call ~p from ~p", [Request, From]),
     error.
 
 %%-------------------------------------------------------------------
 on_cast_msg(Request) ->
-    ?DEBUG("cast:~p",[Request]),
+    ?DEBUG("cast:~p", [Request]),
     ok.

@@ -48,13 +48,13 @@ do_handle_info({nodedown, NodeName}, State) ->
 do_handle_info({ackTimeOut, FromPid}, State) ->
     center_priv:ack_timeout(FromPid),
     {noreply, State};
-do_handle_info({syncAllData,FromPid}, State) ->
+do_handle_info({syncAllData, FromPid}, State) ->
     center_priv:sync_all_data(FromPid),
     {noreply, State};
 do_handle_info(check_connect, State) ->
     center_priv:tick_check_connect(),
     {noreply, State};
-do_handle_info({startNow,FromPid}, State) ->
+do_handle_info({startNow, FromPid}, State) ->
     center_priv:start_now(FromPid),
     {noreply, State};
 do_handle_info(Info, State) ->

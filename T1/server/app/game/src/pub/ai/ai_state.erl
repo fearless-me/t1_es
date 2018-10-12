@@ -57,7 +57,7 @@ update(_Uid, _AiState) ->
     ok.
 
 %%-------------------------------------------------------------------
--spec on_event(Uid :: integer(), AiState :: ai_state_type(), Event::integer()) -> ok.
+-spec on_event(Uid :: integer(), AiState :: ai_state_type(), Event :: integer()) -> ok.
 on_event(Uid, ?AIST_Idle, Event) ->
     ai_state_idle:on_event(Uid, Event);
 on_event(Uid, ?AIST_Pursue, Event) ->

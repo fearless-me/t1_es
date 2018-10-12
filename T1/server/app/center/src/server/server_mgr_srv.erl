@@ -42,22 +42,22 @@ do_handle_call(Request, From, State) ->
 %%--------------------------------------------------------------------
 do_handle_info({nodedown, Msg}, State) ->
     server_mgr_priv:nodedown(Msg),
-    {noreply,State};
+    {noreply, State};
 do_handle_info({register, Data, FromPid}, State) ->
     server_mgr_priv:register(FromPid, Data),
-    {noreply,State};
+    {noreply, State};
 do_handle_info({ackMeNow, Data, FromPid}, State) ->
     server_mgr_priv:ack_now(FromPid, Data),
-    {noreply,State};
+    {noreply, State};
 do_handle_info({allReadyNow, Data, FromPid}, State) ->
     server_mgr_priv:server_ready(FromPid, Data),
-    {noreply,State};
+    {noreply, State};
 do_handle_info(tickNow, State) ->
     server_mgr_priv:tick(),
-    {noreply,State};
+    {noreply, State};
 do_handle_info(stop_cs, State) ->
     erlang:halt(),
-    {noreply,State};
+    {noreply, State};
 do_handle_info(Info, State) ->
     ?ERROR("undeal info ~w", [Info]),
     {noreply, State}.

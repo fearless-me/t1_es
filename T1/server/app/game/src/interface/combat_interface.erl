@@ -17,12 +17,12 @@
 
 event_damage(SrcUid, DstUid, Value) ->
     MapPid = player_interface:get_map_pid(SrcUid),
-    ps:send(MapPid, condition_event, {event_damage, SrcUid, DstUid, Value}) ,
+    ps:send(MapPid, condition_event, {event_damage, SrcUid, DstUid, Value}),
     ok.
 
 
 event_heal(SrcUid, DstUid, Value) ->
     MapPid = player_interface:get_map_pid(SrcUid),
-    ps:send(MapPid, condition_event, {event_heal, SrcUid, DstUid, Value}) ,
+    ps:send(MapPid, condition_event, {event_heal, SrcUid, DstUid, Value}),
     ok.
 

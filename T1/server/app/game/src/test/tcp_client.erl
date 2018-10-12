@@ -53,7 +53,7 @@ ensure() ->
 connect(Port, AccountIdx) ->
     try
         tcp_codec:init(#net_conf{}),
-
+        
         {ok, Socket} = ranch_tcp:connect({127, 0, 0, 1}, Port, [{active, false}]),
         socket(Socket),
         Idx = case AccountIdx of
@@ -67,14 +67,14 @@ connect(Port, AccountIdx) ->
             time = misc_time:utc_seconds(),
             sign = "owner"
         },
-
+        
         send_msg(Socket, Msg1),
         recv_msg(Socket),
-
+        
         recv_msg(Socket),
-
+        
         timer:sleep(15000),
-
+        
         timer:sleep(50),
         erlang:send_after(1000 * 60 * 1000, self(), exit),
         loop_recv(),
@@ -84,7 +84,7 @@ connect(Port, AccountIdx) ->
         _ : Err: _ ->
             ?ERROR("socket ~p, pid ~p err ~p bye~~!", [socket(), self(), Err])
     end,
-
+    
     ok.
 
 loop_recv() ->
@@ -182,13 +182,13 @@ heartbeat() ->
     MapId = get_mid(),
     case get_aid() of
         undefined -> skip;
-        _  when ChangeMap, MapId =/= 2 ->
-            ?INFO("##### ~p change map ~p -> 2",[self(), MapId]),
-            Msg2 = #pk_U2GS_ChangeMap{map_id = 2, x = 324.1, y=233.5},
+        _ when ChangeMap, MapId =/= 2 ->
+            ?INFO("##### ~p change map ~p -> 2", [self(), MapId]),
+            Msg2 = #pk_U2GS_ChangeMap{map_id = 2, x = 324.1, y = 233.5},
             send_msg(socket(), Msg2);
-        _  when ChangeMap, MapId =/= 1 ->
-            ?INFO("##### ~p change map ~p -> 1",[self(), MapId]),
-            Msg2 = #pk_U2GS_ChangeMap{map_id = 1, x = 324.1, y=233.5},
+        _ when ChangeMap, MapId =/= 1 ->
+            ?INFO("##### ~p change map ~p -> 1", [self(), MapId]),
+            Msg2 = #pk_U2GS_ChangeMap{map_id = 1, x = 324.1, y = 233.5},
             send_msg(socket(), Msg2);
         _ ->
             rand_walk()
@@ -203,10 +203,10 @@ heartbeatcount() ->
 
 rand_walk() ->
     Delta =
-        case rand_tool:rand(1,10) rem 2 == 0 of
-         true -> misc:rand(-5, 20) / 1.0;
-         _Any -> misc:rand(-20, 20) / 1.0
-    end,
-
+        case rand_tool:rand(1, 10) rem 2 == 0 of
+            true -> misc:rand(-5, 20) / 1.0;
+            _Any -> misc:rand(-20, 20) / 1.0
+        end,
+    
     send_msg(socket(), #pk_U2GS_PlayerWalk{dst_x = 324.1 + Delta, dst_y = 233.1 + Delta}),
     ok.

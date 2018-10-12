@@ -1,13 +1,13 @@
 -ifndef(COMMON_TEAM_INC_HRL).
--define(COMMON_TEAM_INC_HRL,1).
+-define(COMMON_TEAM_INC_HRL, 1).
 
 %%%-------------------------------------------------------------------
 %%%-------------------------------------------------------------------
 
 -define(TeamRst_0, 0).
--define(TeamRst_Kick,1).
--define(TeamRst_Leave,2).
--define(TeamRst_Dismiss,3).
+-define(TeamRst_Kick, 1).
+-define(TeamRst_Leave, 2).
+-define(TeamRst_Dismiss, 3).
 
 %% 队伍最大人数
 -define(MAX_TeamMemberNum, 4).
@@ -16,7 +16,7 @@
 -define(AckStartCopyMapTimeOut, 15).
 %% 系统自动匹配tick时间
 -define(TeamTickTimeMS, 1000).
--define(InQueueTime, 30*1000).
+-define(InQueueTime, 30 * 1000).
 
 -define(Ets_TeamList, teamEts_).
 -define(Ets_RoleIDRefTeamID, roleIDRefTeamIDEts_).
@@ -73,65 +73,65 @@
 %%%-------------------------------------------------------------------
 %%%-------------------------------------------------------------------
 -record(m_team_member, {
-	roleID = 0, 			%%角色ID
-	code = 0,				%%角色流水号
-	serverID = 0,			%%
-	name = "", 				%%角色名
-	guildID = 0,            %%帮会ID
-	guildName = "",         %%帮会名字
-	career = 0, 			%%职业
+    roleID = 0,            %%角色ID
+    code = 0,                %%角色流水号
+    serverID = 0,            %%
+    name = "",                %%角色名
+    guildID = 0,            %%帮会ID
+    guildName = "",         %%帮会名字
+    career = 0,            %%职业
     race = 0,               %%种族
     sex = 0,                %%性别
-	head = 0,               %%头
-	level = 0, 				%%等级
-	pid = 0,				%%进程ID
-	netPid = 0,				%%其网络进程的ID
-	mapID = 0,				%%当前所在地图ID
-	mapLine = 0,
-	groupID = 0,            %%组ID
-	posX = 0,				%%X坐标
-	posY = 0,				%%Y坐标
-	mapPid = 0,				%%当头所在地图的PID
-	hpPc = 100,             %%当前血量百分比
+    head = 0,               %%头
+    level = 0,                %%等级
+    pid = 0,                %%进程ID
+    netPid = 0,                %%其网络进程的ID
+    mapID = 0,                %%当前所在地图ID
+    mapLine = 0,
+    groupID = 0,            %%组ID
+    posX = 0,                %%X坐标
+    posY = 0,                %%Y坐标
+    mapPid = 0,                %%当头所在地图的PID
+    hpPc = 100,             %%当前血量百分比
 %%	petInfo = [],			%%宠物信息 [{petCode, petPid} | _]
-	customInfo = "",		%%扩展消息
+    customInfo = "",        %%扩展消息
 %%	isLeader = false,      %%是队长
 %%	teamID = 0,             %%队伍id
-	targetMapCount = 0,     %%目标副本次数
-	actionPoint = 0,        %%体力值
-	assistMapID = 0,			%%助战地图ID
-	fightingCapacity = 0,	%%战斗力
-	noticeLeaderRemainNumber = 1,	%% 提醒队长开启的剩余次数
-	targetMapStar = 0,%% 地图星级
-	serverName = "" %% 服务器名称
+    targetMapCount = 0,     %%目标副本次数
+    actionPoint = 0,        %%体力值
+    assistMapID = 0,            %%助战地图ID
+    fightingCapacity = 0,    %%战斗力
+    noticeLeaderRemainNumber = 1,    %% 提醒队长开启的剩余次数
+    targetMapStar = 0,%% 地图星级
+    serverName = "" %% 服务器名称
 }).
 
 -define(ShareTeamInfoName, m_share_team_info).
--record(m_share_team_info,{
-	teamID = 0,
-	copyMapID = 0,
-	leaderID = 0,
-	leaderStartCopyTime = 0,
-	canBeSearch = 1, %% 默认可以被搜索
-	searchStartTime = 0,
-	ackStartCopyRoleList = [],
-	memberList = []
+-record(m_share_team_info, {
+    teamID = 0,
+    copyMapID = 0,
+    leaderID = 0,
+    leaderStartCopyTime = 0,
+    canBeSearch = 1, %% 默认可以被搜索
+    searchStartTime = 0,
+    ackStartCopyRoleList = [],
+    memberList = []
 }).
 
 -define(ShareUidRefTeamIdName, m_share_uid_ref_tid).
--record(m_share_uid_ref_tid,{
-	roleID = 0,
-	teamID = 0,
-	serverID = 0
+-record(m_share_uid_ref_tid, {
+    roleID = 0,
+    teamID = 0,
+    serverID = 0
 }).
 
 -define(ShareUidTeamMatchName, m_share_team_match).
--record(m_share_team_match,{
-	roleID = 0,
-	pid = undefined,
-	startTime = 0,
-	queueTimeEndMs = 0,
-	mapList = []
+-record(m_share_team_match, {
+    roleID = 0,
+    pid = undefined,
+    startTime = 0,
+    queueTimeEndMs = 0,
+    mapList = []
 }).
 
 

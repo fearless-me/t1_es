@@ -19,11 +19,11 @@
 
 task_list() ->
     [
-       ?WATCHDOG_TASK_GROUP(1, base_task, base_task())
+        ?WATCHDOG_TASK_GROUP(1, base_task, base_task())
     ].
 
 base_task() ->
     [
-        ?WATCHDOG_TASK(fun data_loader:is_all_done/0,     "load all data"),
+        ?WATCHDOG_TASK(fun data_loader:is_all_done/0, "load all data"),
         ?WATCHDOG_TASK(fun gs_cs_interface:is_center_ready/0, "connect to center")
     ].

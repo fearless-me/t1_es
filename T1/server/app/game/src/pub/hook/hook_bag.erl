@@ -44,11 +44,11 @@ make(_Type, Uid, Did, Num) ->
 %%-------------------------------------------------------------------
 on_deleted(Type, #m_item{uid = Uid, data_id = Did, num = Have} = _Olds, Num) ->
     %% todo 记日志什么的
-    ?DEBUG("deleted ~p have/del ~p/~p in bag ~p ",[{Uid, Did}, Have, Num, Type]),
+    ?DEBUG("deleted ~p have/del ~p/~p in bag ~p ", [{Uid, Did}, Have, Num, Type]),
     ok.
 
 on_added(Type, #m_item{uid = Uid, data_id = Did} = _News, Num) ->
-    ?DEBUG("added new item ~p, num ~p in bag ~p",[{Uid, Did}, Num, Type]),
+    ?DEBUG("added new item ~p, num ~p in bag ~p", [{Uid, Did}, Num, Type]),
     ok.
 
 on_overlapped(Type, #m_item{uid = Uid, data_id = Did, num = Have} = _News, From, Num) ->
@@ -71,11 +71,11 @@ sync_all(_Type, _Map) ->
 del_one_op(_Type, #m_item{num = Have}, Need) when Need >= Have ->
     all;
 del_one_op(_Type, #m_item{num = Have} = Rs, Need) when Need < Have, Need >= 0 ->
-    {part, Rs#m_item{num = Have-Need}};
+    {part, Rs#m_item{num = Have - Need}};
 del_one_op(_Type, _Rs, _Need) ->
     erlang:error(bad_agrs).
 
-overlap_op( #m_item{num = Have} = Elm, Add) ->
+overlap_op(#m_item{num = Have} = Elm, Add) ->
     Elm#m_item{num = Have + Add}.
 
 %%-------------------------------------------------------------------

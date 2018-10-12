@@ -27,12 +27,14 @@
     change_group_/1,
     % 换地图、回之前的地图
     change_map_/3, change_pre_map_/0,
+    % 改变战斗属性
+    player_change_combat_prop_/1,
     % 本地图传送、开始移动、停止移动
     teleport_/1, start_move_/2, stop_move_/2,
     % 给我所在的地图发送消息
     send_map_msg_/1, send_map_msg_/2,
     % 给我所在地图所有玩家进程发消息或者发送网络消息
-    broadcast_map_msg_/1, broadcast_map_msg_/2,broadcast_map_net_msg_/1,
+    broadcast_map_msg_/1, broadcast_map_msg_/2, broadcast_map_net_msg_/1,
     % 给我视野范围内的所有玩家进程发消息或者发送网络消息
     broadcast_map_view_msg_/1, broadcast_map_view_msg_/2, broadcast_map_view_net_msg_/1
 ]).
@@ -118,6 +120,12 @@ start_move_(MapPid, Req) -> map_interface:player_move_(MapPid, Req).
 
 %%-------------------------------------------------------------------
 stop_move_(MapPid, Req) -> map_interface:player_stop_move_(MapPid, Req).
+
+%%--------------------------------
+player_change_combat_prop_(Req) ->
+    #m_player_map{map_pid = MapPid} = player_rw:get_map(),
+    map_interface:player_change_combat_prop_(MapPid, Req),
+    ok.
 
 
 

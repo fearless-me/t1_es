@@ -32,7 +32,6 @@
       <sourceFolder url="file://$MODULE_DIR$" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/app" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/app/game/src/pub/config" type="erlang-include" />
-      <sourceFolder url="file://$MODULE_DIR$/app/game/src/pub/netmsg" type="erlang-include" />
       <sourceFolder url="file://$MODULE_DIR$/app/game/src/pub/mapcfgs" type="erlang-include" />
       <sourceFolder url="file://$MODULE_DIR$/app/deps/db_share/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/app/deps/db_proxy/src" isTestSource="false" />
@@ -40,6 +39,7 @@
       <sourceFolder url="file://$MODULE_DIR$/app/deps/gen_rpc/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/app/common/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/app/common/include" type="erlang-include" />
+      <sourceFolder url="file://$MODULE_DIR$/app/common/src/netmsg" type="erlang-include" />
       <excludeFolder url="file://$MODULE_DIR$/scripts" />
       <excludeFolder url="file://$MODULE_DIR$/sql" />
     </content>

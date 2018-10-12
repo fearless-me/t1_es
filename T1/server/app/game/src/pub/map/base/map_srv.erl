@@ -15,7 +15,7 @@
 
 
 %% API
--export([start_link/1,start_link/2]).
+-export([start_link/1, start_link/2]).
 -export([mod_init/1, do_handle_call/3, do_handle_info/2, do_handle_cast/2]).
 -export([call_reply/2]).
 
@@ -89,7 +89,7 @@ do_handle_info({change_group, Msg}, State) ->
     mod_map_priv:change_group(Msg),
     {noreply, State};
 do_handle_info({condition_event, ConditionEventMsg}, State) ->
-    map_condition_event:on_event(ConditionEventMsg),
+    mod_map_condition_event:on_event(ConditionEventMsg),
     {noreply, State};
 do_handle_info(Info, State) ->
     mod_map:on_info_msg(Info),
@@ -101,7 +101,7 @@ do_handle_cast(Request, State) ->
     {noreply, State}.
 
 show_status() ->
-
+    
     ok.
 
 

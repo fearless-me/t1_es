@@ -33,7 +33,7 @@ update(Uid) ->
             mod_ai:count_down_attack_tick(Uid),
             TarUid = ai_rw:get_target_uid(Uid),
             IsUseSkillNow = ai_rw:get_attack_wait_tick(Uid) =< 0,
-            NowSkillId =  ai_rw:get_use_skill_id(Uid),
+            NowSkillId = ai_rw:get_use_skill_id(Uid),
             case TarUid > 0 andalso IsUseSkillNow of
                 true ->
                     mod_ai:ai_use_skill(Uid, TarUid, NowSkillId);

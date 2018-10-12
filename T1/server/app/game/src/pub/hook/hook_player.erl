@@ -40,7 +40,7 @@ on_login(Player) ->
     gs_cache_interface:online(Player, self(), player_pub:socket()),
     cross_interface:assign_cross_for_player(Uid),
     player_base:online(Player),
-    player_attr:online(),
+    player_combat:online(),
     player_base:send_init_data(),
     player_cross_priv:online(),
     player_map_priv:online_call(Player),
@@ -60,7 +60,7 @@ on_offline() ->
     } = player_rw:get_map(),
     Uid = player_rw:get_uid(),
     Aid = player_rw:get_aid(),
-
+    
     %% 2.
     ?TRY_CATCH(player_map_priv:offline_call(Uid, Mid, LineId, MPid), Err1, St1),
     ?TRY_CATCH(player_cross_priv:offline(), Err2, St2),
@@ -108,7 +108,7 @@ on_sharp(Hour) ->
 on_rw_update(level, RwRec) ->
     ?lock(level),
     Uid = player_rw:get_uid(),
-    gs_cache_interface:update_player_pub(Uid,    {#m_cache_player_pub.level, RwRec#m_player_rw.level}),
+    gs_cache_interface:update_player_pub(Uid, {#m_cache_player_pub.level, RwRec#m_player_rw.level}),
     gs_cache_interface:update_online_player(Uid, {#m_cache_online_player.level, RwRec#m_player_rw.level}),
     ?unlock(),
     ok;

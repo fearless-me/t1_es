@@ -8,7 +8,7 @@
 -export([init/1]).
 
 
-start_link() ->  supervisor:start_link({local, ?MODULE}, ?MODULE, []).
+start_link() -> supervisor:start_link({local, ?MODULE}, ?MODULE, []).
 
 %% ===================================================================
 %% Supervisor callbacks
@@ -19,7 +19,7 @@ init([]) ->
         {
             {one_for_one, 5, 10},
             [
-
+            
             ]
         }
     }.

@@ -57,7 +57,7 @@ update(Type, Uid, New) ->
 add(Type, Did, Num) ->
     CanBagOverlap = hook_bag:bag_can_overlap(Type),
     CanDidOverlap = hook_bag:did_can_overlap(Did),
-    add_1( CanBagOverlap andalso CanDidOverlap, Type, Did, Num).
+    add_1(CanBagOverlap andalso CanDidOverlap, Type, Did, Num).
 
 
 add_1(true, Type, Did, Num) ->
@@ -212,7 +212,7 @@ sum(Type, Did) ->
     Bag = get_bag(Type),
     Map = Bag#player_bag.items,
     maps:fold(
-        fun(_K, V, Sum)->
+        fun(_K, V, Sum) ->
             case hook_bag:is_did(V, Did) of
                 true -> Sum + hook_bag:overlap_num(V);
                 _ -> Sum
@@ -314,7 +314,7 @@ uid_valid(Type, Uid) ->
 key(Type) -> {?BAG_DICT, Type}.
 get_bag(Type) -> get(key(Type)).
 set_bag(Type, Bag) -> put(key(Type), Bag).
-set_bag_items(Type, Maps)  ->
+set_bag_items(Type, Maps) ->
     Bag = get_bag(Type),
     set_bag(Type, Bag#player_bag{items = Maps}),
     ok.

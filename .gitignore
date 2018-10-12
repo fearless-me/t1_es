@@ -43,3 +43,5 @@ _gsdata_
 *_pkg_*
 *___temp_*
 
+/T1/tools/client
+/T1/tools/src/NetProtor/.vs

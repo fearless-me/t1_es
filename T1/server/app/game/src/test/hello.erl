@@ -25,7 +25,7 @@
 %%%===================================================================
 start_link() ->
     gen_serverw:start_link({local, ?MODULE}, ?MODULE, [],
-        [{spawn_opt, [{min_heap_size, 1024*1024}]}]).
+        [{spawn_opt, [{min_heap_size, 1024 * 1024}]}]).
 
 %%%===================================================================
 %%% Internal functions
@@ -33,13 +33,13 @@ start_link() ->
 mod_init(_Args) ->
     erlang:process_flag(trap_exit, true),
     %% erlang:process_flag(priority, high),
-
+    
     tick_msg(),
     init_data(?MAX_OBJ),
     {ok, ok}.
 
 
-init_data(0)->
+init_data(0) ->
     skip;
 init_data(N) ->
     init_data_one(N),
@@ -47,7 +47,7 @@ init_data(N) ->
 
 init_data_one(X) ->
     L = lists:seq(1, 150),
-    put({p,X}, lists:zip(L, L)).
+    put({p, X}, lists:zip(L, L)).
 
 %%--------------------------------------------------------------------	
 do_handle_call(Request, From, State) ->
@@ -69,7 +69,7 @@ do_handle_info(rand, State) ->
     Old = erlang:process_info(self(), memory),
     loop_rand(100000),
     New = erlang:process_info(self(), memory),
-    ?DEBUG("~nrand_10000:~n~p~n~p",[Old, New]),
+    ?DEBUG("~nrand_10000:~n~p~n~p", [Old, New]),
     {noreply, State};
 do_handle_info(loop_map, State) ->
     Old = erlang:process_info(self(), memory),
@@ -80,13 +80,13 @@ do_handle_info(loop_map, State) ->
                 maps:from_list(lists:zip(L, L));
             Map ->
                 D = rand_tool:rand(1, 100000),
-                ?DEBUG("delete key ~p",[D]),
+                ?DEBUG("delete key ~p", [D]),
                 maps:remove(D, Map)
         end,
     put(m, List1),
     New = erlang:process_info(self(), memory),
-    ?DEBUG("~nloop_map:~n~p~n~p~nsize:~p",[Old, New, maps:size(List1)]),
-
+    ?DEBUG("~nloop_map:~n~p~n~p~nsize:~p", [Old, New, maps:size(List1)]),
+    
     {noreply, State};
 do_handle_info(loop, State) ->
     Old = erlang:process_info(self(), memory),
@@ -96,13 +96,13 @@ do_handle_info(loop, State) ->
                 lists:seq(1, 100000);
             L ->
                 D = rand_tool:rand(1, 100000),
-                ?DEBUG("delete key ~p",[D]),
+                ?DEBUG("delete key ~p", [D]),
                 lists:keydelete(D, 1, L)
         end,
     put(x, List1),
     New = erlang:process_info(self(), memory),
-
-    ?DEBUG("~nloop:~n~p~n~p",[Old, New]),
+    
+    ?DEBUG("~nloop:~n~p~n~p", [Old, New]),
     {noreply, State};
 do_handle_info(new, State) ->
     Old = erlang:process_info(self(), memory),
@@ -110,8 +110,8 @@ do_handle_info(new, State) ->
     List1 = lists:seq(1, 100000),
     put(Ref, List1),
     New = erlang:process_info(self(), memory),
-
-    ?DEBUG("~nnew:~n~p~n~p",[Old, New]),
+    
+    ?DEBUG("~nnew:~n~p~n~p", [Old, New]),
     {noreply, State};
 do_handle_info(Info, State) ->
     ?ERROR("undeal info ~w", [Info]),
@@ -134,7 +134,7 @@ do_tick_rand_change(N) ->
     tick_rand_change_1(),
     do_tick_rand_change(N - 1).
 
-tick_rand_change_1()->
+tick_rand_change_1() ->
     X1 = rand_tool:rand(1, ?MAX_OBJ),
     K1 = rand_tool:rand(1, 150),
     L1 = get({p, X1}),

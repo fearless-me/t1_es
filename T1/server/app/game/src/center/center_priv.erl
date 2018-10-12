@@ -79,7 +79,7 @@ sync_all_data(CsWorkerPid) ->
 start_now(WorkerPid) ->
     misc_ets:write(?CenterServerEts, #recCenterInfo{pid = WorkerPid, status = ?SEVER_STATUS_DONE}),
     %% game/cross server 成功连接 center server，通知?PublicDataMgr是否要同步真实DBID映射表
-
+    
     ?WARN("####centerServer[~p][ok]####", [erlang:node(WorkerPid)]),
     ok.
 
@@ -109,7 +109,7 @@ connect_cs_node() ->
     case misc_ets:read(?CenterServerEts, ?CenterServerKey) of
         [#recCenterInfo{status = ?SEVER_STATUS_DONE}] ->
             ok;
-        [#recCenterInfo{status = ?SEVER_STATUS_READY, dead_line = DeadLine }]  when DeadLine >= Now ->
+        [#recCenterInfo{status = ?SEVER_STATUS_READY, dead_line = DeadLine}] when DeadLine >= Now ->
             skip;
         _ ->
             DbID = gs_interface:get_sid(),
@@ -141,7 +141,7 @@ connect_cs_node(DBId, Node) ->
                 _ ->
                     skip
             end,
-
+            
             ok;
         _ ->
             ?WARN("[~p][~p]connect centerServer failed:~p", [self(), DBId, Node]),

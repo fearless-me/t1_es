@@ -30,39 +30,39 @@
 
 %%-------------------------------------------------------------------
 add_buff(Uid, BuffId, Level, SrcUid) ->
-  case can_add_buff(Uid, BuffId) of
-    true ->
-      BuffList1 = object_rw:get_buff_list(Uid),
-      BuffExist = is_buff_exist(BuffId, BuffList1),
-      BuffList2 = add_buff(BuffExist, Uid, BuffId, Level, SrcUid, BuffList1),
-      object_rw:set_buff_list(Uid, BuffList2),
-      ok;
-    _Any ->
-      skip
-  end,
-  ok.
+    case can_add_buff(Uid, BuffId) of
+        true ->
+            BuffList1 = object_rw:get_buff_list(Uid),
+            BuffExist = is_buff_exist(BuffId, BuffList1),
+            BuffList2 = add_buff(BuffExist, Uid, BuffId, Level, SrcUid, BuffList1),
+            object_rw:set_buff_list(Uid, BuffList2),
+            ok;
+        _Any ->
+            skip
+    end,
+    ok.
 
 %% todo 叠加/更新时间/更新等级/ ...(目前未定)
 add_buff(true, _Uid, _BuffId, _Level, _SrcUid, BuffList) ->
-  BuffList;
+    BuffList;
 %% 添加新buff
 add_buff(_Any, _Uid, BuffId, Level, SrcUid, BuffList) ->
-  Buff = make_buff(_Uid, BuffId, Level, SrcUid),
-  [Buff | BuffList].
+    Buff = make_buff(_Uid, BuffId, Level, SrcUid),
+    [Buff | BuffList].
 
 %% todo 检查能否添加buff
 can_add_buff(_Uid, _BuffId) ->
-  true.
+    true.
 
 %% 
 make_buff(_Uid, BuffId, Level, SrcUid) ->
-  #m_buff{buff_id=BuffId, lifetime=1000, level=Level, source=SrcUid}.
+    #m_buff{buff_id = BuffId, lifetime = 1000, level = Level, source = SrcUid}.
 
 %%-------------------------------------------------------------------
 is_buff_exist(_BuffId, []) ->
-  false;
+    false;
 is_buff_exist(BuffId, BuffList) ->
-  lists:keymember(BuffId, #m_buff.buff_id, BuffList).
+    lists:keymember(BuffId, #m_buff.buff_id, BuffList).
 
 %%-------------------------------------------------------------------
 del_buff(_Uid, _BuffId) -> ok.
@@ -79,15 +79,15 @@ tick(#m_cache_map_object{uid = Uid}) ->
     {_DelBuffList, NewBuffList} = tick_all_buff(BuffList, Uid, [], []),
     object_rw:set_buff_list(Uid, NewBuffList),
     %%
-
+    
     ok.
 
-tick_all_buff([], _Uid,  Delete, Continue) ->
+tick_all_buff([], _Uid, Delete, Continue) ->
     {Delete, Continue};
 tick_all_buff([Buff | BuffList], Uid, Delete, Continue) ->
     case tick_one_buff(Uid, Buff) of
-         delete  -> tick_all_buff(BuffList, Uid, [Buff | Delete], Continue);
-         NewBuff -> tick_all_buff(BuffList, Uid, Delete, [NewBuff | Continue])
+        delete -> tick_all_buff(BuffList, Uid, [Buff | Delete], Continue);
+        NewBuff -> tick_all_buff(BuffList, Uid, Delete, [NewBuff | Continue])
     end.
 
 tick_one_buff(Uid, Buff) ->
@@ -97,7 +97,16 @@ tick_one_buff(_Uid, _Buff) ->
     delete.
 
 %%-------------------------------------------------------------------
+on_add_buff(Uid, Buff) ->
+    #pk_GS2U_AddBuff{uid = Uid},
+    ok.
 
+on_update_buff(Uid, Buff) ->
+    ok.
 
+on_delete_buff(Uid, BuffId) ->
+    ok.
 
+marshal_buff(#m_buff{}) ->
+    ok.
 

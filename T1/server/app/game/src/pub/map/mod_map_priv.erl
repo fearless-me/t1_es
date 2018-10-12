@@ -55,9 +55,9 @@ player_exit_call(S, From, #r_exit_map_req{uid = Uid}) ->
 do_player_exit_call(S, _From, Uid, #m_cache_map_object{} = Obj) ->
     ?INFO("player ~p exit map ~p:~p:~p",
         [Uid, map_rw:get_map_id(), map_rw:get_line_id(), self()]),
-
+    
     map_rw:del_obj_to_map(Obj),
-
+    
     ?TRY_CATCH(map_view:sync_player_exit_map(Obj)),
     ?TRY_CATCH(hook_map:on_player_exit(Uid), Err1, St1),
     {reply, ok, S};
@@ -160,14 +160,14 @@ tick_1(S) ->
 
 tick_obj(S) ->
     ?TRY_CATCH(tick_update_before(S), Err1, Stk1),
-
+    
     % 更新各个对象
     %------------------
     ?TRY_CATCH(tick_player(S), Err2, Stk2),
     ?TRY_CATCH(tick_monster(S), Err3, Stk3),
     ?TRY_CATCH(tick_pet(S), Err4, Stk4),
     %------------------
-
+    
     ?TRY_CATCH(tick_update_after(S), Err5, Stk5),
     ok.
 

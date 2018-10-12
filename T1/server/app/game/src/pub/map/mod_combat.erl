@@ -40,13 +40,13 @@ use_skill(Aer, Der, SkillId, Serial) ->
         error_code = 0
     },
     map_view:send_net_msg_to_visual(Aer, NetMsg),
-
+    
     %% 触发事件
     ?TRY_CATCH(trigger_before_cast_event(Aer, Der, SkillId)),
-
+    
     %% 根据类型
     SkillOpType = ?SKILL_OP_CHANNEL,
-
+    
     object_rw:set_skill_serial(Aer, Serial),
     use_skill_dispatcher(SkillOpType, Aer, TarUid, SkillId, Serial),
     ?DEBUG("~p use skill ~p tar ~p", [Aer, Der, SkillId]),
@@ -73,32 +73,32 @@ instant_skill(Aer, Tar, SkillId, Serial) ->
     active_skill_once(Aer, Tar, object_rw:get_cur_pos(Tar), SkillId, Serial),
     ok.
 
-active_skill_once(Aer, Tar, Pos, SkillId, Serial)->
-
+active_skill_once(Aer, Tar, Pos, SkillId, Serial) ->
+    
     ?TRY_CATCH(trigger_before_hit_event(Aer, Tar, SkillId)),
     
     TargetList = calculate_target_list(Aer, SkillId, Pos),
-
+    
     %% todo 是否可以优化，因为这个是视野广播，不用给每个人发一次
     %% todo 一次性广播给所有同样的消息，让客户端呢判断下
     F =
         fun(HitUid) ->
             calculate_dmg(Aer, SkillId, HitUid, Serial)
         end,
-
+    
     lists:foreach(F, TargetList),
     ok.
 
 %%-------------------------------------------------------------------
 calculate_dmg(Uid, SkillId, TargetUid, Serial) ->
-
+    
     ?TRY_CATCH(trigger_hit_event(Uid, TargetUid, SkillId)),
     
     HitMsg = #pk_GS2U_HitTarget{
         uid = TargetUid, src_uid = Uid, cause = ?HIT_REASON_SKILL, misc = SkillId, serial = Serial
     },
     map_view:send_net_msg_to_visual(TargetUid, HitMsg),
-
+    
     HpMsg = #pk_GS2U_HPChange{
         uid = TargetUid, src_uid = Uid, cause = ?HP_CHANGE_SKILL, result = ?ESR_CRITICAL, hp_change = -1000,
         misc1 = SkillId, misc2 = 0, serial = Serial
@@ -142,7 +142,7 @@ do_tick_cur_skill(_Uid, 0) ->
     ok;
 do_tick_cur_skill(Uid, SkillId) ->
     ?WARN("uid ~p tick skill ~p", [Uid, SkillId]),
-    Serial  = object_rw:get_skill_serial(Uid),
+    Serial = object_rw:get_skill_serial(Uid),
     OpTime0 = object_rw:get_operate_time_def(Uid, 0),
     OpTime1 = OpTime0 + ?MAP_TICK,
     object_rw:set_operate_time(Uid, OpTime1),
@@ -150,14 +150,14 @@ do_tick_cur_skill(Uid, SkillId) ->
         true ->
             Pos = object_rw:get_persist_pos(Uid),
             ?TRY_CATCH(trigger_cast_tick_event(Uid, Uid, SkillId)),
-            ?TRY_CATCH(active_skill_once(Uid, Uid, Pos, SkillId,  Serial), Err1, Stk1),
+            ?TRY_CATCH(active_skill_once(Uid, Uid, Pos, SkillId, Serial), Err1, Stk1),
             ?TRY_CATCH(check_end_skill_tick(Uid, SkillId), Err2, Stk2),
             ok;
         _ ->
             skip
     end,
     %%
-
+    
     ok.
 
 can_skill_active_tick(_Uid, _SkillId) ->
@@ -179,8 +179,8 @@ tick_skill_queue(#m_cache_map_object{uid = Uid}) ->
 tick_skill_queue(_Uid, [], Acc) -> Acc;
 tick_skill_queue(Uid, [Elm | Queue], Acc) ->
     case ?TRY_CATCH_RET(tick_one_skill_queue(Uid, Elm), error) of
-       error -> tick_skill_queue(Uid, Queue, Acc);
-       NewElm -> tick_skill_queue(Uid, Queue, [NewElm | Acc])
+        error -> tick_skill_queue(Uid, Queue, Acc);
+        NewElm -> tick_skill_queue(Uid, Queue, [NewElm | Acc])
     end.
 
 tick_one_skill_queue(_Uid, Elm) ->

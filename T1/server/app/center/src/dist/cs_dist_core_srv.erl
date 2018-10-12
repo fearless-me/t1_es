@@ -27,9 +27,9 @@ start_link() ->
 %%%===================================================================	
 mod_init(_Args) ->
     erlang:process_flag(trap_exit, true),
-    {ok,[[AreaId]]} = init:get_argument(area_id),
-    {ok,[[Sid]]} = init:get_argument(sid),
-    {ok,[[RunNo]]} = init:get_argument(run_no),
+    {ok, [[AreaId]]} = init:get_argument(area_id),
+    {ok, [[Sid]]} = init:get_argument(sid),
+    {ok, [[RunNo]]} = init:get_argument(run_no),
     uid_gen:init(
         list_to_integer(AreaId),
         list_to_integer(Sid),

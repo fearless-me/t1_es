@@ -21,20 +21,20 @@
     get_player_src_sid/1, get_player_src_node/1,
     get_remote_server_map_mgr/2,
     get_player_cross_sid/1, get_player_cross_node/1,
-
+    
     %% 
     assign_cross_for_player/1, force_assign_cross_for_player/2,
-
+    
     %%
     update_player_cross/2,
-
+    
     %%
     is_player_in_cross/1
 ]).
 
 
 is_player_in_cross(Uid) ->
-     misc_ets:member(?ETS_CACHE_PLAYER_CROSS, Uid).
+    misc_ets:member(?ETS_CACHE_PLAYER_CROSS, Uid).
 
 update_player_cross(Uid, Params) ->
     IsCross = gs_interface:is_cross(),
@@ -45,7 +45,8 @@ assign_cross_for_player(Uid) ->
     case is_assign_cross(Uid) of
         true -> skip;
         _ ->
-            QS = ets:fun2ms(fun(Info) when Info#m_share_server_info.type =:= ?SERVER_TYPE_CROSS -> Info#m_share_server_info.sid end),
+            QS = ets:fun2ms(fun(Info) when Info#m_share_server_info.type =:= ?SERVER_TYPE_CROSS ->
+                Info#m_share_server_info.sid end),
             SL = misc_mnesia:dirty_select(?ShareServerInfoName, QS),
             do_assign_cross_for_player(Uid, SL)
     end,
@@ -69,11 +70,11 @@ force_assign_cross_for_player(Uid, CrossSid) ->
     misc_mnesia:write(
         ?SharePlayerCrossLock,
         #m_share_player_cross_lock{
-        uid = Uid,
-        src_sid = Sid,
-        cross_sid = CrossSid,
-        assign_time = misc_time:milli_seconds()
-    }),
+            uid = Uid,
+            src_sid = Sid,
+            cross_sid = CrossSid,
+            assign_time = misc_time:milli_seconds()
+        }),
     ok.
 
 %%-------------------------------------------------------------------

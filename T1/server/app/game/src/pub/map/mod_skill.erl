@@ -13,9 +13,9 @@
 -export([test/0]).
 
 test() ->
-    {ok, ViewerPid} = et_viewer:start([{title,"Coffee Order"}]),
+    {ok, ViewerPid} = et_viewer:start([{title, "Coffee Order"}]),
     CollectorPid = et_viewer:get_collector_pid(ViewerPid),
-    et_collector:report_event(CollectorPid,85,from,to,message,extra_stuff),
-    et_collector:report_event(CollectorPid,85,from,to,kill,extra_stuff),
-    et_collector:report_event(CollectorPid,85,from,to,fuck,extra_stuff),
+    et_collector:report_event(CollectorPid, 85, from, to, message, extra_stuff),
+    et_collector:report_event(CollectorPid, 85, from, to, kill, extra_stuff),
+    et_collector:report_event(CollectorPid, 85, from, to, fuck, extra_stuff),
     ok.

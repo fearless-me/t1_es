@@ -14,17 +14,19 @@
 -include("gs_common_rec.hrl").
 
 %% API
--export([on_call_msg/2]).
--export([on_cast_msg/1]).
--export([on_info_msg/1]).
+-export([
+    on_call_msg/2,
+    on_cast_msg/1,
+    on_info_msg/1
+]).
 
 %%-------------------------------------------------------------------
-on_info_msg({player_change_attr, {Uid, AddList, MultiList, AddList_Del, MultiList_Del}}) ->
+on_info_msg({player_change_combat_prop, {Uid, AddList, MultiList, AddList_Del, MultiList_Del}}) ->
     mod_attr:change_attr(Uid, AddList, MultiList, AddList_Del, MultiList_Del),
     ok;
 on_info_msg({player_use_skill, Req}) ->
-    ?DEBUG("player_use_skill ~p",[Req]),
-    #r_player_use_skill_req{uid=Aer, skill_id=SkillId, tar=Der, serial = Serial} = Req,
+    ?DEBUG("player_use_skill ~p", [Req]),
+    #r_player_use_skill_req{uid = Aer, skill_id = SkillId, tar = Der, serial = Serial} = Req,
     mod_combat:use_skill(Aer, Der, SkillId, Serial),
     ok;
 on_info_msg({player_add_buff, Req}) ->
@@ -32,15 +34,15 @@ on_info_msg({player_add_buff, Req}) ->
     mod_buff:add_buff(Uid, BuffId, Level, SrcUid),
     ok;
 on_info_msg(Info) ->
-    ?DEBUG("info:~p",[Info]),
+    ?DEBUG("info:~p", [Info]),
     ok.
 
 %%-------------------------------------------------------------------
-on_call_msg(Request, From)->
-    ?DEBUG("call ~p from ~p",[Request, From]),
+on_call_msg(Request, From) ->
+    ?DEBUG("call ~p from ~p", [Request, From]),
     error.
 
 %%-------------------------------------------------------------------
 on_cast_msg(Request) ->
-    ?DEBUG("cast:~p",[Request]),
+    ?DEBUG("cast:~p", [Request]),
     ok.

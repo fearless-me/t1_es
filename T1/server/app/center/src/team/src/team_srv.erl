@@ -35,8 +35,8 @@ mod_init(_Args) ->
 %%    ets:new(?Ets_RoleIDRefTeamID, [protected, named_table, {keypos, #m_uid_ref_tid.roleID},{read_concurrency, true}]),	%% 队伍信息
 %%    ets:new(?Ets_RoleMatchTeam, [protected, named_table, {keypos, #m_player_match.roleID},{read_concurrency, true}]),	%% 队伍信息
     team_logic:tickMsg(),
-    ?INFO("[~p] init ok",[self()]),
-
+    ?INFO("[~p] init ok", [self()]),
+    
     {ok, ok}.
 
 %%--------------------------------------------------------------------	
@@ -46,15 +46,15 @@ do_handle_call(Request, From, State) ->
 
 %%--------------------------------------------------------------------
 
-do_handle_info({createTeam, Msg ,_FromPid },State) ->
+do_handle_info({createTeam, Msg, _FromPid}, State) ->
     team_logic:createNewTeam(Msg),
-    {noreply,State};
-do_handle_info({leaveTeam, Msg ,_FromPid },State) ->
+    {noreply, State};
+do_handle_info({leaveTeam, Msg, _FromPid}, State) ->
     team_logic:leaveTeam(Msg),
-    {noreply,State};
-do_handle_info(tick,State) ->
+    {noreply, State};
+do_handle_info(tick, State) ->
     team_logic:tick(),
-    {noreply,State};
+    {noreply, State};
 do_handle_info(Info, State) ->
     ?ERROR("undeal info ~w", [Info]),
     {noreply, State}.

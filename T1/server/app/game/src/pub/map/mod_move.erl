@@ -12,7 +12,7 @@
 -include("netmsg.hrl").
 -include("gs_cache.hrl").
 -include("map_core.hrl").
-
+-include("rec_rw.hrl").
 -include("movement.hrl").
 -include_lib("stdlib/include/assert.hrl").
 
@@ -28,16 +28,19 @@
 
 %%-------------------------------------------------------------------
 init(Uid, Pos, Face) ->
-    object_rw:set_cur_move(Uid, ?EMS_STAND),
-    object_rw:set_next_move(Uid, ?EMS_STAND),
-    object_rw:set_cur_pos(Uid, Pos),
-    object_rw:set_face(Uid, Face),
-    object_rw:set_dir(Uid, Face),
-    object_rw:set_start_pos(Uid, Pos),
-    object_rw:set_dest_pos(Uid, Pos),
-    object_rw:set_vis_tile_idx(Uid, 0),
-    object_rw:set_force_stopped(Uid, false),
-    object_rw:set_move_speed(Uid, 20),
+    ObjRw1 = object_rw:to_record(Uid),
+    ObjRw2 = ObjRw1#m_object_rw{
+        cur_move = ?EMS_STAND,
+        next_move = ?EMS_STAND,
+        cur_pos = Pos,
+        face = Face,
+        start_pos = Pos,
+        dest_pos = Pos,
+        vis_tile_idx = 0,
+        force_stopped = false,
+        move_speed = 20
+    },
+    object_rw:set(Uid, ObjRw2),
     ok.
 
 start_walk_set(Uid, CurMove, NextMove, Src, Dst, Face, Dir, Now, PathList) ->
@@ -95,7 +98,7 @@ test_dir() ->
 start_player_walk_1(Uid, Start, End) ->
 %%    Dir = test_dir(),
 %%    Way = test_path(),
-
+    
     Way = [End],
     Dir = vector3:subtract(End, Start),
     Speed = get_move_speed_by_state(Uid, ?EMS_WALK),
@@ -107,7 +110,7 @@ start_player_walk_1(Uid, Start, End) ->
 %%    TotalTime = TotalDist / Speed * 1000,
 %%    ?WARN("player ~p start move from ~w to ~w, dist ~w, ~w(ms)",
 %%        [Uid, Start, lists:last(Way), TotalDist, TotalTime]),
-
+    
     % 路点变化时同步到ETS
     start_walk_set(Uid, ?EMS_WALK, ?EMS_STAND, Start, End, Dir, Dir, Now, PathList),
     on_obj_pos_change(Uid, Start),
@@ -169,7 +172,7 @@ update_dispatcher(_Obj) -> skip.
 %%-------------------------------------------------------------------
 update_player_move(Obj, ?EMS_WALK) ->
     #m_cache_map_object{uid = Uid} = Obj,
-
+    
     CurPos = object_rw:get_cur_pos(Uid),
     PathList = object_rw:get_path_list(Uid),
     Delta = map_rw:get_move_timer_delta(),
@@ -181,7 +184,7 @@ update_player_move(_Obj, _Move) -> skip.
 %%-------------------------------------------------------------------
 update_monster_move(Obj, ?EMS_WALK) ->
     #m_cache_map_object{uid = Uid} = Obj,
-
+    
     CurPos = object_rw:get_cur_pos(Uid),
     PathList = object_rw:get_path_list(Uid),
     Delta = map_rw:get_move_timer_delta(),
@@ -198,7 +201,7 @@ update_role_walk(Uid, _CurPos, [], _MoveTime) ->
     object_rw:set_start_time(Uid, map_rw:get_move_timer_now()),
     ?ENR_ARRIVE;
 update_role_walk(Uid, _CurPos, PathList, MoveTime) ->
-
+    
     Dir = object_rw:get_dir(Uid),
     Dst = object_rw:get_dest_pos(Uid),
     {NewPos, NewPathList, MoreTime} = linear_pos(PathList, MoveTime, keep),
@@ -207,7 +210,7 @@ update_role_walk(Uid, _CurPos, PathList, MoveTime) ->
 %%        [self(), Obj#m_map_obj.uid, CurPos, NewPos, MoveTime]),
 %%    ?DEBUG("# ~p,~p", [NewPos#vector3.x, NewPos#vector3.z]),
     on_obj_pos_change(Uid, NewPos),
-
+    
     case NewPathList of
         ?ENR_TOBECONTINUED ->
             object_rw:set_seg_move_time(Uid, MoveTime),
@@ -347,15 +350,15 @@ do_start_monster_walk(Uid, Dst, MoveState) ->
     Now = map_rw:get_move_timer_now(),
     Speed = object_rw:get_move_speed(Uid),
     PathList = make_path_list([], Start, Way, Speed),
-
+    
     %%
     TotalDist = lists:foldl(
         fun(#m_move_pos{dist = DistCur}, Acc) -> Acc + DistCur end, 0, PathList),
     TotalTime = TotalDist / Speed * 1000,
     ?WARN("monster ~p start move from ~w to ~w, dist ~w, ~w(ms)",
         [Uid, Start, lists:last(Way), TotalDist, TotalTime]),
-
-    % 
+    
+    %
     start_walk_set(Uid, MoveState, ?EMS_STAND, Start, Dst, Dir, Dir, Now, PathList),
     map_view:sync_movement_to_big_visual_tile(Uid),
     hook_map:on_start_move(Uid),
@@ -376,13 +379,13 @@ update_monster_walk(Uid, CurPos, [], _MoveTime) ->
     object_rw:set_start_time(Uid, map_rw:get_move_timer_now()),
     ?ENR_ARRIVE;
 update_monster_walk(Uid, _CurPos, PathList, MoveTime) ->
-
+    
     Dir = object_rw:get_dir(Uid),
     Dst = object_rw:get_dest_pos(Uid),
     {NewPos, NewPathList, MoreTime} = linear_pos(PathList, MoveTime, keep),
-
+    
     on_obj_pos_change(Uid, NewPos),
-
+    
     case NewPathList of
         ?ENR_TOBECONTINUED ->
             object_rw:set_seg_move_time(Uid, MoveTime),

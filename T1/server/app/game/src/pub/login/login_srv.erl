@@ -31,9 +31,9 @@ start_link() ->
 %%% Internal functions
 %%%===================================================================	
 mod_init(_Args) ->
-     erlang:process_flag(trap_exit, true),
-     erlang:process_flag(priority, high),
-
+    erlang:process_flag(trap_exit, true),
+    erlang:process_flag(priority, high),
+    
     {ok, #{lt => 1800, in => 0, lq => lqueue:new()}}.
 
 %%--------------------------------------------------------------------	

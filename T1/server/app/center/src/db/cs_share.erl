@@ -41,9 +41,9 @@ sync(Node) ->
 
 
 test(N) ->
-    ?WARN("insert ~p m_team_info ...",[N]) ,
-     do_create_n(N),
-    ?WARN("insert ~p m_team_info done #",[N]) ,
+    ?WARN("insert ~p m_team_info ...", [N]),
+    do_create_n(N),
+    ?WARN("insert ~p m_team_info done #", [N]),
     ok.
 
 do_create_n(N) when N =< 0 ->
@@ -53,7 +53,7 @@ do_create_n(N) ->
     do_create_n(N - 1).
 
 write_one_team() ->
-    Info = #m_share_team_info{ teamID = uid_gen:tmp_uid(), leaderID = uid_gen:player_uid()},
+    Info = #m_share_team_info{teamID = uid_gen:tmp_uid(), leaderID = uid_gen:player_uid()},
     misc_mnesia:dirty_write(Info),
     ok.
 

@@ -15,7 +15,7 @@
 -include("gs_common_rec.hrl").
 -include("db_record.hrl").
 
--define(DB_QUERY_TIMEOUT, 15*1000).
+-define(DB_QUERY_TIMEOUT, 15 * 1000).
 
 %% API
 -export([handler/4]).

@@ -14,38 +14,38 @@
 -include("common_team_inc.hrl").
 
 -export([
-	tick/0,
-	tickMsg/0
+    tick/0,
+    tickMsg/0
 ]).
 
 %% API
 -export([
-	createNewTeam/1,
-	leaveTeam/1
+    createNewTeam/1,
+    leaveTeam/1
 ]).
 
 
 %%%-------------------------------------------------------------------
 tickMsg() ->
-	erlang:send_after(?TeamTickTimeMS, self(), tick).
+    erlang:send_after(?TeamTickTimeMS, self(), tick).
 
 tick() ->
-	tickMsg(),
-	Now = misc_time:milli_seconds(),
-	L = misc_mnesia:dirty_all_keys(?ShareUidTeamMatchName),
-	tickMatch(Now, L, ?MatchTickControlMax),
-	ok.
+    tickMsg(),
+    Now = misc_time:milli_seconds(),
+    L = misc_mnesia:dirty_all_keys(?ShareUidTeamMatchName),
+    tickMatch(Now, L, ?MatchTickControlMax),
+    ok.
 
 tickMatch(_Now, [], _N) ->
-	ok;
+    ok;
 tickMatch(_Now, _L, N) when N =< 0 ->
-	ok;
+    ok;
 tickMatch(
-	Now
-	, [_ | L]
-	, N
+    Now
+    , [_ | L]
+    , N
 ) ->
-	tickMatch(Now, L, N - 1).
+    tickMatch(Now, L, N - 1).
 
 %%%-------------------------------------------------------------------
 createNewTeam({CopyMapID, TargetRoleID, MemberInfo}) ->
@@ -71,7 +71,7 @@ doCreateNewTeam(CopyMapID, TargetRoleID, #m_team_member{
     roleID = RoleID,
     serverID = ServerID
 } = MemberInfo) ->
-
+    
     NewTeamID = uidMgr:makeTeamUID(),
     TeamInfo = #m_share_team_info{
         teamID = NewTeamID,
@@ -84,10 +84,10 @@ doCreateNewTeam(CopyMapID, TargetRoleID, #m_team_member{
     true = misc_mnesia:dirty_write(
         #m_share_uid_ref_tid{roleID = RoleID, teamID = NewTeamID, serverID = ServerID}),
     true = misc_mnesia:dirty_write(?Ets_TeamList, TeamInfo),
-
+    
     ?DEBUG("[~p]create Team[~p] with[~p], leader[~p],targetMap[~p], member[~p]",
         [RoleID, NewTeamID, TargetRoleID, RoleID, CopyMapID, RoleID]),
-
+    
     %% 加入组队后向角色进程反馈
     ps:send(Pid, joinTeamOK, NewTeamID),
     ok.
@@ -98,7 +98,7 @@ leaveTeam({RoleID, Pid, NetPid, IsNotify}) ->
         {true, [TeamInfo]} ->
             doLeaveTeam(RoleID, Pid, NetPid, TeamInfo);
         {_, _ErrorCode} when IsNotify ->
-           skip;
+            skip;
         _ ->
             skip
     end,
@@ -115,12 +115,12 @@ canLeaveTeam(RoleID) ->
 doLeaveTeam(RoleID, Pid, NetPid,
     #m_share_team_info{teamID = TeamID, leaderID = LeaderID} = TeamInfo
 ) ->
-
+    
     onMemberLeaveTeam(RoleID, LeaderID, TeamInfo),
     misc_mnesia:dirty_delete(?ShareUidRefTeamIdName, RoleID),
     ?DEBUG("[~p] leave team[~p],leadre[~p -> 0]",
         [RoleID, TeamID, LeaderID]),
-
+    
     %% 离开组队后向角色进程反馈
     ps:send(Pid, leaveTeamOK, TeamID),
     ok.
@@ -137,7 +137,7 @@ onMemberLeaveTeam(LeaderID, LeaderID,
             [#m_team_member{roleID = RoleID} | _] ->
                 RoleID
         end,
-
+    
     case NewLeaderID =:= 0 of
         true ->
             misc_mnesia:dirty_delete(?ShareTeamInfoName, TeamID);

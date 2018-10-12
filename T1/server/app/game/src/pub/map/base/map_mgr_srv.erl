@@ -81,7 +81,7 @@ do_player_join_map_call(S, Req) ->
         tar_map_id = MapID, tar_line_id = TarLineId,
         tar_pos = Pos, force = Force
     } = Req,
-
+    
     Now = misc_time:milli_seconds(),
     MS =
         ets:fun2ms(
@@ -92,10 +92,10 @@ do_player_join_map_call(S, Req) ->
                 reserve = Reserve,
                 dead_line = DeadLine,
                 status = Status
-            } = T) when (Limit > In orelse (Force andalso Limit + Reserve > In )),
-                        DeadLine > Now + ?DEAD_LINE_PROTECT,
-                        Status =:= ?MAP_NORMAL,
-                        (TarLineId =:= 0 orelse CurLineID =:= TarLineId)
+            } = T) when (Limit > In orelse (Force andalso Limit + Reserve > In)),
+                DeadLine > Now + ?DEAD_LINE_PROTECT,
+                Status =:= ?MAP_NORMAL,
+                (TarLineId =:= 0 orelse CurLineID =:= TarLineId)
                 -> T
             end
         ),
@@ -106,10 +106,10 @@ do_player_join_map_call(S, Req) ->
             _ ->
                 create_new_line(S, S#state.map_id, next_line_id())
         end,
-
+    
     %2. ** MapID 与第一行的MapID 强制匹配下
     #m_map_line{pid = MapPid, map_id = MapID, line_id = LineID} = Line,
-
+    
     %3. 加入
     case map_interface:player_join_call(MapPid, Req) of
         ok ->
@@ -124,9 +124,9 @@ do_player_join_map_call(S, Req) ->
 do_player_exit_map_call(S, Req) ->
     %%1.
     #r_exit_map_req{uid = Uid, line_id = LineID} = Req,
-
+    
     ?WARN("player ~p exit map_~p_~p", [Uid, S#state.map_id, LineID]),
-
+    
     %2.
     case misc_ets:read(S#state.ets, LineID) of
         [#m_map_line{pid = Pid}] ->

@@ -23,10 +23,10 @@ run() ->
     player_bag:add(1, 8888, 39),
     player_bag:add(1, 8888, 38),
     player_bag:add(1, 8888, 37),
-
+    
     player_bag:del_did(1, 8888, 25),
     player_bag:del_did(1, 8888, 40),
     _Cnt = player_bag:sum(1, 8888),
-
-
+    
+    
     ok.

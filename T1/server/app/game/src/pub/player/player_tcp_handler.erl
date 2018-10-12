@@ -37,29 +37,29 @@
 
 
 %%-------------------------------------------------------------------
--define(SocketKey,socketRef___).
--define(NET_IDLE_TIME, 30*1000).
--record(r_player_state,{}).
+-define(SocketKey, socketRef___).
+-define(NET_IDLE_TIME, 30 * 1000).
+-record(r_player_state, {}).
 
 
 %%-------------------------------------------------------------------
 -spec shutdown(How) -> ok when
     How :: read | write | read_write.
-shutdown(How) -> 
+shutdown(How) ->
     tcp_handler:shutdown(socket(), How).
 
-stop(Reason)->
+stop(Reason) ->
     ?INFO("aid ~p uid ~p pid ~p stopped with reason ~p",
         [player_rw:get_aid(), player_rw:get_uid(), self(), Reason]),
     catch player_pub:send_net_msg(#pk_GS2U_KickByServer{reason = io_lib:format("~p", [Reason])}),
     tcp_handler:active_stop(Reason).
 
 %%-------------------------------------------------------------------
-send_net_msg(IoList) when is_list(IoList)->
+send_net_msg(IoList) when is_list(IoList) ->
     tcp_handler:direct_send_net_msg(socket(), IoList);
 send_net_msg(Msg) ->
     {Bytes1, IoList} = tcp_codec:encode(Msg),
-    ?DEBUG("~p send ~p bytes, msg ~w",[player_rw:get_uid(), Bytes1, Msg]),
+    ?DEBUG("~p send ~p bytes, msg ~w", [player_rw:get_uid(), Bytes1, Msg]),
     tcp_handler:direct_send_net_msg(socket(), IoList),
     ok.
 
@@ -74,7 +74,7 @@ on_init(Socket) ->
     {ok, #r_player_state{}}.
 
 %%-------------------------------------------------------------------
-on_data(Socket, Data, S)->
+on_data(Socket, Data, S) ->
     set_latest_net_time(),
     tcp_codec:decode(fun player_tcp_handler:on_net_msg/2, Socket, Data),
     S.
@@ -82,7 +82,7 @@ on_data(Socket, Data, S)->
 %%-------------------------------------------------------------------
 on_close(Socket, Reason, S) ->
     player_priv:offline(Reason),
-    ?INFO("~p socket ~p close,reason:~p",[self(), Socket, Reason]),
+    ?INFO("~p socket ~p close,reason:~p", [self(), Socket, Reason]),
     S.
 
 %%-------------------------------------------------------------------
@@ -96,11 +96,11 @@ on_info_msg({net_msg, NetMsg}, S) ->
     player_tcp_handler:send_net_msg(NetMsg),
     S;
 on_info_msg({login_ack, Msg}, S) ->
-    ?DEBUG("login_ack:~p",[Msg]),
+    ?DEBUG("login_ack:~p", [Msg]),
     player_priv:login_ack(Msg),
     S;
 on_info_msg({load_player_list_ack, List}, S) ->
-    ?DEBUG("load_player_list_ack:~p",[List]),
+    ?DEBUG("load_player_list_ack:~p", [List]),
     player_priv:loaded_player_list(List),
     S;
 on_info_msg({load_player_data_ack, Player}, S) ->
@@ -114,7 +114,7 @@ on_info_msg({create_player_ack, Ack}, S) ->
 on_info_msg(return_to_pre_map_req, S) ->
     player_map_priv:return_to_old_map_call(),
     S;
-on_info_msg({passive_change_req,{DestMapID, LineId, TarPos}}, S) ->
+on_info_msg({passive_change_req, {DestMapID, LineId, TarPos}}, S) ->
     player_map_priv:serve_change_map_call(DestMapID, LineId, TarPos),
     S;
 on_info_msg({teleport, NewPos}, S) ->
@@ -125,8 +125,8 @@ on_info_msg(Info, S) ->
     S.
 
 %%-------------------------------------------------------------------
-on_call_msg(Request, From, S)->
-    ?DEBUG("call ~p from ~p",[Request, From]),
+on_call_msg(Request, From, S) ->
+    ?DEBUG("call ~p from ~p", [Request, From]),
     Ret = player:on_call_msg(Request, From),
     {Ret, S}.
 
@@ -136,9 +136,9 @@ on_cast_msg(Request, S) ->
     S.
 
 %%-------------------------------------------------------------------
-on_net_msg(Cmd, Msg)->
+on_net_msg(Cmd, Msg) ->
 %%    ?DEBUG("route_msg id ~p msg ~w",[Cmd, Msg]),
-    ?TRY_CATCH( route_msg(Cmd, Msg) ),
+    ?TRY_CATCH(route_msg(Cmd, Msg)),
     ok.
 
 route_msg(Cmd, Msg) ->
@@ -177,7 +177,7 @@ log_error_msg(Reason, Cmd, Msg) ->
 
 %%-------------------------------------------------------------------
 socket(Socket) -> put(?SocketKey, Socket).
-socket()-> get(?SocketKey).
+socket() -> get(?SocketKey).
 
 %%-------------------------------------------------------------------
 set_latest_net_time() -> put('RECV_NETMSG_LATEST', misc_time:milli_seconds()).

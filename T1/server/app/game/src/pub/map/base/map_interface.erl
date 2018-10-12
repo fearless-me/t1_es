@@ -16,7 +16,7 @@
 %% call
 -export([player_join_call/2, player_exit_call/2, player_teleport_call/2]).
 %%--------------------------------
--export([player_move_/2, player_stop_move_/2, player_change_attr_/2]).
+-export([player_move_/2, player_stop_move_/2, player_change_combat_prop_/2]).
 -export([status_/1]).
 
 
@@ -36,8 +36,8 @@ player_teleport_call(MapPid, Req) ->
 
 
 %%--------------------------------
-player_change_attr_(MapPid, Req) ->
-    ps:send(MapPid, player_change_attr, Req),
+player_change_combat_prop_(MapPid, Req) ->
+    ps:send(MapPid, player_change_combat_prop, Req),
     ok.
 
 %%--------------------------------

@@ -11,13 +11,13 @@
 
 %% API
 -export([
-  on_login/1,
-  inc_daily_counter/0, dec_daily_counter/0,
-  reset_daily_counter/0, get_daily_counter/0, set_daily_counter/0
+    on_login/1,
+    inc_daily_counter/0, dec_daily_counter/0,
+    reset_daily_counter/0, get_daily_counter/0, set_daily_counter/0
 ]).
 
 on_login(_Data) ->
-  ok.
+    ok.
 
 %%-------------------------------------------------------------------
 inc_daily_counter() -> ok.

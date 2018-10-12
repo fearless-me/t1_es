@@ -68,23 +68,23 @@ FieldContainerType MetaInfo::getContainerTypeByName( const std::string& name ) {
 }
 
 bool MetaInfo::cache( const MsgDefine& md ) {
-	for ( const Field& f : md.fields ) {
-		bool validType = false;
-		auto it = typeNamesAlias.find( f.typeName );
-		if ( it != typeNamesAlias.end() ) {
-			// base type
-			validType = true;
-		} else {
-			auto it = cachedMsgDefine.find( f.typeName );
-			if ( it != cachedMsgDefine.end() ) {
-				// msg type
-				validType = true;
-			}
-		}
-		if ( !validType ) {
-			return false;
-		}
-	}
+	//for ( const Field& f : md.fields ) {
+	//	bool validType = false;
+	//	auto it = typeNamesAlias.find( f.typeName );
+	//	if ( it != typeNamesAlias.end() ) {
+	//		// base type
+	//		validType = true;
+	//	} else {
+	//		auto it = cachedMsgDefine.find( f.typeName );
+	//		if ( it != cachedMsgDefine.end() ) {
+	//			// msg type
+	//			validType = true;
+	//		}
+	//	}
+	//	if ( !validType ) {
+	//		return false;
+	//	}
+	//}
 	MsgDefine msgInfo;
 	msgInfo.comment = md.comment;
 	msgInfo.name = md.name;
@@ -107,9 +107,14 @@ bool MetaInfo::cache( const MsgDefine& md ) {
 		} else {
 			auto alias = cachedMsgDefine.find( f.typeName );
 			if ( alias == cachedMsgDefine.end() ) {
-				printf( "unknown field data type: %s\n", f.typeName.c_str() );
-				system( "pause" );
-				continue;
+				printf("***********************************************");
+				printf("WARNING unknown type %s\n", f.typeName.c_str() );
+				printf("WARNING unknown type %s\n", f.typeName.c_str());
+				printf("WARNING unknown type %s\n", f.typeName.c_str());
+				printf("WARNING unknown type %s\n", f.typeName.c_str());
+				printf("***********************************************");
+				Sleep(10000);
+				//continue;
 			}
 			df.typeName = f.typeName;
 			customType = true;

@@ -46,7 +46,7 @@ handle(#pk_U2GS_RequestCreatePlayer{
     BornMid = map_creator_interface:born_map_id(),
     V = map_creator_interface:born_map_pos(),
     player_priv:create_player_(#r_create_player_req{
-       name = Name, camp = Camp, career = Career, race = Race, sex = Sex,
+        name = Name, camp = Camp, career = Career, race = Race, sex = Sex,
         head = Head, mid = BornMid, x = vector3:x(V), y = vector3:z(V), sid = gs_interface:get_sid()
     }),
     ok;
@@ -72,13 +72,13 @@ handle(#pk_U2GS_SkillInterrupt{}) ->
     ok;
 handle(#pk_U2GS_ChangeMap{map_id = MapId, x = X, y = Y}) ->
     Pos = vector3:new(X, 0, Y),
-    ?DEBUG("### client request change to map ~p",[MapId]),
+    ?DEBUG("### client request change to map ~p", [MapId]),
     player_pub:change_map_(MapId, 0, Pos),
     ok;
 handle(#pk_U2GS_Chat{content = Content}) ->
     case player_gm:is_gm(Content) of
-    true -> player_gm:on_gm(Content);
-    _Any -> skip
+        true -> player_gm:on_gm(Content);
+        _Any -> skip
     end,
     ok;
 handle(_Msg) ->

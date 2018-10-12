@@ -12,7 +12,7 @@
 -define(DEF_GS_DB_POOL_HRL, true).
 
 %%--------------------------------------------------------------------
--define(DATA_DB_POOL_NAME,   gdb_pool).
+-define(DATA_DB_POOL_NAME, gdb_pool).
 -define(ACCOUNT_DB_POOL_NAME, adb_pool).
 -define(PUBLIC_DB_POOL_NAME, pubdb_pool).
 -define(INIT_DB_POOL_TIMEOUT, 50 * 1000).

@@ -12,6 +12,8 @@
 -include("rec_rw.hrl").
 -include("gs_cache.hrl").
 -include("map_core.hrl").
+-include("combat.hrl").
+-include("netmsg.hrl").
 
 
 -export([
@@ -60,24 +62,26 @@ on_rw_update(Uid, Key, RwRec) ->
 
 
 %%-------------------------------------------------------------------
+on_rw_update(?OBJ_PLAYER, Uid, cur_pos, R) ->
+    gs_cache_interface:update_online_player(Uid, {#m_cache_online_player.pos, R#m_object_rw.cur_pos});
 on_rw_update(?OBJ_PLAYER, Uid, hp, R) ->
-    misc_ets:update_element(?ETS_CACHE_ONLINE_PLAYER, Uid, {#m_cache_online_player.hp, R#m_object_rw.hp});
+    gs_cache_interface:update_online_player(Uid, {#m_cache_online_player.hp, R#m_object_rw.hp});
 on_rw_update(?OBJ_PLAYER, Uid, buff_list, R) ->
-    misc_ets:update_element(?ETS_CACHE_ONLINE_PLAYER, Uid, {#m_cache_online_player.buff_list, R#m_object_rw.buff_list});
+    gs_cache_interface:update_online_player(Uid, {#m_cache_online_player.buff_list, R#m_object_rw.buff_list});
 on_rw_update(?OBJ_PLAYER, Uid, attr, R) ->
-    misc_ets:update_element(?ETS_CACHE_ONLINE_PLAYER, Uid, {#m_cache_online_player.attr, R#m_object_rw.attr});
+    gs_cache_interface:update_online_player(Uid, {#m_cache_online_player.attr, R#m_object_rw.attr});
 on_rw_update(_ObjType, _Uid, _Key, _RwRec) ->
     ok.
 
 
 %%-------------------------------------------------------------------
-lock_transaction(Key)->
+lock_transaction(Key) ->
     case get(map_obj_lock_transaction) of
         Key -> throw("recursive call");
         _ -> put(map_obj_lock_transaction, Key)
     end,
     ok.
 
-unlock_transaction()->
+unlock_transaction() ->
     erase(map_obj_lock_transaction).
 

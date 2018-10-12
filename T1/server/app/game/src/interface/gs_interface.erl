@@ -48,7 +48,7 @@
 
 -export([
     is_cross/0, get_server_port/0, get_max_connection/0,
-    get_area/0,get_sid/0, get_server_name/0, get_server_type/0,  get_run_no/0, get_center_node/0
+    get_area/0, get_sid/0, get_server_name/0, get_server_type/0, get_run_no/0, get_center_node/0
 ]).
 
 
@@ -60,7 +60,7 @@ get_server_type() -> gs_econfig:get_server_type().
 get_max_connection() -> gs_econfig:get_max_connection().
 get_area() -> gs_econfig:get_area().
 get_sid() -> gs_econfig:get_sid().
-get_run_no()-> gs_econfig:get_run_no().
+get_run_no() -> gs_econfig:get_run_no().
 get_center_node() -> gs_econfig:get_center_node().
 
 %%-------------------------------------------------------------------
@@ -72,7 +72,7 @@ ppid_name(Aid) ->
 
 register_pid(Pid, Aid) ->
     PsName = ppid_name(Aid),
-    try  erlang:register(PsName, Pid) of
+    try erlang:register(PsName, Pid) of
         true -> success
     catch _:_:_ -> repeat_login end.
 
@@ -118,7 +118,7 @@ merge_plat_acc_name(PlatName, PlatAcc) ->
 plat_account_crc(PlatName, PlatAcc) ->
     PN = misc:crc32(PlatName),
     AN = misc:crc32(PlatAcc),
-    (PN bsl 32) bor AN .
+    (PN bsl 32) bor AN.
 
 
 %%-------------------------------------------------------------------

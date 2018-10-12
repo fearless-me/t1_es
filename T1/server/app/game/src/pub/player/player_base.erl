@@ -24,20 +24,20 @@ online(Player) ->
     #p_player{
         aid = Aid, uid = Uid, sid = Sid,
         name = Name, level = Level, sex = Sex,
-        race = Race, career=Career, head = Head,
+        race = Race, career = Career, head = Head,
         map_id = Mid, line = LineId
     } = Player,
-
+    
     RwRec = player_rw:to_record(),
     player_rw:init_default(RwRec#m_player_rw{
-        uid = Uid, sid = Sid, aid =  Aid,
+        uid = Uid, sid = Sid, aid = Aid,
         name = Name, level = Level, sex = Sex,
         race = Race, career = Career, head = Head,
         map = #m_player_map{map_id = Mid, line_id = LineId}
     }),
-    ?DEBUG("player ~p of ~p enter map ~p",[Uid, Aid, Mid]),
+    ?DEBUG("player ~p of ~p enter map ~p", [Uid, Aid, Mid]),
     %% todo 设置buff， cd等等
-
+    
     ok.
 
 %%-------------------------------------------------------------------
@@ -82,7 +82,7 @@ start_walk(Tar) ->
             ?WARN("player start walk at ~p mapid ~p move to ~w", [Uid, MPid, Tar]),
             ok;
         _ ->
-            ?DEBUG("### error walk pos ~w",[Tar])
+            ?DEBUG("### error walk pos ~w", [Tar])
     end,
     ok.
 
@@ -97,6 +97,6 @@ stop_move(Pos) ->
             ?WARN("player ~p mapid ~p stop on ~w", [Uid, MPid, Pos]),
             ok;
         _ ->
-            ?DEBUG("### error stop pos ~w",[Pos])
+            ?DEBUG("### error stop pos ~w", [Pos])
     end,
     ok.

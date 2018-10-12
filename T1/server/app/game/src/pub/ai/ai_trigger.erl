@@ -38,7 +38,7 @@ init_1(_Uid, undefined) ->
 init_1(_Uid, _Cfg) ->
     %% todo 怪物配置 [{触发器ID, 对应技能ID, 目标类型}, ...]
     TriggerList = [],
-
+    
     lists:foldl(
         fun({CfgId, SkillId, TarType}, Acc) ->
             [

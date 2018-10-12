@@ -13,16 +13,16 @@
 %% API
 -export([op/3]).
 
-op(?LOGIC_EQ, P1, P2)->
+op(?LOGIC_EQ, P1, P2) ->
     P1 == P2;
-op(?LOGIC_GT, P1, P2)->
+op(?LOGIC_GT, P1, P2) ->
     P1 > P2;
-op(?LOGIC_LT, P1, P2)->
+op(?LOGIC_LT, P1, P2) ->
     P1 < P2;
-op(?LOGIC_GE, P1, P2)->
+op(?LOGIC_GE, P1, P2) ->
     P1 >= P2;
-op(?LOGIC_LE, P1, P2)->
+op(?LOGIC_LE, P1, P2) ->
     P1 =< P2;
-op(?LOGIC_NEQ, P1, P2)->
+op(?LOGIC_NEQ, P1, P2) ->
     not (P1 == P2).
 

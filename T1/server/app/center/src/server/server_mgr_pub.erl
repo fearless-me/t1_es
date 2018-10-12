@@ -12,5 +12,5 @@
 %% API
 -export([on_nodedown/2]).
 
-on_nodedown(GSNode,  ServerID) ->
+on_nodedown(GSNode, ServerID) ->
     ok.

@@ -13,7 +13,6 @@
 -include("pub_def.hrl").
 -include("netmsg.hrl").
 -include("map_core.hrl").
-
 -include("player_status.hrl").
 -include("gs_common_rec.hrl").
 -include("db_record.hrl").
@@ -40,7 +39,7 @@ init() ->
 login_ack(#r_login_ack{error = 0, account_info = AccountIfo}) ->
     #p_account{aid = AccId} = AccountIfo,
     %%% fixme errorrororororor
-    PsName =  gs_interface:ppid_name(AccId),
+    PsName = gs_interface:ppid_name(AccId),
     loop_check(misc:is_alive(PsName), erlang:whereis(PsName), 5),
     %%% fixme errorrororororor
     Ret = gs_interface:register_pid(self(), AccId),
@@ -54,7 +53,7 @@ login_ack(#r_login_ack{error = Error}) ->
     ok.
 
 
-loop_check(true, Pid, N) when N > 0, is_pid(Pid)->
+loop_check(true, Pid, N) when N > 0, is_pid(Pid) ->
     ps:send(Pid, active_stop, repeat_login),
     timer:sleep(2000),
     loop_check(misc:is_alive(Pid), Pid, N - 1);
@@ -176,7 +175,7 @@ offline_1(Status, Reason) ->
     gs_cache_interface:offline(Aid, Uid),
     ?INFO("player ~p pid ~p sock ~p player ~w offline status ~p reason ~p",
         [Uid, self(), player_pub:socket(), Uid, Status, Reason]),
-
+    
     ok.
 
 %%-------------------------------------------------------------------

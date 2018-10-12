@@ -26,17 +26,17 @@ log_(Client, LogNum) ->
             Pid = erlang:spawn(fun() -> catch do1(LogNum, Self) end),
             [Pid | Acc]
         end, [], lists:seq(1, Client)),
-
+    
     loop(Client),
     DiffMs = os:system_time(milli_seconds) - NowMs,
     TotalLog = Client * LogNum * 4,
     io:format("~w clients, write ~w, time ~w, qps ~w ~n",
-        [Client, TotalLog, DiffMs, TotalLog / DiffMs * 1000 ]),
+        [Client, TotalLog, DiffMs, TotalLog / DiffMs * 1000]),
     ok.
 
-loop(0)->
+loop(0) ->
     ok;
-loop(N)->
+loop(N) ->
     receive
         over ->
             loop(N - 1)
@@ -45,16 +45,16 @@ loop(N)->
 do1(0, Pid) ->
     Pid ! over;
 do1(X, Pid) ->
-    fastlog:debug("xxxxxxxxxxxxxxxxxxxxxasdfadsfaasf我是中国人asdfadfadafd",[]),
+    fastlog:debug("xxxxxxxxxxxxxxxxxxxxxasdfadsfaasf我是中国人asdfadfadafd", []),
     fastlog:debug("~w,~p,~p,~p,~ts",
-        [misc:callstack(),rand:uniform(), ?MODULE, ?LINE, "hello"]),
+        [misc:callstack(), rand:uniform(), ?MODULE, ?LINE, "hello"]),
     fastlog:info("~w,~p,~p,~p,~ts",
-        [misc:callstack(),rand:uniform(), ?MODULE, ?LINE, "hello"]),
+        [misc:callstack(), rand:uniform(), ?MODULE, ?LINE, "hello"]),
     fastlog:warn("~w,~p,~p,~p,~ts",
-        [misc:callstack(),rand:uniform(), ?MODULE, ?LINE, "hello"]),
+        [misc:callstack(), rand:uniform(), ?MODULE, ?LINE, "hello"]),
     fastlog:error("errrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr", []),
     fastlog:error("~w,~p,~p,~p,~ts",
-        [misc:callstack(),rand:uniform(), ?MODULE, ?LINE, "hellosdafdas"]),
+        [misc:callstack(), rand:uniform(), ?MODULE, ?LINE, "hellosdafdas"]),
     fastlog:fatal("~w,~p,~p,~p,~ts",
-        [misc:callstack(),rand:uniform(), ?MODULE, ?LINE, "hello"]),
+        [misc:callstack(), rand:uniform(), ?MODULE, ?LINE, "hello"]),
     do1(X - 1, Pid).

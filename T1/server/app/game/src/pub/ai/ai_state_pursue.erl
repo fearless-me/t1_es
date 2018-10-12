@@ -21,7 +21,7 @@ on_enter(Uid) ->
         true -> mod_ai:start_pursue(Uid, TarUid);
         _ -> ai_rw:set_pursue_tar_pos(Uid, CurPos)
     end,
-
+    
     case ai_rw:get_enter_combat_time(Uid) > 0 of
         true -> skip;
         _Fls ->
@@ -36,7 +36,7 @@ update(Uid) ->
     Tar = ai_rw:get_target_uid(Uid),
     case Tar > 0 of
         true when Ret =:= true -> mod_ai:start_pursue(Uid, Tar);
-        true when Ret =:= false-> mod_ai:update_pursue(Uid, Tar);
+        true when Ret =:= false -> mod_ai:update_pursue(Uid, Tar);
         _ -> skip
     end,
     ok.

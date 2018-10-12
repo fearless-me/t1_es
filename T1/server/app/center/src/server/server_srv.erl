@@ -29,7 +29,7 @@
 start_link(Params) ->
     gen_serverw:start_link(
         ?MODULE, Params,
-        [{spawn_opt, [{min_heap_size, 16*1024}, {min_bin_vheap_size, 16*1024}]}]
+        [{spawn_opt, [{min_heap_size, 16 * 1024}, {min_bin_vheap_size, 16 * 1024}]}]
     ).
 
 %%%===================================================================

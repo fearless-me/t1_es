@@ -26,9 +26,9 @@
 
 
 %%-------------------------------------------------------------------
-get_sid()-> case get(serverID) of undefined -> 0; V -> V end.
-get_from_pid()-> case get(serverPid) of undefined -> 0; V -> V end.
-set_id_pid(Sid, FromPid)->
+get_sid() -> case get(serverID) of undefined -> 0; V -> V end.
+get_from_pid() -> case get(serverPid) of undefined -> 0; V -> V end.
+set_id_pid(Sid, FromPid) ->
     put(serverPid, FromPid),
     put(serverID, Sid).
 %%-------------------------------------------------------------------
@@ -47,7 +47,7 @@ sync() ->
 
 
 sync_over(GSNode, Sid) ->
-
+    
     ?WARN("server[~p] sync done #", [GSNode]),
     all_ready(Sid),
     [Info] = misc_mnesia:dirty_read(?ShareServerInfoName, Sid),
