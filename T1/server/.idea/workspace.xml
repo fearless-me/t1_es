@@ -18,8 +18,6 @@
       <change beforePath="$PROJECT_DIR$/app/common/include/error_code.hrl" beforeDir="false" afterPath="$PROJECT_DIR$/app/common/include/error_code.hrl" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/common/src/common_interface.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/common/src/common_interface.erl" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/common/src/common_logdb_desc.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/common/src/common_logdb_desc.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/common/src/netmsg/netmsg.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/common/src/netmsg/netmsg.erl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/common/src/netmsg/netmsg.hrl" beforeDir="false" afterPath="$PROJECT_DIR$/app/common/src/netmsg/netmsg.hrl" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/game/include/combat.hrl" beforeDir="false" afterPath="$PROJECT_DIR$/app/game/include/combat.hrl" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/game/src/interface/gs_cache_interface.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/game/src/interface/gs_cache_interface.erl" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/game/src/pub/hook/hook_map.erl" beforeDir="false" afterPath="$PROJECT_DIR$/app/game/src/pub/hook/hook_map.erl" afterDir="false" />
@@ -133,7 +131,7 @@
           <entry key="dump" value="2" />
           <entry key="erl" value="3098" />
           <entry key="err" value="1" />
-          <entry key="ers" value="56" />
+          <entry key="ers" value="57" />
           <entry key="gitignore" value="9" />
           <entry key="h" value="1" />
           <entry key="hrl" value="499" />
@@ -161,7 +159,7 @@
           <entry key="HTML" value="1" />
           <entry key="Log" value="8" />
           <entry key="Markdown" value="36" />
-          <entry key="PLAIN_TEXT" value="74" />
+          <entry key="PLAIN_TEXT" value="75" />
           <entry key="Scratch" value="2" />
         </counts>
       </usages-collector>
@@ -193,8 +191,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app/common/src/netmsg/netmsg.hrl">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="136">
-              <caret line="377" column="8" selection-start-line="377" selection-start-column="8" selection-end-line="377" selection-end-column="8" />
+            <state relative-caret-position="310">
+              <caret line="416" column="141" lean-forward="true" selection-start-line="416" selection-start-column="141" selection-end-line="416" selection-end-column="141" />
             </state>
           </provider>
         </entry>
@@ -236,19 +234,19 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/game/include/battle_prop.hrl">
+        <entry file="file://$PROJECT_DIR$/app/common/src/netmsg/netmsg.erl">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="308">
-              <caret line="14" column="119" lean-forward="true" selection-start-line="14" selection-start-column="119" selection-end-line="14" selection-end-column="119" />
+            <state relative-caret-position="224">
+              <caret line="284" column="61" lean-forward="true" selection-start-line="284" selection-start-column="61" selection-end-line="284" selection-end-column="61" />
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/common/src/netmsg/netmsg.erl">
+        <entry file="file://$PROJECT_DIR$/scripts/build_db.ers">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="808">
-              <caret line="250" column="18" selection-start-line="250" selection-start-column="18" selection-end-line="250" selection-end-column="18" />
+            <state relative-caret-position="920">
+              <caret line="167" column="64" lean-forward="true" selection-start-line="167" selection-start-column="64" selection-end-line="167" selection-end-column="64" />
             </state>
           </provider>
         </entry>
@@ -420,8 +418,8 @@
     </treeState>
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="316" />
-    <option name="y" value="415" />
+    <option name="x" value="115" />
+    <option name="y" value="142" />
     <option name="width" value="1936" />
     <option name="height" value="1056" />
   </component>
@@ -607,33 +605,8 @@
             </path>
             <path>
               <item name="Server" type="b2602c69:ProjectViewProjectNode" />
-              <item name="External Libraries" type="cb654da1:ExternalLibrariesNode" />
-            </path>
-            <path>
-              <item name="Server" type="b2602c69:ProjectViewProjectNode" />
-              <item name="External Libraries" type="cb654da1:ExternalLibrariesNode" />
-              <item name="&lt; Erlang 21 &gt;" type="70bed36:NamedLibraryElementNode" />
-            </path>
-            <path>
-              <item name="Server" type="b2602c69:ProjectViewProjectNode" />
-              <item name="External Libraries" type="cb654da1:ExternalLibrariesNode" />
-              <item name="&lt; Erlang 21 &gt;" type="70bed36:NamedLibraryElementNode" />
-              <item name="lib" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="Server" type="b2602c69:ProjectViewProjectNode" />
-              <item name="External Libraries" type="cb654da1:ExternalLibrariesNode" />
-              <item name="&lt; Erlang 21 &gt;" type="70bed36:NamedLibraryElementNode" />
-              <item name="lib" type="462c0819:PsiDirectoryNode" />
-              <item name="stdlib-3.5" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="Server" type="b2602c69:ProjectViewProjectNode" />
-              <item name="External Libraries" type="cb654da1:ExternalLibrariesNode" />
-              <item name="&lt; Erlang 21 &gt;" type="70bed36:NamedLibraryElementNode" />
-              <item name="lib" type="462c0819:PsiDirectoryNode" />
-              <item name="stdlib-3.5" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="Server" type="462c0819:PsiDirectoryNode" />
+              <item name="scripts" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -646,7 +619,7 @@
     <property name="SearchEverywhereHistoryKey" value="&#9;FILE&#9;file://C:/Program Files/erl10.0/lib/erts-10.0/src/erlang.erl" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1539332219026" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1539333664908" />
     <property name="full.screen.before.presentation.mode" value="false" />
     <property name="last_opened_file_path" value="E:/DataTool/Server" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
@@ -1238,13 +1211,13 @@
       <workItem from="1539221118142" duration="2049000" />
       <workItem from="1539224485228" duration="7253000" />
       <workItem from="1539236231013" duration="3288000" />
-      <workItem from="1539308126310" duration="11436000" />
+      <workItem from="1539308126310" duration="12501000" />
     </task>
     <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="2246679000" />
+    <option name="totallyTimeSpent" value="2247744000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -1256,10 +1229,10 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
+    <frame x="282" y="265" width="1936" height="1056" extended-state="0" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.8431591" visible="true" weight="0.15724947" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.8431591" visible="true" weight="0.15724947" />
       <window_info id="Structure" order="1" sideWeight="0.15684094" side_tool="true" weight="0.22547974" />
       <window_info id="Image Layers" order="2" />
       <window_info id="Designer" order="3" />
@@ -1370,13 +1343,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="198">
           <caret line="9" column="87" lean-forward="true" selection-start-line="9" selection-start-column="87" selection-end-line="9" selection-end-column="87" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/scripts/build_db.ers">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="432">
-          <caret line="36" column="32" selection-start-line="36" selection-start-column="32" selection-end-line="36" selection-end-column="32" />
         </state>
       </provider>
     </entry>
@@ -1638,13 +1604,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/common/src/netmsg/netmsg.erl">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="808">
-          <caret line="250" column="18" selection-start-line="250" selection-start-column="18" selection-end-line="250" selection-end-column="18" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/game/src/pub/player/player_base.erl">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="150">
@@ -1652,10 +1611,24 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/app/common/src/netmsg/netmsg.erl">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="224">
+          <caret line="284" column="61" lean-forward="true" selection-start-line="284" selection-start-column="61" selection-end-line="284" selection-end-column="61" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/scripts/build_db.ers">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="920">
+          <caret line="167" column="64" lean-forward="true" selection-start-line="167" selection-start-column="64" selection-end-line="167" selection-end-column="64" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/app/common/src/netmsg/netmsg.hrl">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="136">
-          <caret line="377" column="8" selection-start-line="377" selection-start-column="8" selection-end-line="377" selection-end-column="8" />
+        <state relative-caret-position="310">
+          <caret line="416" column="141" lean-forward="true" selection-start-line="416" selection-start-column="141" selection-end-line="416" selection-end-column="141" />
         </state>
       </provider>
     </entry>
