@@ -6,7 +6,7 @@
 %%% @end
 %%% Created : 13. 六月 2018 15:25
 %%%-------------------------------------------------------------------
--module(attr_calc).
+-module(combat_prop_calc).
 -author("mawenhong").
 -include("logger.hrl").
 

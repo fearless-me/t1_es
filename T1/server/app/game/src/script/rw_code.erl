@@ -63,16 +63,16 @@ run() ->
 %%                ]
 %%            ]
 %%        ),
-        multi_to_code(
-            "..\\src\\pub\\core\\attr_rw.erl",
-            attr_rw,
-            [
-                ["logger.hrl", "pub_def.hrl", "rec_rw.hrl"],
-                [
-                    {m_attr_rw, record_info(fields, m_attr_rw), [], ["Uid"], []}
-                ]
-            ]
-        ),
+%%        multi_to_code(
+%%            "..\\src\\pub\\core\\combat_prop_rw.erl",
+%%            combat_prop_rw,
+%%            [
+%%                ["logger.hrl", "pub_def.hrl", "rec_rw.hrl"],
+%%                [
+%%                    {m_combat_prop_rw, record_info(fields, m_combat_prop_rw), [], ["Uid"], []}
+%%                ]
+%%            ]
+%%        ),
 %%        multi_to_code(
 %%            "..\\src\\pub\\map\\move_rw.erl",
 %%            move_rw,

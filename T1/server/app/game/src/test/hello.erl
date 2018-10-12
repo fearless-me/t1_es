@@ -63,13 +63,14 @@ loop_rand(N) ->
 %%--------------------------------------------------------------------
 do_handle_info(tick, State) ->
     tick_msg(),
+    Old = erlang:process_info(self(), memory),
     tick_rand_change(),
+    tc(Old, erlang:process_info(self(), memory), ?FUNCTION_NAME),
     {noreply, State};
 do_handle_info(rand, State) ->
     Old = erlang:process_info(self(), memory),
     loop_rand(100000),
-    New = erlang:process_info(self(), memory),
-    ?DEBUG("~nrand_10000:~n~p~n~p", [Old, New]),
+    tc(Old, erlang:process_info(self(), memory), ?FUNCTION_NAME),
     {noreply, State};
 do_handle_info(loop_map, State) ->
     Old = erlang:process_info(self(), memory),
@@ -84,8 +85,7 @@ do_handle_info(loop_map, State) ->
                 maps:remove(D, Map)
         end,
     put(m, List1),
-    New = erlang:process_info(self(), memory),
-    ?DEBUG("~nloop_map:~n~p~n~p~nsize:~p", [Old, New, maps:size(List1)]),
+    tc(Old, erlang:process_info(self(), memory), ?FUNCTION_NAME),
     
     {noreply, State};
 do_handle_info(loop, State) ->
@@ -100,18 +100,14 @@ do_handle_info(loop, State) ->
                 lists:keydelete(D, 1, L)
         end,
     put(x, List1),
-    New = erlang:process_info(self(), memory),
-    
-    ?DEBUG("~nloop:~n~p~n~p", [Old, New]),
+    tc(Old, erlang:process_info(self(), memory), ?FUNCTION_NAME),
     {noreply, State};
 do_handle_info(new, State) ->
     Old = erlang:process_info(self(), memory),
     Ref = erlang:make_ref(),
     List1 = lists:seq(1, 100000),
     put(Ref, List1),
-    New = erlang:process_info(self(), memory),
-    
-    ?DEBUG("~nnew:~n~p~n~p", [Old, New]),
+    tc(Old, erlang:process_info(self(), memory), ?FUNCTION_NAME),
     {noreply, State};
 do_handle_info(Info, State) ->
     ?ERROR("undeal info ~w", [Info]),
@@ -122,9 +118,16 @@ do_handle_cast(Request, State) ->
     ?ERROR("undeal cast ~w", [Request]),
     {noreply, State}.
 
+tc({_, Old}, {_, New}, _FuncName) when Old =:= New->
+    skip;
+tc({_, Old}, {_, New}, FuncName) ->
+    ?DEBUG("~p: ~p - ~p = ~s ", [FuncName, New, Old, misc:format_memory_readable(New - Old)]),
+    ok.
+    
+
 
 tick_msg() ->
-    erlang:send_after(100, self(), tick).
+    erlang:send_after(500, self(), tick).
 
 tick_rand_change() -> do_tick_rand_change(300).
 

@@ -415,17 +415,6 @@ read_proc_file(IoDevice, Acc) ->
         eof -> Acc
     end.
 
-
--define(KIB, (1024)).
--define(MIB, (?KIB * 1024)).
--define(GIB, (?MIB * 1024)).
-mem2str(Mem) ->
-    if Mem > ?GIB -> io_lib:format("~.3fG", [Mem / ?GIB]);
-        Mem > ?MIB -> io_lib:format("~.3fM", [Mem / ?MIB]);
-        Mem > ?KIB -> io_lib:format("~.3fK", [Mem / ?KIB]);
-        Mem >= 0 -> io_lib:format("~.1fB", [Mem / 1.0])
-    end.
-
 log_ps_info() ->
     PS_Count = erlang:system_info(process_count),
     RQ = erlang:statistics(run_queue),
@@ -433,12 +422,12 @@ log_ps_info() ->
     ProcessTotal = erlang:memory(processes),
     MemInfo = erlang:memory([system, atom, atom_used, binary, code, ets]),
 
-    SystemMem = mem2str(proplists:get_value(system, MemInfo)),
-    AtomMem = mem2str(proplists:get_value(atom, MemInfo)),
-    AtomUsedMem = mem2str(proplists:get_value(atom_used, MemInfo)),
-    BinMem = mem2str(proplists:get_value(binary, MemInfo)),
-    CodeMem = mem2str(proplists:get_value(code, MemInfo)),
-    EtsMem = mem2str(proplists:get_value(ets, MemInfo)),
+    SystemMem = misc:format_memory_readable(proplists:get_value(system, MemInfo)),
+    AtomMem = misc:format_memory_readable(proplists:get_value(atom, MemInfo)),
+    AtomUsedMem = misc:format_memory_readable(proplists:get_value(atom_used, MemInfo)),
+    BinMem = misc:format_memory_readable(proplists:get_value(binary, MemInfo)),
+    CodeMem = misc:format_memory_readable(proplists:get_value(code, MemInfo)),
+    EtsMem = misc:format_memory_readable(proplists:get_value(ets, MemInfo)),
 
     PSList = erlang:processes(),
 
@@ -476,7 +465,9 @@ log_ps_info() ->
     "Row      Pid                 RegName                       Reductions     MQueue(*)      Memory           TotalHeap        Heap             Stack            current_stacktrace~n~ts"
     "SortByMem:~n"
     "Row      Pid                 RegName                       Reductions     MQueue         Memory(*)        TotalHeap        Heap             Stack            current_stacktrace~n~ts",
-        [PS_Count, RQ, mem2str(ProcessUsed), mem2str(ProcessTotal), nodes(), SystemMem, AtomUsedMem, AtomMem, BinMem, CodeMem, EtsMem, Str1, Str2]),
+        [PS_Count, RQ,
+            misc:format_memory_readable(ProcessUsed),
+            misc:format_memory_readable(ProcessTotal), nodes(), SystemMem, AtomUsedMem, AtomMem, BinMem, CodeMem, EtsMem, Str1, Str2]),
 
     %% 	[{PsPid,RegisterName,_,_,_,PD,_}|_] = List,
 %% 	PDKeyList = [Key || {Key,_} <- PD],
@@ -503,7 +494,11 @@ log_sort_format(List) ->
     {_, Str} = lists:foldl(
         fun({Pid, RegName, Red, MQL, Mem, TotalHeap, Heap, Stack, ST}, {N, AccIn}) ->
             {N - 1, io_lib:format("~-9w~-20ts~-30ts~-15w~-15w~-17ts~-17ts~-17ts~-17ts~ts~n",
-                [N, Pid, RegName, Red, MQL, mem2str(Mem), mem2str(TotalHeap), mem2str(Heap), mem2str(Stack), ST]) ++ AccIn}
+                [N, Pid, RegName, Red, MQL,
+                    misc:format_memory_readable(Mem),
+                    misc:format_memory_readable(TotalHeap),
+                    misc:format_memory_readable(Heap),
+                    misc:format_memory_readable(Stack), ST]) ++ AccIn}
         end, {15, ""}, List2),
     Str.
 

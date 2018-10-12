@@ -11,6 +11,7 @@ rel/example_project
 .concrete/DEV_MODE
 .rebar
 
+
 /scripts/center_chs_debug.txt
 /scripts/center_chs_release.txt
 /scripts/center.dets.data
@@ -26,4 +27,4 @@ _gsdata_
 /app/_gsdata_/
 /app/center/ebin/
 /app/game/ebin/
-!/app/game/ebin/
+/__cs_pkg__/

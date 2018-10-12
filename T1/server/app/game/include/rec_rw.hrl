@@ -56,10 +56,10 @@
     
 }).
 
-%% 战斗属性
--record(m_attr_rw, {
-    max_hp, speed, attack
-}).
+%%%% 战斗属性
+%%-record(m_combat_prop_rw, {
+%%    max_hp, speed, attack
+%%}).
 
 %%%% 移动相关
 %%%% 通过自动生成代码move_rw

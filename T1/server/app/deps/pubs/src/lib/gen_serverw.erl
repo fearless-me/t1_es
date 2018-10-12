@@ -53,7 +53,7 @@
 -define(FULL_SWEEP, {fullsweep_after, 20}).
 -define(FULL_SWEEP_OPTIONS, {spawn_opt,[?FULL_SWEEP]}).
 -define(TimeLine, timeline).
--define(TIMELINE_MICROSECOND, 5000).
+-define(TIMELINE_MICROSECOND, 50000).
 -define(TIMELINE_KEY, msg_deal_timer).
 -define(TC(MFA, Msg), catch tc_start(), RetVal = MFA, catch  tc_end(Msg), RetVal ).
 %% 假设帧率是 20MS那么是50个消息/client/秒, 服务50client，

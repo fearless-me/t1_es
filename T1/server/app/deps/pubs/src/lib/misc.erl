@@ -23,7 +23,7 @@
     ip/0, peername/1, ip_string/1,
     crc32/1, mod_1/2, clamp/3, rand/2,
     get_value/3, callstack/0, sleep/1,
-    interval_operation/5, parse_information_unit/1,
+    interval_operation/5, parse_information_unit/1, format_memory_readable/1,
     get_dict_def/2, md5/1, int_to_hex/1,
     lists_rand_get/1, lists_shuffle/1, lists_rand_get_n/2, list_to_hex/1,
     string_to_term/1, term_to_string/1
@@ -386,6 +386,19 @@ parse_information_unit(Value) when is_list(Value) ->
         nomatch ->
             % log error
             {error, parse_error}
+    end.
+
+
+-define(KIB, (1024)).
+-define(MIB, (?KIB * 1024)).
+-define(GIB, (?MIB * 1024)).
+format_memory_readable(Mem) ->
+    Mem0 = abs(Mem),
+    if
+        Mem0 > ?GIB -> io_lib:format("~.3fG", [Mem / ?GIB]);
+        Mem0 > ?MIB -> io_lib:format("~.3fM", [Mem / ?MIB]);
+        Mem0 > ?KIB -> io_lib:format("~.3fK", [Mem / ?KIB]);
+        Mem0 >= 0 -> io_lib:format("~.1fB", [Mem / 1.0])
     end.
 
 

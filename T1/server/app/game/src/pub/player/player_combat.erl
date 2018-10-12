@@ -34,6 +34,9 @@ online() ->
     end,
     ok.
 
+calc_combat_prop() -> ok.
+
+
 %%-------------------------------------------------------------------
 %% @todo 属性计算方式未定，暂时先这样
 change_combat_prop(AddList, MultiList) ->
@@ -45,9 +48,6 @@ change_combat_prop(AddList, MultiList, AddList_Del, MultiList_Del) ->
     player_pub:player_change_combat_prop_({Uid, AddList, MultiList, AddList_Del, MultiList_Del}),
     ok.
 
-
-
-calc_combat_prop() -> ok.
 
 
 
