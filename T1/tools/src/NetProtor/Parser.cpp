@@ -67,6 +67,7 @@ FieldContainerType MetaInfo::getContainerTypeByName( const std::string& name ) {
 	}
 }
 
+#define WAIT_MILIISECONDS 15000
 bool MetaInfo::cache( const MsgDefine& md ) {
 	//for ( const Field& f : md.fields ) {
 	//	bool validType = false;
@@ -107,13 +108,14 @@ bool MetaInfo::cache( const MsgDefine& md ) {
 		} else {
 			auto alias = cachedMsgDefine.find( f.typeName );
 			if ( alias == cachedMsgDefine.end() ) {
-				printf("***********************************************");
-				printf("WARNING unknown type %s\n", f.typeName.c_str() );
-				printf("WARNING unknown type %s\n", f.typeName.c_str());
-				printf("WARNING unknown type %s\n", f.typeName.c_str());
-				printf("WARNING unknown type %s\n", f.typeName.c_str());
-				printf("***********************************************");
-				Sleep(10000);
+				printf("\n***********************************************\n");
+				printf("WARNING unknown type %s.%s\n", md.name.c_str(), f.typeName.c_str() );
+				printf("WARNING unknown type %s.%s\n", md.name.c_str(), f.typeName.c_str());
+				printf("WARNING unknown type %s.%s\n", md.name.c_str(), f.typeName.c_str());
+				printf("WARNING unknown type %s.%s\n", md.name.c_str(), f.typeName.c_str());
+				printf("***********************************************\n");
+				printf("wait %d seconds continue\n", WAIT_MILIISECONDS/1000);
+				Sleep(WAIT_MILIISECONDS);
 				//continue;
 			}
 			df.typeName = f.typeName;
