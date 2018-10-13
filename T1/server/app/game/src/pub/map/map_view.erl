@@ -33,7 +33,7 @@
 
 
 
--define(VIS_KEY, map_vis_key__).
+-define(VIS_K, map_vis_k__).
 -define(VIS_W, map_vis_w__).
 -define(VIS_H, map_vis_h__).
 -define(CELL_SIZE, map_cell_size__).
@@ -471,11 +471,11 @@ get_vis_tile_around_index(VisTileIndex) ->
 
 %%-------------------------------------------------------------------
 get_vis_tile(VisTileIndex) ->
-    get({?VIS_KEY, VisTileIndex}).
+    get({?VIS_K, VisTileIndex}).
 
 %%-------------------------------------------------------------------
 set_vis_tile(VisTileIndex, VisTile) ->
-    put({?VIS_KEY, VisTileIndex}, VisTile).
+    put({?VIS_K, VisTileIndex}, VisTile).
 
 %%-------------------------------------------------------------------
 %%is_visible(_Self, _Target) -> true.
