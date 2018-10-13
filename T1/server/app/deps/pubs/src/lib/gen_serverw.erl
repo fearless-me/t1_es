@@ -18,7 +18,7 @@
 -include("logger.hrl").
 
 %% API
--export([set_timeline/2]).
+-export([set_timeline/2, pause_effective_monitor/1, continue_effective_monitor/2]).
 -export([start_link/1, start_link/2, start_link/3, start_link/4]).
 -export([start_link2/1, start_link2/2, start_link2/3, start_link2/4]).
 -export([init/1, handle_call/3, handle_cast/2, handle_info/2, terminate/2, code_change/3]).
@@ -49,13 +49,16 @@
 -optional_callbacks([on_terminate/2]).
 
 %% define
--define(LogicModule, myLogicModule).
--define(FULL_SWEEP, {fullsweep_after, 20}).
--define(FULL_SWEEP_OPTIONS, {spawn_opt,[?FULL_SWEEP]}).
--define(TimeLine, timeline).
--define(TIMELINE_MICROSECOND, 50000).
--define(TIMELINE_KEY, msg_deal_timer).
--define(TC(MFA, Msg), catch tc_start(), RetVal = MFA, catch  tc_end(Msg), RetVal ).
+-define(LogicModule,                        myLogicModule).
+-define(FULL_SWEEP,                         {fullsweep_after, 20}).
+-define(FULL_SWEEP_OPTIONS,                 {spawn_opt,[?FULL_SWEEP]}).
+-define(EFFECTIVE_MONITOR_GUARD,            effective_monitor_guard).
+-define(EFFECTIVE_MONITOR_MIN_MICROSECOND,  500000). %% 单位微秒
+-define(TIMELINE_KEY,                       msg_deal_timer).
+-define(TC(MFA, Msg), case i_need_effective_monitor() of
+                          0 -> MFA;
+                          _ -> catch tc_start(), RetVal = MFA, catch  tc_end(Msg), RetVal
+                      end).
 %% 假设帧率是 20MS那么是50个消息/client/秒, 服务50client，
 %% 那么每个消息  1000*1000/2500 = 400micro seconds
 %% 所以每个消息最大处理时间(micro seconds)= 100000 / ClientCount / 1000 / frame_time
@@ -95,21 +98,16 @@ start_link2(Module, Args, Options) ->
 start_link2(Name, Module, Args, Options) ->
     gen_server2:start_link(Name, ?MODULE, [Module, Args], sweep_options(Options)).
 
+%%--------------------------------------------------------------------
+
 set_timeline(Name, Microseconds) ->
     ps:send(Name, {set_timeline, Microseconds}).
 
-%%--------------------------------------------------------------------
-sweep_options(Options) ->
-    case lists:keyfind(spawn_opt, 1, Options) of
-    false -> [?FULL_SWEEP_OPTIONS | Options ];
-    {spawn_opt, SpawnOptions} ->  add_sweep_options(Options, SpawnOptions)
-    end.
+pause_effective_monitor(Name) ->
+    ps:send(Name, pause_effective_monitor).
 
-add_sweep_options(Options, SpawnOptions) ->
-    case lists:keyfind(fullsweep_after, 1, SpawnOptions) of
-        false -> lists:keyreplace(spawn_opt, 1, Options, {spawn_opt,[?FULL_SWEEP | SpawnOptions]});
-        _ ->  Options
-    end.
+continue_effective_monitor(Name, Microseconds) ->
+    ps:send(Name, continue_effective_monitor, Microseconds).
 
 %%--------------------------------------------------------------------
 %% @private
@@ -125,7 +123,8 @@ init(Args) ->
         [Module, ArgList] = Args,
         put(?LogicModule, Module),
         Ret = Module:mod_init(ArgList),
-        ?INFO("~p|~p|~p init ok", [misc:registered_name(), Module, self()]),
+        EffectiveMicroseconds = i_need_effective_monitor(),
+        ?INFO("~p|~p|~p|~p init ok", [misc:registered_name(), Module, self(), EffectiveMicroseconds]),
         Ret
     catch _ : Error : ST ->
         ?ERROR("module ~p,args ~p,error ~p,st ~p", [get(?LogicModule), Args, Error, ST]),
@@ -181,7 +180,13 @@ handle_cast(Request, State) ->
 %% @end
 %%--------------------------------------------------------------------
 handle_info({set_timeline, Microseconds}, State) ->
-    erlang:put(?TimeLine, Microseconds),
+    erlang:put(?EFFECTIVE_MONITOR_GUARD, Microseconds),
+    {noreply, State};
+handle_info(pause_effective_monitor, State) ->
+    put(?EFFECTIVE_MONITOR_GUARD, 0),
+    {noreply, State};
+handle_info({continue_effective_monitor, Microseconds}, State) ->
+    put(?EFFECTIVE_MONITOR_GUARD, Microseconds),
     {noreply, State};
 handle_info(Info, State) ->
     Module = get(?LogicModule),
@@ -208,6 +213,9 @@ terminate(Reason, State) ->
 %%--------------------------------------------------------------------
 code_change(_OldVsn, State, _Extra) -> {ok, State}.
 
+%%--------------------------------------------------------------------
+i_need_effective_monitor() ->
+    misc:get_dict_def(?EFFECTIVE_MONITOR_GUARD, 0).
 
 %%--------------------------------------------------------------------
 %%--------------------------------------------------------------------
@@ -215,7 +223,7 @@ tc_start() ->
     put(?TIMELINE_KEY,  misc_time:micro_seconds()).
 
 tc_end(Msg) ->
-    Td = misc:get_dict_def(?TimeLine, ?TIMELINE_MICROSECOND),
+    Td = misc:get_dict_def(?EFFECTIVE_MONITOR_GUARD, ?EFFECTIVE_MONITOR_MIN_MICROSECOND),
     Tf = case get(?TIMELINE_KEY) of
         undefine -> 0;
         StartTime -> misc_time:micro_seconds() - StartTime
@@ -236,3 +244,16 @@ i_tc_warn(Msg, Time, _) ->
             )
         end
     ).
+
+
+sweep_options(Options) ->
+    case lists:keyfind(spawn_opt, 1, Options) of
+        false -> [?FULL_SWEEP_OPTIONS | Options ];
+        {spawn_opt, SpawnOptions} ->  add_sweep_options(Options, SpawnOptions)
+    end.
+
+add_sweep_options(Options, SpawnOptions) ->
+    case lists:keyfind(fullsweep_after, 1, SpawnOptions) of
+        false -> lists:keyreplace(spawn_opt, 1, Options, {spawn_opt,[?FULL_SWEEP | SpawnOptions]});
+        _ ->  Options
+    end.

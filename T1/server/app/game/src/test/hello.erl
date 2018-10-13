@@ -12,20 +12,30 @@
 -behaviour(gen_serverw).
 -include("logger.hrl").
 
--define(MAX_OBJ, 350).
+-define(MAX_OBJ, 3500).
 
 
 
 %% API
--export([start_link/0]).
+-export([start/0, stop/0, restart/0, run/1]).
 -export([mod_init/1, do_handle_call/3, do_handle_info/2, do_handle_cast/2]).
 
 %%%===================================================================
 %%% public functions
 %%%===================================================================
-start_link() ->
+start() ->
     gen_serverw:start_link({local, ?MODULE}, ?MODULE, [],
         [{spawn_opt, [{min_heap_size, 1024 * 1024}]}]).
+
+stop()->
+    gen_server:stop(?MODULE).
+
+restart() ->
+    catch hello:stop(),
+    hello:start().
+
+run(Cmd) ->
+    ps:send(?MODULE, Cmd).
 
 %%%===================================================================
 %%% Internal functions
@@ -36,6 +46,7 @@ mod_init(_Args) ->
     
     tick_msg(),
     init_data(?MAX_OBJ),
+    gen_serverw:continue_effective_monitor(self(), 500000),
     {ok, ok}.
 
 
