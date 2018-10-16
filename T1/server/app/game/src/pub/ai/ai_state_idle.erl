@@ -8,6 +8,7 @@
 %%%-------------------------------------------------------------------
 -module(ai_state_idle).
 -author("mawenhong").
+-include("rec_rw.hrl").
 
 %% API
 -export([on_enter/1, on_exit/1, update/1, on_event/2]).
@@ -17,9 +18,14 @@ on_enter(Uid) ->
     mod_ai:clear_all_enmity(Uid),
     mod_ai:reset_patrol_tick(Uid),
     mod_ai:reset_look_for_target_tick(Uid),
-    ai_rw:set_is_patrol(Uid, false),
-    ai_rw:set_is_reverse_patrol(Uid, false),
-    ai_rw:set_enter_combat_time(Uid, 0),
+    object_rw:set_fields(
+        Uid,
+        [
+            {#m_object_rw.ai_is_patrol, false},
+            {#m_object_rw.ai_is_reverse_patrol, false},
+            {#m_object_rw.ai_enter_combat_time, 0}
+        ]
+    ),
     ok.
 
 %%-------------------------------------------------------------------

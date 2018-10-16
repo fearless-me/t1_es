@@ -56,6 +56,16 @@ decode(?GS2U_DeleteBuff,Bin0) ->
 		},
 	Bin2 };
 
+%GENERATED from file:combat.h => GS2U_DeleteBuffList
+decode(?GS2U_DeleteBuffList,Bin0) ->
+	{ V_uid, Bin1 } = read_uint64( Bin0 ),
+	{ V_buff_id_list, Bin2 } = read_array(Bin1, fun(X) -> read_uint32( X ) end),
+	{ #pk_GS2U_DeleteBuffList {
+		uid = V_uid,
+		buff_id_list = V_buff_id_list
+		},
+	Bin2 };
+
 %GENERATED from file:combat.h => GS2U_HPChange
 decode(?GS2U_HPChange,Bin0) ->
 	{ V_uid, Bin1 } = read_uint64( Bin0 ),
@@ -125,6 +135,16 @@ decode(?GS2U_UpdateBuff,Bin0) ->
 	{ #pk_GS2U_UpdateBuff {
 		uid = V_uid,
 		buff = V_buff
+		},
+	Bin2 };
+
+%GENERATED from file:combat.h => GS2U_UpdateBuffList
+decode(?GS2U_UpdateBuffList,Bin0) ->
+	{ V_uid, Bin1 } = read_uint64( Bin0 ),
+	{ V_buff_list, Bin2 } = read_array(Bin1, fun(X) -> decode_BuffInfo( X ) end),
+	{ #pk_GS2U_UpdateBuffList {
+		uid = V_uid,
+		buff_list = V_buff_list
 		},
 	Bin2 };
 
@@ -698,6 +718,16 @@ encode(#pk_GS2U_DeleteBuff{} = P) ->
 		Bin_buff_id
 	];
 
+%GENERATED from file:combat.h => GS2U_DeleteBuffList
+encode(#pk_GS2U_DeleteBuffList{} = P) ->
+	Bin_uid = write_uint64( P#pk_GS2U_DeleteBuffList.uid ),
+	Bin_buff_id_list = write_array(P#pk_GS2U_DeleteBuffList.buff_id_list, fun(X) -> write_uint32( X ) end),
+	[
+		<<?GS2U_DeleteBuffList:?U16>>,
+		Bin_uid,
+		Bin_buff_id_list
+	];
+
 %GENERATED from file:combat.h => GS2U_HPChange
 encode(#pk_GS2U_HPChange{} = P) ->
 	Bin_uid = write_uint64( P#pk_GS2U_HPChange.uid ),
@@ -768,6 +798,16 @@ encode(#pk_GS2U_UpdateBuff{} = P) ->
 		<<?GS2U_UpdateBuff:?U16>>,
 		Bin_uid,
 		Bin_buff
+	];
+
+%GENERATED from file:combat.h => GS2U_UpdateBuffList
+encode(#pk_GS2U_UpdateBuffList{} = P) ->
+	Bin_uid = write_uint64( P#pk_GS2U_UpdateBuffList.uid ),
+	Bin_buff_list = write_array(P#pk_GS2U_UpdateBuffList.buff_list, fun(X) -> encode_BuffInfo( X ) end),
+	[
+		<<?GS2U_UpdateBuffList:?U16>>,
+		Bin_uid,
+		Bin_buff_list
 	];
 
 %GENERATED from file:combat.h => GS2U_UseSkill
@@ -1313,11 +1353,13 @@ encode_LookInfoPlayer( #pk_LookInfoPlayer{} = P ) ->
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 name(?GS2U_AddBuff) -> "GS2U_AddBuff";
 name(?GS2U_DeleteBuff) -> "GS2U_DeleteBuff";
+name(?GS2U_DeleteBuffList) -> "GS2U_DeleteBuffList";
 name(?GS2U_HPChange) -> "GS2U_HPChange";
 name(?GS2U_HitTarget) -> "GS2U_HitTarget";
 name(?GS2U_SkillInterrupt) -> "GS2U_SkillInterrupt";
 name(?GS2U_SpecialMove) -> "GS2U_SpecialMove";
 name(?GS2U_UpdateBuff) -> "GS2U_UpdateBuff";
+name(?GS2U_UpdateBuffList) -> "GS2U_UpdateBuffList";
 name(?GS2U_UseSkill) -> "GS2U_UseSkill";
 name(?U2GS_DeleteBuff) -> "U2GS_DeleteBuff";
 name(?U2GS_SkillInterrupt) -> "U2GS_SkillInterrupt";
@@ -1360,11 +1402,13 @@ cmd_list()->
 	[
 		?GS2U_AddBuff
 		,?GS2U_DeleteBuff
+		,?GS2U_DeleteBuffList
 		,?GS2U_HPChange
 		,?GS2U_HitTarget
 		,?GS2U_SkillInterrupt
 		,?GS2U_SpecialMove
 		,?GS2U_UpdateBuff
+		,?GS2U_UpdateBuffList
 		,?GS2U_UseSkill
 		,?U2GS_DeleteBuff
 		,?U2GS_SkillInterrupt

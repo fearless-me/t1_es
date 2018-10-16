@@ -36,6 +36,15 @@
 }).
 
 %% 
+-define(GS2U_DeleteBuffList,29368).
+-record(pk_GS2U_DeleteBuffList,{
+	%% UInt64 角色ID
+	uid = 0,
+	%% UInt32 buff id list
+	buff_id_list = []
+}).
+
+%% 
 %% // 血量变化
 -define(GS2U_HPChange,51252).
 -record(pk_GS2U_HPChange,{
@@ -105,6 +114,15 @@
 	uid = 0,
 	%% BuffInfo buff	
 	buff
+}).
+
+%% 
+-define(GS2U_UpdateBuffList,60642).
+-record(pk_GS2U_UpdateBuffList,{
+	%% UInt64 角色ID
+	uid = 0,
+	%% BuffInfo buff	
+	buff_list = []
 }).
 
 %% 

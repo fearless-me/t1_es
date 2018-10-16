@@ -8,12 +8,13 @@
 %%%-------------------------------------------------------------------
 -module(map_view).
 -author("mawenhong").
-
+-include_lib("stdlib/include/assert.hrl").
 -include("logger.hrl").
 -include("pub_def.hrl").
 -include("map_core.hrl").
 -include("netmsg.hrl").
--include_lib("stdlib/include/assert.hrl").
+-include("rec_rw.hrl").
+
 
 %% API
 -export([
@@ -41,7 +42,7 @@
 sync_player_join_group(Uid, Group) ->
     %1.
     Obj = map_rw:get_player(Uid),
-    Index = pos_to_vis_index(object_rw:get_cur_pos(Uid), get(?VIS_W), ?VIS_DIST),
+    Index = pos_to_vis_index(object_rw:get_field(Uid, #m_object_rw.cur_pos), get(?VIS_W), ?VIS_DIST),
     
     %2.
     ?TRY_CATCH(del_obj_from_vis_tile(Obj, Index)),
@@ -51,7 +52,7 @@ sync_player_join_group(Uid, Group) ->
     sync_del_obj(Obj, Tiles),
     
     %% 4
-    object_rw:set_group(Uid, Group),
+    object_rw:set_field(Uid, #m_object_rw.group, Group),
     
     %% 5
     sync_add_obj(Obj, Tiles),
@@ -62,7 +63,7 @@ sync_player_join_group(Uid, Group) ->
 sync_player_join_map(Obj) ->
     %1.
     Uid = object_core:get_uid(Obj),
-    Pos = object_rw:get_cur_pos(Uid),
+    Pos = object_rw:get_field(Uid, #m_object_rw.cur_pos),
     Index = pos_to_vis_index(Pos, get(?VIS_W), ?VIS_DIST),
     Tiles = get_vis_tile_around(Index),
     
@@ -75,7 +76,7 @@ sync_player_join_map(Obj) ->
 sync_player_exit_map(Obj) ->
     %1.
     Uid = object_core:get_uid(Obj),
-    Index = pos_to_vis_index(object_rw:get_cur_pos(Uid), get(?VIS_W), ?VIS_DIST),
+    Index = pos_to_vis_index(object_rw:get_field(Uid, #m_object_rw.cur_pos), get(?VIS_W), ?VIS_DIST),
     
     %2.
     ?TRY_CATCH(del_obj_from_vis_tile(Obj, Index)),
@@ -118,16 +119,16 @@ init_vis_tile_1(X) ->
 
 %%-------------------------------------------------------------------
 send_net_msg_to_visual(Uid, NetMsg) ->
-    Group = object_rw:get_group(Uid),
-    VisTileIndex = object_rw:get_vis_tile_idx(Uid),
+    Group = object_rw:get_field(Uid, #m_object_rw.group),
+    VisTileIndex = object_rw:get_field(Uid, #m_object_rw.vis_tile_idx),
     VisTileList = get_vis_tile_around(VisTileIndex),
     send_net_msg_to_big_visual_with_group(VisTileList, NetMsg, Group),
     ok.
 
 %%-------------------------------------------------------------------
 send_msg_to_visual(Uid, MsgId) ->
-    Group = object_rw:get_group(Uid),
-    VisTileIndex = object_rw:get_vis_tile_idx(Uid),
+    Group = object_rw:get_field(Uid, #m_object_rw.group),
+    VisTileIndex = object_rw:get_field(Uid, #m_object_rw.vis_tile_idx),
     VisTileList = get_vis_tile_around(VisTileIndex),
     send_msg_to_big_visual_with_group(VisTileList, MsgId, Group),
     ok.
@@ -135,8 +136,8 @@ send_msg_to_visual(Uid, MsgId) ->
 
 %%-------------------------------------------------------------------
 send_msg_to_visual(Uid, MsgId, Msg) ->
-    Group = object_rw:get_group(Uid),
-    VisTileIndex = object_rw:get_vis_tile_idx(Uid),
+    Group = object_rw:get_field(Uid, #m_object_rw.group),
+    VisTileIndex = object_rw:get_field(Uid, #m_object_rw.vis_tile_idx),
     VisTileList = get_vis_tile_around(VisTileIndex),
     send_msg_to_big_visual_with_group(VisTileList, MsgId, Msg, Group),
     ok.
@@ -145,8 +146,8 @@ send_msg_to_visual(Uid, MsgId, Msg) ->
 %% 开始移动广播
 sync_movement_to_big_visual_tile(Uid) ->
     Msg = mod_move:cal_move_msg(Uid),
-    Group = object_rw:get_group(Uid),
-    VisTileIndex = object_rw:get_vis_tile_idx(Uid),
+    Group = object_rw:get_field(Uid, #m_object_rw.group),
+    VisTileIndex = object_rw:get_field(Uid, #m_object_rw.vis_tile_idx),
     sync_movement_to_big_visual_tile(VisTileIndex, Msg, Group),
     ok.
 
@@ -170,7 +171,7 @@ send_net_msg_to_big_visual_with_group(VisTileList, Msg, Group) ->
             (UidList) ->
                 lists:foreach(
                     fun(Uid) ->
-                        case object_rw:get_group(Uid) =:= Group of
+                        case object_rw:get_field(Uid, #m_object_rw.group) =:= Group of
                             true -> gs_interface:send_net_msg(Uid, Msg);
                             _Any -> skip
                         end
@@ -193,7 +194,7 @@ send_msg_to_big_visual_with_group(VisTileList, MsgId, Group) ->
         fun(UidList) ->
             lists:foreach(
                 fun(Uid) ->
-                    case object_rw:get_group(Uid) =:= Group of
+                    case object_rw:get_field(Uid, #m_object_rw.group) =:= Group of
                         true -> gs_interface:send_msg(Uid, MsgId);
                         _Any -> skip
                     end
@@ -212,7 +213,7 @@ send_msg_to_big_visual_with_group(VisTileList, MsgId, Msg, Group) ->
         fun(UidList) ->
             lists:foreach(
                 fun(Uid) ->
-                    case object_rw:get_group(Uid) =:= Group of
+                    case object_rw:get_field(Uid, #m_object_rw.group) =:= Group of
                         true -> gs_interface:send_msg(Uid, MsgId, Msg);
                         _Any -> skip
                     end
@@ -353,10 +354,10 @@ do_sync_big_vis_tile_to_me(?OBJ_PLAYER, Uid, VisTileList, del_all) ->
     end,
     ok;
 do_sync_big_vis_tile_to_me(?OBJ_PLAYER, TarUid, VisTileList, add_all) ->
-    MeGroupId = object_rw:get_group(TarUid),
+    MeGroupId = object_rw:get_field(TarUid, #m_object_rw.group),
     FC =
         fun(Uid) ->
-            case object_rw:get_group(Uid) =:= MeGroupId of
+            case object_rw:get_field(Uid, #m_object_rw.group) =:= MeGroupId of
                 true ->
                     Msg = mod_move:cal_move_msg(Uid),
                     if
@@ -408,13 +409,13 @@ do_sync_big_vis_tile_to_me(_Type, _Uid, _VisTileList, _Msg) -> skip.
 sync_me_to_big_vis_tile(Obj, VisTileList, del_me) ->
     Uid = object_core:get_uid(Obj),
     Msg = #pk_GS2U_RemoveRemote{uid_list = [Uid]},
-    Group = object_rw:get_group(Uid),
+    Group = object_rw:get_field(Uid, #m_object_rw.group),
     send_net_msg_to_big_visual_with_group(VisTileList, Msg, Group),
     ok;
 sync_me_to_big_vis_tile(Obj, VisTileList, add_me) ->
     Uid = object_core:get_uid(Obj),
     Msg = mod_move:cal_move_msg(Uid),
-    Group = object_rw:get_group(Uid),
+    Group = object_rw:get_field(Uid, #m_object_rw.group),
     send_net_msg_to_big_visual_with_group(VisTileList, Msg, Group),
     ok.
 %%-------------------------------------------------------------------

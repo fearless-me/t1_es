@@ -124,74 +124,61 @@ test() ->
     ok.
 
 endcode_decode_test() ->
-    SignedList = [
-        -9223372036854775808, -2147483648, -32768, -128, -256, -1,
+    Int32List = [-2147483648, -32768, -128, -256, -1,
+        0, 1, 100, 127, 128, 255, 256,
+        16#4000 - 1, 16#4000, 16#200000 - 1, 16#200000, 16#10000000 - 1,
+        16#10000000, 2147483647],
+    Int64List = [-9223372036854775808, -2147483648, -32768, -128, -256, -1,
         0, 1, 100, 127, 128, 255, 256,
         16#4000 - 1, 16#4000, 16#200000 - 1, 16#200000, 16#10000000 - 1,
         16#10000000, 2147483647, 9223372036854775807],
     
-    UnsignedList = [0, 1, 100, 127, 128, 255, 256, 16#4000 - 1, 16#4000, 16#200000 - 1, 16#200000, 16#10000000 - 1, 16#10000000, 16#ffffffff, 16#FFFFFFFFFFFFFFFF],
+    Uint32List = [0, 1, 100, 127, 128, 255, 256, 16#4000 - 1, 16#4000, 16#200000 - 1, 16#200000, 16#10000000 - 1, 16#10000000, 16#ffffffff],
+    Uint64List = [0, 1, 100, 127, 128, 255, 256, 16#4000 - 1, 16#4000, 16#200000 - 1, 16#200000, 16#10000000 - 1, 16#10000000, 16#ffffffff, 16#FFFFFFFFFFFFFFFF],
     
     FloatList =
         [
-            92233720368547758.07,
+            92233720368547751.9,
             92233720368.54775807, 9999999999.99, 1111.11111,
-            100.0098, 3.1415927, 1.1, 1.0, 0.0, -1.1, -3.1415927, -1111.11111, -92233720368.54775807, -92233720368547758.08
+            100.0098, 3.1415927, 1.1, 1.0, 0.0, -1.1, -3.1415927, -1111.11111, -92233720368.54775807, -92233720368547751.08
         ],
     
-    color:warn_log("signed encode ... "),
-    lists:foreach(fun(X) -> ed_proc(X) end, SignedList),
+    color:warn_log("~n****int32 encode****~n"),
+    lists:foreach(fun(X) -> ed_proc(X, fun encode_int32/1, fun decode_int32/1, fun check_integer/2) end, Int32List),
     
-    color:warn_log("unsigned encode ... "),
-    lists:foreach(fun(X) -> ed_proc(X) end, UnsignedList),
+    color:warn_log("~n****int64 encode****~n"),
+    lists:foreach(fun(X) -> ed_proc(X, fun encode_int64/1, fun decode_int64/1, fun check_integer/2) end, Int64List),
     
-    color:warn_log("float encode ... "),
+    color:warn_log("~n****uint32 encode****~n"),
+    lists:foreach(fun(X) -> ed_proc(X, fun encode_uint32/1, fun decode_uint32/1, fun check_integer/2) end, Uint32List),
+    
+    color:warn_log("~n****uint64 encode****~n"),
+    lists:foreach(fun(X) -> ed_proc(X, fun encode_uint64/1, fun decode_uint64/1, fun check_integer/2) end, Uint64List),
+    
+    color:warn_log("~n****float encode****~n"),
     lists:foreach(
         fun(Original) ->
-            Bin =
-                case catch encode_from_float(Original) of
-                    {'EXIT', _} -> <<0>>;
-                    B -> B
-                end,
-            {DValue, _} = case catch decode_to_float(Bin) of
-                              {'EXIT',_} -> error;
-                              V -> V
-                          end,
-            EValue = erlang:trunc(Original * ?PRECISION) / ?PRECISION,
-            case  EValue =:= DValue of
-                true -> color:info_log("~p ~p == ~p, ~p~n",     [Original, EValue, DValue, Bin]);
-                _Any -> color:error_log("~p ~p =/= ~p, ~p~n",   [Original, EValue, DValue, Bin])
-            end
+            ed_proc(Original, fun encode_from_float/1, fun decode_to_float/1, fun check_float/2)
         end, FloatList),
     ok.
 
 
-ed_proc(Original) ->
-    {DValue, Bin} = ed_test(Original),
-    case Original =:= DValue of
+ed_proc(Original, EncodeFunc, DecodeFun, CheckFun) ->
+    Bin = EncodeFunc(Original),
+    {DValue, _} = DecodeFun(Bin),
+    case CheckFun(Original,DValue) of
         true ->
-            color:info_log("~p == ~p, ~p~n", [Original, DValue, Bin]);
+            color:info_log("~p == ~p, ~w~n", [Original, DValue, Bin]);
         _Any ->
-            color:error_log("~p =/= ~p, ~p~n", [Original, DValue, Bin])
+            color:error_log("~p =/= ~p, ~w~n", [Original, DValue, Bin])
     end.
 
+check_integer(Original,DecodeValue) ->
+    Original =:=  DecodeValue.
 
-%% int32
-ed_test(X) when X >= ?INT32_MIN, X =< ?INT32_MAX ->
-    Bin = encode_int32(X),
-    decode_int32(Bin);
-%% uint32
-ed_test(X) when X >= 0, X =< ?UINT32_MAX ->
-    Bin = encode_uint32(X),
-    decode_uint32(Bin);
-%% int64
-ed_test(X) when X >= ?INT64_MIN, X =< ?INT64_MAX ->
-    Bin = encode_int64(X),
-    decode_int64(Bin);
-%% uint64
-ed_test(X) when X >= 0, X =< ?UINT64_MAX ->
-    Bin = encode_uint64(X),
-    decode_uint64(Bin).
+check_float(Original, DecodeValue) ->
+    EValue = erlang:trunc(Original * ?PRECISION) / ?PRECISION,
+    EValue =:= DecodeValue.
 
 encode_zigzag_test() ->
     0 = encode_zigzag(0),

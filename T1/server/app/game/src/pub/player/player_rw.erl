@@ -4,6 +4,7 @@
 %%% This File Is AUTO GENERATED, Don't Modify it MANUALLY!!!
 %%-------------------------------------------------------------------
 -module(player_rw).
+-author("Hello World").
 
 %%-------------------------------------------------------------------
 -include("logger.hrl").

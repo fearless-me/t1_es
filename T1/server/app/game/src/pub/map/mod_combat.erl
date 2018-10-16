@@ -15,6 +15,7 @@
 -include("gs_common_rec.hrl").
 -include("map_core.hrl").
 -include("combat.hrl").
+-include("rec_rw.hrl").
 -include("cfg_skill.hrl").
 
 %% 瞬发技能放完就结束
@@ -47,7 +48,7 @@ use_skill(Aer, Der, SkillId, Serial) ->
     %% 根据类型
     SkillOpType = ?SKILL_OP_CHANNEL,
     
-    object_rw:set_skill_serial(Aer, Serial),
+    object_rw:set_field(Aer, #m_object_rw.skill_serial, Serial),
     use_skill_dispatcher(SkillOpType, Aer, TarUid, SkillId, Serial),
     ?DEBUG("~p use skill ~p tar ~p", [Aer, Der, SkillId]),
     ok.
@@ -61,7 +62,7 @@ use_skill_dispatcher(?SKILL_OP_SPELL, Aer, Tar, SkillId, Serial) ->
 
 %% todo 引导类型技能
 channel_skill(Aer, Tar, SkillId, Serial) ->
-    active_skill_once(Aer, Tar, object_rw:get_cur_pos(Tar), SkillId, Serial),
+    active_skill_once(Aer, Tar, object_rw:get_field(Tar, #m_object_rw.cur_pos), SkillId, Serial),
     ok.
 
 %% todo 吟唱技能
@@ -70,7 +71,7 @@ spell_skill(_Aer, _Tar, _SkillId, _Serial) ->
 
 %% todo 瞬发技能
 instant_skill(Aer, Tar, SkillId, Serial) ->
-    active_skill_once(Aer, Tar, object_rw:get_cur_pos(Tar), SkillId, Serial),
+    active_skill_once(Aer, Tar, object_rw:get_field(Tar, #m_object_rw.cur_pos), SkillId, Serial),
     ok.
 
 active_skill_once(Aer, Tar, Pos, SkillId, Serial) ->
@@ -118,7 +119,20 @@ calculate_skill_effect(_Uid, _SkillId, _TarUid) ->
 
 %%-------------------------------------------------------------------
 end_use_skill(Uid) ->
-    object_rw:init_default(Uid),
+    object_rw:set_fields(
+        Uid,
+        [
+            {#m_object_rw.skill_id, 0},
+            {#m_object_rw.target_uid, 0},
+            {#m_object_rw.skill_serial, 0},
+            {#m_object_rw.persist_pos, vector3:new()},
+            {#m_object_rw.cur_dmg_index,0},
+            {#m_object_rw.operate_time, 0},
+            {#m_object_rw.spell_time, 0},
+            {#m_object_rw.channel_cd, 0},
+            {#m_object_rw.skill_queue, []}
+        ]
+    ),
     ok.
 
 interrupt_skill(Uid) ->
@@ -134,7 +148,7 @@ tick(Obj) ->
 
 %%todo 引导技能、吟唱技能
 tick_cur_skill(#m_cache_map_object{uid = Uid}) ->
-    CurSkillId = object_rw:get_skill_id(Uid),
+    CurSkillId = object_rw:get_field(Uid, #m_object_rw.skill_id),
     do_tick_cur_skill(Uid, CurSkillId),
     ok.
 
@@ -142,13 +156,13 @@ do_tick_cur_skill(_Uid, 0) ->
     ok;
 do_tick_cur_skill(Uid, SkillId) ->
     ?WARN("uid ~p tick skill ~p", [Uid, SkillId]),
-    Serial = object_rw:get_skill_serial(Uid),
-    OpTime0 = object_rw:get_operate_time_def(Uid, 0),
+    Serial = object_rw:get_field(Uid, #m_object_rw.skill_serial),
+    OpTime0 = object_rw:get_field(Uid, #m_object_rw.operate_time, 0),
     OpTime1 = OpTime0 + ?MAP_TICK,
-    object_rw:set_operate_time(Uid, OpTime1),
+    object_rw:set_field(Uid, #m_object_rw.operate_time, OpTime1),
     case can_skill_active_tick(Uid, SkillId) of
         true ->
-            Pos = object_rw:get_persist_pos(Uid),
+            Pos = object_rw:get_field(Uid, #m_object_rw.persist_pos),
             ?TRY_CATCH(trigger_cast_tick_event(Uid, Uid, SkillId)),
             ?TRY_CATCH(active_skill_once(Uid, Uid, Pos, SkillId, Serial), Err1, Stk1),
             ?TRY_CATCH(check_end_skill_tick(Uid, SkillId), Err2, Stk2),
@@ -164,16 +178,16 @@ can_skill_active_tick(_Uid, _SkillId) ->
     true.
 
 check_end_skill_tick(Uid, _SkillId) ->
-    _OpTime = object_rw:get_operate_time(Uid),
+    _OpTime = object_rw:get_field(Uid, #m_object_rw.operate_time),
     %% todo 到达最大时间? 到达最大次数?
     end_use_skill(Uid).
 
 %%todo 放完就不管的，但是要持续生效的技能
 %%todo 创建了一个 OBJ_STATIC
 tick_skill_queue(#m_cache_map_object{uid = Uid}) ->
-    Queue0 = object_rw:get_skill_queue(Uid),
+    Queue0 = object_rw:get_field(Uid, #m_object_rw.skill_queue),
     Queue1 = tick_skill_queue(Uid, Queue0, []),
-    object_rw:set_skill_queue(Uid, Queue1),
+    object_rw:set_field(Uid, #m_object_rw.skill_queue, Queue1),
     ok.
 
 tick_skill_queue(_Uid, [], Acc) -> Acc;
@@ -218,7 +232,7 @@ can_ai_use_skill(_Aer) ->
 
 
 is_using_skill(Aer) ->
-    object_rw:get_skill_id(Aer) > 0.
+    object_rw:get_field(Aer, #m_object_rw.skill_id, 0) > 0.
 
 
 %%

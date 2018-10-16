@@ -10,7 +10,7 @@
 -author("mawenhong").
 -include("map_core.hrl").
 -include("gs_cache.hrl").
-
+-include("rec_rw.hrl").
 -include("movement.hrl").
 
 %%
@@ -24,6 +24,7 @@
 ]).
 
 -export([
+    get_detail_ets/0, 
     get_obj_maps/1,
     get_player_map/0, get_monster_map/0, get_npc_map/0, get_pet_map/0,
     set_player_map/1, set_monster_map/1, set_npc_map/1, set_pet_map/1
@@ -42,6 +43,7 @@
 -define(MAP_PLAYER_MAPS, player_maps).
 -define(MAP_NPC_MAPS, pet_maps).
 -define(MAP_PET_MAPS, pet_maps).
+-define(MAP_OBJ_ETS, map_obj_ets).
 -define(MAP_ID, map_id__).
 -define(LINE_ID, line_id__).
 -define(MAP_HOOK, map_hook__).
@@ -58,10 +60,15 @@ init(State) ->
     set_monster_map(#{}),
     set_pet_map(#{}),
     set_npc_map(#{}),
+    set_detail_ets(State#m_map_state.ets),
     ok.
 
+
+set_detail_ets(Ets) -> erlang:put(?MAP_OBJ_ETS, Ets).
+get_detail_ets( ) -> erlang:get(?MAP_OBJ_ETS).
+
 get_obj_maps(Uid) ->
-    Type = object_rw:get_type(Uid),
+    Type = object_rw:get_field(Uid, #m_object_rw.type),
     case Type of
         ?OBJ_PLAYER -> get_player_map();
         ?OBJ_MON -> get_monster_map();
@@ -91,7 +98,7 @@ get_map_hook() -> get(?MAP_HOOK).
 
 %%-------------------------------------------------------------------
 get_unit(Uid) ->
-    Type = object_rw:get_type(Uid),
+    Type = object_rw:get_field(Uid, #m_object_rw.type),
     case Type of
         ?OBJ_PLAYER -> get_player(Uid);
         ?OBJ_MON -> get_monster(Uid);

@@ -43,16 +43,16 @@ run_halt([run_from_scripts_ket]) ->
 
 run() ->
     try
-        multi_to_code(
-            "..\\src\\pub\\map\\object_rw.erl",
-            object_rw,
-            [
-                ["logger.hrl", "pub_def.hrl", "rec_rw.hrl"],
-                [
-                    {m_object_rw, record_info(fields, m_object_rw), [], ["Uid"], "hook_map:on_rw_update"}
-                ]
-            ]
-        ),
+%%        multi_to_code(
+%%            "..\\src\\pub\\map\\object_rw.erl",
+%%            object_rw,
+%%            [
+%%                ["logger.hrl", "pub_def.hrl", "rec_rw.hrl"],
+%%                [
+%%                    {m_object_rw, record_info(fields, m_object_rw), [], ["Uid"], "hook_map:on_rw_update"}
+%%                ]
+%%            ]
+%%        ),
 %%        multi_to_code(
 %%            "..\\src\\pub\\map\\combat_rw.erl",
 %%            combat_rw,
@@ -83,16 +83,16 @@ run() ->
 %%                ]
 %%            ]
 %%        ),
-        multi_to_code(
-            "..\\src\\pub\\map\\ai_rw.erl",
-            ai_rw,
-            [
-                ["logger.hrl", "pub_def.hrl", "ai.hrl", "rec_rw.hrl"],
-                [
-                    {m_ai_rw, record_info(fields, m_ai_rw), [], ["Uid"], []}
-                ]
-            ]
-        ),
+%%        multi_to_code(
+%%            "..\\src\\pub\\map\\ai_rw.erl",
+%%            ai_rw,
+%%            [
+%%                ["logger.hrl", "pub_def.hrl", "ai.hrl", "rec_rw.hrl"],
+%%                [
+%%                    {m_ai_rw, record_info(fields, m_ai_rw), [], ["Uid"], []}
+%%                ]
+%%            ]
+%%        ),
         multi_to_code(
             "..\\src\\pub\\player\\player_rw.erl",
             player_rw,
@@ -117,7 +117,8 @@ multi_to_code(Fname, ModName, [IncFiles, Cfgs]) ->
     write_file(Fname, "~ts", [?HEADER_SEC]),
     write_file(Fname, "~ts", [?SPLIT_LINE]),
     
-    write_file(Fname, "-module(~p).~n~n", [ModName]),
+    write_file(Fname, "-module(~p).~n", [ModName]),
+    write_file(Fname, "-author(~p).~n~n", ["Hello World"]),
     write_file(Fname, "~ts", [?SPLIT_LINE]),
     
     inc_files(Fname, IncFiles),

@@ -14,6 +14,7 @@
 -include("gs_cache.hrl").
 -include("cfg_monster.hrl").
 -include("ai.hrl").
+-include("rec_rw.hrl").
 
 %% API
 -export([
@@ -42,8 +43,14 @@ new_player(Pid, Uid, Group, Pos, Face) ->
     init_rw_default(Uid),
     AttrList = gs_cache_interface:read_online_player_element(Uid, #m_cache_online_player.attr),
     BuffList = gs_cache_interface:read_online_player_element(Uid, #m_cache_online_player.buff_list),
-    object_rw:set_attr_direct(Uid, AttrList),
-    object_rw:set_buff_list_direct(Uid, BuffList),
+    object_rw:set_fields_direct(
+        Uid,
+        [
+            {#m_object_rw.attr, AttrList},
+            {#m_object_rw.buff_list, BuffList}
+        ]
+    ),
+
     new(?OBJ_PLAYER, Pid, Uid, 0, 0, Group, Pos, Face).
 
 del_player(Uid) ->
@@ -89,10 +96,16 @@ del_monster(Uid) ->
 %%-------------------------------------------------------------------
 new(Type, Pid, Uid, Did, Owner, Group, Pos, Face) ->
     mod_move:init(Uid, Pos, Face),
-    object_rw:set_data_id(Uid, Did),
-    object_rw:set_group(Uid, Group),
-    object_rw:set_pid(Uid, Pid),
-    object_rw:set_type(Uid, Type),
+    
+    object_rw:set_fields(
+        Uid,
+        [
+            {#m_object_rw.data_id, Did},
+            {#m_object_rw.group, Group},
+            {#m_object_rw.pid, Pid},
+            {#m_object_rw.type, Type}
+        ]
+    ),
     
     #m_cache_map_object{
         map_id = map_rw:get_map_id(),
@@ -105,16 +118,12 @@ new(Type, Pid, Uid, Did, Owner, Group, Pos, Face) ->
 %%-------------------------------------------------------------------
 %%-------------------------------------------------------------------
 init_rw_default(Uid) ->
-    ai_rw:init_default(Uid),
-    object_rw:init_default(Uid),
-    attr_rw:init_default(Uid),
+    object_rw:init(Uid),
     ?WARN("init_rw_default(~p)", [Uid]),
     ok.
 
 del_all_rw(Uid) ->
-    ai_rw:del(Uid),
     object_rw:del(Uid),
-    attr_rw:del(Uid),
     ?WARN("del_all_rw(~p)", [Uid]),
     ok.
 

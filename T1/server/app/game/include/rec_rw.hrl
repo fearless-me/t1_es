@@ -30,6 +30,7 @@
 -record(m_object_rw, {
     %%-------------------------------------------------------------------
     %% 基础信息
+    uid = 0,
     pid = 0, data_id = 0, group = 0, owner = 0, type = 0,
     
     %%-------------------------------------------------------------------
@@ -52,8 +53,32 @@
     channel_cd = 0,
     %%
     skill_queue = [],
-    hp = 1, max_hp = 1, attr = [], buff_list = []
+    hp = 1, max_hp = 1, attr = [], buff_list = [],
     
+    %%-------------------------------------------------------------------
+    %% AI相关
+    ai_state = 0, pre_ai_state = 0, ai_transition = 1,
+    ai_triggers = [], ai_pause = false,
+    %
+    ai_id = 0,
+    %idle & 巡逻
+    % 巡逻路径， 路径点数， 当前点索引， 是否反向巡逻 ，是否正在巡逻
+    ai_wp_list = [], ai_wp_num = 0, ai_wp_idx = 1, ai_is_reverse_patrol = false, ai_is_patrol = false,
+    % 开始巡逻等待tick 、索敌等待tick
+    ai_patrol_rest_tick = 0, ai_look_for_target_tick = 0,
+    % pursue & attack
+    % 追击目标点 、追击失败 、不能追击、检查追击tick
+    ai_pursue_tar_pos, ai_pursue_failed = false, ai_cant_pursue = false, ai_check_pursue_tick = 10,
+    % 当前目标  、进入战斗的时间、进入战斗的坐标、当前使用的技能、下次攻击等待tick， 攻击序列号
+    ai_target_uid = 0, ai_enter_combat_time = 0, ai_enter_combat_pos, ai_use_skill_id = 0, ai_attack_wait_tick = 10, ai_skill_serial = 0,
+    
+    %flee
+    ai_flee_dst, ai_flee_dir, ai_flee_tick = 0, ai_is_arrived_flee_pos = false,
+    
+    % 仇恨
+    % 仇恨列表  最大仇恨id 锁定目标tick、 没有增加仇恨的tick
+    enmity_list = [], max_enmity_uid = 0, ai_lock_target_tick = 0, no_inc_enmity_tick = 0
+   
 }).
 
 %%%% 战斗属性

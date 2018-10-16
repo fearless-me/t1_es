@@ -20,7 +20,7 @@
     on_map_create/0, on_map_destroy/0,
     on_player_join/1, on_player_exit/1,
     on_monster_create/1, on_monster_dead/1,
-    on_rw_update/3, on_start_move/1
+    on_rw_update/2, on_start_move/1
 ]).
 
 %% 要注意在
@@ -57,20 +57,20 @@ on_start_move(_Uid) ->
 %%-------------------------------------------------------------------
 -define(lock(X), lock_transaction(X)).
 -define(unlock(), unlock_transaction()).
-on_rw_update(Uid, Key, RwRec) ->
-    on_rw_update(object_rw:get_type(Uid), Uid, Key, RwRec).
+on_rw_update(Uid, {Pos, Value}) ->
+    on_rw_update(object_rw:get_field(Uid, #m_object_rw.type), Uid, Pos, Value).
 
 
 %%-------------------------------------------------------------------
-on_rw_update(?OBJ_PLAYER, Uid, cur_pos, R) ->
-    gs_cache_interface:update_online_player(Uid, {#m_cache_online_player.pos, R#m_object_rw.cur_pos});
-on_rw_update(?OBJ_PLAYER, Uid, hp, R) ->
-    gs_cache_interface:update_online_player(Uid, {#m_cache_online_player.hp, R#m_object_rw.hp});
-on_rw_update(?OBJ_PLAYER, Uid, buff_list, R) ->
-    gs_cache_interface:update_online_player(Uid, {#m_cache_online_player.buff_list, R#m_object_rw.buff_list});
-on_rw_update(?OBJ_PLAYER, Uid, attr, R) ->
-    gs_cache_interface:update_online_player(Uid, {#m_cache_online_player.attr, R#m_object_rw.attr});
-on_rw_update(_ObjType, _Uid, _Key, _RwRec) ->
+on_rw_update(?OBJ_PLAYER, Uid, #m_object_rw.cur_pos, CurPos) ->
+    gs_cache_interface:update_online_player(Uid, {#m_cache_online_player.pos, CurPos});
+on_rw_update(?OBJ_PLAYER, Uid, #m_object_rw.hp, Hp) ->
+    gs_cache_interface:update_online_player(Uid, {#m_cache_online_player.hp,Hp});
+on_rw_update(?OBJ_PLAYER, Uid, #m_object_rw.buff_list, BuffList) ->
+    gs_cache_interface:update_online_player(Uid, {#m_cache_online_player.buff_list, BuffList});
+on_rw_update(?OBJ_PLAYER, Uid, #m_object_rw.attr, AttrList) ->
+    gs_cache_interface:update_online_player(Uid, {#m_cache_online_player.attr, AttrList});
+on_rw_update(_ObjType, _Uid, _Key, _Value) ->
     ok.
 
 

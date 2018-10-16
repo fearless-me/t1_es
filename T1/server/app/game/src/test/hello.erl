@@ -12,7 +12,7 @@
 -behaviour(gen_serverw).
 -include("logger.hrl").
 
--define(MAX_OBJ, 3500).
+-define(MAX_OBJ, 350).
 
 
 
@@ -25,7 +25,7 @@
 %%%===================================================================
 start() ->
     gen_serverw:start_link({local, ?MODULE}, ?MODULE, [],
-        [{spawn_opt, [{min_heap_size, 1024 * 1024}]}]).
+        [{spawn_opt, [{min_heap_size, 1 * 1024 * 1024}]}]).
 
 stop()->
     gen_server:stop(?MODULE).
@@ -45,20 +45,19 @@ mod_init(_Args) ->
     %% erlang:process_flag(priority, high),
     
     tick_msg(),
-    init_data(?MAX_OBJ),
+    Map = init_data(?MAX_OBJ, #{}),
     gen_serverw:continue_effective_monitor(self(), 500000),
-    {ok, ok}.
+    {ok, Map}.
 
 
-init_data(0) ->
-    skip;
-init_data(N) ->
-    init_data_one(N),
-    init_data(N - 1).
+init_data(0, Map) ->
+    Map;
+init_data(N, Map) ->
+    init_data(N - 1, init_data_one(N, Map)).
 
-init_data_one(X) ->
+init_data_one(X, Map) ->
     L = lists:seq(1, 150),
-    put({p, X}, lists:zip(L, L)).
+    Map#{ X => lists:zip(L, L)}.
 
 %%--------------------------------------------------------------------	
 do_handle_call(Request, From, State) ->
@@ -75,9 +74,9 @@ loop_rand(N) ->
 do_handle_info(tick, State) ->
     tick_msg(),
     Old = erlang:process_info(self(), memory),
-    tick_rand_change(),
+    State1 = tick_rand_change(300, State),
     tc(Old, erlang:process_info(self(), memory), ?FUNCTION_NAME),
-    {noreply, State};
+    {noreply, State1};
 do_handle_info(rand, State) ->
     Old = erlang:process_info(self(), memory),
     loop_rand(100000),
@@ -132,28 +131,40 @@ do_handle_cast(Request, State) ->
 tc({_, Old}, {_, New}, _FuncName) when Old =:= New->
     skip;
 tc({_, Old}, {_, New}, FuncName) ->
-    ?DEBUG("~p: ~p - ~p = ~s ", [FuncName, New, Old, misc:format_memory_readable(New - Old)]),
+    {_, InfoList1} = erlang:process_info(self(), garbage_collection_info),
+    {_, InfoList2} = erlang:process_info(self(), garbage_collection),
+    ?DEBUG("~n~p~n~s - ~s = ~s ~n~n~s~n~w~n", [
+        FuncName,
+        misc:format_memory_readable(New),
+        misc:format_memory_readable(Old),
+        misc:format_memory_readable(New - Old),
+        format_gc_info(InfoList1, ""),
+        InfoList2
+    ]),
     ok.
+
+format_gc_info([], Acc) ->
+    Acc;
+format_gc_info([{K, V} | Info], Acc) ->
+    format_gc_info(Info, [atom_to_list(K), ":", misc:format_memory_readable(V), "\n"] ++ Acc).
     
 
 
 tick_msg() ->
     erlang:send_after(500, self(), tick).
 
-tick_rand_change() -> do_tick_rand_change(300).
+tick_rand_change(Count, Map) -> do_tick_rand_change(Count, Map).
 
-do_tick_rand_change(0) ->
-    ok;
-do_tick_rand_change(N) ->
-    tick_rand_change_1(),
-    do_tick_rand_change(N - 1).
+do_tick_rand_change(0, Map) ->
+    Map;
+do_tick_rand_change(N, Map) ->
+    do_tick_rand_change(N - 1, tick_rand_change_1(Map)).
 
-tick_rand_change_1() ->
+tick_rand_change_1(Map) ->
     X1 = rand_tool:rand(1, ?MAX_OBJ),
     K1 = rand_tool:rand(1, 150),
-    L1 = get({p, X1}),
+    L1 = maps:get(X1, Map, []),
     L2 = lists:map(fun({K, V}) -> {K, V + V} end, L1),
     L3 = lists:keyreplace(K1, 1, L2, {K1, K1 * X1}),
     L4 = lists:map(fun({K, V}) -> {K, V * rand:uniform()} end, L3),
-    put({p, X1}, L4),
-    ok.
+    Map#{X1 => L4}.

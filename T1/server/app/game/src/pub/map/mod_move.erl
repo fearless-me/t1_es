@@ -28,42 +28,53 @@
 
 %%-------------------------------------------------------------------
 init(Uid, Pos, Face) ->
-    ObjRw1 = object_rw:to_record(Uid),
-    ObjRw2 = ObjRw1#m_object_rw{
-        cur_move = ?EMS_STAND,
-        next_move = ?EMS_STAND,
-        cur_pos = Pos,
-        face = Face,
-        start_pos = Pos,
-        dest_pos = Pos,
-        vis_tile_idx = 0,
-        force_stopped = false,
-        move_speed = 20
-    },
-    object_rw:set(Uid, ObjRw2),
+    object_rw:set_fields_direct(
+        Uid,
+         [
+            {#m_object_rw.cur_move, ?EMS_STAND},
+            {#m_object_rw.next_move, ?EMS_STAND},
+            {#m_object_rw.cur_pos, Pos},
+            {#m_object_rw.face, Face},
+            {#m_object_rw.start_pos, Pos},
+            {#m_object_rw.dest_pos, Pos},
+            {#m_object_rw.vis_tile_idx, 0},
+            {#m_object_rw.force_stopped, false},
+            {#m_object_rw.move_speed, 20}
+         ]
+    ),
     ok.
 
 start_walk_set(Uid, CurMove, NextMove, Src, Dst, Face, Dir, Now, PathList) ->
-    object_rw:set_cur_move(Uid, CurMove),
-    object_rw:set_next_move(Uid, NextMove),
-    object_rw:set_face(Uid, Face),
-    object_rw:set_dir(Uid, Dir),
-    object_rw:set_start_pos(Uid, Src),
-    object_rw:set_dest_pos(Uid, Dst),
-    object_rw:set_seg_move_time(Uid, 0),
-    object_rw:set_start_time(Uid, Now),
-    object_rw:set_force_stopped(Uid, false),
-    object_rw:set_path_list(Uid, PathList),
+    object_rw:set_fields(
+        Uid,
+        [
+            {#m_object_rw.cur_move, CurMove},
+            {#m_object_rw.next_move, NextMove},
+            {#m_object_rw.face, Face},
+            {#m_object_rw.dir, Dir},
+            {#m_object_rw.start_pos, Src},
+            {#m_object_rw.dest_pos, Dst},
+            {#m_object_rw.seg_move_time, 0},
+            {#m_object_rw.start_time, Now},
+            {#m_object_rw.force_stopped, false},
+            {#m_object_rw.path_list, PathList}
+        ]
+    ),
     ok.
 
 stop_move_set(Uid, Pos) ->
-    object_rw:set_cur_move(Uid, ?EMS_STAND),
-    object_rw:set_next_move(Uid, ?EMS_STAND),
-    object_rw:set_start_pos(Uid, Pos),
-    object_rw:set_dest_pos(Uid, Pos),
-    object_rw:set_seg_move_time(Uid, 0),
-    object_rw:set_force_stopped(Uid, false),
-    object_rw:set_path_list(Uid, []),
+    object_rw:set_fields(
+        Uid,
+        [
+            {#m_object_rw.cur_move, ?EMS_STAND},
+            {#m_object_rw.next_move, ?EMS_STAND},
+            {#m_object_rw.start_pos, Pos},
+            {#m_object_rw.dest_pos, Pos},
+            {#m_object_rw.seg_move_time, 0},
+            {#m_object_rw.force_stopped, false},
+            {#m_object_rw.path_list, []}
+        ]
+    ),
     ok.
 
 %%-------------------------------------------------------------------
@@ -164,19 +175,19 @@ update(Obj) -> update_dispatcher(Obj).
 
 %%-------------------------------------------------------------------
 update_dispatcher(#m_cache_map_object{type = ?OBJ_PLAYER, uid = Uid} = Obj) ->
-    update_player_move(Obj, object_rw:get_cur_move(Uid));
+    update_player_move(Obj,   object_rw:get_field(Uid, #m_object_rw.cur_move));
 update_dispatcher(#m_cache_map_object{type = ?OBJ_MON, uid = Uid} = Obj) ->
-    update_monster_move(Obj, object_rw:get_cur_move(Uid));
+    update_monster_move(Obj,  object_rw:get_field(Uid, #m_object_rw.cur_move));
 update_dispatcher(_Obj) -> skip.
 
 %%-------------------------------------------------------------------
 update_player_move(Obj, ?EMS_WALK) ->
     #m_cache_map_object{uid = Uid} = Obj,
     
-    CurPos = object_rw:get_cur_pos(Uid),
-    PathList = object_rw:get_path_list(Uid),
+    CurPos = object_rw:get_field(Uid, #m_object_rw.cur_pos),
+    PathList = object_rw:get_field(Uid, #m_object_rw.path_list),
     Delta = map_rw:get_move_timer_delta(),
-    MovedTime = object_rw:get_seg_move_time(Uid),
+    MovedTime = object_rw:get_field(Uid, #m_object_rw.seg_move_time),
     update_role_walk(Uid, CurPos, PathList, MovedTime + Delta),
     ok;
 update_player_move(_Obj, _Move) -> skip.
@@ -185,10 +196,10 @@ update_player_move(_Obj, _Move) -> skip.
 update_monster_move(Obj, ?EMS_WALK) ->
     #m_cache_map_object{uid = Uid} = Obj,
     
-    CurPos = object_rw:get_cur_pos(Uid),
-    PathList = object_rw:get_path_list(Uid),
+    CurPos = object_rw:get_field(Uid, #m_object_rw.cur_pos),
+    PathList = object_rw:get_field(Uid, #m_object_rw.path_list),
     Delta = map_rw:get_move_timer_delta(),
-    MovedTime = object_rw:get_seg_move_time(Uid),
+    MovedTime = object_rw:get_field(Uid, #m_object_rw.seg_move_time),
     update_monster_walk(Uid, CurPos, PathList, MovedTime + Delta),
     ok;
 update_monster_move(_Obj, _Move) -> skip.
@@ -196,14 +207,19 @@ update_monster_move(_Obj, _Move) -> skip.
 %%-------------------------------------------------------------------
 update_role_walk(Uid, _CurPos, [], _MoveTime) ->
 %%    ?WARN("mapid ~p player ~w arrived ~w", [self(), Uid, CurPos]),
-    object_rw:set_cur_move(Uid, ?EMS_STAND),
-    object_rw:set_next_move(Uid, ?EMS_STAND),
-    object_rw:set_start_time(Uid, map_rw:get_move_timer_now()),
+    object_rw:set_fields(
+        Uid,
+        [
+            {#m_object_rw.cur_move, ?EMS_STAND},
+            {#m_object_rw.next_move, ?EMS_STAND},
+            {#m_object_rw.start_time, map_rw:get_move_timer_now()}
+        ]
+    ),
+
     ?ENR_ARRIVE;
 update_role_walk(Uid, _CurPos, PathList, MoveTime) ->
-    
-    Dir = object_rw:get_dir(Uid),
-    Dst = object_rw:get_dest_pos(Uid),
+    Dir = object_rw:get_field(Uid, #m_object_rw.dir),
+    Dst = object_rw:get_field(Uid, #m_object_rw.dest_pos),
     {NewPos, NewPathList, MoreTime} = linear_pos(PathList, MoveTime, keep),
 
 %%    ?DEBUG("mapid ~p ~w from ~w to ~w move time ~p",
@@ -213,18 +229,26 @@ update_role_walk(Uid, _CurPos, PathList, MoveTime) ->
     
     case NewPathList of
         ?ENR_TOBECONTINUED ->
-            object_rw:set_seg_move_time(Uid, MoveTime),
+            object_rw:set_field(Uid, #m_object_rw.seg_move_time, MoveTime),
             ?ENR_TOBECONTINUED;
         [] ->
-            object_rw:set_path_list(Uid, []),
-            object_rw:set_seg_move_time(Uid, MoreTime),
+            object_rw:set_fields(Uid,
+                [
+                    {#m_object_rw.path_list, []},
+                    {#m_object_rw.seg_move_time, MoreTime}
+                ]
+            ),
             {?ENR_TOBECONTINUED, [], Dir, Dst, MoreTime};
         [#m_move_pos{end_pos = End, dir = TarDir} | _] ->
 %%            ?DEBUG("new dest ~w, dir ~w",[End, TarDir]),
-            object_rw:set_path_list(Uid, NewPathList),
-            object_rw:set_dir(Uid, TarDir),
-            object_rw:set_dest_pos(Uid, End),
-            object_rw:set_seg_move_time(Uid, MoreTime),
+            object_rw:set_fields(Uid,
+                [
+                    {#m_object_rw.path_list, NewPathList},
+                    {#m_object_rw.dir, TarDir},
+                    {#m_object_rw.dest_pos, End},
+                    {#m_object_rw.seg_move_time, MoreTime}
+                ]
+            ),
             {?ENR_TOBECONTINUED, NewPathList, TarDir, End, MoreTime}
     end.
 
@@ -272,17 +296,17 @@ linear_pos_2(Dst, PathList, MoveTime, changed) ->
 on_obj_pos_change(Uid, Tar) ->
     %
     %% ?DEBUG("~w pos change ~w", [Uid, Tar]),
-    Src = object_rw:get_cur_pos(Uid),
+    Src = object_rw:get_field(Uid, #m_object_rw.cur_pos),
     Obj = map_rw:get_unit(Uid),
     OldVisIndex = map_view:pos_to_vis_index(Src),
     NewVisIndex = map_view:pos_to_vis_index(Tar),
 %%    ?DEBUG("in map ~p obj ~p ~ts pos change from ~w, ~w",
 %%        [lib_map_rw:get_map_id(), Uid, Obj#m_map_obj.name, Src, Tar]),
     ?assert(OldVisIndex > 0 andalso NewVisIndex > 0),
-    object_rw:set_cur_pos(Uid, Tar),
     map_view:sync_change_pos_visual_tile(Obj, OldVisIndex, NewVisIndex),
-    object_rw:set_vis_tile_idx(Uid, NewVisIndex),
-    on_obj_pos_changed(object_rw:get_type(Uid), Uid, Tar),
+    object_rw:set_fields(
+        Uid, [{#m_object_rw.cur_pos, Tar}, {#m_object_rw.vis_tile_idx, NewVisIndex}]),
+    on_obj_pos_changed(object_rw:get_field(Uid, #m_object_rw.type), Uid, Tar),
     ok.
 
 on_obj_pos_changed(?OBJ_PLAYER, Uid, Tar) ->
@@ -294,14 +318,14 @@ on_obj_pos_changed(Type, Uid, Tar) ->
 
 %%-------------------------------------------------------------------
 cal_move_msg(Uid) ->
-    do_cal_move_msg(object_rw:get_cur_move(Uid), Uid).
+    do_cal_move_msg(object_rw:get_field(Uid, #m_object_rw.cur_move), Uid).
 
 do_cal_move_msg(?EMS_WALK, Uid) ->
-    Src = object_rw:get_start_pos(Uid),
-    Dst = object_rw:get_dest_pos(Uid),
-    Type = object_rw:get_type(Uid),
+    Src = object_rw:get_field(Uid, #m_object_rw.start_pos),
+    Dst = object_rw:get_field(Uid, #m_object_rw.dest_pos),
+    Type = object_rw:get_field(Uid, #m_object_rw.type),
     Speed = get_move_speed_by_state(Uid, ?EMS_WALK),
-    StartTime = object_rw:get_start_time(Uid),
+    StartTime = object_rw:get_field(Uid, #m_object_rw.start_time),
     #pk_GS2U_SyncWalk{
         uid = Uid, type = Type,
         move_time = map_rw:get_move_timer_pass_time(StartTime),
@@ -310,8 +334,8 @@ do_cal_move_msg(?EMS_WALK, Uid) ->
         speed = Speed
     };
 do_cal_move_msg(?EMS_STAND, Uid) ->
-    Pos = object_rw:get_start_pos(Uid),
-    Type = object_rw:get_type(Uid),
+    Pos = object_rw:get_field(Uid, #m_object_rw.start_pos),
+    Type = object_rw:get_field(Uid, #m_object_rw.type),
     #pk_GS2U_SyncStand{
         uid = Uid,
         type = Type,
@@ -321,11 +345,11 @@ do_cal_move_msg(?EMS_STAND, Uid) ->
 do_cal_move_msg(
     S, Uid
 ) when S =:= ?EMS_MONSTER_PATROL;S =:= ?EMS_MONSTER_WALK;S =:= ?EMS_MONSTER_FLEE ->
-    Src = object_rw:get_start_pos(Uid),
-    Dst = object_rw:get_dest_pos(Uid),
-    Type = object_rw:get_type(Uid),
+    Src = object_rw:get_field(Uid, #m_object_rw.start_pos),
+    Dst = object_rw:get_field(Uid, #m_object_rw.dest_pos),
+    Type = object_rw:get_field(Uid, #m_object_rw.type),
     Speed = get_move_speed_by_state(Uid, S),
-    StartTime = object_rw:get_start_time(Uid),
+    StartTime = object_rw:get_field(Uid, #m_object_rw.start_time),
     #pk_GS2U_SyncWalk{
         uid = Uid, type = Type,
         move_time = map_rw:get_move_timer_pass_time(StartTime),
@@ -345,10 +369,10 @@ start_monster_walk(Uid, Dst, MoveState, NeedCheck) ->
 
 do_start_monster_walk(Uid, Dst, MoveState) ->
     Way = [Dst],
-    Start = object_rw:get_cur_pos(Uid),
+    Start = object_rw:get_field(Uid, #m_object_rw.cur_pos),
     Dir = vector3:subtract(Dst, Start),
     Now = map_rw:get_move_timer_now(),
-    Speed = object_rw:get_move_speed(Uid),
+    Speed = object_rw:get_field(Uid, #m_object_rw.move_speed),
     PathList = make_path_list([], Start, Way, Speed),
     
     %%
@@ -374,46 +398,60 @@ is_can_monster_walk(Uid, _Dst, _MoveState, _NeedCheck) ->
 %%-------------------------------------------------------------------
 update_monster_walk(Uid, CurPos, [], _MoveTime) ->
     ?WARN("mapid ~p monster ~w arrived ~w", [self(), Uid, CurPos]),
-    object_rw:set_cur_move(Uid, ?EMS_STAND),
-    object_rw:set_next_move(Uid, ?EMS_STAND),
-    object_rw:set_start_time(Uid, map_rw:get_move_timer_now()),
+
+    object_rw:set_fields(
+        Uid,
+        [
+            {#m_object_rw.cur_move, ?EMS_STAND},
+            {#m_object_rw.next_move, ?EMS_STAND},
+            {#m_object_rw.start_time, map_rw:get_move_timer_now()}
+        ]
+    ),
     ?ENR_ARRIVE;
 update_monster_walk(Uid, _CurPos, PathList, MoveTime) ->
     
-    Dir = object_rw:get_dir(Uid),
-    Dst = object_rw:get_dest_pos(Uid),
+    Dir = object_rw:get_field(Uid, #m_object_rw.dir),
+    Dst = object_rw:get_field(Uid, #m_object_rw.dest_pos),
     {NewPos, NewPathList, MoreTime} = linear_pos(PathList, MoveTime, keep),
     
     on_obj_pos_change(Uid, NewPos),
     
     case NewPathList of
         ?ENR_TOBECONTINUED ->
-            object_rw:set_seg_move_time(Uid, MoveTime),
+            object_rw:set_field(Uid, #m_object_rw.seg_move_time, MoveTime),
             ?ENR_TOBECONTINUED;
         [] ->
-            object_rw:set_path_list(Uid, []),
-            object_rw:set_seg_move_time(Uid, MoreTime),
+            object_rw:set_fields(Uid,
+                [
+                    {#m_object_rw.path_list, []},
+                    {#m_object_rw.seg_move_time, MoreTime}
+                ]
+            ),
             {?ENR_TOBECONTINUED, [], Dir, Dst, MoreTime};
         [#m_move_pos{end_pos = End, dir = TarDir} | _] ->
 %%            ?DEBUG("new dest ~w, dir ~w",[End, TarDir]),
-            object_rw:set_path_list(Uid, NewPathList),
-            object_rw:set_dir(Uid, TarDir),
-            object_rw:set_dest_pos(Uid, End),
-            object_rw:set_seg_move_time(Uid, MoreTime),
+            object_rw:set_fields(Uid,
+                [
+                    {#m_object_rw.path_list, NewPathList},
+                    {#m_object_rw.dir, TarDir},
+                    {#m_object_rw.dest_pos, End},
+                    {#m_object_rw.seg_move_time, MoreTime}
+                ]
+            ),
             {?ENR_TOBECONTINUED, NewPathList, TarDir, End, MoreTime}
     end.
 
 
 stop_move(Uid, NeedBroadcast) ->
-    CurMove = object_rw:get_cur_move(Uid),
+    CurMove = object_rw:get_field(Uid, #m_object_rw.cur_move),
     if
         CurMove =:= ?EMS_WALK;
         CurMove =:= ?EMS_MONSTER_PATROL;
         CurMove =:= ?EMS_MONSTER_FLEE;
         CurMove =:= ?EMS_MONSTER_WALK ->
-            CurPos = object_rw:get_cur_pos(Uid),
+            CurPos = object_rw:get_field(Uid, #m_object_rw.cur_pos),
             stop_move_set(Uid, CurPos),
-            object_rw:set_force_stopped(Uid, true),
+            object_rw:set_field(Uid, #m_object_rw.force_stopped, true),
             case NeedBroadcast of
                 true -> map_view:sync_movement_to_big_visual_tile(Uid);
                 _ -> skip
@@ -423,13 +461,13 @@ stop_move(Uid, NeedBroadcast) ->
     ok.
 
 stop_move_force(Uid, NeedBroadcast) ->
-    CurMove = object_rw:get_cur_move(Uid),
+    CurMove = object_rw:get_field(Uid, #m_object_rw.cur_move),
     if
         CurMove =:= ?EMS_WALK;
         CurMove =:= ?EMS_MONSTER_PATROL;
         CurMove =:= ?EMS_MONSTER_FLEE;
         CurMove =:= ?EMS_MONSTER_WALK ->
-            CurPos = object_rw:get_cur_pos(Uid),
+            CurPos = object_rw:get_field(Uid, #m_object_rw.cur_pos),
             stop_move_set(Uid, CurPos),
             case NeedBroadcast of
                 true -> map_view:sync_movement_to_big_visual_tile(Uid);
@@ -440,10 +478,10 @@ stop_move_force(Uid, NeedBroadcast) ->
     ok.
 
 get_move_speed_by_state(Uid, ?EMS_MONSTER_PATROL) ->
-    object_rw:get_move_speed(Uid) * 0.5;
+    object_rw:get_field(Uid, #m_object_rw.move_speed) * 0.5;
 get_move_speed_by_state(Uid, ?EMS_MONSTER_FLEE) ->
-    object_rw:get_move_speed(Uid) * 1.1;
+    object_rw:get_field(Uid, #m_object_rw.move_speed) * 1.1;
 get_move_speed_by_state(Uid, ?EMS_MONSTER_WALK) ->
-    object_rw:get_move_speed(Uid);
+    object_rw:get_field(Uid, #m_object_rw.move_speed);
 get_move_speed_by_state(Uid, _) ->
-    object_rw:get_move_speed(Uid).
+    object_rw:get_field(Uid, #m_object_rw.move_speed).

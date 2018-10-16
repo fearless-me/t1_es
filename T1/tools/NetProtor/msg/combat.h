@@ -102,11 +102,23 @@ struct GS2U_UpdateBuff <-
 	BuffInfo	buff;			// buff	
 };
 
+struct GS2U_UpdateBuffList <-
+{
+	uint64		uid;			// 角色ID
+	vector<BuffInfo> buff_list;			// buff	
+};
+
 // 删除buff
 struct GS2U_DeleteBuff <-
 {
 	uint64		uid;			// 角色ID
 	uint32		buff_id;		// buff id
+};
+
+struct GS2U_DeleteBuffList <-
+{
+	uint64		uid;			// 角色ID
+	vector<uint32>		buff_id_list;		// buff id list
 };
 
 // 删除buff

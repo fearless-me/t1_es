@@ -9,7 +9,7 @@
 -module(skill_selector).
 -author("mawenhong").
 -include("logger.hrl").
-
+-include("rec_rw.hrl").
 -include("map_core.hrl").
 
 
@@ -24,10 +24,10 @@ circle(Aer, Pos, Radius) ->
     %%
     FC =
         fun(Der, Acc) ->
-            Own = object_rw:get_owner(Der),
+            Own = object_rw:get_field(Der, #m_object_rw.owner),
             case Own =/= Aer andalso Aer =/= Der of
                 true ->
-                    DPos = object_rw:get_cur_pos(Der),
+                    DPos = object_rw:get_field(Der,#m_object_rw.cur_pos),
                     Dist = vector3:dist(Pos, DPos),
                     case Dist =< Radius of
                         true -> [Der | Acc];
@@ -53,10 +53,10 @@ ring(Aer, Pos, RadiusIn, RadiusOut) ->
     %%
     FC =
         fun(Der, Acc) ->
-            Own = object_rw:get_owner(Der),
+            Own = object_rw:get_field(Der, #m_object_rw.owner),
             case Own =/= Aer andalso Aer =/= Der of
                 true ->
-                    DPos = object_rw:get_cur_pos(Der),
+                    DPos = object_rw:get_field(Der,#m_object_rw.cur_pos),
                     Dist = vector3:dist(Pos, DPos),
                     case Dist >= RadiusIn andalso Dist =< RadiusOut of
                         true -> [Der | Acc];
@@ -83,10 +83,10 @@ sector(Aer, Pos, Face, Angle) ->
     %%
     FC =
         fun(Der, Acc) ->
-            Own = object_rw:get_owner(Der),
+            Own = object_rw:get_field(Der, #m_object_rw.owner),
             case Own =/= Aer andalso Aer =/= Der of
                 true ->
-                    DPos = object_rw:get_cur_pos(Der),
+                    DPos = object_rw:get_field(Der,#m_object_rw.cur_pos),
                     DDir = vector3:subtract(DPos, Pos),
                     AngleBetween = vector3:angle(Face, DDir),
                     case AngleBetween =< Half of
@@ -125,10 +125,10 @@ rectangle_selector(Aer, Pos, Face, Width, Height) ->
     %%
     FC =
         fun(Der, Acc) ->
-            Own = object_rw:get_owner(Der),
+            Own = object_rw:get_field(Der,#m_object_rw.cur_pos),
             case Own =/= Aer andalso Aer =/= Der of
                 true ->
-                    DPos = object_rw:get_cur_pos(Der),
+                    DPos = object_rw:get_field(Der,#m_object_rw.cur_pos),
                     TarV = vector3:subtract(DPos, Pos),
                     Dot_Dist = vector3:dot_product(TarV, Face),
                     % cos(a) >0 [0,90]

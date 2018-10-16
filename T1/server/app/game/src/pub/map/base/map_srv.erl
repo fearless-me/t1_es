@@ -11,7 +11,9 @@
 
 -behaviour(gen_serverw).
 -include("logger.hrl").
+-include("pub_def.hrl").
 -include("map_core.hrl").
+-include("rec_rw.hrl").
 
 
 %% API
@@ -34,15 +36,17 @@ call_reply(FromPid, Ret) ->
 
 %%%===================================================================
 %%% Internal functions
-%%%===================================================================	
+%%%===================================================================
+-define(MAP_OBJ_DETAIL_ETS, map_obj_detail_ets__).
 mod_init([MapID, MapLine]) ->
     erlang:process_flag(trap_exit, true),
     erlang:process_flag(priority, high),
     ProcessName = misc:create_atom(?MODULE, [MapID, MapLine]),
     true = erlang:register(ProcessName, self()),
+    Ets0 = misc_ets:new(?MAP_OBJ_DETAIL_ETS,[protected, set, {keypos, #m_object_rw.uid}, ?ETS_RC]),
     ?INFO("map ~p:~p started", [ProcessName, self()]),
     ps:send(self(), init),
-    {ok, #m_map_state{map_id = MapID, line_id = MapLine}}.
+    {ok, #m_map_state{map_id = MapID, line_id = MapLine, ets = Ets0}}.
 
 %%--------------------------------------------------------------------
 do_handle_call({player_join, Obj}, From, State) ->
