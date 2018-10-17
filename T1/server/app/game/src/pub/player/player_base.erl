@@ -79,7 +79,7 @@ start_walk(Tar) ->
         true ->
             Req = #r_player_start_move_req{uid = Uid, tar = Tar},
             player_pub:start_move_(MPid, Req),
-            ?WARN("player start walk at ~p mapid ~p move to ~w", [Uid, MPid, Tar]),
+%%            ?WARN("player start walk at ~p mapid ~p move to ~w", [Uid, MPid, Tar]),
             ok;
         _ ->
             ?DEBUG("### error walk pos ~w", [Tar])
@@ -94,7 +94,7 @@ stop_move(Pos) ->
         true ->
             Req = #r_player_stop_move_req{uid = Uid, pos = Pos},
             player_pub:stop_move_(MPid, Req),
-            ?WARN("player ~p mapid ~p stop on ~w", [Uid, MPid, Pos]),
+%%            ?WARN("player ~p mapid ~p stop on ~w", [Uid, MPid, Pos]),
             ok;
         _ ->
             ?DEBUG("### error stop pos ~w", [Pos])

@@ -14,22 +14,22 @@
 -include("movement.hrl").
 
 %%
--export([init/1]).
--export([add_obj_to_map/1, del_obj_to_map/1]).
 -export([
+    init/1, status/0,
+    %%
+    add_obj_to_map/1, del_obj_to_map/1,
+    %%
     get_unit/1,
     get_player/1, get_player_size/0,
     get_monster/1, get_monster_size/0,
-    get_npc/1, get_pet/1
-]).
-
--export([
+    get_npc/1, get_npc_size/0,
+    get_pet/1, get_pet_size/0,
+    %%
     get_detail_ets/0, 
     get_obj_maps/1,
     get_player_map/0, get_monster_map/0, get_npc_map/0, get_pet_map/0,
-    set_player_map/1, set_monster_map/1, set_npc_map/1, set_pet_map/1
-]).
--export([
+    set_player_map/1, set_monster_map/1, set_npc_map/1, set_pet_map/1,
+    %%
     get_map_id/0, get_line_id/0, get_map_hook/0,
     update_move_timer/0,
     get_move_timer_delta/0,
@@ -133,12 +133,18 @@ get_npc(Uid) ->
         _ -> undefined
     end.
 
+get_npc_size() ->
+    maps:size(map_rw:get_npc_map()).
+
 %%-------------------------------------------------------------------
 get_pet(Uid) ->
     case misc_ets:read(?ETS_CACHE_MAP_PET, Uid) of
         [#m_cache_map_object{} = Obj | _] -> Obj;
         _ -> undefined
     end.
+
+get_pet_size() ->
+    maps:size(map_rw:get_pet_map()).
 
 %%-------------------------------------------------------------------
 add_obj_to_map(#m_cache_map_object{type = ?OBJ_MON, uid = Uid} = Obj) ->
@@ -183,7 +189,15 @@ get_move_timer_delta() ->
     Delta.
 
 %%-------------------------------------------------------------------
-
+status()->
+    [
+        {objects, misc_ets:size(get_detail_ets())},
+        {player, get_player_size()},
+        {pet, get_pet_size()},
+        {npc, get_npc_size()},
+        {monster, get_monster_size()},
+        {monster_reborn, 0}
+    ].
 
 
 

@@ -14,6 +14,15 @@
 -include("type.hrl").
 -include("mapCfgPrivate.hrl").
 
+%% 0：普通地图
+%% 1：副本地图
+%% 2：分组地图
+%% 3：活动地图
+-define(MAP_TYPE_NORMAL,     0).
+-define(MAP_TYPE_COPY,       1).
+-define(MAP_TYPE_GROUP,      2).
+-define(MAP_TYPE_ACTIVITY,   3).
+
 %% 格子缩放比例
 -define(TILE_SCALE, 1).
 
@@ -40,10 +49,10 @@
 
 %% 地图线路存在时间
 %% @todo 要让地图来配置
--define(LINE_LIFETIME, 5 * 60 * 1000).
+-define(LINE_LIFETIME, 2 * 60 * 1000).
 %% 地图进程退出状态保护时间，让玩家加退出等等
 %% 超过这个时间强杀
--define(DEAD_LINE_PROTECT, 2 * 60 * 1000).
+-define(DEAD_LINE_PROTECT,  30 * 1000).
 
 %% 地图call调用超时时间
 %% 上线、切线、下线
@@ -53,6 +62,12 @@
 
 %% 地图进程心跳（毫秒）
 -define(MAP_TICK, 200).
+
+%% 地图线路不存在时的处理策略
+%% 直接失败，创建新线， 随便选能进一个
+-define(MAP_LINE_RECOVER_ERR, 0).
+-define(MAP_LINE_RECOVER_NEW, 1).
+-define(MAP_LINE_RECOVER_ANY_NEW, 2).
 
 
 %% 地图管理器

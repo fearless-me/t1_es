@@ -78,46 +78,58 @@ do_handle_cast(Request, State) ->
 do_player_join_map_call(S, Req) ->
     %1. 选线
     #r_change_map_req{
-        tar_map_id = MapID, tar_line_id = TarLineId,
-        tar_pos = Pos, force = Force
+        tar_map_id = MapID, tar_line_id = TarLineId, force = Force
     } = Req,
     
+    Recover = map_creator_interface:map_line_recover(MapID),
     Now = misc_time:milli_seconds(),
     MS =
         ets:fun2ms(
             fun(#m_map_line{
                 line_id = CurLineID,
-                limits = Limit,
-                in = In,
-                reserve = Reserve,
-                dead_line = DeadLine,
-                status = Status
-            } = T) when (Limit > In orelse (Force andalso Limit + Reserve > In)),
+                limits = Limit, in = In, reserve = Reserve,
+                dead_line = DeadLine, status = Status
+            } = T
+            ) when
+                (Limit > In orelse (Force andalso Limit + Reserve > In)),
                 DeadLine > Now + ?DEAD_LINE_PROTECT,
                 Status =:= ?MAP_NORMAL,
-                (TarLineId =:= 0 orelse CurLineID =:= TarLineId)
+                (TarLineId =:= 0 orelse CurLineID =:= TarLineId orelse Recover =:= ?MAP_LINE_RECOVER_ANY_NEW)
                 -> T
             end
         ),
-    Line =
-        case misc_ets:select(S#state.ets, MS, 1) of
-            {[Line1 | _], _Continue} ->
-                Line1;
-            _ ->
-                create_new_line(S, S#state.map_id, next_line_id())
+    Res =
+        case misc_ets:select(S#state.ets, MS, 2) of
+            {[Line1], _Continue} -> Line1;
+            {[Line11, _], _Continue} when Line11#m_map_line.line_id  =:= TarLineId -> Line11;
+            {[_, Line22], _Continue} -> Line22;
+            EndOfTable ->  EndOfTable
         end,
     
-    %2. ** MapID 与第一行的MapID 强制匹配下
-    #m_map_line{pid = MapPid, map_id = MapID, line_id = LineID} = Line,
-    
+    i_player_join_map_call(Res, Recover, Req, S).
+
+%%--------------------------------------------------------------------
+%%1.可以进入一条线
+i_player_join_map_call(#m_map_line{pid = MapPid, map_id = MapID, line_id = LineID}, _, Req, State) ->
     %3. 加入
     case map_interface:player_join_call(MapPid, Req) of
         ok ->
-            %4. 更新
-            misc_ets:update_counter(S#state.ets, LineID, {#m_map_line.in, 1}),
-            #r_change_map_ack{map_id = MapID, line_id = LineID, map_pid = MapPid, pos = Pos};
+            misc_ets:update_counter(State#state.ets, LineID, {#m_map_line.in, 1}),
+            #r_change_map_ack{map_id = MapID, line_id = LineID, map_pid = MapPid, pos = Req#r_change_map_req.tar_pos};
         _ ->
             #r_change_map_ack{map_id = MapID, line_id = LineID, map_pid = MapPid, error = -1}
+    end;
+%%2.没有线就返回错误
+i_player_join_map_call(_Any, ?MAP_LINE_RECOVER_ERR, Req, _State) ->
+    #r_change_map_ack{map_id = Req#r_change_map_req.map_id, error = -1};
+%%3.没有线就创建一条新线
+i_player_join_map_call(_Any, Recover, Req, State) ->
+    case catch create_new_line(State, State#state.map_id, next_line_id()) of
+        #m_map_line{} = Line ->
+            i_player_join_map_call(Line, Recover, Req, State);
+        Error ->
+            ?ERROR("create map ~p new line error ~p",[State#state.map_id, Error]),
+            #r_change_map_ack{map_id = Req#r_change_map_req.map_id, error = -1}
     end.
 
 %%--------------------------------------------------------------------
@@ -146,7 +158,7 @@ create_new_line(S, MapID, LineID) ->
     %% 但是长时间存在的地图必须要调整内存相关属性，减少GC
     {ok, Pid} = map_sup:start_child([MapID, LineID]),
     Line = #m_map_line{
-        map_id = MapID, line_id = LineID, pid = Pid,
+        map_id = MapID, line_id = LineID, pid = Pid, status = ?MAP_NORMAL,
         dead_line = misc_time:milli_seconds() + ?LINE_LIFETIME
     },
     erlang:send_after(?LINE_LIFETIME, self(), {stop_line, Line}),
@@ -179,3 +191,4 @@ force_del_line(S, Line) ->
     catch erlang:exit(Pid, normal),
     misc_ets:delete(S#state.ets, LineId),
     ok.
+

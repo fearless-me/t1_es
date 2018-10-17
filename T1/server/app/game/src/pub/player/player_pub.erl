@@ -99,7 +99,7 @@ broadcast_map_view_net_msg_(NetMsg) ->
 
 %%-------------------------------------------------------------------
 change_pre_map_() ->
-    ps:send(self(), return_to_pre_map_req).
+    player_interface:change_pre_map_(self()).
 
 %%-------------------------------------------------------------------
 change_map_(DestMapID, LineId, TarPos) ->

@@ -55,9 +55,9 @@ start_walk_set(Uid, CurMove, NextMove, Src, Dst, Face, Dir, Now, PathList) ->
             {#m_object_rw.start_pos, Src},
             {#m_object_rw.dest_pos, Dst},
             {#m_object_rw.seg_move_time, 0},
-            {#m_object_rw.start_time, Now},
+            {#m_object_rw.move_start_time, Now},
             {#m_object_rw.force_stopped, false},
-            {#m_object_rw.path_list, PathList}
+            {#m_object_rw.move_path_list, PathList}
         ]
     ),
     ok.
@@ -72,7 +72,7 @@ stop_move_set(Uid, Pos) ->
             {#m_object_rw.dest_pos, Pos},
             {#m_object_rw.seg_move_time, 0},
             {#m_object_rw.force_stopped, false},
-            {#m_object_rw.path_list, []}
+            {#m_object_rw.move_path_list, []}
         ]
     ),
     ok.
@@ -185,7 +185,7 @@ update_player_move(Obj, ?EMS_WALK) ->
     #m_cache_map_object{uid = Uid} = Obj,
     
     CurPos = object_rw:get_field(Uid, #m_object_rw.cur_pos),
-    PathList = object_rw:get_field(Uid, #m_object_rw.path_list),
+    PathList = object_rw:get_field(Uid, #m_object_rw.move_path_list),
     Delta = map_rw:get_move_timer_delta(),
     MovedTime = object_rw:get_field(Uid, #m_object_rw.seg_move_time),
     update_role_walk(Uid, CurPos, PathList, MovedTime + Delta),
@@ -197,7 +197,7 @@ update_monster_move(Obj, ?EMS_WALK) ->
     #m_cache_map_object{uid = Uid} = Obj,
     
     CurPos = object_rw:get_field(Uid, #m_object_rw.cur_pos),
-    PathList = object_rw:get_field(Uid, #m_object_rw.path_list),
+    PathList = object_rw:get_field(Uid, #m_object_rw.move_path_list),
     Delta = map_rw:get_move_timer_delta(),
     MovedTime = object_rw:get_field(Uid, #m_object_rw.seg_move_time),
     update_monster_walk(Uid, CurPos, PathList, MovedTime + Delta),
@@ -212,7 +212,7 @@ update_role_walk(Uid, _CurPos, [], _MoveTime) ->
         [
             {#m_object_rw.cur_move, ?EMS_STAND},
             {#m_object_rw.next_move, ?EMS_STAND},
-            {#m_object_rw.start_time, map_rw:get_move_timer_now()}
+            {#m_object_rw.move_start_time, map_rw:get_move_timer_now()}
         ]
     ),
 
@@ -234,7 +234,7 @@ update_role_walk(Uid, _CurPos, PathList, MoveTime) ->
         [] ->
             object_rw:set_fields(Uid,
                 [
-                    {#m_object_rw.path_list, []},
+                    {#m_object_rw.move_path_list, []},
                     {#m_object_rw.seg_move_time, MoreTime}
                 ]
             ),
@@ -243,7 +243,7 @@ update_role_walk(Uid, _CurPos, PathList, MoveTime) ->
 %%            ?DEBUG("new dest ~w, dir ~w",[End, TarDir]),
             object_rw:set_fields(Uid,
                 [
-                    {#m_object_rw.path_list, NewPathList},
+                    {#m_object_rw.move_path_list, NewPathList},
                     {#m_object_rw.dir, TarDir},
                     {#m_object_rw.dest_pos, End},
                     {#m_object_rw.seg_move_time, MoreTime}
@@ -325,7 +325,7 @@ do_cal_move_msg(?EMS_WALK, Uid) ->
     Dst = object_rw:get_field(Uid, #m_object_rw.dest_pos),
     Type = object_rw:get_field(Uid, #m_object_rw.type),
     Speed = get_move_speed_by_state(Uid, ?EMS_WALK),
-    StartTime = object_rw:get_field(Uid, #m_object_rw.start_time),
+    StartTime = object_rw:get_field(Uid, #m_object_rw.move_start_time),
     #pk_GS2U_SyncWalk{
         uid = Uid, type = Type,
         move_time = map_rw:get_move_timer_pass_time(StartTime),
@@ -349,7 +349,7 @@ do_cal_move_msg(
     Dst = object_rw:get_field(Uid, #m_object_rw.dest_pos),
     Type = object_rw:get_field(Uid, #m_object_rw.type),
     Speed = get_move_speed_by_state(Uid, S),
-    StartTime = object_rw:get_field(Uid, #m_object_rw.start_time),
+    StartTime = object_rw:get_field(Uid, #m_object_rw.move_start_time),
     #pk_GS2U_SyncWalk{
         uid = Uid, type = Type,
         move_time = map_rw:get_move_timer_pass_time(StartTime),
@@ -404,7 +404,7 @@ update_monster_walk(Uid, CurPos, [], _MoveTime) ->
         [
             {#m_object_rw.cur_move, ?EMS_STAND},
             {#m_object_rw.next_move, ?EMS_STAND},
-            {#m_object_rw.start_time, map_rw:get_move_timer_now()}
+            {#m_object_rw.move_start_time, map_rw:get_move_timer_now()}
         ]
     ),
     ?ENR_ARRIVE;
@@ -423,7 +423,7 @@ update_monster_walk(Uid, _CurPos, PathList, MoveTime) ->
         [] ->
             object_rw:set_fields(Uid,
                 [
-                    {#m_object_rw.path_list, []},
+                    {#m_object_rw.move_path_list, []},
                     {#m_object_rw.seg_move_time, MoreTime}
                 ]
             ),
@@ -432,7 +432,7 @@ update_monster_walk(Uid, _CurPos, PathList, MoveTime) ->
 %%            ?DEBUG("new dest ~w, dir ~w",[End, TarDir]),
             object_rw:set_fields(Uid,
                 [
-                    {#m_object_rw.path_list, NewPathList},
+                    {#m_object_rw.move_path_list, NewPathList},
                     {#m_object_rw.dir, TarDir},
                     {#m_object_rw.dest_pos, End},
                     {#m_object_rw.seg_move_time, MoreTime}

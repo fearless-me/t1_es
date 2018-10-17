@@ -19,7 +19,14 @@
 %% API
 -export([start_link/1, start_link/2]).
 -export([mod_init/1, do_handle_call/3, do_handle_info/2, do_handle_cast/2]).
--export([call_reply/2]).
+-export([show_status/1, status/1, call_reply/2]).
+
+show_status(Name)-> catch ps:send(Name, show_status).
+status(Name) ->
+    case catch gen_server:call(Name, status) of
+        {'EXIT', Reason} -> Reason;
+        Res -> Res
+    end.
 
 %%%===================================================================
 %%% public functions
@@ -46,9 +53,12 @@ mod_init([MapID, MapLine]) ->
     Ets0 = misc_ets:new(?MAP_OBJ_DETAIL_ETS,[protected, set, {keypos, #m_object_rw.uid}, ?ETS_RC]),
     ?INFO("map ~p:~p started", [ProcessName, self()]),
     ps:send(self(), init),
+    gen_serverw:continue_effective_monitor(self(), ?MAP_TICK * 1000),
     {ok, #m_map_state{map_id = MapID, line_id = MapLine, ets = Ets0}}.
 
 %%--------------------------------------------------------------------
+do_handle_call(status, _From, State) ->
+    {reply, i_status(), State};
 do_handle_call({player_join, Obj}, From, State) ->
     mod_map_priv:player_join_call(State, From, Obj);
 do_handle_call({player_exit, Req}, From, State) ->
@@ -62,8 +72,8 @@ do_handle_call(Request, From, State) ->
 %%--------------------------------------------------------------------
 do_handle_info(init, State) ->
     {noreply, mod_map_priv:init(State)};
-do_handle_info(status, State) ->
-    catch show_status(),
+do_handle_info(show_status, State) ->
+    catch i_show_status(),
     {noreply, State};
 do_handle_info(tick_now, State) ->
     {noreply, mod_map_priv:tick(State)};
@@ -104,9 +114,10 @@ do_handle_cast(Request, State) ->
     mod_map:on_cast_msg(Request),
     {noreply, State}.
 
-show_status() ->
-    
-    ok.
+i_status()-> map_rw:status().
+
+i_show_status()->
+    ?WARN("~nmap:~p~n~p~n",[misc:registered_name(), map_rw:status()]).
 
 
 

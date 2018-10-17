@@ -10,7 +10,7 @@
 -author("mawenhong").
 %% API
 -export([micro_seconds/0, milli_seconds/0, utc_seconds/0, tz_seconds/0, localtime_seconds/0]).
--export([localtime_str/0, utc_str/0]).
+-export([localtime_str/0, utc_str/0, milli_seconds_to_str/1, utc_seconds_to_str/1]).
 -export([day_of_the_week/0, day_of_the_week/1, day_of_the_week/3]).
 -export([format_datetime/1]).
 
@@ -30,6 +30,14 @@ utc_seconds() -> os:system_time(seconds).
 localtime_seconds()->
     calendar:datetime_to_gregorian_seconds(calendar:local_time()) -
         ?SECONDS_FROM_0_TO_1970.
+
+milli_seconds_to_str(MilliSeconds) ->
+    Datetime = calendar:system_time_to_local_time(MilliSeconds, millisecond),
+    format_datetime(Datetime).
+
+utc_seconds_to_str(UtcSeconds) ->
+    Datetime = calendar:system_time_to_local_time(UtcSeconds, seconds),
+    format_datetime(Datetime).
 
 
 localtime_str() ->
@@ -57,6 +65,6 @@ day_of_the_week({Year, Month, Day}) -> calendar:day_of_the_week(Year, Month, Day
 
 
 format_datetime({{Y, MO, D}, {H, MU, S}}) ->
-    io_lib:format(?TIME_FMT, [Y, MO, D, H, MU, S]);
+    lists:flatten(io_lib:format(?TIME_FMT, [Y, MO, D, H, MU, S]));
 format_datetime(Other) ->
-    io_lib:format("~p",[Other]).
+    lists:flatten(io_lib:format("~p",[Other])).

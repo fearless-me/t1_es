@@ -241,7 +241,7 @@ start_stop_now(S) ->
 kick_all_player(_S) ->
     maps:fold(
         fun(_, Uid, _) ->
-            catch gs_interface:send_msg(Uid, return_to_pre_map_req)
+            catch player_interface:change_pre_map_(Uid)
         end, 0, map_rw:get_player_map()),
     ok.
 

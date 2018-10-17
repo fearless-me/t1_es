@@ -13,7 +13,8 @@
 -include("gs_cache.hrl").
 %% API
 -export([
-    get_attr/2, get_hp/1, get_hp_percent/1, get_map_pid/1
+    get_attr/2, get_hp/1, get_hp_percent/1, get_map_pid/1,
+    change_pre_map_/1
 ]).
 
 get_attr(_Uid, _AttrId) ->
@@ -27,3 +28,8 @@ get_hp_percent(_Uid) ->
 
 get_map_pid(Uid) ->
     gs_cache_interface:read_online_player_element(Uid, #m_cache_online_player.map_pid).
+
+
+%%-------------------------------------------------------------------
+change_pre_map_(UidPid) ->
+    gs_interface:send_msg(UidPid, return_to_pre_map_req).
