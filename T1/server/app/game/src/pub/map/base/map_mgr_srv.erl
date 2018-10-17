@@ -187,7 +187,8 @@ stop_map_line(S, Line) ->
 
 force_del_line(S, Line) ->
     #m_map_line{map_id = Mid, line_id = LineId, pid = Pid} = Line,
-    ?WARN("map_~p_~p ~p will be killed", [Mid, LineId, Pid]),
+    ?WARN("map_~p_~p ~p will be killed(force:~p)",
+        [Mid, LineId, Pid, misc:is_alive(Pid)]),
     catch erlang:exit(Pid, normal),
     misc_ets:delete(S#state.ets, LineId),
     ok.
