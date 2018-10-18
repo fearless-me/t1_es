@@ -22,6 +22,7 @@
     is_alive/1, is_alive_g/1, is_alive_lg/1,
     ip/0, peername/1, ip_string/1,
     crc32/1, mod_1/2, clamp/3, rand/2,
+    set_bit/2, unset_bit/2, test_bit/2, first_set_bit/1,
     get_value/3, callstack/0, sleep/1,
     interval_operation/5, parse_information_unit/1, format_memory_readable/1,
     get_dict_def/2, md5/1, int_to_hex/1,
@@ -555,3 +556,27 @@ apply_fun(F) ->
 
 
 
+set_bit(N, BitIndex)
+    when is_number(N), N >= 0, BitIndex > 0, BitIndex =< 64
+->
+    N bor (1 bsl (BitIndex - 1)).
+
+unset_bit(N, BitIndex)
+    when is_number(N), N >= 0, BitIndex > 0, BitIndex =< 64
+->
+    N band (((1 bsl 64) - 1) bxor (1 bsl (BitIndex - 1))).
+
+test_bit(N, BitIndex)
+    when is_number(N), N >= 0, BitIndex > 0, BitIndex =< 64
+->
+    (N band (1 bsl (BitIndex - 1))) > 0.
+
+first_set_bit(0) ->
+    -1;
+first_set_bit(N) when is_integer(N), N > 0 ->
+    do_first_set_bit(N, 1).
+    
+do_first_set_bit(N, BitIndex) when (N band 1) > 0 ->
+    BitIndex;
+do_first_set_bit(N, BitIndex) ->
+    do_first_set_bit(N bsr 1, BitIndex + 1).

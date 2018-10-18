@@ -9,6 +9,9 @@
 -module(llist).
 -author("mawenhong").
 
+-opaque llist() :: {?MODULE, Partition :: non_neg_integer(), Count :: non_neg_integer(), Dict :: dict:dict()}.
+-export_type([llist/0]).
+
 %% API
 -export([
     new/1, add/3, member/4,
@@ -17,9 +20,6 @@
     foldl/3, foldl_n/4,
     partition/1, size/1
 ]).
-
--opaque llist() :: {?MODULE, Partition :: non_neg_integer(), Count :: non_neg_integer(), Dict :: dict:dict()}.
--export_type([llist/0]).
 
 -export([test/0]).
 
