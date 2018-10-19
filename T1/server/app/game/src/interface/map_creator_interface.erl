@@ -60,18 +60,18 @@ map_mgr_lr(Uid, MapID) ->
 do_map_mgr_lr(true, Uid, #mapCfg{is_cross = 0, id = MapID}) ->
     Node = cross_interface:get_player_src_node(Uid),
     case cross_interface:get_remote_server_map_mgr(Node, MapID) of
-        MgrPid when is_pid(MgrPid) -> MgrPid;
+        MgrPid when erlang:is_pid(MgrPid) -> MgrPid;
         Error ->
-            ?ERROR("~p get map mgr ~p from ~p, error ~p", [node(), MapID, Node, Error]),
+            ?ERROR("~p get map mgr ~p from ~p, error ~p", [erlang:node(), MapID, Node, Error]),
             undefined
     end;
 %% 在普通服务器招跨服地图
 do_map_mgr_lr(false, Uid, #mapCfg{is_cross = 1, id = MapID}) ->
     Node = cross_interface:get_player_cross_node(Uid),
     case cross_interface:get_remote_server_map_mgr(Node, MapID) of
-        MgrPid when is_pid(MgrPid) -> MgrPid;
+        MgrPid when erlang:is_pid(MgrPid) -> MgrPid;
         Error ->
-            ?ERROR("~p get map mgr ~p from ~p, error ~p", [node(), MapID, Node, Error]),
+            ?ERROR("~p get map mgr ~p from ~p, error ~p", [erlang:node(), MapID, Node, Error]),
             undefined
     end;
 %% 在跨服上找跨服地图/在普通副找非跨服地图

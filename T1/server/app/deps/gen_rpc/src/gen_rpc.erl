@@ -40,39 +40,52 @@
 %% All functions are GUARD-ed in the sender module, no
 %% need for the overhead here
 -spec async_call(node_or_tuple(), atom() | tuple(), atom() | function()) -> term() | {badrpc, term()} | {badtcp | term()}.
-async_call(Node, M, F) ->
-    gen_rpc_client:async_call(Node, M, F).
+async_call(Node, M, F) -> gen_rpc_client:async_call(Node, M, F).
 
 -spec async_call(node_or_tuple(), atom() | tuple(), atom() | function(), list()) -> term() | {badrpc, term()} | {badtcp | term()}.
 async_call(Node, M, F, A) ->
     gen_rpc_client:async_call(Node, M, F, A).
 
 -spec call(node_or_tuple(), atom() | tuple(), atom() | function()) -> term() | {badrpc, term()} | {badtcp | term()}.
+call(undefined, _M, _F) ->
+    {badrpc, bardars};
 call(Node, M, F) ->
     gen_rpc_client:call(Node, M, F).
 
 -spec call(node_or_tuple(), atom() | tuple(), atom() | function(), list()) -> term() | {badrpc, term()} | {badtcp | term()}.
+call(undefined, _M, _F,_A) ->
+    {badrpc, bardars};
 call(Node, M, F, A) ->
     gen_rpc_client:call(Node, M, F, A).
 
 -spec call(node_or_tuple(), atom() | tuple(), atom() | function(), list(), timeout() | undefined) ->
     term() | {badrpc, term()} | {badtcp | term()}.
+call(undefined, _M, _F, _A, _RecvTO) ->
+    {badrpc, bardars};
 call(Node, M, F, A, RecvTO) ->
     gen_rpc_client:call(Node, M, F, A, RecvTO).
 
 -spec call(node_or_tuple(), atom() | tuple(), atom() | function(), list(), timeout() | undefined, timeout() | undefined) -> term() | {badrpc, term()} | {badtcp | term()}.
+call(undefined, _M, _F, _A, _RecvTO, _SendTO) ->
+    {badrpc, bardars};
 call(Node, M, F, A, RecvTO, SendTO) ->
     gen_rpc_client:call(Node, M, F, A, RecvTO, SendTO).
 
 -spec cast(node_or_tuple(), atom() | tuple(), atom() | function()) -> true.
+cast(undefined, _M, _F) ->
+    false;
 cast(Node, M, F) ->
     gen_rpc_client:cast(Node, M, F).
 
 -spec cast(node_or_tuple(), atom() | tuple(), atom() | function(), list()) -> true.
+cast(undefined, _M, _F, _A) ->
+    false;
 cast(Node, M, F, A) ->
     gen_rpc_client:cast(Node, M, F, A).
 
 -spec cast(node_or_tuple(), atom() | tuple(), atom() | function(), list(), timeout() | undefined) -> true.
+cast(undefined, _M, _F, _A, _SendTO) ->
+    false;
 cast(Node, M, F, A, SendTO) ->
     gen_rpc_client:cast(Node, M, F, A, SendTO).
 

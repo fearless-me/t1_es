@@ -115,8 +115,8 @@ do_serve_change_map_call_exit(undefined, undefined, #r_change_map_req{map_id = M
     #r_change_map_ack{error = -666, map_id = Mid};
 do_serve_change_map_call_exit(_CurMgr, undefined, #r_change_map_req{map_id = Mid}) ->
     #r_change_map_ack{error = -777, map_id = Mid};
-do_serve_change_map_call_exit(undefined, _CurMgr, #r_change_map_req{map_id = Mid}) ->
-    #r_change_map_ack{error = -888, map_id = Mid};
+%%do_serve_change_map_call_exit(undefined, _CurMgr, #r_change_map_req{map_id = Mid}) ->
+%%    #r_change_map_ack{error = -888, map_id = Mid};
 do_serve_change_map_call_exit(CurMgr, _TarMgr, #r_change_map_req{
     uid = Uid, map_id = Mid, line_id = LineId, map_pid = Mpid
 }) ->
@@ -181,7 +181,7 @@ serve_change_map_call_ret(
     serve_change_map_call_fail(Flag, Req, Ack),
     ok.
 
-serve_change_map_call_fail(born_map, _Req, #r_change_map_ack{error = Error, map_id = Mid}) ->
+serve_change_map_call_fail(kick_born_map, _Req, #r_change_map_ack{error = Error, map_id = Mid}) ->
     %% todo 告诉客户端切地图失败
     Uid = player_rw:get_uid(),
     ?FATAL("fatal error ~p, player[~p]can not enter the born map ~p", [Error, Uid, Mid]),
@@ -227,7 +227,7 @@ kick_to_born_map(Req) ->
         Req#r_change_map_req.map_id,
         Req#r_change_map_req.line_id,
         Req#r_change_map_req.tar_pos,
-        Ack, Req, born_map
+        Ack, Req, kick_born_map
     ),
     ok.
 
