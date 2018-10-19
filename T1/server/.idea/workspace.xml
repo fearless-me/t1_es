@@ -70,7 +70,7 @@
     <session id="895199334">
       <usages-collector id="statistics.lifecycle.project">
         <counts>
-          <entry key="project.closed" value="86" />
+          <entry key="project.closed" value="87" />
           <entry key="project.open.time.0" value="2" />
           <entry key="project.open.time.1" value="2" />
           <entry key="project.open.time.10" value="12" />
@@ -129,7 +129,7 @@
           <entry key="config" value="15" />
           <entry key="cs" value="2" />
           <entry key="dump" value="2" />
-          <entry key="erl" value="3360" />
+          <entry key="erl" value="3361" />
           <entry key="err" value="1" />
           <entry key="ers" value="58" />
           <entry key="gitignore" value="10" />
@@ -152,7 +152,7 @@
           <entry key="Batch" value="9" />
           <entry key="C#" value="2" />
           <entry key="C++" value="2" />
-          <entry key="Erlang" value="3360" />
+          <entry key="Erlang" value="3361" />
           <entry key="Erlang Header" value="538" />
           <entry key="Erlang Terms" value="15" />
           <entry key="Erlang/OTP app" value="38" />
@@ -171,11 +171,20 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/game/src/interface/map_creator_interface.erl">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="315">
+              <caret line="27" selection-start-line="27" selection-end-line="27" />
+            </state>
+          </provider>
+        </entry>
+      </file>
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app/game/src/pub/player/player_map_priv.erl">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="794">
-              <caret line="131" column="9" selection-start-line="131" selection-start-column="9" selection-end-line="131" selection-end-column="9" />
+            <state relative-caret-position="536">
+              <caret line="223" column="10" selection-start-line="223" selection-start-column="10" selection-end-line="223" selection-end-column="10" />
             </state>
           </provider>
         </entry>
@@ -1023,7 +1032,7 @@
     <property name="SearchEverywhereHistoryKey" value="&#9;FILE&#9;file://C:/Program Files/erl10.0/lib/stdlib-3.5/src/maps.erl" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1539934575631" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1539934637359" />
     <property name="full.screen.before.presentation.mode" value="false" />
     <property name="last_opened_file_path" value="E:/DataTool/Server" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
@@ -1624,13 +1633,13 @@
       <workItem from="1539689226832" duration="12574000" />
       <workItem from="1539756226372" duration="28216000" />
       <workItem from="1539840008120" duration="10379000" />
-      <workItem from="1539928177866" duration="6380000" />
+      <workItem from="1539928177866" duration="6590000" />
     </task>
     <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="2363828000" />
+    <option name="totallyTimeSpent" value="2364038000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -1643,7 +1652,6 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="0" />
-    <editor active="true" />
     <layout>
       <window_info content_ui="combo" id="Project" order="0" sideWeight="0.8431591" visible="true" weight="0.17110874" />
       <window_info id="Structure" order="1" sideWeight="0.15684094" side_tool="true" weight="0.22547974" />
@@ -2015,13 +2023,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/game/src/interface/map_creator_interface.erl">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="168">
-          <caret line="8" column="29" selection-start-line="8" selection-start-column="8" selection-end-line="8" selection-end-column="29" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/game/src/pub/map/base/map_mgr_interface.erl">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="588">
@@ -2064,10 +2065,17 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/app/game/src/interface/map_creator_interface.erl">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="315">
+          <caret line="27" selection-start-line="27" selection-end-line="27" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/app/game/src/pub/player/player_map_priv.erl">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="794">
-          <caret line="131" column="9" selection-start-line="131" selection-start-column="9" selection-end-line="131" selection-end-column="9" />
+        <state relative-caret-position="536">
+          <caret line="223" column="10" selection-start-line="223" selection-start-column="10" selection-end-line="223" selection-end-column="10" />
         </state>
       </provider>
     </entry>
