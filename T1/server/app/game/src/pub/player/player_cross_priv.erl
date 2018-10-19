@@ -57,7 +57,12 @@ do_online(true) ->
     Data = cross_src:player_pub_data_to_cross(Aid, Uid),
     gs_cache_interface:add_player_cross(Uid),
     grpc:call(Node, cross_dst, rpc_call_player_enter, [Data]);
-do_online(_) -> ok.
+do_online(_) ->
+    Uid = player_rw:get_uid(),
+    gs_cache_interface:del_player_cross(Uid),
+    ok.
+
+
 
 
 %% 在跨服下线
@@ -69,7 +74,10 @@ do_offline(true) ->
     gs_cache_interface:del_player_cross(Uid),
     Ret = grpc:call(Node, cross_dst, rpc_call_player_offline, [Aid, Uid]),
     cross_src:player_pub_data_from_cross(Ret);
-do_offline(_) -> ok.
+do_offline(_) ->
+    Uid = player_rw:get_uid(),
+    gs_cache_interface:del_player_cross(Uid),
+    ok.
 
 %% 从跨服到普通服
 do_change_map_before(true, false) ->
@@ -91,7 +99,7 @@ do_change_map_before(false, true) ->
 do_change_map_before(_IsSrcCross, _IsDstCross) ->
     ok.
 
-%% 从跨服到普通服
+%% 从跨服到普通服 - 成功
 do_change_map_after(true, false, true) ->
     Aid = player_rw:get_aid(),
     Uid = player_rw:get_uid(),
@@ -99,7 +107,7 @@ do_change_map_after(true, false, true) ->
     gs_cache_interface:del_player_cross(Uid),
     Ret = rpc:cast(Node, cross_dst, rpc_call_player_leave, [Aid, Uid]),
     rpc_check(Ret, ?FUNCTION_NAME);
-%% 从普通服到跨服
+%% 从普通服到跨服 - 成功
 do_change_map_after(false, true, true) ->
     Aid = player_rw:get_aid(),
     Uid = player_rw:get_uid(),
@@ -107,12 +115,18 @@ do_change_map_after(false, true, true) ->
     Data = cross_src:player_pub_data_to_cross(Aid, Uid),
     gs_cache_interface:add_player_cross(Uid),
     grpc:cast(Node, cross_dst, rpc_call_player_enter, [Data]);
+%% 从普通服到跨服 - 失败
 do_change_map_after(false, true, false) ->
     Aid = player_rw:get_aid(),
     Uid = player_rw:get_uid(),
     Node = cross_interface:get_player_cross_node(Uid),
     gs_cache_interface:del_player_cross(Uid),
     grpc:cast(Node, cross_dst, rpc_call_del_player, [Aid, Uid]);
+%% 从普通服到任意服 - 失败
+do_change_map_after(false, _IsDstCross, false) ->
+    Uid = player_rw:get_uid(),
+    gs_cache_interface:del_player_cross(Uid),
+    ok;
 do_change_map_after(_IsSrcCross, _IsDstCross, _IsOk) ->
     ok.
 

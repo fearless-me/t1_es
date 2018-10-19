@@ -119,13 +119,13 @@ status(all) ->
                 ?WARN("status(all) error ~p",[Error])
             end
         end);
-status(all_detail) ->
+status(detail) ->
     erlang:spawn(
         fun() ->
             try
                 QS = ets:fun2ms(fun(Info) -> {Info#m_map_mgr.map_id, Info#m_map_mgr.line_ets} end),
                 List = misc_ets:select(?MAP_MGR_ETS, QS),
-                lists:map(fun({MapId, LineEts})-> line_status(MapId, LineEts, all_detail) end, List )
+                lists:map(fun({MapId, LineEts})-> line_status(MapId, LineEts, detail) end, List )
             catch _ : Error : _  ->
                 ?WARN("status(all_detail) error ~p",[Error])
             end
@@ -164,8 +164,6 @@ line_status(MapId, LineEts, Extra) ->
 
 line_status_extra(_Pid, Status, _) when Status =/= ?MAP_NORMAL ->
     killed;
-line_status_extra(Pid, _Status, all_detail) ->
-    map_srv:status(Pid);
 line_status_extra(Pid, _Status, detail) ->
     map_srv:status(Pid);
 line_status_extra(_Pid, _Status, _Ex) ->

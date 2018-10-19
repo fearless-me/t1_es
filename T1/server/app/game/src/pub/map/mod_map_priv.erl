@@ -141,12 +141,15 @@ tick_msg() -> erlang:send_after(?MAP_TICK, self(), tick_now).
 
 -spec tick(S :: #m_map_state{}) -> #m_map_state{}.
 tick(S) ->
-    map_rw:update_move_timer(),
-    tick_1(S).
+    Now = misc_time:milli_seconds(),
+    map_rw:update_move_timer(Now),
+    S1 = tick_1(S),
+    map_rw:check_tick(misc_time:milli_seconds() - Now),
+    S1.
 
 tick_1(#m_map_state{status = ?MAP_READY_EXIT, protect_tick = Tick} = S) when Tick =< 0 ->
     PlayerSize = map_rw:get_player_size(),
-    ?FATAL("map_~p_~p destroy error, player size ~p, force stop now",
+    ?WARN("**map_~p_~p destroy warning, player size ~p, force stop now",
         [map_rw:get_map_id(), map_rw:get_line_id(), PlayerSize]),
     ?TRY_CATCH(real_stop_now(0)),
     S;

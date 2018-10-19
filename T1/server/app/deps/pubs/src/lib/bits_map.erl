@@ -39,7 +39,7 @@ fold(BL, Init, F) when is_function(F, 3) ->
 do_fold(_K, 0, Acc, _F, _Index) ->
     Acc;
 do_fold(K, V, Acc, F, Index) when V band 1 > 0 ->
-    NewAcc = F(K  * ?UNIT_BITS + Index, true, Acc),
+    NewAcc = F(K  * ?UNIT_BITS + Index + 1, true, Acc),
     do_fold(K, V bsr 1, NewAcc, F, Index + 1);
 do_fold(K, V, Acc, F, Index)  ->
     do_fold(K, V bsr 1, Acc, F, Index + 1).
@@ -74,7 +74,7 @@ seq_first_set(BL) ->
     end.
 
 %%-------------------------------------------------------------------
-to_slot(BitIndex) -> BitIndex div ?UNIT_BITS.
+to_slot(BitIndex) -> (BitIndex - 1) div ?UNIT_BITS.
 to_index(BitIndex) -> (BitIndex - 1) rem ?UNIT_BITS + 1.
 
 %%-------------------------------------------------------------------
@@ -112,6 +112,7 @@ i_op(V, Index, _Any) -> misc:unset_bit(V, Index).
 
 %%-------------------------------------------------------------------
 %%-------------------------------------------------------------------
+-define(WRAP(F), timer:tc(fun()-> F end)).
 test() ->
     BL1 = bits_map:new(),
     io:format("~n*****set*****~n"),
@@ -125,7 +126,7 @@ test() ->
     BL45 = i_test_set(BL44, 10),
     BL4 = i_test_set(BL45, 65536000),
     io:format("~n*****fold*****~n"),
-    io:format("first set ~p, first unset ~p~n",[seq_first_set(BL4), seq_first_unset(BL4, 1, 1024)]),
+    io:format("first set ~p, first unset ~p~n",[?WRAP(seq_first_set(BL4)), ?WRAP(seq_first_unset(BL4, 789, 65536))]),
     i_test_fold(BL4),
     io:format("~n*****unset*****~n"),
     BL5 = i_test_unset(BL4, 1),
@@ -136,7 +137,7 @@ test() ->
     io:format("~n*****fold*****~n"),
     i_test_fold(BL0),
     
-    io:format("first set ~p, first unset ~p~n",[seq_first_set(BL0), seq_first_unset(BL0, 1, 1024)]),
+    io:format("first set ~p, first unset ~p~n",[?WRAP(seq_first_set(BL0)), ?WRAP(seq_first_unset(BL0, 1, 1024))]),
     ok.
 
 i_test_fold(BL) ->

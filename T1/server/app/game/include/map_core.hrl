@@ -52,7 +52,7 @@
 -define(LINE_LIFETIME, 2 * 60 * 1000).
 %% 地图进程退出状态保护时间，让玩家加退出等等
 %% 超过这个时间强杀
--define(DEAD_LINE_PROTECT,  30 * 1000).
+-define(DEAD_LINE_PROTECT,  20 * 1000).
 
 %% 地图call调用超时时间
 %% 上线、切线、下线
@@ -61,7 +61,9 @@
 -define(MAP_INIT_TIMEOUT, 60000).
 
 %% 地图进程心跳（毫秒）
--define(MAP_TICK, 200).
+-define(MAP_TICK, 50).
+%% 每个心跳复活的怪物数量
+-define(MAP_TICK_RESPAWN, 50).
 
 %% 地图线路不存在时的处理策略
 %% 直接失败，创建新线， 随便选能进一个

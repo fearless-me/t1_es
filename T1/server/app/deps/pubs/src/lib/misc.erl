@@ -41,7 +41,7 @@ os_type() ->
 
 %%-------------------------------------------------------------------
 get_dict_def(Key, Def) ->
-    case get(Key) of
+    case erlang:get(Key) of
         undefined -> Def;
         V -> V
     end.

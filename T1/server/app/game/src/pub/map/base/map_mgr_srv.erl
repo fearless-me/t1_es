@@ -121,7 +121,7 @@ i_player_join_map_call(#m_map_line{pid = MapPid, map_id = MapID, line_id = LineI
     end;
 %%2.没有线就返回错误
 i_player_join_map_call(_Any, ?MAP_LINE_RECOVER_ERR, Req, _State) ->
-    #r_change_map_ack{map_id = Req#r_change_map_req.map_id, error = -1};
+    #r_change_map_ack{map_id = Req#r_change_map_req.map_id, error = -2};
 %%3.没有线就创建一条新线
 i_player_join_map_call(_Any, Recover, Req, State) ->
     case catch create_new_line(State, State#state.map_id, next_line_id()) of
@@ -129,7 +129,7 @@ i_player_join_map_call(_Any, Recover, Req, State) ->
             i_player_join_map_call(Line, Recover, Req, State);
         Error ->
             ?ERROR("create map ~p new line error ~p",[State#state.map_id, Error]),
-            #r_change_map_ack{map_id = Req#r_change_map_req.map_id, error = -1}
+            #r_change_map_ack{map_id = Req#r_change_map_req.map_id, error = -3}
     end.
 
 %%--------------------------------------------------------------------

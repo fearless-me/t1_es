@@ -137,7 +137,11 @@ inner_update_player_cross(false, Uid, Params) ->
     case cross_interface:is_player_in_cross(Uid) of
         true ->
             Node = cross_interface:get_player_cross_node(Uid),
-            grpc:cast(Node, cross_dst, rpc_cast_update_player, [Params]);
+%%            case Node of
+%%                undefined -> skip;
+%%                _ ->
+                    grpc:cast(Node, cross_dst, rpc_cast_update_player, [Params]);
+%%            end;
         _Any -> skip
     end,
     ok;

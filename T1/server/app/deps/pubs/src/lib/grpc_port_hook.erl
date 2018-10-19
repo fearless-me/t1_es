@@ -25,6 +25,8 @@
 get_server_port() -> get_config(node()).
 
 %%-------------------------------------------------------------------
+get_config(undefined) ->
+    0;
 get_config(Node) ->
     Port = do_node_port(Node),
     ?WARN("gen_rpc get port for node ~p port ~p", [Node, Port]),

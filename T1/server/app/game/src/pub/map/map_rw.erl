@@ -8,6 +8,7 @@
 %%%-------------------------------------------------------------------
 -module(map_rw).
 -author("mawenhong").
+-include("logger.hrl").
 -include("map_core.hrl").
 -include("gs_cache.hrl").
 -include("rec_rw.hrl").
@@ -15,7 +16,7 @@
 
 %%
 -export([
-    init/1, status/0,
+    init/1, status/0, check_tick/1,
     %%
     add_obj_to_map/1, del_obj_to_map/1,
     %%
@@ -31,7 +32,7 @@
     set_player_map/1, set_monster_map/1, set_npc_map/1, set_pet_map/1,
     %%
     get_map_id/0, get_line_id/0, get_map_hook/0,
-    update_move_timer/0,
+    update_move_timer/1,
     get_move_timer_delta/0,
     get_move_timer_now/0,
     get_move_timer_pass_time/1
@@ -48,19 +49,26 @@
 -define(LINE_ID, line_id__).
 -define(MAP_HOOK, map_hook__).
 -define(MOVE_TIMER, map_move_timer__).
+-define(MAP_TICK_INFO, map_tick_info__).
+-record(tick_info,{runs = 0, timeout = 0, max = 0, min = 0}).
 
 %%%-------------------------------------------------------------------
 init(State) ->
-    Now = misc_time:milli_seconds(),
-    put(?MAP_ID, State#m_map_state.map_id),
-    put(?LINE_ID, State#m_map_state.line_id),
-    put(?MAP_HOOK, State#m_map_state.hook_mod),
-    put(?MOVE_TIMER, #m_move_timer{now = Now, latest_up = Now, delta = 0}),
+    init_base(State),
     set_player_map(#{}),
     set_monster_map(#{}),
     set_pet_map(#{}),
     set_npc_map(#{}),
     set_detail_ets(State#m_map_state.ets),
+    set_tick_info(#tick_info{}),
+    ok.
+
+init_base(State) ->
+    Now = misc_time:milli_seconds(),
+    erlang:put(?MAP_ID, State#m_map_state.map_id),
+    erlang:put(?LINE_ID, State#m_map_state.line_id),
+    erlang:put(?MAP_HOOK, State#m_map_state.hook_mod),
+    erlang:put(?MOVE_TIMER, #m_move_timer{now = Now, latest_up = Now, delta = 0}),
     ok.
 
 
@@ -89,12 +97,40 @@ set_pet_map(Maps) -> erlang:put(?MAP_PET_MAPS, Maps).
 get_npc_map() -> get(?MAP_NPC_MAPS).
 set_npc_map(Maps) -> erlang:put(?MAP_NPC_MAPS, Maps).
 
-
+%%-------------------------------------------------------------------
+set_tick_info(Info) -> erlang:put(?MAP_TICK_INFO, Info).
+get_tick_info() -> erlang:get(?MAP_TICK_INFO).
 
 %%-------------------------------------------------------------------
-get_map_id() -> get(?MAP_ID).
-get_line_id() -> get(?LINE_ID).
-get_map_hook() -> get(?MAP_HOOK).
+check_tick(Milliseconds) ->
+    Info = do_check_tick(get_tick_info(), Milliseconds),
+    set_tick_info(Info).
+
+%%-------------------------------------------------------------------
+do_check_tick(undefined, Milliseconds) ->
+    #tick_info{runs = 1, timeout = 0, max = Milliseconds, min = Milliseconds};
+do_check_tick(#tick_info{runs = C, timeout = TC, min = Min, max = Max} = Info, Milliseconds) when Milliseconds > ?MAP_TICK ->
+    Info#tick_info{
+        runs = C + 1,
+        timeout = TC + 1,
+        max = erlang:max(Max, Milliseconds),
+        min = erlang:min(Min, Milliseconds)
+    };
+do_check_tick(#tick_info{runs = C, min = Min, max = Max} = Info, Milliseconds) ->
+    Info#tick_info{
+        runs = C + 1,
+        max = erlang:max(Max, Milliseconds),
+        min = erlang:min(Min, Milliseconds)
+    };
+do_check_tick(_Any, Milliseconds) when Milliseconds > ?MAP_TICK ->
+    #tick_info{runs = 1, timeout = 1, max = Milliseconds, min = Milliseconds};
+do_check_tick(_Any, Milliseconds) ->
+    #tick_info{runs = 1, timeout = 0, max = Milliseconds, min = Milliseconds}.
+
+%%-------------------------------------------------------------------
+get_map_id() -> erlang:get(?MAP_ID).
+get_line_id() -> erlang:get(?LINE_ID).
+get_map_hook() -> erlang:get(?MAP_HOOK).
 
 %%-------------------------------------------------------------------
 get_unit(Uid) ->
@@ -169,23 +205,22 @@ del_obj_to_map(#m_cache_map_object{uid = Uid, type = ?OBJ_PLAYER}) ->
 del_obj_to_map(_) ->
     ok.
 %%-------------------------------------------------------------------
-update_move_timer() ->
-    Now = misc_time:milli_seconds(),
-    #m_move_timer{latest_up = Latest} = get(?MOVE_TIMER),
-    put(?MOVE_TIMER, #m_move_timer{now = Now, latest_up = Now, delta = Now - Latest}),
+update_move_timer(Now) ->
+    #m_move_timer{latest_up = Latest} = erlang:get(?MOVE_TIMER),
+    erlang:put(?MOVE_TIMER, #m_move_timer{now = Now, latest_up = Now, delta = Now - Latest}),
     ok.
 
 %%-------------------------------------------------------------------
 get_move_timer_now() ->
-    #m_move_timer{now = Now} = get(?MOVE_TIMER),
+    #m_move_timer{now = Now} = erlang:get(?MOVE_TIMER),
     Now.
 
 get_move_timer_pass_time(StartTime) ->
-    #m_move_timer{now = Now} = get(?MOVE_TIMER),
+    #m_move_timer{now = Now} = erlang:get(?MOVE_TIMER),
     Now - StartTime.
 
 get_move_timer_delta() ->
-    #m_move_timer{delta = Delta} = get(?MOVE_TIMER),
+    #m_move_timer{delta = Delta} = erlang:get(?MOVE_TIMER),
     Delta.
 
 %%-------------------------------------------------------------------
@@ -196,7 +231,8 @@ status()->
         {pet, get_pet_size()},
         {npc, get_npc_size()},
         {monster, get_monster_size()},
-        {monster_reborn, 0}
+        {respawn, 0},
+        {tick, get_tick_info()}
     ].
 
 
