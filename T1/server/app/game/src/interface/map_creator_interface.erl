@@ -24,7 +24,7 @@
     map_line_recover/1
 ]).
 
--export([status/1]).
+-export([status_/1, status/0]).
 
 %%
 %% 一般情况切地图是制定了一定要加入某个线路
@@ -108,40 +108,52 @@ is_cross_map(MapId) ->
     end.
 
 %%--------------------------------
-status(all) ->
+status_(all) ->
     erlang:spawn(
         fun() ->
             try
                 QS = ets:fun2ms(fun(Info) -> {Info#m_map_mgr.map_id, Info#m_map_mgr.line_ets} end),
                 List = misc_ets:select(?MAP_MGR_ETS, QS),
-                lists:map(fun({MapId, LineEts})-> line_status(MapId, LineEts, all) end, List )
+                Info = lists:map(fun({MapId, LineEts})-> line_status(MapId, LineEts, all) end, List ),
+                ?WARN("~ts",[string:join(Info, "\n")])
             catch _ : Error: _  ->
                 ?WARN("status(all) error ~p",[Error])
             end
         end);
-status(detail) ->
+status_(detail) ->
     erlang:spawn(
         fun() ->
             try
                 QS = ets:fun2ms(fun(Info) -> {Info#m_map_mgr.map_id, Info#m_map_mgr.line_ets} end),
                 List = misc_ets:select(?MAP_MGR_ETS, QS),
-                lists:map(fun({MapId, LineEts})-> line_status(MapId, LineEts, detail) end, List )
+                Info = lists:map(fun({MapId, LineEts})-> line_status(MapId, LineEts, detail) end, List ),
+                ?WARN("~ts",[string:join(Info, "\n")])
             catch _ : Error : _  ->
                 ?WARN("status(all_detail) error ~p",[Error])
             end
         end);
-status(MapId) ->
+status_(MapId) ->
     erlang:spawn(
         fun() ->
             try
                 LineEts = misc_ets:read_element(?MAP_MGR_ETS, MapId, #m_map_mgr.line_ets),
-                line_status(MapId, LineEts, detail)
+                ?WARN("~ts", [line_status(MapId, LineEts, detail)])
             catch _ : Error : _  ->
                 ?WARN("status(~p) error ~p",[MapId, Error])
             end
         end),
     ok.
 
+
+status( ) ->
+    try
+        QS = ets:fun2ms(fun(Info) -> {Info#m_map_mgr.map_id, Info#m_map_mgr.line_ets} end),
+        List = misc_ets:select(?MAP_MGR_ETS, QS),
+        Info = lists:map(fun({MapId, LineEts})-> line_status(MapId, LineEts, detail) end, List ),
+        string:join(Info, "\n")
+    catch _ : Error : _  ->
+        io_lib:format("status(detail) error ~p~n",[Error])
+    end.
 
 -define(INFO_FMT, "~-10.w~-20.w~-10.w~-10.w~-10.w~-30.ts~-10.w~w~n").
 -define(INFO_FMT_STR, "~-10.ts~-20.ts~-10.ts~-10.ts~-10.ts~-30.ts~-10.ts~ts~n").
@@ -159,8 +171,7 @@ line_status(MapId, LineEts, Extra) ->
             io_lib:format(?INFO_FMT,
                 [LineId, Pid, Limits, In, Reserve, misc_time:milli_seconds_to_str(DeadLine), Status, ExtraInfo])
         end, List),
-    ?WARN("~s~ts~s",[Overview, InfoHead, string:join(InfoAll, "")]),
-    ok.
+    io_lib:format("~s~ts~s",[Overview, InfoHead, string:join(InfoAll, "")]).
 
 line_status_extra(_Pid, Status, _) when Status =/= ?MAP_NORMAL ->
     killed;

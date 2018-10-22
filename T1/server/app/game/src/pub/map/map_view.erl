@@ -262,8 +262,16 @@ add_obj_to_vis_tile(Obj, VisTileIndex) ->
 %%    ?DEBUG("add ~p to vis index ~p", [Obj#m_map_obj.uid, VisTileIndex]),
     
     VisTile = get_vis_tile(VisTileIndex),
+    catch object_rw:set_field(
+        object_core:get_uid(Obj),
+        #m_object_rw.vis_tile_idx,
+        VisTileIndex
+    ),
     add_to_vis_tile_1(
-        object_core:get_type(Obj), object_core:get_uid(Obj), VisTileIndex, VisTile),
+        object_core:get_type(Obj),
+        object_core:get_uid(Obj),
+        VisTileIndex, VisTile
+    ),
     ok.
 
 %%

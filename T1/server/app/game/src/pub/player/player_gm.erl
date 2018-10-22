@@ -20,7 +20,8 @@
 -define(GM_CMD_LIST, [
     %% 权限等级、 指令、 回调函数、 说明
     {0, "change_map", fun change_map/1, "切地图 &chang_map $MapId"},
-    {0, "change_group", fun change_group/1, "改变角色分组属性 &change_group $GroupId"}
+    {0, "change_group", fun change_group/1, "改变角色分组属性 &change_group $GroupId"},
+    {0, "add_buff", fun add_buff/1, "添加buff &add_buff $BuffId [$BuffLevel]"}
 ]).
 
 
@@ -66,15 +67,34 @@ do_gm(Cmd, Params) ->
 do_gm(GmLevel, AccessLevel, Call, Params) when GmLevel >= AccessLevel ->
     erlang:apply(Call, [Params]);
 do_gm(_, _, _, _) -> skip.
+%%-------------------------------------------------------------------
+%%-------------------------------------------------------------------
 
+%%-------------------------------------------------------------------
 change_map([MapId | _]) ->
 %%    Delta = misc:rand(-5, 15) / 1.0,
     Pos = vector3:new(324.1, 0, 233.1),
     player_pub:change_map_(list_to_integer(MapId), 0, Pos),
     ok.
 
+%%-------------------------------------------------------------------
 change_group([GroupId | _]) ->
 %%    Delta = misc:rand(-5, 15) / 1.0,
 %%    Pos = vector3:new(324.1, 0, 233.1 ),
     player_pub:change_group_(list_to_integer(GroupId)),
     ok.
+
+%%-------------------------------------------------------------------
+add_buff([BuffId, BuffLevel | _]) ->
+    player_combat:add_buff(
+        list_to_integer(BuffId),
+        list_to_integer(BuffLevel)
+    ),
+    ok;
+add_buff([BuffId | _]) ->
+    player_combat:add_buff(
+        list_to_integer(BuffId),
+        1
+    ),
+    ok.
+

@@ -26,7 +26,15 @@
     %% 封号
     forbid_account/1,
     %% 在线人数
-    total_online/0
+    total_online/0,
+    %% 服务器怪物数量
+    total_monster/0,
+    %% 在地图中人数
+    total_map_player/0,
+    %% 在跨服中的人数
+    total_cross_player/0,
+    %% 输出服务器一些信息
+    status_/0
 ]).
 -export([
     %% 给某个进程或者某个玩家发消息
@@ -65,6 +73,9 @@ get_center_node() -> gs_econfig:get_center_node().
 
 %%-------------------------------------------------------------------
 total_online() -> misc_ets:size(?ETS_CACHE_ACCOUNT_PID_SOCK).
+total_monster() -> misc_ets:size(?ETS_CACHE_MAP_MONSTER).
+total_map_player() -> misc_ets:size(?ETS_CACHE_MAP_PLAYER).
+total_cross_player() -> misc_ets:size(?ETS_CACHE_PLAYER_CROSS).
 
 %%-------------------------------------------------------------------
 ppid_name(Aid) ->
@@ -127,6 +138,28 @@ forbid_account(Aid) ->
 
 %%-------------------------------------------------------------------
 fix_pos(_MapId, _Pos) ->
+    ok.
+
+status_() ->
+    erlang:spawn(
+        fun() ->
+            IsCross = gs_interface:is_cross(),
+            Sid = gs_interface:get_sid(),
+            TotalOnline = gs_interface:total_online(),
+            TotalMonster = gs_interface:total_monster(),
+            TotalMapPlayer = gs_interface:total_map_player(),
+            TotalCrossPlayer = gs_interface:total_cross_player(),
+            MapsInfo = map_creator_interface:status(),
+            io:format(
+                "Sid:~w~n"
+                "IsCross:~w~n"
+                "onlines:~w~n"
+                "map_player:~w~n"
+                "cross_player:~w~n"
+                "monster:~w~n"
+                "~ts~n", [Sid, IsCross, TotalOnline, TotalMapPlayer, TotalCrossPlayer, TotalMonster, MapsInfo])
+        end
+    ),
     ok.
 
 %%

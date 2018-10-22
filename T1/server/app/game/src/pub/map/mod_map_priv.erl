@@ -22,7 +22,7 @@
 %% 初始化， tick， 开始终止进程
 -export([init/1, tick/1, start_stop_now/1, change_group/1]).
 -export([player_start_move/1, player_stop_move/1]).
--export([broadcast_msg/2, broadcast_net_msg/2, broadcast_msg_view/1, broadcast_net_msg_view/1]).
+-export([broadcast_msg/2, broadcast_net_msg/2, broadcast_msg_view/1, broadcast_net_msg_view/1, broadcast_net_msg_view/2]).
 
 %%--------------------------------
 %% WARNING!!! WARNING!!! WARNING!!!
@@ -303,6 +303,10 @@ broadcast_msg_view({Uid, MsgId, Msg}) ->
 
 -spec broadcast_net_msg_view({Uid :: integer(), NetMsg :: tuple()}) -> ok.
 broadcast_net_msg_view({Uid, NetMsg}) ->
+    map_view:broadcast_net_msg_view(Uid, NetMsg),
+    ok.
+
+broadcast_net_msg_view(Uid, NetMsg) ->
     map_view:send_net_msg_to_visual(Uid, NetMsg),
     ok.
 

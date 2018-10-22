@@ -37,7 +37,6 @@ init(Uid, Pos, Face) ->
             {#m_object_rw.face, Face},
             {#m_object_rw.start_pos, Pos},
             {#m_object_rw.dest_pos, Pos},
-            {#m_object_rw.vis_tile_idx, 0},
             {#m_object_rw.force_stopped, false},
             {#m_object_rw.move_speed, 20}
          ]
@@ -304,8 +303,7 @@ on_obj_pos_change(Uid, Tar) ->
 %%        [lib_map_rw:get_map_id(), Uid, Obj#m_map_obj.name, Src, Tar]),
     ?assert(OldVisIndex > 0 andalso NewVisIndex > 0),
     map_view:sync_change_pos_visual_tile(Obj, OldVisIndex, NewVisIndex),
-    object_rw:set_fields(
-        Uid, [{#m_object_rw.cur_pos, Tar}, {#m_object_rw.vis_tile_idx, NewVisIndex}]),
+    object_rw:set_field(Uid, #m_object_rw.cur_pos, Tar),
     on_obj_pos_changed(object_rw:get_field(Uid, #m_object_rw.type), Uid, Tar),
     ok.
 

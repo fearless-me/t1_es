@@ -150,34 +150,34 @@ tick_one_buff(_Uid, _Buff) ->
 %%-------------------------------------------------------------------
 on_add_buff(Uid, Buff) ->
     ViewNetMsg = #pk_GS2U_AddBuff{uid = Uid, buff = i_marshal_buff(Buff)},
-    mod_map_priv:broadcast_net_msg_view(ViewNetMsg).
+    mod_map_priv:broadcast_net_msg_view(Uid, ViewNetMsg).
 
 %%-------------------------------------------------------------------
 on_update_buff(_Uid, []) ->
     skip;
 on_update_buff(Uid, [Buff]) ->
     ViewNetMsg = #pk_GS2U_UpdateBuff{uid = Uid, buff = i_marshal_buff(Buff)},
-    mod_map_priv:broadcast_net_msg_view(ViewNetMsg);
+    mod_map_priv:broadcast_net_msg_view(Uid, ViewNetMsg);
 on_update_buff(Uid, BuffList) when is_list(BuffList) ->
     BuffInfoList = [i_marshal_buff(Buff) || Buff <- BuffList],
     ViewNetMsg = #pk_GS2U_UpdateBuffList{uid = Uid, buff_list = BuffInfoList},
-    mod_map_priv:broadcast_net_msg_view(ViewNetMsg);
+    mod_map_priv:broadcast_net_msg_view(Uid, ViewNetMsg);
 on_update_buff(Uid, Buff) ->
     ViewNetMsg = #pk_GS2U_UpdateBuff{uid = Uid, buff = i_marshal_buff(Buff)},
-    mod_map_priv:broadcast_net_msg_view(ViewNetMsg).
+    mod_map_priv:broadcast_net_msg_view(Uid, ViewNetMsg).
 
 %%-------------------------------------------------------------------
 on_delete_buff(_Uid, []) ->
     skip;
 on_delete_buff(Uid, [BuffId]) ->
     ViewNetMsg = #pk_GS2U_DeleteBuff{uid = Uid, buff_id = BuffId},
-    mod_map_priv:broadcast_net_msg_view(ViewNetMsg);
+    mod_map_priv:broadcast_net_msg_view(Uid, ViewNetMsg);
 on_delete_buff(Uid, BuffIdList) when is_list(BuffIdList) ->
     ViewNetMsg = #pk_GS2U_DeleteBuffList{uid = Uid, buff_id_list = BuffIdList},
-    mod_map_priv:broadcast_net_msg_view(ViewNetMsg);
+    mod_map_priv:broadcast_net_msg_view(Uid, ViewNetMsg);
 on_delete_buff(Uid, BuffId) when is_number(BuffId) ->
     ViewNetMsg = #pk_GS2U_DeleteBuff{uid = Uid, buff_id = BuffId},
-    mod_map_priv:broadcast_net_msg_view(ViewNetMsg).
+    mod_map_priv:broadcast_net_msg_view(Uid, ViewNetMsg).
 
 
 %%------------------------------------------------------------------

@@ -35,11 +35,6 @@
     add_player_cross/1, del_player_cross/1
 ]).
 
-match() ->
-    M = #{},
-    
-    ok.
-
 %%-------------------------------------------------------------------
 init() ->
     misc_ets:new(?ETS_CACHE_PLAYER_PUB, [named_table, public, {keypos, #m_cache_player_pub.uid}, ?ETS_RC, ?ETS_WC]),
@@ -56,8 +51,12 @@ init() ->
     ok.
 
 %%-------------------------------------------------------------------
-online(#p_player{} = Player, Pid, Sock) ->
+online(#p_player{uid = Uid} = Player, Pid, Sock) ->
     add_online_player(Player, Pid, Sock),
+    case misc_ets:member(?ETS_CACHE_PLAYER_PUB, Uid) of
+        true -> skip;
+        _Any -> add_player_pub(Player)
+    end,
     ok.
 
 online_cross(
@@ -96,6 +95,7 @@ add_player_pub(#m_cache_player_pub{} = Player) ->
     misc_ets:write(?ETS_CACHE_PLAYER_PUB, Player),
     ok.
 
+
 del_player_pub(Uid) ->
     ?INFO("del player ~w from ETS_PLAYER_PUB", [Uid]),
     misc_ets:delete(?ETS_CACHE_PLAYER_PUB, Uid).
@@ -103,7 +103,9 @@ del_player_pub(Uid) ->
 get_player_pub(Uid) ->
     case misc_ets:read(?ETS_CACHE_PLAYER_PUB, Uid) of
         [Player] -> Player;
-        _ -> undefined
+        _ ->
+            ?ERROR("where is player ETS_PLAYER_PUB data ~p",[Uid]),
+            undefined
     end.
 
 update_player_pub(Uid, Elements) ->
