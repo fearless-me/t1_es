@@ -188,6 +188,7 @@ tick_player_1(undefined, Uid) ->
 tick_player_1(Obj, _) ->
     ?TRY_CATCH(mod_move:update(Obj), Err1, Stk1),
     ?TRY_CATCH(mod_combat:tick(Obj), Err2, Stk2),
+    ?TRY_CATCH(mod_buff:tick(Obj), Err3, Stk3),
     ok.
 
 %%-------------------------------------------------------------------
@@ -203,6 +204,7 @@ tick_monster_1(Obj, _) ->
     ?TRY_CATCH(mod_move:update(Obj), Err1, Stk1),
     ?TRY_CATCH(mod_ai:update(Obj), Err2, Stk2),
     ?TRY_CATCH(mod_combat:tick(Obj), Err3, Stk3),
+    ?TRY_CATCH(mod_buff:tick(Obj), Err4, Stk4),
     ok.
 
 %%-------------------------------------------------------------------
@@ -217,6 +219,7 @@ tick_pet_1(undefined, Uid) ->
 tick_pet_1(Obj, _) ->
     ?TRY_CATCH(mod_move:update(Obj), Err1, Stk1),
     ?TRY_CATCH(mod_combat:tick(Obj), Err2, Stk2),
+    ?TRY_CATCH(mod_buff:tick(Obj), Err3, Stk3),
     ok.
 
 %%-------------------------------------------------------------------

@@ -120,7 +120,10 @@ i_filter_buff_cfg(_BuffId, Pos, Key) ->
 
 %%-------------------------------------------------------------------
 tick(#m_cache_map_object{uid = Uid}) ->
-    BuffList = i_get_bufflist(Uid),
+    tick(Uid, i_get_bufflist(Uid)).
+
+tick(_Uid, []) -> ok;
+tick(Uid, BuffList) ->
     %% todo 区分删除、更新的buff，批量通知
     {DelBuffList, UpdateBuffList, NewBuffList} = tick_all_buff(BuffList, Uid, [], [], []),
     i_set_bufflist(Uid, NewBuffList),
