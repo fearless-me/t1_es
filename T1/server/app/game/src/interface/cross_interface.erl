@@ -53,10 +53,10 @@ assign_cross_for_player(Uid) ->
     ok.
 
 do_assign_cross_for_player(_Uid, []) ->
-    ok;
+    0;
 do_assign_cross_for_player(Uid, [CrossSid | _]) ->
     force_assign_cross_for_player(Uid, CrossSid),
-    ok.
+    CrossSid.
 
 is_assign_cross(Uid) ->
     case misc_mnesia:dirty_read(?SharePlayerCrossLock, Uid) of
@@ -119,7 +119,7 @@ inner_get_player_src_sid(_Uid) -> undefined.
 inner_get_player_cross_sid(Uid) when is_number(Uid), Uid > 0 ->
     case misc_mnesia:dirty_read(?SharePlayerCrossLock, Uid) of
         [#m_share_player_cross_lock{cross_sid = DstSid}] -> DstSid;
-        _ -> undefined
+        _ -> assign_cross_for_player(Uid)
     end;
 inner_get_player_cross_sid(_Uid) -> undefined.
 

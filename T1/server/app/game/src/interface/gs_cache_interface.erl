@@ -73,6 +73,7 @@ offline(Aid, Uid) ->
     ?INFO("player ~w of account ~p offline", [Uid, Aid]),
     gs_cache_interface:del_online_player(Uid),
     gs_cache_interface:del_account_socket(Aid),
+    misc_ets:delete(?ETS_CACHE_MAP_PLAYER, Uid),
     ok.
 
 

@@ -117,6 +117,9 @@ on_info_msg(return_to_pre_map_req, S) ->
 on_info_msg({passive_change_req, {DestMapID, LineId, TarPos}}, S) ->
     player_map_priv:serve_change_map_call(DestMapID, LineId, TarPos),
     S;
+on_info_msg(passive_kick_to_born_map, S) ->
+    player_map_priv:kick_to_born_map(),
+    S;
 on_info_msg({teleport, NewPos}, S) ->
     player_map_priv:teleport_call(NewPos),
     S;

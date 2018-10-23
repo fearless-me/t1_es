@@ -16,22 +16,25 @@
 
 %%
 -export([
+
     init/1, status/0, check_tick/1,
+
+    %%
+    map_id/0, line_id/0, hook_mod/0,
     %%
     add_obj_to_map/1, del_obj_to_map/1,
     %%
-    get_unit/1,
-    get_player/1, get_player_size/0,
-    get_monster/1, get_monster_size/0,
-    get_npc/1, get_npc_size/0,
-    get_pet/1, get_pet_size/0,
+    find_unit/1, find_unit/2,
     %%
-    get_detail_ets/0, 
-    get_obj_maps/1,
-    get_player_map/0, get_monster_map/0, get_npc_map/0, get_pet_map/0,
-    set_player_map/1, set_monster_map/1, set_npc_map/1, set_pet_map/1,
+    detail_ets/0,
+    obj_maps_with_uid/1, obj_maps_with_type/1,
+
+    obj_maps_with_uid/2, obj_maps_with_type/2,
+
+    obj_size_with_uid/1, obj_size_with_type/1,
+
+    add_uid_to_maps/2, del_uid_from_maps/2,
     %%
-    get_map_id/0, get_line_id/0, get_map_hook/0,
     update_move_timer/1,
     get_move_timer_delta/0,
     get_move_timer_now/0,
@@ -40,11 +43,11 @@
 
 
 %% define
--define(MAP_MON_MAPS, monster_maps).
--define(MAP_PLAYER_MAPS, player_maps).
--define(MAP_NPC_MAPS, pet_maps).
--define(MAP_PET_MAPS, pet_maps).
--define(MAP_OBJ_ETS, map_obj_ets).
+-define(MAPS_MON, monster_maps).
+-define(MAPS_PLAYER, player_maps).
+-define(MAPS_NPC, pet_maps).
+-define(MAPS_PET, pet_maps).
+-define(ETS_MAP_OBJ, map_obj_ets).
 -define(MAP_ID, map_id__).
 -define(LINE_ID, line_id__).
 -define(MAP_HOOK, map_hook__).
@@ -52,14 +55,14 @@
 -define(MAP_TICK_INFO, map_tick_info__).
 -record(tick_info,{runs = 0, timeout = 0, max = 0, min = 0}).
 
-%%%-------------------------------------------------------------------
+%%-------------------------------------------------------------------
 init(State) ->
     init_base(State),
-    set_player_map(#{}),
-    set_monster_map(#{}),
-    set_pet_map(#{}),
-    set_npc_map(#{}),
-    set_detail_ets(State#m_map_state.ets),
+    obj_maps_with_type(?OBJ_PLAYER, #{}),
+    obj_maps_with_type(?OBJ_MON, #{}),
+    obj_maps_with_type(?OBJ_PET, #{}),
+    obj_maps_with_type(?OBJ_NPC, #{}),
+    detail_ets(State#m_map_state.ets),
     set_tick_info(#tick_info{}),
     ok.
 
@@ -71,31 +74,103 @@ init_base(State) ->
     erlang:put(?MOVE_TIMER, #m_move_timer{now = Now, latest_up = Now, delta = 0}),
     ok.
 
+%%-------------------------------------------------------------------
+map_id() -> erlang:get(?MAP_ID).
+line_id() -> erlang:get(?LINE_ID).
+hook_mod() -> erlang:get(?MAP_HOOK).
 
-set_detail_ets(Ets) -> erlang:put(?MAP_OBJ_ETS, Ets).
-get_detail_ets( ) -> erlang:get(?MAP_OBJ_ETS).
+%%-------------------------------------------------------------------
+detail_ets(Ets) -> erlang:put(?ETS_MAP_OBJ, Ets).
+detail_ets( ) -> erlang:get(?ETS_MAP_OBJ).
 
-get_obj_maps(Uid) ->
+%%-------------------------------------------------------------------
+find_unit(Uid) ->
     Type = object_rw:get_field(Uid, #m_object_rw.type),
-    case Type of
-        ?OBJ_PLAYER -> get_player_map();
-        ?OBJ_MON -> get_monster_map();
-        ?OBJ_PET -> get_pet_map();
-        ?OBJ_NPC -> get_npc_map();
+    map_rw:find_unit(Type, Uid).
+
+find_unit(?OBJ_PLAYER, Uid) ->
+    case misc_ets:read(?ETS_CACHE_MAP_PLAYER, Uid) of
+        [#m_cache_map_object{} = Obj | _] -> Obj;
         _ -> undefined
-    end.
+    end;
+find_unit(?OBJ_MON, Uid) ->
+    case misc_ets:read(?ETS_CACHE_MAP_MONSTER, Uid) of
+        [#m_cache_map_object{} = Obj | _] -> Obj;
+        _ -> undefined
+    end;
+find_unit(?OBJ_PET, Uid) ->
+    case misc_ets:read(?ETS_CACHE_MAP_PET, Uid) of
+        [#m_cache_map_object{} = Obj | _] -> Obj;
+        _ -> undefined
+    end;
+find_unit(?OBJ_NPC, Uid) ->
+    case misc_ets:read(?ETS_CACHE_MAP_NPC, Uid) of
+        [#m_cache_map_object{} = Obj | _] -> Obj;
+        _ -> undefined
+    end;
+find_unit(_Type, _Uid) -> undefined.
 
-get_player_map() -> get(?MAP_PLAYER_MAPS).
-set_player_map(Maps) -> erlang:put(?MAP_PLAYER_MAPS, Maps).
+%%-------------------------------------------------------------------
+obj_maps_with_uid(Uid) ->
+    Type = object_rw:get_field(Uid, #m_object_rw.type),
+    obj_maps_with_type(Type).
 
-get_monster_map() -> get(?MAP_MON_MAPS).
-set_monster_map(Maps) -> erlang:put(?MAP_MON_MAPS, Maps).
+%%-------------------------------------------------------------------
+obj_maps_with_type(?OBJ_PLAYER) -> erlang:get(?MAPS_PLAYER);
+obj_maps_with_type(?OBJ_MON) -> erlang:get(?MAPS_MON);
+obj_maps_with_type(?OBJ_PET) -> erlang:get(?MAPS_PET);
+obj_maps_with_type(?OBJ_NPC) -> erlang:get(?MAPS_NPC).
 
-get_pet_map() -> get(?MAP_PET_MAPS).
-set_pet_map(Maps) -> erlang:put(?MAP_PET_MAPS, Maps).
+%%-------------------------------------------------------------------
+obj_maps_with_uid(Uid, Maps) ->
+    Type = object_rw:get_field(Uid, #m_object_rw.type),
+    obj_maps_with_type(Type, Maps).
 
-get_npc_map() -> get(?MAP_NPC_MAPS).
-set_npc_map(Maps) -> erlang:put(?MAP_NPC_MAPS, Maps).
+
+obj_maps_with_type(?OBJ_PLAYER, Maps) ->
+    erlang:put(?MAPS_PLAYER, Maps);
+obj_maps_with_type(?OBJ_MON, Maps) ->
+    erlang:put(?MAPS_MON, Maps);
+obj_maps_with_type(?OBJ_PET, Maps) ->
+    erlang:put(?MAPS_PET, Maps);
+obj_maps_with_type(?OBJ_NPC, Maps) ->
+    erlang:put(?MAPS_NPC, Maps).
+
+%%-------------------------------------------------------------------
+obj_size_with_uid(Uid) ->
+    Type = object_rw:get_field(Uid, #m_object_rw.type),
+    obj_size_with_type(Type).
+
+obj_size_with_type(?OBJ_PLAYER) ->
+    maps:size(map_rw:obj_maps_with_type(?OBJ_PLAYER));
+obj_size_with_type(?OBJ_MON) ->
+    maps:size(map_rw:obj_maps_with_type(?OBJ_MON));
+obj_size_with_type(?OBJ_PET) ->
+    maps:size(map_rw:obj_maps_with_type(?OBJ_PET));
+obj_size_with_type(?OBJ_NPC) ->
+    maps:size(map_rw:obj_maps_with_type(?OBJ_NPC)).
+
+%%-------------------------------------------------------------------
+add_uid_to_maps(Type, Uid) ->
+    i_add_uid_from_maps(obj_maps_with_type(Type), Type, Uid),
+    ok.
+
+i_add_uid_from_maps(undefined, Type, _Uid) ->
+    erlang:error(Type);
+i_add_uid_from_maps(Maps, Type, Uid) ->
+    map_rw:obj_maps_with_type(Type, maps:put(Uid, Uid, Maps)),
+    ok.
+
+
+%%-------------------------------------------------------------------
+del_uid_from_maps(Type, Uid) ->
+    i_del_uid_from_maps(obj_maps_with_type(Type), Type, Uid),
+    ok.
+i_del_uid_from_maps(undefined, Type, _Uid) ->
+    erlang:error(Type);
+i_del_uid_from_maps(Maps, Type, Uid) ->
+    map_rw:obj_maps_with_type(Type, maps:remove(Uid, Maps)),
+    ok.
 
 %%-------------------------------------------------------------------
 set_tick_info(Info) -> erlang:put(?MAP_TICK_INFO, Info).
@@ -127,80 +202,28 @@ do_check_tick(_Any, Milliseconds) when Milliseconds > ?MAP_TICK ->
 do_check_tick(_Any, Milliseconds) ->
     #tick_info{runs = 1, timeout = 0, max = Milliseconds, min = Milliseconds}.
 
-%%-------------------------------------------------------------------
-get_map_id() -> erlang:get(?MAP_ID).
-get_line_id() -> erlang:get(?LINE_ID).
-get_map_hook() -> erlang:get(?MAP_HOOK).
 
-%%-------------------------------------------------------------------
-get_unit(Uid) ->
-    Type = object_rw:get_field(Uid, #m_object_rw.type),
-    case Type of
-        ?OBJ_PLAYER -> get_player(Uid);
-        ?OBJ_MON -> get_monster(Uid);
-        ?OBJ_PET -> get_pet(Uid);
-        ?OBJ_NPC -> get_npc(Uid);
-        _ -> undefined
-    end.
-%%-------------------------------------------------------------------
-get_player(Uid) ->
-    case misc_ets:read(?ETS_CACHE_MAP_PLAYER, Uid) of
-        [#m_cache_map_object{} = Obj | _] -> Obj;
-        _ -> undefined
-    end.
 
-get_player_size() ->
-    maps:size(map_rw:get_player_map()).
-
-%%-------------------------------------------------------------------
-get_monster(Uid) ->
-    case misc_ets:read(?ETS_CACHE_MAP_MONSTER, Uid) of
-        [#m_cache_map_object{} = Obj | _] -> Obj;
-        _ -> undefined
-    end.
-
-get_monster_size() ->
-    maps:size(map_rw:get_monster_map()).
-
-%%-------------------------------------------------------------------
-get_npc(Uid) ->
-    case misc_ets:read(?ETS_CACHE_MAP_NPC, Uid) of
-        [#m_cache_map_object{} = Obj | _] -> Obj;
-        _ -> undefined
-    end.
-
-get_npc_size() ->
-    maps:size(map_rw:get_npc_map()).
-
-%%-------------------------------------------------------------------
-get_pet(Uid) ->
-    case misc_ets:read(?ETS_CACHE_MAP_PET, Uid) of
-        [#m_cache_map_object{} = Obj | _] -> Obj;
-        _ -> undefined
-    end.
-
-get_pet_size() ->
-    maps:size(map_rw:get_pet_map()).
 
 %%-------------------------------------------------------------------
 add_obj_to_map(#m_cache_map_object{type = ?OBJ_MON, uid = Uid} = Obj) ->
     misc_ets:write(?ETS_CACHE_MAP_MONSTER, Obj),
-    map_rw:set_monster_map(maps:put(Uid, Uid, map_rw:get_monster_map())),
+    map_rw:add_uid_to_maps(?OBJ_MON, Uid),
     ok;
 add_obj_to_map(#m_cache_map_object{type = ?OBJ_PLAYER, uid = Uid} = Obj) ->
     misc_ets:write(?ETS_CACHE_MAP_PLAYER, Obj),
-    map_rw:set_player_map(maps:put(Uid, Uid, map_rw:get_player_map())),
+    map_rw:add_uid_to_maps(?OBJ_PLAYER, Uid),
     ok;
 add_obj_to_map(_) ->
     ok.
 
 del_obj_to_map(#m_cache_map_object{uid = Uid, type = ?OBJ_MON}) ->
     misc_ets:delete(?ETS_CACHE_MAP_MONSTER, Uid),
-    map_rw:set_monster_map(maps:remove(Uid, map_rw:get_monster_map())),
+    map_rw:del_uid_from_maps(?OBJ_MON, Uid),
     ok;
 del_obj_to_map(#m_cache_map_object{uid = Uid, type = ?OBJ_PLAYER}) ->
     misc_ets:delete(?ETS_CACHE_MAP_PLAYER, Uid),
-    map_rw:set_player_map(maps:remove(Uid, map_rw:get_player_map())),
+    map_rw:del_uid_from_maps(?OBJ_PLAYER, Uid),
     ok;
 del_obj_to_map(_) ->
     ok.
@@ -226,13 +249,13 @@ get_move_timer_delta() ->
 %%-------------------------------------------------------------------
 status()->
     [
-        {objects, misc_ets:size(get_detail_ets())},
-        {player, get_player_size()},
-        {pet, get_pet_size()},
-        {npc, get_npc_size()},
-        {monster, get_monster_size()},
-        {respawn, 0},
-        {tick, get_tick_info()}
+        {objects,   misc_ets:size(detail_ets())},
+        {player,    obj_size_with_type(?OBJ_PLAYER)},
+        {pet,       obj_size_with_type(?OBJ_PET)},
+        {npc,       obj_size_with_type(?OBJ_NPC)},
+        {monster,   obj_size_with_type(?OBJ_MON)},
+        {respawn,   0},
+        {tick,      get_tick_info()}
     ].
 
 

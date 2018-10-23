@@ -11,6 +11,7 @@
 
 -behaviour(gen_serverw).
 -include("logger.hrl").
+-include("error_code.hrl").
 -include("pub_def.hrl").
 -include("gs_common_rec.hrl").
 -include("gs_ps_def.hrl").
@@ -77,7 +78,7 @@ do_handle_cast(Request, State) ->
 %%--------------------------------------------------------------------
 do_player_join_map_call(S, Req) ->
     %1. 选线
-    #r_change_map_req{
+    #r_join_map_req{
         tar_map_id = MapID, tar_line_id = TarLineId, force = Force
     } = Req,
     
@@ -113,15 +114,15 @@ do_player_join_map_call(S, Req) ->
 i_player_join_map_call(#m_map_line{pid = MapPid, map_id = MapID, line_id = LineID}, _, Req, State) ->
     %3. 加入
     case map_interface:player_join_call(MapPid, Req) of
-        ok ->
+        ?E_Success ->
             misc_ets:update_counter(State#state.ets, LineID, {#m_map_line.in, 1}),
-            #r_change_map_ack{map_id = MapID, line_id = LineID, map_pid = MapPid, pos = Req#r_change_map_req.tar_pos};
+            #r_join_map_ack{error = ?E_Success, map_id = MapID, line_id = LineID, map_pid = MapPid, pos = Req#r_join_map_req.tar_pos};
         _ ->
-            #r_change_map_ack{map_id = MapID, line_id = LineID, map_pid = MapPid, error = -1}
+            #r_join_map_ack{map_id = MapID, line_id = LineID, map_pid = MapPid, error = ?E_Exception}
     end;
 %%2.没有线就返回错误
 i_player_join_map_call(_Any, ?MAP_LINE_RECOVER_ERR, Req, _State) ->
-    #r_change_map_ack{map_id = Req#r_change_map_req.map_id, error = -2};
+    #r_join_map_ack{map_id = Req#r_join_map_req.tar_map_id, error = ?E_Exception};
 %%3.没有线就创建一条新线
 i_player_join_map_call(_Any, Recover, Req, State) ->
     case catch create_new_line(State, State#state.map_id, next_line_id()) of
@@ -129,7 +130,7 @@ i_player_join_map_call(_Any, Recover, Req, State) ->
             i_player_join_map_call(Line, Recover, Req, State);
         Error ->
             ?ERROR("create map ~p new line error ~p",[State#state.map_id, Error]),
-            #r_change_map_ack{map_id = Req#r_change_map_req.map_id, error = -3}
+            #r_join_map_ack{map_id = Req#r_join_map_req.tar_map_id, error = ?E_MapCreateLineFailed}
     end.
 
 %%--------------------------------------------------------------------

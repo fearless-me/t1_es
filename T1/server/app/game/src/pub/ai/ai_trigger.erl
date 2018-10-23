@@ -143,7 +143,7 @@ test_trigger_event(_Uid, #m_ai_trigger_cfg{prob = Prob}) ->
 test_trigger_state(_Uid, _Trigger, 0) ->
     false;
 test_trigger_state(Uid, Trigger, TarUid) when is_integer(TarUid) ->
-    Obj = map_rw:get_unit(TarUid),
+    Obj = map_rw:find_unit(TarUid),
     test_trigger_state(Uid, Trigger, Obj);
 test_trigger_state(_Uid, _Trigger, undefined) ->
     false;

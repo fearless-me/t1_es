@@ -35,7 +35,7 @@
     send_msg_2_all_server_worker/1, send_msg_2_all_server_worker/2,
     
     %%
-    is_server_worker_alive/1,
+    is_server_worker_alive/1,  is_server_alive/1,
     
     %%
     get_server_info/1, get_cgs_info/0,
@@ -63,6 +63,12 @@ get_cgs_info() ->
     Q = ets:fun2ms(fun(Info) when Info#m_share_server_info.type =:= ?SERVER_TYPE_CROSS -> Info end),
     misc_mnesia:dirty_select(?ShareServerInfoName, Q).
 
+%%%-------------------------------------------------------------------
+is_server_alive(ServerID) ->
+    case misc_mnesia:dirty_read(?ShareServerInfoName, ServerID) of
+        [] -> false;
+        _ -> true
+    end.
 
 %%%-------------------------------------------------------------------
 is_server_worker_alive(ServerID) ->

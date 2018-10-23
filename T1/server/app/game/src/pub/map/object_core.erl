@@ -108,8 +108,8 @@ new(Type, Pid, Uid, Did, Owner, Group, Pos, Face) ->
     ),
     
     #m_cache_map_object{
-        map_id = map_rw:get_map_id(),
-        line_id = map_rw:get_line_id(),
+        map_id = map_rw:map_id(),
+        line_id = map_rw:line_id(),
         uid = Uid, pid = Pid, data_id = Did,
         owner = Owner, type = Type
     }.

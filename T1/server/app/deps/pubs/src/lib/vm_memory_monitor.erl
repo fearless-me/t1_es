@@ -17,7 +17,7 @@
 -export([init/1, handle_call/3, handle_cast/2, handle_info/2,
     terminate/2, code_change/3]).
 
--export([log_ps_info/0]).
+-export([info/0]).
 -export([get_total_memory/0, get_vm_limit/0,
     get_check_interval/0, set_check_interval/1,
     get_vm_memory_high_watermark/0, set_vm_memory_high_watermark/1,
@@ -145,7 +145,7 @@ handle_cast(_Request, State) ->
 handle_info(update, State) ->
     {noreply, internal_update(State)};
 handle_info(tick, State) ->
-    log_ps_info(),
+    info(),
     Self = self(),
     erlang:spawn(fun() -> garbage_collect(Self) end),
     {noreply, State};
@@ -415,19 +415,19 @@ read_proc_file(IoDevice, Acc) ->
         eof -> Acc
     end.
 
-log_ps_info() ->
+info() ->
     PS_Count = erlang:system_info(process_count),
     RQ = erlang:statistics(run_queue),
     ProcessUsed = erlang:memory(processes_used),
     ProcessTotal = erlang:memory(processes),
     MemInfo = erlang:memory([system, atom, atom_used, binary, code, ets]),
 
-    SystemMem = misc:format_memory_readable(proplists:get_value(system, MemInfo)),
-    AtomMem = misc:format_memory_readable(proplists:get_value(atom, MemInfo)),
-    AtomUsedMem = misc:format_memory_readable(proplists:get_value(atom_used, MemInfo)),
-    BinMem = misc:format_memory_readable(proplists:get_value(binary, MemInfo)),
-    CodeMem = misc:format_memory_readable(proplists:get_value(code, MemInfo)),
-    EtsMem = misc:format_memory_readable(proplists:get_value(ets, MemInfo)),
+    SystemMem = misc:format_memory_readable(misc:get_value(system, MemInfo)),
+    AtomMem = misc:format_memory_readable(misc:get_value(atom, MemInfo)),
+    AtomUsedMem = misc:format_memory_readable(misc:get_value(atom_used, MemInfo)),
+    BinMem = misc:format_memory_readable(misc:get_value(binary, MemInfo)),
+    CodeMem = misc:format_memory_readable(misc:get_value(code, MemInfo)),
+    EtsMem = misc:format_memory_readable(misc:get_value(ets, MemInfo)),
 
     PSList = erlang:processes(),
 
@@ -436,20 +436,20 @@ log_ps_info() ->
     Fun =
         fun(L, AccIn) ->
             try
-                Pid = proplists:get_value(pid, L),
-                RegName = case proplists:get_value(registered_name, L) of
+                Pid = misc:get_value(pid, L),
+                RegName = case misc:get_value(registered_name, L) of
                               [] ->
                                   "null";
                               V ->
                                   V
                           end,
-                Red = proplists:get_value(reductions, L),
-                MQL = proplists:get_value(message_queue_len, L),
-                Mem = proplists:get_value(memory, L),
-                Heap = proplists:get_value(heap_size, L),
-                Stack = proplists:get_value(stack_size, L),
-                TotalHeap = proplists:get_value(total_heap_size, L),
-                CF = lists:sublist(proplists:get_value(current_stacktrace, L), 4),
+                Red = misc:get_value(reductions, L),
+                MQL = misc:get_value(message_queue_len, L),
+                Mem = misc:get_value(memory, L),
+                Heap = misc:get_value(heap_size, L),
+                Stack = misc:get_value(stack_size, L),
+                TotalHeap = misc:get_value(total_heap_size, L),
+                CF = lists:sublist(misc:get_value(current_stacktrace, L), 4),
 
                 [{Pid, RegName, Red, MQL, Mem, TotalHeap, Heap, Stack, cf_parse(CF, "")} | AccIn]
             catch _ : _ : _ ->

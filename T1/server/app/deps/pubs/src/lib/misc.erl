@@ -23,7 +23,7 @@
     ip/0, peername/1, ip_string/1,
     crc32/1, mod_1/2, clamp/3, rand/2,
     set_bit/2, unset_bit/2, test_bit/2, first_set_bit/1,
-    get_value/3, callstack/0, sleep/1,
+    get_value/2, get_value/3, callstack/0, sleep/1,
     interval_operation/5, parse_information_unit/1, format_memory_readable/1,
     get_dict_def/2, md5/1, int_to_hex/1,
     lists_rand_get/1, lists_shuffle/1, lists_rand_get_n/2, list_to_hex/1,
@@ -245,6 +245,9 @@ clamp(X, Min, Max) when Min =< Max ->
 
 %%-------------------------------------------------------------------
 %% Faster alternative to proplists:get_value/3.
+get_value(Key, Opts) ->
+    misc:get_value(Key, Opts, undefined).
+
 get_value(Key, Opts, Default) ->
     case lists:keyfind(Key, 1, Opts) of
         {_, Value} -> Value;

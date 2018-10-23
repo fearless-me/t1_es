@@ -62,15 +62,12 @@ do_seq_first_unset(BL, StartBit, MaxBit, Loop) ->
         _Any -> StartBit
     end.
 
-
 %%-------------------------------------------------------------------
 seq_first_set(BL) ->
     Iterator = maps:iterator(BL),
     case maps:next(Iterator) of
         none -> -1;
-        {K, V, _} ->
-            io:format("kv={~p,~p}~n",[K,V]),
-            K * ?UNIT_BITS + misc:first_set_bit(V)
+        {K, V, _} -> K * ?UNIT_BITS + misc:first_set_bit(V)
     end.
 
 %%-------------------------------------------------------------------
@@ -112,7 +109,8 @@ i_op(V, Index, _Any) -> misc:unset_bit(V, Index).
 
 %%-------------------------------------------------------------------
 %%-------------------------------------------------------------------
--define(WRAP(F), timer:tc(fun()-> F end)).
+%%-define(WRAP(F), timer:tc(fun()-> F end)).
+-define(WRAP(F), F).
 test() ->
     BL1 = bits_map:new(),
     io:format("~n*****set*****~n"),

@@ -5,15 +5,16 @@
 %%% 上线 进入上次退出的地图，如果失败就直接返回出生地
 %%% 游戏 如果目标地图存在则先退出在进入，如果失败返回出生地
 %%% 游戏 如果目标地图不存在，则会切地图失败
+%%% 游戏 如果原地图不存在了(比如跨服挂掉了) 返回出生地
 %%% @end
 %%% Created : 14. 六月 2018 14:23
 %%%-------------------------------------------------------------------
 -module(player_map_priv).
 -author("mawenhong").
 -include("logger.hrl").
+-include("error_code.hrl").
 -include("map_core.hrl").
 -include("pub_rec.hrl").
-
 -include("gs_cache.hrl").
 -include("db_record.hrl").
 -include("gs_common_rec.hrl").
@@ -27,7 +28,7 @@
 
 -export([
     online_call/1, offline_call/4, serve_change_map_call/3,
-    teleport_call/1, return_to_old_map_call/0
+    teleport_call/1, return_to_old_map_call/0, kick_to_born_map/0
 ]).
 
 
@@ -55,10 +56,8 @@ online_call(Player) ->
     
     Pos = vector3:new(OX, 0, OY),
     Tar = vector3:new(X, 0, Y),
-    Req = #r_change_map_req{
-        uid = Uid, pid = self(),
-        map_id = OldMid, line_id = OldLine, pos = Pos,
-        tar_map_id = Mid, tar_pos = Tar
+    Req = #r_join_map_req{
+        uid = Uid, pid = self(), tar_map_id = Mid, tar_pos = Tar
     },
     Ack = do_online_call(Mid, Req),
     
@@ -72,81 +71,85 @@ do_online_call(MapID, Req) ->
 
 %%
 do_online_call_1(undefined, Req) ->
-    #r_change_map_ack{error = -4, map_id = Req#r_change_map_req.map_id};
+    #r_join_map_ack{error = -4, map_id = Req#r_join_map_req.tar_map_id};
 do_online_call_1(Mgr, Req) ->
-    case map_mgr_interface:player_join_map_call(Mgr, Req) of
-        #r_change_map_ack{} = Ack -> Ack;
-        _ -> #r_change_map_ack{error = -5, map_id = Req#r_change_map_req.map_id}
+    case catch map_mgr_interface:player_join_map_call(Mgr, Req) of
+        #r_join_map_ack{} = Ack -> Ack;
+        _ -> #r_join_map_ack{error = ?E_Exception, map_id = Req#r_join_map_req.tar_map_id}
     end.
 
-
 %%-------------------------------------------------------------------
-serve_change_map_call(DestMapID, DestLineId, TarPos) ->
+serve_change_map_call(TarMid, TarLineId, TarPos) ->
     player_rw:set_status(?PS_CHANGE_MAP),
     Uid = player_rw:get_uid(),
-    #m_cache_online_player{map_id = Mid, line = Line, map_pid = MPid, pos = Pos} = gs_cache_interface:get_online_player(Uid),
-    player_cross_priv:change_map_before(Mid, DestMapID),
+    #m_cache_online_player{
+        map_id = SrcMid, line = SrcLineId, map_pid = SrcMPid, pos = SrcPos
+    } = gs_cache_interface:get_online_player(Uid),
+    player_cross_priv:change_map_before(SrcMid, TarMid),
     
-    Req = #r_change_map_req{
-        uid = Uid, pid = self(),
-        map_id = Mid, line_id = Line, map_pid = MPid, pos = Pos,
-        tar_map_id = DestMapID, tar_line_id = DestLineId, tar_pos = TarPos
-    },
+
+
+    ExitReq = #r_exit_map_req{uid = Uid, map_id = SrcMid, line_id = SrcLineId, map_pid = SrcMPid},
+    JoinReq = #r_join_map_req{uid = Uid, group = 0, pid = self(), tar_map_id = TarMid, tar_line_id = TarLineId, tar_pos = TarPos},
     
-    Ack = do_serve_change_map_call(Req),
-    serve_change_map_call_ret(Mid, Line, Pos, Ack, Req, gaming),
+    Ack = do_serve_change_map_call(ExitReq, JoinReq),
+    serve_change_map_call_ret(SrcMid, SrcLineId, SrcPos, Ack, JoinReq, gaming),
     ok.
 
 %%-------------------------------------------------------------------
-do_serve_change_map_call(Req) ->
-    #r_change_map_req{
-        uid = Uid, tar_map_id = TMid,
-        map_id = Mid, line_id = LineId, map_pid = Mpid
-    } = Req,
-    CurMgr = map_creator_interface:map_mgr_lr(Uid, Mid),
-    TarMgr = map_creator_interface:map_mgr_lr(Uid, TMid),
+do_serve_change_map_call(ExitReq, JoinReq) ->
+
+    %% 1.
+    #r_exit_map_req{uid = Uid, map_id = SrcMid, line_id = SrcLineId, map_pid = SrcMpid} = ExitReq,
+    #r_join_map_req{uid = Uid, tar_map_id = TarMid} = JoinReq,
+
+    
+    CurMgr = map_creator_interface:map_mgr_lr(Uid, SrcMid),
+    TarMgr = map_creator_interface:map_mgr_lr(Uid, TarMid),
+
     ?INFO("player ~p, changeMap map_~p_~p:~p -> map ~p",
-        [Uid, Mid, LineId, Mpid, TMid]),
-    ExitRes = do_serve_change_map_call_exit(CurMgr, TarMgr, Req),
-    do_serve_change_map_call_join(ExitRes, TarMgr, Req).
+        [Uid, SrcMid, SrcLineId, SrcMpid, TarMid]),
+
+    %% 2.
+    ExitRes = do_serve_change_map_call_exit(CurMgr, TarMgr, ExitReq),
+    do_serve_change_map_call_join(ExitRes, TarMgr, JoinReq).
 
 %% 先退出
-do_serve_change_map_call_exit(undefined, undefined, #r_change_map_req{map_id = Mid}) ->
-    #r_change_map_ack{error = -666, map_id = Mid};
-do_serve_change_map_call_exit(_CurMgr, undefined, #r_change_map_req{map_id = Mid}) ->
-    #r_change_map_ack{error = -777, map_id = Mid};
-%%do_serve_change_map_call_exit(undefined, _CurMgr, #r_change_map_req{map_id = Mid}) ->
-%%    #r_change_map_ack{error = -888, map_id = Mid};
-do_serve_change_map_call_exit(CurMgr, _TarMgr, #r_change_map_req{
-    uid = Uid, map_id = Mid, line_id = LineId, map_pid = Mpid
-}) ->
-    map_mgr_interface:player_exit_map_call(CurMgr,
-        #r_exit_map_req{map_id = Mid, line_id = LineId, map_pid = Mpid, uid = Uid}).
+%% 这种情况可能是在跨服(比如跨服中切跨服地图，但是跨服挂了)
+do_serve_change_map_call_exit(undefined, undefined, #r_exit_map_req{map_id = Mid}) ->
+    #r_exit_map_ack{error = ?E_Exception, map_id = Mid};
+%% 这种情况可能是在跨服(跨服中去切普通服务器，但是跨服挂了)
+do_serve_change_map_call_exit(undefined, _CurMgr, #r_exit_map_req{map_id = Mid}) ->
+    #r_exit_map_ack{error = ?E_Success, map_id = Mid};
+%% 这种情况可能是在普通服切跨服，但是跨服不存在
+do_serve_change_map_call_exit(_CurMgr, undefined, #r_exit_map_req{map_id = Mid}) ->
+    #r_exit_map_ack{error = ?E_MapNotExists, map_id = Mid};
+%% 这种是服务器安全的情况下
+do_serve_change_map_call_exit(CurMgr, _TarMgr, #r_exit_map_req{map_id = Mid} = ExitReq) ->
+    case catch map_mgr_interface:player_exit_map_call(CurMgr, ExitReq) of
+        Code when is_number(Code)-> #r_exit_map_ack{error = Code, map_id = Mid};
+        _ ->   #r_exit_map_ack{error = ?E_Exception, map_id = Mid}
+    end.
 
 %% 在进入
-do_serve_change_map_call_join(error, _TarMgr, #r_change_map_req{map_id = Mid}) ->
-    #r_change_map_ack{error = -7, map_id = Mid};
-do_serve_change_map_call_join(#r_change_map_ack{} = Ack, _TarMgr, _Req) ->
-    Ack;
-do_serve_change_map_call_join(_Any, undefined, #r_change_map_req{
-    uid = Uid, tar_map_id = TMid, map_id = Mid}
-) ->
-    ?ERROR("player[~p] tar map[~p] not exists, goto born map", [Uid, TMid]),
-    #r_change_map_ack{error = -8, map_id = Mid};
-do_serve_change_map_call_join(_Any, TarMgr, Req) ->
-    case map_mgr_interface:player_join_map_call(TarMgr, Req) of
-        #r_change_map_ack{} = Ack -> Ack;
-        _ -> #r_change_map_ack{error = -9, map_id = Req#r_change_map_req.map_id}
-    end.
+%% 1.应该不会存在这种情况
+do_serve_change_map_call_join(#r_exit_map_ack{error = ?E_Success}, undefined, _JoinReq) ->
+    #r_join_map_ack{error = ?E_Exception, map_id = 0};
+%% 2. 成功退出地图，加入新地图
+do_serve_change_map_call_join(#r_exit_map_ack{error = ?E_Success}, TarMgr, JoinReq)->
+    case catch map_mgr_interface:player_join_map_call(TarMgr, JoinReq) of
+        #r_join_map_ack{} = Ack -> Ack;
+        _ -> #r_join_map_ack{error = ?E_Exception, map_id = JoinReq#r_join_map_req.tar_map_id}
+    end;
+do_serve_change_map_call_join(#r_exit_map_ack{error = ErrorCode}, _TarMgr, _Req) ->
+    #r_join_map_ack{error = ErrorCode, map_id = 0}.
 
 %%-------------------------------------------------------------------
 serve_change_map_call_ret(
     OldMid, OldLineId, OldPos,
-    #r_change_map_ack{
-        error = 0,
-        map_id = Mid, line_id = LineId,
-        map_pid = MPid, pos = Pos
-    }, _Req, _Flag) ->
+    #r_join_map_ack{error = ?E_Success, map_id = Mid, line_id = LineId, map_pid = MPid, pos = Pos},
+    _Req, _Flag
+) ->
     Uid = player_rw:get_uid(),
     gs_cache_interface:update_online_player(
         Uid,
@@ -171,24 +174,28 @@ serve_change_map_call_ret(
     ok;
 serve_change_map_call_ret(
     OldMid, OldLineId, _OldPos,
-    #r_change_map_ack{error = Err, map_id = Mid} = Ack, Req, Flag
+    #r_join_map_ack{error = Err, map_id = Mid} = Ack,
+    Req, Flag
 ) ->
     player_cross_priv:change_map_after(OldMid, Mid, false),
     
-    ?ERROR("player ~p change from map ~p:~p to map ~p failed with ~p",
-        [player_rw:get_uid(), OldMid, OldLineId, Mid, Err]),
+    ?ERROR("player ~p change from map ~p:~p to map ~p flag ~p failed with ~p",
+        [player_rw:get_uid(), OldMid, OldLineId, Mid, Flag, Err]),
     
     serve_change_map_call_fail(Flag, Req, Ack),
     ok.
 
-serve_change_map_call_fail(kick_born_map, _Req, #r_change_map_ack{error = Error, map_id = Mid}) ->
+serve_change_map_call_fail(kick_born_map, _Req, #r_join_map_ack{error = Error, map_id = Mid}) ->
     %% todo 告诉客户端切地图失败
     Uid = player_rw:get_uid(),
     ?FATAL("fatal error ~p, player[~p]can not enter the born map ~p", [Error, Uid, Mid]),
     player_pub:stop("online can't join map");
-serve_change_map_call_fail(gaming, _Req, _Ack) ->
+serve_change_map_call_fail(gaming, _Req, #r_join_map_ack{error = ?E_MapNotExists}) ->
     %% todo 告诉客户端切地图失败
     player_rw:set_status(?PS_GAME);
+serve_change_map_call_fail(gaming, Req, _Ack) ->
+    %% todo 告诉客户端切地图失败
+    kick_to_born_map(Req);
 serve_change_map_call_fail(_, Req, _Ack) ->
     kick_to_born_map(Req).
 
@@ -205,29 +212,29 @@ return_to_old_map_call() ->
 %%-------------------------------------------------------------------
 offline_call(Uid, MapID, LineId, MapPid) ->
     Mgr = map_creator_interface:map_mgr_lr(Uid, MapID),
-    map_mgr_interface:player_exit_map_call(
+    catch map_mgr_interface:player_exit_map_call(
         Mgr,
         #r_exit_map_req{map_id = MapID, line_id = LineId, map_pid = MapPid, uid = Uid}
     ),
     ok.
 
 %%-------------------------------------------------------------------
+kick_to_born_map()->
+    Uid = player_rw:get_uid(),
+    Req = #r_join_map_req{uid = Uid, pid = self()},
+    kick_to_born_map(Req),
+    ok.
+
 kick_to_born_map(Req) ->
     Uid = player_rw:get_aid(),
     Mid = map_creator_interface:born_map_id(),
     Pos = map_creator_interface:born_map_pos(),
     Mgr = map_creator_interface:map_mgr_lr(Uid, Mid),
-    Old = Req#r_change_map_req.tar_map_id,
-    ?WARN(" player[~p] can't enter ~p kick to born map ~p", [Uid, Old, Mid]),
+    ?WARN("kick player ~p to born map ~p", [Uid, Mid]),
     
     Ack = map_mgr_interface:player_join_map_call(
-        Mgr, Req#r_change_map_req{tar_map_id = Mid, tar_pos = Pos}),
+        Mgr, Req#r_join_map_req{tar_map_id = Mid, tar_pos = Pos}),
     
-    serve_change_map_call_ret(
-        Req#r_change_map_req.map_id,
-        Req#r_change_map_req.line_id,
-        Req#r_change_map_req.tar_pos,
-        Ack, Req, kick_born_map
-    ),
+    serve_change_map_call_ret(Mid, 0, Pos, Ack, Req, kick_born_map),
     ok.
 

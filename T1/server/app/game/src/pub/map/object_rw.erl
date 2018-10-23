@@ -80,4 +80,4 @@ i_set_fields(Uid,[Field | FieldList]) ->
 
 
 i_detail_ets() ->
-    map_rw:get_detail_ets().
+    map_rw:detail_ets().

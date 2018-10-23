@@ -5,40 +5,41 @@
       <configuration />
     </facet>
   </component>
-  <component name="NewModuleRootManager">
+  <component name="NewModuleRootManager" inherit-compiler-output="true">
+    <exclude-output />
     <content url="file://$MODULE_DIR$">
       <sourceFolder url="file://$MODULE_DIR$/app/center/src" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/app/center/include" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/app/center/include" type="erlang-include" />
       <sourceFolder url="file://$MODULE_DIR$/app/deps/dynamic_compile/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/app/deps/econfig/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/app/deps/econfig/test" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/app/deps/eep/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/app/deps/fastlog/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/app/deps/fly/src" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/app/deps/mysql-otp/include" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/app/deps/mysql-otp/include" type="erlang-include" />
       <sourceFolder url="file://$MODULE_DIR$/app/deps/mysql-otp/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/app/deps/mysql-otp/test" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/app/deps/mysql-otp-poolboy/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/app/deps/poolboy/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/app/deps/poolboy/test" isTestSource="true" />
-      <sourceFolder url="file://$MODULE_DIR$/app/deps/pubs/include" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/app/deps/pubs/include" type="erlang-include" />
       <sourceFolder url="file://$MODULE_DIR$/app/deps/pubs/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/app/deps/ranch/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/app/deps/ranch/test" isTestSource="true" />
-      <sourceFolder url="file://$MODULE_DIR$/app/game/include" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/app/game/include" type="erlang-include" />
       <sourceFolder url="file://$MODULE_DIR$/app/game/src" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/app/deps/pubs/src/net" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/app/deps/pubs/src/net" type="erlang-include" />
       <sourceFolder url="file://$MODULE_DIR$" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/app" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/app/game/src/pub/config" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/app/game/src/pub/mapcfgs" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/app/game/src/pub/config" type="erlang-include" />
+      <sourceFolder url="file://$MODULE_DIR$/app/game/src/pub/mapcfgs" type="erlang-include" />
       <sourceFolder url="file://$MODULE_DIR$/app/deps/db_share/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/app/deps/db_proxy/src" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/app/deps/gen_rpc/include" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/app/deps/gen_rpc/include" type="erlang-include" />
       <sourceFolder url="file://$MODULE_DIR$/app/deps/gen_rpc/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/app/common/src" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/app/common/include" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/app/common/src/netmsg" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/app/common/include" type="erlang-include" />
+      <sourceFolder url="file://$MODULE_DIR$/app/common/src/netmsg" type="erlang-include" />
       <excludeFolder url="file://$MODULE_DIR$/.idea" />
       <excludeFolder url="file://$MODULE_DIR$/__cs_pkg__" />
       <excludeFolder url="file://$MODULE_DIR$/__gs_pkg__" />
@@ -52,6 +53,5 @@
     <content url="file://$MODULE_DIR$/app/game" />
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" scope="PROVIDED" name="Erlang SDK" level="project" />
   </component>
 </module>

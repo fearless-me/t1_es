@@ -198,7 +198,7 @@ class HrlWriter(Writer):
         self.addWriteRules("}", self.ruleSecondBrace)
     
     def ruleMacroDefine(self, fileHandler, args1, args2):
-        text = "-define(ErrorCode_%s, %s).\n" % (args1, args2)
+        text = "-define(E_%s, %s).\n" % (args1, args2)
         fileHandler.write(text)
         return fileHandler
     

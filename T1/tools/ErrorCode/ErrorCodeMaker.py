@@ -38,9 +38,11 @@ def work():
 			if reader.hasReadError():
 				print '\nReadError:'
 				print reader.getReadError()
+				os.system("pause")
 			elif reader.hasCheckError():
 				print '\nCheckError:'
 				print reader.getCheckError()
+				os.system("pause")
 			else:
 				if(_GenServerOnly == "True"):					
 					try:

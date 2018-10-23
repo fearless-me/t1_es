@@ -41,7 +41,7 @@
 
 sync_player_join_group(Uid, Group) ->
     %1.
-    Obj = map_rw:get_player(Uid),
+    Obj = map_rw:find_unit(?OBJ_PLAYER, Uid),
     Index = pos_to_vis_index(object_rw:get_field(Uid, #m_object_rw.cur_pos), get(?VIS_W), ?VIS_DIST),
     
     %2.
@@ -278,7 +278,7 @@ add_obj_to_vis_tile(Obj, VisTileIndex) ->
 add_to_vis_tile_1(Type, Uid, VisTileIndex, undefined) ->
     W = get(?VIS_W), H = get(?VIS_H),
     ?ERROR("map ~p add t ~p  code ~p to visIdx ~p invalid ~p, W ~p H ~p",
-        [map_rw:get_map_id(), Type, Uid, VisTileIndex, W * H, W, H]);
+        [map_rw:map_id(), Type, Uid, VisTileIndex, W * H, W, H]);
 add_to_vis_tile_1(?OBJ_PLAYER, Uid, VisTileIndex, VisTile) ->
     set_vis_tile(
         VisTileIndex,

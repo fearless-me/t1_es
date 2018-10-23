@@ -317,7 +317,7 @@ void CGenLuaDescTable::Generate(const std::string& outFilePath, const std::vecto
 	msg_map_content_head += "--BEGIN table for msgs description\n";
 	msg_ids_define += "--BEGIN message id define\n";
 
-	msg_map_content_head += "return\n{\n";
+	msg_map_content_head += "MessageType\n{\n";
 
 	char buf[1024] = {0};
     sprintf (buf, "\t__VERSION__ = %d,\n", version);

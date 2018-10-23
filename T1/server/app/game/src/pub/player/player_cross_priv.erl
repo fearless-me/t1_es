@@ -17,6 +17,7 @@
 -export([
     online/0,               %% 在跨服上线
     offline/0,              %% 在跨服下线
+    check/0,                %% 周期性检查跨服
     change_map_before/2,    %% 从跨服到普通服 / 从普通服到跨服 (切地图前)
     change_map_after/3      %% 从跨服到普通服 / 从普通服到跨服 (切地图后)
 ]).
@@ -62,7 +63,19 @@ do_online(_) ->
     gs_cache_interface:del_player_cross(Uid),
     ok.
 
+check()->
+    Uid = player_rw:get_uid(),
+    Res = cross_interface:is_player_in_cross(Uid),
+    do_check(Res, Uid),
+    ok.
 
+do_check(true, Uid) ->
+    Sid = cross_interface:get_player_cross_sid(Uid),
+    case common_interface:is_server_alive(Sid) of
+        true -> skip;
+        _Any -> player_pub:kick_to_born_map_(nodedown)
+    end;
+do_check(_Any, _Uid) -> skip.
 
 
 %% 在跨服下线
@@ -99,7 +112,10 @@ do_change_map_before(false, true) ->
 do_change_map_before(_IsSrcCross, _IsDstCross) ->
     ok.
 
-%% 从跨服到普通服 - 成功
+%% 跨服到跨服 - 成功
+do_change_map_after(true, true, true) ->
+    ok;
+%% 跨服到普通服 - 成功
 do_change_map_after(true, false, true) ->
     Aid = player_rw:get_aid(),
     Uid = player_rw:get_uid(),
@@ -107,7 +123,7 @@ do_change_map_after(true, false, true) ->
     gs_cache_interface:del_player_cross(Uid),
     Ret = rpc:cast(Node, cross_dst, rpc_call_player_leave, [Aid, Uid]),
     rpc_check(Ret, ?FUNCTION_NAME);
-%% 从普通服到跨服 - 成功
+%% 普通服到跨服 - 成功
 do_change_map_after(false, true, true) ->
     Aid = player_rw:get_aid(),
     Uid = player_rw:get_uid(),
@@ -115,6 +131,11 @@ do_change_map_after(false, true, true) ->
     Data = cross_src:player_pub_data_to_cross(Aid, Uid),
     gs_cache_interface:add_player_cross(Uid),
     grpc:cast(Node, cross_dst, rpc_call_player_enter, [Data]);
+%% 普通服(异常)回到普通服务器  - 成功
+do_change_map_after(_, false, true) ->
+    Uid = player_rw:get_uid(),
+    gs_cache_interface:del_player_cross(Uid),
+    ok;
 %% 从普通服到跨服 - 失败
 do_change_map_after(false, true, false) ->
     Aid = player_rw:get_aid(),

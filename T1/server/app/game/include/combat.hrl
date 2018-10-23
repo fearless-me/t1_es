@@ -17,11 +17,12 @@
 %% 可以让策划配置的不是数值比如 策划配置的是 max_hp 而不是数字1
 %% 程序这边要封装好属性相关的结构，方便读、打包、存、更新
 %%
--define(ATTR_MIN, 1).
--define(ATTR_MAX_HP, 1). %%最大生命
--define(ATTR_ATTACK, 2). %%攻击
--define(ATTR_SPEED, 3). %%速度
--define(ATTR_MAX, 4).
+%%-define(ATTR_MIN, 1).
+%%-define(ATTR_MAX_HP, 1). %%最大生命
+%%-define(ATTR_ATTACK, 2). %%攻击
+%%-define(ATTR_SPEED, 3). %%速度
+%%-define(ATTR_MAX, 4).
+-include("battle_prop.hrl").
 
 
 %% 角色HP变化原因

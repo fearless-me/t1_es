@@ -29,11 +29,16 @@
 -record(r_player_stop_move_req, {uid, pos}).
 %%
 -record(r_exit_map_req, {uid = 0, map_id = 0, line_id = 0, map_pid}).
+-record(r_exit_map_ack, {map_id = 0, line_id = 0, pos, map_pid, error = 0}).
 %%
--record(r_change_map_req, {uid = 0, name, group = 0, pid,
-    map_id = 0, line_id = 0, map_pid, pos, tar_map_id = 0, tar_line_id = 0, tar_pos, force = false}).
+-record(r_change_map_req, {
+    uid = 0, name, group = 0, pid,
+    src_map_id = 0, src_line_id = 0, src_map_pid, src_pos, force = false,
+    tar_map_id = 0, tar_line_id = 0, tar_pos
+}).
 %%
--record(r_change_map_ack, {map_id = 0, line_id = 0, pos, map_pid, error = 0}).
+-record(r_join_map_req, {uid = 0, group = 0, pid, tar_map_id = 0, tar_line_id = 0, tar_pos, force = false}).
+-record(r_join_map_ack, {map_id = 0, line_id = 0, pos, map_pid, error = 0}).
 %%
 -record(r_teleport_req, {uid = 0, map_pid, tar}).
 %%

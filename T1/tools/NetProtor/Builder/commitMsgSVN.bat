@@ -4,5 +4,5 @@ if "%1" == "h" goto begin
 cd /d "%~dp0"
 :begin
 cd ../../../
-TortoiseProc.exe /command:add /path:"tools/NetProtor/msg*Server\\app\\common\\src\\netmsg*Client\\Assets\\Code\\Base\\Net\\Messages" /closeonend:0
-TortoiseProc.exe /command:commit /path:"tools/NetProtor/msg*Server\\app\\common\\src\\netmsg*Client\\Assets\\Code\\Base\\Net\\Messages" /closeonend:0
+TortoiseProc.exe /command:add /path:"tools/NetProtor/msg*Server\\app\\common\\src\\netmsg*Client\\Assets\\Code\\Base\\Net\\Messages*Client\\Assets\\StreamingAssets\\Lua\\Net" /closeonend:0
+TortoiseProc.exe /command:commit /path:"tools/NetProtor/msg*Server\\app\\common\\src\\netmsg*Client\\Assets\\Code\\Base\\Net\\Messages*Client\\Assets\\StreamingAssets\\Lua\\Net" /closeonend:0
