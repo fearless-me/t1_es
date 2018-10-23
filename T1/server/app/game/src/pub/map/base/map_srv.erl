@@ -32,7 +32,14 @@ status(Name) ->
 %%% public functions
 %%%===================================================================
 start_link(Params) ->
-    gen_serverw:start_link(?MODULE, Params, [{timeout, ?MAP_INIT_TIMEOUT}]).
+    gen_serverw:start_link
+    (
+        ?MODULE, Params,
+        [
+            {timeout, ?MAP_INIT_TIMEOUT},
+            {spawn_opt, [{min_heap_size, 32 * 1024}, {min_bin_vheap_size, 32 * 1024}]}
+        ]
+    ).
 
 start_link(Params, SpawnOpts) ->
     gen_serverw:start_link(?MODULE, Params, [{timeout, ?MAP_INIT_TIMEOUT}] ++ SpawnOpts).
