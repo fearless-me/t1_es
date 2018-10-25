@@ -29,14 +29,14 @@ send(Name, Msg) when is_atom(Name) ->
         undefined ->
             case global:whereis_name(Name) of
                 undefined -> skip;
-                Pid -> erlang:send(Pid, Msg)
+                Pid -> do_send(Pid, Msg)
             end;
-        Pid -> erlang:send(Pid, Msg)
+        Pid -> do_send(Pid, Msg)
     end;
 send(Pid, Msg) when is_pid(Pid) ->
-    erlang:send(Pid, Msg);
+    do_send(Pid, Msg);
 send(Dst, Msg) when is_tuple(Dst)->
-    erlang:send(Dst, Msg).
+    do_send(Dst, Msg).
 %%
 send(undefined, _, _) -> ok;
 send(0,_,_)-> ok;
@@ -45,14 +45,14 @@ send(Name, MsgId, Msg) when is_atom(Name), is_atom(MsgId) ->
         undefined ->
             case global:whereis_name(Name) of
                 undefined -> skip;
-                Pid -> erlang:send(Pid, {MsgId,Msg})
+                Pid -> do_send(Pid, {MsgId,Msg})
             end;
-        Pid -> erlang:send(Pid, {MsgId,Msg})
+        Pid -> do_send(Pid, {MsgId,Msg})
     end;
 send(Pid, MsgId, Msg) when is_pid(Pid), is_atom(MsgId) ->
-    erlang:send(Pid, {MsgId,Msg});
+    do_send(Pid, {MsgId,Msg});
 send(Dst,MsgId, Msg) when is_tuple(Dst), is_atom(MsgId)->
-    erlang:send(Dst, {MsgId,Msg}).
+    do_send(Dst, {MsgId,Msg}).
 
 send_with_from(undefined, _) -> ok;
 send_with_from(0, _)-> ok;
@@ -61,14 +61,14 @@ send_with_from(Name, MsgId) when is_atom(Name), is_atom(MsgId) ->
         undefined ->
             case global:whereis_name(Name) of
                 undefined -> skip;
-                Pid -> erlang:send(Pid, {MsgId, self()})
+                Pid -> do_send(Pid, {MsgId, self()})
             end;
-        Pid -> erlang:send(Pid, {MsgId, self()})
+        Pid -> do_send(Pid, {MsgId, self()})
     end;
 send_with_from(Pid, MsgId) when is_pid(Pid), is_atom(MsgId) ->
-    erlang:send(Pid, {MsgId,self()});
+    do_send(Pid, {MsgId,self()});
 send_with_from(Dst, MsgId) when is_tuple(Dst), is_atom(MsgId)->
-    erlang:send(Dst, {MsgId,self()}).
+    do_send(Dst, {MsgId,self()}).
 
 send_with_from(undefined, _, _) -> ok;
 send_with_from(0, _, _)-> ok;
@@ -77,14 +77,14 @@ send_with_from(Name, MsgId, Msg) when is_atom(Name), is_atom(MsgId) ->
         undefined ->
             case global:whereis_name(Name) of
                 undefined -> skip;
-                Pid -> erlang:send(Pid, {MsgId, Msg, self()})
+                Pid -> do_send(Pid, {MsgId, Msg, self()})
             end;
-        Pid -> erlang:send(Pid, {MsgId, Msg, self()})
+        Pid -> do_send(Pid, {MsgId, Msg, self()})
     end;
 send_with_from(Pid, MsgId, Msg) when is_pid(Pid), is_atom(MsgId) ->
-    erlang:send(Pid, {MsgId, Msg,self()});
+    do_send(Pid, {MsgId, Msg,self()});
 send_with_from(Dst, MsgId, Msg) when is_tuple(Dst), is_atom(MsgId)->
-    erlang:send(Dst, {MsgId, Msg,self()}).
+    do_send(Dst, {MsgId, Msg,self()}).
 
 send_with_from(undefined, _, _, _) -> ok;
 send_with_from(0, _, _, _)-> ok;
@@ -93,11 +93,15 @@ send_with_from(Name, MsgId, Msg, From) when is_atom(Name) ->
         undefined ->
             case global:whereis_name(Name) of
                 undefined -> skip;
-                Pid -> erlang:send(Pid, {MsgId, Msg,From})
+                Pid -> do_send(Pid, {MsgId, Msg,From})
             end;
-        Pid -> erlang:send(Pid, {MsgId, Msg,From})
+        Pid -> do_send(Pid, {MsgId, Msg,From})
     end;
 send_with_from(Pid, MsgId, Msg, From) when is_pid(Pid) ->
-    erlang:send(Pid, {MsgId, Msg,From});
+    do_send(Pid, {MsgId, Msg,From});
 send_with_from(Dst, MsgId, Msg, From) when is_tuple(Dst)->
-    erlang:send(Dst, {MsgId, Msg,From}).
+    do_send(Dst, {MsgId, Msg,From}).
+
+
+do_send(Dest, Msg) ->
+    catch erlang:send(Dest, Msg).

@@ -32,11 +32,9 @@ move(X, Y) ->
 c(Port) -> c(Port, 0).
 
 c(Port, AccountIdx) ->
-    ensure(),
     spawn(fun() -> tcp_client:connect(Port, AccountIdx) end).
 
 nc(N, Port) ->
-    ensure(),
     catch ets:new(tcpc, [named_table, public, {keypos, 1}, ?ETS_RC, ?ETS_WC]),
     lists:foreach(fun(_) -> tcp_client:c(Port, 0), timer:sleep(2) end, lists:seq(1, N)).
 
@@ -45,7 +43,7 @@ ensure() ->
     true = misc:start_all_app(ssl),
     true = misc:start_all_app(stdlib),
     true = misc:start_all_app(ranch),
-    true = misc:start_all_app(fastlog),
+    true = loggerS:start("tcp_client"),
     true = misc:start_all_app(fly),
     ok.
 

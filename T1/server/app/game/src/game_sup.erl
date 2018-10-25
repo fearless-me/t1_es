@@ -34,7 +34,7 @@ start() ->
     
     try
         %%          
-        misc:fn_wrapper({"logger", stdio, ?Wrap(loggerS:start())}),
+        misc:fn_wrapper({"logger", stdio, ?Wrap(loggerS:start("game"))}),
         misc:fn_wrapper({"error Logger", ?Wrap(common_error_logger:start(game_sup, game))}),
         misc:fn_wrapper({"gen rpc app", ?Wrap(misc:start_all_app(gen_rpc))}),
         misc:fn_wrapper({"config init", ?Wrap(gs_econfig:start("game.ini"))}),

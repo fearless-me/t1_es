@@ -75,11 +75,11 @@
         %% Lower values for more volatile installations
         %% Seconds idle after the last packet of data sent
         %% to start sending keepalive probes
-        {socket_keepalive_idle, 5},
+        {socket_keepalive_idle, 120},
         %% Seconds between probes
-        {socket_keepalive_interval, 5},
+        {socket_keepalive_interval, 60},
         %% Probes lost to close the connection
-        {socket_keepalive_count, 2}
+        {socket_keepalive_count, 20}
     ]},
     {modules, []}]
 }.

@@ -3,6 +3,44 @@
 
 #include <vector>
 
+//   0 = 黑色      8 = 灰色
+//   1 = 蓝色      9 = 淡蓝色
+//   2 = 绿色      A = 淡绿色
+//   3 = 浅绿色    B = 淡浅绿色
+//   4 = 红色      C = 淡红色
+//   5 = 紫色      D = 淡紫色
+//   6 = 黄色      E = 淡黄色
+//   7 = 白色      F = 亮白色
+
+//   控制台前景颜色
+enum ConsoleForegroundColor
+{
+	enmCFC_Red = FOREGROUND_INTENSITY | FOREGROUND_RED,
+	enmCFC_Green = FOREGROUND_INTENSITY | FOREGROUND_GREEN,
+	enmCFC_Blue = FOREGROUND_INTENSITY | FOREGROUND_BLUE,
+	enmCFC_Yellow = FOREGROUND_INTENSITY | FOREGROUND_RED | FOREGROUND_GREEN,
+	enmCFC_Purple = FOREGROUND_INTENSITY | FOREGROUND_RED | FOREGROUND_BLUE,
+	enmCFC_Cyan = FOREGROUND_INTENSITY | FOREGROUND_GREEN | FOREGROUND_BLUE,
+	enmCFC_Gray = FOREGROUND_INTENSITY,
+	enmCFC_White = FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE,
+	enmCFC_HighWhite = FOREGROUND_INTENSITY | FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE,
+	enmCFC_Black = 0,
+};
+
+enum ConsoleBackGroundColor
+{
+	enmCBC_Red = BACKGROUND_INTENSITY | BACKGROUND_RED,
+	enmCBC_Green = BACKGROUND_INTENSITY | BACKGROUND_GREEN,
+	enmCBC_Blue = BACKGROUND_INTENSITY | BACKGROUND_BLUE,
+	enmCBC_Yellow = BACKGROUND_INTENSITY | BACKGROUND_RED | BACKGROUND_GREEN,
+	enmCBC_Purple = BACKGROUND_INTENSITY | BACKGROUND_RED | BACKGROUND_BLUE,
+	enmCBC_Cyan = BACKGROUND_INTENSITY | BACKGROUND_GREEN | BACKGROUND_BLUE,
+	enmCBC_White = BACKGROUND_RED | BACKGROUND_GREEN | BACKGROUND_BLUE,
+	enmCBC_HighWhite = BACKGROUND_INTENSITY | BACKGROUND_RED | BACKGROUND_GREEN | BACKGROUND_BLUE,
+	enmCBC_Black = 0,
+};
+
+
 struct Misc
 {
 	struct TreeWalker {
@@ -83,6 +121,7 @@ struct Misc
 	static long long	getGlobalTimeMS();
 	static void			md5( const char* file, unsigned char out[16] ){}
 	static void			md5( const char* file, char out[33] ){}
+	static void			setConsoleColor(ConsoleForegroundColor foreColor = enmCFC_White, ConsoleBackGroundColor backColor = enmCBC_Black);
 };
 
 #define __TracePrint( format, ... )							do { Misc::traceEx(   NULL,	  (unsigned int)__LINE__, false, false, format, ##__VA_ARGS__ ); } while(0)

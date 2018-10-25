@@ -25,6 +25,7 @@
 ]).
 
 -export([
+    make_init_log/2,
     discard/1
 ]).
 
@@ -42,7 +43,7 @@
 -define(LOGDIR, "log").
 -define(MSG, fast_logger_msg).
 -define(MAX_LOG_CNT_ONE_FILE, 150000).
-
+-define(if_else(Cond, True, False), case Cond of true -> True; _ -> False end).
 
 -define(CheckFlagMaxLogTimes, 50).
 -record(fastlog_config, {
@@ -160,6 +161,10 @@ discard(IsDiscardLog) ->
 is_slave() ->
     ets:lookup_element(?FlagEts, 1, #fastlog_config.isSlave).
 
+make_init_log(Sink, Fname) ->
+    gen_server2:call(Sink, {make_init_log, Fname}).
+
+
 %%--------------------------------------------------------------------
 %% @doc
 %% Starts the server
@@ -209,11 +214,12 @@ init(Args) -> mod_init(Args).
     {noreply, NewState :: #state{}, timeout() | hibernate} |
     {stop, Reason :: term(), Reply :: term(), NewState :: #state{}} |
     {stop, Reason :: term(), NewState :: #state{}}).
+
 handle_call(Request, From, State) ->
     try call(Request, From, State)
     catch T : E : _ST ->
         error_logger:error_report([{T, E}]),
-        {reply, ok, State}
+        {reply, error, State}
     end.
 
 %%--------------------------------------------------------------------
@@ -309,21 +315,23 @@ do_init(true, Ref, _Fname, _Dir) ->
     {ok, #state{monitorRef = Ref, counter = 0}};
 do_init(false, Ref, Fname, Dir) ->
     MkDirNew = application:get_env(fastlog, mkdir_restart, false),
+    MkLogRun = application:get_env(fastlog, createfile_restart, true),
     NewDir = ensure_log_dir(MkDirNew, Dir),
     NoErr = case erlang:process_info(self(), registered_name) of
                 {registered_name, ?MODULE} -> false;
                 _ -> true
             end,
-    Fd = make_file_(NewDir, Fname),
-    FdErr = case NoErr of
-                true -> undefined;
-                _ -> make_file_(NewDir, Fname, ".Err")
-            end,
+    
+    Fd = ?if_else(MkLogRun, make_file_(NewDir, Fname), undefined),
+    FdErr =  ?if_else( NoErr orelse (not MkLogRun), undefined, make_err_file_(NewDir, Fname)),
+    
     IsShowInStdio = application:get_env(fastlog, show_in_stdio, true),
     {ok, #state{
         monitorRef = Ref, counter = 0, fileName = Fname,
         fd = Fd, fd_err = FdErr, is_log_stdio = IsShowInStdio,
         no_err_fd = NoErr, dir = NewDir}}.
+
+
 
 
 start_file_timer() ->
@@ -366,6 +374,12 @@ do_handle_info(_Info, StateData) ->
     {noreply, StateData}.
 
 %%--------------------------------------------------------------------
+call({make_init_log, Fname}, _From, State) ->
+    #state{no_err_fd = NoErr, dir = NewDir } = State,
+
+    Fd = make_file_(NewDir, Fname),
+    FdErr =  ?if_else( NoErr, undefined, make_err_file_(NewDir, Fname)),
+    {reply, true, State#state{fd = Fd, fd_err = FdErr, fileName = Fname}};
 call(Request, From, State) ->
     io:format("undeal call ~w from ~w", [Request, From]),
     {noreply, ok, State}.
@@ -375,10 +389,7 @@ rotate(#state{fileName = Fname, fd = Fd, fd_err = FdErr, no_err_fd = NoErr, dir 
     catch file:close(Fd),
     catch file:close(FdErr),
     Fd2 = make_file_(Dir, Fname),
-    Fd3 = case NoErr of
-              true -> undefined;
-              _ -> make_file_(Dir, Fname, ".Err")
-          end,
+    Fd3 = ?if_else( NoErr, undefined, make_err_file_(Dir, Fname)),
     {ok, State#state{fd = Fd2, fd_err = Fd3, counter = 0}}.
 
 % Check if the file needs to be rotated
@@ -471,6 +482,9 @@ need_write_log(_Any) ->
 make_file_(Dir, Fname) ->
     make_file_(Dir, Fname, "").
 
+make_err_file_(Dir, Fname) ->
+    make_file_(Dir, Fname, ".Err").
+
 make_file_(Dir, Fname, Suffix) ->
     TimeNow = time_format(erlang:localtime()),
     File = Dir ++ "/" ++ Fname ++ "." ++ TimeNow ++ Suffix ++ ".log",
@@ -508,3 +522,4 @@ master_node() ->
         error -> undefined;
         {ok, [[MasterNode]]} -> erlang:list_to_atom(MasterNode)
     end.
+

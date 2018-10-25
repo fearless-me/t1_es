@@ -14,7 +14,7 @@
 %% API
 -export([
     %%
-    start/0,
+    start/0,  start/1,
 
     %%
     log/2, log/3,
@@ -37,7 +37,12 @@
 
 start( )->
     true = misc:start_app(fastlog),
-    ok.
+    true.
+
+start(Fname) ->
+    true = misc:start_app(fastlog),
+    true = fastlog:make_init_log(?DEFAULT_SINK, Fname),
+    true.
 
 %%-------------------------------------------------------------------
 %%-------------------------------------------------------------------

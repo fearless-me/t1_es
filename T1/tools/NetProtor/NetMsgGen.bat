@@ -28,7 +28,7 @@ cd ..\\
 
 echo build message protos
 cd Builder
-start /wait NetProtor.exe ../msg ../out
+start /B /wait NetProtor.exe ../msg ../out
 
 echo current directory: %cd%
 

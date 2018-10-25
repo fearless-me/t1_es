@@ -4,5 +4,5 @@
 {registered, []},
 {applications, [kernel, stdlib]},
 {mod, {fastlog_app, ["game"]}},
-{env, [{show_in_stdio, true}, {mkdir_restart, false}]},
+{env, [{show_in_stdio, true}, {mkdir_restart, false},{createfile_restart, false}]},
 {modules, [fastlog, fastlog_app, fastlog_sup, gen_server2]}]}.

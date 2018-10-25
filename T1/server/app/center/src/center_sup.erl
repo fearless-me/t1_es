@@ -33,7 +33,7 @@ start() ->
     {ok, SupPid} = center_sup:start_link(),
     
     try
-        misc:fn_wrapper({"logger", stdio, ?Wrap(loggerS:start())}),
+        misc:fn_wrapper({"logger", stdio, ?Wrap(loggerS:start("center"))}),
         misc:fn_wrapper({"error Logger", ?Wrap(common_error_logger:start(center_sup, center))}),
         misc:fn_wrapper({"gen rpc app", ?Wrap(misc:start_all_app(gen_rpc))}),
         misc:fn_wrapper({"config init", ?Wrap(cs_conf:start("center.ini"))}),

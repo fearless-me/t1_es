@@ -67,7 +67,7 @@ FieldContainerType MetaInfo::getContainerTypeByName( const std::string& name ) {
 	}
 }
 
-#define WAIT_MILIISECONDS 15000
+#define WAIT_MILIISECONDS 2000
 bool MetaInfo::cache( const MsgDefine& md ) {
 	//for ( const Field& f : md.fields ) {
 	//	bool validType = false;
@@ -108,6 +108,7 @@ bool MetaInfo::cache( const MsgDefine& md ) {
 		} else {
 			auto alias = cachedMsgDefine.find( f.typeName );
 			if ( alias == cachedMsgDefine.end() ) {
+				Misc::setConsoleColor(enmCFC_Red);
 				printf("\n***********************************************\n");
 				printf("WARNING unknown type %s.%s\n", md.name.c_str(), f.typeName.c_str() );
 				printf("WARNING unknown type %s.%s\n", md.name.c_str(), f.typeName.c_str());
@@ -116,6 +117,7 @@ bool MetaInfo::cache( const MsgDefine& md ) {
 				printf("***********************************************\n");
 				printf("wait %d seconds continue\n", WAIT_MILIISECONDS/1000);
 				Sleep(WAIT_MILIISECONDS);
+				Misc::setConsoleColor();
 				//continue;
 			}
 			df.typeName = f.typeName;
