@@ -21,7 +21,8 @@
 -export([mod_init/1, do_handle_call/3, do_handle_info/2, do_handle_cast/2]).
 -export([show_status/1, status/1, call_reply/2]).
 
-show_status(Name)-> catch ps:send(Name, show_status).
+show_status(Name)->
+    catch ps:send(Name, show_status).
 status(Name) ->
     case catch gen_server:call(Name, status) of
         {'EXIT', Reason} -> Reason;

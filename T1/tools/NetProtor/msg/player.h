@@ -30,6 +30,7 @@ struct GS2U_PlayerInitBase <-
 	uint32	mapID;	// 角色所在当前地图ID
 	vector<int32> combat_props;
 	vector<BuffInfo> buff_list;
+	vector<SkillInfo> skill_list;
 };
 
 // 初始化数据发送完毕

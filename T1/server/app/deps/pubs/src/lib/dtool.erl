@@ -168,6 +168,7 @@ node_sbcs_to_mbcs(Stage) ->
         recon_alloc:sbcs_to_mbcs(Stage)].
 %%-------------------------------------------------------------------
 node_fragmentation(Stage) ->
+    inet_tcp_dist:module_info(),
     recon_alloc:fragmentation(Stage).
 
 node_scheduler_usage(Interval) ->
@@ -177,30 +178,19 @@ node_scheduler_usage(Interval) ->
 %%-------------------------------------------------------------------
 %%-------------------------------------------------------------------
 trans_to_unit_mb(Key, {Key, Size}) ->
-    {Key, mem2str(Size)};
+    {Key, misc:format_memory_readable(Size)};
 trans_to_unit_mb(Key, Size) when is_number(Size) ->
-    {Key, mem2str(Size)};
+    {Key, misc:format_memory_readable(Size)};
 trans_to_unit_mb(Key, List) when is_list(List) ->
     F = fun
             ({K, V}) when is_number(V) ->
-                {K, mem2str(V)};
+                {K, misc:format_memory_readable(V)};
             (O) ->
                 O
         end,
     {Key, lists:map(F, List)};
 trans_to_unit_mb(_Key, Other) ->
     Other.
-
-%%-------------------------------------------------------------------
--define(KIB, (1024)).
--define(MIB, (?KIB * 1024)).
--define(GIB, (?MIB * 1024)).
-mem2str(Mem) ->
-    if Mem > ?GIB -> io_lib:format("~.3fG", [Mem / ?GIB]);
-        Mem > ?MIB -> io_lib:format("~.3fM", [Mem / ?MIB]);
-        Mem > ?KIB -> io_lib:format("~.3fK", [Mem / ?KIB]);
-        Mem >= 0 -> io_lib:format("~.1fB", [Mem / 1.0])
-    end.
 
 %%-------------------------------------------------------------------
 ensure_recon_unit() ->

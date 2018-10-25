@@ -43,10 +43,10 @@
 
 %% 地图上所有对象的共享ETS
 -record(m_cache_map_object, {uid = 0, pid = 0, data_id = 0, map_id = 0, line_id = 0, owner = 0, type = 0}).
--define(ETS_CACHE_MAP_PET, m_cache_map_pet).
--define(ETS_CACHE_MAP_NPC, m_cache_map_npc).
--define(ETS_CACHE_MAP_PLAYER, m_cache_map_player).
--define(ETS_CACHE_MAP_MONSTER, m_cache_map_monster).
+-define(ETS_CACHE_MAP_PET, ets_cache_map_pet).
+-define(ETS_CACHE_MAP_NPC, ets_cache_map_npc).
+-define(ETS_CACHE_MAP_PLAYER, ets_cache_map_player).
+-define(ETS_CACHE_MAP_MONSTER, ets_cache_map_monster).
 
 
 

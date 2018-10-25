@@ -54,7 +54,7 @@
 -define(FlagEts, fastLogEts___).
 
 
--record(state, {monitorRef, counter, fileName, fd, fd_err, is_log_stdio, no_err_fd = false, dir=?LOGDIR}).
+-record(state, {monitorRef, counter, fileName, fd, fd_err, is_log_stdio, no_err_fd = false, dir = ?LOGDIR}).
 
 %%设置日志文件和错误文件的相关选项
 -define(LogFileOptions, [
@@ -144,7 +144,7 @@ do_log(Level, Sink, F, A) ->
         undefined ->
             Sink ! {?MSG, Level, String};
         MasterNode ->
-            {Sink, MasterNode} !   {?MSG, Level, String}
+            {Sink, MasterNode} ! {?MSG, Level, String}
     end,
     ok.
 
@@ -210,12 +210,10 @@ init(Args) -> mod_init(Args).
     {stop, Reason :: term(), Reply :: term(), NewState :: #state{}} |
     {stop, Reason :: term(), NewState :: #state{}}).
 handle_call(Request, From, State) ->
-    try
-        call(Request, From, State)
-    catch
-        T : E : _ST ->
-            error_logger:error_report([{T, E}]),
-            {reply, ok, State}
+    try call(Request, From, State)
+    catch T : E : _ST ->
+        error_logger:error_report([{T, E}]),
+        {reply, ok, State}
     end.
 
 %%--------------------------------------------------------------------
@@ -247,8 +245,7 @@ handle_cast(_Request, State) ->
     {noreply, NewState :: #state{}, timeout() | hibernate} |
     {stop, Reason :: term(), NewState :: #state{}}).
 handle_info(Info, State) ->
-    try
-        do_handle_info(Info, State)
+    try do_handle_info(Info, State)
     catch T : E : _ST ->
         error_logger:error_report([{T, E}]),
         {noreply, State}
@@ -495,9 +492,9 @@ next_hour_sec() ->
     3600 - Min * 60 - Sec.
 
 now_day() ->
-    {{YYYY, MM, DD}, _} = erlang:localtime(),
-    lists:flatten(io_lib:format("~.4w~.2.0w~.2.0w",
-        [YYYY, MM, DD])).
+    {{YYYY, MM, DD}, {HH,_,_}} = erlang:localtime(),
+    lists:flatten(io_lib:format("~.4w~.2.0w~.2.0w~.2.0w",
+        [YYYY, MM, DD, HH])).
 
 time_format_str({{YYYY, MM, DD}, {Hour, Min, Sec}}) ->
     lists:flatten(io_lib:format("~.4w-~.2.0w-~.2.0w ~.2.0w:~.2.0w:~.2.0w",
@@ -509,5 +506,5 @@ time_format({{YYYY, MM, DD}, {Hour, Min, Sec}}) ->
 master_node() ->
     case init:get_argument(master) of
         error -> undefined;
-        {ok,[[MasterNode]]} -> erlang:list_to_atom(MasterNode)
+        {ok, [[MasterNode]]} -> erlang:list_to_atom(MasterNode)
     end.

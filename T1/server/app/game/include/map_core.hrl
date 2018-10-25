@@ -49,7 +49,7 @@
 
 %% 地图线路存在时间
 %% @todo 要让地图来配置
--define(LINE_LIFETIME, 2 * 60 * 1000).
+-define(LINE_LIFETIME, 10 * 60 * 1000).
 %% 地图进程退出状态保护时间，让玩家加退出等等
 %% 超过这个时间强杀
 -define(DEAD_LINE_PROTECT,  20 * 1000).

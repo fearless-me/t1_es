@@ -10,6 +10,15 @@
 //不用使用int uint long 
 //不用使用int uint long 
 
+// skill 数据
+struct SkillInfo
+{
+	uint32 skill_id;
+	uint32 level;
+	uint32 cd_time;
+};
+
+
 // 技能攻击
 struct U2GS_UseSkill ->
 {

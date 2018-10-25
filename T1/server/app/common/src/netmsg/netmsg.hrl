@@ -2,7 +2,7 @@
 -ifndef(netmsg).
 -define(netmsg,1).
 
--define(ProtoVersion,649).
+-define(ProtoVersion,650).
 
 -record(pk_BuffInfo,{
 	%% UInt32
@@ -143,6 +143,15 @@
 	error_code = 0
 }).
 
+-record(pk_SkillInfo,{
+	%% UInt32
+	skill_id = 0,
+	%% UInt32
+	level = 0,
+	%% UInt32
+	cd_time = 0
+}).
+
 %% 
 %% // 删除buff
 -define(U2GS_DeleteBuff,19504).
@@ -160,17 +169,6 @@
 }).
 
 %% 
-%% //////////////////////////////////////////////////////////////////////////
-%% //<-发出去     ;      ->收消息
-%% //不用使用int uint long 
-%% // 支持使用 string float int32 uint32 int64 uint64
-%% /////////////////////////////////////////////////////////////////////////
-%% //不用使用int uint long 
-%% //不用使用int uint long 
-%% //不用使用int uint long 
-%% //不用使用int uint long 
-%% //不用使用int uint long 
-%% //不用使用int uint long 
 %% // 技能攻击
 -define(U2GS_UseSkill,2416).
 -record(pk_U2GS_UseSkill,{
@@ -415,7 +413,9 @@
 	%% Int32
 	combat_props = [],
 	%% BuffInfo
-	buff_list = []
+	buff_list = [],
+	%% SkillInfo
+	skill_list = []
 }).
 
 %% 

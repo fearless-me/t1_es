@@ -392,6 +392,7 @@ decode(?GS2U_PlayerInitBase,Bin0) ->
 	{ V_mapID, Bin9 } = read_uint32( Bin8 ),
 	{ V_combat_props, Bin10 } = read_array(Bin9, fun(X) -> read_int32( X ) end),
 	{ V_buff_list, Bin11 } = read_array(Bin10, fun(X) -> decode_BuffInfo( X ) end),
+	{ V_skill_list, Bin12 } = read_array(Bin11, fun(X) -> decode_SkillInfo( X ) end),
 	{ #pk_GS2U_PlayerInitBase {
 		uid = V_uid,
 		name = V_name,
@@ -403,9 +404,10 @@ decode(?GS2U_PlayerInitBase,Bin0) ->
 		head = V_head,
 		mapID = V_mapID,
 		combat_props = V_combat_props,
-		buff_list = V_buff_list
+		buff_list = V_buff_list,
+		skill_list = V_skill_list
 		},
-	Bin11 };
+	Bin12 };
 
 %GENERATED from file:player.h => GS2U_RemoteMonster
 decode(?GS2U_RemoteMonster,Bin0) ->
@@ -597,6 +599,20 @@ decode_BuffInfo(Bin0) ->
 		wrap = V_wrap
 		},
 	Bin4 }.
+
+%GENERATED from file:combat.h => SkillInfo
+-spec decode_SkillInfo(Bin0) -> { #pk_SkillInfo{},LeftBin }
+	when Bin0 :: binary(), LeftBin :: binary().
+decode_SkillInfo(Bin0) ->
+	{ V_skill_id, Bin1 } = read_uint32( Bin0 ),
+	{ V_level, Bin2 } = read_uint32( Bin1 ),
+	{ V_cd_time, Bin3 } = read_uint32( Bin2 ),
+	{ #pk_SkillInfo {
+		skill_id = V_skill_id,
+		level = V_level,
+		cd_time = V_cd_time
+		},
+	Bin3 }.
 
 %GENERATED from file:login.h => UserPlayerData
 -spec decode_UserPlayerData(Bin0) -> { #pk_UserPlayerData{},LeftBin }
@@ -1054,6 +1070,7 @@ encode(#pk_GS2U_PlayerInitBase{} = P) ->
 	Bin_mapID = write_uint32( P#pk_GS2U_PlayerInitBase.mapID ),
 	Bin_combat_props = write_array(P#pk_GS2U_PlayerInitBase.combat_props, fun(X) -> write_int32( X ) end),
 	Bin_buff_list = write_array(P#pk_GS2U_PlayerInitBase.buff_list, fun(X) -> encode_BuffInfo( X ) end),
+	Bin_skill_list = write_array(P#pk_GS2U_PlayerInitBase.skill_list, fun(X) -> encode_SkillInfo( X ) end),
 	[
 		<<?GS2U_PlayerInitBase:?U16>>,
 		Bin_uid,
@@ -1066,7 +1083,8 @@ encode(#pk_GS2U_PlayerInitBase{} = P) ->
 		Bin_head,
 		Bin_mapID,
 		Bin_combat_props,
-		Bin_buff_list
+		Bin_buff_list,
+		Bin_skill_list
 	];
 
 %GENERATED from file:player.h => GS2U_RemoteMonster
@@ -1257,6 +1275,17 @@ encode_BuffInfo( #pk_BuffInfo{} = P ) ->
 		Bin_lifetime,
 		Bin_level,
 		Bin_wrap	
+].
+
+%GENERATED from file:combat.h => SkillInfo
+encode_SkillInfo( #pk_SkillInfo{} = P ) ->
+	Bin_skill_id = write_uint32( P#pk_SkillInfo.skill_id ),
+	Bin_level = write_uint32( P#pk_SkillInfo.level ),
+	Bin_cd_time = write_uint32( P#pk_SkillInfo.cd_time ),
+	[
+		Bin_skill_id,
+		Bin_level,
+		Bin_cd_time	
 ].
 
 %GENERATED from file:login.h => UserPlayerData
