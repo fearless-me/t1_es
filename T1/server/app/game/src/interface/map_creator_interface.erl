@@ -30,7 +30,7 @@
 %% 一般情况切地图是制定了一定要加入某个线路
 %% 但是某个线路由于生命周期终止或者出错等等导致
 %% 查询不到这个线路时怎么办
-%% @reference ?MAP_LINE_RECOVER_*
+%% ?MAP_LINE_RECOVER_*
 %%
 map_line_recover(MapID) ->
     Cfg = getCfg:getCfgByArgs(cfg_map, MapID),
