@@ -131,7 +131,7 @@
           <entry key="config" value="15" />
           <entry key="cs" value="2" />
           <entry key="dump" value="2" />
-          <entry key="erl" value="3570" />
+          <entry key="erl" value="3574" />
           <entry key="err" value="1" />
           <entry key="ers" value="58" />
           <entry key="gitignore" value="10" />
@@ -144,7 +144,7 @@
           <entry key="md" value="38" />
           <entry key="mk" value="1" />
           <entry key="sql" value="2" />
-          <entry key="src" value="28" />
+          <entry key="src" value="30" />
           <entry key="txt" value="7" />
         </counts>
       </usages-collector>
@@ -154,10 +154,10 @@
           <entry key="Batch" value="9" />
           <entry key="C#" value="2" />
           <entry key="C++" value="2" />
-          <entry key="Erlang" value="3570" />
+          <entry key="Erlang" value="3574" />
           <entry key="Erlang Header" value="574" />
           <entry key="Erlang Terms" value="15" />
-          <entry key="Erlang/OTP app" value="45" />
+          <entry key="Erlang/OTP app" value="47" />
           <entry key="Git file" value="10" />
           <entry key="HTML" value="1" />
           <entry key="Log" value="8" />
@@ -173,92 +173,20 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/deps/fastlog/src/fastlog.erl">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="448">
-              <caret line="384" column="25" selection-start-line="384" selection-start-column="25" selection-end-line="384" selection-end-column="25" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/game/src/interface/map_creator_interface.erl">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="492">
-              <caret line="32" column="3" selection-start-line="32" selection-start-column="3" selection-end-line="32" selection-end-column="3" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/deps/mysql-otp/src/mysql_protocol.erl">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="437">
-              <caret line="683" column="38" lean-forward="true" selection-start-line="683" selection-start-column="38" selection-end-line="683" selection-end-column="38" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/deps/pubs/src/lib/binary_lib.erl">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="500">
-              <caret line="199" column="41" lean-forward="true" selection-start-line="199" selection-start-column="41" selection-end-line="199" selection-end-column="41" />
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/app/deps/pubs/src/lib/integer_codec.erl">
+        <entry file="file://$PROJECT_DIR$/app/deps/gen_rpc/src/gen_rpc_helper.erl">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="798">
-              <caret line="38" column="77" lean-forward="true" selection-start-line="38" selection-start-column="77" selection-end-line="38" selection-end-column="77" />
+            <state relative-caret-position="172">
+              <caret line="244" selection-start-line="244" selection-end-line="244" />
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/deps/pubs/include/type.hrl">
+        <entry file="file://$PROJECT_DIR$/app/deps/gen_rpc/src/gen_rpc.app.src">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="290">
-              <caret line="26" column="8" selection-start-line="26" selection-start-column="8" selection-end-line="26" selection-end-column="8" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/game/src/test/tcp_client.erl">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="353">
-              <caret line="45" column="19" selection-start-line="45" selection-start-column="19" selection-end-line="45" selection-end-column="19" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/deps/pubs/src/lib/misc.erl">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="434">
-              <caret line="307" selection-start-line="307" selection-end-line="307" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/deps/pubs/src/lib/gen_server2.erl">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="470">
-              <caret line="241" selection-start-line="241" selection-end-line="241" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/deps/pubs/src/log/loggerS.erl">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="332">
-              <caret line="43" column="25" selection-start-line="43" selection-start-column="25" selection-end-line="43" selection-end-column="25" />
+            <state relative-caret-position="-100">
+              <caret line="28" column="24" selection-start-line="28" selection-start-column="9" selection-end-line="28" selection-end-column="24" />
             </state>
           </provider>
         </entry>
@@ -279,9 +207,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>μs</find>
-      <find>mms</find>
-      <find>key</find>
       <find>allocators</find>
       <find>temp_alloc</find>
       <find>formate</find>
@@ -309,6 +234,9 @@
       <find>socket_keepalive_idle</find>
       <find>make_init_log</find>
       <find>&lt;=</find>
+      <find>tcp_server_port</find>
+      <find>tcp_client_port</find>
+      <find>_client_port</find>
     </findStrings>
     <replaceStrings>
       <replace>-include(&quot;gs_map_inc.hrl&quot;).</replace>
@@ -914,7 +842,7 @@
     <property name="SearchEverywhereHistoryKey" value="&#9;FILE&#9;file://C:/Program Files/erl10.0/lib/stdlib-3.5/src/maps.erl" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1540520616479" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1540523382611" />
     <property name="full.screen.before.presentation.mode" value="false" />
     <property name="go.gopath.indexing.explicitly.defined" value="true" />
     <property name="go.sdk.automatically.set" value="true" />
@@ -1470,13 +1398,13 @@
       <workItem from="1540360017726" duration="8459000" />
       <workItem from="1540427132792" duration="10592000" />
       <workItem from="1540446515027" duration="197000" />
-      <workItem from="1540446761250" duration="16820000" />
+      <workItem from="1540446761250" duration="17898000" />
     </task>
     <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="2438212000" />
+    <option name="totallyTimeSpent" value="2439290000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -1499,7 +1427,7 @@
       <window_info id="Favorites" order="5" sideWeight="0.50167596" side_tool="true" weight="0.036247335" />
       <window_info id="Capture Tool" order="6" />
       <window_info anchor="bottom" id="Message" order="0" />
-      <window_info anchor="bottom" id="Find" order="1" weight="0.3964365" />
+      <window_info anchor="bottom" id="Find" order="1" visible="true" weight="0.3964365" />
       <window_info anchor="bottom" id="Run" order="2" weight="0.43240222" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
@@ -1582,13 +1510,6 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://C:/Program Files/erl10.0/lib/kernel-6.0/src/inet_tcp_dist.erl">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="620">
-          <caret line="529" column="19" lean-forward="true" selection-start-line="529" selection-start-column="19" selection-end-line="529" selection-end-column="19" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://C:/Program Files/erl10.0/lib/kernel-6.0/src/gen_tcp.erl">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="545">
@@ -1758,13 +1679,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/deps/gen_rpc/src/driver/gen_rpc_driver_tcp.erl">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="540">
-          <caret line="84" column="74" lean-forward="true" selection-start-line="84" selection-start-column="74" selection-end-line="84" selection-end-column="74" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/deps/gen_rpc/include/hut.hrl">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="273">
@@ -1817,24 +1731,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/deps/gen_rpc/src/gen_rpc_acceptor.erl">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="366">
-          <caret line="126" column="65" selection-start-line="126" selection-start-column="65" selection-end-line="126" selection-end-column="65" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/center/data/gen_rpc.app">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="373">
           <caret line="26" column="46" selection-start-line="26" selection-start-column="46" selection-end-line="26" selection-end-column="46" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/deps/gen_rpc/src/gen_rpc_helper.erl">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="151">
-          <caret line="228" column="22" selection-start-line="228" selection-end-line="228" selection-end-column="22" />
         </state>
       </provider>
     </entry>
@@ -1849,13 +1749,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-422">
           <caret line="212" column="34" selection-start-line="212" selection-start-column="34" selection-end-line="212" selection-end-column="34" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/deps/gen_rpc/src/gen_rpc.app.src">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="179">
-          <caret line="58" column="41" selection-start-line="58" selection-start-column="41" selection-end-line="58" selection-end-column="41" />
         </state>
       </provider>
     </entry>
@@ -1924,8 +1817,43 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/app/deps/pubs/src/lib/integer_codec.erl">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="798">
-          <caret line="38" column="77" lean-forward="true" selection-start-line="38" selection-start-column="77" selection-end-line="38" selection-end-column="77" />
+        <state relative-caret-position="231">
+          <caret line="11" column="65" lean-forward="true" selection-start-line="11" selection-start-column="65" selection-end-line="11" selection-end-column="65" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/deps/gen_rpc/src/gen_rpc_acceptor.erl">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="366">
+          <caret line="126" column="65" selection-start-line="126" selection-start-column="65" selection-end-line="126" selection-end-column="65" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/deps/gen_rpc/src/gen_rpc_driver.erl">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="546">
+          <caret line="26" column="41" selection-start-line="26" selection-start-column="41" selection-end-line="26" selection-end-column="41" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/deps/gen_rpc/src/driver/gen_rpc_driver_tcp.erl">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="578">
+          <caret line="216" column="75" selection-start-line="216" selection-start-column="57" selection-end-line="216" selection-end-column="75" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/deps/gen_rpc/src/gen_rpc.app.src">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-100">
+          <caret line="28" column="24" selection-start-line="28" selection-start-column="9" selection-end-line="28" selection-end-column="24" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/deps/gen_rpc/src/gen_rpc_helper.erl">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="172">
+          <caret line="244" selection-start-line="244" selection-end-line="244" />
         </state>
       </provider>
     </entry>
