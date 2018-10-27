@@ -27,7 +27,7 @@
     decode_int64/1, decode_uint64/1,
     decode_integer/2,
     
-    encode_from_float/1, decode_to_float/1,
+    encode_float/1, decode_float/1,
     
     %% signed integer helper
     encode_zigzag/1, decode_zigzag/1
@@ -95,7 +95,7 @@ encode_zigzag(N) when N >= 0 -> N * 2;
 encode_zigzag(N) when N < 0 -> N * -2 - 1.
 
 %%-------------------------------------------------------------------
-encode_from_float(Float) when is_float(Float) ->
+encode_float(Float) when is_float(Float) ->
     N = erlang:trunc(Float * ?PRECISION),
     en_fi(N).
 
@@ -104,7 +104,7 @@ en_fi(N) when N > ?INT64_MIN, N < ?INT64_MAX ->
 
 
 %%-------------------------------------------------------------------
-decode_to_float(Bin) ->
+decode_float(Bin) ->
     {V, LeftBin} = decode_int64(Bin),
     {V / ?PRECISION, LeftBin}.
 
@@ -158,7 +158,7 @@ endcode_decode_test() ->
     color:warn_log("~n****float encode****~n"),
     lists:foreach(
         fun(Original) ->
-            ed_proc(Original, fun encode_from_float/1, fun decode_to_float/1, fun check_float/2)
+            ed_proc(Original, fun encode_float/1, fun decode_float/1, fun check_float/2)
         end, FloatList),
     ok.
 
@@ -189,11 +189,11 @@ encode_zigzag_test() ->
     4294967295 = encode_zigzag(-2147483648).
 
 decode_zigzag_test() ->
-    0 = decode_zigzag(0),
+    +0 = decode_zigzag(0),
     -1 = decode_zigzag(1),
-    1 = decode_zigzag(2),
+    +1 = decode_zigzag(2),
     -2 = decode_zigzag(3),
-    2147483647 = decode_zigzag(4294967294),
+    +2147483647 = decode_zigzag(4294967294),
     -2147483648 = decode_zigzag(4294967295).
 
 

@@ -75,7 +75,7 @@ proc_reduction(PidTerm) ->
 
 %%-------------------------------------------------------------------
 proc_binary(PidOrTerm) ->
-    recon:info(PidOrTerm, binary).
+    recon:info(PidOrTerm, binary_memory).
 
 %%-------------------------------------------------------------------
 proc_memory(PidTerm) ->

@@ -10,7 +10,7 @@
 -module(background_gc).
 -include("logger.hrl").
 
--behaviour(gen_server2).
+-behaviour(gen_server).
 
 -export([start_link/0, run/0]).
 -export([gc/0]). %% For run_interval only
@@ -33,9 +33,9 @@
 
 %%----------------------------------------------------------------------------
 
-start_link() -> gen_server2:start_link({local, ?MODULE}, ?MODULE, [], []).
+start_link() -> gen_server:start_link({local, ?MODULE}, ?MODULE, [], []).
 
-run() -> gen_server2:cast(?MODULE, run).
+run() -> gen_server:cast(?MODULE, run).
 
 %%----------------------------------------------------------------------------
 
