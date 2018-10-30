@@ -16,7 +16,7 @@
 
 %% API
 -export([
-    init/1, del/1, get/1,
+    init/1, del/1, get/1, exists/1,
     set_field/3, set_field_direct/3,
     set_fields/2, set_fields_direct/2,
     get_field/2, get_field/3
@@ -28,6 +28,9 @@ init(#m_object_rw{}=V) -> misc_ets:write(i_detail_ets(), V).
 
 %%-------------------------------------------------------------------
 del(Uid) -> misc_ets:delete(i_detail_ets(), Uid).
+
+exists(Uid) ->
+    misc_ets:member(i_detail_ets(), Uid).
 
 %%-------------------------------------------------------------------
 get(Uid) ->

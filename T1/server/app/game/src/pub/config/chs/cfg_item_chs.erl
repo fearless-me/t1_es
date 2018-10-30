@@ -10,91 +10,121 @@
 -include("battle_prop.hrl").
 
 %% 道具表
-getRow(875) ->
-    #itemCfg{
-        desc__ = "222",
-        item_id = 875,
-        item_type = 20,
-        item_name = "道具3",
-        drop_id = 1
-    };
+getRow(110) ->
+	#itemCfg{
+		desc__ = "这是一个变态的道具",
+		item_id = 110,
+		item_type = 1,
+		item_name = "@@>发情丹<",
+		drop_id = 1
+	};
+getRow(113) ->
+	#itemCfg{
+		desc__ = "不是道具",
+		item_id = 113,
+		item_type = 1,
+		item_name = "@@>不是道具<",
+		drop_id = 1
+	};
 getRow(115) ->
-    #itemCfg{
-        desc__ = "333",
-        item_id = 115,
-        item_type = 1,
-        item_name = "道具3",
-        drop_id = 3
-    };
+	#itemCfg{
+		desc__ = "不是道具",
+		item_id = 115,
+		item_type = 1,
+		item_name = "@@>不是道具<",
+		drop_id = 1
+	};
 getRow(116) ->
-    #itemCfg{
-        desc__ = "呵呵哒",
-        item_id = 116,
-        item_type = 0,
-        item_name = "道具3",
-        drop_id = 3
-    };
+	#itemCfg{
+		desc__ = "不是道具",
+		item_id = 116,
+		item_type = 1,
+		item_name = "@@>不是道具<",
+		drop_id = 1
+	};
 getRow(117) ->
-    #itemCfg{
-        desc__ = "123456789",
-        item_id = 117,
-        item_type = 0,
-        item_name = "道具3",
-        drop_id = 3
-    };
-getRow(1130) ->
-    #itemCfg{
-        desc__ = "666",
-        item_id = 1130,
-        item_type = 1,
-        item_name = "道具3",
-        drop_id = 3
-    };
-getRow(1132) ->
-    #itemCfg{
-        desc__ = "777",
-        item_id = 1132,
-        item_type = 0,
-        item_name = "道具3",
-        drop_id = 3
-    };
-getRow(888) ->
-    #itemCfg{
-        desc__ = "item_desc_1",
-        item_id = 888,
-        item_type = 1,
-        item_name = "item_name_2",
-        drop_id = 0
-    };
-getRow(112) ->
-    #itemCfg{
-        desc__ = "item_desc_1",
-        item_id = 112,
-        item_type = 2,
-        item_name = "item_name_2",
-        drop_id = 0
-    };
+	#itemCfg{
+		desc__ = "不是道具",
+		item_id = 117,
+		item_type = 1,
+		item_name = "@@>不是道具<",
+		drop_id = 1
+	};
+getRow(118) ->
+	#itemCfg{
+		desc__ = "不是道具",
+		item_id = 118,
+		item_type = 1,
+		item_name = "@@>不是道具<",
+		drop_id = 1
+	};
+getRow(104) ->
+	#itemCfg{
+		desc__ = "",
+		item_id = 104,
+		item_type = 0,
+		item_name = "@@>田成汤<",
+		drop_id = 1
+	};
+getRow(105) ->
+	#itemCfg{
+		desc__ = "",
+		item_id = 105,
+		item_type = 0,
+		item_name = "@@>田成丹<",
+		drop_id = 1
+	};
+getRow(101) ->
+	#itemCfg{
+		desc__ = "",
+		item_id = 101,
+		item_type = 0,
+		item_name = "@@>田成丸<",
+		drop_id = 1
+	};
+getRow(100) ->
+	#itemCfg{
+		desc__ = "",
+		item_id = 100,
+		item_type = 0,
+		item_name = "@@>田成膏<",
+		drop_id = 1
+	};
+getRow(111) ->
+	#itemCfg{
+		desc__ = "",
+		item_id = 111,
+		item_type = 0,
+		item_name = "@@>3<",
+		drop_id = 1
+	};
 getRow(_) -> {}.
 
 getKeyList() -> [
-    {875},
-    {115},
-    {116},
-    {117},
-    {1130},
-    {1132},
-    {888},
-    {112}
+	{110},
+	{113},
+	{115},
+	{116},
+	{117},
+	{118},
+	{104},
+	{105},
+	{101},
+	{100},
+	{111}
 ].
 
 get1KeyList() -> [
-    875,
-    115,
-    116,
-    117,
-    1130,
-    1132,
-    888,
-    112
+	110,
+	113,
+	115,
+	116,
+	117,
+	118,
+	104,
+	105,
+	101,
+	100,
+	111
 ].
 

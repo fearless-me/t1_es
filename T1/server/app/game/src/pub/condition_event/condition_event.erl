@@ -52,34 +52,19 @@
 
 
 action_all(EventList, Params) when is_list(EventList) ->
-    lists:foreach(
-        fun(EventID) ->
-            condition_event:action(EventID, Params)
-        end, EventList),
+    condition_event:action(EventList, Params),
     ok;
 action_all(_EventList, _Params) ->
     skip.
 
 
-action(EventID, Params) ->
-    Cfg = getCfg:getCfgByArgs(cfg_conditional_event, EventID),
-    do_action(Cfg, Params).
-
-%%-------------------------------------------------------------------
-do_action([], _Params) ->
-    error;
-do_action(
-    #conditional_eventCfg{
-        conditional = Conditions,
-        event_true = EventTrue,
-        event_false = EventFalse
-    }, Params
-) ->
+action([Conditions, EventTrue, EventFalse], Params) ->
     case condition_loop(true, Conditions, Params) of
         true -> event_loop(EventTrue, Params);
         _Any -> event_loop(EventFalse, Params)
     end,
-    ok.
+    ok;
+action([],_Params) -> skip.
 
 
 %%-------------------------------------------------------------------

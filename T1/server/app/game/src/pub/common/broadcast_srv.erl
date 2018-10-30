@@ -92,14 +92,7 @@ broadcast_msg(MsgId, Msg) ->
             L = misc_ets:select(?ETS_CACHE_ONLINE_PLAYER, Ms),
             lists:foreach
             (
-                fun(Pid) ->
-                    erlang:spawn
-                    (
-                        fun() ->
-                            catch ps:send(Pid, MsgId, Msg)
-                        end
-                    )
-                end,
+                fun(Pid) -> catch ps:send(Pid, MsgId, Msg) end,
                 L
             )
         end,

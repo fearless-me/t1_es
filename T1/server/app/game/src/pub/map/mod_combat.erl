@@ -32,6 +32,19 @@
 ]).
 
 use_skill(Aer, Der, SkillId, Serial) ->
+    do_use_skill(Aer, Der, get_skill_cfg(SkillId), Serial, SkillId).
+
+do_use_skill(Aer, Der, undefined, Serial, SkillId) ->
+    NetMsg = #pk_GS2U_UseSkill{
+        uid = Aer,
+        tar_uid = Der,
+        skill_id = SkillId,
+        serial = Serial,
+        error_code = -1
+    },
+    gs_interface:send_net_msg(Aer,NetMsg),
+    ok;
+do_use_skill(Aer, Der, SkillCfg, Serial, SkillId) ->
     TarUid = ?if_else(Der > 0, Der, Aer),
     NetMsg = #pk_GS2U_UseSkill{
         uid = Aer,
@@ -43,57 +56,57 @@ use_skill(Aer, Der, SkillId, Serial) ->
     map_view:send_net_msg_to_visual(Aer, NetMsg),
     
     %% 触发事件
-    ?TRY_CATCH(trigger_before_cast_event(Aer, Der, SkillId)),
+    ?TRY_CATCH(trigger_before_cast_event(Aer, Der, SkillCfg)),
     
     %% 根据类型
-    SkillOpType = ?SKILL_OP_CHANNEL,
-    
     object_rw:set_field(Aer, #m_object_rw.skill_serial, Serial),
-    use_skill_dispatcher(SkillOpType, Aer, TarUid, SkillId, Serial),
-    ?DEBUG("~p use skill ~p tar ~p", [Aer, Der, SkillId]),
+    use_skill_dispatcher(SkillCfg, Aer, TarUid, Serial),
+    ?DEBUG("~p use skill ~p to tar ~p", [Aer, SkillId, TarUid]),
     ok.
 
-use_skill_dispatcher(?SKILL_OP_INSTANT, Aer, Tar, SkillId, Serial) ->
-    instant_skill(Aer, Tar, SkillId, Serial);
-use_skill_dispatcher(?SKILL_OP_CHANNEL, Aer, Tar, SkillId, Serial) ->
-    channel_skill(Aer, Tar, SkillId, Serial);
-use_skill_dispatcher(?SKILL_OP_SPELL, Aer, Tar, SkillId, Serial) ->
-    spell_skill(Aer, Tar, SkillId, Serial).
+use_skill_dispatcher(#skillCfg{casttype = ?SKILL_OP_INSTANT} = SkillCfg, Aer, Tar, Serial) ->
+    instant_skill(Aer, Tar, SkillCfg, Serial);
+use_skill_dispatcher(#skillCfg{casttype = ?SKILL_OP_CHANNEL} = SkillCfg, Aer, Tar, Serial) ->
+    channel_skill(Aer, Tar, SkillCfg, Serial);
+use_skill_dispatcher(#skillCfg{casttype = ?SKILL_OP_SPELL} = SkillCfg , Aer, Tar, Serial) ->
+    spell_skill(Aer, Tar, SkillCfg, Serial).
 
 %% todo 引导类型技能
-channel_skill(Aer, Tar, SkillId, Serial) ->
-    active_skill_once(Aer, Tar, object_rw:get_field(Tar, #m_object_rw.cur_pos), SkillId, Serial),
+channel_skill(Aer, Tar, SkillCfg, Serial) ->
+    active_skill_once(Aer, Tar, object_rw:get_field(Tar, #m_object_rw.cur_pos), SkillCfg, Serial),
     ok.
 
 %% todo 吟唱技能
-spell_skill(_Aer, _Tar, _SkillId, _Serial) ->
+spell_skill(_Aer, _Tar, _SkillCfg, _Serial) ->
     ok.
 
 %% todo 瞬发技能
-instant_skill(Aer, Tar, SkillId, Serial) ->
-    active_skill_once(Aer, Tar, object_rw:get_field(Tar, #m_object_rw.cur_pos), SkillId, Serial),
+instant_skill(Aer, Tar, SkillCfg, Serial) ->
+    active_skill_once(Aer, Tar, object_rw:get_field(Tar, #m_object_rw.cur_pos), SkillCfg, Serial),
     ok.
 
-active_skill_once(Aer, Tar, Pos, SkillId, Serial) ->
+active_skill_once(_Aer, _Tar, undefined, _SkillCfg, _Serial) ->
+    ok;
+active_skill_once(Aer, Tar, Pos, SkillCfg, Serial) ->
     
-    ?TRY_CATCH(trigger_before_hit_event(Aer, Tar, SkillId)),
+    ?TRY_CATCH(trigger_before_hit_event(Aer, Tar, SkillCfg)),
     
-    TargetList = calculate_target_list(Aer, SkillId, Pos),
+    TargetList = calculate_target_list(Aer, Tar, SkillCfg, Pos),
     
     %% todo 是否可以优化，因为这个是视野广播，不用给每个人发一次
     %% todo 一次性广播给所有同样的消息，让客户端呢判断下
     F =
         fun(HitUid) ->
-            calculate_dmg(Aer, SkillId, HitUid, Serial)
+            calculate_dmg(Aer, SkillCfg, HitUid, Serial)
         end,
     
     lists:foreach(F, TargetList),
     ok.
 
 %%-------------------------------------------------------------------
-calculate_dmg(Uid, SkillId, TargetUid, Serial) ->
+calculate_dmg(Uid, #skillCfg{id = SkillId} = SkillCfg, TargetUid, Serial) ->
     
-    ?TRY_CATCH(trigger_hit_event(Uid, TargetUid, SkillId)),
+    ?TRY_CATCH(trigger_hit_event(Uid, TargetUid, SkillCfg)),
     
     HitMsg = #pk_GS2U_HitTarget{
         uid = TargetUid, src_uid = Uid, cause = ?HIT_REASON_SKILL, misc = SkillId, serial = Serial
@@ -108,13 +121,32 @@ calculate_dmg(Uid, SkillId, TargetUid, Serial) ->
     ok.
 
 %% 选择技能目标
-calculate_target_list(Aer, SkillId, Pos) ->
+calculate_target_list(Aer, Tar, SkillCfg, Pos) ->
     %%todo  计算暴击、闪避、格挡等等
-    calculate_skill_effect(Aer, SkillId, Pos),
-    skill_selector:circle(Aer, Pos, 100).
+    calculate_skill_effect(Aer, SkillCfg, Pos),
+    target_selector(Aer, Tar, Pos, SkillCfg).
+
+%% 根据目标选择
+target_selector(_Aer, Tar, _Pos, #skillCfg{casttarget = ?SKILL_CAST_TARGET_SINGLE}) ->
+    [Tar];
+target_selector(Aer, Tar, Pos, #skillCfg{casttarget = ?SKILL_CAST_TARGET_DIRECTION} = SkillCfg) ->
+    target_selector_area(Aer, Tar, Pos, SkillCfg);
+target_selector(Aer, Tar, Pos, #skillCfg{casttarget = ?SKILL_CAST_TARGET_POSITION} = SkillCfg) ->
+    target_selector_area(Aer, Tar, Pos, SkillCfg);
+target_selector(Aer, Tar, Pos, #skillCfg{casttarget = ?SKILL_CAST_TARGET_FACE_DIR} = SkillCfg) ->
+    target_selector_area(Aer, Tar, Pos, SkillCfg).
+
+%% 根据范围选择
+target_selector_area(_Aer, Tar, _Pos, #skillCfg{areatype = ?SKILL_AREA_TYPE_SINGLE})->
+    [Tar];
+target_selector_area(Aer, _Tar, Pos, #skillCfg{areatype = ?SKILL_AREA_TYPE_LINE, radius = Radius, target = SkillTarget})->
+    FaceDir = object_rw:get_field(Aer, #m_object_rw.dir),
+    skill_selector:rectangle(Aer, Pos, FaceDir, Radius, Radius, SkillTarget);
+target_selector_area(Aer, _Tar, Pos, #skillCfg{areatype = ?SKILL_AREA_TYPE_CIRCLE, radius = Radius, target = SkillTarget})->
+    skill_selector:circle(Aer, Pos, Radius, SkillTarget).
 
 %% 计算暴击、闪避、格挡等等
-calculate_skill_effect(_Uid, _SkillId, _TarUid) ->
+calculate_skill_effect(_Uid, _SkillCfg, _TarUid) ->
     ok.
 
 %%-------------------------------------------------------------------
@@ -149,35 +181,36 @@ tick(Obj) ->
 %%todo 引导技能、吟唱技能
 tick_cur_skill(#m_cache_map_object{uid = Uid}) ->
     CurSkillId = object_rw:get_field(Uid, #m_object_rw.skill_id),
-    do_tick_cur_skill(Uid, CurSkillId),
+    do_tick_cur_skill(Uid, get_skill_cfg(CurSkillId)),
     ok.
 
-do_tick_cur_skill(_Uid, 0) ->
-    ok;
-do_tick_cur_skill(Uid, SkillId) ->
+
+do_tick_cur_skill(Uid, #skillCfg{id = SkillId} = SkillCfg) ->
     ?WARN("uid ~p tick skill ~p", [Uid, SkillId]),
     Serial = object_rw:get_field(Uid, #m_object_rw.skill_serial),
     OpTime0 = object_rw:get_field(Uid, #m_object_rw.operate_time, 0),
     OpTime1 = OpTime0 + ?MAP_TICK,
     object_rw:set_field(Uid, #m_object_rw.operate_time, OpTime1),
-    case can_skill_active_tick(Uid, SkillId) of
+    case can_skill_active_tick(Uid, SkillCfg) of
         true ->
             Pos = object_rw:get_field(Uid, #m_object_rw.persist_pos),
-            ?TRY_CATCH(trigger_cast_tick_event(Uid, Uid, SkillId)),
-            ?TRY_CATCH(active_skill_once(Uid, Uid, Pos, SkillId, Serial), Err1, Stk1),
-            ?TRY_CATCH(check_end_skill_tick(Uid, SkillId), Err2, Stk2),
+            ?TRY_CATCH(trigger_cast_tick_event(Uid, Uid, SkillCfg)),
+            ?TRY_CATCH(active_skill_once(Uid, Uid, Pos, SkillCfg, Serial), Err1, Stk1),
+            ?TRY_CATCH(check_end_skill_tick(Uid, SkillCfg), Err2, Stk2),
             ok;
         _ ->
             skip
     end,
     %%
     
+    ok;
+do_tick_cur_skill(_Uid, undefined) ->
     ok.
 
-can_skill_active_tick(_Uid, _SkillId) ->
+can_skill_active_tick(_Uid, _SkillCfg) ->
     true.
 
-check_end_skill_tick(Uid, _SkillId) ->
+check_end_skill_tick(Uid, _SkillCfg) ->
     _OpTime = object_rw:get_field(Uid, #m_object_rw.operate_time),
     %% todo 到达最大时间? 到达最大次数?
     end_use_skill(Uid).
@@ -236,18 +269,21 @@ is_using_skill(Aer) ->
 
 
 %%
-trigger_before_cast_event(Aer, Der, SkillId) ->
-    #skillCfg{beforecast = EventList} = getCfg:getCfgByArgs(cfg_skill, SkillId),
+trigger_before_cast_event(Aer, Der, #skillCfg{beforecast = EventList}) ->
     condition_event:action_all(EventList, [Aer, Der]).
 
-trigger_cast_tick_event(Aer, Der, SkillId) ->
-    #skillCfg{castingtick = EventList} = getCfg:getCfgByArgs(cfg_skill, SkillId),
+trigger_cast_tick_event(Aer, Der,  #skillCfg{castingtick = EventList}) ->
     condition_event:action_all(EventList, [Aer, Der]).
 
-trigger_before_hit_event(Aer, Der, SkillId) ->
-    #skillCfg{beforehit = EventList} = getCfg:getCfgByArgs(cfg_skill, SkillId),
+trigger_before_hit_event(Aer, Der, #skillCfg{beforecast = EventList}) ->
     condition_event:action_all(EventList, [Aer, Der]).
 
-trigger_hit_event(Aer, Der, SkillId) ->
-    #skillCfg{beforehit = EventList} = getCfg:getCfgByArgs(cfg_skill, SkillId),
+trigger_hit_event(Aer, Der,  #skillCfg{beforehit = EventList}) ->
     condition_event:action_all(EventList, [Aer, Der]).
+
+get_skill_cfg(0) -> undefined;
+get_skill_cfg(SkillId) ->
+    case getCfg:getCfgByArgs(cfg_skill, SkillId) of
+        #skillCfg{} = Cfg -> Cfg;
+        _Any -> undefined
+    end.

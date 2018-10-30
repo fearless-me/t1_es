@@ -25,6 +25,30 @@
 -include("battle_prop.hrl").
 
 
+%% 技能操作类型
+-define(SKILL_OP_INSTANT, 1).  %% 瞬发
+-define(SKILL_OP_CHANNEL, 2).  %% 引导
+-define(SKILL_OP_SPELL, 3).    %% 吟唱
+
+
+%% 技能施法目标
+-define(SKILL_CAST_TARGET_SINGLE, 1).
+-define(SKILL_CAST_TARGET_DIRECTION, 2).
+-define(SKILL_CAST_TARGET_POSITION, 3).
+-define(SKILL_CAST_TARGET_FACE_DIR, 4).
+
+%% 技能目标范围类型
+-define(SKILL_AREA_TYPE_SINGLE, 1).
+-define(SKILL_AREA_TYPE_LINE,   2).
+-define(SKILL_AREA_TYPE_CIRCLE, 3).
+
+%%  技能作用目标类型
+-define(SKILL_TARGET_PLAYER,  1).
+-define(SKILL_TARGET_MONSTER, 2).
+-define(SKILL_TARGET_PET,     4).
+
+
+
 %% 角色HP变化原因
 -define(HP_CHANGE_SKILL, 0). %% 技能伤害引起
 -define(HP_CHANGE_BUFF, 1). %% Buff伤害引起
@@ -48,10 +72,6 @@
 -define(ESR_BLOCKED, 2).    %% 格挡
 
 
-%%
--define(SKILL_OP_INSTANT, 1).  %% 瞬发
--define(SKILL_OP_CHANNEL, 2).  %% 引导
--define(SKILL_OP_SPELL, 3).    %% 吟唱
 
 -record(m_buff, {buff_id = 0, lifetime = 0, level = 1, wrap = 1, source = 0}).
 

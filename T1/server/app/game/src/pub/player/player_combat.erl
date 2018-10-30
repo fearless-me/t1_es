@@ -9,8 +9,10 @@
 -module(player_combat).
 -author("mawenhong").
 -include("logger.hrl").
+-include("netmsg.hrl").
 -include("gs_cache.hrl").
 -include("gs_common_rec.hrl").
+-include("cfg_skill.hrl").
 
 %% API
 -export([
@@ -61,7 +63,7 @@ add_buff(BuffId, Level) ->
 
 %%-------------------------------------------------------------------
 use_skill(SkillId, Tar, Pos, Serial) ->
-    ?DEBUG("~p use skill ~p", [player_rw:get_uid(), SkillId]),
+    ?DEBUG("~p use skill ~p serial ~p at pos ~w", [player_rw:get_uid(), SkillId, Serial, Pos]),
     R1 = check_cd(SkillId),
     R2 = check_cost(R1, SkillId),
     R3 = check_skill(R2, SkillId),
@@ -74,14 +76,20 @@ do_use_skill(true, SkillId, Tar, Pos, Serial) ->
     Uid = player_rw:get_uid(),
     Msg = #r_player_use_skill_req{
         uid = Uid, skill_id = SkillId, tar = Tar, pos = Pos, serial = Serial},
-%%    lib_player_map_priv:teleport_call(Pos),
-    ?DEBUG("send use skill to map ~p", [player_rw:get_map()]),
+    ?DEBUG("~p use skill ~p serial ~p send to map ~w",
+        [Uid, SkillId, Serial, player_rw:get_map()]),
     update_skill_cd(SkillId),
     player_pub:send_map_msg_(player_use_skill, Msg),
     ok;
-do_use_skill(ErrAndFalse, _SkillId, _Tar, _Pos, _Serial) ->
-    %% todo 发送错误消息
-    ErrAndFalse.
+do_use_skill(ErrAndFalse, SkillId, Tar, _Pos, Serial) ->
+    NetMsg = #pk_GS2U_UseSkill{
+        uid = player_rw:get_uid(),
+        tar_uid = Tar,
+        skill_id = SkillId,
+        serial = Serial,
+        error_code = ErrAndFalse
+    },
+    player_pub:send_net_msg(NetMsg).
 
 
 update_skill_cd(_SkillId) ->
@@ -97,8 +105,11 @@ check_cost(true, _SkillId) ->
 check_cost(ErrAndFalse, _SkillId) ->
     ErrAndFalse.
 
-check_skill(true, _SkillId) ->
-    true;
+check_skill(true, SkillId) ->
+    case getCfg:getCfgByArgs(cfg_skill, SkillId) of
+        #skillCfg{} -> true;
+        _ -> -1
+    end;
 check_skill(ErrAndFalse, _SkillId) ->
     ErrAndFalse.
 

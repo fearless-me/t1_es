@@ -21,7 +21,8 @@
     %% 权限等级、 指令、 回调函数、 说明
     {0, "change_map", fun change_map/1, "切地图 &chang_map $MapId"},
     {0, "change_group", fun change_group/1, "改变角色分组属性 &change_group $GroupId"},
-    {0, "add_buff", fun add_buff/1, "添加buff &add_buff $BuffId [$BuffLevel]"}
+    {0, "add_buff", fun add_buff/1, "添加buff &add_buff $BuffId [$BuffLevel]"},
+    {0, "use_skill", fun use_skill/1, "使用技能 &use_skill $SkillId $TargetId"}
 ]).
 
 
@@ -95,6 +96,17 @@ add_buff([BuffId | _]) ->
     player_combat:add_buff(
         list_to_integer(BuffId),
         1
+    ),
+    ok.
+
+%%-------------------------------------------------------------------
+use_skill([SkillId, TarUid | _]) ->
+    Uid = player_rw:get_uid(),
+    player_combat:use_skill(
+        list_to_integer(SkillId),
+        list_to_integer(TarUid),
+        player_interface:get_cur_pos(Uid),
+        misc_time:utc_seconds()
     ),
     ok.
 

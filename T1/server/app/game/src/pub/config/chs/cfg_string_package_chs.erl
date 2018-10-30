@@ -10,55 +10,88 @@
 -include("battle_prop.hrl").
 
 %% 语言包，翻译表
-getRow(1000001) ->
+getRow(3) ->
 	#string_packageCfg{
-		desc__ = "海螺",
-		id = 1000001,
+		desc__ = "tiancheng",
+		id = 3,
 		enum_string_id = "",
 		type = 4,
 		notice_type = 0,
-		content = "海螺5555"
+		content = "tiancheng"
 	};
-getRow(2) ->
+getRow(4) ->
 	#string_packageCfg{
-		desc__ = "服务器TIPS定义开始",
-		id = 2,
-		enum_string_id = "system",
-		type = 1,
-		notice_type = 1,
-		content = "欢迎你"
-	};
-getRow(2000003) ->
-	#string_packageCfg{
-		desc__ = "世界守护BOSS",
-		id = 2000003,
+		desc__ = "拳击",
+		id = 4,
 		enum_string_id = "",
 		type = 4,
 		notice_type = 0,
-		content = "世界守护BOSS"
+		content = "4"
 	};
-getRow(2000004) ->
+getRow(5) ->
 	#string_packageCfg{
-		desc__ = "世界守护BOSS小弟",
-		id = 2000004,
+		desc__ = "横扫拳击",
+		id = 5,
 		enum_string_id = "",
 		type = 4,
 		notice_type = 0,
-		content = "世界守护BOSS小弟"
+		content = "横扫拳击"
+	};
+getRow(6) ->
+	#string_packageCfg{
+		desc__ = "蓄力重拳",
+		id = 6,
+		enum_string_id = "",
+		type = 4,
+		notice_type = 0,
+		content = "6"
+	};
+getRow(7) ->
+	#string_packageCfg{
+		desc__ = "佛山无影脚",
+		id = 7,
+		enum_string_id = "",
+		type = 4,
+		notice_type = 0,
+		content = "佛山无影脚"
+	};
+getRow(8) ->
+	#string_packageCfg{
+		desc__ = "加班续命",
+		id = 8,
+		enum_string_id = "",
+		type = 4,
+		notice_type = 0,
+		content = "8"
+	};
+getRow(9) ->
+	#string_packageCfg{
+		desc__ = "边回边打",
+		id = 9,
+		enum_string_id = "",
+		type = 4,
+		notice_type = 0,
+		content = "边回边打"
 	};
 getRow(_) -> {}.
 
 getKeyList() -> [
-	{1000001},
-	{2},
-	{2000003},
-	{2000004}
+	{3},
+	{4},
+	{5},
+	{6},
+	{7},
+	{8},
+	{9}
 ].
 
 get1KeyList() -> [
-	1000001,
-	2,
-	2000003,
-	2000004
+	3,
+	4,
+	5,
+	6,
+	7,
+	8,
+	9
 ].
 

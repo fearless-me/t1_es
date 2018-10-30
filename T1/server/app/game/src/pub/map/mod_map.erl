@@ -25,7 +25,7 @@ on_info_msg({player_change_combat_prop, {Uid, AddList, MultiList, AddList_Del, M
     mod_combat_prop:change_combat_prop(Uid, AddList, MultiList, AddList_Del, MultiList_Del),
     ok;
 on_info_msg({player_use_skill, Req}) ->
-    ?DEBUG("player_use_skill ~p", [Req]),
+    ?DEBUG("player_use_skill ~w", [Req]),
     #r_player_use_skill_req{uid = Aer, skill_id = SkillId, tar = Der, serial = Serial} = Req,
     mod_combat:use_skill(Aer, Der, SkillId, Serial),
     ok;

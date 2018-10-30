@@ -109,11 +109,12 @@ do_serve_change_map_call(ExitReq, JoinReq) ->
     CurMgr = map_creator_interface:map_mgr_lr(Uid, SrcMid),
     TarMgr = map_creator_interface:map_mgr_lr(Uid, TarMid),
 
-    ?INFO("player ~p, changeMap map_~p_~p:~p -> map ~p",
-        [Uid, SrcMid, SrcLineId, SrcMpid, TarMid]),
+    ?INFO("player ~p, changeMap map_~p_~p:~p|~p -> map ~p | ~p",
+        [Uid, SrcMid, SrcLineId, SrcMpid, CurMgr, TarMid, TarMgr]),
 
     %% 2.
     ExitRes = do_serve_change_map_call_exit(CurMgr, TarMgr, ExitReq),
+    ?DEBUG("~p",[ExitRes]),
     do_serve_change_map_call_join(ExitRes, TarMgr, JoinReq).
 
 %% 先退出
@@ -129,8 +130,8 @@ do_serve_change_map_call_exit(_CurMgr, undefined, #r_exit_map_req{map_id = Mid})
 %% 这种是服务器安全的情况下
 do_serve_change_map_call_exit(CurMgr, _TarMgr, #r_exit_map_req{map_id = Mid} = ExitReq) ->
     case catch map_mgr_interface:player_exit_map_call(CurMgr, ExitReq) of
-        Code when is_number(Code)-> #r_exit_map_ack{error = Code, map_id = Mid};
-        _ ->   #r_exit_map_ack{error = ?E_Exception, map_id = Mid}
+        #r_exit_map_ack{} = Ack -> Ack;
+        _Err -> #r_exit_map_ack{error = ?E_Exception, map_id = Mid}
     end.
 
 %% 在进入
@@ -143,8 +144,8 @@ do_serve_change_map_call_join(#r_exit_map_ack{error = ?E_Success}, TarMgr, JoinR
         #r_join_map_ack{} = Ack -> Ack;
         _ -> #r_join_map_ack{error = ?E_Exception, map_id = JoinReq#r_join_map_req.tar_map_id}
     end;
-do_serve_change_map_call_join(#r_exit_map_ack{error = ErrorCode}, _TarMgr, _Req) ->
-    #r_join_map_ack{error = ErrorCode, map_id = 0}.
+do_serve_change_map_call_join(#r_exit_map_ack{error = ErrorCode}, _TarMgr, JoinReq) ->
+    #r_join_map_ack{error = ErrorCode, map_id = JoinReq#r_join_map_req.tar_map_id}.
 
 %%-------------------------------------------------------------------
 serve_change_map_call_ret(

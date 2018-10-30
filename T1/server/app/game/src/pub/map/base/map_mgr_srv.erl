@@ -136,20 +136,26 @@ i_player_join_map_call(_Any, Recover, Req, State) ->
 %%--------------------------------------------------------------------
 do_player_exit_map_call(S, Req) ->
     %%1.
-    #r_exit_map_req{uid = Uid, line_id = LineID} = Req,
+    #r_exit_map_req{uid = Uid, line_id = LineID, map_id = Mid} = Req,
     
     ?WARN("player ~p exit map_~p_~p", [Uid, S#state.map_id, LineID]),
     
     %2.
     case misc_ets:read(S#state.ets, LineID) of
         [#m_map_line{pid = Pid}] ->
-            misc_ets:update_counter(S#state.ets, LineID, {#m_map_line.in, -1}),
+
             %% @todo 退出地图失败是否要处理
-            map_interface:player_exit_call(Pid, Req);
+            ExitRes = map_interface:player_exit_call(Pid, Req),
+            case ExitRes of
+                ?E_Success ->
+                    misc_ets:update_counter(S#state.ets, LineID, {#m_map_line.in, -1});
+                _ -> skip
+            end,
+            #r_exit_map_ack{error = ExitRes, map_id = Mid, line_id = LineID };
         _ ->
             ?ERROR("player ~p exit map_~p_~p but line ~p not exists",
                 [Uid, S#state.map_id, LineID, LineID]),
-            error
+            #r_exit_map_ack{error = ?E_Exception, map_id = Mid}
     end.
 
 %%--------------------------------------------------------------------
