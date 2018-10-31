@@ -98,7 +98,7 @@ player_join_call(S, _From, Any) ->
 %% call
 force_teleport_call(S, From, #r_teleport_req{uid = Uid, tar = TarPos}) ->
     map_srv:call_reply(From, ok),
-    CurPos = object_rw:get_field(Uid, #m_object_rw.cur_pos),
+    CurPos = object_rw:get_cur_pos(Uid),
     ?TRY_CATCH(mod_move:on_obj_pos_change(Uid, TarPos)),
     ?DEBUG("player ~p teleport from ~w to ~w in map ~p_~p",
         [Uid, CurPos, TarPos, map_rw:map_id(), map_rw:line_id()]),
@@ -120,7 +120,7 @@ init_all_monster_1(Mdata) ->
 
 init_all_monster_2(Obj) ->
     Uid = object_core:get_uid(Obj),
-    VisIndex = map_view:pos_to_vis_index(object_rw:get_field(Uid, #m_object_rw.cur_pos)),
+    VisIndex = map_view:pos_to_vis_index(object_rw:get_cur_pos(Uid)),
     map_rw:add_obj_to_map(Obj),
     map_view:add_obj_to_vis_tile(Obj, VisIndex),
     hook_map:on_monster_create(Uid),
@@ -200,7 +200,7 @@ tick_monster(_S) ->
         end, 0, map_rw:obj_maps_with_type(?OBJ_MON)).
 
 tick_monster_1(undefined, Uid) ->
-    ?ERROR("monster ~p  ~p not exists", [Uid, object_rw:get_field(Uid, #m_object_rw.data_id)]);
+    ?ERROR("monster ~p  ~p not exists", [Uid, object_rw:get_data_id(Uid)]);
 tick_monster_1(Obj, _) ->
     ?TRY_CATCH(mod_move:update(Obj), Err1, Stk1),
     ?TRY_CATCH(mod_ai:update(Obj), Err2, Stk2),
@@ -256,7 +256,7 @@ kick_all_player(_S) ->
 -spec player_start_move(Req :: #r_player_start_move_req{}) -> ok | error.
 player_start_move(Req) ->
     #r_player_start_move_req{uid = Uid, tar = Dst} = Req,
-    mod_move:start_player_walk(Uid, object_rw:get_field(Uid, #m_object_rw.cur_pos), Dst).
+    mod_move:start_player_walk(Uid, object_rw:get_cur_pos(Uid), Dst).
 
 %%-------------------------------------------------------------------
 -spec player_stop_move(Req :: #r_player_stop_move_req{}) -> ok | error.

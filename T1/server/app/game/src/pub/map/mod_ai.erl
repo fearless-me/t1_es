@@ -72,15 +72,15 @@ init_ai(Uid) ->
     CreateType = ?EACT_Indicate,
     case CreateType of
         ?EACT_NoAI ->
-            object_rw:set_field(Uid, #m_object_rw.ai_id, 0);
+            object_rw:set_ai_id(Uid, 0);
         ?EACT_Indicate ->
-            object_rw:set_field(Uid, #m_object_rw.ai_id, 0);
+            object_rw:set_ai_id(Uid, 0);
         ?EACT_Random ->
-            object_rw:set_field(Uid, #m_object_rw.ai_id, 0);
+            object_rw:set_ai_id(Uid, 0);
         ?EACT_GroupRandom ->
-            object_rw:set_field(Uid, #m_object_rw.ai_id, 0);
+            object_rw:set_ai_id(Uid, 0);
         _ ->
-            object_rw:set_field(Uid, #m_object_rw.ai_id, 0)
+            object_rw:set_ai_id(Uid, 0)
     end,
     % todo 添加buff、技能等等
     ok.
@@ -94,7 +94,7 @@ init_trigger(Uid) ->
 %%-------------------------------------------------------------------
 init_transition(Uid) ->
     % todo 根据怪物配置添加AI类型
-    case object_rw:get_field(Uid, #m_object_rw.ai_id, 0) of
+    case object_rw:get_ai_id(Uid, 0) of
         0 -> skip;
         _Id ->
             _AiAction = ?AIAT_Active
@@ -104,13 +104,13 @@ init_transition(Uid) ->
 %%-------------------------------------------------------------------
 reset_patrol_tick(Uid) ->
     ResetTick = rand_tool:rand() div ?AI_PATROL_REST_TICK_INTERVAL + ?AI_PATROL_REST_TICK_MIN,
-    object_rw:set_field(Uid, #m_object_rw.ai_patrol_rest_tick, ResetTick),
+    object_rw:set_ai_patrol_rest_tick(Uid, ResetTick),
     ok.
 
 %%-------------------------------------------------------------------
 can_update_ai(Uid) ->
     %% todo 检查是否有AI，是否死亡，以及其他限制状态
-    AiId = object_rw:get_field(Uid, #m_object_rw.ai_id, 0),
+    AiId = object_rw:get_ai_id(Uid, 0),
     AiId > 0.
 
 %%-------------------------------------------------------------------
@@ -125,7 +125,7 @@ update(_Any) ->
 do_update(Uid, true) ->
     %% todo 获取怪物AI配置
     AiAction = ?AIAT_Null,
-    State = object_rw:get_field(Uid, #m_object_rw.ai_state),
+    State = object_rw:get_ai_state(Uid),
     
     ?TRY_CATCH(update_hook(Uid), Err1, Stk1),
     ?TRY_CATCH(update_transition(Uid, AiAction), Err2, Stk2),
@@ -144,7 +144,7 @@ update_hook(_Uid) ->
 update_transition(_Uid, ?AIAT_Null) ->
     skip;
 update_transition(Uid, AiAction) ->
-    OldState = object_rw:get_field(Uid, #m_object_rw.ai_state),
+    OldState = object_rw:get_ai_state(Uid),
     NewState = ai_transition:transition(Uid, AiAction),
     case NewState of
         OldState -> skip;
@@ -169,7 +169,7 @@ change_state(Uid, OldState, NewState) ->
     % 先退出旧状态
     ai_state:on_exit(Uid, OldState),
     %在更新状态
-    object_rw:set_field(Uid, #m_object_rw.ai_state, NewState),
+    object_rw:set_ai_state(Uid, NewState),
     ai_state:on_enter(Uid, NewState),
     ok.
 
@@ -182,18 +182,18 @@ update_patrol(Uid) ->
     case PatrolType of
         ?ECPT_Wood -> skip;
         _ ->
-            IsPatrol = object_rw:get_field(Uid, #m_object_rw.ai_is_patrol),
-            PatrolTick = object_rw:get_field(Uid, #m_object_rw.ai_patrol_rest_tick),
+            IsPatrol = object_rw:get_ai_is_patrol(Uid),
+            PatrolTick = object_rw:get_ai_patrol_rest_tick(Uid),
             do_update_patrol(Uid, IsPatrol, PatrolTick)
     end,
     ok.
 
 %% 巡逻结束
 do_update_patrol(Uid, true, _ResetTick) ->
-    CurMove = object_rw:get_field(Uid, #m_object_rw.cur_move),
+    CurMove = object_rw:get_cur_move(Uid),
     case CurMove of
         ?EMS_STAND ->
-            object_rw:set_field(Uid, #m_object_rw.ai_is_patrol, false),
+            object_rw:set_ai_is_patrol(Uid, false),
             reset_patrol_tick(Uid),
             ok;
         _ ->
@@ -202,7 +202,7 @@ do_update_patrol(Uid, true, _ResetTick) ->
     ok;
 %% 等待重启
 do_update_patrol(Uid, _IsPatrol, ResetTick) when ResetTick > 0 ->
-    object_rw:set_field(Uid, #m_object_rw.ai_patrol_rest_tick, ResetTick - 1),
+    object_rw:set_ai_patrol_rest_tick(Uid, ResetTick - 1),
     ok;
 %% 更新巡逻
 do_update_patrol(Uid, _IsPatrol, _ResetTick) ->
@@ -216,11 +216,11 @@ start_patrol(Uid) ->
     ok.
 
 do_start_patrol(Uid, ?ECPT_Path) ->
-    WPNum = object_rw:get_field(Uid, #m_object_rw.ai_wp_num),
-    WPIdx = object_rw:get_field(Uid, #m_object_rw.ai_wp_idx),
+    WPNum = object_rw:get_ai_wp_num(Uid),
+    WPIdx = object_rw:get_ai_wp_idx(Uid),
     
     %
-    IsReversePatrol1 = object_rw:get_field(Uid, #m_object_rw.ai_is_reverse_patrol),
+    IsReversePatrol1 = object_rw:get_ai_is_reverse_patrol(Uid),
     IsReversePatrol2 =
         if
             not IsReversePatrol1 andalso (WPIdx == WPNum) ->
@@ -246,7 +246,7 @@ do_start_patrol(Uid, ?ECPT_Path) ->
         ]
     ),
     
-    WPList = object_rw:get_field(Uid, #m_object_rw.ai_wp_list),
+    WPList = object_rw:get_ai_wp_list(Uid),
     TarPos = lists:nth(NewWPIdx, WPList),
     
     % 怪物开始跑路
@@ -254,7 +254,7 @@ do_start_patrol(Uid, ?ECPT_Path) ->
     ok;
 do_start_patrol(Uid, ?ECPT_Range) ->
     Diameter = ?AI_PATROL_RADIUS * 2,
-    NowPos = object_rw:get_field(Uid, #m_object_rw.cur_pos),
+    NowPos = object_rw:get_cur_pos(Uid),
     X = vector3:x(NowPos) + ((rand_tool:rand() rem Diameter) - ?AI_PATROL_RADIUS),
     Z = vector3:z(NowPos) + ((rand_tool:rand() rem Diameter) - ?AI_PATROL_RADIUS),
     TarPos = vector3:new(X, 0, Z),
@@ -269,7 +269,7 @@ do_start_patrol(_Uid, _AnyType) ->
 do_started_patrol_1(Uid, TarPos) ->
     Ret = mod_move:start_monster_walk(Uid, TarPos, ?EMS_MONSTER_PATROL, true),
     case Ret of
-        true -> object_rw:set_field(Uid,#m_object_rw.ai_is_patrol, true);
+        true -> object_rw:set_ai_is_patrol(Uid, true);
         _ -> skip
     end,
     ok.
@@ -278,7 +278,7 @@ do_started_patrol_1(Uid, TarPos) ->
 %%-------------------------------------------------------------------
 %%
 clear_all_enmity(Uid) ->
-    List = object_rw:get_field(Uid, #m_object_rw.enmity_list),
+    List = object_rw:get_enmity_list(Uid),
     lists:foreach(
         fun(#m_unit_enmity{uid = TarUid}) ->
             clear_enmity(TarUid, Uid, false)
@@ -290,7 +290,7 @@ clear_all_enmity(Uid) ->
 
 %% todo 优化仇恨列表的计算
 add_enmity(Uid, TarUid, Val) ->
-    EnList0 = object_rw:get_field(Uid, #m_object_rw.enmity_list),
+    EnList0 = object_rw:get_enmity_list(Uid),
     EnList1 =
         case lists:keyfind(TarUid, #m_unit_enmity.uid, EnList0) of
             #m_unit_enmity{enmity = EnmityVal} = Enmity ->
@@ -312,7 +312,7 @@ add_enmity(Uid, TarUid, Val) ->
 
 %%-------------------------------------------------------------------
 sort_max_enmity(Uid, []) ->
-    object_rw:set_field(Uid, #m_object_rw.max_enmity_uid, 0),
+    object_rw:set_max_enmity_uid(Uid, 0),
     ok;
 sort_max_enmity(Uid, EnList0) ->
     EnList1 = filter_enmity_list(EnList0, []),
@@ -350,9 +350,9 @@ do_sort_max_enmity([_H | EnList], TarUid, TarEnVal) ->
 
 %%-------------------------------------------------------------------
 clear_enmity(Uid, TarUid, false) ->
-    EnList0 = object_rw:get_field(Uid, #m_object_rw.enmity_list),
+    EnList0 = object_rw:get_enmity_list(Uid),
     EnList1 = lists:keydelete(TarUid, #m_unit_enmity.uid, EnList0),
-    object_rw:set_field(Uid, #m_object_rw.enmity_list, EnList1),
+    object_rw:set_enmity_list(Uid, EnList1),
     
     EnList1;
 clear_enmity(Uid, TarUid, _SetMaxEnmity) ->
@@ -362,7 +362,7 @@ clear_enmity(Uid, TarUid, _SetMaxEnmity) ->
 
 %%-------------------------------------------------------------------
 update_look_for_enemy(Uid) ->
-    T = object_rw:get_field(Uid, #m_object_rw.ai_look_for_target_tick),
+    T = object_rw:get_ai_look_for_target_tick(Uid),
     R = can_look_for_enemy(Uid, T),
     do_update_look_for_enemy(Uid, R).
 
@@ -374,7 +374,7 @@ do_update_look_for_enemy(_Uid, _) -> skip.
 %%-------------------------------------------------------------------
 can_look_for_enemy(_Uid, V) when V =< 0 -> true;
 can_look_for_enemy(Uid, V) when V > 0 ->
-    object_rw:set_field(Uid, #m_object_rw.ai_look_for_target_tick, V - 1),
+    object_rw:set_ai_look_for_target_tick(Uid, V - 1),
     false;
 can_look_for_enemy(_Uid, _V) ->
     true.
@@ -387,26 +387,26 @@ start_look_for_enemy(Uid) ->
 
 %%-------------------------------------------------------------------
 update_lock_target(Uid) ->
-    Current = object_rw:get_field(Uid, #m_object_rw.ai_target_uid),
+    Current = object_rw:get_ai_target_uid(Uid),
     Changed = find_lock_target(Uid, Current, false),
     changed_lock_target(Uid, Changed).
 
 changed_lock_target(_Uid, true) -> true;
 changed_lock_target(Uid, _False) ->
-    LockTick = object_rw:get_field(Uid, #m_object_rw.ai_lock_target_tick),
+    LockTick = object_rw:get_ai_lock_target_tick(Uid),
     case LockTick > 0 of
         true ->
-            object_rw:set_field(Uid, #m_object_rw.ai_look_for_target_tick, LockTick - 1),
+            object_rw:set_ai_look_for_target_tick(Uid, LockTick - 1),
             false;
         _ ->
-            TarUid = object_rw:get_field(Uid, #m_object_rw.ai_target_uid),
+            TarUid = object_rw:get_ai_target_uid(Uid),
             MaxUid = get_max_enmity_uid(Uid),
             reset_lock_target_time(Uid),
             case TarUid =:= MaxUid of
                 true ->
                     false;
                 _ ->
-                    object_rw:set_field(Uid, #m_object_rw.ai_target_uid, MaxUid),
+                    object_rw:set_ai_target_uid(Uid, MaxUid),
                     true
             end
     end.
@@ -421,7 +421,7 @@ find_lock_target(Uid, TargetUid, Changed) ->
             % todo 目标存在清除仇恨
             clear_enmity(Uid, TargetUid, true),
             NewTar = get_max_enmity_uid(Uid),
-            object_rw:set_field(Uid, #m_object_rw.ai_target_uid, NewTar),
+            object_rw:set_ai_target_uid(Uid, NewTar),
             reset_lock_target_time(Uid),
             find_lock_target(Uid, NewTar, true)
     end.
@@ -433,30 +433,30 @@ is_target_valid(_TargetUid) ->
 %%-------------------------------------------------------------------
 reset_look_for_target_tick(Uid) ->
     ResetTick = rand_tool:rand() div ?AI_LOOK_FOR_ENEMY_TICK_INTERVAL + ?AI_LOOK_FOR_ENEMY_TICK_MIN,
-    object_rw:set_field(Uid, #m_object_rw.ai_look_for_target_tick, ResetTick),
+    object_rw:set_ai_look_for_target_tick(Uid, ResetTick),
     ok.
 
 %%-------------------------------------------------------------------
 %%-------------------------------------------------------------------
 reset_lock_target_time(Uid) ->
     ResetTick = rand_tool:rand() div ?AI_LOCK_TARGET_TICK_INTERVAL + ?AI_LOCK_TARGET_MIN_TICK,
-    object_rw:set_field(Uid, #m_object_rw.ai_look_for_target_tick, ResetTick),
+    object_rw:set_ai_look_for_target_tick(Uid, ResetTick),
     ok.
 
 %%-------------------------------------------------------------------
 reset_check_pursue_tick(Uid) ->
-    object_rw:set_field(Uid, #m_object_rw.ai_check_pursue_tick, rand_tool:rand() rem 6 + 5),
+    object_rw:set_ai_check_pursue_tick(Uid, rand_tool:rand() rem 6 + 5),
     ok.
 
 %%-------------------------------------------------------------------
 count_down_attack_tick(Uid) ->
-    Tick = object_rw:get_field(Uid, #m_object_rw.ai_attack_wait_tick),
-    object_rw:set_field(Uid, #m_object_rw.ai_attack_wait_tick, Tick - 1),
+    Tick = object_rw:get_ai_attack_wait_tick(Uid),
+    object_rw:set_ai_attack_wait_tick(Uid, Tick - 1),
     ok.
 
 %%-------------------------------------------------------------------
 get_pursue_unit(Uid) ->
-    TarUid = object_rw:get_field(Uid, #m_object_rw.ai_target_uid),
+    TarUid = object_rw:get_ai_target_uid(Uid),
     map_rw:find_unit(TarUid).
 
 %%-------------------------------------------------------------------
@@ -470,25 +470,25 @@ start_pursue(Uid, TarUid) when is_integer(TarUid), TarUid > 0 ->
     ),
     reset_check_pursue_tick(Uid),
     
-    Pos = object_rw:get_field(Uid, #m_object_rw.cur_pos),
+    Pos = object_rw:get_cur_pos(Uid),
     Ret = mod_move:is_can_monster_walk(Uid, Pos, ?EMS_MONSTER_WALK, true),
     case Ret of
         true ->
-            object_rw:set_field(Uid, #m_object_rw.ai_pursue_tar_pos, Pos),
+            object_rw:set_ai_pursue_tar_pos(Uid, Pos),
             mod_move:start_monster_walk(Uid, Pos, ?EMS_MONSTER_WALK, false);
         _ ->
-            object_rw:set_field(Uid, #m_object_rw.ai_pursue_failed, true)
+            object_rw:set_ai_pursue_failed(Uid, true)
     end,
     ok;
 start_pursue(_Uid, _TarUid) -> ok.
 
 %%-------------------------------------------------------------------
 update_pursue(Uid, TarUid) when is_integer(TarUid), TarUid > 0 ->
-    CheckTick = object_rw:get_field(Uid, #m_object_rw.ai_check_pursue_tick),
-    NoEnmityTick = object_rw:get_field(Uid, #m_object_rw.no_inc_enmity_tick),
-    IsPursueFailed = object_rw:get_field(Uid, #m_object_rw.ai_pursue_failed),
-    IsCantPursue = object_rw:get_field(Uid, #m_object_rw.ai_cant_pursue),
-    object_rw:set_field(
+    CheckTick = object_rw:get_ai_check_pursue_tick(Uid),
+    NoEnmityTick = object_rw:get_no_inc_enmity_tick(Uid),
+    IsPursueFailed = object_rw:ai_pursue_failed(Uid),
+    IsCantPursue = object_rw:ai_cant_pursue(Uid),
+    object_rw:set_fields(
         Uid,
         [
             {#m_object_rw.ai_check_pursue_tick, CheckTick - 1},
@@ -517,35 +517,35 @@ update_pursue_1(Uid, TarUid, _Failed, _Cant) ->
     CanMove = true,
     case CanMove of
         falae ->
-            object_rw:set_field(Uid, #m_object_rw.ai_cant_pursue, true);
+            object_rw:set_ai_cant_pursue(Uid, true);
         _ ->
-            NoEnmityTick = object_rw:get_field(Uid, #m_object_rw.no_inc_enmity_tick),
+            NoEnmityTick = object_rw:get_no_inc_enmity_tick(Uid),
             update_pursue_2(Uid, TarUid, NoEnmityTick)
     end,
     ok.
 
 %%-------------------------------------------------------------------
 update_pursue_2(Uid, _TarUid, NoEnmityTick) when NoEnmityTick > ?AI_RETURN_TICK ->
-    object_rw:set_field(Uid, #m_object_rw.ai_pursue_failed, true),
+    object_rw:set_ai_pursue_failed(Uid, true),
     ok;
 update_pursue_2(Uid, TarUid, _NoEnmityTick) ->
-    CurMove = object_rw:get_field(Uid, #m_object_rw.cur_move),
-    IsStop = object_rw:get_field(Uid, #m_object_rw.force_stopped),
+    CurMove = object_rw:get_cur_move(Uid),
+    IsStop = object_rw:get_force_stopped(Uid),
     case CurMove of
         ?EMS_STAND when IsStop ->
             start_pursue(Uid, TarUid);
         ?EMS_STAND when IsStop =:= false ->
             start_pursue(Uid, TarUid);
         _ ->
-            update_pursue_3(Uid, TarUid, object_rw:get_field(Uid, #m_object_rw.ai_check_pursue_tick))
+            update_pursue_3(Uid, TarUid, object_rw:get_ai_check_pursue_tick(Uid))
     end,
     ok.
 
 %%-------------------------------------------------------------------
 update_pursue_3(Uid, TarUid, CheckTick) when CheckTick =< 0 ->
     reset_check_pursue_tick(Uid),
-    CurPos = object_rw:get_field(Uid, #m_object_rw.cur_pos),
-    TarPos = object_rw:get_field(TarUid, #m_object_rw.cur_pos),
+    CurPos = object_rw:get_cur_pos(Uid),
+    TarPos = object_rw:get_cur_pos(TarUid),
     Diff_X = vector3:x(CurPos) - vector3:x(TarPos),
     Diff_Z = vector3:z(CurPos) - vector3:z(TarPos),
     if
@@ -577,8 +577,8 @@ is_in_attack_dist(Uid, TarUid) when is_number(TarUid) ->
 is_in_attack_dist(_Uid, undefined) ->
     false;
 is_in_attack_dist(Uid, #m_cache_map_object{uid = TarUid}) ->
-    VSrc = object_rw:get_field(Uid, #m_object_rw.cur_pos),
-    VDst = object_rw:get_field(TarUid, #m_object_rw.cur_pos),
+    VSrc = object_rw:get_cur_pos(Uid),
+    VDst = object_rw:get_cur_pos(TarUid),
     Dist_SQ = vector3:dist_sq(VSrc, VDst),
     %% todo 根据普攻来检查距离， AI使用的技能可能需要动态选择
     Dist_SQ >= 100;
@@ -586,11 +586,11 @@ is_in_attack_dist(_Uid, _Any) ->
     false.
 
 ai_use_skill(Uid, SkillId, TarUid) ->
-    Serial = object_rw:get_field(Uid, #m_object_rw.ai_skill_serial),
+    Serial = object_rw:get_ai_skill_serial(Uid),
     Ret = mod_combat:use_skill(Uid, TarUid, SkillId, Serial),
     case Ret =:= ok of
         true ->
-            object_rw:set_field(Uid, #m_object_rw.ai_skill_serial, Serial + 1);
+            object_rw:set_ai_skill_serial(Uid, Serial + 1);
         _ -> skip
     end,
     Ret =:= ok.
@@ -599,8 +599,8 @@ ai_use_skill(Uid, SkillId, TarUid) ->
 %%-------------------------------------------------------------------
 %%-------------------------------------------------------------------
 count_down_flee_tick(Uid) ->
-    Tick = object_rw:get_field(Uid, #m_object_rw.ai_flee_tick),
-    object_rw:set_field(Uid, #m_object_rw.ai_flee_tick, Tick - 1),
+    Tick = object_rw:get_ai_flee_tick(Uid),
+    object_rw:set_ai_flee_tick(Uid, Tick - 1),
     ok.
 
 rand_flee_pos(Uid) ->
@@ -608,7 +608,7 @@ rand_flee_pos(Uid) ->
     Ang = (rand_tool:rand() rem 360) / 1.0,
     Dir1 = vector3:new(V_X, 0, 0),
     Dir2 = vector3:rotate_around_origin_2d(Dir1, Ang),
-    Pos1 = object_rw:get_field(Uid, #m_object_rw.cur_pos),
+    Pos1 = object_rw:get_cur_pos(Uid),
     Pos2 = vector3:add(Pos1, Dir2),
     % todo 检查目标是否可以走，不可走多随机几次
     object_rw:set_fields(
@@ -633,29 +633,29 @@ start_flee(Uid, Dst) ->
     Ret = mod_move:is_can_monster_walk(Uid, Dst, ?EMS_MONSTER_FLEE, true),
     case Ret of
         true ->
-            object_rw:set_field(Uid, #m_object_rw.ai_flee_dst, Dst),
+            object_rw:set_ai_flee_dst(Uid, Dst),
             mod_move:start_monster_walk(Uid, Dst, ?EMS_MONSTER_FLEE, false);
         _ ->
-            object_rw:set_field(Uid, #m_object_rw.ai_pursue_failed, true)
+            object_rw:set_ai_pursue_failed(Uid, true)
     end,
     
     ok.
 
 update_flee(Uid) ->
-    IsFailed = object_rw:get_field(Uid, #m_object_rw.ai_pursue_failed),
-    IsCantPursue = object_rw:get_field(Uid, #m_object_rw.ai_cant_pursue),
+    IsFailed = object_rw:get_ai_pursue_failed(Uid),
+    IsCantPursue = object_rw:get_ai_cant_pursue(Uid),
     do_update_flee(Uid, IsFailed, IsCantPursue),
     ok.
 
 %% 巡逻结束
 do_update_flee(Uid, true, _Cant) ->
     rand_flee_pos(Uid),
-    start_flee(Uid, object_rw:get_field(Uid, #m_object_rw.ai_flee_dst)),
+    start_flee(Uid, object_rw:get_ai_flee_dst(Uid)),
     ok;
 %% 等待重启
 do_update_flee(Uid, _Failed, true) ->
     case object_core:is_unit_cant_move_state(Uid) of
-        false -> start_flee(Uid, object_rw:get_field(Uid, #m_object_rw.ai_flee_dst));
+        false -> start_flee(Uid, object_rw:get_ai_flee_dst(Uid));
         _ -> skip
     end,
     ok;
@@ -663,17 +663,17 @@ do_update_flee(Uid, _Failed, true) ->
 do_update_flee(Uid, _Failed, _Cant) ->
     case object_core:is_unit_cant_move_state(Uid) of
         true ->
-            object_rw:set_field(Uid, #m_object_rw.ai_cant_pursue, true);
+            object_rw:set_ai_cant_pursue(Uid, true);
         _ ->
-            CurMove = object_rw:get_field(Uid, #m_object_rw.cur_move),
-            IsStop = object_rw:get_field(Uid, #m_object_rw.force_stopped),
+            CurMove = object_rw:get_cur_move(Uid),
+            IsStop = object_rw:get_force_stopped(Uid),
             case CurMove of
                 ?EMS_STAND when IsStop ->
-                    start_flee(Uid, object_rw:get_field(Uid, #m_object_rw.ai_flee_dst));
+                    start_flee(Uid, object_rw:get_ai_flee_dst(Uid));
                 ?EMS_STAND when IsStop =:= false ->
-                    object_rw:set_field(Uid, #m_object_rw.ai_is_arrived_flee_pos, true);
+                    object_rw:set_ai_is_arrived_flee_pos(Uid, true);
                 _ ->
-                    start_flee(Uid, object_rw:get_field(Uid, #m_object_rw.ai_flee_dst))
+                    start_flee(Uid, object_rw:get_ai_flee_dst(Uid))
             end
     end,
     ok.
@@ -683,9 +683,9 @@ get_target_by_type(_Uid, ?CFE_NULL) ->
 get_target_by_type(Uid, ?CFE_Self) ->
     Uid;
 get_target_by_type(Uid, ?CFE_CurPlayer) ->
-    object_rw:get_field(Uid, #m_object_rw.ai_target_uid);
+    object_rw:get_ai_target_uid(Uid);
 get_target_by_type(Uid, ?CFE_RandPlayer) ->
-    L = object_rw:get_field(Uid, #m_object_rw.enmity_list),
+    L = object_rw:get_enmity_list(Uid),
     case misc:lists_rand_get(L) of
         undefined -> 0;
         R -> R#m_unit_enmity.uid

@@ -85,7 +85,7 @@ detail_ets( ) -> erlang:get(?ETS_MAP_OBJ).
 
 %%-------------------------------------------------------------------
 find_unit(Uid) ->
-    Type = object_rw:get_field(Uid, #m_object_rw.type),
+    Type = object_rw:get_type(Uid),
     map_rw:find_unit(Type, Uid).
 
 find_unit(?OBJ_PLAYER, Uid) ->
@@ -112,7 +112,7 @@ find_unit(_Type, _Uid) -> undefined.
 
 %%-------------------------------------------------------------------
 obj_maps_with_uid(Uid) ->
-    Type = object_rw:get_field(Uid, #m_object_rw.type),
+    Type = object_rw:get_type(Uid),
     obj_maps_with_type(Type).
 
 %%-------------------------------------------------------------------
@@ -123,7 +123,7 @@ obj_maps_with_type(?OBJ_NPC) -> erlang:get(?MAPS_NPC).
 
 %%-------------------------------------------------------------------
 obj_maps_with_uid(Uid, Maps) ->
-    Type = object_rw:get_field(Uid, #m_object_rw.type),
+    Type = object_rw:get_type(Uid),
     obj_maps_with_type(Type, Maps).
 
 
@@ -138,7 +138,7 @@ obj_maps_with_type(?OBJ_NPC, Maps) ->
 
 %%-------------------------------------------------------------------
 obj_size_with_uid(Uid) ->
-    Type = object_rw:get_field(Uid, #m_object_rw.type),
+    Type = object_rw:get_type(Uid),
     obj_size_with_type(Type).
 
 obj_size_with_type(?OBJ_PLAYER) ->

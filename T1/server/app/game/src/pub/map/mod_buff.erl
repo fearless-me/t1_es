@@ -200,8 +200,8 @@ i_marshal_buff(#m_buff{
 
 %%------------------------------------------------------------------
 i_get_bufflist(Uid) ->
-    object_rw:get_field(Uid, #m_object_rw.buff_list).
+    object_rw:get_buff_list(Uid).
 
 i_set_bufflist(Uid, BuffList) ->
-    object_rw:set_field(Uid, #m_object_rw.buff_list, BuffList).
+    object_rw:set_buff_list(Uid, BuffList).
 

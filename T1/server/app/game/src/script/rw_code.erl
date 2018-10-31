@@ -103,6 +103,7 @@ run() ->
                 ]
             ]
         ),
+        object_rw(record_info(fields, m_object_rw)),
         ok
     catch _:Err:ST ->
         color:error_log("~p,~p~n", [Err, ST])
@@ -523,3 +524,121 @@ write_file(Fd, Fmt) ->
 %%-------------------------------------------------------------------
 write_file(Fd, Fmt, Args) ->
     file:write_file(Fd, io_lib:format(Fmt, Args), [append]).
+
+
+object_rw(FieldList) ->
+    Fname = "..\\src\\pub\\map\\object_rw.erl",
+    file:write_file(Fname, ""),
+    write_file(Fname, "~ts", [?SPLIT_LINE]),
+    write_file(Fname, "~ts", [?HEADER_SEC]),
+    write_file(Fname, "~ts", [?SPLIT_LINE]),
+
+    write_file(Fname, "-module(~p).~n", [object_rw]),
+    write_file(Fname, "-author(~p).~n~n", ["Hello World"]),
+    write_file(Fname, "~ts", [?SPLIT_LINE]),
+    write_file(Fname, "~ts~n",
+    ["-include(\"logger.hrl\").\n"
+    "-include(\"pub_def.hrl\").\n"
+    "-include(\"rec_rw.hrl\").\n"
+    "-include(\"map_core.hrl\").\n"]),
+
+    write_file(Fname, "~ts", [?SPLIT_LINE]),
+
+    write_file(Fname, "~ts~n", ["-export(["]),  
+    export_field(Fname, FieldList),
+    write_file(Fname, "\tinit/1, del/1, exists/1, get/1, set_fields/2, set_fields_direct/2 \n"),
+    write_file(Fname, "])."),
+    write_file(Fname, "~n~ts", [?SPLIT_LINE]),
+    write_file(Fname, "~n~ts", [?SPLIT_LINE]),
+    common_body(Fname),
+    field_body(Fname, FieldList),
+    ok.
+
+export_field(Fname, []) ->
+    write_file(Fname, "~ts", [?SPLIT_LINE]);
+export_field(Fname, [Field | FieldList]) ->
+    write_file(Fname, "\t set_~p/2, set_~p_direct/2, get_~p/1, get_~p/2, %#m_object_rw.~p ~n",
+        [Field, Field,Field, Field, Field]),
+    export_field(Fname, FieldList).
+
+common_body(Fname) ->
+    write_file(Fname, "~ts", [?SPLIT_LINE]),
+    write_file(Fname, "~ts", [
+"init(Uid)when is_number(Uid)-> init(#m_object_rw{uid = Uid});
+init(#m_object_rw{}=V) -> misc_ets:write(i_ets(), V).
+%%
+del(Uid) -> misc_ets:delete(i_ets(), Uid).
+%%
+exists(Uid) -> misc_ets:member(i_ets(), Uid).
+get(Uid) ->
+    case misc_ets:read(i_ets(), Uid) of
+        []  -> undefined;
+        [R] -> R
+    end.
+"
+    ]),
+    write_file(Fname, "~ts", [?SPLIT_LINE]),
+
+
+
+    write_file(Fname, "~ts",
+    [
+"
+set_fields(_Uid,[]) -> ok;
+set_fields(Uid,FieldList) ->
+    misc_ets:update_element(
+        i_ets(), Uid, FieldList),
+    i_set_fields(Uid,FieldList),
+    ok.
+set_fields_direct(_Uid,[]) -> ok;
+set_fields_direct(Uid,FieldList) ->
+    misc_ets:update_element(
+        i_ets(), Uid, FieldList),
+    ok.
+"
+    ]),
+
+    write_file(Fname, "~ts", [?SPLIT_LINE]),
+    write_file(Fname,"~ts",
+        [
+"i_ets() -> map_rw:detail_ets().
+
+i_set_fields(_Uid,[]) ->
+    ok;
+i_set_fields(Uid,[FieldTuple | FieldList]) ->
+    ?TRY_CATCH(hook_map:on_rw_update(Uid, FieldTuple)),
+    i_set_fields(Uid, FieldList).
+"
+        ]),
+    write_file(Fname, "~ts", [?SPLIT_LINE]),
+    ok.
+
+field_body(Fname, []) ->
+    write_file(Fname, "~ts", [?SPLIT_LINE]);
+field_body(Fname, [Field | FieldList]) ->
+    write_file(Fname,
+"
+get_~p(Uid) ->
+    misc_ets:read_element(i_ets(), Uid, #m_object_rw.~p).
+
+get_~p(Uid, Def) ->
+    case misc_ets:read_element(i_ets(), Uid, #m_object_rw.~p) of
+        undefined -> Def;
+        Any -> Any
+    end.
+    
+set_~p(Uid, Val)->
+    misc_ets:update_element(i_ets(), Uid, {#m_object_rw.~p, Val}),
+    ?TRY_CATCH(hook_map:on_rw_update(Uid,{#m_object_rw.~p, Val})).
+set_~p_direct(Uid, Val) ->
+    misc_ets:update_element(i_ets(), Uid, {#m_object_rw.~p, Val}),
+    ok.
+", [Field, Field, Field, Field, Field, Field, Field, Field, Field]),
+    write_file(Fname, "~ts", [?SPLIT_LINE]),
+    field_body(Fname, FieldList).
+
+
+
+
+
+

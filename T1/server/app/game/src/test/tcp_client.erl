@@ -34,9 +34,14 @@ c(Port) -> c(Port, 0).
 c(Port, AccountIdx) ->
     spawn(fun() -> tcp_client:connect(Port, AccountIdx) end).
 
+
 nc(N, Port) ->
     catch ets:new(tcpc, [named_table, public, {keypos, 1}, ?ETS_RC, ?ETS_WC]),
     lists:foreach(fun(_) -> tcp_client:c(Port, 0), timer:sleep(2) end, lists:seq(1, N)).
+
+nc(N, Port, Interval) ->
+    catch ets:new(tcpc, [named_table, public, {keypos, 1}, ?ETS_RC, ?ETS_WC]),
+    lists:foreach(fun(_) -> tcp_client:c(Port, 0), timer:sleep(Interval) end, lists:seq(1, N)).
 
 ensure() ->
     true = misc:start_all_app(kernel),

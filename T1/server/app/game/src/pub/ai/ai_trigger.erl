@@ -23,9 +23,9 @@
 
 %%-------------------------------------------------------------------
 init(Uid) ->
-    AIid = object_rw:get_field(Uid, #m_object_rw.ai_id),
+    AIid = object_rw:get_ai_id(Uid),
     Triggers = init_1(Uid, AIid),
-    object_rw:set_field(Uid, #m_object_rw.ai_triggers, Triggers),
+    object_rw:set_ai_triggers(Uid, Triggers),
     ok.
 
 
@@ -53,9 +53,9 @@ init_1(_Uid, _Cfg) ->
 
 %%-------------------------------------------------------------------
 update(Uid) ->
-    Triggers0 = object_rw:get_field(Uid, #m_object_rw.ai_triggers, []),
+    Triggers0 = object_rw:get_ai_triggers(Uid, []),
     Triggers1 = lists:map(fun(Trigger) -> do_update(Uid, Trigger) end, Triggers0),
-    object_rw:set_field(Uid, #m_object_rw.ai_triggers, Triggers1),
+    object_rw:set_ai_triggers(Uid, Triggers1),
     ok.
 
 do_update(_Uid, #m_ai_trigger{is_active = false} = Trigger) ->
@@ -93,17 +93,17 @@ on_trigger(
 
 %%-------------------------------------------------------------------
 refresh(Uid) ->
-    Triggers0 = object_rw:get_field(Uid, #m_object_rw.ai_triggers, []),
+    Triggers0 = object_rw:get_ai_triggers(Uid, []),
     Triggers1 = lists:map(
         fun(Trigger) ->
             Trigger#m_ai_trigger{is_active = false, active_tick = 0, trigger_times = 0}
         end, Triggers0),
-    object_rw:set_field(Uid, #m_object_rw.ai_triggers, Triggers1),
+    object_rw:set_ai_triggers(Uid, Triggers1),
     ok.
 
 %%-------------------------------------------------------------------
 set_active(Uid, EventType) ->
-    Triggers0 = object_rw:get_field(Uid, #m_object_rw.ai_triggers, []),
+    Triggers0 = object_rw:get_ai_triggers(Uid, []),
     Triggers1 = lists:map(
         fun(#m_ai_trigger{cfg_id = Id} = Trigger) ->
             IsNeedActive = can_active(Id, EventType),
@@ -113,7 +113,7 @@ set_active(Uid, EventType) ->
                 true -> Trigger
             end
         end, Triggers0),
-    object_rw:set_field(Uid, #m_object_rw.ai_triggers, Triggers1),
+    object_rw:set_ai_triggers(Uid, Triggers1),
     ok.
 
 can_active(_CfgId, EventType) ->
@@ -168,12 +168,12 @@ test_trigger_state(_Uid, _Any, _None) ->
 
 %%-------------------------------------------------------------------
 on_event(Uid, EventType) ->
-    Triggers0 = object_rw:get_field(Uid, #m_object_rw.ai_triggers, []),
+    Triggers0 = object_rw:get_ai_triggers(Uid, []),
     Triggers1 = lists:map(
         fun(Trigger) ->
             on_event_1(Uid, Trigger, EventType)
         end, Triggers0),
-    object_rw:set_field(Uid, #m_object_rw.ai_triggers, Triggers1),
+    object_rw:set_ai_triggers(Uid, Triggers1),
     ok.
 
 on_event_1(Uid, #m_ai_trigger{cfg_id = _Id} = Trigger, EventType) ->
