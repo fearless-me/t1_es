@@ -10,7 +10,7 @@
 -export([ensure/0]).
 -export([c/1]).
 -export([c/2]).
--export([nc/2]).
+-export([nc/2, nc/3]).
 -export([connect/2]).
 -export([handle/1, handle/2]).
 -export([move/2]).
@@ -35,9 +35,7 @@ c(Port, AccountIdx) ->
     spawn(fun() -> tcp_client:connect(Port, AccountIdx) end).
 
 
-nc(N, Port) ->
-    catch ets:new(tcpc, [named_table, public, {keypos, 1}, ?ETS_RC, ?ETS_WC]),
-    lists:foreach(fun(_) -> tcp_client:c(Port, 0), timer:sleep(2) end, lists:seq(1, N)).
+nc(N, Port) -> nc(N, Port, 10).
 
 nc(N, Port, Interval) ->
     catch ets:new(tcpc, [named_table, public, {keypos, 1}, ?ETS_RC, ?ETS_WC]),
