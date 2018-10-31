@@ -52,7 +52,7 @@ select_cross(?SelectPolicy_Full) ->
             {Info#m_share_server_info.online, Info#m_share_server_info.sid}
         end
     ),
-    L = misc_mnesia:dirty_select(?ShareServerInfoName, Q),
+    L = misc_mnesia:dirty_select(?MNESIA_SERVER_INFO, Q),
     S = lists:sort(fun({OL1, _S1}, {OL2, _S2}) -> OL1 > OL2 end, L),
     E =
         case lists:reverse(S) of

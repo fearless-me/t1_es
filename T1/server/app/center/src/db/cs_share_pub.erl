@@ -33,9 +33,9 @@ frag_share_tables() ->
 share_tables() ->
     Node = node(),
     [
-        ?SHARE_SHARE_TABLE(Node, ?ShareServerInfoName, m_share_server_info),
+        ?SHARE_SHARE_TABLE(Node, ?MNESIA_SERVER_INFO, m_share_server_info),
         ?SHARE_SHARE_TABLE(Node, ?ShareTeamInfoName, m_share_team_info),
         ?SHARE_SHARE_TABLE(Node, ?ShareUidRefTeamIdName, m_share_uid_ref_tid),
         ?SHARE_LOCAL_TABLE(Node, ?ShareUidTeamMatchName, m_share_team_match),
-        ?SHARE_LOCAL_TABLE(Node, ?SharePlayerCrossLock, m_share_player_cross_lock)
+        ?SHARE_LOCAL_TABLE(Node, ?MNESIA_PLAYER_CROSS, m_share_player_cross_lock)
     ].

@@ -53,7 +53,7 @@
     channel_cd = 0,
     %%
     skill_queue = [],
-    hp = 1, max_hp = 1, attr = [], buff_list = [],
+    hp = 1, max_hp = 1, prop_list = [], buff_list = [],
     
     %%-------------------------------------------------------------------
     %% AI相关

@@ -50,7 +50,7 @@ get_all_sid(Type) ->
 
 %%%-------------------------------------------------------------------
 get_server_info(ServerID) ->
-    case misc_mnesia:dirty_read(?ShareServerInfoName, ServerID) of
+    case misc_mnesia:dirty_read(?MNESIA_SERVER_INFO, ServerID) of
         [Info] ->
             Info;
         _ ->
@@ -61,11 +61,11 @@ get_server_info(ServerID) ->
 % 选取所有可用跨服信息
 get_cgs_info() ->
     Q = ets:fun2ms(fun(Info) when Info#m_share_server_info.type =:= ?SERVER_TYPE_CROSS -> Info end),
-    misc_mnesia:dirty_select(?ShareServerInfoName, Q).
+    misc_mnesia:dirty_select(?MNESIA_SERVER_INFO, Q).
 
 %%%-------------------------------------------------------------------
 is_server_alive(ServerID) ->
-    case misc_mnesia:dirty_read(?ShareServerInfoName, ServerID) of
+    case misc_mnesia:dirty_read(?MNESIA_SERVER_INFO, ServerID) of
         [] -> false;
         _ -> true
     end.
@@ -200,32 +200,32 @@ sel_server_pid_list(ServerType, Type, ExceptServerID) ->
 
 sel_server_id(0) ->
     QS = ets:fun2ms(fun(Info) -> Info#m_share_server_info.sid end),
-    misc_mnesia:dirty_select(?ShareServerInfoName, QS);
+    misc_mnesia:dirty_select(?MNESIA_SERVER_INFO, QS);
 sel_server_id(SeverType) ->
     QS = ets:fun2ms(fun(Info) when Info#m_share_server_info.type =:= SeverType -> Info#m_share_server_info.sid end),
-    misc_mnesia:dirty_select(?ShareServerInfoName, QS).
+    misc_mnesia:dirty_select(?MNESIA_SERVER_INFO, QS).
 
 sel_server_pid_list_1(0, ?TYPE_WINDOW, ExceptServerID) ->
     QS = ets:fun2ms(fun(Info) when Info#m_share_server_info.sid =/= ExceptServerID ->
         Info#m_share_server_info.src_pid end),
-    misc_mnesia:dirty_select(?ShareServerInfoName, QS);
+    misc_mnesia:dirty_select(?MNESIA_SERVER_INFO, QS);
 sel_server_pid_list_1(Type, ?TYPE_WINDOW, ExceptServerID) ->
     QS = ets:fun2ms(fun(Info) when Info#m_share_server_info.sid =/= ExceptServerID andalso Info#m_share_server_info.type =:= Type ->
         Info#m_share_server_info.src_pid end),
-    misc_mnesia:dirty_select(?ShareServerInfoName, QS);
+    misc_mnesia:dirty_select(?MNESIA_SERVER_INFO, QS);
 sel_server_pid_list_1(0, _Type, ExceptServerID) ->
     QS = ets:fun2ms(
         fun(Info) when Info#m_share_server_info.status =:= ?SEVER_STATUS_DONE andalso Info#m_share_server_info.sid =/= ExceptServerID ->
             Info#m_share_server_info.worker end
     ),
-    misc_mnesia:dirty_select(?ShareServerInfoName, QS);
+    misc_mnesia:dirty_select(?MNESIA_SERVER_INFO, QS);
 sel_server_pid_list_1(Type, _Type, ExceptServerID) ->
     QS = ets:fun2ms(
         fun(Info) when Info#m_share_server_info.sid =/= ExceptServerID, Info#m_share_server_info.type =:= Type, Info#m_share_server_info.status =:= ?SEVER_STATUS_DONE ->
             Info#m_share_server_info.worker
         end
     ),
-    misc_mnesia:dirty_select(?ShareServerInfoName, QS).
+    misc_mnesia:dirty_select(?MNESIA_SERVER_INFO, QS).
 
 %%%-------------------------------------------------------------------
 sel_server_pid(ServerID, Type) ->
@@ -239,7 +239,7 @@ sel_server_pid(ServerID, Type) ->
 
 sel_server_pid_1(ServerID, ?TYPE_WINDOW) ->
 %%    case ets:lookup(?GLOBAL_GS_ETS, ServerID) of
-    case misc_mnesia:dirty_read(?ShareServerInfoName, ServerID) of
+    case misc_mnesia:dirty_read(?MNESIA_SERVER_INFO, ServerID) of
         [#m_share_server_info{src_pid = Pid}] when is_pid(Pid) ->
             Pid;
         _ ->
@@ -247,7 +247,7 @@ sel_server_pid_1(ServerID, ?TYPE_WINDOW) ->
     end;
 sel_server_pid_1(ServerID, _Type) ->
 %%    case ets:lookup(?GLOBAL_GS_ETS, ServerID) of
-    case misc_mnesia:dirty_read(?ShareServerInfoName, ServerID) of
+    case misc_mnesia:dirty_read(?MNESIA_SERVER_INFO, ServerID) of
         [#m_share_server_info{worker = Pid, status = ?SEVER_STATUS_DONE}] when is_pid(Pid) ->
             Pid;
         _ ->

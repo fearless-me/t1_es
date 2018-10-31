@@ -68,7 +68,7 @@ on_rw_update(?OBJ_PLAYER, Uid, #m_object_rw.hp, Hp) ->
     gs_cache_interface:update_online_player(Uid, {#m_cache_online_player.hp,Hp});
 on_rw_update(?OBJ_PLAYER, Uid, #m_object_rw.buff_list, BuffList) ->
     gs_cache_interface:update_online_player(Uid, {#m_cache_online_player.buff_list, BuffList});
-on_rw_update(?OBJ_PLAYER, Uid, #m_object_rw.attr, AttrList) ->
+on_rw_update(?OBJ_PLAYER, Uid, #m_object_rw.prop_list, AttrList) ->
     gs_cache_interface:update_online_player(Uid, {#m_cache_online_player.attr, AttrList});
 on_rw_update(_ObjType, _Uid, _Key, _Value) ->
     ok.

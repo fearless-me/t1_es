@@ -45,16 +45,9 @@
 -define(MAX_LOG_CNT_ONE_FILE, 150000).
 -define(if_else(Cond, True, False), case Cond of true -> True; _ -> False end).
 
--define(CheckFlagMaxLogTimes, 50).
--record(fastlog_config, {
-    key = 1,
-    isDiscard = false,
-    isSlave = false,
-    master_node
-}).
--define(FlagEts, fastLogEts___).
-
-
+-define(DISCARD_FLAG, dicard_log).
+-define(MASTER_NODE, master_of_slave).
+-define(CheckFlagMaxLogTimes, 100).
 -record(state, {monitorRef, counter, fileName, fd, fd_err, is_log_stdio, no_err_fd = false, dir = ?LOGDIR}).
 
 %%设置日志文件和错误文件的相关选项
@@ -141,7 +134,7 @@ do_log(Level, Sink, F, A) ->
     String =
         io_lib:format("[~.4w-~.2.0w-~.2.0w ~.2.0w:~.2.0w:~.2.0w][~w]~ts~n",
             [YYYY, MM, DD, Hour, Min, Sec, Level, io_lib:format(F, A)]),
-    case ets:lookup_element(?FlagEts, 1, #fastlog_config.master_node) of
+    case get_env(?MASTER_NODE, undefined) of
         undefined ->
             Sink ! {?MSG, Level, String};
         MasterNode ->
@@ -151,15 +144,11 @@ do_log(Level, Sink, F, A) ->
 
 -spec discard(IsDiscardLog :: true|false) -> ok.
 discard(IsDiscardLog) ->
-    ets:insert(
-        ?FlagEts,
-        #fastlog_config{isDiscard = misc:i2b(IsDiscardLog)}
-    ),
+    set_env(?DISCARD_FLAG, IsDiscardLog),
     ok.
 
 
-is_slave() ->
-    ets:lookup_element(?FlagEts, 1, #fastlog_config.isSlave).
+is_slave() -> get_env(?MASTER_NODE, undefined) =/= undefined.
 
 make_init_log(Sink, Fname) ->
     gen_server2:call(Sink, {make_init_log, Fname}).
@@ -294,18 +283,9 @@ code_change(_OldVsn, State, _Extra) ->
 mod_init([Fname, ParentPid]) ->
     erlang:process_flag(trap_exit, true),
     erlang:process_flag(priority, high),
-
-    case ets:info(?FlagEts) of
-        undefined ->
-            MasterNode = master_node(),
-            ets:new(?FlagEts, [public, named_table, {keypos, #fastlog_config.key}, {write_concurrency, true}, {read_concurrency, true}]),
-            case MasterNode of
-                undefined ->
-                    ets:insert(?FlagEts, #fastlog_config{});
-                _ ->
-                    ets:insert(?FlagEts, #fastlog_config{isSlave = true, master_node = MasterNode})
-            end;
-        _ -> skip
+    case master_node() of
+        undefined -> skip;
+        MasterNode -> set_env(?MASTER_NODE, MasterNode)
     end,
 
     Ref = erlang:monitor(process, ParentPid),
@@ -314,18 +294,18 @@ mod_init([Fname, ParentPid]) ->
 do_init(true, Ref, _Fname, _Dir) ->
     {ok, #state{monitorRef = Ref, counter = 0}};
 do_init(false, Ref, Fname, Dir) ->
-    MkDirNew = application:get_env(fastlog, mkdir_restart, false),
-    MkLogRun = application:get_env(fastlog, createfile_restart, true),
+    MkDirNew = get_env(mkdir_restart, false),
+    MkLogRun = get_env(createfile_restart, true),
     NewDir = ensure_log_dir(MkDirNew, Dir),
     NoErr = case erlang:process_info(self(), registered_name) of
                 {registered_name, ?MODULE} -> false;
                 _ -> true
             end,
-    
+
     Fd = ?if_else(MkLogRun, make_file_(NewDir, Fname), undefined),
-    FdErr =  ?if_else( NoErr orelse (not MkLogRun), undefined, make_err_file_(NewDir, Fname)),
-    
-    IsShowInStdio = application:get_env(fastlog, show_in_stdio, true),
+    FdErr = ?if_else(NoErr orelse (not MkLogRun), undefined, make_err_file_(NewDir, Fname)),
+
+    IsShowInStdio = get_env(show_in_stdio, true),
     {ok, #state{
         monitorRef = Ref, counter = 0, fileName = Fname,
         fd = Fd, fd_err = FdErr, is_log_stdio = IsShowInStdio,
@@ -375,10 +355,10 @@ do_handle_info(_Info, StateData) ->
 
 %%--------------------------------------------------------------------
 call({make_init_log, Fname}, _From, State) ->
-    #state{no_err_fd = NoErr, dir = NewDir } = State,
+    #state{no_err_fd = NoErr, dir = NewDir} = State,
 
     Fd = make_file_(NewDir, Fname),
-    FdErr =  ?if_else( NoErr, undefined, make_err_file_(NewDir, Fname)),
+    FdErr = ?if_else(NoErr, undefined, make_err_file_(NewDir, Fname)),
     {reply, true, State#state{fd = Fd, fd_err = FdErr, fileName = Fname}};
 call(Request, From, State) ->
     io:format("undeal call ~w from ~w", [Request, From]),
@@ -389,7 +369,7 @@ rotate(#state{fileName = Fname, fd = Fd, fd_err = FdErr, no_err_fd = NoErr, dir 
     catch file:close(Fd),
     catch file:close(FdErr),
     Fd2 = make_file_(Dir, Fname),
-    Fd3 = ?if_else( NoErr, undefined, make_err_file_(Dir, Fname)),
+    Fd3 = ?if_else(NoErr, undefined, make_err_file_(Dir, Fname)),
     {ok, State#state{fd = Fd2, fd_err = Fd3, counter = 0}}.
 
 % Check if the file needs to be rotated
@@ -467,12 +447,7 @@ is_error_log(_) -> true.
 need_write_log(Cnt) when is_number(Cnt) ->
     case Cnt > 0 andalso (Cnt rem ?CheckFlagMaxLogTimes) =:= 0 of
         true ->
-            case ets:lookup(?FlagEts, 1) of
-                [#fastlog_config{isDiscard = IsDiscardLog} | _] ->
-                    not IsDiscardLog;
-                _ ->
-                    true
-            end;
+            not get_env(?DISCARD_FLAG, false);
         _ ->
             true
     end;
@@ -506,7 +481,7 @@ next_hour_sec() ->
     3600 - Min * 60 - Sec.
 
 now_day() ->
-    {{YYYY, MM, DD}, {HH,_,_}} = erlang:localtime(),
+    {{YYYY, MM, DD}, {HH, _, _}} = erlang:localtime(),
     lists:flatten(io_lib:format("~.4w~.2.0w~.2.0w~.2.0w",
         [YYYY, MM, DD, HH])).
 
@@ -523,3 +498,9 @@ master_node() ->
         {ok, [[MasterNode]]} -> erlang:list_to_atom(MasterNode)
     end.
 
+
+set_env(Key, Value) ->
+    application:set_env(?MODULE, Key, Value).
+
+get_env(Key, Def) ->
+    application:get_env(?MODULE, Key, Def).

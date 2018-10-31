@@ -46,7 +46,7 @@ new_player(Pid, Uid, Group, Pos, Face) ->
     object_rw:set_fields_direct(
         Uid,
         [
-            {#m_object_rw.attr, AttrList},
+            {#m_object_rw.prop_list, AttrList},
             {#m_object_rw.buff_list, BuffList}
         ]
     ),

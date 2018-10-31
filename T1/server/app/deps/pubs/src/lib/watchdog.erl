@@ -45,7 +45,6 @@
 %%%===================================================================
 %% define
 -record(state, {all = [], todo = [], mod, pause=false}).
--define(ServerState, serverStateEts_).
 -define(CHECK_TICK,  15000).
 
 pause() ->
@@ -76,14 +75,12 @@ status() ->
 status_() ->
     ps:send(?MODULE, status).
 
-ready(V) ->
-    misc_ets:write(?ServerState, #pub_kv{key = 1, value = V}).
+ready(V) -> application:set_env(?MODULE, ready_now, V).
+
 
 ready() ->
-    case catch misc_ets:read(?ServerState, 1) of
-        [#pub_kv{value = V}] -> misc:i2b(V);
-        _ -> false
-    end.
+    V = application:get_env(?MODULE, ready_now, 0),
+    misc:i2b(V).
 
 is_all_done() ->
     gen_server:call(?MODULE, task_all_done).
@@ -140,7 +137,6 @@ start_link(Mod) ->
 mod_init(Mod) ->
     erlang:process_flag(trap_exit, true),
     erlang:process_flag(priority, high),
-    misc_ets:new(?ServerState, [public, named_table, {keypos, #pub_kv.key}, ?ETS_RC]),
     Tasks = i_init_all_task(Mod),
     i_show_task_group(Tasks),
     timer:apply_interval(1000, ?MODULE, remove_done, []),
