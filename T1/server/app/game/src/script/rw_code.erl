@@ -275,8 +275,8 @@ field_fun(Fd, Record, Field, Suffix, ExParam, HookUpdate) ->
     SetFunctionName = field_fun_name("set", Field, Suffix),
     SetFunctionPara = string:join(ExParam ++ ["V"], ","),
     SetFunctionDirectName = string:join([SetFunctionName, "direct"], "_"),
-    
-    HookUpdateCall = string:join(ExParam ++ [to_list(Field), "R"], ","),
+
+    HookUpdateCall = string:join(ExParam ++ ["#" ++ to_list(Record) ++ "." ++ to_list(Field), "V"], ","),
     
     GetFunctionBody = io_lib:format(
         "~ts(~ts)-> ~ts(~ts).\n\n",
@@ -419,41 +419,43 @@ i_set_field(File, Record, Field, SuffixList, ExParam, HookUpdate) ->
             [] ->
                 io_lib:format(
                     "%%#~p.~p\n"
-                    "~s(~s{~p, Val}, R) ->\n\tR#~p{~p = Val};\n"
-                    "~s(~s{~p, Val, add}, R) ->\n\tR#~p{~p = ~s + Val};\n"
-                    "~s(~s{~p, Val, sub}, R) ->\n\tR#~p{~p = ~s - Val};\n"
+%%                    "~s(~s{~p, Val}, R) ->\n\tR#~p{~p = Val};\n"
+%%                    "~s(~s{~p, Val, add}, R) ->\n\tR#~p{~p = ~s + Val};\n"
+%%                    "~s(~s{~p, Val, sub}, R) ->\n\tR#~p{~p = ~s - Val};\n"
                     "~s(~s{~s, Val}, R) ->\n\tR#~p{~p = Val};\n"
-                    "~s(~s{~s, Val, add}, R) ->\n\tR#~p{~p = ~s + Val};\n"
-                    "~s(~s{~s, Val, sub}, R) ->\n\tR#~p{~p = ~s - Val};\n",
+%%                    "~s(~s{~s, Val, add}, R) ->\n\tR#~p{~p = ~s + Val};\n"
+%%                    "~s(~s{~s, Val, sub}, R) ->\n\tR#~p{~p = ~s - Val};\n"
+                    ,
                     
                     [
                         Record, Field,
-                        ISetFunctionName, ExParamList, Field, Record, Field,
-                        ISetFunctionName, ExParamList, Field, Record, Field, RecordFieldVal,
-                        ISetFunctionName, ExParamList, Field, Record, Field, RecordFieldVal,
-                        ISetFunctionName, ExParamList, RecordFieldIdx, Record, Field,
-                        ISetFunctionName, ExParamList, RecordFieldIdx, Record, Field, RecordFieldVal,
-                        ISetFunctionName, ExParamList, RecordFieldIdx, Record, Field, RecordFieldVal
+%%                        ISetFunctionName, ExParamList, Field, Record, Field,
+%%                        ISetFunctionName, ExParamList, Field, Record, Field, RecordFieldVal,
+%%                        ISetFunctionName, ExParamList, Field, Record, Field, RecordFieldVal,
+                        ISetFunctionName, ExParamList, RecordFieldIdx, Record, Field
+%%                        ISetFunctionName, ExParamList, RecordFieldIdx, Record, Field, RecordFieldVal,
+%%                        ISetFunctionName, ExParamList, RecordFieldIdx, Record, Field, RecordFieldVal
                     ]
                 );
             _ ->
                 io_lib:format(
                     "%%#~p.~p\n"
-                    "~s(~s{~p, Val}, R) ->\n\tR1 = R#~p{~p = Val},\n\t?TRY_CATCH(~ts(~ts)),\n\tR1;\n"
-                    "~s(~s{~p, Val, add}, R) ->\n\tR1 = R#~p{~p = ~s + Val},\n\t?TRY_CATCH(~ts(~ts)),\n\tR1;\n"
-                    "~s(~s{~p, Val, sub}, R) ->\n\tR1 = R#~p{~p = ~s - Val},\n\t?TRY_CATCH(~ts(~ts)),\n\tR1;\n"
+%%                    "~s(~s{~p, Val}, R) ->\n\tR1 = R#~p{~p = Val},\n\t?TRY_CATCH(~ts(~ts)),\n\tR1;\n"
+%%                    "~s(~s{~p, Val, add}, R) ->\n\tR1 = R#~p{~p = ~s + Val},\n\t?TRY_CATCH(~ts(~ts)),\n\tR1;\n"
+%%                    "~s(~s{~p, Val, sub}, R) ->\n\tR1 = R#~p{~p = ~s - Val},\n\t?TRY_CATCH(~ts(~ts)),\n\tR1;\n"
                     "~s(~s{~s, Val}, R) ->\n\tR1 = R#~p{~p = Val},\n\t?TRY_CATCH(~ts(~ts)),\n\tR1;\n"
-                    "~s(~s{~s, Val, add}, R) ->\n\tR1 = R#~p{~p = ~s + Val},\n\t?TRY_CATCH(~ts(~ts)),\n\tR1;\n"
-                    "~s(~s{~s, Val, sub}, R) ->\n\tR1 = R#~p{~p = ~s - Val},\n\t?TRY_CATCH(~ts(~ts)),\n\tR1;\n",
+%%                    "~s(~s{~s, Val, add}, R) ->\n\tR1 = R#~p{~p = ~s + Val},\n\t?TRY_CATCH(~ts(~ts)),\n\tR1;\n"
+%%                    "~s(~s{~s, Val, sub}, R) ->\n\tR1 = R#~p{~p = ~s - Val},\n\t?TRY_CATCH(~ts(~ts)),\n\tR1;\n"
+                    ,
                     
                     [
                         Record, Field,
-                        ISetFunctionName, ExParamList, Field, Record, Field, HookUpdate, HookUpdateCall,
-                        ISetFunctionName, ExParamList, Field, Record, Field, RecordFieldVal, HookUpdate, HookUpdateCall,
-                        ISetFunctionName, ExParamList, Field, Record, Field, RecordFieldVal, HookUpdate, HookUpdateCall,
-                        ISetFunctionName, ExParamList, RecordFieldIdx, Record, Field, HookUpdate, HookUpdateCall,
-                        ISetFunctionName, ExParamList, RecordFieldIdx, Record, Field, RecordFieldVal, HookUpdate, HookUpdateCall,
-                        ISetFunctionName, ExParamList, RecordFieldIdx, Record, Field, RecordFieldVal, HookUpdate, HookUpdateCall
+%%                        ISetFunctionName, ExParamList, Field, Record, Field, HookUpdate, HookUpdateCall,
+%%                        ISetFunctionName, ExParamList, Field, Record, Field, RecordFieldVal, HookUpdate, HookUpdateCall,
+%%                        ISetFunctionName, ExParamList, Field, Record, Field, RecordFieldVal, HookUpdate, HookUpdateCall,
+                        ISetFunctionName, ExParamList, RecordFieldIdx, Record, Field, HookUpdate, HookUpdateCall
+%%                        ISetFunctionName, ExParamList, RecordFieldIdx, Record, Field, RecordFieldVal, HookUpdate, HookUpdateCall,
+%%                        ISetFunctionName, ExParamList, RecordFieldIdx, Record, Field, RecordFieldVal, HookUpdate, HookUpdateCall
                     ]
                 )
         end,

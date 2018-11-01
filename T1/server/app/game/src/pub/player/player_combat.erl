@@ -29,7 +29,7 @@
 online() ->
     Uid = player_rw:get_uid(),
     case gs_cache_interface:read_online_player_element(
-        Uid, #m_cache_online_player.attr)
+        Uid, #m_cache_online_player.prop_list)
     of
         [] -> calc_combat_prop();
         _ -> ok

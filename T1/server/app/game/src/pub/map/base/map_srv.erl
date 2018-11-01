@@ -62,7 +62,7 @@ mod_init([MapID, MapLine]) ->
     Ets0 = misc_ets:new(?MAP_OBJ_DETAIL_ETS,[protected, set, {keypos, #m_object_rw.uid}, ?ETS_RC]),
     ?INFO("map ~p:~p started", [ProcessName, self()]),
     ps:send(self(), init),
-    gen_serverw:continue_effective_monitor(self(), ?MAP_TICK * 1000),
+    gen_serverw:continue_effective_monitor(self(), ?MAP_TICK),
     {ok, #m_map_state{map_id = MapID, line_id = MapLine, ets = Ets0}}.
 
 %%--------------------------------------------------------------------

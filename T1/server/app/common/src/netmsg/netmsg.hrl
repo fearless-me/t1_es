@@ -2,7 +2,7 @@
 -ifndef(netmsg).
 -define(netmsg,1).
 
--define(ProtoVersion,650).
+-define(ProtoVersion,651).
 
 -record(pk_BuffInfo,{
 	%% UInt32

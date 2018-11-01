@@ -407,18 +407,18 @@ FileScanner::~FileScanner()
 										std::string listTypeName = isPod ? "Common.Collections.Generic.List" : "List";
 										if ( m->type == MT_None ) {
 											if ( !isPod ) {
-												INDENT_FPRINT, "public class %s : SerializeAble\n", m->name.c_str() );
+												INDENT_FPRINT, "public partial class %s : SerializeAble\n", m->name.c_str() );
 											} else {
 												INDENT_FPRINT, "#if !NOT_USE_FAST_STREAM\n" );
 												INDENT_FPRINT, "[StructLayout( LayoutKind.Sequential, CharSet = CharSet.Ansi, Pack = 1 )]\n" );
 												INDENT_FPRINT, "public struct %s\n", m->name.c_str() );
 												INDENT_FPRINT, "#else\n" );
-												INDENT_FPRINT, "public class %s : SerializeAble\n", m->name.c_str() );
+												INDENT_FPRINT, "public partial class %s : SerializeAble\n", m->name.c_str() );
 												INDENT_FPRINT, "#endif\n" );
 											}
 										} else {
 											allMessages.push_back( m );
-											INDENT_FPRINT, "public class %s : BaseMessage\n", m->name.c_str() );
+											INDENT_FPRINT, "public partial class %s : BaseMessage\n", m->name.c_str() );
 										}
 										INDENT_FPRINT, "{\n" );
 										if ( indent() )
@@ -607,9 +607,9 @@ FileScanner::~FileScanner()
 												auto typeListDef = [&]() {
 													
 													INDENT_FPRINT, "#if !NOT_USE_FAST_STREAM\n" );
-													INDENT_FPRINT, "public class %s : %s<%s> {\n", msgListName.c_str(), _listTypeName.c_str(), m->name.c_str() );
+													INDENT_FPRINT, "public partial class %s : %s<%s> {\n", msgListName.c_str(), _listTypeName.c_str(), m->name.c_str() );
 													INDENT_FPRINT, "#else\n" );
-													INDENT_FPRINT, "public class %s : List<%s> {\n", msgListName.c_str(), m->name.c_str() );
+													INDENT_FPRINT, "public partial class %s : List<%s> {\n", msgListName.c_str(), m->name.c_str() );
 													INDENT_FPRINT, "#endif\n" );
 													
 													if ( indent() ) {

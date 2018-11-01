@@ -41,8 +41,8 @@ XCOPY "..\\Out" "..\\..\\..\\Client\\Assets\\Code\\Base\\Net\\Messages" /s /c /i
 echo copy net message sources to server
 XCOPY ..\\out ..\\..\\..\\Server\\app\\common\\src\\netmsg /s /c /i /d /y /EXCLUDE:EXCLUDE_cs.txt
 
-echo copy lua net message sources to client
-XCOPY "..\\Out" "..\\..\\..\\Client\\Assets\\StreamingAssets\\Lua\\Net" /s /c /i /d /y /EXCLUDE:EXCLUDE_only_lua.txt
+::echo copy lua net message sources to client
+::XCOPY "..\\Out" "..\\..\\..\\Client\\Assets\\StreamingAssets\\Lua\\Net" /s /c /i /d /y /EXCLUDE:EXCLUDE_only_lua.txt
 
 ::echo generate net protocal signatures for lua
 ::cd ../../Bin

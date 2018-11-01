@@ -41,7 +41,7 @@ is_dead(Uid) ->
 %%-------------------------------------------------------------------
 new_player(Pid, Uid, Group, Pos, Face) ->
     init_rw_default(Uid),
-    AttrList = gs_cache_interface:read_online_player_element(Uid, #m_cache_online_player.attr),
+    AttrList = gs_cache_interface:read_online_player_element(Uid, #m_cache_online_player.prop_list),
     BuffList = gs_cache_interface:read_online_player_element(Uid, #m_cache_online_player.buff_list),
     object_rw:set_fields_direct(
         Uid,

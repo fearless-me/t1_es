@@ -22,8 +22,9 @@
 -define(ETS_CACHE_ONLINE_PLAYER, ets_cache_player_online).
 -record(m_cache_online_player, {
     uid, aid, pid, socket, level, career = 0,
-    old_map_id = -1, old_line = 0, old_pos, map_id = -1, line = 0, map_pid, pos,
-    state = 0, hp = 0, attr = [], buff_list = []
+    line = 0, map_pid, pos,
+    old_map_id = -1, old_line = 0, old_pos, map_id = -1,
+    state = 0, hp = 0, prop_list = [], buff_list = []
 }).
 
 %% 记录跨服玩家

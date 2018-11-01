@@ -46,7 +46,7 @@ mod_init(_Args) ->
     
     tick_msg(),
     Map = init_data(?MAX_OBJ, #{}),
-    gen_serverw:continue_effective_monitor(self(), 500000),
+    gen_serverw:continue_effective_monitor(self(), 500),
     {ok, Map}.
 
 

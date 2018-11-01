@@ -37,8 +37,8 @@ tick_me() ->
     ?TRY_CATCH(hook_player:on_tick()),
     S = do_second(Now),
     M = do_minute(S, Now),
-    H = do_hour(M, Now),
-    _ = do_sharp(H, Now),
+    _ = do_hour(M, Now),
+    _ = do_sharp(M, Now),
     ok.
 
 %%-------------------------------------------------------------------

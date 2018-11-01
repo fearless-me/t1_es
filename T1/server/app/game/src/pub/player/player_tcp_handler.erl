@@ -70,7 +70,7 @@ on_init(Socket) ->
     player_priv:init(),
     set_latest_net_time(),
     check_idle_msg(),
-    ?DEBUG("client connected: ~p ~ts:~p", [Socket, Ip, Port]),
+    ?WARN("client connected: ~p ~ts:~p, ~p", [Socket, Ip, Port,self()]),
     {ok, #r_player_state{}}.
 
 %%-------------------------------------------------------------------

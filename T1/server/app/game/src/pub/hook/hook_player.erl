@@ -106,15 +106,14 @@ on_sharp(Hour) ->
 -define(unlock(), unlock_transaction()).
 
 %%不要在调用player_rw:set_xxx
-on_rw_update(level, RwRec) ->
+on_rw_update(#m_player_rw.level, Level) ->
     ?lock(level),
     Uid = player_rw:get_uid(),
-    gs_cache_interface:update_player_pub(Uid, {#m_cache_player_pub.level, RwRec#m_player_rw.level}),
-    gs_cache_interface:update_online_player(Uid, {#m_cache_online_player.level, RwRec#m_player_rw.level}),
+    gs_cache_interface:update_player_pub(Uid, {#m_cache_player_pub.level, Level}),
+    gs_cache_interface:update_online_player(Uid, {#m_cache_online_player.level, Level}),
     ?unlock(),
     ok;
-on_rw_update(_Key, _RwRec) ->
-%%    ?DEBUG("player ~p key ~p  value ~p", [lib_player_rw:get_uid(), Key, Value]),
+on_rw_update(_Key, _Val) ->
     ok.
 
 

@@ -46,7 +46,7 @@ get_aid_def(Def)->
 set_aid(V)->
 	R = erlang:get(m_player_rw),
 	erlang:put(m_player_rw, R#m_player_rw{aid = V}),
-	?TRY_CATCH(hook_player:on_rw_update(aid,R)).
+	?TRY_CATCH(hook_player:on_rw_update(#m_player_rw.aid,V)).
 
 set_aid_direct(V)->
 	R = erlang:get(m_player_rw),
@@ -65,7 +65,7 @@ get_uid_def(Def)->
 set_uid(V)->
 	R = erlang:get(m_player_rw),
 	erlang:put(m_player_rw, R#m_player_rw{uid = V}),
-	?TRY_CATCH(hook_player:on_rw_update(uid,R)).
+	?TRY_CATCH(hook_player:on_rw_update(#m_player_rw.uid,V)).
 
 set_uid_direct(V)->
 	R = erlang:get(m_player_rw),
@@ -84,7 +84,7 @@ get_sid_def(Def)->
 set_sid(V)->
 	R = erlang:get(m_player_rw),
 	erlang:put(m_player_rw, R#m_player_rw{sid = V}),
-	?TRY_CATCH(hook_player:on_rw_update(sid,R)).
+	?TRY_CATCH(hook_player:on_rw_update(#m_player_rw.sid,V)).
 
 set_sid_direct(V)->
 	R = erlang:get(m_player_rw),
@@ -103,7 +103,7 @@ get_name_def(Def)->
 set_name(V)->
 	R = erlang:get(m_player_rw),
 	erlang:put(m_player_rw, R#m_player_rw{name = V}),
-	?TRY_CATCH(hook_player:on_rw_update(name,R)).
+	?TRY_CATCH(hook_player:on_rw_update(#m_player_rw.name,V)).
 
 set_name_direct(V)->
 	R = erlang:get(m_player_rw),
@@ -122,7 +122,7 @@ get_level_def(Def)->
 set_level(V)->
 	R = erlang:get(m_player_rw),
 	erlang:put(m_player_rw, R#m_player_rw{level = V}),
-	?TRY_CATCH(hook_player:on_rw_update(level,R)).
+	?TRY_CATCH(hook_player:on_rw_update(#m_player_rw.level,V)).
 
 set_level_direct(V)->
 	R = erlang:get(m_player_rw),
@@ -141,7 +141,7 @@ get_sex_def(Def)->
 set_sex(V)->
 	R = erlang:get(m_player_rw),
 	erlang:put(m_player_rw, R#m_player_rw{sex = V}),
-	?TRY_CATCH(hook_player:on_rw_update(sex,R)).
+	?TRY_CATCH(hook_player:on_rw_update(#m_player_rw.sex,V)).
 
 set_sex_direct(V)->
 	R = erlang:get(m_player_rw),
@@ -160,7 +160,7 @@ get_head_def(Def)->
 set_head(V)->
 	R = erlang:get(m_player_rw),
 	erlang:put(m_player_rw, R#m_player_rw{head = V}),
-	?TRY_CATCH(hook_player:on_rw_update(head,R)).
+	?TRY_CATCH(hook_player:on_rw_update(#m_player_rw.head,V)).
 
 set_head_direct(V)->
 	R = erlang:get(m_player_rw),
@@ -179,7 +179,7 @@ get_race_def(Def)->
 set_race(V)->
 	R = erlang:get(m_player_rw),
 	erlang:put(m_player_rw, R#m_player_rw{race = V}),
-	?TRY_CATCH(hook_player:on_rw_update(race,R)).
+	?TRY_CATCH(hook_player:on_rw_update(#m_player_rw.race,V)).
 
 set_race_direct(V)->
 	R = erlang:get(m_player_rw),
@@ -198,7 +198,7 @@ get_career_def(Def)->
 set_career(V)->
 	R = erlang:get(m_player_rw),
 	erlang:put(m_player_rw, R#m_player_rw{career = V}),
-	?TRY_CATCH(hook_player:on_rw_update(career,R)).
+	?TRY_CATCH(hook_player:on_rw_update(#m_player_rw.career,V)).
 
 set_career_direct(V)->
 	R = erlang:get(m_player_rw),
@@ -217,7 +217,7 @@ get_map_def(Def)->
 set_map(V)->
 	R = erlang:get(m_player_rw),
 	erlang:put(m_player_rw, R#m_player_rw{map = V}),
-	?TRY_CATCH(hook_player:on_rw_update(map,R)).
+	?TRY_CATCH(hook_player:on_rw_update(#m_player_rw.map,V)).
 
 set_map_direct(V)->
 	R = erlang:get(m_player_rw),
@@ -236,7 +236,7 @@ get_last_second_tick_def(Def)->
 set_last_second_tick(V)->
 	R = erlang:get(m_player_rw),
 	erlang:put(m_player_rw, R#m_player_rw{last_second_tick = V}),
-	?TRY_CATCH(hook_player:on_rw_update(last_second_tick,R)).
+	?TRY_CATCH(hook_player:on_rw_update(#m_player_rw.last_second_tick,V)).
 
 set_last_second_tick_direct(V)->
 	R = erlang:get(m_player_rw),
@@ -255,7 +255,7 @@ get_last_minute_tick_def(Def)->
 set_last_minute_tick(V)->
 	R = erlang:get(m_player_rw),
 	erlang:put(m_player_rw, R#m_player_rw{last_minute_tick = V}),
-	?TRY_CATCH(hook_player:on_rw_update(last_minute_tick,R)).
+	?TRY_CATCH(hook_player:on_rw_update(#m_player_rw.last_minute_tick,V)).
 
 set_last_minute_tick_direct(V)->
 	R = erlang:get(m_player_rw),
@@ -274,7 +274,7 @@ get_last_hour_tick_def(Def)->
 set_last_hour_tick(V)->
 	R = erlang:get(m_player_rw),
 	erlang:put(m_player_rw, R#m_player_rw{last_hour_tick = V}),
-	?TRY_CATCH(hook_player:on_rw_update(last_hour_tick,R)).
+	?TRY_CATCH(hook_player:on_rw_update(#m_player_rw.last_hour_tick,V)).
 
 set_last_hour_tick_direct(V)->
 	R = erlang:get(m_player_rw),
@@ -293,7 +293,7 @@ get_status_def(Def)->
 set_status(V)->
 	R = erlang:get(m_player_rw),
 	erlang:put(m_player_rw, R#m_player_rw{status = V}),
-	?TRY_CATCH(hook_player:on_rw_update(status,R)).
+	?TRY_CATCH(hook_player:on_rw_update(#m_player_rw.status,V)).
 
 set_status_direct(V)->
 	R = erlang:get(m_player_rw),
@@ -328,353 +328,73 @@ i_set_fields(R, [H | FieldList]) ->
 	i_set_fields(i_set_field(R,H), FieldList).
 
 %%#m_player_rw.aid
-i_set_field({aid, Val}, R) ->
-	R1 = R#m_player_rw{aid = Val},
-	?TRY_CATCH(hook_player:on_rw_update(aid,R)),
-	R1;
-i_set_field({aid, Val, add}, R) ->
-	R1 = R#m_player_rw{aid = R#m_player_rw.aid + Val},
-	?TRY_CATCH(hook_player:on_rw_update(aid,R)),
-	R1;
-i_set_field({aid, Val, sub}, R) ->
-	R1 = R#m_player_rw{aid = R#m_player_rw.aid - Val},
-	?TRY_CATCH(hook_player:on_rw_update(aid,R)),
-	R1;
 i_set_field({#m_player_rw.aid, Val}, R) ->
 	R1 = R#m_player_rw{aid = Val},
 	?TRY_CATCH(hook_player:on_rw_update(aid,R)),
 	R1;
-i_set_field({#m_player_rw.aid, Val, add}, R) ->
-	R1 = R#m_player_rw{aid = R#m_player_rw.aid + Val},
-	?TRY_CATCH(hook_player:on_rw_update(aid,R)),
-	R1;
-i_set_field({#m_player_rw.aid, Val, sub}, R) ->
-	R1 = R#m_player_rw{aid = R#m_player_rw.aid - Val},
-	?TRY_CATCH(hook_player:on_rw_update(aid,R)),
-	R1;
 %%#m_player_rw.uid
-i_set_field({uid, Val}, R) ->
-	R1 = R#m_player_rw{uid = Val},
-	?TRY_CATCH(hook_player:on_rw_update(uid,R)),
-	R1;
-i_set_field({uid, Val, add}, R) ->
-	R1 = R#m_player_rw{uid = R#m_player_rw.uid + Val},
-	?TRY_CATCH(hook_player:on_rw_update(uid,R)),
-	R1;
-i_set_field({uid, Val, sub}, R) ->
-	R1 = R#m_player_rw{uid = R#m_player_rw.uid - Val},
-	?TRY_CATCH(hook_player:on_rw_update(uid,R)),
-	R1;
 i_set_field({#m_player_rw.uid, Val}, R) ->
 	R1 = R#m_player_rw{uid = Val},
 	?TRY_CATCH(hook_player:on_rw_update(uid,R)),
 	R1;
-i_set_field({#m_player_rw.uid, Val, add}, R) ->
-	R1 = R#m_player_rw{uid = R#m_player_rw.uid + Val},
-	?TRY_CATCH(hook_player:on_rw_update(uid,R)),
-	R1;
-i_set_field({#m_player_rw.uid, Val, sub}, R) ->
-	R1 = R#m_player_rw{uid = R#m_player_rw.uid - Val},
-	?TRY_CATCH(hook_player:on_rw_update(uid,R)),
-	R1;
 %%#m_player_rw.sid
-i_set_field({sid, Val}, R) ->
-	R1 = R#m_player_rw{sid = Val},
-	?TRY_CATCH(hook_player:on_rw_update(sid,R)),
-	R1;
-i_set_field({sid, Val, add}, R) ->
-	R1 = R#m_player_rw{sid = R#m_player_rw.sid + Val},
-	?TRY_CATCH(hook_player:on_rw_update(sid,R)),
-	R1;
-i_set_field({sid, Val, sub}, R) ->
-	R1 = R#m_player_rw{sid = R#m_player_rw.sid - Val},
-	?TRY_CATCH(hook_player:on_rw_update(sid,R)),
-	R1;
 i_set_field({#m_player_rw.sid, Val}, R) ->
 	R1 = R#m_player_rw{sid = Val},
 	?TRY_CATCH(hook_player:on_rw_update(sid,R)),
 	R1;
-i_set_field({#m_player_rw.sid, Val, add}, R) ->
-	R1 = R#m_player_rw{sid = R#m_player_rw.sid + Val},
-	?TRY_CATCH(hook_player:on_rw_update(sid,R)),
-	R1;
-i_set_field({#m_player_rw.sid, Val, sub}, R) ->
-	R1 = R#m_player_rw{sid = R#m_player_rw.sid - Val},
-	?TRY_CATCH(hook_player:on_rw_update(sid,R)),
-	R1;
 %%#m_player_rw.name
-i_set_field({name, Val}, R) ->
-	R1 = R#m_player_rw{name = Val},
-	?TRY_CATCH(hook_player:on_rw_update(name,R)),
-	R1;
-i_set_field({name, Val, add}, R) ->
-	R1 = R#m_player_rw{name = R#m_player_rw.name + Val},
-	?TRY_CATCH(hook_player:on_rw_update(name,R)),
-	R1;
-i_set_field({name, Val, sub}, R) ->
-	R1 = R#m_player_rw{name = R#m_player_rw.name - Val},
-	?TRY_CATCH(hook_player:on_rw_update(name,R)),
-	R1;
 i_set_field({#m_player_rw.name, Val}, R) ->
 	R1 = R#m_player_rw{name = Val},
 	?TRY_CATCH(hook_player:on_rw_update(name,R)),
 	R1;
-i_set_field({#m_player_rw.name, Val, add}, R) ->
-	R1 = R#m_player_rw{name = R#m_player_rw.name + Val},
-	?TRY_CATCH(hook_player:on_rw_update(name,R)),
-	R1;
-i_set_field({#m_player_rw.name, Val, sub}, R) ->
-	R1 = R#m_player_rw{name = R#m_player_rw.name - Val},
-	?TRY_CATCH(hook_player:on_rw_update(name,R)),
-	R1;
 %%#m_player_rw.level
-i_set_field({level, Val}, R) ->
-	R1 = R#m_player_rw{level = Val},
-	?TRY_CATCH(hook_player:on_rw_update(level,R)),
-	R1;
-i_set_field({level, Val, add}, R) ->
-	R1 = R#m_player_rw{level = R#m_player_rw.level + Val},
-	?TRY_CATCH(hook_player:on_rw_update(level,R)),
-	R1;
-i_set_field({level, Val, sub}, R) ->
-	R1 = R#m_player_rw{level = R#m_player_rw.level - Val},
-	?TRY_CATCH(hook_player:on_rw_update(level,R)),
-	R1;
 i_set_field({#m_player_rw.level, Val}, R) ->
 	R1 = R#m_player_rw{level = Val},
 	?TRY_CATCH(hook_player:on_rw_update(level,R)),
 	R1;
-i_set_field({#m_player_rw.level, Val, add}, R) ->
-	R1 = R#m_player_rw{level = R#m_player_rw.level + Val},
-	?TRY_CATCH(hook_player:on_rw_update(level,R)),
-	R1;
-i_set_field({#m_player_rw.level, Val, sub}, R) ->
-	R1 = R#m_player_rw{level = R#m_player_rw.level - Val},
-	?TRY_CATCH(hook_player:on_rw_update(level,R)),
-	R1;
 %%#m_player_rw.sex
-i_set_field({sex, Val}, R) ->
-	R1 = R#m_player_rw{sex = Val},
-	?TRY_CATCH(hook_player:on_rw_update(sex,R)),
-	R1;
-i_set_field({sex, Val, add}, R) ->
-	R1 = R#m_player_rw{sex = R#m_player_rw.sex + Val},
-	?TRY_CATCH(hook_player:on_rw_update(sex,R)),
-	R1;
-i_set_field({sex, Val, sub}, R) ->
-	R1 = R#m_player_rw{sex = R#m_player_rw.sex - Val},
-	?TRY_CATCH(hook_player:on_rw_update(sex,R)),
-	R1;
 i_set_field({#m_player_rw.sex, Val}, R) ->
 	R1 = R#m_player_rw{sex = Val},
 	?TRY_CATCH(hook_player:on_rw_update(sex,R)),
 	R1;
-i_set_field({#m_player_rw.sex, Val, add}, R) ->
-	R1 = R#m_player_rw{sex = R#m_player_rw.sex + Val},
-	?TRY_CATCH(hook_player:on_rw_update(sex,R)),
-	R1;
-i_set_field({#m_player_rw.sex, Val, sub}, R) ->
-	R1 = R#m_player_rw{sex = R#m_player_rw.sex - Val},
-	?TRY_CATCH(hook_player:on_rw_update(sex,R)),
-	R1;
 %%#m_player_rw.head
-i_set_field({head, Val}, R) ->
-	R1 = R#m_player_rw{head = Val},
-	?TRY_CATCH(hook_player:on_rw_update(head,R)),
-	R1;
-i_set_field({head, Val, add}, R) ->
-	R1 = R#m_player_rw{head = R#m_player_rw.head + Val},
-	?TRY_CATCH(hook_player:on_rw_update(head,R)),
-	R1;
-i_set_field({head, Val, sub}, R) ->
-	R1 = R#m_player_rw{head = R#m_player_rw.head - Val},
-	?TRY_CATCH(hook_player:on_rw_update(head,R)),
-	R1;
 i_set_field({#m_player_rw.head, Val}, R) ->
 	R1 = R#m_player_rw{head = Val},
 	?TRY_CATCH(hook_player:on_rw_update(head,R)),
 	R1;
-i_set_field({#m_player_rw.head, Val, add}, R) ->
-	R1 = R#m_player_rw{head = R#m_player_rw.head + Val},
-	?TRY_CATCH(hook_player:on_rw_update(head,R)),
-	R1;
-i_set_field({#m_player_rw.head, Val, sub}, R) ->
-	R1 = R#m_player_rw{head = R#m_player_rw.head - Val},
-	?TRY_CATCH(hook_player:on_rw_update(head,R)),
-	R1;
 %%#m_player_rw.race
-i_set_field({race, Val}, R) ->
-	R1 = R#m_player_rw{race = Val},
-	?TRY_CATCH(hook_player:on_rw_update(race,R)),
-	R1;
-i_set_field({race, Val, add}, R) ->
-	R1 = R#m_player_rw{race = R#m_player_rw.race + Val},
-	?TRY_CATCH(hook_player:on_rw_update(race,R)),
-	R1;
-i_set_field({race, Val, sub}, R) ->
-	R1 = R#m_player_rw{race = R#m_player_rw.race - Val},
-	?TRY_CATCH(hook_player:on_rw_update(race,R)),
-	R1;
 i_set_field({#m_player_rw.race, Val}, R) ->
 	R1 = R#m_player_rw{race = Val},
 	?TRY_CATCH(hook_player:on_rw_update(race,R)),
 	R1;
-i_set_field({#m_player_rw.race, Val, add}, R) ->
-	R1 = R#m_player_rw{race = R#m_player_rw.race + Val},
-	?TRY_CATCH(hook_player:on_rw_update(race,R)),
-	R1;
-i_set_field({#m_player_rw.race, Val, sub}, R) ->
-	R1 = R#m_player_rw{race = R#m_player_rw.race - Val},
-	?TRY_CATCH(hook_player:on_rw_update(race,R)),
-	R1;
 %%#m_player_rw.career
-i_set_field({career, Val}, R) ->
-	R1 = R#m_player_rw{career = Val},
-	?TRY_CATCH(hook_player:on_rw_update(career,R)),
-	R1;
-i_set_field({career, Val, add}, R) ->
-	R1 = R#m_player_rw{career = R#m_player_rw.career + Val},
-	?TRY_CATCH(hook_player:on_rw_update(career,R)),
-	R1;
-i_set_field({career, Val, sub}, R) ->
-	R1 = R#m_player_rw{career = R#m_player_rw.career - Val},
-	?TRY_CATCH(hook_player:on_rw_update(career,R)),
-	R1;
 i_set_field({#m_player_rw.career, Val}, R) ->
 	R1 = R#m_player_rw{career = Val},
 	?TRY_CATCH(hook_player:on_rw_update(career,R)),
 	R1;
-i_set_field({#m_player_rw.career, Val, add}, R) ->
-	R1 = R#m_player_rw{career = R#m_player_rw.career + Val},
-	?TRY_CATCH(hook_player:on_rw_update(career,R)),
-	R1;
-i_set_field({#m_player_rw.career, Val, sub}, R) ->
-	R1 = R#m_player_rw{career = R#m_player_rw.career - Val},
-	?TRY_CATCH(hook_player:on_rw_update(career,R)),
-	R1;
 %%#m_player_rw.map
-i_set_field({map, Val}, R) ->
-	R1 = R#m_player_rw{map = Val},
-	?TRY_CATCH(hook_player:on_rw_update(map,R)),
-	R1;
-i_set_field({map, Val, add}, R) ->
-	R1 = R#m_player_rw{map = R#m_player_rw.map + Val},
-	?TRY_CATCH(hook_player:on_rw_update(map,R)),
-	R1;
-i_set_field({map, Val, sub}, R) ->
-	R1 = R#m_player_rw{map = R#m_player_rw.map - Val},
-	?TRY_CATCH(hook_player:on_rw_update(map,R)),
-	R1;
 i_set_field({#m_player_rw.map, Val}, R) ->
 	R1 = R#m_player_rw{map = Val},
 	?TRY_CATCH(hook_player:on_rw_update(map,R)),
 	R1;
-i_set_field({#m_player_rw.map, Val, add}, R) ->
-	R1 = R#m_player_rw{map = R#m_player_rw.map + Val},
-	?TRY_CATCH(hook_player:on_rw_update(map,R)),
-	R1;
-i_set_field({#m_player_rw.map, Val, sub}, R) ->
-	R1 = R#m_player_rw{map = R#m_player_rw.map - Val},
-	?TRY_CATCH(hook_player:on_rw_update(map,R)),
-	R1;
 %%#m_player_rw.last_second_tick
-i_set_field({last_second_tick, Val}, R) ->
-	R1 = R#m_player_rw{last_second_tick = Val},
-	?TRY_CATCH(hook_player:on_rw_update(last_second_tick,R)),
-	R1;
-i_set_field({last_second_tick, Val, add}, R) ->
-	R1 = R#m_player_rw{last_second_tick = R#m_player_rw.last_second_tick + Val},
-	?TRY_CATCH(hook_player:on_rw_update(last_second_tick,R)),
-	R1;
-i_set_field({last_second_tick, Val, sub}, R) ->
-	R1 = R#m_player_rw{last_second_tick = R#m_player_rw.last_second_tick - Val},
-	?TRY_CATCH(hook_player:on_rw_update(last_second_tick,R)),
-	R1;
 i_set_field({#m_player_rw.last_second_tick, Val}, R) ->
 	R1 = R#m_player_rw{last_second_tick = Val},
 	?TRY_CATCH(hook_player:on_rw_update(last_second_tick,R)),
 	R1;
-i_set_field({#m_player_rw.last_second_tick, Val, add}, R) ->
-	R1 = R#m_player_rw{last_second_tick = R#m_player_rw.last_second_tick + Val},
-	?TRY_CATCH(hook_player:on_rw_update(last_second_tick,R)),
-	R1;
-i_set_field({#m_player_rw.last_second_tick, Val, sub}, R) ->
-	R1 = R#m_player_rw{last_second_tick = R#m_player_rw.last_second_tick - Val},
-	?TRY_CATCH(hook_player:on_rw_update(last_second_tick,R)),
-	R1;
 %%#m_player_rw.last_minute_tick
-i_set_field({last_minute_tick, Val}, R) ->
-	R1 = R#m_player_rw{last_minute_tick = Val},
-	?TRY_CATCH(hook_player:on_rw_update(last_minute_tick,R)),
-	R1;
-i_set_field({last_minute_tick, Val, add}, R) ->
-	R1 = R#m_player_rw{last_minute_tick = R#m_player_rw.last_minute_tick + Val},
-	?TRY_CATCH(hook_player:on_rw_update(last_minute_tick,R)),
-	R1;
-i_set_field({last_minute_tick, Val, sub}, R) ->
-	R1 = R#m_player_rw{last_minute_tick = R#m_player_rw.last_minute_tick - Val},
-	?TRY_CATCH(hook_player:on_rw_update(last_minute_tick,R)),
-	R1;
 i_set_field({#m_player_rw.last_minute_tick, Val}, R) ->
 	R1 = R#m_player_rw{last_minute_tick = Val},
 	?TRY_CATCH(hook_player:on_rw_update(last_minute_tick,R)),
 	R1;
-i_set_field({#m_player_rw.last_minute_tick, Val, add}, R) ->
-	R1 = R#m_player_rw{last_minute_tick = R#m_player_rw.last_minute_tick + Val},
-	?TRY_CATCH(hook_player:on_rw_update(last_minute_tick,R)),
-	R1;
-i_set_field({#m_player_rw.last_minute_tick, Val, sub}, R) ->
-	R1 = R#m_player_rw{last_minute_tick = R#m_player_rw.last_minute_tick - Val},
-	?TRY_CATCH(hook_player:on_rw_update(last_minute_tick,R)),
-	R1;
 %%#m_player_rw.last_hour_tick
-i_set_field({last_hour_tick, Val}, R) ->
-	R1 = R#m_player_rw{last_hour_tick = Val},
-	?TRY_CATCH(hook_player:on_rw_update(last_hour_tick,R)),
-	R1;
-i_set_field({last_hour_tick, Val, add}, R) ->
-	R1 = R#m_player_rw{last_hour_tick = R#m_player_rw.last_hour_tick + Val},
-	?TRY_CATCH(hook_player:on_rw_update(last_hour_tick,R)),
-	R1;
-i_set_field({last_hour_tick, Val, sub}, R) ->
-	R1 = R#m_player_rw{last_hour_tick = R#m_player_rw.last_hour_tick - Val},
-	?TRY_CATCH(hook_player:on_rw_update(last_hour_tick,R)),
-	R1;
 i_set_field({#m_player_rw.last_hour_tick, Val}, R) ->
 	R1 = R#m_player_rw{last_hour_tick = Val},
 	?TRY_CATCH(hook_player:on_rw_update(last_hour_tick,R)),
 	R1;
-i_set_field({#m_player_rw.last_hour_tick, Val, add}, R) ->
-	R1 = R#m_player_rw{last_hour_tick = R#m_player_rw.last_hour_tick + Val},
-	?TRY_CATCH(hook_player:on_rw_update(last_hour_tick,R)),
-	R1;
-i_set_field({#m_player_rw.last_hour_tick, Val, sub}, R) ->
-	R1 = R#m_player_rw{last_hour_tick = R#m_player_rw.last_hour_tick - Val},
-	?TRY_CATCH(hook_player:on_rw_update(last_hour_tick,R)),
-	R1;
 %%#m_player_rw.status
-i_set_field({status, Val}, R) ->
-	R1 = R#m_player_rw{status = Val},
-	?TRY_CATCH(hook_player:on_rw_update(status,R)),
-	R1;
-i_set_field({status, Val, add}, R) ->
-	R1 = R#m_player_rw{status = R#m_player_rw.status + Val},
-	?TRY_CATCH(hook_player:on_rw_update(status,R)),
-	R1;
-i_set_field({status, Val, sub}, R) ->
-	R1 = R#m_player_rw{status = R#m_player_rw.status - Val},
-	?TRY_CATCH(hook_player:on_rw_update(status,R)),
-	R1;
 i_set_field({#m_player_rw.status, Val}, R) ->
 	R1 = R#m_player_rw{status = Val},
-	?TRY_CATCH(hook_player:on_rw_update(status,R)),
-	R1;
-i_set_field({#m_player_rw.status, Val, add}, R) ->
-	R1 = R#m_player_rw{status = R#m_player_rw.status + Val},
-	?TRY_CATCH(hook_player:on_rw_update(status,R)),
-	R1;
-i_set_field({#m_player_rw.status, Val, sub}, R) ->
-	R1 = R#m_player_rw{status = R#m_player_rw.status - Val},
 	?TRY_CATCH(hook_player:on_rw_update(status,R)),
 	R1;
 i_set_field(_Elem,R)-> R.

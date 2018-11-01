@@ -150,7 +150,8 @@ calculate_skill_effect(_Uid, _SkillCfg, _TarUid) ->
     ok.
 
 %%-------------------------------------------------------------------
-end_use_skill(Uid) ->
+interrupt_skill(Uid) ->
+    SkillId = object_rw:get_skill_id(Uid),
     object_rw:set_fields(
         Uid,
         [
@@ -165,11 +166,10 @@ end_use_skill(Uid) ->
             {#m_object_rw.skill_queue, []}
         ]
     ),
+    Msg = #pk_GS2U_SkillInterrupt{uid = Uid, skill_id = SkillId},
+    map_view:send_net_msg_to_visual(Uid, Msg),
     ok.
 
-interrupt_skill(Uid) ->
-    end_use_skill(Uid),
-    ok.
 
 %%-------------------------------------------------------------------
 tick(Obj) ->
@@ -213,7 +213,7 @@ can_skill_active_tick(_Uid, _SkillCfg) ->
 check_end_skill_tick(Uid, _SkillCfg) ->
     _OpTime = object_rw:get_operate_time(Uid),
     %% todo 到达最大时间? 到达最大次数?
-    end_use_skill(Uid).
+    interrupt_skill(Uid).
 
 %%todo 放完就不管的，但是要持续生效的技能
 %%todo 创建了一个 OBJ_STATIC

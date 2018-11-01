@@ -21,7 +21,7 @@
 -export([set_timeline/2, pause_effective_monitor/1, continue_effective_monitor/2]).
 -export([start_link/1, start_link/2, start_link/3, start_link/4]).
 -export([start_link2/1, start_link2/2, start_link2/3, start_link2/4]).
--export([init/1, handle_call/3, handle_cast/2, handle_info/2, terminate/2, code_change/3]).
+-export([init/1, init_loop/2, handle_call/3, handle_cast/2, handle_info/2, terminate/2, code_change/3]).
 
 -callback mod_init(Args :: term()) ->
     {ok, State :: term()} | {ok, State :: term(), timeout() | hibernate} |
@@ -100,14 +100,14 @@ start_link2(Name, Module, Args, Options) ->
 
 %%--------------------------------------------------------------------
 
-set_timeline(Name, Microseconds) ->
-    ps:send(Name, {set_timeline, Microseconds}).
+set_timeline(Name, Millisecond) ->
+    ps:send(Name, {set_timeline, Millisecond * 1000}).
 
 pause_effective_monitor(Name) ->
     ps:send(Name, pause_effective_monitor).
 
-continue_effective_monitor(Name, Microseconds) ->
-    ps:send(Name, continue_effective_monitor, Microseconds).
+continue_effective_monitor(Name, Millisecond) ->
+    ps:send(Name, continue_effective_monitor, Millisecond * 1000).
 
 %%--------------------------------------------------------------------
 %% @private
@@ -129,8 +129,14 @@ init(Args) ->
     catch _ : Error : ST ->
         ?ERROR("module ~p,args ~p,error ~p,st ~p", [get(?LogicModule), Args, Error, ST]),
         {stop, Error}
-    end
-.
+    end.
+
+init_loop(Module, ArgList) ->
+    put(?LogicModule, Module),
+    EffectiveMicroseconds = i_need_effective_monitor(),
+    ?INFO("~p|~p|~p|~p init ok", [misc:registered_name(), Module, self(), EffectiveMicroseconds]),
+    State = Module:mod_init(ArgList),
+    gen_server:enter_loop(?MODULE, [], State).
 
 %%--------------------------------------------------------------------
 %% @private
