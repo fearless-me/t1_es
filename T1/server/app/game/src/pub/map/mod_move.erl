@@ -17,14 +17,14 @@
 -include_lib("stdlib/include/assert.hrl").
 
 %% API
--export([init/3, update/1]).
 -export([
+    init/3, tick/2,
     stop_move/2, stop_move_force/2,
     start_player_walk/3, on_obj_pos_change/2, stop_player_move/2,
     start_monster_walk/4, is_can_monster_walk/4
 ]).
 -export([cal_move_msg/1]).
-%%-export([cal_move_msg_info/2]).
+
 
 %%-------------------------------------------------------------------
 init(Uid, Pos, Face) ->
@@ -170,41 +170,41 @@ make_move_r(Start, End, Speed) ->
     }.
 
 %%-------------------------------------------------------------------
-update(Obj) -> update_dispatcher(Obj).
+tick(Obj, _Now) -> tick_dispatcher(Obj).
 
 %%-------------------------------------------------------------------
-update_dispatcher(#m_cache_map_object{type = ?OBJ_PLAYER, uid = Uid} = Obj) ->
-    update_player_move(Obj,   object_rw:get_cur_move(Uid));
-update_dispatcher(#m_cache_map_object{type = ?OBJ_MON, uid = Uid} = Obj) ->
-    update_monster_move(Obj,  object_rw:get_cur_move(Uid));
-update_dispatcher(_Obj) -> skip.
+tick_dispatcher(#m_cache_map_object{type = ?OBJ_PLAYER, uid = Uid} = Obj) ->
+    tick_player_move(Obj,   object_rw:get_cur_move(Uid));
+tick_dispatcher(#m_cache_map_object{type = ?OBJ_MON, uid = Uid} = Obj) ->
+    tick_monster_move(Obj,  object_rw:get_cur_move(Uid));
+tick_dispatcher(_Obj) -> skip.
 
 %%-------------------------------------------------------------------
-update_player_move(Obj, ?EMS_WALK) ->
+tick_player_move(Obj, ?EMS_WALK) ->
     #m_cache_map_object{uid = Uid} = Obj,
     
     CurPos = object_rw:get_cur_pos(Uid),
     PathList = object_rw:get_move_path_list(Uid),
     Delta = map_rw:get_move_timer_delta(),
     MovedTime = object_rw:get_seg_move_time(Uid),
-    update_role_walk(Uid, CurPos, PathList, MovedTime + Delta),
+    tick_role_walk(Uid, CurPos, PathList, MovedTime + Delta),
     ok;
-update_player_move(_Obj, _Move) -> skip.
+tick_player_move(_Obj, _Move) -> skip.
 
 %%-------------------------------------------------------------------
-update_monster_move(Obj, ?EMS_WALK) ->
+tick_monster_move(Obj, ?EMS_WALK) ->
     #m_cache_map_object{uid = Uid} = Obj,
     
     CurPos = object_rw:get_cur_pos(Uid),
     PathList = object_rw:get_move_path_list(Uid),
     Delta = map_rw:get_move_timer_delta(),
     MovedTime = object_rw:get_seg_move_time(Uid),
-    update_monster_walk(Uid, CurPos, PathList, MovedTime + Delta),
+    tick_monster_walk(Uid, CurPos, PathList, MovedTime + Delta),
     ok;
-update_monster_move(_Obj, _Move) -> skip.
+tick_monster_move(_Obj, _Move) -> skip.
 
 %%-------------------------------------------------------------------
-update_role_walk(Uid, _CurPos, [], _MoveTime) ->
+tick_role_walk(Uid, _CurPos, [], _MoveTime) ->
 %%    ?WARN("mapid ~p player ~w arrived ~w", [self(), Uid, CurPos]),
     object_rw:set_fields(
         Uid,
@@ -216,7 +216,7 @@ update_role_walk(Uid, _CurPos, [], _MoveTime) ->
     ),
 
     ?ENR_ARRIVE;
-update_role_walk(Uid, _CurPos, PathList, MoveTime) ->
+tick_role_walk(Uid, _CurPos, PathList, MoveTime) ->
     Dir = object_rw:get_dir(Uid),
     Dst = object_rw:get_dest_pos(Uid),
     {NewPos, NewPathList, MoreTime} = linear_pos(PathList, MoveTime, keep),
@@ -394,7 +394,7 @@ is_can_monster_walk(Uid, _Dst, _MoveState, _NeedCheck) ->
 
 
 %%-------------------------------------------------------------------
-update_monster_walk(Uid, CurPos, [], _MoveTime) ->
+tick_monster_walk(Uid, CurPos, [], _MoveTime) ->
     ?WARN("mapid ~p monster ~w arrived ~w", [self(), Uid, CurPos]),
 
     object_rw:set_fields(
@@ -406,7 +406,7 @@ update_monster_walk(Uid, CurPos, [], _MoveTime) ->
         ]
     ),
     ?ENR_ARRIVE;
-update_monster_walk(Uid, _CurPos, PathList, MoveTime) ->
+tick_monster_walk(Uid, _CurPos, PathList, MoveTime) ->
     
     Dir = object_rw:get_dir(Uid),
     Dst = object_rw:get_dest_pos(Uid),

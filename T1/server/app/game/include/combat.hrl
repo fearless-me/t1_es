@@ -73,7 +73,7 @@
 
 
 
--record(m_buff, {buff_id = 0, lifetime = 0, level = 1, wrap = 1, source = 0}).
+-record(m_buff, {buff_id = 0, lifetime = 0, level = 1, wrap = 1, source = 0, latest=0}).
 
 
 

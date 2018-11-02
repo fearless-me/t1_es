@@ -20,7 +20,7 @@
 
 %% API
 -export([
-    init/2, update/1,
+    init/2, update/2,
     %% patrol
     update_patrol/1,
     clear_all_enmity/1, reset_patrol_tick/1, reset_look_for_target_tick/1,
@@ -114,11 +114,11 @@ can_update_ai(Uid) ->
     AiId > 0.
 
 %%-------------------------------------------------------------------
-update(#m_cache_map_object{uid = Uid}) ->
+update(#m_cache_map_object{uid = Uid}, _Now) ->
     NeedUpdate = can_update_ai(Uid),
     do_update(Uid, NeedUpdate),
     ok;
-update(_Any) ->
+update(_Any, _Now) ->
     ok.
 
 %%-------------------------------------------------------------------

@@ -22,7 +22,7 @@ getRow(0) ->
 		model = "",
 		born_event = 0,
 		death_event = 0,
-		proplist = [[?HP,?ADD,10000008]]
+		proplist = [[1,?ADD,10000008]]
 	};
 getRow(_) -> {}.
 

@@ -155,7 +155,7 @@ discover_src_files(
         end,
     HrlFiles = lists:usort(lists:foldl(Fhrl, [], SrcDirs ++ IncDirs)),
     NewState = State#state{src_files = ErlFiles, hrl_files = HrlFiles},
-    process_src_files_incs(ErlFiles),
+    process_src_files(ErlFiles),
     {noreply, NewState}.
 
 
@@ -193,7 +193,7 @@ compare_hrl_files(State) ->
     NewState = State#state{hrl_file_lastmod = NewHrlFileLastMod},
     {noreply, NewState}.
 
-process_src_files_incs(SrcFiles) ->
+process_src_files(SrcFiles) ->
     case ets:info(?INC_REF_SRC_ETS, size) of
         0 ->
             Now = os:system_time(milli_seconds),
@@ -211,19 +211,17 @@ process_src_files_incs(SrcFiles) ->
             skip
     end.
 
-process_src_file_incs(SrcFile) ->
+process_inc_files(SrcFile) ->
     try epp_dodger:parse_file(SrcFile) of
         {ok, Forms} ->
-            do_process_src_file_incs(SrcFile, Forms);
+            do_process_inc_files(SrcFile, Forms);
         Error ->
             ?ERROR("epp_dodger parse_file ~ts failed, ~p", [SrcFile, Error])
     catch _:_:_ -> skip
     end.
 
-do_process_src_file_incs(SrcFile, Forms) ->
+do_process_inc_files(SrcFile, Forms) ->
     IncludeFiles = src_file_include([], Forms),
-%%    ?WARN("parse src file ~ts, includes:~p",
-%%        [SrcFile, IncludeFiles]),
 
     %% 头文件被删除
     case ets:lookup(?SRC_REF_INC_ETS, SrcFile) of
@@ -274,7 +272,7 @@ do_process_src_file_incs(SrcFile, Forms) ->
 process_src_file_incs_1(PidList, []) ->
     PidList;
 process_src_file_incs_1(PidList, [SrcFile | SrcFiles]) ->
-    Pid = erlang:spawn_monitor(fun() -> process_src_file_incs(SrcFile) end),
+    Pid = erlang:spawn_monitor(fun() -> process_inc_files(SrcFile) end),
     process_src_file_incs_1([Pid | PidList], SrcFiles).
 
 src_file_include(HrlFiles, []) ->
@@ -390,7 +388,7 @@ process_src_file_lastmod(undefined, _Other, _) ->
 
 recompile_src_file(SrcFile, Options) ->
     %% Get the module, src dir, and options...
-    process_src_file_incs(SrcFile),
+    process_inc_files(SrcFile),
     {CompileFun, Module} =
         {fun compile:file/2, list_to_atom(filename:basename(SrcFile, ".erl"))},
 

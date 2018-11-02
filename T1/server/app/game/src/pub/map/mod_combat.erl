@@ -27,7 +27,7 @@
 
 %% API
 -export([
-    use_skill/4, tick/1, interrupt_skill/1,
+    use_skill/4, tick/2, interrupt_skill/1,
     dispatcher/5, can_ai_use_skill/1, is_using_skill/1
 ]).
 
@@ -172,7 +172,7 @@ interrupt_skill(Uid) ->
 
 
 %%-------------------------------------------------------------------
-tick(Obj) ->
+tick(Obj, Now) ->
     ?TRY_CATCH(tick_cur_skill(Obj), Err1, Stk1),
     ?TRY_CATCH(tick_skill_queue(Obj), Err2, Stk2),
     ok.

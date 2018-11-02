@@ -4,6 +4,6 @@ cd /d "%~dp0"
 xcopy /F /R /Y .\ansi\*.dll C:\Windows\System32\
 xcopy /F /R /Y .\ansi\*.exe C:\Windows\System32\
 ping -n 10 127.0.0.1 > nul
-start /B ansicon.exe -U
+start /B ansicon.exe -i
 
 pause

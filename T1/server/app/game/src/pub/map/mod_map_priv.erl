@@ -144,94 +144,94 @@ tick_msg() -> erlang:send_after(?MAP_TICK, self(), tick_now).
 tick(S) ->
     Now = misc_time:milli_seconds(),
     map_rw:update_move_timer(Now),
-    S1 = tick_1(S),
+    S1 = tick_1(S, Now),
     map_rw:check_tick(misc_time:milli_seconds() - Now),
     S1.
 
-tick_1(#m_map_state{status = ?MAP_READY_EXIT, protect_tick = Tick} = S) when Tick =< 0 ->
+tick_1(#m_map_state{status = ?MAP_READY_EXIT, protect_tick = Tick} = S, _Now) when Tick =< 0 ->
     PlayerSize = map_rw:obj_size_with_type(?OBJ_PLAYER),
     ?WARN("**map_~p_~p destroy warning, player size ~p, force stop now",
         [map_rw:map_id(), map_rw:line_id(), PlayerSize]),
     ?TRY_CATCH(real_stop_now(0)),
     S;
-tick_1(#m_map_state{status = ?MAP_READY_EXIT, protect_tick = TickMax} = S) ->
+tick_1(#m_map_state{status = ?MAP_READY_EXIT, protect_tick = TickMax} = S, _Now) ->
     PlayerSize = map_rw:obj_size_with_type(?OBJ_PLAYER),
     ?TRY_CATCH(real_stop_now(PlayerSize)),
     S#m_map_state{protect_tick = TickMax - 1};
-tick_1(S) ->
+tick_1(S, Now) ->
     ?TRY_CATCH(tick_msg(), Err1, Stk1),
-    ?TRY_CATCH(tick_obj(S), Err2, Stk2),
+    ?TRY_CATCH(tick_obj(S, Now), Err2, Stk2),
     S.
 
-tick_obj(S) ->
-    ?TRY_CATCH(tick_update_before(S), Err1, Stk1),
+tick_obj(S, Now) ->
+    ?TRY_CATCH(tick_update_before(S, Now), Err1, Stk1),
     
     % 更新各个对象
     %------------------
-    ?TRY_CATCH(tick_player(S), Err2, Stk2),
-    ?TRY_CATCH(tick_monster(S), Err3, Stk3),
-    ?TRY_CATCH(tick_pet(S), Err4, Stk4),
-    ?TRY_CATCH(tick_respawn_monster(S), Err5, Stk5),
+    ?TRY_CATCH(tick_player(S, Now), Err2, Stk2),
+    ?TRY_CATCH(tick_monster(S, Now), Err3, Stk3),
+    ?TRY_CATCH(tick_pet(S, Now), Err4, Stk4),
+    ?TRY_CATCH(tick_respawn_monster(S, Now), Err5, Stk5),
     %------------------
     
-    ?TRY_CATCH(tick_update_after(S), Err, Stk),
+    ?TRY_CATCH(tick_update_after(S, Now), Err, Stk),
     ok.
 
 %%-------------------------------------------------------------------
-tick_player(_S) ->
+tick_player(_S, Now) ->
     maps:fold(
         fun(_, Uid, _) ->
-            tick_player_1(map_rw:find_unit(?OBJ_PLAYER, Uid), Uid)
+            tick_player_1(map_rw:find_unit(?OBJ_PLAYER, Uid), Uid, Now)
         end, 0, map_rw:obj_maps_with_type(?OBJ_PLAYER)).
 
-tick_player_1(undefined, Uid) ->
+tick_player_1(undefined, Uid, _Now) ->
     %% @todo 加入异常处理删除该玩家
-    ?ERROR("player ~p may be leave map", [Uid]);
-tick_player_1(Obj, _) ->
-    ?TRY_CATCH(mod_move:update(Obj), Err1, Stk1),
-    ?TRY_CATCH(mod_combat:tick(Obj), Err2, Stk2),
-    ?TRY_CATCH(mod_buff:tick(Obj), Err3, Stk3),
+    ?ERROR("tick player ~p may be leave map", [Uid]);
+tick_player_1(Obj, _, Now) ->
+    ?TRY_CATCH(mod_move:tick(Obj, Now), Err1, Stk1),
+    ?TRY_CATCH(mod_combat:tick(Obj, Now), Err2, Stk2),
+    ?TRY_CATCH(mod_buff:tick(Obj, Now), Err3, Stk3),
     ok.
 
 %%-------------------------------------------------------------------
-tick_monster(_S) ->
+tick_monster(_S, Now) ->
     maps:fold(
         fun(_, Uid, _) ->
-            tick_monster_1(map_rw:find_unit(?OBJ_MON, Uid), Uid)
+            tick_monster_1(map_rw:find_unit(?OBJ_MON, Uid), Uid, Now)
         end, 0, map_rw:obj_maps_with_type(?OBJ_MON)).
 
-tick_monster_1(undefined, Uid) ->
-    ?ERROR("monster ~p  ~p not exists", [Uid, object_rw:get_data_id(Uid)]);
-tick_monster_1(Obj, _) ->
-    ?TRY_CATCH(mod_move:update(Obj), Err1, Stk1),
-    ?TRY_CATCH(mod_ai:update(Obj), Err2, Stk2),
-    ?TRY_CATCH(mod_combat:tick(Obj), Err3, Stk3),
-    ?TRY_CATCH(mod_buff:tick(Obj), Err4, Stk4),
+tick_monster_1(undefined, Uid, _Now) ->
+    ?ERROR("tick monster ~p  ~p not exists", [Uid, object_rw:get_data_id(Uid)]);
+tick_monster_1(Obj, _, Now) ->
+    ?TRY_CATCH(mod_move:tick(Obj, Now), Err1, Stk1),
+    ?TRY_CATCH(mod_ai:update(Obj, Now), Err2, Stk2),
+    ?TRY_CATCH(mod_combat:tick(Obj, Now), Err3, Stk3),
+    ?TRY_CATCH(mod_buff:tick(Obj, Now), Err4, Stk4),
     ok.
 
 %%-------------------------------------------------------------------
-tick_pet(_S) ->
+tick_pet(_S, Now) ->
     maps:fold(
         fun(_, Uid, _) ->
-            tick_pet_1(map_rw:find_unit(?OBJ_PET, Uid), Uid)
+            tick_pet_1(map_rw:find_unit(?OBJ_PET, Uid), Uid, Now)
         end, 0, map_rw:obj_maps_with_type(?OBJ_PET)).
 
-tick_pet_1(undefined, Uid) ->
-    ?ERROR("pet ~p not exists", [Uid]);
-tick_pet_1(Obj, _) ->
-    ?TRY_CATCH(mod_move:update(Obj), Err1, Stk1),
-    ?TRY_CATCH(mod_combat:tick(Obj), Err2, Stk2),
-    ?TRY_CATCH(mod_buff:tick(Obj), Err3, Stk3),
+tick_pet_1(undefined, Uid, _Now) ->
+    ?ERROR("tick pet ~p not exists", [Uid]);
+tick_pet_1(Obj, _, Now) ->
+    ?TRY_CATCH(mod_move:tick(Obj, Now), Err1, Stk1),
+    ?TRY_CATCH(mod_combat:tick(Obj, Now), Err2, Stk2),
+    ?TRY_CATCH(mod_buff:tick(Obj, Now), Err3, Stk3),
     ok.
 
 %%-------------------------------------------------------------------
-tick_respawn_monster(_S) ->
+tick_respawn_monster(_S, _Now) ->
     ok.
 
 %%-------------------------------------------------------------------
-tick_update_before(_S) -> ok.
+tick_update_before(_S, _Now) -> ok.
 
-tick_update_after(_S) -> ok.
+tick_update_after(_S, _Now) -> ok.
 
 %%-------------------------------------------------------------------
 real_stop_now(0) ->
