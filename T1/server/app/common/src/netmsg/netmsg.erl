@@ -607,12 +607,14 @@ decode_SkillInfo(Bin0) ->
 	{ V_skill_id, Bin1 } = read_uint32( Bin0 ),
 	{ V_level, Bin2 } = read_uint32( Bin1 ),
 	{ V_cd_time, Bin3 } = read_uint32( Bin2 ),
+	{ V_slot_index, Bin4 } = read_uint32( Bin3 ),
 	{ #pk_SkillInfo {
 		skill_id = V_skill_id,
 		level = V_level,
-		cd_time = V_cd_time
+		cd_time = V_cd_time,
+		slot_index = V_slot_index
 		},
-	Bin3 }.
+	Bin4 }.
 
 %GENERATED from file:login.h => UserPlayerData
 -spec decode_UserPlayerData(Bin0) -> { #pk_UserPlayerData{},LeftBin }
@@ -1282,10 +1284,12 @@ encode_SkillInfo( #pk_SkillInfo{} = P ) ->
 	Bin_skill_id = write_uint32( P#pk_SkillInfo.skill_id ),
 	Bin_level = write_uint32( P#pk_SkillInfo.level ),
 	Bin_cd_time = write_uint32( P#pk_SkillInfo.cd_time ),
+	Bin_slot_index = write_uint32( P#pk_SkillInfo.slot_index ),
 	[
 		Bin_skill_id,
 		Bin_level,
-		Bin_cd_time	
+		Bin_cd_time,
+		Bin_slot_index	
 ].
 
 %GENERATED from file:login.h => UserPlayerData

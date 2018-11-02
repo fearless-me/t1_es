@@ -2,7 +2,7 @@
 -ifndef(netmsg).
 -define(netmsg,1).
 
--define(ProtoVersion,651).
+-define(ProtoVersion,652).
 
 -record(pk_BuffInfo,{
 	%% UInt32
@@ -149,7 +149,9 @@
 	%% UInt32
 	level = 0,
 	%% UInt32
-	cd_time = 0
+	cd_time = 0,
+	%% UInt32技能盘孔位
+	slot_index = 0
 }).
 
 %% 

@@ -10,13 +10,27 @@
 -include("battle_prop.hrl").
 
 %% 怪物配置表
+getRow(0) ->
+	#monsterCfg{
+		desc__ = "测试怪剑圣",
+		id = 0,
+		name = "@@>1000000<",
+		type = 1,
+		sub_type = 1,
+		ai = 0,
+		ai_param = [],
+		model = "",
+		born_event = 0,
+		death_event = 0,
+		proplist = [[?HP,?ADD,10000008]]
+	};
 getRow(_) -> {}.
 
 getKeyList() -> [
-
+	{0}
 ].
 
 get1KeyList() -> [
-
+	0
 ].
 

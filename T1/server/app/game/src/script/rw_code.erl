@@ -411,7 +411,7 @@ i_set_field_function_name(SuffixList) ->
 i_set_field(File, Record, Field, SuffixList, ExParam, HookUpdate) ->
     ISetFunctionName = i_set_field_function_name(SuffixList),
     RecordFieldIdx = lists:concat(["#", Record, ".", Field]),
-    RecordFieldVal = lists:concat(["R#", Record, ".", Field]),
+%%    RecordFieldVal = lists:concat(["R#", Record, ".", Field]),
     HookUpdateCall = string:join(ExParam ++ [to_list(Field), "R"], ","),
     ExParamList = string:join([lists:concat([Param, ","]) || Param <- ExParam], ""),
     IFieldSetFunctionBody =
@@ -554,6 +554,7 @@ object_rw(FieldList) ->
     write_file(Fname, "~n~ts", [?SPLIT_LINE]),
     common_body(Fname),
     field_body(Fname, FieldList),
+    color:info_log("write ~s ok!", [Fname]),
     ok.
 
 export_field(Fname, []) ->
@@ -619,7 +620,7 @@ field_body(Fname, []) ->
     write_file(Fname, "~ts", [?SPLIT_LINE]);
 field_body(Fname, [Field | FieldList]) ->
     write_file(Fname,
-"
+"%% #m_object_rw.~p
 get_~p(Uid) ->
     misc_ets:read_element(i_ets(), Uid, #m_object_rw.~p).
 
@@ -635,7 +636,7 @@ set_~p(Uid, Val)->
 set_~p_direct(Uid, Val) ->
     misc_ets:update_element(i_ets(), Uid, {#m_object_rw.~p, Val}),
     ok.
-", [Field, Field, Field, Field, Field, Field, Field, Field, Field]),
+", [Field, Field, Field, Field, Field, Field, Field, Field, Field, Field]),
     write_file(Fname, "~ts", [?SPLIT_LINE]),
     field_body(Fname, FieldList).
 

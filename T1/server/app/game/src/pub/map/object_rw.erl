@@ -117,7 +117,7 @@ i_set_fields(Uid,[FieldTuple | FieldList]) ->
     ?TRY_CATCH(hook_map:on_rw_update(Uid, FieldTuple)),
     i_set_fields(Uid, FieldList).
 %%-------------------------------------------------------------------
-
+%% #m_object_rw.uid
 get_uid(Uid) ->
     misc_ets:read_element(i_ets(), Uid, #m_object_rw.uid).
 
@@ -134,7 +134,7 @@ set_uid_direct(Uid, Val) ->
     misc_ets:update_element(i_ets(), Uid, {#m_object_rw.uid, Val}),
     ok.
 %%-------------------------------------------------------------------
-
+%% #m_object_rw.pid
 get_pid(Uid) ->
     misc_ets:read_element(i_ets(), Uid, #m_object_rw.pid).
 
@@ -151,7 +151,7 @@ set_pid_direct(Uid, Val) ->
     misc_ets:update_element(i_ets(), Uid, {#m_object_rw.pid, Val}),
     ok.
 %%-------------------------------------------------------------------
-
+%% #m_object_rw.data_id
 get_data_id(Uid) ->
     misc_ets:read_element(i_ets(), Uid, #m_object_rw.data_id).
 
@@ -168,7 +168,7 @@ set_data_id_direct(Uid, Val) ->
     misc_ets:update_element(i_ets(), Uid, {#m_object_rw.data_id, Val}),
     ok.
 %%-------------------------------------------------------------------
-
+%% #m_object_rw.group
 get_group(Uid) ->
     misc_ets:read_element(i_ets(), Uid, #m_object_rw.group).
 
@@ -185,7 +185,7 @@ set_group_direct(Uid, Val) ->
     misc_ets:update_element(i_ets(), Uid, {#m_object_rw.group, Val}),
     ok.
 %%-------------------------------------------------------------------
-
+%% #m_object_rw.owner
 get_owner(Uid) ->
     misc_ets:read_element(i_ets(), Uid, #m_object_rw.owner).
 
@@ -202,7 +202,7 @@ set_owner_direct(Uid, Val) ->
     misc_ets:update_element(i_ets(), Uid, {#m_object_rw.owner, Val}),
     ok.
 %%-------------------------------------------------------------------
-
+%% #m_object_rw.type
 get_type(Uid) ->
     misc_ets:read_element(i_ets(), Uid, #m_object_rw.type).
 
@@ -219,7 +219,7 @@ set_type_direct(Uid, Val) ->
     misc_ets:update_element(i_ets(), Uid, {#m_object_rw.type, Val}),
     ok.
 %%-------------------------------------------------------------------
-
+%% #m_object_rw.move_speed
 get_move_speed(Uid) ->
     misc_ets:read_element(i_ets(), Uid, #m_object_rw.move_speed).
 
@@ -236,7 +236,7 @@ set_move_speed_direct(Uid, Val) ->
     misc_ets:update_element(i_ets(), Uid, {#m_object_rw.move_speed, Val}),
     ok.
 %%-------------------------------------------------------------------
-
+%% #m_object_rw.cur_move
 get_cur_move(Uid) ->
     misc_ets:read_element(i_ets(), Uid, #m_object_rw.cur_move).
 
@@ -253,7 +253,7 @@ set_cur_move_direct(Uid, Val) ->
     misc_ets:update_element(i_ets(), Uid, {#m_object_rw.cur_move, Val}),
     ok.
 %%-------------------------------------------------------------------
-
+%% #m_object_rw.next_move
 get_next_move(Uid) ->
     misc_ets:read_element(i_ets(), Uid, #m_object_rw.next_move).
 
@@ -270,7 +270,7 @@ set_next_move_direct(Uid, Val) ->
     misc_ets:update_element(i_ets(), Uid, {#m_object_rw.next_move, Val}),
     ok.
 %%-------------------------------------------------------------------
-
+%% #m_object_rw.vis_tile_idx
 get_vis_tile_idx(Uid) ->
     misc_ets:read_element(i_ets(), Uid, #m_object_rw.vis_tile_idx).
 
@@ -287,7 +287,7 @@ set_vis_tile_idx_direct(Uid, Val) ->
     misc_ets:update_element(i_ets(), Uid, {#m_object_rw.vis_tile_idx, Val}),
     ok.
 %%-------------------------------------------------------------------
-
+%% #m_object_rw.cur_pos
 get_cur_pos(Uid) ->
     misc_ets:read_element(i_ets(), Uid, #m_object_rw.cur_pos).
 
@@ -304,7 +304,7 @@ set_cur_pos_direct(Uid, Val) ->
     misc_ets:update_element(i_ets(), Uid, {#m_object_rw.cur_pos, Val}),
     ok.
 %%-------------------------------------------------------------------
-
+%% #m_object_rw.start_pos
 get_start_pos(Uid) ->
     misc_ets:read_element(i_ets(), Uid, #m_object_rw.start_pos).
 
@@ -321,7 +321,7 @@ set_start_pos_direct(Uid, Val) ->
     misc_ets:update_element(i_ets(), Uid, {#m_object_rw.start_pos, Val}),
     ok.
 %%-------------------------------------------------------------------
-
+%% #m_object_rw.dest_pos
 get_dest_pos(Uid) ->
     misc_ets:read_element(i_ets(), Uid, #m_object_rw.dest_pos).
 
@@ -338,7 +338,7 @@ set_dest_pos_direct(Uid, Val) ->
     misc_ets:update_element(i_ets(), Uid, {#m_object_rw.dest_pos, Val}),
     ok.
 %%-------------------------------------------------------------------
-
+%% #m_object_rw.face
 get_face(Uid) ->
     misc_ets:read_element(i_ets(), Uid, #m_object_rw.face).
 
@@ -355,7 +355,7 @@ set_face_direct(Uid, Val) ->
     misc_ets:update_element(i_ets(), Uid, {#m_object_rw.face, Val}),
     ok.
 %%-------------------------------------------------------------------
-
+%% #m_object_rw.dir
 get_dir(Uid) ->
     misc_ets:read_element(i_ets(), Uid, #m_object_rw.dir).
 
@@ -372,7 +372,7 @@ set_dir_direct(Uid, Val) ->
     misc_ets:update_element(i_ets(), Uid, {#m_object_rw.dir, Val}),
     ok.
 %%-------------------------------------------------------------------
-
+%% #m_object_rw.move_start_time
 get_move_start_time(Uid) ->
     misc_ets:read_element(i_ets(), Uid, #m_object_rw.move_start_time).
 
@@ -389,7 +389,7 @@ set_move_start_time_direct(Uid, Val) ->
     misc_ets:update_element(i_ets(), Uid, {#m_object_rw.move_start_time, Val}),
     ok.
 %%-------------------------------------------------------------------
-
+%% #m_object_rw.seg_move_time
 get_seg_move_time(Uid) ->
     misc_ets:read_element(i_ets(), Uid, #m_object_rw.seg_move_time).
 
@@ -406,7 +406,7 @@ set_seg_move_time_direct(Uid, Val) ->
     misc_ets:update_element(i_ets(), Uid, {#m_object_rw.seg_move_time, Val}),
     ok.
 %%-------------------------------------------------------------------
-
+%% #m_object_rw.force_stopped
 get_force_stopped(Uid) ->
     misc_ets:read_element(i_ets(), Uid, #m_object_rw.force_stopped).
 
@@ -423,7 +423,7 @@ set_force_stopped_direct(Uid, Val) ->
     misc_ets:update_element(i_ets(), Uid, {#m_object_rw.force_stopped, Val}),
     ok.
 %%-------------------------------------------------------------------
-
+%% #m_object_rw.move_path_list
 get_move_path_list(Uid) ->
     misc_ets:read_element(i_ets(), Uid, #m_object_rw.move_path_list).
 
@@ -440,7 +440,7 @@ set_move_path_list_direct(Uid, Val) ->
     misc_ets:update_element(i_ets(), Uid, {#m_object_rw.move_path_list, Val}),
     ok.
 %%-------------------------------------------------------------------
-
+%% #m_object_rw.skill_id
 get_skill_id(Uid) ->
     misc_ets:read_element(i_ets(), Uid, #m_object_rw.skill_id).
 
@@ -457,7 +457,7 @@ set_skill_id_direct(Uid, Val) ->
     misc_ets:update_element(i_ets(), Uid, {#m_object_rw.skill_id, Val}),
     ok.
 %%-------------------------------------------------------------------
-
+%% #m_object_rw.target_uid
 get_target_uid(Uid) ->
     misc_ets:read_element(i_ets(), Uid, #m_object_rw.target_uid).
 
@@ -474,7 +474,7 @@ set_target_uid_direct(Uid, Val) ->
     misc_ets:update_element(i_ets(), Uid, {#m_object_rw.target_uid, Val}),
     ok.
 %%-------------------------------------------------------------------
-
+%% #m_object_rw.skill_serial
 get_skill_serial(Uid) ->
     misc_ets:read_element(i_ets(), Uid, #m_object_rw.skill_serial).
 
@@ -491,7 +491,7 @@ set_skill_serial_direct(Uid, Val) ->
     misc_ets:update_element(i_ets(), Uid, {#m_object_rw.skill_serial, Val}),
     ok.
 %%-------------------------------------------------------------------
-
+%% #m_object_rw.persist_pos
 get_persist_pos(Uid) ->
     misc_ets:read_element(i_ets(), Uid, #m_object_rw.persist_pos).
 
@@ -508,7 +508,7 @@ set_persist_pos_direct(Uid, Val) ->
     misc_ets:update_element(i_ets(), Uid, {#m_object_rw.persist_pos, Val}),
     ok.
 %%-------------------------------------------------------------------
-
+%% #m_object_rw.cur_dmg_index
 get_cur_dmg_index(Uid) ->
     misc_ets:read_element(i_ets(), Uid, #m_object_rw.cur_dmg_index).
 
@@ -525,7 +525,7 @@ set_cur_dmg_index_direct(Uid, Val) ->
     misc_ets:update_element(i_ets(), Uid, {#m_object_rw.cur_dmg_index, Val}),
     ok.
 %%-------------------------------------------------------------------
-
+%% #m_object_rw.operate_time
 get_operate_time(Uid) ->
     misc_ets:read_element(i_ets(), Uid, #m_object_rw.operate_time).
 
@@ -542,7 +542,7 @@ set_operate_time_direct(Uid, Val) ->
     misc_ets:update_element(i_ets(), Uid, {#m_object_rw.operate_time, Val}),
     ok.
 %%-------------------------------------------------------------------
-
+%% #m_object_rw.spell_time
 get_spell_time(Uid) ->
     misc_ets:read_element(i_ets(), Uid, #m_object_rw.spell_time).
 
@@ -559,7 +559,7 @@ set_spell_time_direct(Uid, Val) ->
     misc_ets:update_element(i_ets(), Uid, {#m_object_rw.spell_time, Val}),
     ok.
 %%-------------------------------------------------------------------
-
+%% #m_object_rw.channel_cd
 get_channel_cd(Uid) ->
     misc_ets:read_element(i_ets(), Uid, #m_object_rw.channel_cd).
 
@@ -576,7 +576,7 @@ set_channel_cd_direct(Uid, Val) ->
     misc_ets:update_element(i_ets(), Uid, {#m_object_rw.channel_cd, Val}),
     ok.
 %%-------------------------------------------------------------------
-
+%% #m_object_rw.skill_queue
 get_skill_queue(Uid) ->
     misc_ets:read_element(i_ets(), Uid, #m_object_rw.skill_queue).
 
@@ -593,7 +593,7 @@ set_skill_queue_direct(Uid, Val) ->
     misc_ets:update_element(i_ets(), Uid, {#m_object_rw.skill_queue, Val}),
     ok.
 %%-------------------------------------------------------------------
-
+%% #m_object_rw.hp
 get_hp(Uid) ->
     misc_ets:read_element(i_ets(), Uid, #m_object_rw.hp).
 
@@ -610,7 +610,7 @@ set_hp_direct(Uid, Val) ->
     misc_ets:update_element(i_ets(), Uid, {#m_object_rw.hp, Val}),
     ok.
 %%-------------------------------------------------------------------
-
+%% #m_object_rw.max_hp
 get_max_hp(Uid) ->
     misc_ets:read_element(i_ets(), Uid, #m_object_rw.max_hp).
 
@@ -627,7 +627,7 @@ set_max_hp_direct(Uid, Val) ->
     misc_ets:update_element(i_ets(), Uid, {#m_object_rw.max_hp, Val}),
     ok.
 %%-------------------------------------------------------------------
-
+%% #m_object_rw.prop_list
 get_prop_list(Uid) ->
     misc_ets:read_element(i_ets(), Uid, #m_object_rw.prop_list).
 
@@ -644,7 +644,7 @@ set_prop_list_direct(Uid, Val) ->
     misc_ets:update_element(i_ets(), Uid, {#m_object_rw.prop_list, Val}),
     ok.
 %%-------------------------------------------------------------------
-
+%% #m_object_rw.buff_list
 get_buff_list(Uid) ->
     misc_ets:read_element(i_ets(), Uid, #m_object_rw.buff_list).
 
@@ -661,7 +661,7 @@ set_buff_list_direct(Uid, Val) ->
     misc_ets:update_element(i_ets(), Uid, {#m_object_rw.buff_list, Val}),
     ok.
 %%-------------------------------------------------------------------
-
+%% #m_object_rw.ai_state
 get_ai_state(Uid) ->
     misc_ets:read_element(i_ets(), Uid, #m_object_rw.ai_state).
 
@@ -678,7 +678,7 @@ set_ai_state_direct(Uid, Val) ->
     misc_ets:update_element(i_ets(), Uid, {#m_object_rw.ai_state, Val}),
     ok.
 %%-------------------------------------------------------------------
-
+%% #m_object_rw.pre_ai_state
 get_pre_ai_state(Uid) ->
     misc_ets:read_element(i_ets(), Uid, #m_object_rw.pre_ai_state).
 
@@ -695,7 +695,7 @@ set_pre_ai_state_direct(Uid, Val) ->
     misc_ets:update_element(i_ets(), Uid, {#m_object_rw.pre_ai_state, Val}),
     ok.
 %%-------------------------------------------------------------------
-
+%% #m_object_rw.ai_transition
 get_ai_transition(Uid) ->
     misc_ets:read_element(i_ets(), Uid, #m_object_rw.ai_transition).
 
@@ -712,7 +712,7 @@ set_ai_transition_direct(Uid, Val) ->
     misc_ets:update_element(i_ets(), Uid, {#m_object_rw.ai_transition, Val}),
     ok.
 %%-------------------------------------------------------------------
-
+%% #m_object_rw.ai_triggers
 get_ai_triggers(Uid) ->
     misc_ets:read_element(i_ets(), Uid, #m_object_rw.ai_triggers).
 
@@ -729,7 +729,7 @@ set_ai_triggers_direct(Uid, Val) ->
     misc_ets:update_element(i_ets(), Uid, {#m_object_rw.ai_triggers, Val}),
     ok.
 %%-------------------------------------------------------------------
-
+%% #m_object_rw.ai_pause
 get_ai_pause(Uid) ->
     misc_ets:read_element(i_ets(), Uid, #m_object_rw.ai_pause).
 
@@ -746,7 +746,7 @@ set_ai_pause_direct(Uid, Val) ->
     misc_ets:update_element(i_ets(), Uid, {#m_object_rw.ai_pause, Val}),
     ok.
 %%-------------------------------------------------------------------
-
+%% #m_object_rw.ai_id
 get_ai_id(Uid) ->
     misc_ets:read_element(i_ets(), Uid, #m_object_rw.ai_id).
 
@@ -763,7 +763,7 @@ set_ai_id_direct(Uid, Val) ->
     misc_ets:update_element(i_ets(), Uid, {#m_object_rw.ai_id, Val}),
     ok.
 %%-------------------------------------------------------------------
-
+%% #m_object_rw.ai_wp_list
 get_ai_wp_list(Uid) ->
     misc_ets:read_element(i_ets(), Uid, #m_object_rw.ai_wp_list).
 
@@ -780,7 +780,7 @@ set_ai_wp_list_direct(Uid, Val) ->
     misc_ets:update_element(i_ets(), Uid, {#m_object_rw.ai_wp_list, Val}),
     ok.
 %%-------------------------------------------------------------------
-
+%% #m_object_rw.ai_wp_num
 get_ai_wp_num(Uid) ->
     misc_ets:read_element(i_ets(), Uid, #m_object_rw.ai_wp_num).
 
@@ -797,7 +797,7 @@ set_ai_wp_num_direct(Uid, Val) ->
     misc_ets:update_element(i_ets(), Uid, {#m_object_rw.ai_wp_num, Val}),
     ok.
 %%-------------------------------------------------------------------
-
+%% #m_object_rw.ai_wp_idx
 get_ai_wp_idx(Uid) ->
     misc_ets:read_element(i_ets(), Uid, #m_object_rw.ai_wp_idx).
 
@@ -814,7 +814,7 @@ set_ai_wp_idx_direct(Uid, Val) ->
     misc_ets:update_element(i_ets(), Uid, {#m_object_rw.ai_wp_idx, Val}),
     ok.
 %%-------------------------------------------------------------------
-
+%% #m_object_rw.ai_is_reverse_patrol
 get_ai_is_reverse_patrol(Uid) ->
     misc_ets:read_element(i_ets(), Uid, #m_object_rw.ai_is_reverse_patrol).
 
@@ -831,7 +831,7 @@ set_ai_is_reverse_patrol_direct(Uid, Val) ->
     misc_ets:update_element(i_ets(), Uid, {#m_object_rw.ai_is_reverse_patrol, Val}),
     ok.
 %%-------------------------------------------------------------------
-
+%% #m_object_rw.ai_is_patrol
 get_ai_is_patrol(Uid) ->
     misc_ets:read_element(i_ets(), Uid, #m_object_rw.ai_is_patrol).
 
@@ -848,7 +848,7 @@ set_ai_is_patrol_direct(Uid, Val) ->
     misc_ets:update_element(i_ets(), Uid, {#m_object_rw.ai_is_patrol, Val}),
     ok.
 %%-------------------------------------------------------------------
-
+%% #m_object_rw.ai_patrol_rest_tick
 get_ai_patrol_rest_tick(Uid) ->
     misc_ets:read_element(i_ets(), Uid, #m_object_rw.ai_patrol_rest_tick).
 
@@ -865,7 +865,7 @@ set_ai_patrol_rest_tick_direct(Uid, Val) ->
     misc_ets:update_element(i_ets(), Uid, {#m_object_rw.ai_patrol_rest_tick, Val}),
     ok.
 %%-------------------------------------------------------------------
-
+%% #m_object_rw.ai_look_for_target_tick
 get_ai_look_for_target_tick(Uid) ->
     misc_ets:read_element(i_ets(), Uid, #m_object_rw.ai_look_for_target_tick).
 
@@ -882,7 +882,7 @@ set_ai_look_for_target_tick_direct(Uid, Val) ->
     misc_ets:update_element(i_ets(), Uid, {#m_object_rw.ai_look_for_target_tick, Val}),
     ok.
 %%-------------------------------------------------------------------
-
+%% #m_object_rw.ai_pursue_tar_pos
 get_ai_pursue_tar_pos(Uid) ->
     misc_ets:read_element(i_ets(), Uid, #m_object_rw.ai_pursue_tar_pos).
 
@@ -899,7 +899,7 @@ set_ai_pursue_tar_pos_direct(Uid, Val) ->
     misc_ets:update_element(i_ets(), Uid, {#m_object_rw.ai_pursue_tar_pos, Val}),
     ok.
 %%-------------------------------------------------------------------
-
+%% #m_object_rw.ai_pursue_failed
 get_ai_pursue_failed(Uid) ->
     misc_ets:read_element(i_ets(), Uid, #m_object_rw.ai_pursue_failed).
 
@@ -916,7 +916,7 @@ set_ai_pursue_failed_direct(Uid, Val) ->
     misc_ets:update_element(i_ets(), Uid, {#m_object_rw.ai_pursue_failed, Val}),
     ok.
 %%-------------------------------------------------------------------
-
+%% #m_object_rw.ai_cant_pursue
 get_ai_cant_pursue(Uid) ->
     misc_ets:read_element(i_ets(), Uid, #m_object_rw.ai_cant_pursue).
 
@@ -933,7 +933,7 @@ set_ai_cant_pursue_direct(Uid, Val) ->
     misc_ets:update_element(i_ets(), Uid, {#m_object_rw.ai_cant_pursue, Val}),
     ok.
 %%-------------------------------------------------------------------
-
+%% #m_object_rw.ai_check_pursue_tick
 get_ai_check_pursue_tick(Uid) ->
     misc_ets:read_element(i_ets(), Uid, #m_object_rw.ai_check_pursue_tick).
 
@@ -950,7 +950,7 @@ set_ai_check_pursue_tick_direct(Uid, Val) ->
     misc_ets:update_element(i_ets(), Uid, {#m_object_rw.ai_check_pursue_tick, Val}),
     ok.
 %%-------------------------------------------------------------------
-
+%% #m_object_rw.ai_target_uid
 get_ai_target_uid(Uid) ->
     misc_ets:read_element(i_ets(), Uid, #m_object_rw.ai_target_uid).
 
@@ -967,7 +967,7 @@ set_ai_target_uid_direct(Uid, Val) ->
     misc_ets:update_element(i_ets(), Uid, {#m_object_rw.ai_target_uid, Val}),
     ok.
 %%-------------------------------------------------------------------
-
+%% #m_object_rw.ai_enter_combat_time
 get_ai_enter_combat_time(Uid) ->
     misc_ets:read_element(i_ets(), Uid, #m_object_rw.ai_enter_combat_time).
 
@@ -984,7 +984,7 @@ set_ai_enter_combat_time_direct(Uid, Val) ->
     misc_ets:update_element(i_ets(), Uid, {#m_object_rw.ai_enter_combat_time, Val}),
     ok.
 %%-------------------------------------------------------------------
-
+%% #m_object_rw.ai_enter_combat_pos
 get_ai_enter_combat_pos(Uid) ->
     misc_ets:read_element(i_ets(), Uid, #m_object_rw.ai_enter_combat_pos).
 
@@ -1001,7 +1001,7 @@ set_ai_enter_combat_pos_direct(Uid, Val) ->
     misc_ets:update_element(i_ets(), Uid, {#m_object_rw.ai_enter_combat_pos, Val}),
     ok.
 %%-------------------------------------------------------------------
-
+%% #m_object_rw.ai_use_skill_id
 get_ai_use_skill_id(Uid) ->
     misc_ets:read_element(i_ets(), Uid, #m_object_rw.ai_use_skill_id).
 
@@ -1018,7 +1018,7 @@ set_ai_use_skill_id_direct(Uid, Val) ->
     misc_ets:update_element(i_ets(), Uid, {#m_object_rw.ai_use_skill_id, Val}),
     ok.
 %%-------------------------------------------------------------------
-
+%% #m_object_rw.ai_attack_wait_tick
 get_ai_attack_wait_tick(Uid) ->
     misc_ets:read_element(i_ets(), Uid, #m_object_rw.ai_attack_wait_tick).
 
@@ -1035,7 +1035,7 @@ set_ai_attack_wait_tick_direct(Uid, Val) ->
     misc_ets:update_element(i_ets(), Uid, {#m_object_rw.ai_attack_wait_tick, Val}),
     ok.
 %%-------------------------------------------------------------------
-
+%% #m_object_rw.ai_skill_serial
 get_ai_skill_serial(Uid) ->
     misc_ets:read_element(i_ets(), Uid, #m_object_rw.ai_skill_serial).
 
@@ -1052,7 +1052,7 @@ set_ai_skill_serial_direct(Uid, Val) ->
     misc_ets:update_element(i_ets(), Uid, {#m_object_rw.ai_skill_serial, Val}),
     ok.
 %%-------------------------------------------------------------------
-
+%% #m_object_rw.ai_flee_dst
 get_ai_flee_dst(Uid) ->
     misc_ets:read_element(i_ets(), Uid, #m_object_rw.ai_flee_dst).
 
@@ -1069,7 +1069,7 @@ set_ai_flee_dst_direct(Uid, Val) ->
     misc_ets:update_element(i_ets(), Uid, {#m_object_rw.ai_flee_dst, Val}),
     ok.
 %%-------------------------------------------------------------------
-
+%% #m_object_rw.ai_flee_dir
 get_ai_flee_dir(Uid) ->
     misc_ets:read_element(i_ets(), Uid, #m_object_rw.ai_flee_dir).
 
@@ -1086,7 +1086,7 @@ set_ai_flee_dir_direct(Uid, Val) ->
     misc_ets:update_element(i_ets(), Uid, {#m_object_rw.ai_flee_dir, Val}),
     ok.
 %%-------------------------------------------------------------------
-
+%% #m_object_rw.ai_flee_tick
 get_ai_flee_tick(Uid) ->
     misc_ets:read_element(i_ets(), Uid, #m_object_rw.ai_flee_tick).
 
@@ -1103,7 +1103,7 @@ set_ai_flee_tick_direct(Uid, Val) ->
     misc_ets:update_element(i_ets(), Uid, {#m_object_rw.ai_flee_tick, Val}),
     ok.
 %%-------------------------------------------------------------------
-
+%% #m_object_rw.ai_is_arrived_flee_pos
 get_ai_is_arrived_flee_pos(Uid) ->
     misc_ets:read_element(i_ets(), Uid, #m_object_rw.ai_is_arrived_flee_pos).
 
@@ -1120,7 +1120,7 @@ set_ai_is_arrived_flee_pos_direct(Uid, Val) ->
     misc_ets:update_element(i_ets(), Uid, {#m_object_rw.ai_is_arrived_flee_pos, Val}),
     ok.
 %%-------------------------------------------------------------------
-
+%% #m_object_rw.enmity_list
 get_enmity_list(Uid) ->
     misc_ets:read_element(i_ets(), Uid, #m_object_rw.enmity_list).
 
@@ -1137,7 +1137,7 @@ set_enmity_list_direct(Uid, Val) ->
     misc_ets:update_element(i_ets(), Uid, {#m_object_rw.enmity_list, Val}),
     ok.
 %%-------------------------------------------------------------------
-
+%% #m_object_rw.max_enmity_uid
 get_max_enmity_uid(Uid) ->
     misc_ets:read_element(i_ets(), Uid, #m_object_rw.max_enmity_uid).
 
@@ -1154,7 +1154,7 @@ set_max_enmity_uid_direct(Uid, Val) ->
     misc_ets:update_element(i_ets(), Uid, {#m_object_rw.max_enmity_uid, Val}),
     ok.
 %%-------------------------------------------------------------------
-
+%% #m_object_rw.ai_lock_target_tick
 get_ai_lock_target_tick(Uid) ->
     misc_ets:read_element(i_ets(), Uid, #m_object_rw.ai_lock_target_tick).
 
@@ -1171,7 +1171,7 @@ set_ai_lock_target_tick_direct(Uid, Val) ->
     misc_ets:update_element(i_ets(), Uid, {#m_object_rw.ai_lock_target_tick, Val}),
     ok.
 %%-------------------------------------------------------------------
-
+%% #m_object_rw.no_inc_enmity_tick
 get_no_inc_enmity_tick(Uid) ->
     misc_ets:read_element(i_ets(), Uid, #m_object_rw.no_inc_enmity_tick).
 

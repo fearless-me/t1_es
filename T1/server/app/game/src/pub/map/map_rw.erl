@@ -182,8 +182,6 @@ check_tick(Milliseconds) ->
     set_tick_info(Info).
 
 %%-------------------------------------------------------------------
-do_check_tick(undefined, Milliseconds) ->
-    #tick_info{runs = 1, timeout = 0, max = Milliseconds, min = Milliseconds};
 do_check_tick(#tick_info{runs = C, timeout = TC, min = Min, max = Max} = Info, Milliseconds) when Milliseconds > ?MAP_TICK ->
     Info#tick_info{
         runs = C + 1,

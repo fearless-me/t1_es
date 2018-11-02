@@ -26,7 +26,7 @@ getRow(4) ->
 		enum_string_id = "",
 		type = 4,
 		notice_type = 0,
-		content = "4"
+		content = "拳击"
 	};
 getRow(5) ->
 	#string_packageCfg{
@@ -44,7 +44,7 @@ getRow(6) ->
 		enum_string_id = "",
 		type = 4,
 		notice_type = 0,
-		content = "6"
+		content = "蓄力重拳"
 	};
 getRow(7) ->
 	#string_packageCfg{
@@ -62,7 +62,7 @@ getRow(8) ->
 		enum_string_id = "",
 		type = 4,
 		notice_type = 0,
-		content = "8"
+		content = "加班续命"
 	};
 getRow(9) ->
 	#string_packageCfg{
@@ -73,6 +73,42 @@ getRow(9) ->
 		notice_type = 0,
 		content = "边回边打"
 	};
+getRow(0) ->
+	#string_packageCfg{
+		desc__ = "test_server",
+		id = 0,
+		enum_string_id = "server_system",
+		type = 1,
+		notice_type = 0,
+		content = "服务器内部定义"
+	};
+getRow(1) ->
+	#string_packageCfg{
+		desc__ = "test_client",
+		id = 1,
+		enum_string_id = "client_system",
+		type = 2,
+		notice_type = 0,
+		content = "客户端内部定义"
+	};
+getRow(2) ->
+	#string_packageCfg{
+		desc__ = "test_ui",
+		id = 2,
+		enum_string_id = "ui_system",
+		type = 3,
+		notice_type = 0,
+		content = "客户端UI使用定义"
+	};
+getRow(1000000) ->
+	#string_packageCfg{
+		desc__ = "剑圣",
+		id = 1000000,
+		enum_string_id = "",
+		type = 4,
+		notice_type = 0,
+		content = "剑圣"
+	};
 getRow(_) -> {}.
 
 getKeyList() -> [
@@ -82,7 +118,11 @@ getKeyList() -> [
 	{6},
 	{7},
 	{8},
-	{9}
+	{9},
+	{0},
+	{1},
+	{2},
+	{1000000}
 ].
 
 get1KeyList() -> [
@@ -92,6 +132,10 @@ get1KeyList() -> [
 	6,
 	7,
 	8,
-	9
+	9,
+	0,
+	1,
+	2,
+	1000000
 ].
 

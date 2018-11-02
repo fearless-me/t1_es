@@ -171,9 +171,10 @@ tick_obj(S) ->
     ?TRY_CATCH(tick_player(S), Err2, Stk2),
     ?TRY_CATCH(tick_monster(S), Err3, Stk3),
     ?TRY_CATCH(tick_pet(S), Err4, Stk4),
+    ?TRY_CATCH(tick_respawn_monster(S), Err5, Stk5),
     %------------------
     
-    ?TRY_CATCH(tick_update_after(S), Err5, Stk5),
+    ?TRY_CATCH(tick_update_after(S), Err, Stk),
     ok.
 
 %%-------------------------------------------------------------------
@@ -221,6 +222,10 @@ tick_pet_1(Obj, _) ->
     ?TRY_CATCH(mod_move:update(Obj), Err1, Stk1),
     ?TRY_CATCH(mod_combat:tick(Obj), Err2, Stk2),
     ?TRY_CATCH(mod_buff:tick(Obj), Err3, Stk3),
+    ok.
+
+%%-------------------------------------------------------------------
+tick_respawn_monster(_S) ->
     ok.
 
 %%-------------------------------------------------------------------
