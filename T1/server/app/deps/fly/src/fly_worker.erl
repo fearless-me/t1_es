@@ -41,8 +41,9 @@
     file = "",
     ref_files = []
 }).
--define(INC_REF_SRC_ETS, inc_ref_src_ets__).
--define(SRC_REF_INC_ETS, src_ref_inc_ets__).
+-define(INC_REF_SRC_ETS, fly_inc_ref_src_ets__).
+-define(SRC_REF_INC_ETS, fly_src_ref_inc_ets__).
+-define(ANY_REF_DIR_ETS, fly_any_ref_dir_ets__).
 
 
 %% API
@@ -100,6 +101,13 @@ mod_init(_Args) ->
             {write_concurrency, true},
             {read_concurrency, true}
         ]),
+    ets:new(?ANY_REF_DIR_ETS,
+        [
+            named_table, set, public,
+            {keypos, #hrl_file_srcs.file},
+            {write_concurrency, true},
+            {read_concurrency, true}
+        ]),
     timer:apply_interval(Interval, fly_worker, run_now, []),
     ?WARN("fly worker stared!"),
     {ok, #state{}}.
@@ -134,6 +142,7 @@ do_handle_cast(Request, State) ->
 
 %%-------------------------------------------------------------------
 discover_src_dirs(State) ->
+    ets:delete_all_objects(?ANY_REF_DIR_ETS),
     SrcDirs = fly:info(src_dirs),
     IncDirs = fly:info(inc_dirs),
     Options = fly:info(opts),
@@ -167,6 +176,8 @@ compare_src_files(State) ->
         end,
     NewSrcFileLastMod = lists:usort([F(X) || X <- State#state.src_files]),
 
+    lists:foreach(fun(IncFile) -> process_source_code_conflict(IncFile) end, State#state.src_files),
+
     %% Compare to previous results, if there are changes, then recompile the file...
     process_src_file_lastmod(State#state.src_file_lastmod, NewSrcFileLastMod, State#state.compile_opts),
 
@@ -183,6 +194,8 @@ compare_hrl_files(State) ->
             {X, LastMod}
         end,
     NewHrlFileLastMod = lists:usort([F(X) || X <- State#state.hrl_files]),
+
+    lists:foreach(fun(IncFile) -> process_source_code_conflict(IncFile) end, State#state.hrl_files),
 
     %% Compare to previous results, if there are changes, then recompile src files that depends
     process_hrl_file_lastmod(State#state.hrl_file_lastmod, NewHrlFileLastMod, State#state.src_files, State#state.compile_opts),
@@ -220,6 +233,21 @@ process_inc_files(SrcFile) ->
     catch _:_:_ -> skip
     end.
 
+process_source_code_conflict(SourceFile) ->
+    SrcFileBaseName = filename:basename(SourceFile),
+    case ets:lookup(?ANY_REF_DIR_ETS, SrcFileBaseName) of
+        [] -> ets:insert(?ANY_REF_DIR_ETS, #hrl_file_srcs{file = SrcFileBaseName, ref_files = [SourceFile]});
+        [#hrl_file_srcs{ref_files = [SourceFile]}] -> skip;
+        [#hrl_file_srcs{ref_files = ConflictFiles}] ->
+            case lists:member(SourceFile, ConflictFiles) of
+                true -> ?ERROR("~n~ts~n~ts~n",[SrcFileBaseName, string:join(ConflictFiles, "\n")]);
+                _Any ->
+                    ?ERROR("~n~ts~n~ts~n",[SrcFileBaseName, string:join([SourceFile | ConflictFiles], "\n")]),
+                    ets:insert(?ANY_REF_DIR_ETS, #hrl_file_srcs{file = SrcFileBaseName, ref_files = [SourceFile | ConflictFiles]})
+            end
+    end,
+    ok.
+
 do_process_inc_files(SrcFile, Forms) ->
     IncludeFiles = src_file_include([], Forms),
 
@@ -243,9 +271,6 @@ do_process_inc_files(SrcFile, Forms) ->
             ok
     end,
 
-    ets:insert(?SRC_REF_INC_ETS, #hrl_file_srcs{
-        file = SrcFile, ref_files = IncludeFiles
-    }),
 
     %% 头文件修改或者.erl添加了头文件
     lists:foreach(
@@ -267,6 +292,7 @@ do_process_inc_files(SrcFile, Forms) ->
                     end
             end
         end, IncludeFiles),
+    ets:insert(?SRC_REF_INC_ETS, #hrl_file_srcs{file =SrcFile, ref_files = IncludeFiles}),
     ok.
 
 process_src_file_incs_1(PidList, []) ->

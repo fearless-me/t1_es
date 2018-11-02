@@ -70,11 +70,7 @@ mod_init({Ref, Socket, ranch_tcp, Opts}) ->
     {ok, S} = Handler:on_init(Socket),
     erlang:process_flag(trap_exit, true),
     gen_serverw:continue_effective_monitor(self(),  200),
-    #state{
-        socket = Socket,
-        handler = Handler,
-        cli_data = S
-    }.
+    #state{socket = Socket, handler = Handler, cli_data = S}.
 
 
 %%--------------------------------------------------------------------	
