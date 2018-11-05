@@ -81,7 +81,7 @@
 %% 地图进程状态
 -record(m_map_state, {map_id = 0, line_id = 0, ets, respawn = [], hook_mod, status = ?MAP_NORMAL, protect_tick = ?DEAD_LINE_PROTECT div ?MAP_TICK}).
 %% 地图线路
--record(m_map_line, {map_id = 0, line_id = 0, pid, limits = 50, in = 0, reserve = 10, dead_line = 0, status = ?MAP_NORMAL}).
+-record(m_map_line, {map_id = 0, line_id = 0, pid, limits = 150, in = 0, reserve = 10, dead_line = 0, status = ?MAP_NORMAL}).
 
 
 %% 地图单位类型

@@ -39,10 +39,11 @@
 -define(VIS_H, map_vis_h__).
 -define(CELL_SIZE, map_cell_size__).
 
+
 sync_player_join_group(Uid, Group) ->
     %1.
     Obj = map_rw:find_unit(?OBJ_PLAYER, Uid),
-    Index = pos_to_vis_index(object_rw:get_cur_pos(Uid), get(?VIS_W), ?VIS_DIST),
+    Index = pos_to_vis_index(object_rw:get_cur_pos(Uid), visual_w(), ?VIS_DIST),
     
     %2.
     ?TRY_CATCH(del_obj_from_vis_tile(Obj, Index)),
@@ -64,7 +65,7 @@ sync_player_join_map(Obj) ->
     %1.
     Uid = object_core:get_uid(Obj),
     Pos = object_rw:get_cur_pos(Uid),
-    Index = pos_to_vis_index(Pos, get(?VIS_W), ?VIS_DIST),
+    Index = pos_to_vis_index(Pos, visual_w(), ?VIS_DIST),
     Tiles = get_vis_tile_around(Index),
     
     %2.
@@ -76,7 +77,7 @@ sync_player_join_map(Obj) ->
 sync_player_exit_map(Obj) ->
     %1.
     Uid = object_core:get_uid(Obj),
-    Index = pos_to_vis_index(object_rw:get_cur_pos(Uid), get(?VIS_W), ?VIS_DIST),
+    Index = pos_to_vis_index(object_rw:get_cur_pos(Uid), visual_w(), ?VIS_DIST),
     
     %2.
     ?TRY_CATCH(del_obj_from_vis_tile(Obj, Index)),
@@ -99,23 +100,34 @@ init_vis_tile(#recGameMapCfg{
     VisW = (erlang:trunc(Col * 1) div ?VIS_DIST) + 1,
     VisH = (erlang:trunc(Row * 1) div ?VIS_DIST) + 1,
     VisT = VisW * VisH,
-    
+
     ?assert(VisT > 1),
-    
-    put(?VIS_W, VisW),
-    put(?VIS_H, VisH),
-    put(?CELL_SIZE, CellSize),
-    init_vis_tile_1(VisT),
+
+
+    visual_w(VisW),
+    visual_h(VisH),
+    map_cell_size(CellSize),
+    ViewMaps = init_vis_tile_1(VisT, #{}),
+    erlang:put(?VIS_K, ViewMaps),
     ok.
 
 %%-------------------------------------------------------------------
-init_vis_tile_1(X) when X < 0 ->
-    ?ERROR("");
-init_vis_tile_1(X) when X =:= 0 ->
-    ok;
-init_vis_tile_1(X) ->
-    set_vis_tile(X, #m_vis_tile{index = X}),
-    init_vis_tile_1(X - 1).
+init_vis_tile_1(X, ViewMaps) when X < 0 ->
+    ?ERROR(""),
+    ViewMaps;
+init_vis_tile_1(X, ViewMaps) when X =:= 0 ->
+    ViewMaps;
+init_vis_tile_1(X, ViewMaps) ->
+%%    set_vis_tile(X, #m_vis_tile{index = X}),
+
+    init_vis_tile_1(X - 1, ViewMaps#{ X => #m_vis_tile{index = X} }).
+%%init_vis_tile_1(X) when X < 0 ->
+%%    ?ERROR("");
+%%init_vis_tile_1(X) when X =:= 0 ->
+%%    ok;
+%%init_vis_tile_1(X) ->
+%%    set_vis_tile(X, #m_vis_tile{index = X}),
+%%    init_vis_tile_1(X - 1).
 
 %%-------------------------------------------------------------------
 send_net_msg_to_visual(Uid, NetMsg) ->
@@ -275,7 +287,7 @@ add_obj_to_vis_tile(Obj, VisTileIndex) ->
 
 %%
 add_to_vis_tile_1(Type, Uid, VisTileIndex, undefined) ->
-    W = get(?VIS_W), H = get(?VIS_H),
+    W = visual_w(), H = visual_h(),
     ?ERROR("map ~p add t ~p  code ~p to visIdx ~p invalid ~p, W ~p H ~p",
         [map_rw:map_id(), Type, Uid, VisTileIndex, W * H, W, H]);
 add_to_vis_tile_1(?OBJ_PLAYER, Uid, VisTileIndex, VisTile) ->
@@ -313,7 +325,7 @@ del_obj_from_vis_tile(Obj, VisTileIndex) ->
 
 %%
 del_from_vis_tile_1(Type, Uid, VisTileIndex, undefined) ->
-    W = get(?VIS_W), H = get(?VIS_H),
+    W = visual_w(), H = visual_h(),
     ?ERROR("del t ~p, code ~p to visIdx ~p invalid ~p, W ~p H ~p",
         [Type, Uid, VisTileIndex, W * H, W, H]);
 del_from_vis_tile_1(?OBJ_PLAYER, Uid, VisTileIndex, VisTile) ->
@@ -431,11 +443,11 @@ sync_me_to_big_vis_tile(Obj, VisTileList, add_me) ->
 
 %%-------------------------------------------------------------------
 pos_to_vis_index(Pos) ->
-    pos_to_vis_index(Pos, get(?VIS_W), ?VIS_DIST).
+    pos_to_vis_index(Pos, visual_w(), ?VIS_DIST).
 
 %% vector3 
 pos_to_vis_index(Pos, VisTileWidth, ViewDist) ->
-    CellSize = get(?CELL_SIZE),
+    CellSize = map_cell_size(),
     IndexX = trunc(vector3:x(Pos) / CellSize / ?TILE_SCALE / ViewDist) + 1,
     IndexZ = trunc(vector3:z(Pos) / CellSize / ?TILE_SCALE / ViewDist) + 1,
     
@@ -463,8 +475,8 @@ get_vis_tile_around_index(VisTileIndex) ->
 %%    | bl |  b | br |
 %%    +--------------+
     ?assert(VisTileIndex > 0),
-    W = get(?VIS_W),
-    H = get(?VIS_H),
+    W = visual_w(),
+    H = visual_h(),
     C = VisTileIndex,
     L = C - 1,
     R = C + 1,
@@ -479,13 +491,25 @@ get_vis_tile_around_index(VisTileIndex) ->
 
 %%-------------------------------------------------------------------
 get_vis_tile(VisTileIndex) ->
-    get({?VIS_K, VisTileIndex}).
+    #{VisTileIndex := ViewTile} = erlang:get(?VIS_K),
+    ViewTile.
+%%    erlang:get({?VIS_K, VisTileIndex}).
 
 %%-------------------------------------------------------------------
 set_vis_tile(VisTileIndex, VisTile) ->
-    put({?VIS_K, VisTileIndex}, VisTile).
+    Maps = erlang:get(?VIS_K),
+    erlang:put(?VIS_K, Maps#{ VisTileIndex := VisTile}).
+%%    put({?VIS_K, VisTileIndex}, VisTile).
 
 %%-------------------------------------------------------------------
 %%is_visible(_Self, _Target) -> true.
 
 
+visual_w() -> erlang:get(?VIS_W).
+visual_w(Width) -> erlang:put(?VIS_W, Width).
+
+visual_h() -> erlang:get(?VIS_H).
+visual_h(Height) -> erlang:put(?VIS_H, Height).
+
+map_cell_size() -> erlang:get(?CELL_SIZE).
+map_cell_size(CS) -> erlang:put(?CELL_SIZE, CS).
