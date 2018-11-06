@@ -124,7 +124,7 @@ start_player_walk_1(Uid, Start, End) ->
     % 路点变化时同步到ETS
     start_walk_set(Uid, ?EMS_WALK, ?EMS_STAND, Start, End, Dir, Dir, Now, PathList),
     on_obj_pos_change(Uid, Start),
-    map_view:sync_movement_to_big_visual_tile(Uid),
+    mod_view:sync_movement_to_big_visual_tile(Uid),
     hook_map:on_start_move(Uid),
     ok.
 
@@ -137,7 +137,7 @@ stop_player_move(Uid, Pos) ->
 stop_player_move_1(Uid, Pos) ->
     stop_move_set(Uid, Pos),
     on_obj_pos_change(Uid, Pos),
-    map_view:sync_movement_to_big_visual_tile(Uid),
+    mod_view:sync_movement_to_big_visual_tile(Uid),
     ok.
 
 %%-------------------------------------------------------------------
@@ -297,12 +297,12 @@ on_obj_pos_change(Uid, Tar) ->
     %% ?DEBUG("~w pos change ~w", [Uid, Tar]),
     Src = object_rw:get_cur_pos(Uid),
     Obj = map_rw:find_unit(Uid),
-    OldVisIndex = map_view:pos_to_vis_index(Src),
-    NewVisIndex = map_view:pos_to_vis_index(Tar),
+    OldVisIndex = mod_view:pos_to_vis_index(Src),
+    NewVisIndex = mod_view:pos_to_vis_index(Tar),
 %%    ?DEBUG("in map ~p obj ~p ~ts pos change from ~w, ~w",
 %%        [lib_map_rw:get_map_id(), Uid, Obj#m_map_obj.name, Src, Tar]),
     ?assert(OldVisIndex > 0 andalso NewVisIndex > 0),
-    map_view:sync_change_pos_visual_tile(Obj, OldVisIndex, NewVisIndex),
+    mod_view:sync_change_pos_visual_tile(Obj, OldVisIndex, NewVisIndex),
     object_rw:set_cur_pos(Uid, Tar),
     on_obj_pos_changed(object_rw:get_type(Uid), Uid, Tar),
     ok.
@@ -382,7 +382,7 @@ do_start_monster_walk(Uid, Dst, MoveState) ->
     
     %
     start_walk_set(Uid, MoveState, ?EMS_STAND, Start, Dst, Dir, Dir, Now, PathList),
-    map_view:sync_movement_to_big_visual_tile(Uid),
+    mod_view:sync_movement_to_big_visual_tile(Uid),
     hook_map:on_start_move(Uid),
     true.
 
@@ -451,7 +451,7 @@ stop_move(Uid, NeedBroadcast) ->
             stop_move_set(Uid, CurPos),
             object_rw:set_force_stopped(Uid, true),
             case NeedBroadcast of
-                true -> map_view:sync_movement_to_big_visual_tile(Uid);
+                true -> mod_view:sync_movement_to_big_visual_tile(Uid);
                 _ -> skip
             end;
         true -> skip
@@ -468,7 +468,7 @@ stop_move_force(Uid, NeedBroadcast) ->
             CurPos = object_rw:get_cur_pos(Uid),
             stop_move_set(Uid, CurPos),
             case NeedBroadcast of
-                true -> map_view:sync_movement_to_big_visual_tile(Uid);
+                true -> mod_view:sync_movement_to_big_visual_tile(Uid);
                 _ -> skip
             end;
         true -> skip

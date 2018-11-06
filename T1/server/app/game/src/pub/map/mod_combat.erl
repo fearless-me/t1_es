@@ -53,7 +53,7 @@ do_use_skill(Aer, Der, SkillCfg, Serial, SkillId) ->
         serial = Serial,
         error_code = 0
     },
-    map_view:send_net_msg_to_visual(Aer, NetMsg),
+    mod_view:send_net_msg_to_visual(Aer, NetMsg),
     
     %% 触发事件
     ?TRY_CATCH(trigger_before_cast_event(Aer, Der, SkillCfg)),
@@ -111,13 +111,13 @@ calculate_dmg(Uid, #skillCfg{id = SkillId} = SkillCfg, TargetUid, Serial) ->
     HitMsg = #pk_GS2U_HitTarget{
         uid = TargetUid, src_uid = Uid, cause = ?HIT_REASON_SKILL, misc = SkillId, serial = Serial
     },
-    map_view:send_net_msg_to_visual(TargetUid, HitMsg),
+    mod_view:send_net_msg_to_visual(TargetUid, HitMsg),
     
     HpMsg = #pk_GS2U_HPChange{
         uid = TargetUid, src_uid = Uid, cause = ?HP_CHANGE_SKILL, result = ?ESR_CRITICAL, hp_change = -1000,
         misc1 = SkillId, misc2 = 0, serial = Serial
     },
-    map_view:send_net_msg_to_visual(TargetUid, HpMsg),
+    mod_view:send_net_msg_to_visual(TargetUid, HpMsg),
     ok.
 
 %% 选择技能目标
@@ -167,7 +167,7 @@ interrupt_skill(Uid) ->
         ]
     ),
     Msg = #pk_GS2U_SkillInterrupt{uid = Uid, skill_id = SkillId},
-    map_view:send_net_msg_to_visual(Uid, Msg),
+    mod_view:send_net_msg_to_visual(Uid, Msg),
     ok.
 
 

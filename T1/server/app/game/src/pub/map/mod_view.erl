@@ -6,7 +6,7 @@
 %%% @end
 %%% Created : 11. 五月 2018 14:50
 %%%-------------------------------------------------------------------
--module(map_view).
+-module(mod_view).
 -author("mawenhong").
 -include_lib("stdlib/include/assert.hrl").
 -include("logger.hrl").

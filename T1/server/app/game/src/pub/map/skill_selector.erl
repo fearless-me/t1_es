@@ -20,8 +20,8 @@
 
 %% 圆形
 circle(Aer, Pos, Radius, TargetType) ->
-    Index = map_view:pos_to_vis_index(Pos),
-    Tiles = map_view:get_vis_tile_around(Index),
+    Index = mod_view:pos_to_vis_index(Pos),
+    Tiles = mod_view:get_vis_tile_around(Index),
     %%
     FC =
         fun(Der, Acc) ->Own = object_rw:get_owner(Der),
@@ -41,8 +41,8 @@ circle(Aer, Pos, Radius, TargetType) ->
 
 %% 环形
 ring(Aer, Pos, RadiusIn, RadiusOut, TargetType) ->
-    Index = map_view:pos_to_vis_index(Pos),
-    Tiles = map_view:get_vis_tile_around(Index),
+    Index = mod_view:pos_to_vis_index(Pos),
+    Tiles = mod_view:get_vis_tile_around(Index),
     %%
     FC =
         fun(Der, Acc) ->
@@ -63,8 +63,8 @@ ring(Aer, Pos, RadiusIn, RadiusOut, TargetType) ->
 
 %% 扇形
 sector(Aer, Pos, Face, Angle, TargetType) ->
-    Index = map_view:pos_to_vis_index(Pos),
-    Tiles = map_view:get_vis_tile_around(Index),
+    Index = mod_view:pos_to_vis_index(Pos),
+    Tiles = mod_view:get_vis_tile_around(Index),
     Half = Angle / 2,
     %%
     FC =
@@ -96,8 +96,8 @@ rectangle_center(Aer, Pos, Dir, Width, Height, TargetType) ->
 
 %% 矩形选择实现
 rectangle_selector(Aer, Pos, Face, Width, Height, TargetType) ->
-    Index = map_view:pos_to_vis_index(Pos),
-    Tiles = map_view:get_vis_tile_around(Index),
+    Index = mod_view:pos_to_vis_index(Pos),
+    Tiles = mod_view:get_vis_tile_around(Index),
     Face_SQ = vector3:dist_sq(Face),
     Height_SQ = Height * Height,
     Width_SQ = Width * Width,

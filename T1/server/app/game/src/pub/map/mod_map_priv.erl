@@ -40,7 +40,7 @@
 init(S) ->
     Conf = map_creator_interface:map_data(S#m_map_state.map_id),
     ok = map_rw:init(S),
-    ok = map_view:init_vis_tile(Conf),
+    ok = mod_view:init_vis_tile(Conf),
     ok = init_npc(Conf),
     ok = init_monster(Conf),
     tick_msg(),
@@ -61,7 +61,7 @@ do_player_exit_call(S, _From, Uid, #m_cache_map_object{} = Obj) ->
     
     map_rw:del_obj_to_map(Obj),
     
-    ?TRY_CATCH(map_view:sync_player_exit_map(Obj)),
+    ?TRY_CATCH(mod_view:sync_player_exit_map(Obj)),
     ?TRY_CATCH(hook_map:on_player_exit(Uid), Err1, St1),
     {reply, ?E_Success, S};
 do_player_exit_call(S, _From, Uid, _Obj) ->
@@ -88,7 +88,7 @@ player_join_call(S, From, #r_join_map_req{uid = Uid, pid = Pid, group = Group, t
         send_goto_map_msg(Uid, Pos),
         map_rw:add_obj_to_map(Obj),
         map_srv:call_reply(From, ?E_Success),
-        ?TRY_CATCH(map_view:sync_player_join_map(Obj)),
+        ?TRY_CATCH(mod_view:sync_player_join_map(Obj)),
         ?TRY_CATCH(hook_map:on_player_join(Uid), Err1, St1),
         ?DEBUG("uid ~p, join map ~w, name ~p", [object_core:get_uid(Obj), self(), misc:registered_name()]),
         {noreply, S}
@@ -130,9 +130,9 @@ init_all_monster_1(Mdata) ->
 
 init_all_monster_2(Obj) ->
     Uid = object_core:get_uid(Obj),
-    VisIndex = map_view:pos_to_vis_index(object_rw:get_cur_pos(Uid)),
+    VisIndex = mod_view:pos_to_vis_index(object_rw:get_cur_pos(Uid)),
     map_rw:add_obj_to_map(Obj),
-    map_view:add_obj_to_vis_tile(Obj, VisIndex),
+    mod_view:add_obj_to_vis_tile(Obj, VisIndex),
     hook_map:on_monster_create(Uid),
     ?DEBUG("map ~p:~p create monster ~p, uid ~p, visIndex ~p",
         [map_rw:map_id(), map_rw:line_id(), object_core:get_data_id(Obj), Uid, VisIndex]),
@@ -315,24 +315,24 @@ broadcast_net_msg(_S, NetMsg) ->
 %%-------------------------------------------------------------------
 -spec broadcast_msg_view({Uid :: integer(), MsgId :: term()} | {Uid :: integer(), MsgId :: term(), Msg :: term()}) -> ok.
 broadcast_msg_view({Uid, MsgId}) ->
-    map_view:send_msg_to_visual(Uid, MsgId),
+    mod_view:send_msg_to_visual(Uid, MsgId),
     ok;
 broadcast_msg_view({Uid, MsgId, Msg}) ->
-    map_view:send_msg_to_visual(Uid, MsgId, Msg),
+    mod_view:send_msg_to_visual(Uid, MsgId, Msg),
     ok.
 
 -spec broadcast_net_msg_view({Uid :: integer(), NetMsg :: tuple()}) -> ok.
 broadcast_net_msg_view({Uid, NetMsg}) ->
-    map_view:broadcast_net_msg_view(Uid, NetMsg),
+    mod_view:broadcast_net_msg_view(Uid, NetMsg),
     ok.
 
 broadcast_net_msg_view(Uid, NetMsg) ->
-    map_view:send_net_msg_to_visual(Uid, NetMsg),
+    mod_view:send_net_msg_to_visual(Uid, NetMsg),
     ok.
 
 %%-------------------------------------------------------------------
 change_group({Uid, GroupId}) ->
-    map_view:sync_player_join_group(Uid, GroupId),
+    mod_view:sync_player_join_group(Uid, GroupId),
     ok.
 
 
