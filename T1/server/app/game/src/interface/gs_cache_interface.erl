@@ -120,12 +120,13 @@ read_player_pub_element(Uid, Pos) ->
 %%-------------------------------------------------------------------
 %%-------------------------------------------------------------------
 add_online_player(#p_player{} = PPlayer, Pid, Socket) ->
+    Sid = gs_interface:get_sid(),
     #p_player{
         aid = Aid, uid = Uid, level = Lv, head = _Head,
         map_id = Mid, x = X, y = Y, old_map_id = OMid, old_x = Ox, old_y = Oy
     } = PPlayer,
     Player = #m_cache_online_player{
-        uid = Uid, aid = Aid, level = Lv, pid = Pid, socket = Socket,
+        uid = Uid, aid = Aid, level = Lv, pid = Pid, socket = Socket,  sid = Sid,
         map_id = Mid, line = 0, pos = vector3:new(X, 0, Y),
         old_map_id = OMid, old_line = 1, old_pos = vector3:new(Ox, 0, Oy)
     },

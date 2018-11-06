@@ -45,6 +45,9 @@ do_handle_info({registerAck, Data, FromPid}, State) ->
 do_handle_info({nodedown, NodeName}, State) ->
     center_priv:nodedown(NodeName),
     {noreply, State};
+do_handle_info({server_down, Data}, State) ->
+    center_priv:other_down(Data),
+    {noreply, State};
 do_handle_info({ackTimeOut, FromPid}, State) ->
     center_priv:ack_timeout(FromPid),
     {noreply, State};

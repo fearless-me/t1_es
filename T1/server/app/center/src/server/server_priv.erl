@@ -22,15 +22,18 @@
     nodedown/2, sync/0
 ]).
 
--export([get_sid/0, get_from_pid/0, set_id_pid/2]).
+-export([get_sid/0, get_from_pid/0, get_type/0, set_info/3]).
 
 
 %%-------------------------------------------------------------------
 get_sid() -> case get(serverID) of undefined -> 0; V -> V end.
 get_from_pid() -> case get(serverPid) of undefined -> 0; V -> V end.
-set_id_pid(Sid, FromPid) ->
+get_type() -> case get(serverType) of undefined -> 0; V -> V end.
+set_info(Sid, FromPid, Type) ->
     put(serverPid, FromPid),
-    put(serverID, Sid).
+    put(serverID, Sid),
+    put(serverType, Type),
+    ok.
 %%-------------------------------------------------------------------
 
 
@@ -65,7 +68,10 @@ all_ready(_ServerID) ->
 
 %%-------------------------------------------------------------------
 nodedown(GSNode, OtpName) ->
+    Sid = server_priv:get_sid(),
+    Type = server_priv:get_type(),
     ps:send(?CS_SVR_MGR_OTP, nodedown, {GSNode, server_priv:get_sid()}),
     ?WARN("server[~p], stop worker[~p][~p] now", [GSNode, self(), OtpName]),
+    common_interface:send_msg_2_all_server(server_down, {Sid, Type, GSNode}),
     ok.
 

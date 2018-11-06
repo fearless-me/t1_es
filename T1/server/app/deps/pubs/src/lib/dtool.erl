@@ -168,7 +168,6 @@ node_sbcs_to_mbcs(Stage) ->
         recon_alloc:sbcs_to_mbcs(Stage)].
 %%-------------------------------------------------------------------
 node_fragmentation(Stage) ->
-    inet_tcp_dist:module_info(),
     recon_alloc:fragmentation(Stage).
 
 node_scheduler_usage(Interval) ->

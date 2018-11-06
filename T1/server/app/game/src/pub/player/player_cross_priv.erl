@@ -98,7 +98,7 @@ do_change_map_before(true, false) ->
     Uid = player_rw:get_uid(),
     Node = cross_interface:get_player_cross_node(Uid),
     %% fixme 跨服回传的数据处理
-    Ret = rpc:call(Node, cross_dst, rpc_call_player_prepare_leave, [Aid, Uid]),
+    Ret = grpc:call(Node, cross_dst, rpc_call_player_prepare_leave, [Aid, Uid]),
     cross_src:player_pub_data_from_cross(Ret);
 %% 从普通服到跨服
 do_change_map_before(false, true) ->

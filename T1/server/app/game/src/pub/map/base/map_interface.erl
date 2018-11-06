@@ -15,6 +15,7 @@
 %% WARNING!!! WARNING!!! WARNING!!!
 %% call
 -export([player_join_call/2, player_exit_call/2, player_teleport_call/2]).
+-export([player_exit_map_exception_call/2]).
 %%--------------------------------
 -export([player_move_/2, player_stop_move_/2, player_change_combat_prop_/2]).
 -export([status_/1]).
@@ -32,6 +33,11 @@ player_join_call(MapPid, Obj) ->
 %%--------------------------------
 player_teleport_call(MapPid, Req) ->
     gen_server:call(MapPid, {player_teleport, Req}, ?MAP_CALL_TIMEOUT).
+
+
+player_exit_map_exception_call(MapPid, Data) ->
+    gen_server:call(MapPid,{player_exit_exception, Data}, ?MAP_CALL_TIMEOUT).
+
 %%--------------------------------
 
 

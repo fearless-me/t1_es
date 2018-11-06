@@ -37,7 +37,7 @@
 %% sensible value.
 -define(MEMORY_SIZE_FOR_UNKNOWN_OS, 1073741824).
 -define(DEFAULT_VM_MEMORY_HIGH_WATERMARK, 0.4).
--define(MONITOR_LOGGER, vm_monitor_log).
+-define(VM_MONITOR_LOGGER, vm_monitor_log).
 
 -record(state, {total_memory,
     memory_limit,
@@ -110,7 +110,8 @@ start_link(MemFraction, AlarmSet, AlarmClear) ->
 init([MemFraction, AlarmFuns]) ->
     TRef = start_timer(?DEFAULT_MEMORY_CHECK_INTERVAL),
     start_portprogram(os:type()),
-    {ok, _Logger} = fastlog:start_link(?MONITOR_LOGGER, "monitor.vm"),
+    {ok, _Logger} = fastlog:start_link(?VM_MONITOR_LOGGER, "monitor.vm"),
+    true = fastlog:make_init_log(?VM_MONITOR_LOGGER, "monitor.vm"),
     State = #state{timeout = ?DEFAULT_MEMORY_CHECK_INTERVAL,
         timer = TRef,
         alarmed = false,
@@ -247,7 +248,7 @@ internal_update(State = #state{memory_limit = MemLimit,
     State#state{alarmed = NewAlarmed}.
 
 emit_update_info(AlarmState, MemUsed, MemLimit) ->
-    ?INFO_SINK(?MONITOR_LOGGER,
+    ?INFO_SINK(?VM_MONITOR_LOGGER,
         "vm_memory_high_watermark ~p. Memory used:~p allowed:~p~n",
         [AlarmState, MemUsed, MemLimit]).
 
@@ -459,7 +460,7 @@ info() ->
     PPList = lists:foldl(Fun, [], ProcessesProplist),
     Str1 = log_sort_mqueue(PPList),
     Str2 = log_sort_memory(PPList),
-    ?INFO_SINK(?MONITOR_LOGGER, "~n~nProcess: total ~p(RQ:~p) using:~s(~s allocated) nodes:~p~n"
+    ?INFO_SINK(?VM_MONITOR_LOGGER, "~n~nProcess: total ~p(RQ:~p) using:~s(~s allocated) nodes:~p~n"
     "Memory: Sys ~s, Atom ~s/~s, Bin ~s, Code ~s, Ets ~s~n"
     "SortByMQueue:~n"
     "Row      Pid                 RegName                       Reductions     MQueue(*)      Memory           TotalHeap        Heap             Stack            current_stacktrace~n~ts"

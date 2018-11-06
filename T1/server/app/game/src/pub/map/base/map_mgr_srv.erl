@@ -53,6 +53,9 @@ do_handle_call({join_map, Req}, _From, State) ->
 do_handle_call({exit_map, Req}, _From, State) ->
     Ret = do_player_exit_map_call(State, Req),
     {reply, Ret, State};
+do_handle_call({exit_map_excetipon, {Uid, LineId}}, _From, State) ->
+    Ret = player_exit_map_exception_call(State, Uid, LineId),
+    {reply, Ret, State};
 do_handle_call(Request, From, State) ->
     ?ERROR("undeal call ~w from ~w", [Request, From]),
     {reply, ok, State}.
@@ -92,6 +95,7 @@ do_player_join_map_call(S, Req) ->
                 dead_line = DeadLine, status = Status
             } = T
             ) when
+                In >= 0,
                 (Limit > In orelse (Force andalso Limit + Reserve > In)),
                 DeadLine > Now + ?DEAD_LINE_PROTECT,
                 Status =:= ?MAP_NORMAL,
@@ -157,6 +161,19 @@ do_player_exit_map_call(S, Req) ->
                 [Uid, S#state.map_id, LineID, LineID]),
             #r_exit_map_ack{error = ?E_Exception, map_id = Mid}
     end.
+
+player_exit_map_exception_call(S, Uid, LineID) ->
+    ?WARN("player ~p exit map_~p_~p", [Uid, S#state.map_id, LineID]),
+    case misc_ets:read(S#state.ets, LineID) of
+        [#m_map_line{pid = Pid}] ->
+            map_interface:player_exit_map_exception_call(Pid, Uid),
+            misc_ets:update_counter(S#state.ets, LineID, {#m_map_line.in, -1}),
+            ok;
+        _ ->
+            ?ERROR("player ~p exit map_~p_~p but line ~p not exists",
+                [Uid, S#state.map_id, LineID, LineID])
+    end,
+    ok.
 
 %%--------------------------------------------------------------------
 create_new_line(S, MapID, LineID) ->

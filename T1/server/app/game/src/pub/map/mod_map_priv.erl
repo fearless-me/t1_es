@@ -32,6 +32,7 @@
 -export([player_join_call/3]).
 -export([player_exit_call/3]).
 -export([force_teleport_call/3]).
+-export([player_exit_exception_call/2]).
 %%--------------------------------
 
 %%-------------------------------------------------------------------
@@ -72,6 +73,14 @@ do_player_exit_call(S, _From, Uid, _Obj) ->
 %%-------------------------------------------------------------------
 %% WARNING!!! WARNING!!! WARNING!!!
 %% call
+player_exit_exception_call(S, Uid) ->
+    Obj = map_rw:find_unit(?OBJ_PLAYER, Uid),
+    ?TRY_CATCH(do_player_exit_call(S, undefined, Uid, Obj)),
+    {reply, ?E_Success, S}.
+
+%%-------------------------------------------------------------------
+%% WARNING!!! WARNING!!! WARNING!!!
+%% call
 player_join_call(S, From, #r_join_map_req{uid = Uid, pid = Pid, group = Group, tar_pos = Pos}) ->
     try
         ?DEBUG("player ~p to ~p", [Uid, Pos]),
@@ -84,6 +93,7 @@ player_join_call(S, From, #r_join_map_req{uid = Uid, pid = Pid, group = Group, t
         ?DEBUG("uid ~p, join map ~w, name ~p", [object_core:get_uid(Obj), self(), misc:registered_name()]),
         {noreply, S}
     catch _ : Error : ST ->
+        ?TRY_CATCH_ONLY(map_rw:del_obj_to_map(#m_cache_map_object{uid = Uid, type = ?OBJ_PLAYER})),
         ?ERROR("player join map ~w, name ~p, error ~p, ~p", [self(), misc:registered_name(), Error, ST]),
         {reply, ?E_Exception, S}
     end;
@@ -186,6 +196,7 @@ tick_player(_S, Now) ->
 
 tick_player_1(undefined, Uid, _Now) ->
     %% @todo 加入异常处理删除该玩家
+    map_rw:del_uid_from_maps(?OBJ_PLAYER, Uid),
     ?ERROR("tick player ~p may be leave map", [Uid]);
 tick_player_1(Obj, _, Now) ->
     ?TRY_CATCH(mod_move:tick(Obj, Now), Err1, Stk1),

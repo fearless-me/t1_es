@@ -14,6 +14,7 @@
 -include("pub_def.hrl").
 
 
+-define(SYSTEM_MONITOR_LOGGER, monitor_logger).
 %%
 -define(LARGE_HEAP,             100*1024*1024).
 -define(LARGE_HEAP_GUARD_MIN,   1*1024*1024).
@@ -62,7 +63,8 @@ mod_init(_Args) ->
     %% erlang:process_flag(priority, high),
     ets:new(?REPORT_CACHE_ETS, [protected, named_table, {keypos, #monitor_info.pid_or_port}, ?ETS_RC]),
     WordSize = erlang:system_info(wordsize),
-    {ok, Pid} = fastlog:start_link(monitor_logger, "monitor.sys"),
+    {ok, Pid} = fastlog:start_link(?SYSTEM_MONITOR_LOGGER, "monitor.sys"),
+    true = fastlog:make_init_log(?SYSTEM_MONITOR_LOGGER, "monitor.sys"),
     erlang:system_monitor(self(),
         [
             busy_port,

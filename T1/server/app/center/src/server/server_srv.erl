@@ -40,7 +40,7 @@ mod_init({DBId, SeverType, FromPid}) ->
         GSNode = erlang:node(FromPid),
         NameAtom = makeName(SeverType, DBId),
         true = erlang:register(NameAtom, self()),
-        server_priv:set_id_pid(DBId, FromPid),
+        server_priv:set_info(DBId, FromPid, SeverType),
         erlang:monitor_node(GSNode, true),
         tick_msg(),
         ?WARN("server[~p][~p] init OK", [GSNode, NameAtom]),

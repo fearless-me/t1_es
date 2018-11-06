@@ -13,13 +13,14 @@
 -include("pub_rec.hrl").
 -include("common_def.hrl").
 -include("gs_ps_def.hrl").
+-include("gs_cache.hrl").
 -include("center_srv.hrl").
 
 
 %% API
 -export([
     init/0,
-    register_ack/2, nodedown/1, ack_timeout/1,
+    register_ack/2, nodedown/1, ack_timeout/1, other_down/1,
     sync_all_data/1, start_now/1, tick_check_connect/0
 ]).
 
@@ -53,15 +54,51 @@ nodedown(NodeName) ->
     ?WARN("centerServer Node[~p] is down", [NodeName]),
     misc_ets:write(?CenterServerEts, #recCenterInfo{}),
     center_nodedown(gs_interface:is_cross()),
-    ps:send(teamGSCacheOtp, centerNodeDown),
     ok.
 %%%-------------------------------------------------------------------
 center_nodedown(true) ->
     ?WARN("center server nodedown, all backGS"),
-    ps:send(?CS_SVR_MGR_OTP, pidMsg2AllOLPlayer, {backToGSNow, centerDown}),
     ok;
 center_nodedown(_IsCrossServer) ->
     ok.
+
+%%%-------------------------------------------------------------------
+other_down({Sid, ?SERVER_TYPE_GAME, GSNode}) ->
+    kick_all_player(
+        gs_interface:is_cross(),
+        Sid,
+        GSNode
+    ),
+    ok;
+other_down({_Sid, _Type, _GSNode}) ->
+    ok.
+
+kick_all_player(true, Sid, GSNode) ->
+    ?WARN("*** server ~p|~p down, kick all player in this cross ***", [Sid, GSNode]),
+    erlang:spawn(
+        fun() ->
+            QS =
+                ets:fun2ms
+                (
+                    fun(Info) when Info#m_cache_online_player.sid == Sid ->
+                        {
+                            Info#m_cache_online_player.aid,
+                            Info#m_cache_online_player.uid,
+                            Info#m_cache_online_player.map_id,
+                            Info#m_cache_online_player.line
+                        }
+                    end
+                ),
+            List = misc_ets:select(?ETS_CACHE_ONLINE_PLAYER, QS),
+            lists:foreach(
+                fun({Aid, Uid, Mid, LineId}) ->
+                    Mgr = map_creator_interface:map_mgr_l(Mid),
+                    map_mgr_interface:player_exit_map_exception_call(Mgr, {Uid, LineId}),
+                    gs_cache_interface:offline(Aid, Uid)
+                end, List)
+        end),
+    ok;
+kick_all_player(_Any, _Sid, _GSNode) -> skip.
 
 %%%-------------------------------------------------------------------
 ack_timeout(MgrPid) ->
@@ -79,7 +116,7 @@ sync_all_data(CsWorkerPid) ->
 start_now(WorkerPid) ->
     misc_ets:write(?CenterServerEts, #recCenterInfo{pid = WorkerPid, status = ?SEVER_STATUS_DONE}),
     %% game/cross server 成功连接 center server，通知?PublicDataMgr是否要同步真实DBID映射表
-    
+
     ?WARN("####centerServer[~p][ok]####", [erlang:node(WorkerPid)]),
     ok.
 
@@ -130,7 +167,7 @@ connect_cs_node(DBId, Node) ->
             erlang:monitor_node(Node, false),
             erlang:monitor_node(Node, true),
             gs_share:restart(),
-            
+
             %% 告诉跨服，保存本节点
             case gs_cs_interface:register(Node) of
                 true ->
@@ -141,7 +178,7 @@ connect_cs_node(DBId, Node) ->
                 _ ->
                     skip
             end,
-            
+
             ok;
         _ ->
             ?WARN("[~p][~p]connect centerServer failed:~p", [self(), DBId, Node]),

@@ -8,6 +8,7 @@
 %%% 游戏 如果原地图不存在了(比如跨服挂掉了) 返回出生地
 %%% todo 有些异常情况比如跨服很卡长时间不能获取跨服上地图管理器
 %%% todo 或者即使取到了在后续逻辑时timeout了怎么办（保证状态不错）？
+%%% todo 如果游戏服挂掉了，在跨服的玩家怎么处理
 %%% @end
 %%% Created : 14. 六月 2018 14:23
 %%%-------------------------------------------------------------------
@@ -73,7 +74,7 @@ do_online_call(MapID, Req) ->
 
 %%
 do_online_call_1(undefined, Req) ->
-    #r_join_map_ack{error = -4, map_id = Req#r_join_map_req.tar_map_id};
+    #r_join_map_ack{error = ?E_Exception, map_id = Req#r_join_map_req.tar_map_id};
 do_online_call_1(Mgr, Req) ->
     case catch map_mgr_interface:player_join_map_call(Mgr, Req) of
         #r_join_map_ack{} = Ack -> Ack;
