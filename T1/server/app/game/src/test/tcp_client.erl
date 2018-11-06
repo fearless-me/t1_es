@@ -206,6 +206,8 @@ rand_walk() ->
     PosList = [{243.2,209.1}, {324.01, 138.49}, {324.1, 225.1}],
     N =  rand_tool:rand(1, erlang:length(PosList)),
     {PosX, PosY} = lists:nth(N, PosList),
+
+    Delta = rand_tool:rand(-10, 15),
     
-    send_msg(socket(), #pk_U2GS_PlayerWalk{dst_x = PosX, dst_y = PosY}),
+    send_msg(socket(), #pk_U2GS_PlayerWalk{dst_x = PosX + Delta, dst_y = PosY + Delta}),
     ok.
