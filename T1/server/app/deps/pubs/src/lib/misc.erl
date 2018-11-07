@@ -154,7 +154,7 @@ is_alive_rpc(Pid) when is_pid(Pid) ->
     Node = erlang:node(Pid),
     case Node =:= node() of
         true -> erlang:is_process_alive(Pid);
-        _Any -> grpc:call('game@127.0.0.1', erlang, is_process_alive, [Pid])
+        _Any -> grpc:call(Node, erlang, is_process_alive, [Pid])
     end.
 
 %%-------------------------------------------------------------------
