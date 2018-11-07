@@ -209,7 +209,7 @@ info(PidTerm, location) ->
     info_type(PidTerm, location, [initial_call, current_stacktrace]);
 info(PidTerm, memory_used) ->
     info_type(PidTerm, memory_used, [memory, message_queue_len, heap_size,
-                                     total_heap_size, garbage_collection]);
+                                     total_heap_size, garbage_collection, garbage_collection_info]);
 info(PidTerm, work) ->
     info_type(PidTerm, work, [reductions]);
 info(PidTerm, Keys) ->

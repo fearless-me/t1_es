@@ -11,96 +11,45 @@
 
 %% API
 -export([
-    proc_info/1, proc_basic_info/1, proc_backtrace/1, proc_statistics/2,
-    proc_signal/1, proc_reduction/1, proc_binary/1, proc_memory/1, proc_gc/1,
+    %% 进程相关
+    info/1, info/2,
+    bin_leak/1,
+    proc_count/2, proc_unlink/0, proc_statistics/2,
 
-    proc_top/2, proc_top_memory/1, proc_top_message_queue/1,
-    proc_top_bin_leak/1, proc_unlink/0,
+    %% 节点相关
+    node_port/1, node_stats/0, node_stats_print/2,
+    memory/1, memory/2,
 
-    node_port/1,
-    node_stats/0, node_stats_print/2,
-    node_memory/1, node_memory/2,
-    node_allocator_snapshot/0, node_allocator_snapshot_save/1,
-    node_cache_hit/0, node_avg_block_size/1, node_sbcs_to_mbcs/1,
-    node_fragmentation/1, node_scheduler_usage/1
+    %% tcp
+    tcp/0, inet_count/2, port_info/1, port_info/2,
+
+    %% allocators
+    allocators/0, allocators/1,
+    alloc_snapshot/0, alloc_snapshot_save/1,
+    cache_hit/0, average_block_sizes/1, sbcs_to_mbcs/1,
+    fragmentation/1,
+
+    %% schedulers
+    scheduler_usage/1, scheduler_statistics/1,
+
+    %% trace
+    trace/5, trace_clear/0
 ]).
 
 
-
-proc_statistics(Name, Milliseconds) ->
-    sys:statistics(Name, true),
-    timer:sleep(Milliseconds),
-    Info =
-    case sys:statistics(Name, get) of
-        {ok, Statistics} ->
-            lists:foldl(
-                fun
-                    ({Key,{{_,_,_},{_,_,_}} = DataTime}, Acc) ->
-                        Acc ++ lists:concat([Key, ":", misc_time:format_datetime(DataTime), "\n"]);
-                    ({Key, Val}, Acc) ->
-                        Acc ++ lists:concat([Key, ":", Val, "\n"])
-                end, [], Statistics);
-        Other ->
-            lists:concat([Other])
-    end,
-    sys:statistics(Name, false),
-    io:format
-    (
-        "~n****** system statistics ******~n"
-        "process:~p~n"
-        "~s"
-        "*********************************~n", [Name, Info]
-    ),
-    ok.
-
-%%-------------------------------------------------------------------
-proc_info(PidTerm) ->
+info(PidTerm)->
     recon:info(PidTerm).
 
-%%-------------------------------------------------------------------
-proc_basic_info(PidTerm) ->
-    recon:info(PidTerm, meta).
+info(PidTerm, Keys)->
+    recon:info(PidTerm, Keys).
 
 %%-------------------------------------------------------------------
-proc_backtrace(PidTerm) ->
-    recon:info(PidTerm, location).
-
-%%-------------------------------------------------------------------
-proc_signal(PidTerm) ->
-    recon:info(PidTerm, signals).
-
-%%-------------------------------------------------------------------
-proc_reduction(PidTerm) ->
-    recon:info(PidTerm, work).
-
-%%-------------------------------------------------------------------
-proc_binary(PidOrTerm) ->
-    recon:info(PidOrTerm, binary_memory).
-
-%%-------------------------------------------------------------------
-proc_memory(PidTerm) ->
-    recon:info(PidTerm, memory_used).
-
-%%-------------------------------------------------------------------
-proc_gc(PidTerm) ->
-    A = erlang:process_info(recon_lib:term_to_pid(PidTerm), garbage_collection),
-    B = erlang:process_info(recon_lib:term_to_pid(PidTerm), garbage_collection_info),
-    [A, B].
-
-%%-------------------------------------------------------------------
-proc_top(AttrName, Num) ->
+proc_count(AttrName, Num) ->
     recon:proc_count(AttrName, Num).
 
-%%-------------------------------------------------------------------
-proc_top_memory(N) ->
-    recon:proc_count(memory, N).
 
 %%-------------------------------------------------------------------
-proc_top_message_queue(N) ->
-    recon:proc_count(message_queue_len, N).
-
-%%-------------------------------------------------------------------
-proc_top_bin_leak(N) ->
+bin_leak(N) ->
     recon:bin_leak(N).
 
 %%-------------------------------------------------------------------
@@ -110,6 +59,33 @@ proc_unlink() ->
         [{_, Ls}, {_, Ms}] <- [process_info(P, [links, monitors])],
         [] == Ls, [] == Ms
     ].
+
+%%-------------------------------------------------------------------
+proc_statistics(Name, Milliseconds) ->
+    sys:statistics(Name, true),
+    timer:sleep(Milliseconds),
+    Info =
+        case sys:statistics(Name, get) of
+            {ok, Statistics} ->
+                lists:foldl(
+                    fun
+                        ({Key,{{_,_,_},{_,_,_}} = DataTime}, Acc) ->
+                            Acc ++ lists:concat([Key, ":", misc_time:format_datetime(DataTime), "\n"]);
+                        ({Key, Val}, Acc) ->
+                            Acc ++ lists:concat([Key, ":", Val, "\n"])
+                    end, [], Statistics);
+            Other ->
+                lists:concat([Other])
+        end,
+    sys:statistics(Name, false),
+    io:format
+    (
+        "~n****** system statistics ******~n"
+        "process:~p~n"
+        "~s"
+        "*********************************~n", [Name, Info]
+    ),
+    ok.
 
 %%-------------------------------------------------------------------
 node_stats() ->
@@ -123,7 +99,10 @@ node_port(Node)->
     hd([P|| P<-erlang:ports(), erlang:port_info(P, connected) == {connected,Owner}]).
 
 %%-------------------------------------------------------------------
-node_allocator_snapshot() ->
+allocators()-> recon_alloc:allocators().
+allocators(types) -> recon_alloc:allocators(types).
+
+alloc_snapshot() ->
     ensure_recon_unit(),
     case recon_alloc:snapshot_get() of
         undefined -> recon_alloc:snapshot();
@@ -131,48 +110,77 @@ node_allocator_snapshot() ->
     end.
 
 %%-------------------------------------------------------------------
-node_allocator_snapshot_save(File) ->
+alloc_snapshot_save(File) ->
     ensure_recon_unit(),
     recon_alloc:snapshot_save(File).
 
 %%-------------------------------------------------------------------
-node_memory(Stage) ->
-    Ks = [used, allocated, unused, usage, allocated_types, allocated_instances],
-    lists:map(fun(Key) -> node_memory(Key, Stage) end, Ks).
-
-%%-------------------------------------------------------------------
--spec node_memory(Key, Stage) -> any() when
-    Key :: used | allocated | unused | usage | allocated_types|allocated_instances,
-    Stage :: current | max.
-node_memory(usage, Stage) ->
-    ensure_recon_unit(),
-    {usage, trunc(recon_alloc:memory(usage, Stage) * 10000) / 10000};
-node_memory(Key, Stage) ->
-    ensure_recon_unit(),
-    trans_to_unit_mb(Key, recon_alloc:memory(Key, Stage)).
-
-%%-------------------------------------------------------------------
-node_cache_hit() ->
+cache_hit() ->
     ensure_recon_unit(),
     recon_alloc:cache_hit_rates().
 
 %%-------------------------------------------------------------------
-node_avg_block_size(Stage) ->
+average_block_sizes(Stage) ->
     ensure_recon_unit(),
     recon_alloc:average_block_sizes(Stage).
 
 
 %%-------------------------------------------------------------------
-node_sbcs_to_mbcs(Stage) ->
+memory(Stage) ->
+    Ks = [used, allocated, unused, usage, allocated_types, allocated_instances],
+    lists:map(fun(Key) -> memory(Key, Stage) end, Ks).
+
+%%-------------------------------------------------------------------
+-spec memory(Key, Stage) -> any() when
+    Key :: used | allocated | unused | usage | allocated_types|allocated_instances,
+    Stage :: current | max.
+memory(usage, Stage) ->
+    ensure_recon_unit(),
+    {usage, trunc(recon_alloc:memory(usage, Stage) * 10000) / 10000};
+memory(Key, Stage) ->
+    ensure_recon_unit(),
+    trans_to_unit_mb(Key, recon_alloc:memory(Key, Stage)).
+
+
+
+%%-------------------------------------------------------------------
+sbcs_to_mbcs(Stage) ->
     ["the higher the value,  the worst the condition" |
         recon_alloc:sbcs_to_mbcs(Stage)].
+
 %%-------------------------------------------------------------------
-node_fragmentation(Stage) ->
+fragmentation(Stage) ->
     recon_alloc:fragmentation(Stage).
 
-node_scheduler_usage(Interval) ->
+%%-------------------------------------------------------------------
+scheduler_usage(Interval) ->
     recon:scheduler_usage(Interval).
 
+
+scheduler_statistics(Interval)->
+    erlang:system_flag(scheduling_statistics,enable),
+    timer:sleep(Interval),
+    Res0 = erlang:system_info(scheduling_statistics),
+    Res1 = erlang:system_info(total_scheduling_statistics),
+    erlang:system_flag(scheduling_statistics,disable),
+    {Res0, Res1}.
+
+
+
+
+
+tcp() -> recon:tcp().
+inet_count(Attr, Num) -> recon:inet_count(Attr, Num).
+
+port_info(PortTerm) -> recon:port_info(PortTerm).
+port_info(PortTerm, Keys)-> recon:port_info(PortTerm, Keys).
+
+%%-------------------------------------------------------------------
+trace(Mod, Fun, Args, Limit, Opts) ->
+    recon_trace:calls({Mod, Fun, Args}, Limit, Opts).
+
+trace_clear() ->
+    recon_trace:clear().
 
 %%-------------------------------------------------------------------
 %%-------------------------------------------------------------------
