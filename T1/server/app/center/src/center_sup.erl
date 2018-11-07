@@ -45,8 +45,7 @@ start() ->
         misc:fn_wrapper("serv data loader", ?Wrap(misc:start_otp(SupPid, data_loader, worker, [cs_data_loader]))),
         misc:fn_wrapper("watchdog", ?Wrap(misc:start_otp(SupPid, watchdog, worker, [cs_watchdog]))),
         misc:fn_wrapper("gc", ?Wrap(misc:start_otp(SupPid, background_gc, worker))),
-        misc:fn_wrapper("monitor/vms", ?Wrap(misc:start_otp(SupPid, vm_memory_monitor, worker, [0.5]))),
-        misc:fn_wrapper("system monitor", ?Wrap(misc:start_otp(SupPid, system_monitor, worker))),
+        misc:fn_wrapper("monitor/vms/system monitor", ?Wrap(misc:start_otp(SupPid, vms_monitor, worker, [0.5]))),
         misc:fn_wrapper("serv_cache", ?Wrap(misc:start_otp(SupPid, cs_cache_srv, worker))),
         misc:fn_wrapper("all logic process", ?Wrap(misc:start_otp(SupPid, cs_logic_sup, supervisor))),
         

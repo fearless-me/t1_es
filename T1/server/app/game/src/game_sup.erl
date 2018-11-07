@@ -45,8 +45,7 @@ start() ->
         %%
         misc:fn_wrapper("watchdog", ?Wrap(misc:start_otp(SupPid, watchdog, worker, [gs_watchdog]))),
         misc:fn_wrapper("gc", ?Wrap(misc:start_otp(SupPid, background_gc, worker))),
-        misc:fn_wrapper("monitor/vms", ?Wrap(misc:start_otp(SupPid, vm_memory_monitor, worker, [0.5]))),
-        misc:fn_wrapper("system monitor", ?Wrap(misc:start_otp(SupPid, system_monitor, worker))),
+        misc:fn_wrapper("monitor/vms/system monitor", ?Wrap(misc:start_otp(SupPid, vms_monitor, worker, [0.5]))),
         misc:fn_wrapper("map root supervisor", ?Wrap(misc:start_otp(SupPid, map_root_sup, supervisor))),
         misc:fn_wrapper("login window", ?Wrap(misc:start_otp(SupPid, login_srv, worker))),
         misc:fn_wrapper("serv_cache", ?Wrap(misc:start_otp(SupPid, gs_cache_srv, worker))),

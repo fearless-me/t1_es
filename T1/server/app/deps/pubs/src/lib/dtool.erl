@@ -105,7 +105,7 @@ allocators(types) -> recon_alloc:allocators(types).
 alloc_snapshot() ->
     ensure_recon_unit(),
     case recon_alloc:snapshot_get() of
-        undefined -> recon_alloc:snapshot();
+        undefined -> recon_alloc:snapshot(), recon_alloc:snapshot_get();
         Snap -> Snap
     end.
 
