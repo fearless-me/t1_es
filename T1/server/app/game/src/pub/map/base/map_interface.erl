@@ -16,6 +16,7 @@
 %% call
 -export([player_join_call/2, player_exit_call/2, player_teleport_call/2]).
 -export([player_exit_map_exception_call/2]).
+-export([player_exit_map_exception_/2, clear_online_player_immediately_/1]).
 %%--------------------------------
 -export([player_move_/2, player_stop_move_/2, player_change_combat_prop_/2]).
 -export([status_/1]).
@@ -40,6 +41,11 @@ player_exit_map_exception_call(MapPid, Data) ->
 
 %%--------------------------------
 
+player_exit_map_exception_(MapPid, Data) ->
+    gen_server:cast(MapPid,{player_exit_exception_, Data}).
+
+clear_online_player_immediately_(Pid) ->
+    ps:send(Pid, {event, clear_online_player_immediately}).
 
 %%--------------------------------
 player_change_combat_prop_(MapPid, Req) ->

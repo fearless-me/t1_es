@@ -45,7 +45,7 @@
 %%%===================================================================
 %% define
 -record(state, {all = [], todo = [], mod, pause=false}).
--define(CHECK_TICK,  15000).
+-define(CHECK_TICK,  5000).
 
 pause() ->
     gen_server:call(?MODULE, pause).

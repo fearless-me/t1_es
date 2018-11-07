@@ -89,7 +89,7 @@ register_pid(Pid, Aid) ->
 
 %%-------------------------------------------------------------------
 kick_account(Aid, Reason) ->
-    Name = misc:create_atom(player, [Aid]),
+    Name = ppid_name(Aid),
     ps:send(Name, kick_role, Reason),
     ok.
 

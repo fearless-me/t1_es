@@ -22,7 +22,7 @@
 -export([mod_init/1, do_handle_call/3, do_handle_info/2, do_handle_cast/2]).
 -export([show_status/1, status/1, call_reply/2]).
 
-show_status(Name)->
+show_status(Name) ->
     catch ps:send(Name, show_status).
 status(Name) ->
     case catch gen_server:call(Name, status) of
@@ -54,16 +54,17 @@ call_reply(FromPid, Ret) ->
 %%% Internal functions
 %%%===================================================================
 -define(MAP_OBJ_DETAIL_ETS, map_obj_detail_ets__).
-mod_init([MapID, MapLine]) ->
+mod_init([MapID, MapLine, MgrEts]) ->
     erlang:process_flag(trap_exit, true),
     erlang:process_flag(priority, high),
     ProcessName = misc:create_atom(?MODULE, [MapID, MapLine]),
     true = erlang:register(ProcessName, self()),
-    Ets0 = misc_ets:new(?MAP_OBJ_DETAIL_ETS,[protected, set, {keypos, #m_object_rw.uid}, ?ETS_RC]),
+    Ets0 = misc_ets:new(?MAP_OBJ_DETAIL_ETS, [protected, set, {keypos, #m_object_rw.uid}, ?ETS_RC]),
     ?INFO("map ~p:~p started", [ProcessName, self()]),
     ps:send(self(), init),
+    i_tick_clear_msg(),
     gen_serverw:continue_effective_monitor(self(), ?MAP_TICK),
-    {ok, #m_map_state{map_id = MapID, line_id = MapLine, ets = Ets0}}.
+    {ok, #m_map_state{map_id = MapID, line_id = MapLine, ets = Ets0, mgr_ets = MgrEts}}.
 
 %%--------------------------------------------------------------------
 do_handle_call(status, _From, State) ->
@@ -82,9 +83,15 @@ do_handle_call(Request, From, State) ->
 
 %%--------------------------------------------------------------------
 
-
 do_handle_info(init, State) ->
     {noreply, mod_map_priv:init(State)};
+do_handle_info({event, clear_online_player_immediately}, State) ->
+    catch tick_clear_player(),
+    {noreply, State};
+do_handle_info({event, clear_online_player}, State) ->
+    catch tick_clear_player(),
+    i_tick_clear_msg(),
+    {noreply, State};
 do_handle_info(show_status, State) ->
     catch i_show_status(),
     {noreply, State};
@@ -123,14 +130,46 @@ do_handle_info(Info, State) ->
     {noreply, State}.
 
 %%--------------------------------------------------------------------
+do_handle_cast({player_exit_exception_, Data}, State) ->
+    mod_map_priv:player_exit_exception_call(State, Data),
+    {noreply, State};
 do_handle_cast(Request, State) ->
     mod_map:on_cast_msg(Request),
     {noreply, State}.
 
-i_status()-> map_rw:status().
 
-i_show_status()->
-    ?WARN("~nmap:~p~n~p~n",[misc:registered_name(), map_rw:status()]).
+%%--------------------------------------------------------------------
+%%--------------------------------------------------------------------
+tick_clear_player() ->
+    Pid = self(),
+    Maps = map_rw:obj_maps_with_type(?OBJ_PLAYER),
+    erlang:spawn
+    (fun() ->
+        ClearAll =
+            maps:fold
+            (
+                fun(_, Uid, X) ->
+                    PPid = gs_cache_interface:get_online_player_pid(Uid),
+                    case misc:is_alive_rpc(PPid) of
+                        true -> X;
+                        _Any ->
+                            map_interface:player_exit_map_exception_(Pid, Uid),
+                            X + 1
+                    end
+                end, 0, Maps
+            ),
+        ?WARN("map ~p tick_clear_player ~p", [misc:registered_name(), ClearAll])
+     end
+    ),
+    ok.
+
+i_tick_clear_msg() ->
+    erlang:send_after(?MAP_TICK_CLEAR_PLAYER, self(), {event, clear_online_player}).
+
+i_status() -> map_rw:status().
+
+i_show_status() ->
+    ?WARN("~nmap:~p~n~p~n", [misc:registered_name(), map_rw:status()]).
 
 
 

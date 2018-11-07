@@ -19,7 +19,7 @@
     atom_to_binary/1, to_atom/1, create_atom/2, list_to_string_suffix/2,
     register_process/2, register_process/3, registered_name/0, registered_name/1,
     process_node/1, whereis_lg/1, allow_node/1,
-    is_alive/1, is_alive_g/1, is_alive_lg/1,
+    is_alive/1, is_alive_g/1, is_alive_lg/1, is_alive_rpc/1,
     ip/0, peername/1, ip_string/1,
     crc32/1, mod_1/2, clamp/3, rand/2,
     set_bit/2, unset_bit/2, test_bit/2, first_set_bit/1,
@@ -142,6 +142,20 @@ is_alive_lg(Name) when is_atom(Name) ->
     end;
 is_alive_lg(Pid) when is_pid(Pid) ->
     erlang:is_process_alive(Pid).
+
+is_alive_rpc(0) -> false;
+is_alive_rpc(undefined) -> false;
+is_alive_rpc(Name) when is_atom(Name) ->
+    case whereis_lg(Name) of
+        undefined -> false;
+        Pid -> is_alive_rpc(Pid)
+    end;
+is_alive_rpc(Pid) when is_pid(Pid) ->
+    Node = erlang:node(Pid),
+    case Node =:= node() of
+        true -> erlang:is_process_alive(Pid);
+        _Any -> grpc:call('game@127.0.0.1', erlang, is_process_alive, [Pid])
+    end.
 
 %%-------------------------------------------------------------------
 crc32(Str) -> erlang:adler32(Str).

@@ -41,7 +41,7 @@ mod_init([MapID]) ->
     erlang:process_flag(trap_exit, true),
     erlang:process_flag(priority, high),
     EtsAtom = misc:create_atom(?MAP_LINES, [MapID]),
-    Ets = misc_ets:new(EtsAtom, [named_table, protected, {keypos, #m_map_line.line_id}, ?ETS_RC]),
+    Ets = misc_ets:new(EtsAtom, [named_table, public, {keypos, #m_map_line.line_id}, ?ETS_RC]),
     ?INFO("mapMgr ~p started, line ets:~p,mapID:~p", [ProcessName, Ets, MapID]),
     ps:send(?GS_MAP_CREATOR_OTP, map_mgr_line_ets, {MapID, EtsAtom}),
     {ok, #state{ets = Ets, map_id = MapID}}.
@@ -119,7 +119,6 @@ i_player_join_map_call(#m_map_line{pid = MapPid, map_id = MapID, line_id = LineI
     %3. 加入
     case map_interface:player_join_call(MapPid, Req) of
         ?E_Success ->
-            misc_ets:update_counter(State#state.ets, LineID, {#m_map_line.in, 1}),
             #r_join_map_ack{error = ?E_Success, map_id = MapID, line_id = LineID, map_pid = MapPid, pos = Req#r_join_map_req.tar_pos};
         _ ->
             #r_join_map_ack{map_id = MapID, line_id = LineID, map_pid = MapPid, error = ?E_Exception}
@@ -150,11 +149,6 @@ do_player_exit_map_call(S, Req) ->
 
             %% @todo 退出地图失败是否要处理
             ExitRes = map_interface:player_exit_call(Pid, Req),
-            case ExitRes of
-                ?E_Success ->
-                    misc_ets:update_counter(S#state.ets, LineID, {#m_map_line.in, -1});
-                _ -> skip
-            end,
             #r_exit_map_ack{error = ExitRes, map_id = Mid, line_id = LineID };
         _ ->
             ?ERROR("player ~p exit map_~p_~p but line ~p not exists",
@@ -167,7 +161,6 @@ player_exit_map_exception_call(S, Uid, LineID) ->
     case misc_ets:read(S#state.ets, LineID) of
         [#m_map_line{pid = Pid}] ->
             map_interface:player_exit_map_exception_call(Pid, Uid),
-            misc_ets:update_counter(S#state.ets, LineID, {#m_map_line.in, -1}),
             ok;
         _ ->
             ?ERROR("player ~p exit map_~p_~p but line ~p not exists",
@@ -180,7 +173,7 @@ create_new_line(S, MapID, LineID) ->
     %% @todo 此处要根据地图类型的不同来采取不同的策略
     %% 比如副本地图不用做任何优化
     %% 但是长时间存在的地图必须要调整内存相关属性，减少GC
-    {ok, Pid} = map_sup:start_child([MapID, LineID]),
+    {ok, Pid} = map_sup:start_child([MapID, LineID, S#state.ets]),
     Line = #m_map_line{
         map_id = MapID, line_id = LineID, pid = Pid, status = ?MAP_NORMAL,
         dead_line = misc_time:milli_seconds() + ?LINE_LIFETIME

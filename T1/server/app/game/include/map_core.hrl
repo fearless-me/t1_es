@@ -59,6 +59,7 @@
 -define(MAP_CALL_TIMEOUT, 15000).
 %% 地图初始化超时时间
 -define(MAP_INIT_TIMEOUT, 60000).
+-define(MAP_TICK_CLEAR_PLAYER, 5*60*1000).
 
 %% 地图进程心跳（毫秒）
 -define(MAP_TICK, 50).
@@ -79,7 +80,7 @@
 %% 视图
 -record(m_vis_tile, {index = 0, player = [], monster = [], npc = [], pet = []}).
 %% 地图进程状态
--record(m_map_state, {map_id = 0, line_id = 0, ets, respawn = [], hook_mod, status = ?MAP_NORMAL, protect_tick = ?DEAD_LINE_PROTECT div ?MAP_TICK}).
+-record(m_map_state, {map_id = 0, line_id = 0, ets, mgr_ets, respawn = [], hook_mod, status = ?MAP_NORMAL, protect_tick = ?DEAD_LINE_PROTECT div ?MAP_TICK}).
 %% 地图线路
 -record(m_map_line, {map_id = 0, line_id = 0, pid, limits = 150, in = 0, reserve = 10, dead_line = 0, status = ?MAP_NORMAL}).
 

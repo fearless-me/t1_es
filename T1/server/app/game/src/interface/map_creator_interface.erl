@@ -18,6 +18,7 @@
 
 %% API
 -export([
+    broadcast/1,
     is_cross_map/1, map_data/1,
     map_mgr_lr/2, map_mgr_l/1,
     born_map_id/0, born_map_pos/0, map_init_pos/1,
@@ -25,6 +26,25 @@
 ]).
 
 -export([status_/1, status/0]).
+
+broadcast(Msg) ->
+    erlang:spawn(
+        fun()->
+            QS = ets:fun2ms(fun(Info) -> Info#m_map_mgr.line_ets end),
+            List = misc_ets:select(?MAP_MGR_ETS, QS),
+            lists:foreach(fun(Ets)-> broadcast_to_line(Ets, Msg) end, List)
+        end),
+    ok.
+
+
+broadcast_to_line(Ets, Msg) ->
+    QS = ets:fun2ms(fun(Info) ->  Info#m_map_line.pid end),
+    List = misc_ets:select(Ets, QS),
+    lists:foreach(fun(Pid) ->
+        ?DEBUG("send to map pid ~p msg ~p", [Pid, Msg]),
+        ps:send(Pid, Msg)
+                  end, List),
+    ok.
 
 %%
 %% 一般情况切地图是制定了一定要加入某个线路

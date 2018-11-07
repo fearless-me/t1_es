@@ -36,7 +36,7 @@ mod_init(_Args) ->
     misc_ets:new(?MAP_MGR_ETS, [protected, named_table, {keypos, #m_map_mgr.map_id}, ?ETS_RC]),
     
     load_all_map(),
-    
+
     ?INFO("map_creator started"),
     {ok, {}}.
 
@@ -79,8 +79,6 @@ load_one_map(false, #mapCfg{is_cross = 0, id = MapID}) ->
 load_one_map(false, #mapCfg{is_cross = 1, id = MapID}) ->
     ?WARN("~p This is a normal-server won't create cross-server map mgr ~p ", [node(), MapID]),
     ok.
-
-
 
 
 

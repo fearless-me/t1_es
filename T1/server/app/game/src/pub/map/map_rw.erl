@@ -24,7 +24,7 @@
     %%
     add_obj_to_map/1, del_obj_to_map/1,
     %%
-    find_unit/1, find_unit/2,
+    find_unit/1, find_unit/2, unit_exist/2,
     %%
     detail_ets/0,
     obj_maps_with_uid/1, obj_maps_with_type/1,
@@ -109,6 +109,16 @@ find_unit(?OBJ_NPC, Uid) ->
         _ -> undefined
     end;
 find_unit(_Type, _Uid) -> undefined.
+
+unit_exist(?OBJ_PLAYER, Uid) ->
+    misc_ets:member(?ETS_CACHE_MAP_PLAYER, Uid);
+unit_exist(?OBJ_MON, Uid) ->
+    misc_ets:member(?ETS_CACHE_MAP_MONSTER, Uid);
+unit_exist(?OBJ_PET, Uid) ->
+    misc_ets:member(?ETS_CACHE_MAP_PET, Uid);
+unit_exist(?OBJ_NPC, Uid) ->
+    misc_ets:member(?ETS_CACHE_MAP_NPC, Uid).
+
 
 %%-------------------------------------------------------------------
 obj_maps_with_uid(Uid) ->
