@@ -13,53 +13,6 @@
 -include("logger.hrl").
 -include("pub_def.hrl").
 
--export([start_link/1, start_link/3]).
-
--export([init/1, handle_call/3, handle_cast/2, handle_info/2,
-    terminate/2, code_change/3]).
-
--export([info/0]).
--export([get_total_memory/0, get_vm_limit/0,
-    get_check_interval/0, set_check_interval/1,
-    get_vm_memory_high_watermark/0, set_vm_memory_high_watermark/1,
-    get_memory_limit/0]).
-
--export([set_monitor_large_heap/1, clear/0]).
-%% for tests
--export([parse_line_linux/1]).
-
-
--define(SERVER, ?MODULE).
--define(DEFAULT_MEMORY_CHECK_INTERVAL, 1000).
--define(ONE_MB, 1048576).
--define(TICK_LOG, 20 * 60 * 1000).
-
-%% For an unknown OS, we assume that we have 1GB of memory. It'll be
-%% wrong. Scale by vm_memory_high_watermark in configuration to get a
-%% sensible value.
--define(MEMORY_SIZE_FOR_UNKNOWN_OS, 1073741824).
--define(DEFAULT_VM_MEMORY_HIGH_WATERMARK, 0.4).
-
--record(state, {total_memory,
-    memory_limit,
-    memory_config_limit,
-    timeout,
-    timer,
-    alarmed,
-    alarm_funs
-}).
-
--define(VM_MONITOR_LOGGER, monitor_logger).
-%%
--define(LARGE_HEAP,             100*1024*1024).
--define(LARGE_HEAP_GUARD_MIN,   1*1024*1024).
-%%
--define(LONG_GC,                500).
--define(LONG_SCHEDULE,          500).
-%%
--define(REPORT_CACHE_ETS, system_monitor_ets__).
--record(monitor_info,{pid_or_port, event, info, start, latest, count=0, need_flush=true}).
-
 %%----------------------------------------------------------------------------
 
 -ifdef(use_specs).
@@ -77,6 +30,50 @@
 -spec(get_memory_limit/0 :: () -> non_neg_integer()).
 
 -endif.
+
+%%----------------------------------------------------------------------------
+-export([start_link/1, start_link/3]).
+
+-export([init/1, handle_call/3, handle_cast/2, handle_info/2,
+    terminate/2, code_change/3]).
+
+-export([info/0]).
+-export([get_total_memory/0, get_vm_limit/0,
+    get_check_interval/0, set_check_interval/1,
+    get_vm_memory_high_watermark/0, set_vm_memory_high_watermark/1,
+    get_memory_limit/0]).
+
+-export([set_monitor_large_heap/1, clear/0]).
+%% for tests
+-export([parse_line_linux/1]).
+
+
+%%----------------------------------------------------------------------------
+%%----------------------------------------------------------------------------
+-define(DEFAULT_MEMORY_CHECK_INTERVAL, 1000).
+-define(ONE_MB, 1048576).
+-define(TICK_LOG, 20 * 60 * 1000).
+
+%% For an unknown OS, we assume that we have 1GB of memory. It'll be
+%% wrong. Scale by vm_memory_high_watermark in configuration to get a
+%% sensible value.
+-define(MEMORY_SIZE_FOR_UNKNOWN_OS, 1073741824).
+-define(DEFAULT_VM_MEMORY_HIGH_WATERMARK, 0.4).
+%%
+-define(LARGE_HEAP,             100*1024*1024).
+-define(LARGE_HEAP_GUARD_MIN,   1*1024*1024).
+%%
+-define(LONG_GC,                500).
+-define(LONG_SCHEDULE,          500).
+%%
+-define(VM_MONITOR_LOGGER, monitor_logger).
+-define(REPORT_CACHE_ETS, system_monitor_ets__).
+
+%%
+-record(state, {total_memory, memory_limit, memory_config_limit, timeout, timer, alarmed, alarm_funs}).
+-record(monitor_info,{pid_or_port, event, info, start, latest, count=0, need_flush=true}).
+
+
 
 %%----------------------------------------------------------------------------
 %% Public API
@@ -128,7 +125,7 @@ start_link(MemFraction) ->
         fun alarm_handler:set_alarm/1, fun alarm_handler:clear_alarm/1).
 
 start_link(MemFraction, AlarmSet, AlarmClear) ->
-    gen_server:start_link({local, ?SERVER}, ?MODULE,
+    gen_server:start_link({local, ?MODULE}, ?MODULE,
         [MemFraction, {AlarmSet, AlarmClear}], []).
 
 init([MemFraction, AlarmFuns]) ->
