@@ -19,7 +19,7 @@
 %% API
 -export([
     broadcast/1,
-    is_cross_map/1, map_data/1,
+    is_cross_map/1, map_data/1,  map_type/1, normal_map/1,
     map_mgr_lr/2, map_mgr_l/1,
     born_map_id/0, born_map_pos/0, map_init_pos/1,
     map_line_recover/1
@@ -101,6 +101,15 @@ do_map_mgr_lr(_Any, _Uid, #mapCfg{id = MapID}) ->
         _ -> undefined
     end.
 
+
+map_type(MapID) ->
+    case getCfg:getCfgByArgs(cfg_map, MapID) of
+        #mapCfg{type = Type} -> Type;
+        _Any -> ?MAP_TYPE_INVALID
+    end.
+
+normal_map(MapID) ->
+    map_creator_interface:map_type(MapID) =:= ?MAP_TYPE_NORMAL.
 
 %%-------------------------------------------------------------------
 map_data(MapID) -> gameMapCfg:getMapCfg(MapID).

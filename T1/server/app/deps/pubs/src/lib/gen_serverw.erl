@@ -53,12 +53,14 @@
 -define(FULL_SWEEP,                         {fullsweep_after, 20}).
 -define(FULL_SWEEP_OPTIONS,                 {spawn_opt,[?FULL_SWEEP]}).
 -define(EFFECTIVE_MONITOR_GUARD,            effective_monitor_guard).
+-define(EFFECTIVE_MONITOR_INFO,             effective_monitor_info).
 -define(EFFECTIVE_MONITOR_MIN_MICROSECOND,  500000). %% 单位微秒
 -define(TIMELINE_KEY,                       msg_deal_timer).
 -define(TC(MFA, Msg), case i_need_effective_monitor() of
-                          0 -> MFA;
-                          _ -> catch tc_start(), RetVal = MFA, catch  tc_end(Msg), RetVal
+                          0 -> catch accumulated_msg(0), MFA;
+                          _ -> catch tc_start(), RetVal = MFA, catch tc_end(Msg), RetVal
                       end).
+-record(msg_exe_monitor_info,{msg=0, timeout=0, max=0, min=0}).
 %% 假设帧率是 20MS那么是50个消息/client/秒, 服务50client，
 %% 那么每个消息  1000*1000/2500 = 400micro seconds
 %% 所以每个消息最大处理时间(micro seconds)= 100000 / ClientCount / 1000 / frame_time
@@ -239,6 +241,7 @@ tc_end(Msg) ->
 i_tc_warn(_, Time, DeadLine) when Time < DeadLine ->
     skip;
 i_tc_warn(Msg, Time, _) ->
+    accumulated_msg(Time),
     erlang:spawn
     (
         fun()->
@@ -263,3 +266,33 @@ add_sweep_options(Options, SpawnOptions) ->
         false -> lists:keyreplace(spawn_opt, 1, Options, {spawn_opt,[?FULL_SWEEP | SpawnOptions]});
         _ ->  Options
     end.
+
+
+%%-------------------------------------------------------------------
+set_tick_info(Info) -> erlang:put(?EFFECTIVE_MONITOR_INFO, Info).
+get_tick_info() -> erlang:get(?EFFECTIVE_MONITOR_INFO).
+
+%%-------------------------------------------------------------------
+accumulated_msg(Milliseconds) ->
+    Td = misc:get_dict_def(?EFFECTIVE_MONITOR_GUARD, ?EFFECTIVE_MONITOR_MIN_MICROSECOND),
+    Info = do_accumulated_msg(get_tick_info(), Milliseconds, Td),
+    set_tick_info(Info).
+
+%%-------------------------------------------------------------------
+do_accumulated_msg(#msg_exe_monitor_info{msg = C, timeout = TC, min = Min, max = Max} = Info, Milliseconds, Td) when Milliseconds > Td ->
+    Info#msg_exe_monitor_info{
+        msg = C + 1,
+        timeout = TC + 1,
+        max = erlang:max(Max, Milliseconds),
+        min = erlang:min(Min, Milliseconds)
+    };
+do_accumulated_msg(#msg_exe_monitor_info{msg = C, min = Min, max = Max} = Info, Milliseconds, _Td) ->
+    Info#msg_exe_monitor_info{
+        msg = C + 1,
+        max = erlang:max(Max, Milliseconds),
+        min = erlang:min(Min, Milliseconds)
+    };
+do_accumulated_msg(_Any, Milliseconds, Td) when Milliseconds > Td ->
+    #msg_exe_monitor_info{msg = 1, timeout = 1, max = Milliseconds, min = Milliseconds};
+do_accumulated_msg(_Any, Milliseconds, _Td) ->
+    #msg_exe_monitor_info{msg = 1, timeout = 0, max = Milliseconds, min = Milliseconds}.

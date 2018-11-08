@@ -158,13 +158,14 @@ tick_clear_player() ->
                     end
                 end, 0, Maps
             ),
-        ?WARN("map ~p tick_clear_player ~p", [misc:registered_name(), ClearAll])
+        ?WARN("map ~p tick_clear_player ~p", [misc:registered_name(Pid), ClearAll])
      end
     ),
     ok.
 
 i_tick_clear_msg() ->
-    erlang:send_after(?MAP_TICK_CLEAR_PLAYER, self(), {event, clear_online_player}).
+    TickTime = ?if_else(gs_interface:is_cross(), ?MAP_TICK_CLEAR_PLAYER_CROSS, ?MAP_TICK_CLEAR_PLAYER_LOCAL),
+    erlang:send_after(TickTime, self(), {event, clear_online_player}).
 
 i_status() -> map_rw:status().
 

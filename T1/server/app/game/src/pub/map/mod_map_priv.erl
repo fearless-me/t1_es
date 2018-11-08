@@ -60,17 +60,17 @@ do_player_exit_call(S, _From, Uid, #m_cache_map_object{} = Obj) ->
         [Uid, map_rw:map_id(), map_rw:line_id(), self()]),
     
     map_rw:del_obj_to_map(Obj),
-    
+    misc_ets:update_counter(S#m_map_state.mgr_ets, map_rw:line_id(), {#m_map_line.in, -1}),
     ?TRY_CATCH(mod_view:sync_player_exit_map(Obj)),
     ?TRY_CATCH(hook_map:on_player_exit(Uid), Err1, St1),
-    misc_ets:update_counter(S#m_map_state.mgr_ets, map_rw:line_id(), {#m_map_line.in, -1}),
     {reply, ?E_Success, S};
 do_player_exit_call(S, _From, Uid, _Obj) ->
-    ?ERROR("~w req exit map ~w ~w, but obj not exists!",
+    ?WARN("~w req exit map ~w ~w, but obj not exists!",
         [Uid, self(), misc:registered_name()]),
-    map_rw:del_uid_from_maps(?OBJ_PLAYER, Uid),
-    ?TRY_CATCH_ONLY(mod_view:sync_player_exit_map(#m_cache_map_object{uid = Uid, type = ?OBJ_PLAYER})),
-    misc_ets:update_counter(S#m_map_state.mgr_ets, map_rw:line_id(), {#m_map_line.in, -1}),
+    catch map_rw:del_uid_from_maps(?OBJ_PLAYER, Uid),
+    catch mod_view:sync_player_exit_map(#m_cache_map_object{uid = Uid, type = ?OBJ_PLAYER}),
+    catch hook_map:on_player_exit(Uid),
+    catch misc_ets:update_counter(S#m_map_state.mgr_ets, map_rw:line_id(), {#m_map_line.in, -1}),
     {reply, ?E_Success, S}.
 
 %%-------------------------------------------------------------------
@@ -259,8 +259,8 @@ real_stop_now(_Players) ->
 %%-------------------------------------------------------------------
 -spec start_stop_now(S :: #m_map_state{}) -> #m_map_state{}.
 start_stop_now(S) ->
-    ?INFO("~p ~p start stop now, kick all player(s)",
-        [misc:registered_name(), self()]),
+    ?INFO("~p ~p start stop now, kick all ~p player(s)",
+        [misc:registered_name(), self(), map_rw:obj_size_with_type(?OBJ_PLAYER)]),
     ?TRY_CATCH(hook_map:on_map_destroy(), Err1, Stk1),
     ?TRY_CATCH(kick_all_player(S), Err2, Stk2),
     S#m_map_state{status = ?MAP_READY_EXIT}.
@@ -268,6 +268,7 @@ start_stop_now(S) ->
 kick_all_player(_S) ->
     maps:fold(
         fun(_, Uid, _) ->
+            ?WARN("~p kick player ~p",[misc:registered_name(), Uid]),
             catch player_interface:change_pre_map_(Uid)
         end, 0, map_rw:obj_maps_with_type(?OBJ_PLAYER)),
     ok.

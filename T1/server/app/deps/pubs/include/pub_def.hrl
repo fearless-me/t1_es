@@ -39,20 +39,18 @@
 %%-------------------------------------------------------------------------------
 -define(TRY_CATCH(Fun, Err, St, Format, Args),
     try Fun
-    catch _:Err:St ->
-        ?ERROR(Format ++ "Reason=~w,Stacktrace=~p", Args ++ [Err, St])
+    catch _:Err:St -> ?ERROR(Format ++ "Reason=~w,Stacktrace=~p", Args ++ [Err, St])
     end).
 
 %%-------------------------------------------------------------------------------
 -define(TRY_CATCH(Fun, Err, St, Tip),
     try Fun
-    catch _:Err:St ->
-        ?ERROR("~ts: Reason=~w,Stacktrace=~p", [Tip, Err, St])
+    catch _:Err:St -> ?ERROR("~ts: Reason=~w,Stacktrace=~p", [Tip, Err, St])
     end).
+
 -define(TRY_CATCH(Fun, Err, St),
     try Fun
-    catch _:Err:St ->
-        ?ERROR("Reason=~w,Stacktrace=~p", [Err, St])
+    catch _:Err:St -> ?ERROR("Reason=~w,Stacktrace=~p", [Err, St])
     end).
 
 -define(TRY_CATCH(Fun), ?TRY_CATCH(Fun,Err,St)).
@@ -79,12 +77,15 @@
     end).
 
 -define(TRY_CATCH_RET(Fun,Ret), ?TRY_CATCH_RET(Fun, Ret,Err,St)).
+%%-------------------------------------------------------------------------------
+-define(TRY_CATCH_TIP(Fun, Err),
+    try Fun
+    catch _ : Err : _  ->  ?ERROR("Reason=~w", [Err])
+    end
+).
 
 %%-------------------------------------------------------------------------------
--define(TRY_CATCH_ONLY(Fun),
-    try Fun
-    catch _:_ -> skip
-    end).
+-define(TRY_CATCH_ONLY(Fun), catch Fun).
 
 %%-------------------------------------------------------------------------------
 

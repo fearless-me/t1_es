@@ -9,6 +9,11 @@
 %%% todo 有些异常情况比如跨服很卡长时间不能获取跨服上地图管理器
 %%% todo 或者即使取到了在后续逻辑时timeout了怎么办（保证状态不错）？
 %%% todo 如果游戏服挂掉了，在跨服的玩家怎么处理
+%%% todo 如果跨服挂掉怎么办
+%%% todo 如果地图销毁,踢所有玩家，在地图保护时间内（20秒）(跨服、游戏服)玩家没有退出地图怎么办？
+%%% todo 如跨服中切跨服地图，但是跨服挂
+%%% todo 跨服中去切普通服务器，但是跨服挂了
+%%% todo 普通服切跨服，但是跨服不存在
 %%% @end
 %%% Created : 14. 六月 2018 14:23
 %%%-------------------------------------------------------------------
@@ -155,18 +160,32 @@ serve_change_map_call_ret(
     _Req, _Flag
 ) ->
     Uid = player_rw:get_uid(),
-    gs_cache_interface:update_online_player(
-        Uid,
-        [
-            {#m_cache_online_player.old_map_id, OldMid},
-            {#m_cache_online_player.old_line, OldLineId},
-            {#m_cache_online_player.old_pos, OldPos},
-            {#m_cache_online_player.map_id, Mid},
-            {#m_cache_online_player.line, LineId},
-            {#m_cache_online_player.map_pid, MPid},
-            {#m_cache_online_player.pos, Pos}
-        ]
-    ),
+    case map_creator_interface:normal_map(OldMid) of
+        true ->
+            gs_cache_interface:update_online_player(
+                Uid,
+                [
+                    {#m_cache_online_player.old_map_id, OldMid},
+                    {#m_cache_online_player.old_line, OldLineId},
+                    {#m_cache_online_player.old_pos, OldPos},
+                    {#m_cache_online_player.map_id, Mid},
+                    {#m_cache_online_player.line, LineId},
+                    {#m_cache_online_player.map_pid, MPid},
+                    {#m_cache_online_player.pos, Pos}
+                ]
+            );
+        _Any ->
+            gs_cache_interface:update_online_player(
+                Uid,
+                [
+                    {#m_cache_online_player.map_id, Mid},
+                    {#m_cache_online_player.line, LineId},
+                    {#m_cache_online_player.map_pid, MPid},
+                    {#m_cache_online_player.pos, Pos}
+                ]
+            )
+    end,
+
     player_rw:set_map(
         #m_player_map{map_id = Mid, line_id = LineId, map_pid = MPid}
     ),

@@ -43,10 +43,11 @@ mod_init([MapID]) ->
     EtsAtom = misc:create_atom(?MAP_LINES, [MapID]),
     Ets = misc_ets:new(EtsAtom, [named_table, public, {keypos, #m_map_line.line_id}, ?ETS_RC]),
     ?INFO("mapMgr ~p started, line ets:~p,mapID:~p", [ProcessName, Ets, MapID]),
-    ps:send(?GS_MAP_CREATOR_OTP, map_mgr_line_ets, {MapID, EtsAtom}),
     {ok, #state{ets = Ets, map_id = MapID}}.
 
 %%--------------------------------------------------------------------
+do_handle_call(get_line_ets, _From, State) ->
+    {reply, State#state.ets, State};
 do_handle_call({join_map, Req}, _From, State) ->
     Ret = do_player_join_map_call(State, Req),
     {reply, Ret, State};

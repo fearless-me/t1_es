@@ -35,7 +35,7 @@ mod_init(_Args) ->
     
     misc_ets:new(?MAP_MGR_ETS, [protected, named_table, {keypos, #m_map_mgr.map_id}, ?ETS_RC]),
     
-    load_all_map(),
+    start_all_map_mgr(),
 
     ?INFO("map_creator started"),
     {ok, {}}.
@@ -46,9 +46,6 @@ do_handle_call(Request, From, State) ->
     {reply, ok, State}.
 
 %%--------------------------------------------------------------------
-do_handle_info({map_mgr_line_ets, {MapID, Ets}}, State) ->
-    misc_ets:update_element(?MAP_MGR_ETS, MapID, {#m_map_mgr.line_ets, Ets}),
-    {noreply, State};
 do_handle_info(Info, State) ->
     ?ERROR("undeal info ~w", [Info]),
     {noreply, State}.
@@ -59,7 +56,7 @@ do_handle_cast(Request, State) ->
     {noreply, State}.
 
 %%--------------------------------------------------------------------
-load_all_map() ->
+start_all_map_mgr() ->
     IsCross = gs_interface:is_cross(),
     L = getCfg:get1KeyList(cfg_map),
     _ = [load_one_map(IsCross, getCfg:getCfgByArgs(cfg_map, MapID)) || MapID <- L],
@@ -67,7 +64,8 @@ load_all_map() ->
 
 load_one_map(true, #mapCfg{is_cross = 1, id = MapID}) ->
     {ok, Pid} = map_mgr_sup:start_child(MapID),
-    misc_ets:write(?MAP_MGR_ETS, #m_map_mgr{map_id = MapID, mgr = Pid}),
+    Ets = gen_server:call(Pid, get_line_ets, infinity),
+    misc_ets:write(?MAP_MGR_ETS, #m_map_mgr{map_id = MapID, mgr = Pid, line_ets = Ets}),
     ok;
 load_one_map(true, #mapCfg{is_cross = 0, id = MapID}) ->
     ?WARN("~p This is a cross-server won't create normal map mgr ~p ", [node(), MapID]),

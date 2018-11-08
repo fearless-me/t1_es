@@ -112,6 +112,11 @@ on_info_msg({create_player_ack, Ack}, S) ->
     player_priv:create_player_ack(Ack),
     S;
 on_info_msg(return_to_pre_map_req, S) ->
+    Uid = player_rw:get_uid(),
+    case cross_interface:is_player_in_cross(Uid) of
+        true -> timer:sleep(30000);
+        _Any -> skip
+    end,
     player_map_priv:return_to_old_map_call(),
     S;
 on_info_msg({passive_change_req, {DestMapID, LineId, TarPos}}, S) ->

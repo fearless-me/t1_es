@@ -18,6 +18,7 @@
 %% 1：副本地图
 %% 2：分组地图
 %% 3：活动地图
+-define(MAP_TYPE_INVALID,   -1).
 -define(MAP_TYPE_NORMAL,     0).
 -define(MAP_TYPE_COPY,       1).
 -define(MAP_TYPE_GROUP,      2).
@@ -59,7 +60,8 @@
 -define(MAP_CALL_TIMEOUT, 15000).
 %% 地图初始化超时时间
 -define(MAP_INIT_TIMEOUT, 60000).
--define(MAP_TICK_CLEAR_PLAYER, 5*60*1000).
+-define(MAP_TICK_CLEAR_PLAYER_LOCAL, 30*1000).
+-define(MAP_TICK_CLEAR_PLAYER_CROSS, 5*60*1000).
 
 %% 地图进程心跳（毫秒）
 -define(MAP_TICK, 50).

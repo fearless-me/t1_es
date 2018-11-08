@@ -73,7 +73,7 @@ do_check(true, Uid) ->
     Sid = cross_interface:get_player_cross_sid(Uid),
     case common_interface:is_server_alive(Sid) of
         true -> skip;
-        _Any -> player_pub:kick_to_born_map_(nodedown)
+        _Any -> player_pub:kick_to_born_map_(cross_nodedown)
     end;
 do_check(_Any, _Uid) -> skip.
 
