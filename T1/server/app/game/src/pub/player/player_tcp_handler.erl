@@ -112,11 +112,6 @@ on_info_msg({create_player_ack, Ack}, S) ->
     player_priv:create_player_ack(Ack),
     S;
 on_info_msg(return_to_pre_map_req, S) ->
-    Uid = player_rw:get_uid(),
-    case cross_interface:is_player_in_cross(Uid) of
-        true -> timer:sleep(30000);
-        _Any -> skip
-    end,
     player_map_priv:return_to_old_map_call(),
     S;
 on_info_msg({passive_change_req, {DestMapID, LineId, TarPos}}, S) ->
@@ -127,6 +122,12 @@ on_info_msg(passive_kick_to_born_map, S) ->
     S;
 on_info_msg({teleport, NewPos}, S) ->
     player_map_priv:teleport_call(NewPos),
+    S;
+on_info_msg({msg_transfer_to_map, MsgId}, S) ->
+    player_pub:send_map_msg_(MsgId),
+    S;
+on_info_msg({msg_transfer_to_map, MsgId, Msg}, S) ->
+    player_pub:send_map_msg_(MsgId, Msg),
     S;
 on_info_msg(Info, S) ->
     ?TRY_CATCH(player:on_info_msg(Info)),

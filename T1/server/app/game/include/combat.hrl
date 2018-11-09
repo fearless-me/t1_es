@@ -12,18 +12,8 @@
 -define(GS_COMBAT_INC_HRL, true).
 
 
-%% 属性定义
-%% @todo 看看是否能自动生成
-%% 可以让策划配置的不是数值比如 策划配置的是 max_hp 而不是数字1
-%% 程序这边要封装好属性相关的结构，方便读、打包、存、更新
-%%
-%%-define(ATTR_MIN, 1).
-%%-define(ATTR_MAX_HP, 1). %%最大生命
-%%-define(ATTR_ATTACK, 2). %%攻击
-%%-define(ATTR_SPEED, 3). %%速度
-%%-define(ATTR_MAX, 4).
--include("battle_prop.hrl").
 
+-include("battle_prop.hrl").    %% 属性定义
 
 %% 技能操作类型
 -define(SKILL_OP_INSTANT, 1).  %% 瞬发
@@ -72,8 +62,16 @@
 -define(ESR_BLOCKED, 2).    %% 格挡
 
 
-
+ -define(BUFF_FOREVER_LOGIC, 2147483647).
 -record(m_buff, {buff_id = 0, lifetime = 0, level = 1, wrap = 1, source = 0, latest=0}).
+%% fixme 临时定义一个 buff的配置表结构，具体什么样子未知
+-record(buffCfg, {
+ id=1, group_id=1, effect=0, debuff=1, del_trigger=[],
+ del_flag=0, life_time=10, tick_time=10, save_type=1,
+ max_layer=99, prop_list=[],
+ add_cond_event=[], tick_cond_event=[],
+ stop_cond_event=[], break_cond_event=[]
+}).
 
 
 

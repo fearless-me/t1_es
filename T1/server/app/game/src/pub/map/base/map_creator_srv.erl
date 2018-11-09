@@ -62,20 +62,18 @@ start_all_map_mgr() ->
     _ = [load_one_map(IsCross, getCfg:getCfgByArgs(cfg_map, MapID)) || MapID <- L],
     ok.
 
-load_one_map(true, #mapCfg{is_cross = 1, id = MapID}) ->
-    {ok, Pid} = map_mgr_sup:start_child(MapID),
-    Ets = gen_server:call(Pid, get_line_ets, infinity),
-    misc_ets:write(?MAP_MGR_ETS, #m_map_mgr{map_id = MapID, mgr = Pid, line_ets = Ets}),
-    ok;
 load_one_map(true, #mapCfg{is_cross = 0, id = MapID}) ->
     ?WARN("~p This is a cross-server won't create normal map mgr ~p ", [node(), MapID]),
     ok;
-load_one_map(false, #mapCfg{is_cross = 0, id = MapID}) ->
-    {ok, Pid} = map_mgr_sup:start_child(MapID),
-    misc_ets:write(?MAP_MGR_ETS, #m_map_mgr{map_id = MapID, mgr = Pid}),
-    ok;
 load_one_map(false, #mapCfg{is_cross = 1, id = MapID}) ->
     ?WARN("~p This is a normal-server won't create cross-server map mgr ~p ", [node(), MapID]),
+    ok;
+load_one_map(_Any, MapCfg) -> do_load_one_map(MapCfg).
+
+do_load_one_map(#mapCfg{id = MapID}) ->
+    {ok, Pid} = map_mgr_sup:start_child(MapID),
+    Ets = gen_server:call(Pid, get_line_ets, infinity),
+    misc_ets:write(?MAP_MGR_ETS, #m_map_mgr{map_id = MapID, mgr = Pid, line_ets = Ets}),
     ok.
 
 

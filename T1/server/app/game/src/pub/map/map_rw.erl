@@ -263,7 +263,7 @@ status()->
         {npc,       obj_size_with_type(?OBJ_NPC)},
         {monster,   obj_size_with_type(?OBJ_MON)},
         {respawn,   0},
-        {tick,      get_tick_info()}
+        get_tick_info(), gen_serverw:status_self()
     ].
 
 

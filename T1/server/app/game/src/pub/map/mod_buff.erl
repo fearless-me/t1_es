@@ -16,18 +16,24 @@
 -include("gs_common_rec.hrl").
 -include("combat.hrl").
 -include("rec_rw.hrl").
+-include("condition_event.hrl").
 
 %% API
 -export([
-    add_buff/4, %% 添加buff
+    add_buff/1, %% 添加buff
+    add_buff/7, %% 添加buff
     tick/2,     %% buff 周期触发
+    del_all/1,  %%删除所有buff
     del_buff/2, %% 删除某个id的buff
     del_buff_trigger/2, %% 删除某个事件触发的比如 进出地图、上下线
     del_buff_group/2, %% 删除某个buff组
     del_buff_effect/2,   %% 删除某个效果的buff
     del_debuff/1,  %% 删除debuff
-    del_buff_source/2  %% 删除某个来源的buff
+    del_enbuff/1,   %% 删除所有增益buff
+    del_buff_source/2,  %% 删除某个来源的buff
+    condition_event_del_buff/3 %% 条件事件删除buff
 ]).
+-export([is_buff_exist/2]).
 
 -define(BUFF_ADD, 1).
 -define(BUFF_REMOVE, 2).
@@ -43,22 +49,25 @@
 -define(REMOVE_DEATH, 1).
 -define(REMOVE_LEAVE_MAP, 2).
 
-%% fixme 临时定义一个 buff的配置表结构，具体什么样子未知
--record(buffCfg, {
-    id, group_id, type, debuff, del_trigger,
-    del_flag, life_time, tick_time, save_type,
-    max_layer, prop_list,
-    add_cond_event, tick_cond_event,
-    stop_cond_event, break_cond_event
-}).
 
 %%-------------------------------------------------------------------
-add_buff(Uid, BuffId, Level, SrcUid) ->
-    case can_add_buff(Uid, BuffId) of
+
+add_buff(Req) ->
+    #r_player_add_buff_req{
+        uid = Uid, src_uid = SrcUid,
+        buff_id = BuffId, level = Level,
+        skip_immune = SkipImmune,
+        layer = Layer, lifetime = LifeTime
+    } = Req,
+    mod_buff:add_buff(Uid, BuffId, Level, SrcUid, Layer, LifeTime, SkipImmune),
+    ok.
+
+add_buff(Uid, BuffId, Level, SrcUid, Layer, LifeTime, SkipImmune) ->
+    case can_add_buff(Uid, BuffId, SkipImmune) of
         true ->
             BuffList1 = i_get_buff_list(Uid),
             BuffExist = find_buff(BuffId, BuffList1),
-            case add_buff(BuffExist, Uid, BuffId, Level, SrcUid, BuffList1) of
+            case add_buff(BuffExist, Uid, BuffId, Level, SrcUid, Layer, LifeTime, BuffList1) of
                 keep -> skip;
                 BuffList2 -> i_set_buff_list(Uid, BuffList2)
             end;
@@ -67,36 +76,38 @@ add_buff(Uid, BuffId, Level, SrcUid) ->
     ok.
 
 %% 新的等级低
-add_buff(#m_buff{level = BuffLevel}, _Uid, _BuffId, Level, _SrcUid, _) when BuffLevel > Level ->
+add_buff(#m_buff{level = BuffLevel}, _Uid, _BuffId, Level, _SrcUid, _Layer, _LifeTime,  _) when BuffLevel > Level ->
     keep;
 %% 新的等级高 %% todo 这种地方要优化属性计算
-add_buff(#m_buff{level = BuffLevel} = OldBuff, Uid, BuffId, Level, SrcUid, BuffList) when BuffLevel < Level ->
+add_buff(#m_buff{level = BuffLevel} = OldBuff, Uid, BuffId, Level, SrcUid, Layer, LifeTime, BuffList) when BuffLevel < Level ->
     catch trigger_buff_event(?BUFF_REMOVE, Uid, OldBuff),
     catch trigger_buff_prop(?PROP_DEL, Uid, OldBuff),
-    Buff = make_buff(Uid, BuffId, Level, SrcUid),
+    Buff = make_buff(Uid, BuffId, Level, SrcUid, Layer, LifeTime),
     on_update_buff(Uid, Buff),
     catch trigger_buff_event(?BUFF_ADD, Uid, Buff),
     catch trigger_buff_prop(?PROP_ADD, Uid, Buff),
     lists:keystore(BuffId, #m_buff.buff_id, BuffList, Buff);
 %% 新的等级一样 更新
-add_buff(#m_buff{level = Level}, Uid, BuffId, Level, SrcUid, BuffList) ->
-    Buff = make_buff(Uid, BuffId, Level, SrcUid),
+add_buff(#m_buff{level = Level, wrap = Wrap}, Uid, BuffId, Level, SrcUid, Layer, LifeTime, BuffList) ->
+    NewLayer = erlang:max(Wrap, Layer),
+    Buff = make_buff(Uid, BuffId, Level, SrcUid, NewLayer, LifeTime),
     lists:keystore(BuffId, #m_buff.buff_id, BuffList, Buff);
 %% 没有这个buff， 添加新buff
-add_buff(_Any, Uid, BuffId, Level, SrcUid, BuffList) ->
-    Buff = make_buff(Uid, BuffId, Level, SrcUid),
+add_buff(_Any, Uid, BuffId, Level, SrcUid, Layer, LifeTime, BuffList) ->
+    Buff = make_buff(Uid, BuffId, Level, SrcUid, Layer, LifeTime),
     on_add_buff(Uid, Buff),
     catch trigger_buff_event(?BUFF_ADD, Uid, Buff),
     catch trigger_buff_prop(?PROP_ADD, Uid, Buff),
     [Buff | BuffList].
 
 %% todo 检查能否添加buff
-can_add_buff(_Uid, _BuffId) ->
+can_add_buff(_Uid, _BuffId, _SkipImmune) ->
     true.
 
 %% 
-make_buff(_Uid, BuffId, Level, SrcUid) ->
-    #m_buff{buff_id = BuffId, lifetime = 1000, level = Level, source = SrcUid}.
+make_buff(_Uid, BuffId, Level, SrcUid, Layer, LifeTime) ->
+    RealLifeTime = ?if_else(LifeTime == 0, 1000, LifeTime),
+    #m_buff{buff_id = BuffId, lifetime = RealLifeTime, level = Level, source = SrcUid, wrap = Layer}.
 
 %%-------------------------------------------------------------------
 find_buff(_BuffId, []) ->
@@ -111,14 +122,33 @@ is_buff_exist(BuffId, BuffList) ->
     lists:keymember(BuffId, #m_buff.buff_id, BuffList).
 
 %%-------------------------------------------------------------------
+del_all(Uid) -> do_del_all(Uid).
 del_buff(Uid, BuffId) -> do_del_buff(Uid, #m_buff.buff_id, BuffId).
 del_buff_source(Uid, Source) -> do_del_buff(Uid, #m_buff.source, Source).
+del_debuff(Uid) -> do_del_buff_cfg(Uid, #buffCfg.debuff, [1]).
+del_enbuff(Uid) -> do_del_buff_cfg(Uid, #buffCfg.debuff, [0]).
+del_buff_effect(Uid, Type) -> do_del_buff_cfg(Uid, #buffCfg.effect, [Type]).
+del_buff_group(Uid, GroupId) -> do_del_buff_cfg(Uid, #buffCfg.group_id, [GroupId]).
+del_buff_trigger(Uid, Trigger) -> do_del_buff_cfg(Uid, #buffCfg.del_trigger, [Trigger]).
 
-%% todo 根据配置表类型筛选buff
-del_debuff(Uid) -> do_del_buff_cfg(Uid, #buffCfg.debuff, 1).
-del_buff_effect(Uid, Type) -> do_del_buff_cfg(Uid, #buffCfg.type, Type).
-del_buff_group(Uid, GroupId) -> do_del_buff_cfg(Uid, #buffCfg.group_id, GroupId).
-del_buff_trigger(Uid, Trigger) -> do_del_buff_cfg(Uid, #buffCfg.del_trigger, Trigger).
+%% 事件删除buff
+condition_event_del_buff(?BUFF_CHECK_TYPE_ID, Uid, BuffIdList) ->
+    do_del_buff_cfg(Uid, #buffCfg.id, BuffIdList);
+condition_event_del_buff(?BUFF_CHECK_TYPE_EN_DE, Uid, [_1, _2]) ->
+    do_del_all(Uid);
+condition_event_del_buff(?BUFF_CHECK_TYPE_EN_DE, Uid, [Type]) ->
+    ?if_else(Type == ?BUFF_DEBUFF, del_debuff(Uid), del_enbuff(Uid));
+condition_event_del_buff(?BUFF_CHECK_TYPE_EFFECT, Uid, EffectList) ->
+    do_del_buff_cfg(Uid, #buffCfg.effect, EffectList);
+condition_event_del_buff(?BUFF_CHECK_TYPE_GROUP, Uid, GroupList) ->
+    do_del_buff_cfg(Uid, #buffCfg.group_id, GroupList).
+
+%%-------------------------------------------------------------------
+do_del_all(Uid) ->
+    BuffList1 = i_get_buff_list(Uid),
+    i_set_buff_list(Uid, []),
+    on_delete_buff(Uid, BuffList1, ?BUFF_REMOVE),
+    ok.
 
 %%-------------------------------------------------------------------
 do_del_buff(Uid, Pos, Key) ->
@@ -129,9 +159,9 @@ do_del_buff(Uid, Pos, Key) ->
 
     ok.
 
-do_del_buff_cfg(Uid, Pos, Key) ->
+do_del_buff_cfg(Uid, Pos, KeyList) ->
     BuffList1 = i_get_buff_list(Uid),
-    {Matched, Unmatched} = i_filter_buff_list_cfg(BuffList1, [], [], Pos, Key),
+    {Matched, Unmatched} = i_filter_buff_list_cfg(BuffList1, [], [], Pos, KeyList),
     i_set_buff_list(Uid, Unmatched),
     on_delete_buff(Uid, Matched, ?BUFF_REMOVE),
     ok.
@@ -145,26 +175,25 @@ i_filter_buff_list([Buff | Original], Matched, Unmatched, Pos, Key) ->
     i_filter_buff_list(Original, Matched, [Buff | Unmatched], Pos, Key).
 
 %%-------------------------------------------------------------------
-i_filter_buff_list_cfg([], Matched, Unmatched, _Pos, _Key) ->
+i_filter_buff_list_cfg([], Matched, Unmatched, _Pos, _KeyList) ->
     {Matched, Unmatched};
-i_filter_buff_list_cfg([Buff | Original], Matched, Unmatched, Pos, Key) ->
-    case i_filter_buff_cfg(Buff, Pos, Key) of
+i_filter_buff_list_cfg([Buff | Original], Matched, Unmatched, Pos, KeyList) ->
+    case i_filter_buff_cfg(Buff, Pos, KeyList) of
         true ->
-            i_filter_buff_list_cfg(Original, [Buff | Matched], Unmatched, Pos, Key);
+            i_filter_buff_list_cfg(Original, [Buff | Matched], Unmatched, Pos, KeyList);
         _Any ->
-            i_filter_buff_list_cfg(Original, Matched, [Buff | Unmatched], Pos, Key)
+            i_filter_buff_list_cfg(Original, Matched, [Buff | Unmatched], Pos, KeyList)
     end.
 
-i_filter_buff_cfg(_BuffId, Pos, Key) ->
+i_filter_buff_cfg(_BuffId, Pos, KeyList) ->
     BuffCfg = #buffCfg{},
-    element(Pos, BuffCfg) == Key.
-
+    lists:member(element(Pos, BuffCfg), KeyList).
 
 %%-------------------------------------------------------------------
 tick(#m_cache_map_object{uid = Uid}, Now) ->
     tick(Uid, i_get_buff_list(Uid), Now).
 
-tick(_Uid, [], Now) -> ok;
+tick(_Uid, [], _Now) -> ok;
 tick(Uid, BuffList, Now) ->
     {DelBuffList, UpdateBuffList, NewBuffList} = tick_all_buff(BuffList, Uid, [], [], [], Now),
     i_set_buff_list(Uid, NewBuffList),

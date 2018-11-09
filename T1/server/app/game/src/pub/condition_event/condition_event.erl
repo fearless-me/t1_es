@@ -13,40 +13,6 @@
 -include("gs_cache.hrl").
 -include("condition_event.hrl").
 %%-include("cfg_conditional_event.hrl").
-
-%% 条件事件集合表
--record(conditional_eventCfg, {
-    %% 行描述
-    desc__,
-    
-    %% ID
-    id,
-    
-    %% 作用模块
-    %% 0：通用
-    %% 1：技能
-    %% 2：副本
-    module,
-    
-    %% 主类型
-    type,
-    
-    %% 子类型
-    subtype,
-    
-    %% 条件
-    conditional,
-    
-    %% 事件真
-    event_true,
-    
-    %% 事件假
-    event_false,
-    
-    %% 参数列表
-    param
-}).
-
 %% API
 -export([action_all/2, action/2]).
 
@@ -76,7 +42,7 @@ condition_loop(
     [[?CONDITION_OR | _] = Condition | Conditions],
     Params
 ) ->
-    case condition_check:check(Condition, Params) of
+    case condition_action:check(Condition, Params) of
         true -> true;
         _Any -> condition_loop(false, Conditions, Params)
     end;
@@ -85,7 +51,7 @@ condition_loop(
     [[?CONDITION_AND | _] = Condition | Conditions],
     Params
 ) ->
-    case condition_check:check(Condition, Params) of
+    case condition_action:check(Condition, Params) of
         false -> false;
         _Any -> condition_loop(true, Conditions, Params)
     end.

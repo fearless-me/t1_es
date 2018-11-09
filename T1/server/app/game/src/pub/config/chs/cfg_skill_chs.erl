@@ -36,7 +36,7 @@ getRow(10000) ->
 		castanim = "1_1_1",
 		skilleffect = "1_1_1",
 		hiteffect = "2_1_1",
-		beforecast = [],
+		beforecast = [[[0,0,0,0,0,0]],[],[]],
 		castingtick = [],
 		beforehit = [],
 		ishit = [[],[[0,2,0,0,1000,0,0,0]],[]],

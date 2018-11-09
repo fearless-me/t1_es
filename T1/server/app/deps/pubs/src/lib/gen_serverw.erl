@@ -18,10 +18,15 @@
 -include("logger.hrl").
 
 %% API
--export([set_timeline/2, pause_effective_monitor/1, continue_effective_monitor/2]).
--export([start_link/1, start_link/2, start_link/3, start_link/4]).
--export([start_link2/1, start_link2/2, start_link2/3, start_link2/4]).
--export([init/1, init_loop/2, handle_call/3, handle_cast/2, handle_info/2, terminate/2, code_change/3]).
+-export([
+    set_timeline/2, pause_effective_monitor/1, continue_effective_monitor/2,
+    status_self/0, status/1, status_/1
+]).
+-export([
+    start_link/1, start_link/2, start_link/3, start_link/4,
+    start_link2/1, start_link2/2, start_link2/3, start_link2/4,
+    init/1, init_loop/2, handle_call/3, handle_cast/2, handle_info/2, terminate/2, code_change/3
+]).
 
 -callback mod_init(Args :: term()) ->
     {ok, State :: term()} | {ok, State :: term(), timeout() | hibernate} |
@@ -111,6 +116,27 @@ pause_effective_monitor(Name) ->
 continue_effective_monitor(Name, Millisecond) ->
     ps:send(Name, continue_effective_monitor, Millisecond * 1000).
 
+status_self() ->
+    try
+        Base = erlang:get(?EFFECTIVE_MONITOR_GUARD),
+        Info =
+            case erlang:get(?EFFECTIVE_MONITOR_INFO) of
+                #msg_exe_monitor_info{max = Max, min = Min} = Info1 ->
+                    Info1#msg_exe_monitor_info{max = micro_to_milli(Max), min = micro_to_milli(Min)};
+                Any -> Any
+            end,
+        [{base, micro_to_milli(Base)}, Info]
+    catch _ : Error : _  -> Error
+    end.
+
+micro_to_milli(Val) -> erlang:trunc(Val / 1000).
+
+status(Name) ->
+    gen_server:call(Name, inner_core_status).
+
+status_(Name) ->
+    ps:send(Name, inner_core_status).
+
 %%--------------------------------------------------------------------
 %% @private
 %% @doc
@@ -125,6 +151,7 @@ init(Args) ->
         [Module, ArgList] = Args,
         put(?LogicModule, Module),
         Ret = Module:mod_init(ArgList),
+        i_auto_effective_monitor(),
         EffectiveMicroseconds = i_need_effective_monitor(),
         ?INFO("~p|~p|~p|~p init ok", [misc:registered_name(), Module, self(), EffectiveMicroseconds]),
         Ret
@@ -152,6 +179,8 @@ init_loop(Module, ArgList) ->
 %%
 %% @end
 %%--------------------------------------------------------------------
+handle_call(inner_core_status, _From, State) ->
+    {reply, gen_serverw:status_self(), State};
 handle_call(Request, From, State) ->
     Module = get(?LogicModule),
     try ?TC(Module:do_handle_call(Request, From, State), {Request, From})
@@ -191,10 +220,13 @@ handle_info({set_timeline, Microseconds}, State) ->
     erlang:put(?EFFECTIVE_MONITOR_GUARD, Microseconds),
     {noreply, State};
 handle_info(pause_effective_monitor, State) ->
-    put(?EFFECTIVE_MONITOR_GUARD, 0),
+    erlang:put(?EFFECTIVE_MONITOR_GUARD, 0),
     {noreply, State};
 handle_info({continue_effective_monitor, Microseconds}, State) ->
-    put(?EFFECTIVE_MONITOR_GUARD, Microseconds),
+    erlang:put(?EFFECTIVE_MONITOR_GUARD, Microseconds),
+    {noreply, State};
+handle_info(inner_core_status, State) ->
+    catch ?WARN("~n***~p|~p~n~p~n***~n",[self(), misc:registered_name(), gen_serverw:status_self()]),
     {noreply, State};
 handle_info(Info, State) ->
     Module = get(?LogicModule),
@@ -236,12 +268,12 @@ tc_end(Msg) ->
         undefine -> 0;
         StartTime -> misc_time:micro_seconds() - StartTime
     end,
+    accumulated_msg(Tf),
     i_tc_warn(Msg, Tf, Td).
 
 i_tc_warn(_, Time, DeadLine) when Time < DeadLine ->
     skip;
 i_tc_warn(Msg, Time, _) ->
-    accumulated_msg(Time),
     erlang:spawn
     (
         fun()->
@@ -269,14 +301,14 @@ add_sweep_options(Options, SpawnOptions) ->
 
 
 %%-------------------------------------------------------------------
-set_tick_info(Info) -> erlang:put(?EFFECTIVE_MONITOR_INFO, Info).
-get_tick_info() -> erlang:get(?EFFECTIVE_MONITOR_INFO).
+set_monitor_info(Info) -> erlang:put(?EFFECTIVE_MONITOR_INFO, Info).
+get_monitor_info() -> erlang:get(?EFFECTIVE_MONITOR_INFO).
 
 %%-------------------------------------------------------------------
 accumulated_msg(Milliseconds) ->
     Td = misc:get_dict_def(?EFFECTIVE_MONITOR_GUARD, ?EFFECTIVE_MONITOR_MIN_MICROSECOND),
-    Info = do_accumulated_msg(get_tick_info(), Milliseconds, Td),
-    set_tick_info(Info).
+    Info = do_accumulated_msg(get_monitor_info(), Milliseconds, Td),
+    set_monitor_info(Info).
 
 %%-------------------------------------------------------------------
 do_accumulated_msg(#msg_exe_monitor_info{msg = C, timeout = TC, min = Min, max = Max} = Info, Milliseconds, Td) when Milliseconds > Td ->
@@ -296,3 +328,11 @@ do_accumulated_msg(_Any, Milliseconds, Td) when Milliseconds > Td ->
     #msg_exe_monitor_info{msg = 1, timeout = 1, max = Milliseconds, min = Milliseconds};
 do_accumulated_msg(_Any, Milliseconds, _Td) ->
     #msg_exe_monitor_info{msg = 1, timeout = 0, max = Milliseconds, min = Milliseconds}.
+
+
+
+-ifdef(RELEASE).
+i_auto_effective_monitor() -> ok.
+-else.
+i_auto_effective_monitor() -> put(?EFFECTIVE_MONITOR_GUARD, ?EFFECTIVE_MONITOR_MIN_MICROSECOND).
+-endif.

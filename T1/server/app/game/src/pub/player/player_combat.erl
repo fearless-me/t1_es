@@ -60,7 +60,6 @@ add_buff(BuffId, Level) ->
     player_pub:send_map_msg_(player_add_buff, Req),
     ok.
 
-
 %%-------------------------------------------------------------------
 use_skill(SkillId, Tar, Pos, Serial) ->
     ?DEBUG("~p use skill ~p serial ~p at pos ~w", [player_rw:get_uid(), SkillId, Serial, Pos]),

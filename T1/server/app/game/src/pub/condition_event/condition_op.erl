@@ -23,6 +23,6 @@ op(?LOGIC_GE, P1, P2) ->
     P1 >= P2;
 op(?LOGIC_LE, P1, P2) ->
     P1 =< P2;
-op(?LOGIC_NEQ, P1, P2) ->
+op(?LOGIC_NE, P1, P2) ->
     not (P1 == P2).
 

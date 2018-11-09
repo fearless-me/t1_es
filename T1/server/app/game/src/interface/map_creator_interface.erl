@@ -184,8 +184,8 @@ status( ) ->
         io_lib:format("status(detail) error ~p~n",[Error])
     end.
 
--define(INFO_FMT, "~-10.w~-20.w~-10.w~-10.w~-10.w~-30.ts~-10.w~w~n").
--define(INFO_FMT_STR, "~-10.ts~-20.ts~-10.ts~-10.ts~-10.ts~-30.ts~-10.ts~ts~n").
+-define(INFO_FMT, "~-10.w~-15.w~-10.w~-10.w~-10.w~-25.ts~-10.w~w~n").
+-define(INFO_FMT_STR, "~-10.ts~-15.ts~-10.ts~-10.ts~-10.ts~-25.ts~-10.ts~ts~n").
 line_status(MapId, LineEts, Extra) ->
     Overview = io_lib:format("~nmapid:~p  line count:~p~n", [MapId, misc_ets:size(LineEts)]),
     List = misc_ets:to_list(LineEts),

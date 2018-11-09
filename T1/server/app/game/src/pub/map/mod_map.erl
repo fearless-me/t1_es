@@ -30,8 +30,13 @@ on_info_msg({player_use_skill, Req}) ->
     mod_combat:use_skill(Aer, Der, SkillId, Serial),
     ok;
 on_info_msg({player_add_buff, Req}) ->
-    #r_player_add_buff_req{uid = Uid, src_uid = SrcUid, buff_id = BuffId, level = Level} = Req,
-    mod_buff:add_buff(Uid, BuffId, Level, SrcUid),
+    mod_buff:add_buff(Req),
+    ok;
+%%on_info_msg({contiond_event_add_buff, Req}) ->
+%%    mod_buff:add_buff(Req),
+%%    ok;
+on_info_msg({player_del_buff, Uid, OpType, Params}) ->
+    mod_buff:condition_event_del_buff(OpType, Uid, Params),
     ok;
 on_info_msg(Info) ->
     ?DEBUG("info:~p", [Info]),
