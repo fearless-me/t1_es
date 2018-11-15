@@ -66,8 +66,10 @@ get_cgs_info() ->
 %%%-------------------------------------------------------------------
 is_server_alive(ServerID) ->
     case misc_mnesia:dirty_read(?MNESIA_SERVER_INFO, ServerID) of
-        [] -> false;
-        _ -> true
+        [#m_share_server_info{status = ?SEVER_STATUS_DONE}] ->
+            true;
+        _Any ->
+            false
     end.
 
 %%%-------------------------------------------------------------------

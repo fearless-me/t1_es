@@ -147,10 +147,10 @@ test_trigger_state(Uid, Trigger, TarUid) when is_integer(TarUid) ->
     test_trigger_state(Uid, Trigger, Obj);
 test_trigger_state(_Uid, _Trigger, undefined) ->
     false;
-test_trigger_state(Uid, #m_ai_trigger{cfg_id = _Id}, #m_cache_map_object{uid = TarUid} = Obj) ->
+test_trigger_state(Uid, #m_ai_trigger{cfg_id = _Id}, #m_cache_map_object_priv{uid = TarUid} = Obj) ->
     case
-        object_core:is_dead(Uid) orelse
-            object_core:is_dead(TarUid)
+        object_priv:is_dead(Uid) orelse
+            object_priv:is_dead(TarUid)
     of
         true ->
             false;

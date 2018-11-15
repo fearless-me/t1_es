@@ -474,6 +474,7 @@ system_info() ->
     "thread pool size(+A)                   :   ~p ~n\t"
     "system version                         :   ~ts~n\t"
     "ERTS vesion                            :   ~ts~n\t"
+    "garbage collection info                :   ~p ~n\t"
     "ulimit -a                              :   ~ts~n\t"
     "sytem monitor                          :   ~w~n"
     "======================================================================================================~n",
@@ -488,6 +489,7 @@ system_info() ->
             erlang:system_info(thread_pool_size),
             erlang:system_info(otp_release),
             erlang:system_info(version),
+            erlang:statistics(garbage_collection),
             ulimit(misc:os_type()),
             erlang:system_monitor()
         ]

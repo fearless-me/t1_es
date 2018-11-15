@@ -11,20 +11,38 @@
 -ifndef(GS_CACHE_INC_HRL).
 -define(GS_CACHE_INC_HRL, true).
 
-%% 玩家部分数据的一个快照
+%% @doc
+%% 玩家部分数据的一个快照,提供给**本服务器*所有模块**访问
+%%　
+%% 包括服务器删给所有角色的信息
+%% 这部分数据是玩家进程更新过来的
 -define(ETS_CACHE_PLAYER_PUB, ets_cache_player_pub).
 -record(m_cache_player_pub, {
-    % 玩家进程上线是初始化、运行时更新
-    uid, aid, sid, name, sex, career, race, camp, level
+    uid, aid, sid, name, sex, career, race, camp, head, level
 }).
 
-%% 在线玩家的实时数据
+%% @doc
+%% 在线玩家的实时数据（这部分数据是在线提供给**本服务器*所有模块**访问用的）
+%% 玩家私有数据**不要**存到这里
+%% 部分数据是由玩家进程更新
+%% 部分数据是由地图进程更新（包括战斗相关的）
 -define(ETS_CACHE_ONLINE_PLAYER, ets_cache_player_online).
 -record(m_cache_online_player, {
-    uid, aid, pid, socket, level, career = 0, sid=0,
-    map_id = -1, line = 0, map_pid, pos,
-    old_map_id = -1, old_line = 0, old_pos,
-    state = 0, hp = 0, prop_list = [], buff_list = []
+    %-------------------------------------------------------------------
+    %% 这些基础信息有玩家进程来更新
+    uid, aid, pid, socket, level=1, sid=0,
+    name="", sex=0, career=1, race=1, camp=0, head=0,
+    map_id = -1, line = 0, map_pid, old_map_id = -1, old_line = 0, old_pos,
+    
+    %-------------------------------------------------------------------
+    %% 玩家移动时的实时位置由地图进程更新，其他情况下由玩家进程来更新
+    pos,
+
+    %-------------------------------------------------------------------
+    %% 地图进程来维护的信息 这部分主要牵涉到战斗信息
+    state = 0, %% 状态
+    hp = 0, battle_props, buff_list = []
+    %-------------------------------------------------------------------
 }).
 
 %% 记录跨服玩家
@@ -42,12 +60,12 @@
 -define(ETS_CACHE_ALARM_PLAYER, ets_cache_alarm_player).
 -record(m_cache_alarm_player, {uid, alarm_data}).
 
-%% 地图上所有对象的共享ETS
--record(m_cache_map_object, {uid = 0, pid = 0, data_id = 0, map_id = 0, line_id = 0, owner = 0, type = 0}).
--define(ETS_CACHE_MAP_PET, ets_cache_map_pet).
--define(ETS_CACHE_MAP_NPC, ets_cache_map_npc).
--define(ETS_CACHE_MAP_PLAYER, ets_cache_map_player).
--define(ETS_CACHE_MAP_MONSTER, ets_cache_map_monster).
+%% 地图上所有对象的共享ETS(基础逻辑需要这个,其他逻辑使用object_rw模块)
+-record(m_cache_map_object_priv, {uid = 0, pid = 0, data_id = 0, map_id = 0, line_id = 0, owner = 0, type = 0}).
+-define(ETS_CACHE_MAP_PET_PRIV, ets_cache_map_pet_priv).
+-define(ETS_CACHE_MAP_NPC_PRIV, ets_cache_map_npc_priv).
+-define(ETS_CACHE_MAP_PLAYER_PRIV, ets_cache_map_player_priv).
+-define(ETS_CACHE_MAP_MONSTER_PRIV, ets_cache_map_monster_priv).
 
 
 

@@ -11,6 +11,7 @@
 -ifndef(PUB_DEF_HRL).
 -define(PUB_DEF_HRL, true).
 
+-include("logger.hrl").
 -include_lib("stdlib/include/ms_transform.hrl").
 
 -define(ETS_RC,{read_concurrency,true}).
@@ -39,18 +40,18 @@
 %%-------------------------------------------------------------------------------
 -define(TRY_CATCH(Fun, Err, St, Format, Args),
     try Fun
-    catch _:Err:St -> ?ERROR(Format ++ "Reason=~w,Stacktrace=~p", Args ++ [Err, St])
+    catch _:Err:St -> ?ERROR(Format ++ "Error=~w,stack=~p", Args ++ [Err, St])
     end).
 
 %%-------------------------------------------------------------------------------
 -define(TRY_CATCH(Fun, Err, St, Tip),
     try Fun
-    catch _:Err:St -> ?ERROR("~ts: Reason=~w,Stacktrace=~p", [Tip, Err, St])
+    catch _:Err:St -> ?ERROR("~ts: Error=~w,stack=~p", [Tip, Err, St])
     end).
 
 -define(TRY_CATCH(Fun, Err, St),
     try Fun
-    catch _:Err:St -> ?ERROR("Reason=~w,Stacktrace=~p", [Err, St])
+    catch _:Err:St -> ?ERROR("Error=~w,stack=~p", [Err, St])
     end).
 
 -define(TRY_CATCH(Fun), ?TRY_CATCH(Fun,Err,St)).
@@ -58,38 +59,50 @@
 %%-------------------------------------------------------------------------------
 -define(TRY_CATCH_RET(Fun, Ret, Err, St, Format, Args),
     try Fun
-    catch _:Err:St ->
-        ?ERROR(Format ++ "Reason=~w,Stacktrace=~p", Args ++ [Err, St]),
-        Ret
+    catch _:Err:St -> ?ERROR(Format ++ "Error=~w,stack=~p", Args ++ [Err, St]), Ret
     end).
 
 -define(TRY_CATCH_RET(Fun, Ret, Err, St, Tip),
     try Fun
-    catch _:Err:St ->
-        ?ERROR("~ts: Reason=~w,Stacktrace=~p", [Tip,Err,St]),
-        Ret
+    catch _:Err:St -> ?ERROR("~ts: Error=~w,stack=~p", [Tip,Err,St]), Ret
     end).
+
 -define(TRY_CATCH_RET(Fun, Ret, Err, St),
     try Fun
-    catch _:Err:St ->
-        ?ERROR("Reason=~w,Stacktrace=~p", [Err,St]),
-        Ret
+    catch _:Err:St -> ?ERROR("Error=~w,stack=~p", [Err,St]), Ret
     end).
 
 -define(TRY_CATCH_RET(Fun,Ret), ?TRY_CATCH_RET(Fun, Ret,Err,St)).
 %%-------------------------------------------------------------------------------
 -define(TRY_CATCH_TIP(Fun, Err),
     try Fun
-    catch _ : Err : _  ->  ?ERROR("Reason=~w", [Err])
+    catch _ : Err : _  ->  ?ERROR("Error=~w", [Err])
     end
 ).
 
 %%-------------------------------------------------------------------------------
+-define(TRY_CATCH_ERROR(Fun, Err),
+    try Fun
+    catch _:Err:_ -> ?ERROR("Error=~w", [Err])
+    end).
+
+-define(TRY_CATCH_ERROR(Fun), ?TRY_CATCH_ERROR(Fun, Err)).
+
+-define(TRY_CATCH_ERROR_RET(Fun, Err, Ret),
+    try Fun
+    catch _:Err:_ -> ?ERROR("Error=~w", [Err]), Ret
+    end).
+
+-define(TRY_CATCH_ERROR_RET(Fun, Ret), ?TRY_CATCH_ERROR_RET(Fun, Err, Ret)).
+
+-define(TRY_CATCH_RET_ONLY(Fun, Ret),
+    try Fun
+    catch _:_:_ -> Ret
+    end).
+%%-------------------------------------------------------------------------------
 -define(TRY_CATCH_ONLY(Fun), catch Fun).
 
 %%-------------------------------------------------------------------------------
-
-
 
 
 -endif.

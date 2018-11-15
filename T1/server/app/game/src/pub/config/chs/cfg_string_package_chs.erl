@@ -107,7 +107,16 @@ getRow(1000000) ->
 		enum_string_id = "",
 		type = 4,
 		notice_type = 0,
-		content = "剑圣"
+		content = "1000000"
+	};
+getRow(1000001) ->
+	#string_packageCfg{
+		desc__ = "添加回血BUFF",
+		id = 1000001,
+		enum_string_id = "",
+		type = 4,
+		notice_type = 0,
+		content = "添加回血BUFF"
 	};
 getRow(_) -> {}.
 
@@ -122,7 +131,8 @@ getKeyList() -> [
 	{0},
 	{1},
 	{2},
-	{1000000}
+	{1000000},
+	{1000001}
 ].
 
 get1KeyList() -> [
@@ -136,6 +146,7 @@ get1KeyList() -> [
 	0,
 	1,
 	2,
-	1000000
+	1000000,
+	1000001
 ].
 

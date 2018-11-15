@@ -16,6 +16,7 @@
 -include("gs_common_rec.hrl").
 -include("gs_ps_def.hrl").
 -include("map_core.hrl").
+-include("gs_cache.hrl").
 
 
 %% API
@@ -205,9 +206,21 @@ stop_map_line(S, Line) ->
 
 force_del_line(S, Line) ->
     #m_map_line{map_id = Mid, line_id = LineId, pid = Pid} = Line,
-    ?WARN("map_~p_~p ~p will be killed(force:~p)",
-        [Mid, LineId, Pid, misc:is_alive(Pid)]),
+    IsAlive = misc:is_alive(Pid),
+    ?TRY_CATCH_ONLY(clear_line_player(IsAlive, Mid, LineId)),
+    ?WARN("map_~p_~p ~p will be killed(force:~p)", [Mid, LineId, Pid, IsAlive]),
     catch erlang:exit(Pid, normal),
     misc_ets:delete(S#state.ets, LineId),
+
     ok.
+
+clear_line_player(true, Mid, Line) ->
+    erlang:spawn
+    (
+        fun()->
+            Match = #m_cache_map_object_priv{map_id = Mid, line_id = Line, _ =  '_'},
+            misc_ets:match_delete(?ETS_CACHE_MAP_PLAYER_PRIV, Match)
+        end
+    );
+clear_line_player(_, _Mid, _Line) -> skip.
 

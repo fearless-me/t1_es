@@ -18,7 +18,7 @@
     aid = 0, uid = 0, sid = 0,
     name = "", level = 1, sex = 0, head = 1,
     race = 0, career = 0, map, % m_player_map
-    last_second_tick, last_minute_tick, last_hour_tick,
+    last_second_tick, last_minute_tick, last_hour_tick ,
     status
 %%  逻辑代码的放在这之后（比如背包，技能等等）
 }).
@@ -30,9 +30,10 @@
 -record(m_object_rw, {
     %%-------------------------------------------------------------------
     %% 基础信息
-    uid = 0,
+    uid = 0, 
     pid = 0, data_id = 0, group = 0, owner = 0, type = 0,
-    
+    level = 1, name="", sex=0, career=1, race=1, camp=0,
+    state = 0, %% 状态
     %%-------------------------------------------------------------------
     %% 移动相关
     move_speed = 20,
@@ -53,7 +54,7 @@
     channel_cd = 0,
     %%
     skill_queue = [],
-    hp = 1, max_hp = 1, prop_list = [], buff_list = [],
+    hp = 1, max_hp = 1, battle_props, buff_list = [],
     
     %%-------------------------------------------------------------------
     %% AI相关

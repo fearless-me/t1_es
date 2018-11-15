@@ -9,6 +9,9 @@
 -author("mawenhong").
 
 
+-ifndef(LOGGER_HRL).
+-define(LOGGER_HRL, true).
+
 -define(DEBUG(Fmt), loggerS:debug("[~w:~w] "++Fmt,[?MODULE, ?LINE])).
 -define(DEBUG(Fmt,Args), loggerS:debug("[~w:~w] "++Fmt,[?MODULE, ?LINE]++Args)).
 -define(INFO(Fmt), loggerS:info("[~w:~w] "++Fmt,[?MODULE, ?LINE])).
@@ -33,5 +36,7 @@
 -define(ERROR_SINK(Sink, Fmt,Args), loggerS:error_sink(Sink, "[~w:~w] "++Fmt,[?MODULE, ?LINE]++Args)).
 -define(FATAL_SINK(Sink, Fmt), loggerS:fatal_sink(Sink, "[~w:~w] "++Fmt,[?MODULE, ?LINE])).
 -define(FATAL_SINK(Sink, Fmt,Args), loggerS:fatal_sink(Sink, "[~w:~w] "++Fmt,[?MODULE, ?LINE]++Args)).
+
+-endif.
 
 

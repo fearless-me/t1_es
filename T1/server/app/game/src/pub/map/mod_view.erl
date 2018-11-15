@@ -63,7 +63,7 @@ sync_player_join_group(Uid, Group) ->
 %%-------------------------------------------------------------------
 sync_player_join_map(Obj) ->
     %1.
-    Uid = object_core:get_uid(Obj),
+    Uid = object_priv:get_uid(Obj),
     Pos = object_rw:get_cur_pos(Uid),
     Index = pos_to_vis_index(Pos, visual_w(), ?VIS_DIST),
     Tiles = get_vis_tile_around(Index),
@@ -76,7 +76,7 @@ sync_player_join_map(Obj) ->
 %%-------------------------------------------------------------------
 sync_player_exit_map(Obj) ->
     %1.
-    Uid = object_core:get_uid(Obj),
+    Uid = object_priv:get_uid(Obj),
     Index = pos_to_vis_index(object_rw:get_cur_pos(Uid), visual_w(), ?VIS_DIST),
     
     %2.
@@ -275,12 +275,12 @@ add_obj_to_vis_tile(Obj, VisTileIndex) ->
     
     VisTile = get_vis_tile(VisTileIndex),
     catch object_rw:set_vis_tile_idx(
-        object_core:get_uid(Obj),
+        object_priv:get_uid(Obj),
         VisTileIndex
     ),
     add_to_vis_tile_1(
-        object_core:get_type(Obj),
-        object_core:get_uid(Obj),
+        object_priv:get_type(Obj),
+        object_priv:get_uid(Obj),
         VisTileIndex, VisTile
     ),
     ok.
@@ -320,7 +320,7 @@ del_obj_from_vis_tile(Obj, VisTileIndex) ->
 
 %%    ?DEBUG("del ~p from vis index ~p", [Obj#m_map_obj.uid, VisTileIndex]),
     VisTile = get_vis_tile(VisTileIndex),
-    del_from_vis_tile_1(object_core:get_type(Obj), object_core:get_uid(Obj), VisTileIndex, VisTile),
+    del_from_vis_tile_1(object_priv:get_type(Obj), object_priv:get_uid(Obj), VisTileIndex, VisTile),
     ok.
 
 %%
@@ -355,8 +355,8 @@ del_from_vis_tile_1(_Type, _Uid, _VisTileIndex, _VisTile) ->
 %%-------------------------------------------------------------------
 %% 同步周围Obj给我
 sync_big_vis_tile_to_me(Obj, VisTileList, Msg) ->
-    Uid = object_core:get_uid(Obj),
-    Type = object_core:get_type(Obj),
+    Uid = object_priv:get_uid(Obj),
+    Type = object_priv:get_type(Obj),
     do_sync_big_vis_tile_to_me(Type, Uid, VisTileList, Msg),
     ok.
 
@@ -426,13 +426,13 @@ do_sync_big_vis_tile_to_me(_Type, _Uid, _VisTileList, _Msg) -> skip.
 %%-------------------------------------------------------------------
 %% 把Obj信息广播到九宫格中
 sync_me_to_big_vis_tile(Obj, VisTileList, del_me) ->
-    Uid = object_core:get_uid(Obj),
+    Uid = object_priv:get_uid(Obj),
     Msg = #pk_GS2U_RemoveRemote{uid_list = [Uid]},
     Group = object_rw:get_group(Uid),
     send_net_msg_to_big_visual_with_group(VisTileList, Msg, Group),
     ok;
 sync_me_to_big_vis_tile(Obj, VisTileList, add_me) ->
-    Uid = object_core:get_uid(Obj),
+    Uid = object_priv:get_uid(Obj),
     Msg = mod_move:cal_move_msg(Uid),
     Group = object_rw:get_group(Uid),
     send_net_msg_to_big_visual_with_group(VisTileList, Msg, Group),

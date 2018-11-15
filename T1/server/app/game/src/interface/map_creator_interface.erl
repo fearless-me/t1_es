@@ -15,11 +15,10 @@
 -include("cfg_map.hrl").
 
 
-
 %% API
 -export([
-    broadcast/1,
-    is_cross_map/1, map_data/1,  map_type/1, normal_map/1,
+    broadcast/1, select_all_map_pid/0,
+    is_cross_map/1, map_data/1, map_type/1, normal_map/1,
     map_mgr_lr/2, map_mgr_l/1,
     born_map_id/0, born_map_pos/0, map_init_pos/1,
     map_line_recover/1
@@ -28,23 +27,32 @@
 -export([status_/1, status/0]).
 
 broadcast(Msg) ->
-    erlang:spawn(
-        fun()->
-            QS = ets:fun2ms(fun(Info) -> Info#m_map_mgr.line_ets end),
-            List = misc_ets:select(?MAP_MGR_ETS, QS),
-            lists:foreach(fun(Ets)-> broadcast_to_line(Ets, Msg) end, List)
-        end),
+    erlang:spawn
+    (
+        fun() ->
+            MLL = select_all_map_pid(),
+            lists:foreach
+            (
+                fun(Pid)->
+                    ?DEBUG("send to map pid ~p msg ~p", [Pid, Msg]),
+                    ps:send(Pid, Msg)
+                end,
+                MLL
+            )
+        end
+    ),
     ok.
 
+select_all_map_pid() ->
+    QS1 = ets:fun2ms(fun(Info) -> Info#m_map_mgr.line_ets end),
+    MGL = misc_ets:select(?MAP_MGR_ETS, QS1),
+    QS2 = ets:fun2ms(fun(Info) -> Info#m_map_line.pid end),
+    lists:foldl(
+        fun(LineEts, Acc)->
+            MLL = misc_ets:select(LineEts, QS2),
+            lists:append(MLL, Acc)
+        end, [], MGL).
 
-broadcast_to_line(Ets, Msg) ->
-    QS = ets:fun2ms(fun(Info) ->  Info#m_map_line.pid end),
-    List = misc_ets:select(Ets, QS),
-    lists:foreach(fun(Pid) ->
-        ?DEBUG("send to map pid ~p msg ~p", [Pid, Msg]),
-        ps:send(Pid, Msg)
-                  end, List),
-    ok.
 
 %%
 %% 一般情况切地图是制定了一定要加入某个线路
@@ -56,13 +64,13 @@ map_line_recover(MapID) ->
     Cfg = getCfg:getCfgByArgs(cfg_map, MapID),
     do_map_line_recover(Cfg).
 
-do_map_line_recover(#mapCfg{ type = ?MAP_TYPE_NORMAL}) ->
+do_map_line_recover(#mapCfg{type = ?MAP_TYPE_NORMAL}) ->
     ?MAP_LINE_RECOVER_ANY_NEW;
-do_map_line_recover(#mapCfg{ type = ?MAP_TYPE_COPY}) ->
+do_map_line_recover(#mapCfg{type = ?MAP_TYPE_COPY}) ->
     ?MAP_LINE_RECOVER_ERR;
-do_map_line_recover(#mapCfg{ type = ?MAP_TYPE_GROUP}) ->
+do_map_line_recover(#mapCfg{type = ?MAP_TYPE_GROUP}) ->
     ?MAP_LINE_RECOVER_ERR;
-do_map_line_recover(#mapCfg{ type = ?MAP_TYPE_ACTIVITY}) ->
+do_map_line_recover(#mapCfg{type = ?MAP_TYPE_ACTIVITY}) ->
     ?MAP_LINE_RECOVER_ERR.
 
 %%-------------------------------------------------------------------
@@ -87,12 +95,17 @@ do_map_mgr_lr(true, Uid, #mapCfg{is_cross = 0, id = MapID}) ->
     end;
 %% 在普通服务器招跨服地图
 do_map_mgr_lr(false, Uid, #mapCfg{is_cross = 1, id = MapID}) ->
-    Node = cross_interface:get_player_cross_node(Uid),
-    case cross_interface:get_remote_server_map_mgr(Node, MapID) of
-        MgrPid when erlang:is_pid(MgrPid) -> MgrPid;
-        Error ->
-            ?ERROR("~p get map mgr ~p from ~p, error ~p", [erlang:node(), MapID, Node, Error]),
-            undefined
+    IsCenterReady = gs_cs_interface:is_center_ready(),
+    case IsCenterReady of
+        true ->
+            Node = cross_interface:get_player_cross_node(Uid),
+            case cross_interface:get_remote_server_map_mgr(Node, MapID) of
+                MgrPid when erlang:is_pid(MgrPid) -> MgrPid;
+                Error ->
+                    ?ERROR("~p get map mgr ~p from ~p, error ~p", [erlang:node(), MapID, Node, Error]),
+                    undefined
+            end;
+        _Any -> undefined
     end;
 %% 在跨服上找跨服地图/在普通副找非跨服地图
 do_map_mgr_lr(_Any, _Uid, #mapCfg{id = MapID}) ->
@@ -143,10 +156,10 @@ status_(all) ->
             try
                 QS = ets:fun2ms(fun(Info) -> {Info#m_map_mgr.map_id, Info#m_map_mgr.line_ets} end),
                 List = misc_ets:select(?MAP_MGR_ETS, QS),
-                Info = lists:map(fun({MapId, LineEts})-> line_status(MapId, LineEts, all) end, List ),
-                ?WARN("~ts",[string:join(Info, "\n")])
-            catch _ : Error: _  ->
-                ?WARN("status(all) error ~p",[Error])
+                Info = lists:map(fun({MapId, LineEts}) -> line_status(MapId, LineEts, all) end, List),
+                ?WARN("~ts", [string:join(Info, "\n")])
+            catch _ : Error: _ ->
+                ?WARN("status(all) error ~p", [Error])
             end
         end);
 status_(detail) ->
@@ -155,10 +168,10 @@ status_(detail) ->
             try
                 QS = ets:fun2ms(fun(Info) -> {Info#m_map_mgr.map_id, Info#m_map_mgr.line_ets} end),
                 List = misc_ets:select(?MAP_MGR_ETS, QS),
-                Info = lists:map(fun({MapId, LineEts})-> line_status(MapId, LineEts, detail) end, List ),
-                ?WARN("~ts",[string:join(Info, "\n")])
-            catch _ : Error : _  ->
-                ?WARN("status(all_detail) error ~p",[Error])
+                Info = lists:map(fun({MapId, LineEts}) -> line_status(MapId, LineEts, detail) end, List),
+                ?WARN("~ts", [string:join(Info, "\n")])
+            catch _ : Error : _ ->
+                ?WARN("status(all_detail) error ~p", [Error])
             end
         end);
 status_(MapId) ->
@@ -167,21 +180,21 @@ status_(MapId) ->
             try
                 LineEts = misc_ets:read_element(?MAP_MGR_ETS, MapId, #m_map_mgr.line_ets),
                 ?WARN("~ts", [line_status(MapId, LineEts, detail)])
-            catch _ : Error : _  ->
-                ?WARN("status(~p) error ~p",[MapId, Error])
+            catch _ : Error : _ ->
+                ?WARN("status(~p) error ~p", [MapId, Error])
             end
         end),
     ok.
 
 
-status( ) ->
+status() ->
     try
         QS = ets:fun2ms(fun(Info) -> {Info#m_map_mgr.map_id, Info#m_map_mgr.line_ets} end),
         List = misc_ets:select(?MAP_MGR_ETS, QS),
-        Info = lists:map(fun({MapId, LineEts})-> line_status(MapId, LineEts, detail) end, List ),
+        Info = lists:map(fun({MapId, LineEts}) -> line_status(MapId, LineEts, detail) end, List),
         string:join(Info, "\n")
-    catch _ : Error : _  ->
-        io_lib:format("status(detail) error ~p~n",[Error])
+    catch _ : Error : _ ->
+        io_lib:format("status(detail) error ~p~n", [Error])
     end.
 
 -define(INFO_FMT, "~-10.w~-15.w~-10.w~-10.w~-10.w~-25.ts~-10.w~w~n").
@@ -189,18 +202,18 @@ status( ) ->
 line_status(MapId, LineEts, Extra) ->
     Overview = io_lib:format("~nmapid:~p  line count:~p~n", [MapId, misc_ets:size(LineEts)]),
     List = misc_ets:to_list(LineEts),
-    InfoHead = io_lib:format(?INFO_FMT_STR, ["line id","pid","limit","in", "reserve","deadline", "status", "extra"]),
+    InfoHead = io_lib:format(?INFO_FMT_STR, ["line id", "pid", "limit", "in", "reserve", "deadline", "status", "extra"]),
     InfoAll = lists:map(
         fun(#m_map_line{
             line_id = LineId, pid = Pid,
             limits = Limits, in = In, reserve = Reserve,
             dead_line = DeadLine, status = Status
-        })->
+        }) ->
             ExtraInfo = line_status_extra(Pid, Status, Extra),
             io_lib:format(?INFO_FMT,
                 [LineId, Pid, Limits, In, Reserve, misc_time:milli_seconds_to_str(DeadLine), Status, ExtraInfo])
         end, List),
-    io_lib:format("~s~ts~s",[Overview, InfoHead, string:join(InfoAll, "")]).
+    io_lib:format("~s~ts~s", [Overview, InfoHead, string:join(InfoAll, "")]).
 
 line_status_extra(_Pid, Status, _) when Status =/= ?MAP_NORMAL ->
     killed;

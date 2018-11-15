@@ -20,6 +20,13 @@
 	 set_group/2, set_group_direct/2, get_group/1, get_group/2, %#m_object_rw.group 
 	 set_owner/2, set_owner_direct/2, get_owner/1, get_owner/2, %#m_object_rw.owner 
 	 set_type/2, set_type_direct/2, get_type/1, get_type/2, %#m_object_rw.type 
+	 set_level/2, set_level_direct/2, get_level/1, get_level/2, %#m_object_rw.level 
+	 set_name/2, set_name_direct/2, get_name/1, get_name/2, %#m_object_rw.name 
+	 set_sex/2, set_sex_direct/2, get_sex/1, get_sex/2, %#m_object_rw.sex 
+	 set_career/2, set_career_direct/2, get_career/1, get_career/2, %#m_object_rw.career 
+	 set_race/2, set_race_direct/2, get_race/1, get_race/2, %#m_object_rw.race 
+	 set_camp/2, set_camp_direct/2, get_camp/1, get_camp/2, %#m_object_rw.camp 
+	 set_state/2, set_state_direct/2, get_state/1, get_state/2, %#m_object_rw.state 
 	 set_move_speed/2, set_move_speed_direct/2, get_move_speed/1, get_move_speed/2, %#m_object_rw.move_speed 
 	 set_cur_move/2, set_cur_move_direct/2, get_cur_move/1, get_cur_move/2, %#m_object_rw.cur_move 
 	 set_next_move/2, set_next_move_direct/2, get_next_move/1, get_next_move/2, %#m_object_rw.next_move 
@@ -44,7 +51,7 @@
 	 set_skill_queue/2, set_skill_queue_direct/2, get_skill_queue/1, get_skill_queue/2, %#m_object_rw.skill_queue 
 	 set_hp/2, set_hp_direct/2, get_hp/1, get_hp/2, %#m_object_rw.hp 
 	 set_max_hp/2, set_max_hp_direct/2, get_max_hp/1, get_max_hp/2, %#m_object_rw.max_hp 
-	 set_prop_list/2, set_prop_list_direct/2, get_prop_list/1, get_prop_list/2, %#m_object_rw.prop_list 
+	 set_battle_props/2, set_battle_props_direct/2, get_battle_props/1, get_battle_props/2, %#m_object_rw.battle_props 
 	 set_buff_list/2, set_buff_list_direct/2, get_buff_list/1, get_buff_list/2, %#m_object_rw.buff_list 
 	 set_ai_state/2, set_ai_state_direct/2, get_ai_state/1, get_ai_state/2, %#m_object_rw.ai_state 
 	 set_pre_ai_state/2, set_pre_ai_state_direct/2, get_pre_ai_state/1, get_pre_ai_state/2, %#m_object_rw.pre_ai_state 
@@ -217,6 +224,125 @@ set_type(Uid, Val)->
     ?TRY_CATCH(hook_map:on_rw_update(Uid,{#m_object_rw.type, Val})).
 set_type_direct(Uid, Val) ->
     misc_ets:update_element(i_ets(), Uid, {#m_object_rw.type, Val}),
+    ok.
+%%-------------------------------------------------------------------
+%% #m_object_rw.level
+get_level(Uid) ->
+    misc_ets:read_element(i_ets(), Uid, #m_object_rw.level).
+
+get_level(Uid, Def) ->
+    case misc_ets:read_element(i_ets(), Uid, #m_object_rw.level) of
+        undefined -> Def;
+        Any -> Any
+    end.
+    
+set_level(Uid, Val)->
+    misc_ets:update_element(i_ets(), Uid, {#m_object_rw.level, Val}),
+    ?TRY_CATCH(hook_map:on_rw_update(Uid,{#m_object_rw.level, Val})).
+set_level_direct(Uid, Val) ->
+    misc_ets:update_element(i_ets(), Uid, {#m_object_rw.level, Val}),
+    ok.
+%%-------------------------------------------------------------------
+%% #m_object_rw.name
+get_name(Uid) ->
+    misc_ets:read_element(i_ets(), Uid, #m_object_rw.name).
+
+get_name(Uid, Def) ->
+    case misc_ets:read_element(i_ets(), Uid, #m_object_rw.name) of
+        undefined -> Def;
+        Any -> Any
+    end.
+    
+set_name(Uid, Val)->
+    misc_ets:update_element(i_ets(), Uid, {#m_object_rw.name, Val}),
+    ?TRY_CATCH(hook_map:on_rw_update(Uid,{#m_object_rw.name, Val})).
+set_name_direct(Uid, Val) ->
+    misc_ets:update_element(i_ets(), Uid, {#m_object_rw.name, Val}),
+    ok.
+%%-------------------------------------------------------------------
+%% #m_object_rw.sex
+get_sex(Uid) ->
+    misc_ets:read_element(i_ets(), Uid, #m_object_rw.sex).
+
+get_sex(Uid, Def) ->
+    case misc_ets:read_element(i_ets(), Uid, #m_object_rw.sex) of
+        undefined -> Def;
+        Any -> Any
+    end.
+    
+set_sex(Uid, Val)->
+    misc_ets:update_element(i_ets(), Uid, {#m_object_rw.sex, Val}),
+    ?TRY_CATCH(hook_map:on_rw_update(Uid,{#m_object_rw.sex, Val})).
+set_sex_direct(Uid, Val) ->
+    misc_ets:update_element(i_ets(), Uid, {#m_object_rw.sex, Val}),
+    ok.
+%%-------------------------------------------------------------------
+%% #m_object_rw.career
+get_career(Uid) ->
+    misc_ets:read_element(i_ets(), Uid, #m_object_rw.career).
+
+get_career(Uid, Def) ->
+    case misc_ets:read_element(i_ets(), Uid, #m_object_rw.career) of
+        undefined -> Def;
+        Any -> Any
+    end.
+    
+set_career(Uid, Val)->
+    misc_ets:update_element(i_ets(), Uid, {#m_object_rw.career, Val}),
+    ?TRY_CATCH(hook_map:on_rw_update(Uid,{#m_object_rw.career, Val})).
+set_career_direct(Uid, Val) ->
+    misc_ets:update_element(i_ets(), Uid, {#m_object_rw.career, Val}),
+    ok.
+%%-------------------------------------------------------------------
+%% #m_object_rw.race
+get_race(Uid) ->
+    misc_ets:read_element(i_ets(), Uid, #m_object_rw.race).
+
+get_race(Uid, Def) ->
+    case misc_ets:read_element(i_ets(), Uid, #m_object_rw.race) of
+        undefined -> Def;
+        Any -> Any
+    end.
+    
+set_race(Uid, Val)->
+    misc_ets:update_element(i_ets(), Uid, {#m_object_rw.race, Val}),
+    ?TRY_CATCH(hook_map:on_rw_update(Uid,{#m_object_rw.race, Val})).
+set_race_direct(Uid, Val) ->
+    misc_ets:update_element(i_ets(), Uid, {#m_object_rw.race, Val}),
+    ok.
+%%-------------------------------------------------------------------
+%% #m_object_rw.camp
+get_camp(Uid) ->
+    misc_ets:read_element(i_ets(), Uid, #m_object_rw.camp).
+
+get_camp(Uid, Def) ->
+    case misc_ets:read_element(i_ets(), Uid, #m_object_rw.camp) of
+        undefined -> Def;
+        Any -> Any
+    end.
+    
+set_camp(Uid, Val)->
+    misc_ets:update_element(i_ets(), Uid, {#m_object_rw.camp, Val}),
+    ?TRY_CATCH(hook_map:on_rw_update(Uid,{#m_object_rw.camp, Val})).
+set_camp_direct(Uid, Val) ->
+    misc_ets:update_element(i_ets(), Uid, {#m_object_rw.camp, Val}),
+    ok.
+%%-------------------------------------------------------------------
+%% #m_object_rw.state
+get_state(Uid) ->
+    misc_ets:read_element(i_ets(), Uid, #m_object_rw.state).
+
+get_state(Uid, Def) ->
+    case misc_ets:read_element(i_ets(), Uid, #m_object_rw.state) of
+        undefined -> Def;
+        Any -> Any
+    end.
+    
+set_state(Uid, Val)->
+    misc_ets:update_element(i_ets(), Uid, {#m_object_rw.state, Val}),
+    ?TRY_CATCH(hook_map:on_rw_update(Uid,{#m_object_rw.state, Val})).
+set_state_direct(Uid, Val) ->
+    misc_ets:update_element(i_ets(), Uid, {#m_object_rw.state, Val}),
     ok.
 %%-------------------------------------------------------------------
 %% #m_object_rw.move_speed
@@ -627,21 +753,21 @@ set_max_hp_direct(Uid, Val) ->
     misc_ets:update_element(i_ets(), Uid, {#m_object_rw.max_hp, Val}),
     ok.
 %%-------------------------------------------------------------------
-%% #m_object_rw.prop_list
-get_prop_list(Uid) ->
-    misc_ets:read_element(i_ets(), Uid, #m_object_rw.prop_list).
+%% #m_object_rw.battle_props
+get_battle_props(Uid) ->
+    misc_ets:read_element(i_ets(), Uid, #m_object_rw.battle_props).
 
-get_prop_list(Uid, Def) ->
-    case misc_ets:read_element(i_ets(), Uid, #m_object_rw.prop_list) of
+get_battle_props(Uid, Def) ->
+    case misc_ets:read_element(i_ets(), Uid, #m_object_rw.battle_props) of
         undefined -> Def;
         Any -> Any
     end.
     
-set_prop_list(Uid, Val)->
-    misc_ets:update_element(i_ets(), Uid, {#m_object_rw.prop_list, Val}),
-    ?TRY_CATCH(hook_map:on_rw_update(Uid,{#m_object_rw.prop_list, Val})).
-set_prop_list_direct(Uid, Val) ->
-    misc_ets:update_element(i_ets(), Uid, {#m_object_rw.prop_list, Val}),
+set_battle_props(Uid, Val)->
+    misc_ets:update_element(i_ets(), Uid, {#m_object_rw.battle_props, Val}),
+    ?TRY_CATCH(hook_map:on_rw_update(Uid,{#m_object_rw.battle_props, Val})).
+set_battle_props_direct(Uid, Val) ->
+    misc_ets:update_element(i_ets(), Uid, {#m_object_rw.battle_props, Val}),
     ok.
 %%-------------------------------------------------------------------
 %% #m_object_rw.buff_list

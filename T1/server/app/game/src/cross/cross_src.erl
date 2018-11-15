@@ -38,8 +38,10 @@ player_pub_data_to_cross(Aid, Uid) ->
 %%  {@link cross_dst:rpc_call_player_prepare_leave}
 %%
 player_pub_data_from_cross({badrpc, _} = X) ->
-    ?ERROR("~p error: ~p ", [?FUNCTION_NAME, X]);
+    ?ERROR("~p error: ~p ", [?FUNCTION_NAME, X]),
+    false;
 player_pub_data_from_cross({badtcp, _} = X) ->
-    ?ERROR("~p error: ~p ", [?FUNCTION_NAME, X]);
+    ?ERROR("~p error: ~p ", [?FUNCTION_NAME, X]),
+    false;
 player_pub_data_from_cross(_Any) ->
-    ok.
+    true.

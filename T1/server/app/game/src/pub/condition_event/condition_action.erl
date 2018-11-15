@@ -49,7 +49,7 @@ check_action([_1, ?CONDITION_PLAYER, ?CONDITION_PLAYER_SUB_HP, P1, P2, P3], [Aer
 %%类型参数	填写值	int	填各种id就完了
 %%判断逻辑	选项	Bool	0存在 1不存在
 %%判断对象	选项	int	0目标 1自身
-check_action([_1, ?CONDITION_BUFF, ?CONDITION_BUFF_SUB_HAS, P1, P2, P3, P4], [Aer, Der]) ->
+check_action([_1,?CONDITION_BUFF_HAS, P1, P2, P3, P4], [Aer, Der]) ->
     Tar = ?if_else(P4 == ?TARGET_SELF, Aer, Der),
     Exists = player_interface:has_buff(Tar, P1, P2),
     condition_op:op(?LOGIC_EQ, misc:i2b(P3), Exists);
@@ -61,7 +61,7 @@ check_action([_1, ?CONDITION_BUFF, ?CONDITION_BUFF_SUB_HAS, P1, P2, P3, P4], [Ae
 %%判断目标	选项	int	0自身 1目标
 %%判断逻辑   逻辑操作,大于、等于(?LOGIC_**)..
 %%判断值 	填写值	int	填ms值吧
-check_action([_1, ?CONDITION_BUFF, ?CONDITION_BUFF_SUB_CHECK_TIME, P1, P2, P3, P4], [Aer, Der]) ->
+check_action([_1, ?CONDITION_BUFF_CHECK_TIME, P1, P2, P3, P4], [Aer, Der]) ->
     Tar = ?if_else(P2 == ?TARGET_SELF, Aer, Der),
     Hp = player_interface:get_buff_time(Tar, P1),
     condition_op:op(P3, Hp, P4);

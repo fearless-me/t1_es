@@ -37,6 +37,8 @@
     status_/0
 ]).
 -export([
+    %% 紧急情况下屏蔽掉某些客户端消息
+    forbid_net_msg/1, is_net_msg_forbig/1, allow_net_msg/1,
     %% 给某个进程或者某个玩家发消息
     send_msg/2,
     send_msg/3,
@@ -73,8 +75,8 @@ get_center_node() -> gs_econfig:get_center_node().
 
 %%-------------------------------------------------------------------
 total_online() -> misc_ets:size(?ETS_CACHE_ACCOUNT_PID_SOCK).
-total_monster() -> misc_ets:size(?ETS_CACHE_MAP_MONSTER).
-total_map_player() -> misc_ets:size(?ETS_CACHE_MAP_PLAYER).
+total_monster() -> misc_ets:size(?ETS_CACHE_MAP_MONSTER_PRIV).
+total_map_player() -> misc_ets:size(?ETS_CACHE_MAP_PLAYER_PRIV).
 total_cross_player() -> misc_ets:size(?ETS_CACHE_PLAYER_CROSS).
 
 %%-------------------------------------------------------------------
@@ -135,6 +137,19 @@ plat_account_crc(PlatName, PlatAcc) ->
 %%-------------------------------------------------------------------
 forbid_account(Aid) ->
     gs_interface:kick_account(Aid, forbid_account).
+
+
+forbid_net_msg(MsgIdOrList) ->
+    catch lawman_srv:forbid_msg(MsgIdOrList).
+
+is_net_msg_forbig(MsgId) ->
+    case catch lawman_srv:is_msg_forbid(MsgId) of
+        {'EXIT', _} -> false;
+        Res -> Res
+    end.
+
+allow_net_msg(MsgIdOrList) ->
+    catch lawman_srv:allow_msg(MsgIdOrList).
 
 %%-------------------------------------------------------------------
 fix_pos(_MapId, _Pos) ->

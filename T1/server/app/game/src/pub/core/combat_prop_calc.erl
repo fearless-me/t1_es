@@ -12,7 +12,20 @@
 -include("combat.hrl").
 
 %% API
--export([calc/5]).
+-export([calc/3, calc/5]).
+
+%%%-------------------------------------------------------------------
+%% api:战斗属性的刷新
+-spec calc(BattleProps, AddList, DelList) -> Ret when
+    BattleProps :: battleProps(),
+    AddList :: listBPU(), DelList :: listBPU(),
+    Ret :: battleProps().
+calc(BattleProps, [], []) ->
+    BattleProps;
+calc(BattleProps, AddList, DelList) ->
+    Ret1 = calc_add(AddList, BattleProps),
+    Ret2 = calc_del(DelList, Ret1),
+    calc_convert(Ret2).
 
 %%%-------------------------------------------------------------------
 %% api:战斗属性的刷新
@@ -226,9 +239,11 @@ calc_convert_finals([], Acc) ->
     ListBP2Final :: listBPU(), ListBP3Final :: listBPU().
 calc_convert_1([H | T], Career, ListBP1Final, ListBP2Acc, ListBP3Acc) ->
     BP1Final = {ID, _UseType, Add} = calc_convert_final(H),
-    {List1to2, List1to3} = lists:keyfind(Career, 1, ?Career2List),
-    ListBP2AccNew = calc_convert_1_(lists:keyfind(ID, 1, List1to2), Add, ListBP2Acc),
-    ListBP3AccNew = calc_convert_1_(lists:keyfind(ID, 1, List1to3), Add, ListBP3Acc),
+    {_, List2, List3} = lists:keyfind(Career, 1, ?Career2List),
+    {_, List1to2} = lists:keyfind(ID, 1, List2),
+    ListBP2AccNew = calc_convert_1_(List1to2, Add, ListBP2Acc),
+    {_, List1to3} = lists:keyfind(ID, 1, List3),
+    ListBP3AccNew = calc_convert_1_(List1to3, Add, ListBP3Acc),
     calc_convert_1(T, Career, [BP1Final | ListBP1Final], ListBP2AccNew, ListBP3AccNew);
 calc_convert_1([], _Career, ListBP1Final, ListBP2Acc, ListBP3Acc) ->
     ListBP2Final = calc_convert_finals(ListBP2Acc, []),

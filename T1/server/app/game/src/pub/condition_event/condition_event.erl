@@ -30,13 +30,11 @@ action([Conditions, EventTrue, EventFalse], Params) ->
         _Any -> event_loop(EventFalse, Params)
     end,
     ok;
-action([],_Params) -> skip.
+action(_Any,_Params) -> skip.
 
 
 %%-------------------------------------------------------------------
 %%    [[逻辑关系，主分类，分类的ID，参数1，参数2，参数3]]
-condition_loop(Result, [], _Params) ->
-    Result;
 condition_loop(
     _Result,
     [[?CONDITION_OR | _] = Condition | Conditions],
@@ -54,11 +52,15 @@ condition_loop(
     case condition_action:check(Condition, Params) of
         false -> false;
         _Any -> condition_loop(true, Conditions, Params)
-    end.
+    end;
+condition_loop(Result, [_Condition | Conditions], Params) ->
+    condition_loop(Result, Conditions, Params);
+condition_loop(_Result, _AnyOther, _Params) ->
+    true.
 
 %%-------------------------------------------------------------------
-event_loop([], _Params) ->
-    skip;
+event_loop([], _Params) -> skip;
+event_loop([[]], _Params) -> skip;
 event_loop(Events, Params) ->
     lists:foreach(
         fun(Event) ->

@@ -39,8 +39,8 @@ offline() ->
 change_map_before(SrcMid, DstMid) ->
     IsSrcCross = map_creator_interface:is_cross_map(SrcMid),
     IsDstCross = map_creator_interface:is_cross_map(DstMid),
-    do_change_map_before(IsSrcCross, IsDstCross),
-    ok.
+    do_change_map_before(IsSrcCross, IsDstCross).
+
 %% 从跨服到普通服 / 从普通服到跨服 (切地图后)
 change_map_after(SrcMid, DstMid, IsOk) ->
     IsSrcCross = map_creator_interface:is_cross_map(SrcMid),
@@ -70,10 +70,15 @@ check()->
     ok.
 
 do_check(true, Uid) ->
-    Sid = cross_interface:get_player_cross_sid(Uid),
-    case common_interface:is_server_alive(Sid) of
-        true -> skip;
-        _Any -> player_pub:kick_to_born_map_(cross_nodedown)
+    try
+        Sid = cross_interface:get_player_cross_sid(Uid),
+        case common_interface:is_server_alive(Sid) of
+            true -> skip;
+            _Any -> player_pub:kick_to_born_map_(cross_nodedown)
+        end
+    catch _ : Err : _  ->
+        ?WARN("player ~p check cross server error ~p, kick to born map",[Uid, Err]),
+        player_pub:kick_to_born_map_(cross_nodedown)
     end;
 do_check(_Any, _Uid) -> skip.
 
@@ -110,7 +115,7 @@ do_change_map_before(false, true) ->
     Ret = grpc:call(Node, cross_dst, rpc_call_player_enter, [Data]),
     rpc_check(Ret, ?FUNCTION_NAME);
 do_change_map_before(_IsSrcCross, _IsDstCross) ->
-    ok.
+    true.
 
 %% 跨服到跨服 - 成功
 do_change_map_after(true, true, true) ->
@@ -121,7 +126,7 @@ do_change_map_after(true, false, true) ->
     Uid = player_rw:get_uid(),
     Node = cross_interface:get_player_cross_node(Uid),
     gs_cache_interface:del_player_cross(Uid),
-    Ret = rpc:cast(Node, cross_dst, rpc_call_player_leave, [Aid, Uid]),
+    Ret = grpc:cast(Node, cross_dst, rpc_call_player_leave, [Aid, Uid]),
     rpc_check(Ret, ?FUNCTION_NAME);
 %% 普通服到跨服 - 成功
 do_change_map_after(false, true, true) ->
@@ -153,8 +158,10 @@ do_change_map_after(_IsSrcCross, _IsDstCross, _IsOk) ->
 
 
 rpc_check({badrpc, _} = X, F) ->
-    ?ERROR("~p error: ~p ", [F, X]);
+    ?ERROR("~p error: ~p ", [F, X]),
+    false;
 rpc_check({badtcp, _} = X, F) ->
-    ?ERROR("~p error: ~p ", [F, X]);
+    ?ERROR("~p error: ~p ", [F, X]),
+    false;
 rpc_check(_Any, _F) ->
-    ok.
+    true.

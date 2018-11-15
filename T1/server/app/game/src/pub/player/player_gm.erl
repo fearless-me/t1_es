@@ -22,7 +22,9 @@
     {0, "change_map", fun change_map/1, "切地图 &chang_map $MapId"},
     {0, "change_group", fun change_group/1, "改变角色分组属性 &change_group $GroupId"},
     {0, "add_buff", fun add_buff/1, "添加buff &add_buff $BuffId [$BuffLevel]"},
-    {0, "use_skill", fun use_skill/1, "使用技能 &use_skill $SkillId $TargetId"}
+    {0, "use_skill", fun use_skill/1, "使用技能 &use_skill $SkillId $TargetId"},
+    {0, "add_bp", fun add_bp/1, "添加战斗属性 &add_bp $bpId $bpUseType $bpValue"},
+    {0, "query_bp", fun query_bp/1, "查看战斗属性 &query_bp $bpId"}
 ]).
 
 
@@ -87,13 +89,17 @@ change_group([GroupId | _]) ->
 
 %%-------------------------------------------------------------------
 add_buff([BuffId, BuffLevel | _]) ->
+    Uid = player_rw:get_uid(),
     player_combat:add_buff(
+        Uid,
         list_to_integer(BuffId),
         list_to_integer(BuffLevel)
     ),
     ok;
 add_buff([BuffId | _]) ->
+    Uid = player_rw:get_uid(),
     player_combat:add_buff(
+        Uid,
         list_to_integer(BuffId),
         1
     ),
@@ -108,5 +114,26 @@ use_skill([SkillId, TarUid | _]) ->
         player_interface:get_cur_pos(Uid),
         misc_time:utc_seconds()
     ),
+    ok.
+
+%%-------------------------------------------------------------------
+add_bp([BattlePropId, BPUseType, Value | _]) ->
+    %% 传入值可能不是加算，但是无所谓，是添加就行
+    BattlePropUse = {
+        list_to_integer(BattlePropId),
+        list_to_integer(BPUseType),
+        list_to_float(Value)
+    },
+    player_combat:change_combat_prop([BattlePropUse], []),
+    ok.
+
+%%-------------------------------------------------------------------
+query_bp([]) ->
+    Value = player_combat:query_prop(),
+    ?INFO("playerUid:~w use gm query_bp result:~w", [player_rw:get_uid(), Value]),
+    ok;
+query_bp([BattlePropId | _]) ->
+    Value = player_combat:query_prop(list_to_integer(BattlePropId)),
+    ?INFO("playerUid:~w use gm query_bp[~ts] result:~w", [player_rw:get_uid(), BattlePropId, Value]),
     ok.
 

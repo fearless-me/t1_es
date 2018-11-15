@@ -23,7 +23,7 @@
 -type battlePropID() :: integer().
 -type battlePropUse() :: {battlePropID(), battlePropUseType(), float()}.  %% 该结构用于计算
 -type listBPU() :: [battlePropUse(), ...].
--define(DEFAULT_BATTLE_PROP_USE(ID), {?BPUseType_ADD, ID, 0.0}).
+-define(DEFAULT_BATTLE_PROP_USE(ID), {ID, ?BPUseType_ADD, 0.0}).
 -record(m_bp, {id, add = 0.0, mul = 1.0}).
 -type battlePropCache() :: #m_bp{}. %% 该结构用于缓存
 -type listBPC() :: [battlePropCache(), ...].

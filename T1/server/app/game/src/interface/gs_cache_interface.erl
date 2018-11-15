@@ -3,6 +3,18 @@
 %%% @copyright (C) 2018, <COMPANY>
 %%% @doc
 %%%
+%%% 导出的这些接口是基础设施要用的
+%%% 因为牵涉到跨服，所以要统一提供出来好同步数据(游戏服与跨服同步)
+%%%
+%%% 其他的数据如果没有跨服的需要、或者不需要让跨服玩家看到的数据没有必要单独写接口
+%%% 统一使用misc_ets提供的接口
+%%% 
+%%% 另外请参考下面两个数据的定义中说明
+%%% 玩家部分数据的一个快照,提供给**本服务器*所有模块**访问
+%%% @reference #m_cache_player_pub{}
+%%% 在线玩家的实时数据（这部分数据是在线提供给**本服务器*所有模块**访问用的）
+%%% @reference #m_cache_online_player{}
+%%%
 %%% @end
 %%% Created : 30. 五月 2018 19:31
 %%%-------------------------------------------------------------------
@@ -15,15 +27,11 @@
 
 
 %% API
--export([init/0]).
-
-%% 下面导出的这些接口是基础设施要用的
-%% 因为牵涉到跨服，所以要统一提供出来好同步数据(游戏服 <-> 跨服)
-%% 其他的数据如果没有跨服的需要、或者不需要让跨服玩家看到的数据没有必要单独写接口
-%% 统一使用misc_ets提供的接口
 -export([
-%%    
-    online/3, online_cross/2, offline/2,
+    init/0,
+    online/3, online_cross/2, offline/2
+]).
+-export([
     get_online_player_pid/1, get_online_player_socket/1, get_online_player_map_pid/1,
 %% ETS_CACHE_PLAYER_PUB
     add_player_pub/1, del_player_pub/1, get_player_pub/1, update_player_pub/2, read_player_pub_element/2,
@@ -44,10 +52,10 @@ init() ->
     misc_ets:new(?ETS_CACHE_ALARM_POLICY, [named_table, public, {keypos, #m_cache_alarm_policy.id}, ?ETS_RC, ?ETS_WC]),
     misc_ets:new(?ETS_CACHE_ALARM_PLAYER, [named_table, public, {keypos, #m_cache_alarm_player.uid}, ?ETS_RC, ?ETS_WC]),
     %%
-    misc_ets:new(?ETS_CACHE_MAP_PET, [named_table, public, {keypos, #m_cache_map_object.uid}, ?ETS_RC, ?ETS_WC]),
-    misc_ets:new(?ETS_CACHE_MAP_NPC, [named_table, public, {keypos, #m_cache_map_object.uid}, ?ETS_RC, ?ETS_WC]),
-    misc_ets:new(?ETS_CACHE_MAP_PLAYER, [named_table, public, {keypos, #m_cache_map_object.uid}, ?ETS_RC, ?ETS_WC]),
-    misc_ets:new(?ETS_CACHE_MAP_MONSTER, [named_table, public, {keypos, #m_cache_map_object.uid}, ?ETS_RC, ?ETS_WC]),
+    misc_ets:new(?ETS_CACHE_MAP_PET_PRIV, [named_table, public, {keypos, #m_cache_map_object_priv.uid}, ?ETS_RC, ?ETS_WC]),
+    misc_ets:new(?ETS_CACHE_MAP_NPC_PRIV, [named_table, public, {keypos, #m_cache_map_object_priv.uid}, ?ETS_RC, ?ETS_WC]),
+    misc_ets:new(?ETS_CACHE_MAP_PLAYER_PRIV, [named_table, public, {keypos, #m_cache_map_object_priv.uid}, ?ETS_RC, ?ETS_WC]),
+    misc_ets:new(?ETS_CACHE_MAP_MONSTER_PRIV, [named_table, public, {keypos, #m_cache_map_object_priv.uid}, ?ETS_RC, ?ETS_WC]),
     ok.
 
 %%-------------------------------------------------------------------
@@ -73,7 +81,6 @@ offline(Aid, Uid) ->
     ?INFO("player ~w of account ~p offline", [Uid, Aid]),
     gs_cache_interface:del_online_player(Uid),
     gs_cache_interface:del_account_socket(Aid),
-    misc_ets:delete(?ETS_CACHE_MAP_PLAYER, Uid),
     ok.
 
 
@@ -81,13 +88,13 @@ offline(Aid, Uid) ->
 %%-------------------------------------------------------------------
 add_player_pub(#p_player{} = PPlayer) ->
     #p_player{
-        aid = Aid, uid = Uid, sid = Sid, name = Name,
+        aid = Aid, uid = Uid, sid = Sid, name = Name, head = Head,
         level = Lv, sex = Sex, camp = Camp, race = Race, career = Career
     } = PPlayer,
     Player = #m_cache_player_pub{
         uid = Uid, aid = Aid, sid = Sid,
         name = Name, sex = Sex, camp = Camp,
-        career = Career, race = Race,
+        career = Career, race = Race, head = Head,
         level = Lv
     },
     misc_ets:write(?ETS_CACHE_PLAYER_PUB, Player),
@@ -122,19 +129,23 @@ read_player_pub_element(Uid, Pos) ->
 add_online_player(#p_player{} = PPlayer, Pid, Socket) ->
     Sid = gs_interface:get_sid(),
     #p_player{
-        aid = Aid, uid = Uid, level = Lv, head = _Head,
+        aid = Aid, uid = Uid, level = Lv, head = Head, name = Name,
+        sex = Sex, career = Career, race = Race, camp = Camp,
         map_id = Mid, x = X, y = Y, old_map_id = OMid, old_x = Ox, old_y = Oy
     } = PPlayer,
     Player = #m_cache_online_player{
         uid = Uid, aid = Aid, level = Lv, pid = Pid, socket = Socket,  sid = Sid,
+        name = Name, sex = Sex, career = Career, race = Race, camp = Camp, head = Head,
         map_id = Mid, line = 0, pos = vector3:new(X, 0, Y),
         old_map_id = OMid, old_line = 1, old_pos = vector3:new(Ox, 0, Oy)
     },
     misc_ets:write(?ETS_CACHE_ONLINE_PLAYER, Player),
+    ?INFO("add ETS_CACHE_ONLINE_PLAYER ~p",[Uid]),
     ok.
 
-add_online_player(#m_cache_online_player{} = Player) ->
+add_online_player(#m_cache_online_player{uid = Uid} = Player) ->
     misc_ets:write(?ETS_CACHE_ONLINE_PLAYER, Player),
+    ?INFO("add ETS_CACHE_ONLINE_PLAYER ~p",[Uid]),
     ok.
 
 del_online_player(Uid) ->
@@ -160,8 +171,8 @@ get_online_player_socket(Uid) ->
         ?ETS_CACHE_ONLINE_PLAYER, Uid, #m_cache_online_player.socket).
 
 get_online_player_pid(Uid) ->
-    misc_ets:read_element(
-        ?ETS_CACHE_ONLINE_PLAYER, Uid, #m_cache_online_player.pid).
+    ?TRY_CATCH_RET_ONLY(misc_ets:read_element(
+        ?ETS_CACHE_ONLINE_PLAYER, Uid, #m_cache_online_player.pid), undefined).
 
 get_online_player_map_pid(Uid) ->
     misc_ets:read_element(
@@ -174,6 +185,7 @@ add_account_socket(Aid, Pid, Socket) ->
         #m_cache_account_pid_sock{aid = Aid, pid = Pid, sock = Socket}).
 
 del_account_socket(Aid) ->
+    ?INFO("del account ~w from ETS_CACHE_ACCOUNT_PID_SOCK", [Aid]),
     misc_ets:delete(?ETS_CACHE_ACCOUNT_PID_SOCK, Aid).
 
 get_account_socket(Aid) ->

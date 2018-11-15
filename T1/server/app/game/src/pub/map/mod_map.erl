@@ -11,6 +11,7 @@
 -author("mawenhong").
 
 -include("logger.hrl").
+-include("pub_def.hrl").
 -include("gs_common_rec.hrl").
 
 %% API
@@ -32,9 +33,9 @@ on_info_msg({player_use_skill, Req}) ->
 on_info_msg({player_add_buff, Req}) ->
     mod_buff:add_buff(Req),
     ok;
-%%on_info_msg({contiond_event_add_buff, Req}) ->
-%%    mod_buff:add_buff(Req),
-%%    ok;
+on_info_msg({sync_player_to_map, Uid}) ->
+    ?TRY_CATCH_ONLY(mod_map_sub:sync_player_to_map(Uid)),
+    ok;
 on_info_msg({player_del_buff, Uid, OpType, Params}) ->
     mod_buff:condition_event_del_buff(OpType, Uid, Params),
     ok;

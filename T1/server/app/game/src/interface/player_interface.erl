@@ -13,9 +13,11 @@
 -include("gs_cache.hrl").
 -include("combat.hrl").
 -include("condition_event.hrl").
+-include("cfg_buff.hrl").
 
 %% API
 -export([
+    kick_to_born_map_/1,
     %% 让玩家回之前的普通地图
     change_pre_map_/1,
     %% 给玩家所在地图进程发消息
@@ -77,6 +79,10 @@ add_buff_(UidPid, Req) ->
     player_interface:send_map_msg_(UidPid, {player_add_buff, Req}).
 
 %%-------------------------------------------------------------------
+kick_to_born_map_(UidPid) ->
+    gs_interface:send_msg(UidPid, passive_kick_to_born_map).
+
+%%-------------------------------------------------------------------
 change_pre_map_(UidPid) ->
     gs_interface:send_msg(UidPid, return_to_pre_map_req).
 
@@ -95,12 +101,11 @@ i_has_buff([], _Type, _Param) ->
 i_has_buff(BuffList, ?BUFF_CHECK_TYPE_ID, Param) ->
     lists:keyfind(Param, #m_buff.buff_id, BuffList) =/= false;
 i_has_buff(BuffList, ?BUFF_CHECK_TYPE_EN_DE, Param) ->
-    Val = ?if_else(Param == ?BUFF_DEBUFF, 1, 0),
-    i_has_buff_1(BuffList, #buffCfg.debuff, Val);
+    i_has_buff_1(BuffList, #buffCfg.purpose, Param);
 i_has_buff(BuffList, ?BUFF_CHECK_TYPE_EFFECT, Param) ->
-    i_has_buff_1(BuffList, #buffCfg.effect, Param);
+    i_has_buff_1(BuffList, #buffCfg.effectType, Param);
 i_has_buff(BuffList, ?BUFF_CHECK_TYPE_GROUP, Param) ->
-    i_has_buff_1(BuffList, #buffCfg.group_id, Param).
+    i_has_buff_1(BuffList, #buffCfg.groupId, Param).
 
 i_has_buff_1([], _Key, _Pos) ->
     false;

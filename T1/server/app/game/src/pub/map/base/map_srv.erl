@@ -153,7 +153,7 @@ tick_clear_player() ->
                     case misc:is_alive_rpc(PPid) of
                         true -> X;
                         _Any ->
-                            map_interface:player_exit_map_exception_(Pid, Uid),
+                            ?TRY_CATCH_ERROR(map_interface:player_exit_map_exception_(Pid, Uid)),
                             X + 1
                     end
                 end, 0, Maps

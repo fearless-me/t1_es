@@ -147,15 +147,19 @@ on_cast_msg(Request, S) ->
 %%-------------------------------------------------------------------
 on_net_msg(Cmd, Msg) ->
 %%    ?DEBUG("route_msg id ~p msg ~w",[Cmd, Msg]),
-    ?TRY_CATCH(route_msg(Cmd, Msg)),
+    IsForbid = gs_interface:is_net_msg_forbig(Cmd),
+    ?TRY_CATCH(route_msg(IsForbid, Cmd, Msg)),
     ok.
 
-route_msg(Cmd, Msg) ->
+route_msg(false, Cmd, Msg) ->
     %%1. hook
-%%    ?DEBUG("route(~w)",[Msg]),
     Status = player_rw:get_status(),
     filter_msg(Status, Cmd, Msg),
+    ok;
+route_msg(_Any, Cmd, _Msg) ->
+    ?DEBUG("msg ~p forbid",[Cmd]),
     ok.
+
 
 filter_msg(?PS_ERROR, Cmd, Msg) ->
     log_error_msg(status_forbid, Cmd, Msg);
@@ -194,9 +198,19 @@ check_idle_msg() -> erlang:send_after(?NET_IDLE_TIME, self(), check_net).
 check_idle() ->
     try
         case misc_time:milli_seconds() - get('RECV_NETMSG_LATEST') > ?NET_IDLE_TIME of
-            true -> player_tcp_handler:stop(net_heartbeat_stop);
-            false -> check_idle_msg()
+            true ->
+                net_heartbeat_stop();
+            false ->
+                check_idle_msg()
         end
     catch _ : _ : _ ->
-        player_tcp_handler:stop(net_heartbeat_stop)
+        net_heartbeat_stop()
     end.
+
+-ifdef(RELEASE).
+net_heartbeat_stop() -> player_tcp_handler:stop(net_heartbeat_stop).
+-else.
+net_heartbeat_stop() ->
+    ?ERROR("net_heartbeat_stop, but debug, continue"),
+    check_idle_msg().
+-endif.

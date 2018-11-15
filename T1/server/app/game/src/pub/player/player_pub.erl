@@ -24,6 +24,8 @@
 ]).
 
 -export([
+    %% 同步角色的基础信息到地图（升级、改名、专职等等地图需要的玩家信息）
+    sync_base_to_map_/0,
     % 改变分组
     change_group_/1,
     % 换地图、回之前的地图
@@ -108,8 +110,12 @@ change_map_(DestMapID, LineId, TarPos) ->
 
 kick_to_born_map_(Reason) ->
     ?WARN("kick player ~p to born map ~p",[player_rw:get_uid(), Reason]),
-    ps:send(self(), passive_kick_to_born_map),
+    player_interface:kick_to_born_map_(self()),
     ok.
+
+sync_base_to_map_()->
+    Uid = player_rw:get_uid(),
+    player_pub:broadcast_map_msg_({sync_player_to_map, Uid}).
 
 %%-------------------------------------------------------------------
 change_group_(GroupId) ->

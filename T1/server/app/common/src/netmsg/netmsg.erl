@@ -46,6 +46,42 @@ decode(?GS2U_AddBuff,Bin0) ->
 		},
 	Bin2 };
 
+%GENERATED from file:combat.h => GS2U_BattleHpDelta
+decode(?GS2U_BattleHpDelta,Bin0) ->
+	{ V_uidSrc, Bin1 } = read_uint64( Bin0 ),
+	{ V_uidDes, Bin2 } = read_uint64( Bin1 ),
+	{ V_hpPerA, Bin3 } = read_float( Bin2 ),
+	{ V_hpPerB, Bin4 } = read_float( Bin3 ),
+	{ V_listHpDelta, Bin5 } = read_array(Bin4, fun(X) -> read_int32( X ) end),
+	{ #pk_GS2U_BattleHpDelta {
+		uidSrc = V_uidSrc,
+		uidDes = V_uidDes,
+		hpPerA = V_hpPerA,
+		hpPerB = V_hpPerB,
+		listHpDelta = V_listHpDelta
+		},
+	Bin5 };
+
+%GENERATED from file:combat.h => GS2U_BattleProps
+decode(?GS2U_BattleProps,Bin0) ->
+	{ V_uid, Bin1 } = read_uint64( Bin0 ),
+	{ V_career, Bin2 } = read_uint32( Bin1 ),
+	{ V_listBP1, Bin3 } = read_array(Bin2, fun(X) -> decode_BattlePropEx( X ) end),
+	{ V_listBP2, Bin4 } = read_array(Bin3, fun(X) -> decode_BattlePropEx( X ) end),
+	{ V_listBP3, Bin5 } = read_array(Bin4, fun(X) -> decode_BattlePropEx( X ) end),
+	{ V_listBP4, Bin6 } = read_array(Bin5, fun(X) -> decode_BattlePropEx( X ) end),
+	{ V_listBPFinal, Bin7 } = read_array(Bin6, fun(X) -> decode_BattleProp( X ) end),
+	{ #pk_GS2U_BattleProps {
+		uid = V_uid,
+		career = V_career,
+		listBP1 = V_listBP1,
+		listBP2 = V_listBP2,
+		listBP3 = V_listBP3,
+		listBP4 = V_listBP4,
+		listBPFinal = V_listBPFinal
+		},
+	Bin7 };
+
 %GENERATED from file:combat.h => GS2U_DeleteBuff
 decode(?GS2U_DeleteBuff,Bin0) ->
 	{ V_uid, Bin1 } = read_uint64( Bin0 ),
@@ -584,6 +620,32 @@ decode(?U2GS_PlayerWalk,Bin0) ->
 		},
 	Bin4 }.
 
+%GENERATED from file:combat.h => BattleProp
+-spec decode_BattleProp(Bin0) -> { #pk_BattleProp{},LeftBin }
+	when Bin0 :: binary(), LeftBin :: binary().
+decode_BattleProp(Bin0) ->
+	{ V_propID, Bin1 } = read_uint32( Bin0 ),
+	{ V_addValue, Bin2 } = read_float( Bin1 ),
+	{ #pk_BattleProp {
+		propID = V_propID,
+		addValue = V_addValue
+		},
+	Bin2 }.
+
+%GENERATED from file:combat.h => BattlePropEx
+-spec decode_BattlePropEx(Bin0) -> { #pk_BattlePropEx{},LeftBin }
+	when Bin0 :: binary(), LeftBin :: binary().
+decode_BattlePropEx(Bin0) ->
+	{ V_propID, Bin1 } = read_uint32( Bin0 ),
+	{ V_addValue, Bin2 } = read_float( Bin1 ),
+	{ V_mulValue, Bin3 } = read_float( Bin2 ),
+	{ #pk_BattlePropEx {
+		propID = V_propID,
+		addValue = V_addValue,
+		mulValue = V_mulValue
+		},
+	Bin3 }.
+
 %GENERATED from file:combat.h => BuffInfo
 -spec decode_BuffInfo(Bin0) -> { #pk_BuffInfo{},LeftBin }
 	when Bin0 :: binary(), LeftBin :: binary().
@@ -724,6 +786,42 @@ encode(#pk_GS2U_AddBuff{} = P) ->
 		<<?GS2U_AddBuff:?U16>>,
 		Bin_uid,
 		Bin_buff
+	];
+
+%GENERATED from file:combat.h => GS2U_BattleHpDelta
+encode(#pk_GS2U_BattleHpDelta{} = P) ->
+	Bin_uidSrc = write_uint64( P#pk_GS2U_BattleHpDelta.uidSrc ),
+	Bin_uidDes = write_uint64( P#pk_GS2U_BattleHpDelta.uidDes ),
+	Bin_hpPerA = write_float( P#pk_GS2U_BattleHpDelta.hpPerA ),
+	Bin_hpPerB = write_float( P#pk_GS2U_BattleHpDelta.hpPerB ),
+	Bin_listHpDelta = write_array(P#pk_GS2U_BattleHpDelta.listHpDelta, fun(X) -> write_int32( X ) end),
+	[
+		<<?GS2U_BattleHpDelta:?U16>>,
+		Bin_uidSrc,
+		Bin_uidDes,
+		Bin_hpPerA,
+		Bin_hpPerB,
+		Bin_listHpDelta
+	];
+
+%GENERATED from file:combat.h => GS2U_BattleProps
+encode(#pk_GS2U_BattleProps{} = P) ->
+	Bin_uid = write_uint64( P#pk_GS2U_BattleProps.uid ),
+	Bin_career = write_uint32( P#pk_GS2U_BattleProps.career ),
+	Bin_listBP1 = write_array(P#pk_GS2U_BattleProps.listBP1, fun(X) -> encode_BattlePropEx( X ) end),
+	Bin_listBP2 = write_array(P#pk_GS2U_BattleProps.listBP2, fun(X) -> encode_BattlePropEx( X ) end),
+	Bin_listBP3 = write_array(P#pk_GS2U_BattleProps.listBP3, fun(X) -> encode_BattlePropEx( X ) end),
+	Bin_listBP4 = write_array(P#pk_GS2U_BattleProps.listBP4, fun(X) -> encode_BattlePropEx( X ) end),
+	Bin_listBPFinal = write_array(P#pk_GS2U_BattleProps.listBPFinal, fun(X) -> encode_BattleProp( X ) end),
+	[
+		<<?GS2U_BattleProps:?U16>>,
+		Bin_uid,
+		Bin_career,
+		Bin_listBP1,
+		Bin_listBP2,
+		Bin_listBP3,
+		Bin_listBP4,
+		Bin_listBPFinal
 	];
 
 %GENERATED from file:combat.h => GS2U_DeleteBuff
@@ -1266,6 +1364,26 @@ encode(#pk_U2GS_PlayerWalk{} = P) ->
 
 encode(_) -> noMatch.
 
+%GENERATED from file:combat.h => BattleProp
+encode_BattleProp( #pk_BattleProp{} = P ) ->
+	Bin_propID = write_uint32( P#pk_BattleProp.propID ),
+	Bin_addValue = write_float( P#pk_BattleProp.addValue ),
+	[
+		Bin_propID,
+		Bin_addValue	
+].
+
+%GENERATED from file:combat.h => BattlePropEx
+encode_BattlePropEx( #pk_BattlePropEx{} = P ) ->
+	Bin_propID = write_uint32( P#pk_BattlePropEx.propID ),
+	Bin_addValue = write_float( P#pk_BattlePropEx.addValue ),
+	Bin_mulValue = write_float( P#pk_BattlePropEx.mulValue ),
+	[
+		Bin_propID,
+		Bin_addValue,
+		Bin_mulValue	
+].
+
 %GENERATED from file:combat.h => BuffInfo
 encode_BuffInfo( #pk_BuffInfo{} = P ) ->
 	Bin_buff_id = write_uint32( P#pk_BuffInfo.buff_id ),
@@ -1385,6 +1503,8 @@ encode_LookInfoPlayer( #pk_LookInfoPlayer{} = P ) ->
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 name(?GS2U_AddBuff) -> "GS2U_AddBuff";
+name(?GS2U_BattleHpDelta) -> "GS2U_BattleHpDelta";
+name(?GS2U_BattleProps) -> "GS2U_BattleProps";
 name(?GS2U_DeleteBuff) -> "GS2U_DeleteBuff";
 name(?GS2U_DeleteBuffList) -> "GS2U_DeleteBuffList";
 name(?GS2U_HPChange) -> "GS2U_HPChange";
@@ -1434,6 +1554,8 @@ name(MsgID) -> "ErrorNetMsg_" ++ erlang:integer_to_list(MsgID).
 cmd_list()->
 	[
 		?GS2U_AddBuff
+		,?GS2U_BattleHpDelta
+		,?GS2U_BattleProps
 		,?GS2U_DeleteBuff
 		,?GS2U_DeleteBuffList
 		,?GS2U_HPChange

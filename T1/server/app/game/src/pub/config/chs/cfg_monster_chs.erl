@@ -22,7 +22,7 @@ getRow(0) ->
 		model = "",
 		born_event = 0,
 		death_event = 0,
-		proplist = [[?BP_2_HP_CUR,?ADD,10000008]]
+		proplist = [[?BP_2_HP_CUR,?BPUseType_ADD,10000008]]
 	};
 getRow(_) -> {}.
 

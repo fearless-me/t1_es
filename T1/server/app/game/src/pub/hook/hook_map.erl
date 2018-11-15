@@ -9,6 +9,7 @@
 -module(hook_map).
 -author("mawenhong").
 -include("logger.hrl").
+-include("pub_def.hrl").
 -include("rec_rw.hrl").
 -include("gs_cache.hrl").
 -include("map_core.hrl").
@@ -17,10 +18,20 @@
 
 
 -export([
+    %%------------------------地图-------------------------------------------
     on_map_create/0, on_map_destroy/0,
+
+    %%------------------------通用-------------------------------------------
+    on_start_move/1, on_set_state/2, on_unset_state/2,
+
+    %%------------------------玩家-------------------------------------------
     on_player_join/1, on_player_exit/1,
+
+    %%------------------------怪物-------------------------------------------
     on_monster_create/1, on_monster_dead/1,
-    on_rw_update/2, on_start_move/1
+    
+    %%-------------------------------------------------------------------
+    on_rw_update/2
 ]).
 
 %% 要注意在
@@ -28,28 +39,42 @@
 %% 这三个接口不要处理过于复杂的逻辑，因为这个是 call调用,如果要处理的逻辑比较耗时
 %% 发个消息给相应的进程来异步处理
 %%
+
 %%-------------------------------------------------------------------
+%% 地图
 on_map_create() ->
     ok.
 
 on_map_destroy() ->
     ok.
+
 %%-------------------------------------------------------------------
+%% 通用
+on_set_state(_Uid, _State) ->
+    ok.
+
+on_unset_state(_Uid, _State) ->
+    ok.
+
+on_start_move(_Uid) ->
+    ok.
+
+%%-------------------------------------------------------------------
+%% 玩家
 on_player_join(_Uid) ->
     ok.
 
 on_player_exit(Uid) ->
-    object_core:del_player(Uid),
+    ?TRY_CATCH_ONLY(object_priv:del_player(Uid)),
+    ?TRY_CATCH_ONLY(mod_buff:del_buff(Uid, ?BUFF_REMOVE_LEAVE_MAP)),
     ok.
 %%-------------------------------------------------------------------
+%% 怪物
 on_monster_create(_Uid) ->
     ok.
 
 on_monster_dead(Uid) ->
-    object_core:del_monster(Uid),
-    ok.
-
-on_start_move(_Uid) ->
+    object_priv:del_monster(Uid),
     ok.
 
 %%-------------------------------------------------------------------
@@ -62,14 +87,17 @@ on_rw_update(Uid, {Pos, Value}) ->
 
 
 %%-------------------------------------------------------------------
+%% 刷到ets供全局访问
 on_rw_update(?OBJ_PLAYER, Uid, #m_object_rw.cur_pos, CurPos) ->
     gs_cache_interface:update_online_player(Uid, {#m_cache_online_player.pos, CurPos});
 on_rw_update(?OBJ_PLAYER, Uid, #m_object_rw.hp, Hp) ->
     gs_cache_interface:update_online_player(Uid, {#m_cache_online_player.hp,Hp});
 on_rw_update(?OBJ_PLAYER, Uid, #m_object_rw.buff_list, BuffList) ->
     gs_cache_interface:update_online_player(Uid, {#m_cache_online_player.buff_list, BuffList});
-on_rw_update(?OBJ_PLAYER, Uid, #m_object_rw.prop_list, AttrList) ->
-    gs_cache_interface:update_online_player(Uid, {#m_cache_online_player.prop_list, AttrList});
+on_rw_update(?OBJ_PLAYER, Uid, #m_object_rw.battle_props, BattleProps) ->
+    gs_cache_interface:update_online_player(Uid, {#m_cache_online_player.battle_props, BattleProps});
+on_rw_update(?OBJ_PLAYER, Uid, #m_object_rw.state, State) ->
+    gs_cache_interface:update_online_player(Uid, {#m_cache_online_player.state, State});
 on_rw_update(_ObjType, _Uid, _Key, _Value) ->
     ok.
 

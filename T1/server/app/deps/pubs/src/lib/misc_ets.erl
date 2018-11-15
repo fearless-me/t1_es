@@ -36,8 +36,8 @@
     %% 某个字段自增
     update_counter/3,
     %% 匹配
-    select/2, select/3,
-    match/2, match/3,
+    select/2, select/3,  select_delete/2,
+    match/2, match/3,  match_delete/2,
     match_object/2, match_object/3
 ]).
 
@@ -102,13 +102,15 @@ select(Tab, QS) -> ets:select(Tab, QS).
 
 select(Tab, QS, Limit) -> ets:select(Tab, QS, Limit).
 
+select_delete(Tab, QS) -> ets:select_delete(Tab, QS).
 %%-------------------------------------------------------------------
 match(Tab, Pattern) -> ets:match(Tab, Pattern).
 match(Tab, Pattern, Limit) -> ets:match(Tab, Pattern, Limit).
-
+match_delete(Tab, Pattern) -> ets:match_delete(Tab, Pattern).
 %%-------------------------------------------------------------------
 match_object(Tab, Pattern) -> ets:match_object(Tab, Pattern).
 match_object(Tab, Pattern, Limit) -> ets:match_object(Tab, Pattern, Limit).
+
 
 
 

@@ -105,13 +105,32 @@ on_sharp(Hour) ->
 -define(lock(X), lock_transaction(X)).
 -define(unlock(), unlock_transaction()).
 
-%%不要在调用player_rw:set_xxx
+%% 不要在调用player_rw:set_xxx
+%% 刷到全局ets 或者跨服相关的ets 供服务器其他模块全局访问
 on_rw_update(#m_player_rw.level, Level) ->
-    ?lock(level),
     Uid = player_rw:get_uid(),
     gs_cache_interface:update_player_pub(Uid, {#m_cache_player_pub.level, Level}),
     gs_cache_interface:update_online_player(Uid, {#m_cache_online_player.level, Level}),
-    ?unlock(),
+    ok;
+on_rw_update(#m_player_rw.name, Name) ->
+    Uid = player_rw:get_uid(),
+    gs_cache_interface:update_player_pub(Uid, {#m_cache_player_pub.name, Name}),
+    gs_cache_interface:update_online_player(Uid, {#m_cache_online_player.name, Name}),
+    ok;
+on_rw_update(#m_player_rw.head, Head) ->
+    Uid = player_rw:get_uid(),
+    gs_cache_interface:update_player_pub(Uid, {#m_cache_player_pub.head, Head}),
+    gs_cache_interface:update_online_player(Uid, {#m_cache_online_player.head, Head}),
+    ok;
+on_rw_update(#m_player_rw.race, Race) ->
+    Uid = player_rw:get_uid(),
+    gs_cache_interface:update_player_pub(Uid, {#m_cache_player_pub.race, Race}),
+    gs_cache_interface:update_online_player(Uid, {#m_cache_online_player.race, Race}),
+    ok;
+on_rw_update(#m_player_rw.career, Career) ->
+    Uid = player_rw:get_uid(),
+    gs_cache_interface:update_player_pub(Uid, {#m_cache_player_pub.career, Career}),
+    gs_cache_interface:update_online_player(Uid, {#m_cache_online_player.career, Career}),
     ok;
 on_rw_update(_Key, _Val) ->
     ok.

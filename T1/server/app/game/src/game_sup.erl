@@ -43,6 +43,7 @@ start() ->
         misc:fn_wrapper("auto compile and load", ?Wrap(fly:start())),
         
         %%
+        misc:fn_wrapper("lawman_srv", ?Wrap(misc:start_otp(SupPid, lawman_srv, worker))),
         misc:fn_wrapper("watchdog", ?Wrap(misc:start_otp(SupPid, watchdog, worker, [gs_watchdog]))),
         misc:fn_wrapper("gc", ?Wrap(misc:start_otp(SupPid, background_gc, worker))),
         misc:fn_wrapper("monitor/vms/system monitor", ?Wrap(misc:start_otp(SupPid, vms_monitor, worker, [0.5]))),

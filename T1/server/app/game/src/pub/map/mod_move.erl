@@ -173,15 +173,15 @@ make_move_r(Start, End, Speed) ->
 tick(Obj, _Now) -> tick_dispatcher(Obj).
 
 %%-------------------------------------------------------------------
-tick_dispatcher(#m_cache_map_object{type = ?OBJ_PLAYER, uid = Uid} = Obj) ->
+tick_dispatcher(#m_cache_map_object_priv{type = ?OBJ_PLAYER, uid = Uid} = Obj) ->
     tick_player_move(Obj,   object_rw:get_cur_move(Uid));
-tick_dispatcher(#m_cache_map_object{type = ?OBJ_MON, uid = Uid} = Obj) ->
+tick_dispatcher(#m_cache_map_object_priv{type = ?OBJ_MON, uid = Uid} = Obj) ->
     tick_monster_move(Obj,  object_rw:get_cur_move(Uid));
 tick_dispatcher(_Obj) -> skip.
 
 %%-------------------------------------------------------------------
 tick_player_move(Obj, ?EMS_WALK) ->
-    #m_cache_map_object{uid = Uid} = Obj,
+    #m_cache_map_object_priv{uid = Uid} = Obj,
     
     CurPos = object_rw:get_cur_pos(Uid),
     PathList = object_rw:get_move_path_list(Uid),
@@ -193,7 +193,7 @@ tick_player_move(_Obj, _Move) -> skip.
 
 %%-------------------------------------------------------------------
 tick_monster_move(Obj, ?EMS_WALK) ->
-    #m_cache_map_object{uid = Uid} = Obj,
+    #m_cache_map_object_priv{uid = Uid} = Obj,
     
     CurPos = object_rw:get_cur_pos(Uid),
     PathList = object_rw:get_move_path_list(Uid),
@@ -389,7 +389,7 @@ do_start_monster_walk(Uid, Dst, MoveState) ->
 
 is_can_monster_walk(Uid, _Dst, _MoveState, _NeedCheck) ->
     % todo 检查怪物状态、检查目标点等等
-    object_core:is_unit_cant_move_state(Uid),
+    object_priv:is_unit_cant_move_state(Uid),
     true.
 
 

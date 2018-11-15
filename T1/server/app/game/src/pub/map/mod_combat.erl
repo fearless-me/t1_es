@@ -179,7 +179,7 @@ tick(Obj, Now) ->
 
 
 %%todo 引导技能、吟唱技能
-tick_cur_skill(#m_cache_map_object{uid = Uid}) ->
+tick_cur_skill(#m_cache_map_object_priv{uid = Uid}) ->
     CurSkillId = object_rw:get_skill_id(Uid),
     do_tick_cur_skill(Uid, get_skill_cfg(CurSkillId)),
     ok.
@@ -217,7 +217,7 @@ check_end_skill_tick(Uid, _SkillCfg) ->
 
 %%todo 放完就不管的，但是要持续生效的技能
 %%todo 创建了一个 OBJ_STATIC
-tick_skill_queue(#m_cache_map_object{uid = Uid}) ->
+tick_skill_queue(#m_cache_map_object_priv{uid = Uid}) ->
     Queue0 = object_rw:get_skill_queue(Uid),
     Queue1 = tick_skill_queue(Uid, Queue0, []),
     object_rw:set_skill_queue(Uid, Queue1),

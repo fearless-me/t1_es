@@ -27,6 +27,7 @@
     find_unit/1, find_unit/2, unit_exist/2,
     %%
     detail_ets/0,
+    obj_exist/1,
     obj_maps_with_uid/1, obj_maps_with_type/1,
 
     obj_maps_with_uid/2, obj_maps_with_type/2,
@@ -89,36 +90,40 @@ find_unit(Uid) ->
     map_rw:find_unit(Type, Uid).
 
 find_unit(?OBJ_PLAYER, Uid) ->
-    case misc_ets:read(?ETS_CACHE_MAP_PLAYER, Uid) of
-        [#m_cache_map_object{} = Obj | _] -> Obj;
+    case misc_ets:read(?ETS_CACHE_MAP_PLAYER_PRIV, Uid) of
+        [#m_cache_map_object_priv{} = Obj | _] -> Obj;
         _ -> undefined
     end;
 find_unit(?OBJ_MON, Uid) ->
-    case misc_ets:read(?ETS_CACHE_MAP_MONSTER, Uid) of
-        [#m_cache_map_object{} = Obj | _] -> Obj;
+    case misc_ets:read(?ETS_CACHE_MAP_MONSTER_PRIV, Uid) of
+        [#m_cache_map_object_priv{} = Obj | _] -> Obj;
         _ -> undefined
     end;
 find_unit(?OBJ_PET, Uid) ->
-    case misc_ets:read(?ETS_CACHE_MAP_PET, Uid) of
-        [#m_cache_map_object{} = Obj | _] -> Obj;
+    case misc_ets:read(?ETS_CACHE_MAP_PET_PRIV, Uid) of
+        [#m_cache_map_object_priv{} = Obj | _] -> Obj;
         _ -> undefined
     end;
 find_unit(?OBJ_NPC, Uid) ->
-    case misc_ets:read(?ETS_CACHE_MAP_NPC, Uid) of
-        [#m_cache_map_object{} = Obj | _] -> Obj;
+    case misc_ets:read(?ETS_CACHE_MAP_NPC_PRIV, Uid) of
+        [#m_cache_map_object_priv{} = Obj | _] -> Obj;
         _ -> undefined
     end;
 find_unit(_Type, _Uid) -> undefined.
 
 unit_exist(?OBJ_PLAYER, Uid) ->
-    misc_ets:member(?ETS_CACHE_MAP_PLAYER, Uid);
+    misc_ets:member(?ETS_CACHE_MAP_PLAYER_PRIV, Uid);
 unit_exist(?OBJ_MON, Uid) ->
-    misc_ets:member(?ETS_CACHE_MAP_MONSTER, Uid);
+    misc_ets:member(?ETS_CACHE_MAP_MONSTER_PRIV, Uid);
 unit_exist(?OBJ_PET, Uid) ->
-    misc_ets:member(?ETS_CACHE_MAP_PET, Uid);
+    misc_ets:member(?ETS_CACHE_MAP_PET_PRIV, Uid);
 unit_exist(?OBJ_NPC, Uid) ->
-    misc_ets:member(?ETS_CACHE_MAP_NPC, Uid).
+    misc_ets:member(?ETS_CACHE_MAP_NPC_PRIV, Uid).
 
+
+%%-------------------------------------------------------------------
+obj_exist(Uid) ->
+   misc_ets:member(Uid, map_rw:detail_ets()).
 
 %%-------------------------------------------------------------------
 obj_maps_with_uid(Uid) ->
@@ -214,23 +219,23 @@ do_check_tick(_Any, Milliseconds) ->
 
 
 %%-------------------------------------------------------------------
-add_obj_to_map(#m_cache_map_object{type = ?OBJ_MON, uid = Uid} = Obj) ->
-    misc_ets:write(?ETS_CACHE_MAP_MONSTER, Obj),
+add_obj_to_map(#m_cache_map_object_priv{type = ?OBJ_MON, uid = Uid} = Obj) ->
+    misc_ets:write(?ETS_CACHE_MAP_MONSTER_PRIV, Obj),
     map_rw:add_uid_to_maps(?OBJ_MON, Uid),
     ok;
-add_obj_to_map(#m_cache_map_object{type = ?OBJ_PLAYER, uid = Uid} = Obj) ->
-    misc_ets:write(?ETS_CACHE_MAP_PLAYER, Obj),
+add_obj_to_map(#m_cache_map_object_priv{type = ?OBJ_PLAYER, uid = Uid} = Obj) ->
+    misc_ets:write(?ETS_CACHE_MAP_PLAYER_PRIV, Obj),
     map_rw:add_uid_to_maps(?OBJ_PLAYER, Uid),
     ok;
 add_obj_to_map(_) ->
     ok.
 
-del_obj_to_map(#m_cache_map_object{uid = Uid, type = ?OBJ_MON}) ->
-    misc_ets:delete(?ETS_CACHE_MAP_MONSTER, Uid),
+del_obj_to_map(#m_cache_map_object_priv{uid = Uid, type = ?OBJ_MON}) ->
+    misc_ets:delete(?ETS_CACHE_MAP_MONSTER_PRIV, Uid),
     map_rw:del_uid_from_maps(?OBJ_MON, Uid),
     ok;
-del_obj_to_map(#m_cache_map_object{uid = Uid, type = ?OBJ_PLAYER}) ->
-    misc_ets:delete(?ETS_CACHE_MAP_PLAYER, Uid),
+del_obj_to_map(#m_cache_map_object_priv{uid = Uid, type = ?OBJ_PLAYER}) ->
+    misc_ets:delete(?ETS_CACHE_MAP_PLAYER_PRIV, Uid),
     map_rw:del_uid_from_maps(?OBJ_PLAYER, Uid),
     ok;
 del_obj_to_map(_) ->

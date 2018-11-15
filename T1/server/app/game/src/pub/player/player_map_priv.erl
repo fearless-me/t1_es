@@ -115,6 +115,7 @@ do_serve_change_map_call(ExitReq, JoinReq) ->
     CurMgr = map_creator_interface:map_mgr_lr(Uid, SrcMid),
     TarMgr = map_creator_interface:map_mgr_lr(Uid, TarMid),
 
+
     ?INFO("player ~p, changeMap map_~p_~p:~p|~p -> map ~p | ~p",
         [Uid, SrcMid, SrcLineId, SrcMpid, CurMgr, TarMid, TarMgr]),
 
@@ -128,7 +129,7 @@ do_serve_change_map_call(ExitReq, JoinReq) ->
 do_serve_change_map_call_exit(undefined, undefined, #r_exit_map_req{map_id = Mid}) ->
     #r_exit_map_ack{error = ?E_Exception, map_id = Mid};
 %% 这种情况可能是在跨服(跨服中去切普通服务器，但是跨服挂了)
-do_serve_change_map_call_exit(undefined, _CurMgr, #r_exit_map_req{map_id = Mid}) ->
+do_serve_change_map_call_exit(undefined, _TarMgr, #r_exit_map_req{map_id = Mid}) ->
     #r_exit_map_ack{error = ?E_Success, map_id = Mid};
 %% 这种情况可能是在普通服切跨服，但是跨服不存在
 do_serve_change_map_call_exit(_CurMgr, undefined, #r_exit_map_req{map_id = Mid}) ->
@@ -162,7 +163,7 @@ serve_change_map_call_ret(
     Uid = player_rw:get_uid(),
     case map_creator_interface:normal_map(OldMid) of
         true ->
-            gs_cache_interface:update_online_player(
+            catch gs_cache_interface:update_online_player(
                 Uid,
                 [
                     {#m_cache_online_player.old_map_id, OldMid},
@@ -175,7 +176,7 @@ serve_change_map_call_ret(
                 ]
             );
         _Any ->
-            gs_cache_interface:update_online_player(
+            catch gs_cache_interface:update_online_player(
                 Uid,
                 [
                     {#m_cache_online_player.map_id, Mid},

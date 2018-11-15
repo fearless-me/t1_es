@@ -53,50 +53,28 @@ register_ack(MgrPid, Data) ->
 nodedown(NodeName) ->
     ?WARN("centerServer Node[~p] is down", [NodeName]),
     misc_ets:write(?CenterServerEts, #recCenterInfo{}),
-    center_nodedown(gs_interface:is_cross()),
+    ?TRY_CATCH_ERROR(center_nodedown(gs_interface:is_cross())),
     ok.
 %%%-------------------------------------------------------------------
 center_nodedown(true) ->
-    ?WARN("center server nodedown, all backGS"),
+    lawman_srv:cross_kick_all_player_to_born_map(),
+    ?TRY_CATCH_ONLY(gs_share:stop()),
     ok;
 center_nodedown(_IsCrossServer) ->
+    ?TRY_CATCH_ONLY(gs_share:stop()),
     ok.
 
 %%%-------------------------------------------------------------------
-other_down({Sid, ?SERVER_TYPE_GAME, GSNode}) ->
-    kick_all_player(
-        gs_interface:is_cross(),
-        Sid,
-        GSNode
-    ),
+other_down({Sid, ?SERVER_TYPE_GAME, GSNode} = Info) ->
+    ?WARN("other server down ~p",[Info]),
+    kick_all_player(gs_interface:is_cross(), Sid, GSNode),
     ok;
-other_down({_Sid, _Type, _GSNode}) ->
+other_down(Info) ->
+    ?WARN("other server down ~p",[Info]),
     ok.
 
 kick_all_player(true, Sid, GSNode) ->
-    ?WARN("*** server ~p|~p down, kick all player in this cross ***", [Sid, GSNode]),
-%%    map_creator_interface:broadcast({event, clear_online_player_immediately}),
-    erlang:spawn(
-        fun() ->
-            QS =
-                ets:fun2ms
-                (
-                    fun(Info) when Info#m_cache_online_player.sid == Sid ->
-                        {
-                            Info#m_cache_online_player.aid,
-                            Info#m_cache_online_player.uid,
-                            Info#m_cache_online_player.map_pid
-                        }
-                    end
-                ),
-            List = misc_ets:select(?ETS_CACHE_ONLINE_PLAYER, QS),
-            lists:foreach(
-                fun({Aid, Uid, MPid}) ->
-                    catch map_interface:player_exit_map_exception_(MPid, Uid),
-                    catch gs_cache_interface:offline(Aid, Uid)
-                end, List)
-        end),
-    ok;
+    lawman_srv:cross_clear_server_online_player_immediately(Sid, GSNode);
 kick_all_player(_Any, _Sid, _GSNode) -> skip.
 
 %%%-------------------------------------------------------------------

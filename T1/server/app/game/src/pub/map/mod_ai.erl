@@ -114,7 +114,7 @@ can_update_ai(Uid) ->
     AiId > 0.
 
 %%-------------------------------------------------------------------
-update(#m_cache_map_object{uid = Uid}, _Now) ->
+update(#m_cache_map_object_priv{uid = Uid}, _Now) ->
     NeedUpdate = can_update_ai(Uid),
     do_update(Uid, NeedUpdate),
     ok;
@@ -576,7 +576,7 @@ is_in_attack_dist(Uid, TarUid) when is_number(TarUid) ->
     is_in_attack_dist(Uid, Obj);
 is_in_attack_dist(_Uid, undefined) ->
     false;
-is_in_attack_dist(Uid, #m_cache_map_object{uid = TarUid}) ->
+is_in_attack_dist(Uid, #m_cache_map_object_priv{uid = TarUid}) ->
     VSrc = object_rw:get_cur_pos(Uid),
     VDst = object_rw:get_cur_pos(TarUid),
     Dist_SQ = vector3:dist_sq(VSrc, VDst),
@@ -654,14 +654,14 @@ do_update_flee(Uid, true, _Cant) ->
     ok;
 %% 等待重启
 do_update_flee(Uid, _Failed, true) ->
-    case object_core:is_unit_cant_move_state(Uid) of
+    case object_priv:is_unit_cant_move_state(Uid) of
         false -> start_flee(Uid, object_rw:get_ai_flee_dst(Uid));
         _ -> skip
     end,
     ok;
 %% 更新巡逻
 do_update_flee(Uid, _Failed, _Cant) ->
-    case object_core:is_unit_cant_move_state(Uid) of
+    case object_priv:is_unit_cant_move_state(Uid) of
         true ->
             object_rw:set_ai_cant_pursue(Uid, true);
         _ ->

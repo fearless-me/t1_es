@@ -30,8 +30,8 @@
 %%-------------------------------------------------------------------
 %% 目标类型
 %%-------------------------------------------------------------------
--define(TARGET_SELF, 1).
--define(TARGET_OTHER, 2).
+-define(TARGET_SELF, 0).
+-define(TARGET_OTHER, 1).
 
 %%-------------------------------------------------------------------
 %% buff检查类型
@@ -45,22 +45,15 @@
 %%按组
 -define(BUFF_CHECK_TYPE_GROUP,  3).
 
-%%-------------------------------------------------------------------
-%% buff类型
-%%-------------------------------------------------------------------
-%% 减益buff
--define(BUFF_DEBUFF, 1).
-%% 增益buff
--define(BUFF_ENBUFF, 2).
-
 
 %%-------------------------------------------------------------------
 %% 事件主类型
 %%-------------------------------------------------------------------
 %% 伤害
--define(EVENT_DAMAGE, 1).
+-define(EVENT_DAMAGE,    0).
 %% buff
--define(EVENT_BUFF, 1).
+-define(EVENT_ADD_BUFF,  1).
+-define(EVENT_DEL_BUFF,  2).
 
 %%-------------------------------------------------------------------
 %% 事件子类型
@@ -69,18 +62,16 @@
 -define(EVENT_DAMAGE_SUB_PERCENT, 1).
 %% 固定伤害
 -define(EVENT_DAMAGE_SUB_FIX, 2).
-%% 添加buff
--define(EVENT_BUFF_SUB_ADD, 1).
-%% 删除buff
--define(EVENT_BUFF_SUB_DEL, 1).
 
 %%-------------------------------------------------------------------
 %% 条件主类型
 %%-------------------------------------------------------------------
 %% 角色
--define(CONDITION_PLAYER, 1).
-%% buff
--define(CONDITION_BUFF,   2).
+-define(CONDITION_PLAYER, 0).
+%% 是否有buff
+-define(CONDITION_BUFF_HAS, 1).
+%% 检查buff时间
+-define(CONDITION_BUFF_CHECK_TIME, 2).
 
 %%-------------------------------------------------------------------
 %% 条件子类型
@@ -91,10 +82,7 @@
 -define(CONDITION_PLAYER_SUB_HP, 2).
 
 
-%% 是否有buff
--define(CONDITION_BUFF_SUB_HAS, 1).
-%% 检查buff时间
--define(CONDITION_BUFF_SUB_CHECK_TIME, 2).
+
 
 
 

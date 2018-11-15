@@ -2,7 +2,23 @@
 -ifndef(netmsg).
 -define(netmsg,1).
 
--define(ProtoVersion,652).
+-define(ProtoVersion,653).
+
+-record(pk_BattleProp,{
+	%% UInt32 属性ID
+	propID = 0,
+	%% Single 加算值
+	addValue = 0.0
+}).
+
+-record(pk_BattlePropEx,{
+	%% UInt32 属性ID
+	propID = 0,
+	%% Single 加算值
+	addValue = 0.0,
+	%% Single 乘算值
+	mulValue = 0.0
+}).
 
 -record(pk_BuffInfo,{
 	%% UInt32
@@ -23,6 +39,42 @@
 	uid = 0,
 	%% BuffInfo buff	
 	buff
+}).
+
+%% 
+%% // 战斗结果同步血量变化
+-define(GS2U_BattleHpDelta,57796).
+-record(pk_GS2U_BattleHpDelta,{
+	%% UInt64 来源ID
+	uidSrc = 0,
+	%% UInt64 目标ID
+	uidDes = 0,
+	%% Single 血量百分比（变化前
+	hpPerA = 0.0,
+	%% Single 血量百分比（变化后
+	hpPerB = 0.0,
+	%% Int32 血量变化值列表
+	listHpDelta = []
+}).
+
+%% 
+%% // 同步战斗属性
+-define(GS2U_BattleProps,25624).
+-record(pk_GS2U_BattleProps,{
+	%% UInt64 对象ID
+	uid = 0,
+	%% UInt32 职业ID，计算战斗属性时会使用到
+	career = 0,
+	%% BattlePropEx 1类属性
+	listBP1 = [],
+	%% BattlePropEx 2类属性
+	listBP2 = [],
+	%% BattlePropEx 3类属性
+	listBP3 = [],
+	%% BattlePropEx 4类属性
+	listBP4 = [],
+	%% BattleProp 最终属性
+	listBPFinal = []
 }).
 
 %% 

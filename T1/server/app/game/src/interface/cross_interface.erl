@@ -18,6 +18,7 @@
 
 %% API
 -export([
+    get_all_cross_sid/0,
     get_player_src_sid/1, get_player_src_node/1,
     get_remote_server_map_mgr/2,
     get_player_cross_sid/1, get_player_cross_node/1,
@@ -49,8 +50,7 @@ assign_cross_for_player(Uid) ->
                 Info#m_share_server_info.sid end),
             SL = misc_mnesia:dirty_select(?MNESIA_SERVER_INFO, QS),
             do_assign_cross_for_player(Uid, SL)
-    end,
-    ok.
+    end.
 
 do_assign_cross_for_player(_Uid, []) ->
     0;
@@ -59,10 +59,11 @@ do_assign_cross_for_player(Uid, [CrossSid | _]) ->
     CrossSid.
 
 is_assign_cross(Uid) ->
-    case misc_mnesia:dirty_read(?MNESIA_PLAYER_CROSS, Uid) of
-        [#m_share_player_cross_lock{cross_sid = Sid}] when Sid > 0 ->
-            true;
-        _ -> false
+    case catch misc_mnesia:dirty_read(?MNESIA_PLAYER_CROSS, Uid) of
+        [#m_share_player_cross_lock{cross_sid = Sid}] ->
+            Sid > 0;
+        _ ->
+            false
     end.
 %%-------------------------------------------------------------------
 force_assign_cross_for_player(Uid, CrossSid) ->
@@ -96,6 +97,11 @@ get_remote_server_map_mgr(Node, MapID)
     grpc:call(Node, cross_rpc, rpc_call_get_map_mgr, [MapID]);
 get_remote_server_map_mgr(_Node, _MapID) -> undefined.
 
+get_all_cross_sid()->
+    QS = ets:fun2ms(fun(Info) when Info#m_share_server_info.type =:= ?SERVER_TYPE_CROSS ->
+        Info#m_share_server_info.sid end),
+    misc_mnesia:dirty_select(?MNESIA_SERVER_INFO, QS).
+
 %%-------------------------------------------------------------------
 %%-------------------------------------------------------------------
 inner_get_player_src_node(Uid) ->
@@ -117,9 +123,14 @@ inner_get_player_src_sid(_Uid) -> undefined.
 
 %%-------------------------------------------------------------------
 inner_get_player_cross_sid(Uid) when is_number(Uid), Uid > 0 ->
-    case misc_mnesia:dirty_read(?MNESIA_PLAYER_CROSS, Uid) of
-        [#m_share_player_cross_lock{cross_sid = DstSid}] -> DstSid;
-        _ -> assign_cross_for_player(Uid)
+    case gs_cs_interface:is_center_ready() of
+        true ->
+            case misc_mnesia:dirty_read(?MNESIA_PLAYER_CROSS, Uid) of
+                [#m_share_player_cross_lock{cross_sid = DstSid}] -> DstSid;
+                _ -> assign_cross_for_player(Uid)
+            end;
+        _Any ->
+            undefined
     end;
 inner_get_player_cross_sid(_Uid) -> undefined.
 

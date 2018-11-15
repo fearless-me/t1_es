@@ -10,7 +10,7 @@
 -author("mawenhong").
 
 %% API
--export([start/0, restart/0]).
+-export([start/0, restart/0, stop/0]).
 
 
 start() ->
@@ -22,4 +22,8 @@ start() ->
 restart() ->
     misc_mnesia:stop(),
     true = misc_mnesia:start(),
+    ok.
+
+stop() ->
+    misc_mnesia:stop(),
     ok.

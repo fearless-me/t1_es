@@ -63,15 +63,34 @@
 
 
  -define(BUFF_FOREVER_LOGIC, 2147483647).
--record(m_buff, {buff_id = 0, lifetime = 0, level = 1, wrap = 1, source = 0, latest=0}).
-%% fixme 临时定义一个 buff的配置表结构，具体什么样子未知
--record(buffCfg, {
- id=1, group_id=1, effect=0, debuff=1, del_trigger=[],
- del_flag=0, life_time=10, tick_time=10, save_type=1,
- max_layer=99, prop_list=[],
- add_cond_event=[], tick_cond_event=[],
- stop_cond_event=[], break_cond_event=[]
-}).
+-record(m_buff, {buff_id = 0, lifetime = 0, level = 1, layer = 1, source = 0, latest=0}).
+
+%%-------------------------------------------------------------------
+%% buff类型
+%%-------------------------------------------------------------------
+
+%% 增益buff
+-define(BUFF_ENBUFF, 0).
+%% 减益buff
+-define(BUFF_DEBUFF, 1).
+-define(BUFF_UNKNOWN,2).
+
+-define(BUFF_SOURCE_COEXIST, 0).
+-define(BUFF_SOURCE_REPLACE, 1).
+
+
+-define(BUFF_REMOVE_DEATH, death).
+-define(BUFF_REMOVE_LEAVE_MAP, leave).
+
+
+%%-------------------------------------------------------------------
+-define(STATE_DEAD, 1).      %% 死亡
+-define(STATE_DIZZY, 2).     %% 眩晕
+-define(STATE_TIE, 3).       %% 定身
+-define(STATE_SPOR, 4).      %% 昏睡
+-define(STATE_INVINCIBLE, 5).%% 无敌
+-define(STATE_LURK, 6).      %% 隐身
+
 
 
 
