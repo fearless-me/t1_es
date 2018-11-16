@@ -15,8 +15,7 @@
 %% API
 -export([
     rpc_call_player_enter/1, rpc_call_player_prepare_leave/2, rpc_call_player_leave/2,
-    rpc_call_player_offline/2, rpc_call_del_player/2,
-    rpc_cast_update_player/1
+    rpc_call_player_offline/2, rpc_call_del_player/2
 ]).
 
 
@@ -71,10 +70,3 @@ rpc_call_del_player(Aid, Uid) ->
     ?INFO("player ~w of account ~p del in cross", [Uid, Aid]),
     ok.
 
-
-rpc_cast_update_player({?ETS_CACHE_PLAYER_PUB, Uid, Elements}) ->
-    gs_cache_interface:update_player_pub(Uid, Elements),
-    ok;
-rpc_cast_update_player({?ETS_CACHE_ONLINE_PLAYER, Uid, Elements}) ->
-    gs_cache_interface:update_online_player(Uid, Elements),
-    ok.

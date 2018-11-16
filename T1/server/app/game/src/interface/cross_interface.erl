@@ -148,10 +148,12 @@ inner_update_player_cross(false, Uid, Params) ->
     case cross_interface:is_player_in_cross(Uid) of
         true ->
             Node = cross_interface:get_player_cross_node(Uid),
-            grpc:cast(Node, cross_dst, rpc_cast_update_player, [Params]);
+            grpc:cast(Node, cross_rpc, rpc_cast_update_player, [Params]);
         _Any -> skip
     end,
     ok;
-inner_update_player_cross(_Any, _Uid, _Params) -> skip.
+inner_update_player_cross(_IsCross, Uid, Params) ->
+    %% 打印日志看看是否需要把跨服数据同步到原服务器
+    ?DEBUG("update player ~p data in cross ~w",[Uid, Params]).
 
 
