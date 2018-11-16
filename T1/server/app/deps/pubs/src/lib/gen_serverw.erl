@@ -217,13 +217,13 @@ handle_cast(Request, State) ->
 %% @end
 %%--------------------------------------------------------------------
 handle_info({set_timeline, Microseconds}, State) ->
-    erlang:put(?EFFECTIVE_MONITOR_GUARD, Microseconds),
+    catch erlang:put(?EFFECTIVE_MONITOR_GUARD, Microseconds),
     {noreply, State};
 handle_info(pause_effective_monitor, State) ->
-    erlang:put(?EFFECTIVE_MONITOR_GUARD, 0),
+    catch erlang:put(?EFFECTIVE_MONITOR_GUARD, 0),
     {noreply, State};
 handle_info({continue_effective_monitor, Microseconds}, State) ->
-    erlang:put(?EFFECTIVE_MONITOR_GUARD, Microseconds),
+    catch erlang:put(?EFFECTIVE_MONITOR_GUARD, Microseconds),
     {noreply, State};
 handle_info(inner_core_status, State) ->
     catch ?WARN("~n***~p|~p~n~p~n***~n",[self(), misc:registered_name(), gen_serverw:status_self()]),
@@ -280,7 +280,7 @@ i_tc_warn(Msg, Time, _) ->
             Bin = lists:sublist(lists:flatten(io_lib:format("~w", [Msg])), 1, 128),
             ?WARN
             (
-                "~p|~p|~p ** ~s ** use time ~p micro seconds",
+                "***effective warning** ~p|~p|~p ** ~s ** use time ~p micro seconds",
                 [ get(?LogicModule), self(), misc:registered_name(), Bin, Time]
             )
         end
