@@ -93,8 +93,6 @@ serve_change_map_call(TarMid, TarLineId, TarPos) ->
     #m_cache_online_player{
         map_id = SrcMid, line = SrcLineId, map_pid = SrcMPid, pos = SrcPos
     } = gs_cache_interface:get_online_player(Uid),
-    player_cross_priv:change_map_before(SrcMid, TarMid),
-    
 
 
     ExitReq = #r_exit_map_req{uid = Uid, map_id = SrcMid, line_id = SrcLineId, map_pid = SrcMPid},
@@ -119,10 +117,15 @@ do_serve_change_map_call(ExitReq, JoinReq) ->
     ?INFO("player ~p, changeMap map_~p_~p:~p|~p -> map ~p | ~p",
         [Uid, SrcMid, SrcLineId, SrcMpid, CurMgr, TarMid, TarMgr]),
 
+    case TarMgr of
+        undefined -> skip;
+        _ -> player_cross_priv:change_map_before(SrcMid, TarMid)
+    end,
+
     %% 2.
-    ExitRes = do_serve_change_map_call_exit(CurMgr, TarMgr, ExitReq),
-    ?DEBUG("~p",[ExitRes]),
-    do_serve_change_map_call_join(ExitRes, TarMgr, JoinReq).
+    ExitAck = do_serve_change_map_call_exit(CurMgr, TarMgr, ExitReq),
+    ?DEBUG("~w",[ExitAck]),
+    do_serve_change_map_call_join(ExitAck, TarMgr, JoinReq).
 
 %% 先退出
 %% 这种情况可能是在跨服(比如跨服中切跨服地图，但是跨服挂了)

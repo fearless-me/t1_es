@@ -26,6 +26,22 @@
     sum/2, remain_slots/1, cur_slots/1, max_slots/1, overlapped/2
 ]).
 
+-export([on_login/1, on_ready/0, on_offline/0, on_save/0]).
+
+
+on_login(_Bags) ->
+    ok.
+
+on_ready() ->
+    ok.
+
+on_offline() ->
+    ok.
+
+on_save() ->
+    undefined.
+
+
 
 
 %% 加、删、改、合并

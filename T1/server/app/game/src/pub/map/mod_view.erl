@@ -42,7 +42,7 @@
 
 sync_player_join_group(Uid, Group) ->
     %1.
-    Obj = map_rw:find_unit(?OBJ_PLAYER, Uid),
+    Obj = object_priv:find_object_priv(?OBJ_PLAYER, Uid),
     Index = pos_to_vis_index(object_rw:get_cur_pos(Uid), visual_w(), ?VIS_DIST),
     
     %2.

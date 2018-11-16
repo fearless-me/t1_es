@@ -57,7 +57,7 @@ nodedown(NodeName) ->
     ok.
 %%%-------------------------------------------------------------------
 center_nodedown(true) ->
-    lawman_srv:cross_kick_all_player_to_born_map(),
+    lawman_srv:cross_kick_all_player_to_born_map(center_nodedown),
     ?TRY_CATCH_ONLY(gs_share:stop()),
     ok;
 center_nodedown(_IsCrossServer) ->
@@ -79,8 +79,7 @@ kick_all_player(_Any, _Sid, _GSNode) -> skip.
 
 %%%-------------------------------------------------------------------
 ack_timeout(MgrPid) ->
-    ?ERROR("ackTimeout to centerServer[~p]",
-        [erlang:node(MgrPid)]),
+    ?ERROR("ackTimeout to centerServer[~p]", [erlang:node(MgrPid)]),
     misc_ets:write(?CenterServerEts, #recCenterInfo{}),
     ok.
 %%%-------------------------------------------------------------------

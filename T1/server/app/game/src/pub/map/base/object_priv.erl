@@ -31,6 +31,11 @@
     is_unit_cant_move_state/1, is_dead/1
 ]).
 
+-export([
+    %%
+    find_object_priv/1, find_object_priv/2, object_priv_exist/2
+]).
+
 
 is_unit_cant_move_state(_Uid) ->
     %% todo 检查目标是否处于死亡，定身，眩晕等等或者在释放技能等等
@@ -175,3 +180,41 @@ get_data_id(Obj) -> Obj#m_cache_map_object_priv.data_id.
 get_owner(Obj) -> Obj#m_cache_map_object_priv.owner.
 get_type(Obj) -> Obj#m_cache_map_object_priv.type.
 %%-------------------------------------------------------------------
+
+
+
+%%-------------------------------------------------------------------
+find_object_priv(Uid) ->
+    Type = object_rw:get_type(Uid),
+    object_priv:find_object_priv(Type, Uid).
+
+find_object_priv(?OBJ_PLAYER, Uid) ->
+    case misc_ets:read(?ETS_CACHE_MAP_PLAYER_PRIV, Uid) of
+        [#m_cache_map_object_priv{} = Obj | _] -> Obj;
+        _ -> undefined
+    end;
+find_object_priv(?OBJ_MON, Uid) ->
+    case misc_ets:read(?ETS_CACHE_MAP_MONSTER_PRIV, Uid) of
+        [#m_cache_map_object_priv{} = Obj | _] -> Obj;
+        _ -> undefined
+    end;
+find_object_priv(?OBJ_PET, Uid) ->
+    case misc_ets:read(?ETS_CACHE_MAP_PET_PRIV, Uid) of
+        [#m_cache_map_object_priv{} = Obj | _] -> Obj;
+        _ -> undefined
+    end;
+find_object_priv(?OBJ_NPC, Uid) ->
+    case misc_ets:read(?ETS_CACHE_MAP_NPC_PRIV, Uid) of
+        [#m_cache_map_object_priv{} = Obj | _] -> Obj;
+        _ -> undefined
+    end;
+find_object_priv(_Type, _Uid) -> undefined.
+
+object_priv_exist(?OBJ_PLAYER, Uid) ->
+    misc_ets:member(?ETS_CACHE_MAP_PLAYER_PRIV, Uid);
+object_priv_exist(?OBJ_MON, Uid) ->
+    misc_ets:member(?ETS_CACHE_MAP_MONSTER_PRIV, Uid);
+object_priv_exist(?OBJ_PET, Uid) ->
+    misc_ets:member(?ETS_CACHE_MAP_PET_PRIV, Uid);
+object_priv_exist(?OBJ_NPC, Uid) ->
+    misc_ets:member(?ETS_CACHE_MAP_NPC_PRIV, Uid).

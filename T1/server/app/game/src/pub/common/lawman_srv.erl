@@ -23,7 +23,7 @@
 %% API
 -export([
     cross_clear_server_online_player_immediately/2,
-    cross_kick_all_player_to_born_map/0,
+    cross_kick_all_player_to_born_map/1,
     forbid_msg/1, allow_msg/1, forbid_clear/0, is_msg_forbid/1
 ]).
 -export([start_link/0]).
@@ -33,8 +33,8 @@
 cross_clear_server_online_player_immediately(Sid, GSNode) ->
     gen_server:cast(?MODULE, {?CLEAR_PLAYER_FLAG, Sid, GSNode}).
 
-cross_kick_all_player_to_born_map() ->
-    gen_server:cast(?MODULE, cross_kick_all_player_to_born_map).
+cross_kick_all_player_to_born_map(Reason) ->
+    gen_server:cast(?MODULE, {cross_kick_all_player_to_born_map, Reason}).
 
 %%-------------------------------------------------------------------
 is_msg_forbid(MsgId) ->
@@ -93,8 +93,8 @@ do_handle_cast({?CLEAR_PLAYER_FLAG, Sid, GSNode}, State) ->
         _Any -> ?WARN("skip clear online player of ~p ",[{Sid, GSNode}])
     end,
     {noreply, State};
-do_handle_cast(cross_kick_all_player_to_born_map, State) ->
-    i_cross_kick_all_player_to_born_map(),
+do_handle_cast({cross_kick_all_player_to_born_map, Reason}, State) ->
+    i_cross_kick_all_player_to_born_map(Reason),
     {noreply, State};
 do_handle_cast(Request, State) ->
     ?ERROR("undeal cast ~w", [Request]),
@@ -105,11 +105,11 @@ on_terminate(_Reason, _State) ->
     ok.
 
 %%-------------------------------------------------------------------
-i_cross_kick_all_player_to_born_map()->
-    ?DEBUG("~p kick all playe to born map",[node()]),
+i_cross_kick_all_player_to_born_map(Reason)->
     erlang:spawn
     (
         fun() ->
+            ?WARN("cross ~p kick all players to born map **~p**... ",[node(), Reason]),
             try
                 QS = ets:fun2ms
                 (
@@ -125,9 +125,10 @@ i_cross_kick_all_player_to_born_map()->
                 lists:foreach
                 (
                     fun({Aid, Uid, Pid}) ->
-                        player_interface:kick_to_born_map_(Pid),
-                        gs_cache_interface:offline(Aid, Uid),
-                        catch ?WARN("*** kick player ~p of account ~p to born map ***",[Aid, Uid])
+                        ?TRY_CATCH_ERROR(player_interface:kick_to_born_map_(Pid), Err1),
+                        ?TRY_CATCH_ERROR(gs_cache_interface:offline(Aid, Uid), Err2),
+                        catch ?WARN("\t*** kick player ~p of account ~p to born map  **~p**  ***",
+                            [Uid, Aid, Reason])
                     end,
                     List
                 ),
@@ -136,10 +137,12 @@ i_cross_kick_all_player_to_born_map()->
                 lists:foreach
                 (
                     fun(Pid) ->
-                        map_interface:clear_online_player_immediately_(Pid)
+                        ?TRY_CATCH_ERROR(map_interface:clear_online_player_immediately_(Pid))
                     end,
                     MLL
-                )
+                ),
+                ?WARN("cross ~p kick ~p player(s) to born map **~p** done#",
+                    [node(), erlang:length(List), Reason])
             catch _ : _Err : _ST ->
                 skip
             end
@@ -167,7 +170,7 @@ i_done_clear(Sid) ->
 
 %%-------------------------------------------------------------------
 i_cross_clear_online_player(Sid, GSNode) when Sid > 0 ->
-    ?WARN("*** server ~p|~p down, kick all player in this cross ***", [Sid, GSNode]),
+    ?WARN("*** server ~p|~p down, kick all players in this cross ... ***", [Sid, GSNode]),
     erlang:spawn
     (
         fun() ->
@@ -188,7 +191,9 @@ i_cross_clear_online_player(Sid, GSNode) when Sid > 0 ->
                     fun({Aid, Uid, MPid}) ->
                         catch map_interface:player_exit_map_exception_(MPid, Uid),
                         catch gs_cache_interface:offline(Aid, Uid)
-                    end, List)
+                    end, List),
+                ?WARN("*** server ~p|~p down, kick ~p player(s) in this cross ... ***",
+                    [Sid, GSNode, erlang:length(List)])
             catch _ : _ : _ -> skip
             end,
             catch ps:send(?MODULE, {clear_done, Sid})
@@ -197,7 +202,7 @@ i_cross_clear_online_player(Sid, GSNode) when Sid > 0 ->
     ),
     ok;
 i_cross_clear_online_player(0, _Node) ->
-    ?WARN("*** checkck all player in server ***"),
+    ?WARN("*** checkck all player in server ... ***"),
     erlang:spawn
     (
         fun() ->
@@ -223,16 +228,16 @@ i_cross_clear_online_player(0, _Node) ->
                          end
                      ),
                  List = misc_ets:select(?ETS_CACHE_ONLINE_PLAYER, QS),
-                 lists:foreach
+                 X = lists:foldl
                  (
-                     fun({Aid, Uid, Pid}) ->
+                     fun({Aid, Uid, Pid}, Acc) ->
                          case misc:is_alive_rpc(Pid) of
-                             true -> skip;
-                             _Any -> gs_cache_interface:offline(Aid, Uid)
+                             true -> Acc;
+                             _Any -> gs_cache_interface:offline(Aid, Uid), Acc+1
                          end
-                     end,
-                     List
-                 )
+                     end, 0, List
+                 ),
+                 ?WARN("*** checkck all players in server done# clear ~p players ***",[X])
              catch _:_:_  -> skip
              end,
             catch ps:send(?MODULE, {clear_done, 0})

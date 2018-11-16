@@ -93,7 +93,8 @@ run() ->
 %%                ]
 %%            ]
 %%        ),
-        multi_to_code(
+        multi_to_code
+        (
             "..\\src\\pub\\player\\player_rw.erl",
             player_rw,
             [
@@ -103,7 +104,11 @@ run() ->
                 ]
             ]
         ),
-        object_rw(record_info(fields, m_object_rw)),
+        object_rw
+        (
+            "..\\src\\pub\\map\\obj\\object_rw.erl",
+            record_info(fields, m_object_rw)
+        ),
         ok
     catch _:Err:ST ->
         color:error_log("~p,~p~n", [Err, ST])
@@ -528,8 +533,7 @@ write_file(Fd, Fmt, Args) ->
     file:write_file(Fd, io_lib:format(Fmt, Args), [append]).
 
 
-object_rw(FieldList) ->
-    Fname = "..\\src\\pub\\map\\object_rw.erl",
+object_rw(Fname, FieldList) ->
     file:write_file(Fname, ""),
     write_file(Fname, "~ts", [?SPLIT_LINE]),
     write_file(Fname, "~ts", [?HEADER_SEC]),

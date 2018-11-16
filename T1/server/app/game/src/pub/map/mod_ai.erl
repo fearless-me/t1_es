@@ -457,7 +457,7 @@ count_down_attack_tick(Uid) ->
 %%-------------------------------------------------------------------
 get_pursue_unit(Uid) ->
     TarUid = object_rw:get_ai_target_uid(Uid),
-    map_rw:find_unit(TarUid).
+    object_priv:find_object_priv(TarUid).
 
 %%-------------------------------------------------------------------
 start_pursue(Uid, TarUid) when is_integer(TarUid), TarUid > 0 ->
@@ -572,7 +572,7 @@ on_ai_event(_Uid, _Event) ->
 is_in_attack_dist(_Uid, TarUid) when TarUid =< 0 ->
     false;
 is_in_attack_dist(Uid, TarUid) when is_number(TarUid) ->
-    Obj = map_rw:find_unit(TarUid),
+    Obj = object_priv:find_object_priv(TarUid),
     is_in_attack_dist(Uid, Obj);
 is_in_attack_dist(_Uid, undefined) ->
     false;

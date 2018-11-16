@@ -296,7 +296,7 @@ on_obj_pos_change(Uid, Tar) ->
     %
     %% ?DEBUG("~w pos change ~w", [Uid, Tar]),
     Src = object_rw:get_cur_pos(Uid),
-    Obj = map_rw:find_unit(Uid),
+    Obj = object_priv:find_object_priv(Uid),
     OldVisIndex = mod_view:pos_to_vis_index(Src),
     NewVisIndex = mod_view:pos_to_vis_index(Tar),
 %%    ?DEBUG("in map ~p obj ~p ~ts pos change from ~w, ~w",

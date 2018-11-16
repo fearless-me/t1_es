@@ -82,6 +82,16 @@ do_handle_cast(Request, State) ->
 
 %%--------------------------------------------------------------------
 do_player_join_map_call(S, Req) ->
+    #r_join_map_req{uid = Uid} = Req,
+    Exists = object_priv:object_priv_exist(?OBJ_PLAYER, Uid),
+    do_player_join_map_call_1(Exists, S, Req).
+
+do_player_join_map_call_1(true, _S, Req) ->
+    #r_join_map_req{uid = Uid, tar_map_id = TarMapID, tar_line_id = TarLineId} = Req,
+    ?ERROR("player ~p req join map ~p|~p, but player already in map ~w",
+        [Uid, TarMapID, TarLineId, object_priv:find_object_priv(?OBJ_PLAYER, Uid)]),
+    #r_join_map_ack{map_id = TarMapID, error = ?E_Exception};
+do_player_join_map_call_1(_Any, S, Req) ->
     %1. 选线
     #r_join_map_req{
         tar_map_id = MapID, tar_line_id = TarLineId, force = Force

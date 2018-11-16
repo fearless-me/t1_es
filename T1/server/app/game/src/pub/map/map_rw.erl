@@ -16,15 +16,13 @@
 
 %%
 -export([
-
     init/1, status/0, check_tick/1,
 
     %%
     map_id/0, line_id/0, hook_mod/0,
     %%
-    add_obj_to_map/1, del_obj_to_map/1,
-    %%
-    find_unit/1, find_unit/2, unit_exist/2,
+    add_object/1, del_object/1,
+    
     %%
     detail_ets/0,
     obj_exist/1,
@@ -83,43 +81,6 @@ hook_mod() -> erlang:get(?MAP_HOOK).
 %%-------------------------------------------------------------------
 detail_ets(Ets) -> erlang:put(?ETS_MAP_OBJ, Ets).
 detail_ets( ) -> erlang:get(?ETS_MAP_OBJ).
-
-%%-------------------------------------------------------------------
-find_unit(Uid) ->
-    Type = object_rw:get_type(Uid),
-    map_rw:find_unit(Type, Uid).
-
-find_unit(?OBJ_PLAYER, Uid) ->
-    case misc_ets:read(?ETS_CACHE_MAP_PLAYER_PRIV, Uid) of
-        [#m_cache_map_object_priv{} = Obj | _] -> Obj;
-        _ -> undefined
-    end;
-find_unit(?OBJ_MON, Uid) ->
-    case misc_ets:read(?ETS_CACHE_MAP_MONSTER_PRIV, Uid) of
-        [#m_cache_map_object_priv{} = Obj | _] -> Obj;
-        _ -> undefined
-    end;
-find_unit(?OBJ_PET, Uid) ->
-    case misc_ets:read(?ETS_CACHE_MAP_PET_PRIV, Uid) of
-        [#m_cache_map_object_priv{} = Obj | _] -> Obj;
-        _ -> undefined
-    end;
-find_unit(?OBJ_NPC, Uid) ->
-    case misc_ets:read(?ETS_CACHE_MAP_NPC_PRIV, Uid) of
-        [#m_cache_map_object_priv{} = Obj | _] -> Obj;
-        _ -> undefined
-    end;
-find_unit(_Type, _Uid) -> undefined.
-
-unit_exist(?OBJ_PLAYER, Uid) ->
-    misc_ets:member(?ETS_CACHE_MAP_PLAYER_PRIV, Uid);
-unit_exist(?OBJ_MON, Uid) ->
-    misc_ets:member(?ETS_CACHE_MAP_MONSTER_PRIV, Uid);
-unit_exist(?OBJ_PET, Uid) ->
-    misc_ets:member(?ETS_CACHE_MAP_PET_PRIV, Uid);
-unit_exist(?OBJ_NPC, Uid) ->
-    misc_ets:member(?ETS_CACHE_MAP_NPC_PRIV, Uid).
-
 
 %%-------------------------------------------------------------------
 obj_exist(Uid) ->
@@ -219,26 +180,26 @@ do_check_tick(_Any, Milliseconds) ->
 
 
 %%-------------------------------------------------------------------
-add_obj_to_map(#m_cache_map_object_priv{type = ?OBJ_MON, uid = Uid} = Obj) ->
+add_object(#m_cache_map_object_priv{type = ?OBJ_MON, uid = Uid} = Obj) ->
     misc_ets:write(?ETS_CACHE_MAP_MONSTER_PRIV, Obj),
     map_rw:add_uid_to_maps(?OBJ_MON, Uid),
     ok;
-add_obj_to_map(#m_cache_map_object_priv{type = ?OBJ_PLAYER, uid = Uid} = Obj) ->
+add_object(#m_cache_map_object_priv{type = ?OBJ_PLAYER, uid = Uid} = Obj) ->
     misc_ets:write(?ETS_CACHE_MAP_PLAYER_PRIV, Obj),
     map_rw:add_uid_to_maps(?OBJ_PLAYER, Uid),
     ok;
-add_obj_to_map(_) ->
+add_object(_) ->
     ok.
 
-del_obj_to_map(#m_cache_map_object_priv{uid = Uid, type = ?OBJ_MON}) ->
+del_object(#m_cache_map_object_priv{uid = Uid, type = ?OBJ_MON}) ->
     misc_ets:delete(?ETS_CACHE_MAP_MONSTER_PRIV, Uid),
     map_rw:del_uid_from_maps(?OBJ_MON, Uid),
     ok;
-del_obj_to_map(#m_cache_map_object_priv{uid = Uid, type = ?OBJ_PLAYER}) ->
+del_object(#m_cache_map_object_priv{uid = Uid, type = ?OBJ_PLAYER}) ->
     misc_ets:delete(?ETS_CACHE_MAP_PLAYER_PRIV, Uid),
     map_rw:del_uid_from_maps(?OBJ_PLAYER, Uid),
     ok;
-del_obj_to_map(_) ->
+del_object(_) ->
     ok.
 %%-------------------------------------------------------------------
 update_move_timer(Now) ->
