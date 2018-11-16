@@ -24,7 +24,6 @@
 %%  {@link cross_dst:rpc_call_player_enter}
 %%
 player_pub_data_to_cross(Aid, Uid) ->
-    Aid = player_rw:get_aid(),
     #r_to_cross_data{
         aid = Aid,
         uid = player_rw:get_uid(),
