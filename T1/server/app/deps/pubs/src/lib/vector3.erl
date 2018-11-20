@@ -106,9 +106,10 @@ dot_product_v(V1, V2) ->
     #vector3{x = X1*X2, y = Y1*Y2, z = Z1*Z2}.
 
 %%
-valid(V) ->
+valid(#vector3{} = V) ->
     #vector3{x = X,  z = Z} = V,
-    erlang:is_number(X) andalso erlang:is_number(Z).
+    erlang:is_number(X) andalso erlang:is_number(Z);
+valid(_Any) -> false.
 
 %%
 add(V1, V2) ->

@@ -43,9 +43,9 @@ parallel_load() -> [].
 info({serv_start_ack, RunNo}) ->
     try
         cs_conf:set_run_no(RunNo),
-        AreaId = cs_conf:get_area(),
+%%        AreaId = cs_conf:get_area(),
         Sid = cs_conf:get_sid(),
-        uid_gen:init(AreaId, Sid, RunNo),
+        uid_gen:init(Sid, RunNo),
         data_loader:task_over(serv_start)
     catch _:Err:ST ->
         misc:halt("save serv_start failed, error ~p, current stack ~p", [Err, ST])

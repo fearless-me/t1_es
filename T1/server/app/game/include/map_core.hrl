@@ -88,14 +88,15 @@
 
 
 %% 地图单位类型
+%% @doc 服务器用于分类地图对象，尽量与UID的类型定义一致
 %% {@link m_cache_map_object}
 -define(OBJ_ERR, 0).
 -define(OBJ_MIN, 1).
 -define(OBJ_MON, 1).
--define(OBJ_STATIC, 2).
--define(OBJ_NPC, 3).
--define(OBJ_PET, 4).
--define(OBJ_PLAYER, 5).
+-define(OBJ_NPC, 2).
+-define(OBJ_PET, 3).
+-define(OBJ_PLAYER, 4).
+-define(OBJ_STATIC, 5).
 -define(OBJ_MAX, 5).
 
 

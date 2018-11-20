@@ -152,6 +152,7 @@ new(
     #m_cache_map_object_priv{
         map_id = map_rw:map_id(),
         line_id = map_rw:line_id(),
+        map_pid = self(),
         uid = Uid, pid = Pid, data_id = Did,
         owner = Owner, type = Type
     }.

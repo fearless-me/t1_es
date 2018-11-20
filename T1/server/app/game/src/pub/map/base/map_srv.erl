@@ -20,10 +20,11 @@
 %% API
 -export([start_link/1, start_link/2]).
 -export([mod_init/1, do_handle_call/3, do_handle_info/2, do_handle_cast/2]).
--export([show_status/1, status/1, call_reply/2]).
+-export([show_status_/1, status/1, call_reply/2]).
 
-show_status(Name) ->
+show_status_(Name) ->
     catch ps:send(Name, show_status).
+
 status(Name) ->
     case catch gen_server:call(Name, status) of
         {'EXIT', Reason} -> Reason;
@@ -73,8 +74,8 @@ do_handle_call({player_join, Obj}, From, State) ->
     mod_map_priv:player_join_call(State, From, Obj);
 do_handle_call({player_exit, Req}, From, State) ->
     mod_map_priv:player_exit_call(State, From, Req);
-do_handle_call({player_exit_exception, Data}, _From, State) ->
-    mod_map_priv:player_exit_exception_call(State, Data);
+%%do_handle_call({player_exit_exception, Data}, _From, State) ->
+%%    mod_map_priv:player_exit_exception_call(State, Data);
 do_handle_call({player_teleport, Req}, From, State) ->
     mod_map_priv:force_teleport_call(State, From, Req);
 do_handle_call(Request, From, State) ->
@@ -130,7 +131,7 @@ do_handle_info(Info, State) ->
     {noreply, State}.
 
 %%--------------------------------------------------------------------
-do_handle_cast({player_exit_exception_, Data}, State) ->
+do_handle_cast({player_exit_exception_, _From, _PsName, Data}, State) ->
     mod_map_priv:player_exit_exception_call(State, Data),
     {noreply, State};
 do_handle_cast(Request, State) ->
@@ -141,11 +142,12 @@ do_handle_cast(Request, State) ->
 %%--------------------------------------------------------------------
 %%--------------------------------------------------------------------
 tick_clear_player() ->
-    Pid = self(),
+    Self = self(),
     Maps = map_rw:obj_maps_with_type(?OBJ_PLAYER),
     erlang:spawn
     (fun() ->
         ClearAll =
+            MapName = misc:registered_name(Self),
             maps:fold
             (
                 fun(_, Uid, X) ->
@@ -153,14 +155,16 @@ tick_clear_player() ->
                     case misc:is_alive_rpc(PPid) of
                         true -> X;
                         _Any ->
-                            ?TRY_CATCH_ERROR(map_interface:player_exit_map_exception_(Pid, Uid)),
+                            catch ?WARN("~p|~p clear player ~p", [Self, MapName, Uid]),
+                            ?TRY_CATCH_ERROR(map_interface:player_exit_map_exception_(Self, Uid)),
                             X + 1
                     end
                 end, 0, Maps
             ),
-        ?WARN("map ~p tick_clear_player ~p", [misc:registered_name(Pid), ClearAll])
+        catch ?WARN("~p|~p tick_clear_player ~p", [Self, MapName, ClearAll])
      end
     ),
+
     ok.
 
 i_tick_clear_msg() ->

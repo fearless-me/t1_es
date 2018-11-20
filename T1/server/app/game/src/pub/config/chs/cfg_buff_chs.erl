@@ -30,7 +30,7 @@ getRow(10000) ->
 		maxLayer = 1,
 		sourceConflict = 1,
 		displayType = 0,
-		propList = [{?BP_2_HP_MAX,?BPUseType_IGNORE,1000}],
+		propList = [{?BP_3_FAST,?BPUseType_MUL,545436},{?BP_1_STR,?BPUseType_ADD,12},{?BP_1_STA,?BPUseType_MUL,312321},{?BP_1_STR,?BPUseType_ADD,133}],
 		onAdd = [[[],[],[]],[[0,2,0,2,500,5,1,0],[],[],[]],[[],[],[],[]]],
 		onTick = [[[],[],[]],[[0,2,0,2,100,5,1,0],[],[],[]],[[],[],[],[]]],
 		onStop = [],

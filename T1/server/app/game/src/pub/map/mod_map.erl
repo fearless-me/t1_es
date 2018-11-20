@@ -40,15 +40,15 @@ on_info_msg({player_del_buff, Uid, OpType, Params}) ->
     mod_buff:condition_event_del_buff(OpType, Uid, Params),
     ok;
 on_info_msg(Info) ->
-    ?DEBUG("info:~p", [Info]),
+    ?ERROR("info:~p", [Info]),
     ok.
 
 %%-------------------------------------------------------------------
 on_call_msg(Request, From) ->
-    ?DEBUG("call ~p from ~p", [Request, From]),
+    ?ERROR("call ~p from ~p", [Request, From]),
     error.
 
 %%-------------------------------------------------------------------
 on_cast_msg(Request) ->
-    ?DEBUG("cast:~p", [Request]),
+    ?ERROR("cast:~p", [Request]),
     ok.

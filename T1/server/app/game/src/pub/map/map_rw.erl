@@ -84,7 +84,7 @@ detail_ets( ) -> erlang:get(?ETS_MAP_OBJ).
 
 %%-------------------------------------------------------------------
 obj_exist(Uid) ->
-   misc_ets:member(Uid, map_rw:detail_ets()).
+   misc_ets:member(map_rw:detail_ets(), Uid).
 
 %%-------------------------------------------------------------------
 obj_maps_with_uid(Uid) ->

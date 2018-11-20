@@ -55,9 +55,9 @@ do_handle_call({join_map, Req}, _From, State) ->
 do_handle_call({exit_map, Req}, _From, State) ->
     Ret = do_player_exit_map_call(State, Req),
     {reply, Ret, State};
-do_handle_call({exit_map_excetipon, {Uid, LineId}}, _From, State) ->
-    Ret = player_exit_map_exception_call(State, Uid, LineId),
-    {reply, Ret, State};
+%%do_handle_call({exit_map_excetipon, {Uid, LineId}}, _From, State) ->
+%%    Ret = player_exit_map_exception_call(State, Uid, LineId),
+%%    {reply, Ret, State};
 do_handle_call(Request, From, State) ->
     ?ERROR("undeal call ~w from ~w", [Request, From]),
     {reply, ok, State}.
@@ -160,25 +160,24 @@ do_player_exit_map_call(S, Req) ->
         [#m_map_line{pid = Pid}] ->
 
             %% @todo 退出地图失败是否要处理
-            ExitRes = map_interface:player_exit_call(Pid, Req),
-            #r_exit_map_ack{error = ExitRes, map_id = Mid, line_id = LineID };
+            map_interface:player_exit_call(Pid, Req);
         _ ->
             ?ERROR("player ~p exit map_~p_~p but line ~p not exists",
                 [Uid, S#state.map_id, LineID, LineID]),
             #r_exit_map_ack{error = ?E_Exception, map_id = Mid}
     end.
 
-player_exit_map_exception_call(S, Uid, LineID) ->
-    ?WARN("player ~p exit map_~p_~p", [Uid, S#state.map_id, LineID]),
-    case misc_ets:read(S#state.ets, LineID) of
-        [#m_map_line{pid = Pid}] ->
-            map_interface:player_exit_map_exception_call(Pid, Uid),
-            ok;
-        _ ->
-            ?ERROR("player ~p exit map_~p_~p but line ~p not exists",
-                [Uid, S#state.map_id, LineID, LineID])
-    end,
-    ok.
+%%player_exit_map_exception_call(S, Uid, LineID) ->
+%%    ?WARN("player ~p exit map_~p_~p", [Uid, S#state.map_id, LineID]),
+%%    case misc_ets:read(S#state.ets, LineID) of
+%%        [#m_map_line{pid = Pid}] ->
+%%            map_interface:player_exit_map_exception_call(Pid, Uid),
+%%            ok;
+%%        _ ->
+%%            ?ERROR("player ~p exit map_~p_~p but line ~p not exists",
+%%                [Uid, S#state.map_id, LineID, LineID])
+%%    end,
+%%    ok.
 
 %%--------------------------------------------------------------------
 create_new_line(S, MapID, LineID) ->
@@ -207,7 +206,7 @@ next_line_id() ->
 
 stop_map_line(S, Line) ->
     #m_map_line{map_id = Mid, line_id = LineId, pid = Pid} = Line,
-    ?WARN("map_~p_~p ~p will be stopped", [Mid, LineId, Pid]),
+    ?WARN("~p|map_~p_~p will be stopped", [Pid, Mid, LineId]),
     % 预留保护时间让玩家退出
     erlang:send_after(?DEAD_LINE_PROTECT, self(), {force_del_line_now, Line}),
     misc_ets:update_element(S#state.ets, LineId, {#m_map_line.status, ?MAP_READY_EXIT}),
@@ -218,7 +217,7 @@ force_del_line(S, Line) ->
     #m_map_line{map_id = Mid, line_id = LineId, pid = Pid} = Line,
     IsAlive = misc:is_alive(Pid),
     ?TRY_CATCH_ONLY(clear_line_player(IsAlive, Mid, LineId)),
-    ?WARN("map_~p_~p ~p will be killed(force:~p)", [Mid, LineId, Pid, IsAlive]),
+    ?WARN("~p|map_~p_~p will be killed(force:~p)", [Pid, Mid, LineId, IsAlive]),
     catch erlang:exit(Pid, normal),
     misc_ets:delete(S#state.ets, LineId),
 

@@ -48,7 +48,7 @@
 -define(DISCARD_FLAG, dicard_log).
 -define(MASTER_NODE, master_of_slave).
 -define(CheckFlagMaxLogTimes, 100).
--record(state, {monitorRef, counter, fileName, fd, fd_err, is_log_stdio, no_err_fd = false, dir = ?LOGDIR}).
+-record(state, {monitorRef, counter, fileName, fd, fd_err, is_log_stdio, no_err_fd = false}).
 
 %%设置日志文件和错误文件的相关选项
 -define(LogFileOptions, [
@@ -59,6 +59,8 @@
     exclusive, append, raw, binary, delayed_write
 ]).
 
+-define(LogFileOpenOpt, [append, raw, binary, delayed_write]).
+
 
 %%%===================================================================
 %%% API
@@ -67,7 +69,7 @@
 -ifdef(RELEASE).
 -define(LOG_LEVEL, info).
 -else.
--define(LOG_LEVEL, debug).
+-define(LOG_LEVEL, info).
 -endif.
 
 fatal(Sink, Fmt) -> fatal_(?LOG_LEVEL, Sink, Fmt, []).
@@ -296,20 +298,20 @@ do_init(true, Ref, _Fname, _Dir) ->
 do_init(false, Ref, Fname, Dir) ->
     MkDirNew = get_env(mkdir_restart, false),
     MkLogRun = get_env(createfile_restart, true),
-    NewDir = ensure_log_dir(MkDirNew, Dir),
+    ensure_log_dir(MkDirNew, Dir),
     NoErr = case erlang:process_info(self(), registered_name) of
                 {registered_name, ?MODULE} -> false;
                 _ -> true
             end,
 
-    Fd = ?if_else(MkLogRun, make_file_(NewDir, Fname), undefined),
-    FdErr = ?if_else(NoErr orelse (not MkLogRun), undefined, make_err_file_(NewDir, Fname)),
+    Fd = ?if_else(MkLogRun, make_file_(Fname), undefined),
+    FdErr = ?if_else(NoErr orelse (not MkLogRun), undefined, make_err_file_(Fname)),
 
     IsShowInStdio = get_env(show_in_stdio, true),
     {ok, #state{
         monitorRef = Ref, counter = 0, fileName = Fname,
         fd = Fd, fd_err = FdErr, is_log_stdio = IsShowInStdio,
-        no_err_fd = NoErr, dir = NewDir}}.
+        no_err_fd = NoErr}}.
 
 
 
@@ -355,21 +357,21 @@ do_handle_info(_Info, StateData) ->
 
 %%--------------------------------------------------------------------
 call({make_init_log, Fname}, _From, State) ->
-    #state{no_err_fd = NoErr, dir = NewDir} = State,
+    #state{no_err_fd = NoErr} = State,
 
-    Fd = make_file_(NewDir, Fname),
-    FdErr = ?if_else(NoErr, undefined, make_err_file_(NewDir, Fname)),
+    Fd = make_file_(Fname),
+    FdErr = ?if_else(NoErr, undefined, make_err_file_(Fname)),
     {reply, true, State#state{fd = Fd, fd_err = FdErr, fileName = Fname}};
 call(Request, From, State) ->
     io:format("undeal call ~w from ~w", [Request, From]),
     {noreply, ok, State}.
 
 %%--------------------------------------------------------------------
-rotate(#state{fileName = Fname, fd = Fd, fd_err = FdErr, no_err_fd = NoErr, dir = Dir} = State) ->
+rotate(#state{fileName = Fname, fd = Fd, fd_err = FdErr, no_err_fd = NoErr} = State) ->
     catch file:close(Fd),
     catch file:close(FdErr),
-    Fd2 = make_file_(Dir, Fname),
-    Fd3 = ?if_else(NoErr, undefined, make_err_file_(Dir, Fname)),
+    Fd2 = make_file_(Fname),
+    Fd3 = ?if_else(NoErr, undefined, make_err_file_(Fname)),
     {ok, State#state{fd = Fd2, fd_err = Fd3, counter = 0}}.
 
 % Check if the file needs to be rotated
@@ -447,33 +449,55 @@ is_error_log(_) -> true.
 need_write_log(Cnt) when is_number(Cnt) ->
     case Cnt > 0 andalso (Cnt rem ?CheckFlagMaxLogTimes) =:= 0 of
         true ->
-            not get_env(?DISCARD_FLAG, false);
+            not (get_env(?DISCARD_FLAG, false) orelse check_msg_queue());
         _ ->
             true
     end;
 need_write_log(_Any) ->
     true.
 
-make_file_(Dir, Fname) ->
+check_msg_queue()->
+    MaxLimit = get_env(discard_log_limit, 5000),
+    case erlang:process_info(self(), message_queue_len) of
+        {message_queue_len, MsgQ} -> MsgQ >= MaxLimit;
+        _ -> false
+    end.
+
+make_file_(Fname) ->
+    Dir = get_env(logdir, ?LOGDIR),
     make_file_(Dir, Fname, "").
 
-make_err_file_(Dir, Fname) ->
+make_err_file_(Fname) ->
+    Dir = get_env(logdir, ?LOGDIR),
     make_file_(Dir, Fname, ".Err").
 
 make_file_(Dir, Fname, Suffix) ->
     TimeNow = time_format(erlang:localtime()),
     File = Dir ++ "/" ++ Fname ++ "." ++ TimeNow ++ Suffix ++ ".log",
-    {ok, Fd} = file:open(File, ?LogFileOptions),
+    {ok, Fd}  =
+        case file:open(File, ?LogFileOptions) of
+            {ok, _} = Res -> Res;
+            {error,eexist} -> file:open(File, ?LogFileOpenOpt);
+            Error -> io:format("*** create file ~s error ~p ~n",[File, Error]), Error
+        end,
     file:write(Fd, <<16#EF, 16#BB, 16#BF>>),
     io:format("[~ts][info]create log file[~s] succ.~n", [time_format_str(erlang:localtime()), File]),
     Fd.
 
-ensure_log_dir(true, Dir) ->
-    NewDir = Dir ++ now_day(),
-    file:make_dir(NewDir),
-    NewDir;
-ensure_log_dir(_, Dir) ->
-    file:make_dir(Dir),
+ensure_log_dir(MkNewDir, Dir) ->
+    case get_env(logdir, undefined) of
+        undefined ->
+            NewDir = gen_log_dir(MkNewDir, Dir),
+            file:make_dir(NewDir),
+            set_env(logdir, NewDir);
+        ExistDir ->
+            file:make_dir(ExistDir)
+    end,
+    ok.
+
+gen_log_dir(true, Dir) ->
+    Dir ++ now_day();
+gen_log_dir(_, Dir) ->
     Dir.
 
 next_hour_sec() ->

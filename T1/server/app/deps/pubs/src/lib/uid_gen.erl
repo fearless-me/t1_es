@@ -15,8 +15,10 @@
 %% API
 -export([tmp_uid/0]).
 -export([mon_uid/0]).
--export([acc_uid/0]).
+-export([npc_uid/0]).
+-export([pet_uid/0]).
 -export([player_uid/0]).
+-export([acc_uid/0]).
 -export([item_uid/0]).
 -export([mail_uid/0]).
 
@@ -24,20 +26,25 @@
 -export([uid_type/1, parse_db_id/1]).
 -export([short/1, long/1]).
 -export([parse/1]).
--export([init/3]).
+-export([init/2]).
 
 
 %%数据库中UID的类型，取值范围为[0,31]
 -define(UID_TYPE_START,     0).      %% 开始值
 
--define(UID_TYPE_TEMP,      0).      %% 宠物或者队伍
+%% 服务器运行时需要的
+-define(UID_TYPE_TEMP,      0).      %% 队伍(临时且不保存的)
+%%(1- 10)预留给地图对象
 -define(UID_TYPE_MON,       1).      %% 怪物
--define(UID_TYPE_ACCOUNT,   2).      %% 账号
--define(UID_TYPE_PLAYER,    3).      %% 角色
--define(UID_TYPE_ITEM,      4).      %% 道具
--define(UID_TYPE_MAIL,      5).      %% 邮件
+-define(UID_TYPE_NPC,       2).      %% NPC
+-define(UID_TYPE_PET,       3).      %% PET
+-define(UID_TYPE_PLAYER,    4).      %% 玩家
+%%其他逻辑上需要的UID
+-define(UID_TYPE_ACCOUNT,   11).      %% 账号
+-define(UID_TYPE_ITEM,      12).      %% 道具
+-define(UID_TYPE_MAIL,      13).      %% 邮件
 
--define(UID_TYPE_END,      31).      %% 结束值
+-define(UID_TYPE_END,      63).      %% 结束值
 -type uid_type() :: ?UID_TYPE_START .. ?UID_TYPE_END.
 
 %%%-------------------------------------------------------------------
@@ -46,15 +53,25 @@
 -spec tmp_uid() -> uint64().
 tmp_uid() -> gen_1(?UID_TYPE_TEMP).
 
+%% 怪物UID
 -spec mon_uid() -> uint64().
 mon_uid() -> gen_1(?UID_TYPE_MON).
 
--spec acc_uid() -> uint64().
-acc_uid() -> gen_1(?UID_TYPE_ACCOUNT).
+%% npc UID
+-spec npc_uid() -> uint64().
+npc_uid() -> gen_1(?UID_TYPE_NPC).
 
-%%生成角色UID
+%% pet uid
+-spec pet_uid() -> uint64().
+pet_uid() -> gen_1(?UID_TYPE_PET).
+
+%%角色UID
 -spec player_uid() -> uint64().
 player_uid() -> gen_1(?UID_TYPE_PLAYER).
+
+%% 账号UID
+-spec acc_uid() -> uint64().
+acc_uid() -> gen_1(?UID_TYPE_ACCOUNT).
 
 %%生成道具UID
 -spec item_uid() -> uint64().
@@ -79,22 +96,22 @@ mail_uid() -> gen_1(?UID_TYPE_MAIL).
 }).
 
 -define(BIT_HIGH,   1).		% UID最高位，默认0，空位
--define(BIT_TYPE,	5).		% UID类型?UID_TYPE_Start - ?UID_TYPE_End:0~31
--define(BIT_AREA,	4).		% ADBID:0~15
--define(BIT_SVER,	10).	% DBID:0~1023
+-define(BIT_TYPE,	6).		% UID类型?UID_TYPE_Start - ?UID_TYPE_End:0~63
+%%-define(BIT_AREA,	4).		% ADBID:0~15
+-define(BIT_SVER,	11).	% DBID:0~2047
 -define(BIT_INDX,	13).	% DBID:0~8191
--define(BIT_ACCU,	31).	% ID累加值:0~2147483647
+-define(BIT_ACCU,	33).	% ID累加值:0~8589934591
 
 -define(INDEX_MAX, ((1 bsl ?BIT_INDX) - 1)).
 
 
 %%%-------------------------------------------------------------------
 
-init(AreaID, Sid, UIDIndex) ->
-    ?INFO("~p init area ~p server ~p runno ~p", [node(), AreaID, Sid, UIDIndex]),
-    init_1(AreaID, Sid, UIDIndex).
+init(Sid, UIDIndex) ->
+    ?INFO("~p init server ~p runno ~p", [node(), Sid, UIDIndex]),
+    init_1(Sid, UIDIndex).
 
-init_1(AreaID, Sid, UIDIndex) ->
+init_1(Sid, UIDIndex) ->
      case UIDIndex >= 0 andalso UIDIndex =< ?INDEX_MAX  of
          true -> skip;
          _ ->
@@ -106,8 +123,8 @@ init_1(AreaID, Sid, UIDIndex) ->
     List = lists:seq(?UID_TYPE_START, ?UID_TYPE_END),
     Fun =
         fun(UIDType) ->
-            MinUID = gen(UIDType, AreaID, Sid, UIDIndex, 0),
-            MaxUID = gen(UIDType, AreaID, Sid, UIDIndex, (1 bsl ?BIT_ACCU) - 1),
+            MinUID = gen(UIDType, Sid, UIDIndex, 0),
+            MaxUID = gen(UIDType, Sid, UIDIndex, (1 bsl ?BIT_ACCU) - 1),
 
             misc_ets:write(?UIDEts, #recUID{type = UIDType,curUID = MinUID,minUID = MinUID,maxUID = MaxUID}),
 
@@ -142,7 +159,7 @@ check_uid(UID) ->
 uid_min() ->
     case get(minUID) of
         undefined ->
-            MinUID = gen(?UID_TYPE_START, 0, 0, 0, 0),
+            MinUID = gen(?UID_TYPE_START, 0, 0, 0),
             put(minUID, MinUID),
             MinUID;
         UID ->
@@ -151,7 +168,7 @@ uid_min() ->
 uid_max() ->
     case get(maxUID) of
         undefined ->
-            MaxUID = gen((1 bsl ?BIT_TYPE) - 1, (1 bsl ?BIT_AREA) - 1, (1 bsl ?BIT_SVER) - 1, (1 bsl ?BIT_INDX) - 1, (1 bsl ?BIT_ACCU) - 1),
+            MaxUID = gen((1 bsl ?BIT_TYPE) - 1, (1 bsl ?BIT_SVER) - 1, (1 bsl ?BIT_INDX) - 1, (1 bsl ?BIT_ACCU) - 1),
             put(maxUID, MaxUID),
             MaxUID;
         UID ->
@@ -160,7 +177,7 @@ uid_max() ->
 uid_min(UIDType) ->
     case get({minUID, UIDType}) of
         undefined ->
-            MinUID = gen(UIDType, 0, 0, 0, 0),
+            MinUID = gen(UIDType, 0, 0, 0),
             put({minUID, UIDType}, MinUID),
             MinUID;
         UID ->
@@ -169,7 +186,7 @@ uid_min(UIDType) ->
 uid_max(UIDType) ->
     case get({maxUID, UIDType}) of
         undefined ->
-            MaxUID = gen(UIDType, (1 bsl ?BIT_AREA) - 1, (1 bsl ?BIT_SVER) - 1, (1 bsl ?BIT_INDX) - 1, (1 bsl ?BIT_ACCU) - 1),
+            MaxUID = gen(UIDType, (1 bsl ?BIT_SVER) - 1, (1 bsl ?BIT_INDX) - 1, (1 bsl ?BIT_ACCU) - 1),
             put({maxUID, UIDType}, MaxUID),
             MaxUID;
         UID ->
@@ -188,16 +205,16 @@ parse_db_id(UID) ->
     {_, _, _, DBID, _, _} = parse(UID),
     DBID.
 
-gen(UIDType, ADBID, DBID, IDIndex, IDRange) ->
+gen(UIDType, DBID, IDIndex, IDRange) ->
     High = 0,
-    <<UID:64>> = <<High:?BIT_HIGH, UIDType:?BIT_TYPE, ADBID:?BIT_AREA, DBID:?BIT_SVER, IDIndex:?BIT_INDX, IDRange:?BIT_ACCU>>,
+    <<UID:64>> = <<High:?BIT_HIGH, UIDType:?BIT_TYPE, DBID:?BIT_SVER, IDIndex:?BIT_INDX, IDRange:?BIT_ACCU>>,
     UID.
 
 %% 解析UID
--spec parse(UID::uint64()) -> {H::integer(), UIDType::integer(), ADBID::integer(), DBID::integer(), UIDIndex::integer(), IDRange::integer()}.
+-spec parse(UID::uint64()) -> {H::integer(), UIDType::integer(), DBID::integer(), UIDIndex::integer(), IDRange::integer()}.
 parse(UID) ->
-    <<H:?BIT_HIGH, UIDType:?BIT_TYPE, ADBID:?BIT_AREA, DBID:?BIT_SVER, UIDIndex:?BIT_INDX, IDRange:?BIT_ACCU>> = <<UID:64>>,
-    {H, UIDType, ADBID, DBID, UIDIndex, IDRange}.
+    <<H:?BIT_HIGH, UIDType:?BIT_TYPE, DBID:?BIT_SVER, UIDIndex:?BIT_INDX, IDRange:?BIT_ACCU>> = <<UID:64>>,
+    {H, UIDType, DBID, UIDIndex, IDRange}.
 
 %%当达到最大UID值时，会自动从最小值再次开始
 -spec gen_1(Type) -> uint32() when Type::uid_type().
@@ -214,5 +231,5 @@ short(UID) ->
 long(ShortID) ->
     <<IDRange:?BIT_ACCU, DBID:?BIT_SVER, UIDIndex:?BIT_INDX>>
         = <<ShortID:(?BIT_SVER + ?BIT_INDX + ?BIT_ACCU)>>,
-    gen(?UID_TYPE_PLAYER, 1, DBID, UIDIndex, IDRange).
+    gen(?UID_TYPE_PLAYER, DBID, UIDIndex, IDRange).
 %% ================以上两个方法仅针对角色UID================

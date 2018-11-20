@@ -20,7 +20,7 @@
 -type(vm_memory_high_watermark() :: (float() | {'absolute', integer() | string()})).
 -spec(start_link/1 :: (float()) -> pid() | {'error', term()}).
 -spec(start_link/3 :: (float(), fun ((any()) -> 'ok'),
-    fun ((any()) -> 'ok')) -> pid() | {'error', term()} ).
+    fun ((any()) -> 'ok')) -> pid() | {'error', term()}).
 -spec(get_total_memory/0 :: () -> (non_neg_integer() | 'unknown')).
 -spec(get_vm_limit/0 :: () -> non_neg_integer()).
 -spec(get_check_interval/0 :: () -> non_neg_integer()).
@@ -37,7 +37,7 @@
 -export([init/1, handle_call/3, handle_cast/2, handle_info/2,
     terminate/2, code_change/3]).
 
--export([info/0]).
+-export([dump_all/0, dump_info/0, dump_monitor/0]).
 -export([get_total_memory/0, get_vm_limit/0,
     get_check_interval/0, set_check_interval/1,
     get_vm_memory_high_watermark/0, set_vm_memory_high_watermark/1,
@@ -60,19 +60,18 @@
 -define(MEMORY_SIZE_FOR_UNKNOWN_OS, 1073741824).
 -define(DEFAULT_VM_MEMORY_HIGH_WATERMARK, 0.4).
 %%
--define(LARGE_HEAP,             100*1024*1024).
--define(LARGE_HEAP_GUARD_MIN,   1*1024*1024).
+-define(LARGE_HEAP, 100 * 1024 * 1024).
+-define(LARGE_HEAP_GUARD_MIN, 1 * 1024 * 1024).
 %%
--define(LONG_GC,                500).
--define(LONG_SCHEDULE,          500).
+-define(LONG_GC, 500).
+-define(LONG_SCHEDULE, 500).
 %%
 -define(VM_MONITOR_LOGGER, monitor_logger).
 -define(REPORT_CACHE_ETS, system_monitor_ets__).
 
 %%
 -record(state, {total_memory, memory_limit, memory_config_limit, timeout, timer, alarmed, alarm_funs}).
--record(monitor_info,{pid_or_port, event, info, start, latest, count=0, need_flush=true}).
-
+-record(monitor_info, {pid_or_port, event, info, start, latest, count = 0, need_flush = true}).
 
 
 %%----------------------------------------------------------------------------
@@ -117,6 +116,79 @@ set_vm_memory_high_watermark(Fraction) ->
 get_memory_limit() ->
     gen_server:call(?MODULE, get_memory_limit, infinity).
 
+dump_all()->
+    dump_info(),
+    dump_monitor(),
+    ok.
+
+dump_info() ->
+    PS_Count = erlang:system_info(process_count),
+    RQ = erlang:statistics(run_queue),
+    ProcessUsed = erlang:memory(processes_used),
+    ProcessTotal = erlang:memory(processes),
+    MemInfo = erlang:memory([system, atom, atom_used, binary, code, ets]),
+
+    SystemMem = misc:format_memory_readable(misc:get_value(system, MemInfo)),
+    AtomMem = misc:format_memory_readable(misc:get_value(atom, MemInfo)),
+    AtomUsedMem = misc:format_memory_readable(misc:get_value(atom_used, MemInfo)),
+    BinMem = misc:format_memory_readable(misc:get_value(binary, MemInfo)),
+    CodeMem = misc:format_memory_readable(misc:get_value(code, MemInfo)),
+    EtsMem = misc:format_memory_readable(misc:get_value(ets, MemInfo)),
+
+    PSList = erlang:processes(),
+
+    ProcessesProplist = [[{pid, erlang:pid_to_list(P)} | process_info_items(P)] || P <- PSList],
+
+    Fun =
+        fun(L, AccIn) ->
+            try
+                Pid = misc:get_value(pid, L),
+                RegName = case misc:get_value(registered_name, L) of
+                              [] ->
+                                  "null";
+                              V ->
+                                  V
+                          end,
+                Red = misc:get_value(reductions, L),
+                MQL = misc:get_value(message_queue_len, L),
+                Mem = misc:get_value(memory, L),
+                Heap = misc:get_value(heap_size, L),
+                Stack = misc:get_value(stack_size, L),
+                TotalHeap = misc:get_value(total_heap_size, L),
+                CF = lists:sublist(misc:get_value(current_stacktrace, L), 4),
+
+                [{Pid, RegName, Red, MQL, Mem, TotalHeap, Heap, Stack, cf_parse(CF, "")} | AccIn]
+            catch _ : _ : _ ->
+                AccIn
+            end
+        end,
+    PPList = lists:foldl(Fun, [], ProcessesProplist),
+    Str1 = log_sort_mqueue(PPList),
+    Str2 = log_sort_memory(PPList),
+    ?INFO_SINK(?VM_MONITOR_LOGGER, "~n~nProcess: total ~p(RQ:~p) using:~s(~s allocated) nodes:~p~n"
+    "Memory: Sys ~s, Atom ~s/~s, Bin ~s, Code ~s, Ets ~s~n"
+    "SortByMQueue:~n"
+    "Row      Pid                 RegName                       Reductions     MQueue(*)      Memory           TotalHeap        Heap             Stack            current_stacktrace~n~ts"
+    "SortByMem:~n"
+    "Row      Pid                 RegName                       Reductions     MQueue         Memory(*)        TotalHeap        Heap             Stack            current_stacktrace~n~ts",
+        [PS_Count, RQ,
+            misc:format_memory_readable(ProcessUsed),
+            misc:format_memory_readable(ProcessTotal), nodes(), SystemMem, AtomUsedMem, AtomMem, BinMem, CodeMem, EtsMem, Str1, Str2]),
+    ok.
+
+-define(MONITOR_FMT_HEAD, "~-20.w~-20.w~-20.w~-25.w~-25.w~w").
+-define(MONITOR_FMT_BODY, "~-20.w~-20.w~-20.w~-25.ts~-25.ts~w").
+dump_monitor() ->
+    ?INFO_SINK(?VM_MONITOR_LOGGER, "system monitor total event ~p:",[ets:info(?REPORT_CACHE_ETS, size)]),
+    ?INFO_SINK(?VM_MONITOR_LOGGER, ?MONITOR_FMT_HEAD,[pid_or_port, event, info, start, latest, count]),
+    ets:tab2list(?REPORT_CACHE_ETS),
+    ets:foldl(
+        fun(#monitor_info{pid_or_port = PP, event = E, info = I, start = S, latest = L, count = C}, _)->
+            ?INFO_SINK(?VM_MONITOR_LOGGER, ?MONITOR_FMT_BODY,[PP, E, I, S, L, C])
+        end, 0, ?REPORT_CACHE_ETS),
+
+    ok.
+
 %%----------------------------------------------------------------------------
 %% gen_server callbacks
 %%----------------------------------------------------------------------------
@@ -143,7 +215,7 @@ init([MemFraction, AlarmFuns]) ->
             {large_heap, ?LARGE_HEAP div WordSize}
         ]
     ),
-    
+
     {ok, _Logger} = fastlog:start_link(?VM_MONITOR_LOGGER, "monitor.sys.vm"),
     true = fastlog:make_init_log(?VM_MONITOR_LOGGER, "monitor.sys.vm"),
     State = #state{timeout = ?DEFAULT_MEMORY_CHECK_INTERVAL,
@@ -188,38 +260,43 @@ handle_info({monitor, GcPid, long_gc, Info}, Logger) ->
 %% {monitor, PidOrPort, long_schedule, Info} is sent to MonitorPid.
 %% PidOrPort is the process or port that was running.
 %% Info is a list of two-element tuples describing the event.
-handle_info({monitor, PidOrPort, long_schedule, Info} , Logger) ->
+handle_info({monitor, PidOrPort, long_schedule, Info}, Logger) ->
     cache_monitor(PidOrPort, long_schedule, Info),
     {noreply, Logger};
 %% {monitor, GcPid, large_heap, Info} is sent to MonitorPid.
 %% GcPid and Info are the same as for long_gc earlier,
 %% except that the tuple tagged with timeout is not present.
-handle_info({monitor, GcPid, large_heap, Info} , Logger) ->
+handle_info({monitor, GcPid, large_heap, Info}, Logger) ->
     cache_monitor(GcPid, large_heap, Info),
     {noreply, Logger};
 %% {monitor, SusPid, busy_port, Port} is sent to MonitorPid.
 %% SusPid is the pid that got suspended when sending to Port.
-handle_info({monitor, SusPid, busy_port, Port} , Logger) ->
+handle_info({monitor, SusPid, busy_port, Port}, Logger) ->
     cache_monitor(Port, busy_port, SusPid),
     {noreply, Logger};
 %% {monitor, SusPid, busy_dist_port, Port} is sent to MonitorPid.
 %% SusPid is the pid that got suspended when sending through the inter-node communication port Port.
-handle_info({monitor, SusPid, busy_dist_port, Port} , Logger) ->
+handle_info({monitor, SusPid, busy_dist_port, Port}, Logger) ->
     cache_monitor(Port, busy_dist_port, SusPid),
     {noreply, Logger};
 %%--------------------------------------------------------------------
 handle_info({set_large_heap, SetsWord}, State) ->
-    {_MonitorPid,Old} = erlang:system_monitor(),
+    {_MonitorPid, Old} = erlang:system_monitor(),
     New = remove_monitor_set(Old, large_heap, []),
-    erlang:system_monitor(self(),[{large_heap, SetsWord} | New]),
+    erlang:system_monitor(self(), [{large_heap, SetsWord} | New]),
     {noreply, State};
 %%--------------------------------------------------------------------
 handle_info(update, State) ->
     {noreply, internal_update(State)};
 handle_info(tick, State) ->
-    info(),
     Self = self(),
-    erlang:spawn(fun() -> garbage_collect(Self) end),
+    erlang:spawn
+    (
+        fun() ->
+            vms_monitor:dump_all(),
+            garbage_collect(Self)
+        end
+    ),
     {noreply, State};
 handle_info(_Info, State) ->
     {noreply, State}.
@@ -487,64 +564,7 @@ read_proc_file(IoDevice, Acc) ->
         eof -> Acc
     end.
 
-info() ->
-    PS_Count = erlang:system_info(process_count),
-    RQ = erlang:statistics(run_queue),
-    ProcessUsed = erlang:memory(processes_used),
-    ProcessTotal = erlang:memory(processes),
-    MemInfo = erlang:memory([system, atom, atom_used, binary, code, ets]),
 
-    SystemMem = misc:format_memory_readable(misc:get_value(system, MemInfo)),
-    AtomMem = misc:format_memory_readable(misc:get_value(atom, MemInfo)),
-    AtomUsedMem = misc:format_memory_readable(misc:get_value(atom_used, MemInfo)),
-    BinMem = misc:format_memory_readable(misc:get_value(binary, MemInfo)),
-    CodeMem = misc:format_memory_readable(misc:get_value(code, MemInfo)),
-    EtsMem = misc:format_memory_readable(misc:get_value(ets, MemInfo)),
-
-    PSList = erlang:processes(),
-
-    ProcessesProplist = [[{pid, erlang:pid_to_list(P)} | process_info_items(P)] || P <- PSList],
-
-    Fun =
-        fun(L, AccIn) ->
-            try
-                Pid = misc:get_value(pid, L),
-                RegName = case misc:get_value(registered_name, L) of
-                              [] ->
-                                  "null";
-                              V ->
-                                  V
-                          end,
-                Red = misc:get_value(reductions, L),
-                MQL = misc:get_value(message_queue_len, L),
-                Mem = misc:get_value(memory, L),
-                Heap = misc:get_value(heap_size, L),
-                Stack = misc:get_value(stack_size, L),
-                TotalHeap = misc:get_value(total_heap_size, L),
-                CF = lists:sublist(misc:get_value(current_stacktrace, L), 4),
-
-                [{Pid, RegName, Red, MQL, Mem, TotalHeap, Heap, Stack, cf_parse(CF, "")} | AccIn]
-            catch _ : _ : _ ->
-                    AccIn
-            end
-        end,
-    PPList = lists:foldl(Fun, [], ProcessesProplist),
-    Str1 = log_sort_mqueue(PPList),
-    Str2 = log_sort_memory(PPList),
-    ?INFO_SINK(?VM_MONITOR_LOGGER, "~n~nProcess: total ~p(RQ:~p) using:~s(~s allocated) nodes:~p~n"
-    "Memory: Sys ~s, Atom ~s/~s, Bin ~s, Code ~s, Ets ~s~n"
-    "SortByMQueue:~n"
-    "Row      Pid                 RegName                       Reductions     MQueue(*)      Memory           TotalHeap        Heap             Stack            current_stacktrace~n~ts"
-    "SortByMem:~n"
-    "Row      Pid                 RegName                       Reductions     MQueue         Memory(*)        TotalHeap        Heap             Stack            current_stacktrace~n~ts",
-        [PS_Count, RQ,
-            misc:format_memory_readable(ProcessUsed),
-            misc:format_memory_readable(ProcessTotal), nodes(), SystemMem, AtomUsedMem, AtomMem, BinMem, CodeMem, EtsMem, Str1, Str2]),
-
-    %% 	[{PsPid,RegisterName,_,_,_,PD,_}|_] = List,
-%% 	PDKeyList = [Key || {Key,_} <- PD],
-%% 	?LOG_OUT("Pid:~p RegName:~p KeyList:~p",[PsPid,RegisterName,PDKeyList]),
-    ok.
 
 cf_parse([], Acc) ->
     Acc;
@@ -588,7 +608,6 @@ process_info_items(P) ->
         ]).
 
 
-
 %%--------------------------------------------------------------------
 remove_monitor_set([], _Key, Acc) ->
     Acc;
@@ -600,7 +619,7 @@ remove_monitor_set([Conf | Left], Key, Acc) ->
     remove_monitor_set(Left, Key, [Conf | Acc]).
 
 %%--------------------------------------------------------------------
-cache_monitor(PidOrPort, Event, Info)->
+cache_monitor(PidOrPort, Event, Info) ->
     Now = misc_time:localtime_str(),
     case ets:lookup(?REPORT_CACHE_ETS, PidOrPort) of
         [] ->
@@ -616,7 +635,7 @@ cache_monitor(PidOrPort, Event, Info)->
                     count = 1
                 }
             );
-        [Rec] when (not is_number(Info) ); Rec#monitor_info.info < Info  ->
+        [Rec] when (not is_number(Info)); Rec#monitor_info.info < Info ->
             ets:update_element
             (
                 ?REPORT_CACHE_ETS, PidOrPort,
@@ -624,7 +643,7 @@ cache_monitor(PidOrPort, Event, Info)->
                     {#monitor_info.need_flush, true},
                     {#monitor_info.info, Info},
                     {#monitor_info.latest, Now},
-                    {#monitor_info.count, Rec#monitor_info.count+1}
+                    {#monitor_info.count, Rec#monitor_info.count + 1}
                 ]
             );
         [Rec] ->
@@ -634,11 +653,10 @@ cache_monitor(PidOrPort, Event, Info)->
                 [
                     {#monitor_info.need_flush, true},
                     {#monitor_info.latest, Now},
-                    {#monitor_info.count, Rec#monitor_info.count+1}
+                    {#monitor_info.count, Rec#monitor_info.count + 1}
                 ]
             )
     end,
     ok.
-
 
 

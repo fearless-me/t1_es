@@ -42,22 +42,6 @@
 }).
 
 %% 
-%% // 战斗结果同步血量变化
--define(GS2U_BattleHpDelta,57796).
--record(pk_GS2U_BattleHpDelta,{
-	%% UInt64 来源ID
-	uidSrc = 0,
-	%% UInt64 目标ID
-	uidDes = 0,
-	%% Single 血量百分比（变化前
-	hpPerA = 0.0,
-	%% Single 血量百分比（变化后
-	hpPerB = 0.0,
-	%% Int32 血量变化值列表
-	listHpDelta = []
-}).
-
-%% 
 %% // 同步战斗属性
 -define(GS2U_BattleProps,25624).
 -record(pk_GS2U_BattleProps,{

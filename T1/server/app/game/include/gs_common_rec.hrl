@@ -36,7 +36,7 @@
 %% 地图传送
 -record(r_teleport_req, {uid = 0, map_pid, tar}).
 %% 使用技能
--record(r_player_use_skill_req, {uid = 0, skill_id = 0, tar = 0, pos, serial = 0}).
+-record(r_player_use_skill_req, {uid = 0, skill_id = 0, tar = 0,    pos, serial = 0}).
 %% 添加buff
 -record(r_player_add_buff_req, {uid = 0, src_uid = 0, buff_id = 0, level = 1, lifetime=0, layer=1, skip_immune=false}).
 

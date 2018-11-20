@@ -129,6 +129,9 @@ on_info_msg({msg_transfer_to_map, MsgId}, S) ->
 on_info_msg({msg_transfer_to_map, MsgId, Msg}, S) ->
     player_pub:send_map_msg_(MsgId, Msg),
     S;
+on_info_msg({'DOWN', _, process, _, _} = Msg, S) ->
+    catch player_cross_priv:process_down(Msg),
+    S;
 on_info_msg(Info, S) ->
     ?TRY_CATCH(player:on_info_msg(Info)),
     S.

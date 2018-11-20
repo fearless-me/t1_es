@@ -53,26 +53,28 @@ init(S) ->
 %% call
 player_exit_call(S, From, #r_exit_map_req{uid = Uid}) ->
     Obj = object_priv:find_object_priv(?OBJ_PLAYER, Uid),
-    ?TRY_CATCH_RET(do_player_exit_call(S, From, Uid, Obj), {reply, ?E_Exception, S}).
+    Ack = #r_exit_map_ack{error = ?E_Exception, map_id = map_rw:map_id(), line_id = map_rw:line_id() },
+    ?TRY_CATCH_RET(do_player_exit_call(S, From, Uid, Obj), {reply, Ack, S}).
 
-do_player_exit_call(S, _From, Uid, #m_cache_map_object_priv{} = Obj) ->
-    ?INFO("player ~p exit map ~p:~p:~p",
-        [Uid, map_rw:map_id(), map_rw:line_id(), self()]),
+do_player_exit_call(S, From, Uid, #m_cache_map_object_priv{} = Obj) ->
+    ?INFO("player ~p exit ~p | ~p from ~p", [Uid, self(), misc:registered_name(), From]),
 
     ?TRY_CATCH_ERROR(map_rw:del_object(Obj), Err1),
     ?TRY_CATCH_ERROR(mod_view:sync_player_exit_map(Obj), Err2),
     ?TRY_CATCH_ERROR(hook_map:on_player_exit(Uid), Err3),
     ?TRY_CATCH_ERROR(dec_line_number(S#m_map_state.mgr_ets, map_rw:line_id()), Err4),
-    {reply, ?E_Success, S};
-do_player_exit_call(S, _From, Uid, _) ->
-    ?ERROR("~w req exit map ~w ~w, but obj not exists!",
-        [Uid, self(), misc:registered_name()]),
+    Ack = #r_exit_map_ack{error = ?E_Success, map_id = map_rw:map_id(), line_id = map_rw:line_id() },
+    {reply, Ack, S};
+do_player_exit_call(S, From, Uid, _) ->
+    ?WARN("~w req exit map ~w|~w from ~p, but obj not exists!",
+        [Uid, self(), misc:registered_name(),From]),
 %%    Obj = #m_cache_map_object_priv{uid = Uid, type = ?OBJ_PLAYER},
 %%    ?TRY_CATCH_ERROR(map_rw:del_object(Obj), Err1),
 %%    ?TRY_CATCH_ERROR(mod_view:sync_player_exit_map(Obj), Err2),
 %%    ?TRY_CATCH_ERROR(hook_map:on_player_exit(Uid), Err3),
 %%    ?TRY_CATCH_ERROR(dec_line_number(S#m_map_state.mgr_ets, map_rw:line_id()), Err4),
-    {reply, ?E_Success, S}.
+    Ack = #r_exit_map_ack{error = ?E_Success, map_id = map_rw:map_id(), line_id = map_rw:line_id() },
+    {reply, Ack, S}.
 
 
 dec_line_number(Ets, LineId) ->
@@ -89,6 +91,7 @@ dec_line_number(Ets, LineId) ->
 %% call
 player_exit_exception_call(S, Uid) ->
     Obj = object_priv:find_object_priv(?OBJ_PLAYER, Uid),
+    ?WARN("player_exit_exception_call(~p)",[Uid]),
     ?TRY_CATCH(do_player_exit_call(S, undefined, Uid, Obj)),
     {reply, ?E_Success, S}.
 
@@ -126,7 +129,7 @@ force_teleport_call(S, From, #r_teleport_req{uid = Uid, tar = TarPos}) ->
     map_srv:call_reply(From, ok),
     CurPos = object_rw:get_cur_pos(Uid),
     ?TRY_CATCH(mod_move:on_obj_pos_change(Uid, TarPos)),
-    ?DEBUG("player ~p teleport from ~w to ~w in map ~p_~p",
+    ?DEBUG("player ~p teleport from ~w to ~w in map_~p_~p",
         [Uid, CurPos, TarPos, map_rw:map_id(), map_rw:line_id()]),
     {ok, S}.
 
@@ -150,7 +153,7 @@ init_all_monster_2(Obj) ->
     map_rw:add_object(Obj),
     mod_view:add_obj_to_vis_tile(Obj, VisIndex),
     hook_map:on_monster_create(Uid),
-    ?DEBUG("map ~p:~p create monster ~p, uid ~p, visIndex ~p",
+    ?DEBUG("map_~p_~p create monster ~p, uid ~p, visIndex ~p",
         [map_rw:map_id(), map_rw:line_id(), object_priv:get_data_id(Obj), Uid, VisIndex]),
     ok.
 
@@ -262,7 +265,7 @@ tick_update_after(_S, _Now) -> ok.
 
 %%-------------------------------------------------------------------
 real_stop_now(0) ->
-    ?INFO("~p ~p stop now", [misc:registered_name(), self()]),
+    ?INFO("~p|~p stop now", [self(), misc:registered_name()]),
     ps:send(self(), stop_immediately);
 real_stop_now(_Players) ->
     tick_msg(),
@@ -271,8 +274,8 @@ real_stop_now(_Players) ->
 %%-------------------------------------------------------------------
 -spec start_stop_now(S :: #m_map_state{}) -> #m_map_state{}.
 start_stop_now(S) ->
-    ?INFO("~p ~p start stop now, kick all ~p player(s)",
-        [misc:registered_name(), self(), map_rw:obj_size_with_type(?OBJ_PLAYER)]),
+    ?INFO("~p|~p start stop now, kick all ~p player(s)",
+        [self(), misc:registered_name(), map_rw:obj_size_with_type(?OBJ_PLAYER)]),
     ?TRY_CATCH(hook_map:on_map_destroy(), Err1, Stk1),
     ?TRY_CATCH(kick_all_player(S), Err2, Stk2),
     S#m_map_state{status = ?MAP_READY_EXIT}.
@@ -280,7 +283,7 @@ start_stop_now(S) ->
 kick_all_player(_S) ->
     maps:fold(
         fun(_, Uid, _) ->
-            ?WARN("~p kick player ~p", [misc:registered_name(), Uid]),
+            ?WARN("~p|~p kick player ~p", [self(), misc:registered_name(), Uid]),
             catch player_interface:change_pre_map_(Uid)
         end, 0, map_rw:obj_maps_with_type(?OBJ_PLAYER)),
     ok.
@@ -311,13 +314,13 @@ send_goto_map_msg(Uid, Pos) ->
 broadcast_msg(_S, {MsgId}) ->
     maps:fold(
         fun(_, Uid, _) ->
-            gs_interface:send_msg(Uid, MsgId)
+            catch gs_interface:send_msg(Uid, MsgId)
         end, 0, map_rw:obj_maps_with_type(?OBJ_PLAYER)),
     ok;
 broadcast_msg(_S, {MsgId, Msg}) ->
     maps:fold(
         fun(_, Uid, _) ->
-            gs_interface:send_msg(Uid, MsgId, Msg)
+            catch gs_interface:send_msg(Uid, MsgId, Msg)
         end, 0, map_rw:obj_maps_with_type(?OBJ_PLAYER)),
     ok.
 
@@ -325,7 +328,7 @@ broadcast_msg(_S, {MsgId, Msg}) ->
 broadcast_net_msg(_S, NetMsg) ->
     maps:fold(
         fun(_, Uid, _) ->
-            gs_interface:send_net_msg(Uid, NetMsg)
+            catch gs_interface:send_net_msg(Uid, NetMsg)
         end, 0, map_rw:obj_maps_with_type(?OBJ_PLAYER)),
     ok.
 
@@ -340,7 +343,7 @@ broadcast_msg_view({Uid, MsgId, Msg}) ->
 
 -spec broadcast_net_msg_view({Uid :: integer(), NetMsg :: tuple()}) -> ok.
 broadcast_net_msg_view({Uid, NetMsg}) ->
-    mod_view:broadcast_net_msg_view(Uid, NetMsg),
+    mod_view:send_net_msg_to_visual(Uid, NetMsg),
     ok.
 
 broadcast_net_msg_view(Uid, NetMsg) ->

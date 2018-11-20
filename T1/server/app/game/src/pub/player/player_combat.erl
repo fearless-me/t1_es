@@ -45,25 +45,39 @@ calc_combat_prop() ->
     BattleProps = #m_battleProps{
         career = 1, %% fixme combat_prop_calc:?Career_1
         listBP1 = [
-            #m_bp{id = ?BP_1_STR, add = 2.0, mul = 1.1},
-            #m_bp{id = ?BP_1_AGI, add = 1.0, mul = 1.0},
-            #m_bp{id = ?BP_1_INT, add = 0.5, mul = 1.0}
+            #m_bp{id = ?BP_1_STR, add = 10.0},
+            #m_bp{id = ?BP_1_AGI, add = 8.0},
+            #m_bp{id = ?BP_1_INT, add = 10.0},
+            #m_bp{id = ?BP_1_STA, add = 10.0}
         ],
         listBP2 = [
-            #m_bp{id = ?BP_2_HP_MAX, add = 1.0},
-            #m_bp{id = ?BP_2_MP_MAX, add = 1.0}
+            #m_bp{id = ?BP_2_HP_MAX, add = 50.0},
+            #m_bp{id = ?BP_2_HP_CUR, add = 50.0},
+            #m_bp{id = ?BP_2_MP_MAX, add = 40.0},
+            #m_bp{id = ?BP_2_MP_CUR, add = 40.0},
+            #m_bp{id = ?BP_2_ATK, add = 38.0},
+            #m_bp{id = ?BP_2_DEF, add = 30.0}
         ],
         listBP3 = [
-            #m_bp{id = ?BP_3_CRI, add = 10.0}
+            #m_bp{id = ?BP_3_HIT, add = 36.0},
+            #m_bp{id = ?BP_3_FLEE, add = 16.0},
+            #m_bp{id = ?BP_3_CRI, add = 26.0}
+            #m_bp{id = ?BP_3_FAST, add = 16.0}
         ]
     },
     %% test end
     Uid = player_rw:get_uid(),
-    gs_cache_interface:update_online_player(
-        Uid, {#m_cache_online_player.battle_props, BattleProps}),
     %% 注1.因算法会在所有列表为空时跳过计算，因此这里要传入不影响内容的非空列表
     %% 注2.考虑到可能的优化，低层属性可能会引起更多的计算，因此非空列表中使用高层属性
-    change_combat_prop({?BP_4_HIT, ?BPUseType_ADD, 0.0}, []),
+    %% 注3.通常战斗属性在地图中进行计算，这里仅初始化放在角色进程
+    BattlePropsNew = combat_prop_calc:calc(
+        BattleProps, [{?BP_4_HIT, ?BPUseType_ADD, 0.0}], []),
+    gs_cache_interface:update_online_player(
+        Uid, {#m_cache_online_player.battle_props, BattlePropsNew}),
+    %% 同步HP属性到快捷属性中
+    gs_cache_interface:update_online_player(
+        Uid, {#m_cache_online_player.hp, erlang:trunc(1000.0)}
+    ),
     ok.
 
 

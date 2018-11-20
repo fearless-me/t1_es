@@ -30,7 +30,7 @@
 -record(m_cache_online_player, {
     %-------------------------------------------------------------------
     %% 这些基础信息有玩家进程来更新
-    uid, aid, pid, socket, level=1, sid=0,
+    uid, aid, pid, pid_bg, socket, level=1, sid=0,
     name="", sex=0, career=1, race=1, camp=0, head=0,
     map_id = -1, line = 0, map_pid, old_map_id = -1, old_line = 0, old_pos,
     
@@ -61,7 +61,7 @@
 -record(m_cache_alarm_player, {uid, alarm_data}).
 
 %% 地图上所有对象的共享ETS(基础逻辑需要这个,其他逻辑使用object_rw模块)
--record(m_cache_map_object_priv, {uid = 0, pid = 0, data_id = 0, map_id = 0, line_id = 0, owner = 0, type = 0}).
+-record(m_cache_map_object_priv, {uid = 0, pid = 0, data_id = 0, map_id = 0, line_id = 0, map_pid, owner = 0, type = 0}).
 -define(ETS_CACHE_MAP_PET_PRIV, ets_cache_map_pet_priv).
 -define(ETS_CACHE_MAP_NPC_PRIV, ets_cache_map_npc_priv).
 -define(ETS_CACHE_MAP_PLAYER_PRIV, ets_cache_map_player_priv).

@@ -1,13 +1,13 @@
 %%%-------------------------------------------------------------------
-%%% @author mawenhong
+%%% @author Administrator
 %%% @copyright (C) 2018, <COMPANY>
 %%% @doc
 %%%
 %%% @end
-%%% Created : 23. 八月 2018 10:50
+%%% Created : 20. 十一月 2018 11:50
 %%%-------------------------------------------------------------------
--module(cs_dist_core_srv).
--author("mawenhong").
+-module(gen_serverw_example).
+-author("Administrator").
 
 -behaviour(gen_serverw).
 -include("logger.hrl").
@@ -26,15 +26,9 @@ start_link() ->
 %%% Internal functions
 %%%===================================================================	
 mod_init(_Args) ->
-    erlang:process_flag(trap_exit, true),
-%%    {ok, [[AreaId]]} = init:get_argument(area_id),
-    {ok, [[Sid]]} = init:get_argument(sid),
-    {ok, [[RunNo]]} = init:get_argument(run_no),
-    uid_gen:init(
-%%        list_to_integer(AreaId),
-        list_to_integer(Sid),
-        list_to_integer(RunNo)
-    ),
+    %% erlang:process_flag(trap_exit, true),
+    %% erlang:process_flag(priority, high),
+
     {ok, ok}.
 
 %%--------------------------------------------------------------------	

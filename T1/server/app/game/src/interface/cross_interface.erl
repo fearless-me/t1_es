@@ -18,10 +18,14 @@
 
 %% API
 -export([
+    %%
     get_all_cross_sid/0,
     get_player_src_sid/1, get_player_src_node/1,
     get_remote_server_map_mgr/2,
     get_player_cross_sid/1, get_player_cross_node/1,
+
+    %%
+    get_cross_player_cross_node/1,  get_cross_player_src_node/1,
     
     %% 
     assign_cross_for_player/1, force_assign_cross_for_player/2,
@@ -33,6 +37,19 @@
     is_player_in_cross/1
 ]).
 
+get_cross_player_cross_node(Uid) ->
+    try
+        Pid = gs_cache_interface:read_online_player_element(Uid, #m_cache_online_player.pid_bg),
+        erlang:node(Pid)
+    catch _: _: _  -> undefined
+    end.
+
+get_cross_player_src_node(Uid) ->
+    try
+        Pid = gs_cache_interface:read_online_player_element(Uid, #m_cache_online_player.pid),
+        erlang:node(Pid)
+    catch _: _: _  -> undefined
+    end.
 
 is_player_in_cross(Uid) ->
     misc_ets:member(?ETS_CACHE_PLAYER_CROSS, Uid).
@@ -147,13 +164,17 @@ inner_get_server_node(_Sid) -> undefined.
 inner_update_player_cross(false, Uid, Params) ->
     case cross_interface:is_player_in_cross(Uid) of
         true ->
-            Node = cross_interface:get_player_cross_node(Uid),
-            grpc:cast(Node, cross_rpc, rpc_cast_update_player, [Params]);
+            Node = cross_interface:get_cross_player_cross_node(Uid),
+            grpc:cast(Node, cross_rpc, rpc_cast_update_player_from_game, [Params]),
+            catch ?DEBUG("update player ~p data from ~p to cross ~p params ~w",[Uid, node(), Node, Params]);
         _Any -> skip
     end,
     ok;
 inner_update_player_cross(_IsCross, Uid, Params) ->
-    %% 打印日志看看是否需要把跨服数据同步到原服务器
-    ?DEBUG("update player ~p data in cross ~w",[Uid, Params]).
+    %% @doc 打印日志看看是否需要把跨服数据同步到原服务器,经过测试实时同步数据可以让服务器消息堆积巨大
+    %%
+    Node = cross_interface:get_cross_player_src_node(Uid),
+    grpc:cast(Node, cross_rpc, rpc_cast_update_player_from_cross, [Params]),
+    catch ?DEBUG("update player ~p data from cross ~p to ~p params ~w",[Uid, node(), Node, Params]).
 
 

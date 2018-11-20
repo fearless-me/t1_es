@@ -16,25 +16,24 @@
 -include("gs_cache.hrl").
 
 
--define(CLEAR_PLAYER_FLAG, clear_server_online_player_immediately).
+-define(CLEAR_PLAYER_FLAG, i_clear_online_players).
 -define(FORBID_MSG_ID_ETS, forbid_msg_id_ets_).
 
 
 %% API
 -export([
-    cross_clear_server_online_player_immediately/2,
-    cross_kick_all_player_to_born_map/1,
+    clear_now/2,
     forbid_msg/1, allow_msg/1, forbid_clear/0, is_msg_forbid/1
 ]).
 -export([start_link/0]).
 -export([mod_init/1, on_terminate/2, do_handle_call/3, do_handle_info/2, do_handle_cast/2]).
 
 %%-------------------------------------------------------------------
-cross_clear_server_online_player_immediately(Sid, GSNode) ->
+clear_now(Sid, GSNode) ->
     gen_server:cast(?MODULE, {?CLEAR_PLAYER_FLAG, Sid, GSNode}).
 
-cross_kick_all_player_to_born_map(Reason) ->
-    gen_server:cast(?MODULE, {cross_kick_all_player_to_born_map, Reason}).
+%%kick_all_player_to_born_map(Reason) ->
+%%    gen_server:cast(?MODULE, {kick_all_player_to_born_map, Reason}).
 
 %%-------------------------------------------------------------------
 is_msg_forbid(MsgId) ->
@@ -89,12 +88,12 @@ do_handle_info(Info, State) ->
 %%--------------------------------------------------------------------
 do_handle_cast({?CLEAR_PLAYER_FLAG, Sid, GSNode}, State) ->
     case catch i_need_clear(Sid) of
-        true -> ?TRY_CATCH_ERROR(i_cross_clear_online_player(Sid, GSNode));
+        true -> ?TRY_CATCH_ERROR(i_clear_online_players(Sid, GSNode));
         _Any -> ?WARN("skip clear online player of ~p ",[{Sid, GSNode}])
     end,
     {noreply, State};
-do_handle_cast({cross_kick_all_player_to_born_map, Reason}, State) ->
-    i_cross_kick_all_player_to_born_map(Reason),
+do_handle_cast({kick_all_player_to_born_map, Reason}, State) ->
+    i_kick_all_player_to_born_map(Reason),
     {noreply, State};
 do_handle_cast(Request, State) ->
     ?ERROR("undeal cast ~w", [Request]),
@@ -105,7 +104,7 @@ on_terminate(_Reason, _State) ->
     ok.
 
 %%-------------------------------------------------------------------
-i_cross_kick_all_player_to_born_map(Reason)->
+i_kick_all_player_to_born_map(Reason)->
     erlang:spawn
     (
         fun() ->
@@ -169,7 +168,7 @@ i_done_clear(Sid) ->
     ok.
 
 %%-------------------------------------------------------------------
-i_cross_clear_online_player(Sid, GSNode) when Sid > 0 ->
+i_clear_online_players(Sid, GSNode) when Sid > 0 ->
     ?WARN("*** server ~p|~p down, kick all players in this cross ... ***", [Sid, GSNode]),
     erlang:spawn
     (
@@ -201,7 +200,7 @@ i_cross_clear_online_player(Sid, GSNode) when Sid > 0 ->
         end
     ),
     ok;
-i_cross_clear_online_player(0, _Node) ->
+i_clear_online_players(0, _Node) ->
     ?WARN("*** checkck all player in server ... ***"),
     erlang:spawn
     (
@@ -237,7 +236,7 @@ i_cross_clear_online_player(0, _Node) ->
                          end
                      end, 0, List
                  ),
-                 ?WARN("*** checkck all players in server done# clear ~p players ***",[X])
+                 ?WARN("*** check all players in server done# clear ~p players ***",[X])
              catch _:_:_  -> skip
              end,
             catch ps:send(?MODULE, {clear_done, 0})

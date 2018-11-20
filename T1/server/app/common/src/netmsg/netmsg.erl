@@ -46,22 +46,6 @@ decode(?GS2U_AddBuff,Bin0) ->
 		},
 	Bin2 };
 
-%GENERATED from file:combat.h => GS2U_BattleHpDelta
-decode(?GS2U_BattleHpDelta,Bin0) ->
-	{ V_uidSrc, Bin1 } = read_uint64( Bin0 ),
-	{ V_uidDes, Bin2 } = read_uint64( Bin1 ),
-	{ V_hpPerA, Bin3 } = read_float( Bin2 ),
-	{ V_hpPerB, Bin4 } = read_float( Bin3 ),
-	{ V_listHpDelta, Bin5 } = read_array(Bin4, fun(X) -> read_int32( X ) end),
-	{ #pk_GS2U_BattleHpDelta {
-		uidSrc = V_uidSrc,
-		uidDes = V_uidDes,
-		hpPerA = V_hpPerA,
-		hpPerB = V_hpPerB,
-		listHpDelta = V_listHpDelta
-		},
-	Bin5 };
-
 %GENERATED from file:combat.h => GS2U_BattleProps
 decode(?GS2U_BattleProps,Bin0) ->
 	{ V_uid, Bin1 } = read_uint64( Bin0 ),
@@ -788,22 +772,6 @@ encode(#pk_GS2U_AddBuff{} = P) ->
 		Bin_buff
 	];
 
-%GENERATED from file:combat.h => GS2U_BattleHpDelta
-encode(#pk_GS2U_BattleHpDelta{} = P) ->
-	Bin_uidSrc = write_uint64( P#pk_GS2U_BattleHpDelta.uidSrc ),
-	Bin_uidDes = write_uint64( P#pk_GS2U_BattleHpDelta.uidDes ),
-	Bin_hpPerA = write_float( P#pk_GS2U_BattleHpDelta.hpPerA ),
-	Bin_hpPerB = write_float( P#pk_GS2U_BattleHpDelta.hpPerB ),
-	Bin_listHpDelta = write_array(P#pk_GS2U_BattleHpDelta.listHpDelta, fun(X) -> write_int32( X ) end),
-	[
-		<<?GS2U_BattleHpDelta:?U16>>,
-		Bin_uidSrc,
-		Bin_uidDes,
-		Bin_hpPerA,
-		Bin_hpPerB,
-		Bin_listHpDelta
-	];
-
 %GENERATED from file:combat.h => GS2U_BattleProps
 encode(#pk_GS2U_BattleProps{} = P) ->
 	Bin_uid = write_uint64( P#pk_GS2U_BattleProps.uid ),
@@ -1503,7 +1471,6 @@ encode_LookInfoPlayer( #pk_LookInfoPlayer{} = P ) ->
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 name(?GS2U_AddBuff) -> "GS2U_AddBuff";
-name(?GS2U_BattleHpDelta) -> "GS2U_BattleHpDelta";
 name(?GS2U_BattleProps) -> "GS2U_BattleProps";
 name(?GS2U_DeleteBuff) -> "GS2U_DeleteBuff";
 name(?GS2U_DeleteBuffList) -> "GS2U_DeleteBuffList";
@@ -1554,7 +1521,6 @@ name(MsgID) -> "ErrorNetMsg_" ++ erlang:integer_to_list(MsgID).
 cmd_list()->
 	[
 		?GS2U_AddBuff
-		,?GS2U_BattleHpDelta
 		,?GS2U_BattleProps
 		,?GS2U_DeleteBuff
 		,?GS2U_DeleteBuffList

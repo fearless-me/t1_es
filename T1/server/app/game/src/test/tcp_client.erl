@@ -4,7 +4,7 @@
 -include("pub_def.hrl").
 -include("netmsg.hrl").
 -include("netconf.hrl").
--define(HeartBeat, 15000).
+-define(HeartBeat, 20000).
 
 %% API
 -export([ensure/0]).
@@ -39,7 +39,19 @@ nc(N, Port) -> nc(N, Port, 10).
 
 nc(N, Port, Interval) ->
     catch ets:new(tcpc, [named_table, public, {keypos, 1}, ?ETS_RC, ?ETS_WC]),
-    lists:foreach(fun(_) -> tcp_client:c(Port, 0), timer:sleep(Interval) end, lists:seq(1, N)).
+    erlang:spawn
+    (
+        fun() ->
+            lists:foreach
+            (
+                fun(_) ->
+                    tcp_client:c(Port, 0),
+                    timer:sleep(Interval)
+                end,
+                lists:seq(1, N)
+            )
+        end
+    ).
 
 ensure() ->
     true = misc:start_all_app(kernel),
@@ -54,7 +66,7 @@ ensure() ->
 connect(Port, AccountIdx) ->
     try
         tcp_codec:init(#net_conf{}),
-        
+
         {ok, Socket} = ranch_tcp:connect({127, 0, 0, 1}, Port, [{active, false}]),
         socket(Socket),
         Idx = case AccountIdx of
@@ -68,14 +80,14 @@ connect(Port, AccountIdx) ->
             time = misc_time:utc_seconds(),
             sign = "owner"
         },
-        
+
         send_msg(Socket, Msg1),
         recv_msg(Socket),
-        
+
         recv_msg(Socket),
-        
+
         timer:sleep(15000),
-        
+
         timer:sleep(50),
         erlang:send_after(1000 * 60 * 1000, self(), exit),
         loop_recv(),
@@ -85,7 +97,7 @@ connect(Port, AccountIdx) ->
         _ : Err: _ ->
             ?ERROR("socket ~p, pid ~p err ~p bye~~!", [socket(), self(), Err])
     end,
-    
+
     ok.
 
 loop_recv() ->
@@ -163,8 +175,8 @@ handle_1(#pk_GS2U_PlayerInitBase{uid = Uid}) ->
 handle_1(#pk_GS2U_GetPlayerInitDataEnd{}) ->
     rand_walk(),
     ok;
-handle_1(Msg) ->
-    ?WARN("recv: ~w", [Msg]).
+handle_1(_Msg) -> ok.
+%%    ?WARN("recv: ~w", [Msg]).
 
 -define(SocketKey, socketRef___).
 socket(Socket) -> put(?SocketKey, Socket).
@@ -203,11 +215,11 @@ heartbeatcount() ->
     end.
 
 rand_walk() ->
-    PosList = [{243.2,209.1}, {324.01, 138.49}, {324.1, 225.1}],
-    N =  rand_tool:rand(1, erlang:length(PosList)),
+    PosList = [{243.2, 209.1}, {324.01, 138.49}, {324.1, 225.1}],
+    N = rand_tool:rand(1, erlang:length(PosList)),
     {PosX, PosY} = lists:nth(N, PosList),
 
     Delta = rand_tool:rand(-10, 15),
-    
+
     send_msg(socket(), #pk_U2GS_PlayerWalk{dst_x = PosX + Delta, dst_y = PosY + Delta}),
     ok.

@@ -20,7 +20,7 @@
 -export([
     %% 注册玩家进程
     ppid_name/1,
-    register_pid/2,
+    register_ppid/2,
     %% 踢人
     kick_account/2,
     %% 封号
@@ -83,7 +83,7 @@ total_cross_player() -> misc_ets:size(?ETS_CACHE_PLAYER_CROSS).
 ppid_name(Aid) ->
     misc:create_atom(player, [Aid]).
 
-register_pid(Pid, Aid) ->
+register_ppid(Pid, Aid) ->
     PsName = ppid_name(Aid),
     try erlang:register(PsName, Pid) of
         true -> success

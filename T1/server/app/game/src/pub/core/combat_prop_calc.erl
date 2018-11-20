@@ -10,9 +10,11 @@
 -author("mawenhong").
 -include("logger.hrl").
 -include("combat.hrl").
+-include("netmsg.hrl").
+-include("type.hrl").
 
 %% API
--export([calc/3, calc/5]).
+-export([calc/3, calc/5, battleProps2NetMsg/2, calcHitAndDamage/2]).
 
 %%%-------------------------------------------------------------------
 %% api:战斗属性的刷新
@@ -37,11 +39,93 @@ calc(BattleProps, AddList, DelList) ->
 calc(BattleProps, [], [], [], []) ->
     BattleProps;
 calc(BattleProps, AddList, MultiList, AddList_Del, MultiList_Del) ->
-    Ret1 = calc_add(AddList, BattleProps),
+    %% 默认添加血量是为了属性列表中必然有血量相关属性
+    AddListReal = [?DEFAULT_BATTLE_PROP_USE(?BP_2_HP_CUR) | [?DEFAULT_BATTLE_PROP_USE(?BP_2_HP_MAX) | AddList]],
+    Ret1 = calc_add(AddListReal, BattleProps),
     Ret2 = calc_add(MultiList, Ret1),
     Ret3 = calc_del(AddList_Del, Ret2),
     Ret4 = calc_del(MultiList_Del, Ret3),
-    calc_convert(Ret4).
+    Ret5 = calc_convert(Ret4),
+    ListBPFinal1 = calc_limit(
+        [
+            {?BP_2_HP_MAX, 1, max},
+            {?BP_2_MP_MAX, 1, max},
+            {?BP_2_ATK, 0, max}
+        ],
+        Ret5#m_battleProps.listBPFinal
+    ),
+    Ret5#m_battleProps{listBPFinal = calc_max2cur(BattleProps#m_battleProps.listBPFinal, ListBPFinal1)}.
+
+%%%-------------------------------------------------------------------
+%% internal:战斗属性的刷新 之 血量、法力最大值变化引起的当前值变化
+-spec calc_max2cur(ListOld::listBPU(), ListNew::listBPU()) -> ListReal::listBPU().
+calc_max2cur(ListOld, ListNew) ->
+    {_, _, HpOld} = queryValueFromListBPU(?BP_2_HP_CUR, ListOld),
+    {_, _, HpMaxOld} = queryValueFromListBPU(?BP_2_HP_MAX, ListOld),
+    {_, _, MpOld} = queryValueFromListBPU(?BP_2_MP_CUR, ListOld),
+    {_, _, MpMaxOld} = queryValueFromListBPU(?BP_2_MP_MAX, ListOld),
+    {_, _, HpNew} = queryValueFromListBPU(?BP_2_HP_CUR, ListNew),
+    {_, _, HpMaxNew} = queryValueFromListBPU(?BP_2_HP_MAX, ListNew),
+    {_, _, MpNew} = queryValueFromListBPU(?BP_2_MP_CUR, ListNew),
+    {_, _, MpMaxNew} = queryValueFromListBPU(?BP_2_MP_MAX, ListNew),
+    ListReal =
+        case erlang:min(HpMaxNew, erlang:max(1.0, MpMaxNew - MpMaxOld + MpOld)) of
+            MpNew ->
+                ListNew;
+            MpNew_ ->
+                lists:keystore(?BP_2_MP_CUR, 1, ListNew,
+                    {?BP_2_MP_CUR, ?BPUseType_ADD, MpNew_})
+        end,
+    case HpOld < 1.0 of
+        true ->
+            ListReal;
+        _ ->
+            case erlang:min(HpMaxNew, erlang:max(1.0, HpMaxNew - HpMaxOld + HpOld)) of
+                HpNew ->
+                    ListReal;
+                HpNew_ ->
+                    lists:keystore(?BP_2_HP_CUR, 1, ListReal,
+                        {?BP_2_MP_CUR, ?BPUseType_ADD, HpNew_})
+            end
+    end.
+
+%%%-------------------------------------------------------------------
+%% internal:战斗属性的刷新 之 部分属性值限制
+-spec calc_limit(ListLimit, listBPU()) -> listBPU() when
+    ListLimit :: {PropID, Min, Max},
+    PropID :: float(), Min :: float(), Max :: float().
+calc_limit([{PropID, Min, max} | T], ListBPFinal) ->
+    %% 只限制最小值
+    {_, _, Value} = queryValueFromListBPU(PropID, ListBPFinal),
+    case erlang:max(Value, Min) of
+        Value ->
+            calc_limit(T, ListBPFinal);
+        New ->
+            calc_limit(T, lists:keystore(
+                PropID, 1, ListBPFinal, {PropID, ?BPUseType_ADD, New}))
+    end;
+calc_limit([{PropID, min, Max} | T], ListBPFinal) ->
+    %% 只限制最大值
+    {_, _, Value} = queryValueFromListBPU(PropID, ListBPFinal),
+    case erlang:min(Value, Max) of
+        Value ->
+            calc_limit(T, ListBPFinal);
+        New ->
+            calc_limit(T, lists:keystore(
+                PropID, 1, ListBPFinal, {PropID, ?BPUseType_ADD, New}))
+    end;
+calc_limit([{PropID, Min, Max} | T], ListBPFinal) ->
+    %% 两边都限制
+    {_, _, Value} = queryValueFromListBPU(PropID, ListBPFinal),
+    case erlang:min(erlang:max(Min, Value), Max) of
+        Value ->
+            calc_limit(T, ListBPFinal);
+        New ->
+            calc_limit(T, lists:keystore(
+                PropID, 1, ListBPFinal, {PropID, ?BPUseType_ADD, New}))
+    end;
+calc_limit([], ListBPFinal) ->
+    ListBPFinal.
 
 %%%-------------------------------------------------------------------
 %% internal:战斗属性的刷新 之 根据属性ID获取对应的字段序号
@@ -282,6 +366,7 @@ calc_convert_3_(?BP_3_HIT, Value) ->
     %% 因此处无法获取目标数值，因此此处Target闪避值固定使用100.0代替
     %% 直译为代码：
     %% Percent = 1.0 - (1.0 / (1.0 + math:pow(2.71828, (-0.3 * (100.0 - Value))))) / 5.0
+    %% fixme pow(2.7, 714.7)将会报错，因此这里需要处理极值的问题
     {?BP_4_HIT, 1.0 - (0.2 / (1 + math:pow(2.71828, (0.3 * Value - 30.0))))};
 calc_convert_3_(?BP_3_FLEE, Value) ->
     %% 策划给的公式：
@@ -294,3 +379,162 @@ calc_convert_3_(?BP_3_CRI, Value) ->
     {?BP_4_CRI, Value / (Value + 100)};
 calc_convert_3_(?BP_3_FAST, Value) ->
     {?BP_4_FAST, Value / (Value + 100)}.
+
+%%%-------------------------------------------------------------------
+%% api:战斗属性转换为协议结构便于发送
+-spec battleProps2NetMsg(uint64(), battleProps()) -> #pk_GS2U_BattleProps{}.
+battleProps2NetMsg(UID, #m_battleProps{
+    career = Career,
+    listBP1 = ListBP1,
+    listBP2 = ListBP2,
+    listBP3 = ListBP3,
+    listBP4 = ListBP4,
+    listBPFinal = ListBPFinal
+}) ->
+    #pk_GS2U_BattleProps{
+        uid = UID,
+        career = Career,
+        listBP1 = battleProps2NetMsg_cache(ListBP1, []),
+        listBP2 = battleProps2NetMsg_cache(ListBP2, []),
+        listBP3 = battleProps2NetMsg_cache(ListBP3, []),
+        listBP4 = battleProps2NetMsg_cache(ListBP4, []),
+        listBPFinal = battleProps2NetMsg_use(ListBPFinal, [])
+    }.
+
+-spec battleProps2NetMsg_cache(listBPC(), [#pk_BattlePropEx{}, ...]) -> [#pk_BattlePropEx{}, ...].
+battleProps2NetMsg_cache([#m_bp{id = ID, add = Add, mul = Mul} | T], Acc) ->
+    battleProps2NetMsg_cache(T, [#pk_BattlePropEx{propID = ID, addValue = Add, mulValue = Mul} | Acc]);
+battleProps2NetMsg_cache([], Acc) ->
+    Acc.
+
+-spec battleProps2NetMsg_use(listBPU(), [#pk_BattleProp{}, ...]) -> [#pk_BattleProp{}, ...].
+battleProps2NetMsg_use([{ID, _Type, Add} | T], Acc) ->
+    battleProps2NetMsg_use(T, [#pk_BattleProp{propID = ID, addValue = Add} | Acc]);
+battleProps2NetMsg_use([], Acc) ->
+    Acc.
+
+%%%-------------------------------------------------------------------
+%% internal,tool:从列表中查找一个属性值，没找到则返回默认值
+-spec queryValueFromListBPU(battlePropID(), listBPU()) -> battlePropUse().
+queryValueFromListBPU(ID, List) ->
+    case lists:keyfind(ID, 1, List) of
+        false ->
+            ?DEFAULT_BATTLE_PROP_USE(ID);
+        BPU ->
+            BPU
+    end.
+-spec queryValueFromListBPC(battlePropID(), listBPC()) -> battlePropCache().
+queryValueFromListBPC(ID, List) ->
+    case lists:keyfind(ID, #m_bp.id, List) of
+        false ->
+            ?DEFAULT_BATTLE_PROP_CACHE(ID);
+        BPC ->
+            BPC
+    end.
+
+%%%-------------------------------------------------------------------
+%% api:计算战斗伤害
+%% ListBPUExtra 表示本次计算中对来源属性修正，仅限于类型2、类型3的属性
+-spec calcHitAndDamage(UidSrc::uint64(), UidDes::uint64()) -> Ret when
+    Ret :: {IsHit, IsCri, Damage, DeltaHp, IsDead},
+    IsHit :: boolean(),     %% 是否命中
+    IsCri :: boolean(),     %% 是否暴击
+    Damage :: float(),      %% 理论造成的伤害
+    DeltaHp :: integer(),   %% 实际的血量变化（会因为血量上下线、取整等原因与理论伤害不同）
+    IsDead :: boolean().    %% 目标是否死亡（可能与当前伤害无关）
+calcHitAndDamage(UidSrc, UidDes) ->
+    {
+        [
+            {_, _, BP_2_ATK_ADD_Src},
+            {_, _, BP_3_HIT_ADD_Src},
+            {_, _, BP_4_CRI_ADD_Src}
+        ],
+        [
+            #m_bp{add = BP_4_HIT_ADD_Src, mul = BP_4_HIT_MUL_Src}
+        ]
+    } = calcHitAndDamage_query(UidSrc, [?BP_2_ATK, ?BP_3_HIT, ?BP_4_CRI], [?BP_4_HIT]),
+    {
+        [
+            {_, _, BP_2_DEF_ADD_Des},
+            {_, _, BP_2_HP_MAX_ADD_Des},
+            {_, _, BP_2_HP_CUR_ADD_Des},
+            {_, _, BP_3_FLEE_ADD_Des}
+        ],
+        [
+            #m_bp{add = BP_4_FLEE_ADD_Des, mul = BP_4_FLEE_MUL_Des}
+        ]
+    } = calcHitAndDamage_query(UidDes, [?BP_2_DEF, ?BP_2_HP_MAX, ?BP_2_HP_CUR, ?BP_3_FLEE], [?BP_4_FLEE]),
+    case calcHitAndDamage_isHit(
+        BP_3_HIT_ADD_Src, BP_4_HIT_ADD_Src, BP_4_HIT_MUL_Src,
+        BP_3_FLEE_ADD_Des, BP_4_FLEE_ADD_Des, BP_4_FLEE_MUL_Des
+    ) of
+        false ->
+            {false, false, 0.0, 0, BP_2_HP_CUR_ADD_Des < 1.0}; %% 未命中，什么也不用说了
+        true ->
+            {IsCri, MulCri} =
+                case misc:rand(0, 9999) < erlang:trunc(BP_4_CRI_ADD_Src * 10000) of
+                    true ->
+                        {true, 2.0};    %% fixme 暴击固定为2倍伤害
+                    _ ->
+                        {false, 1.0}    %% 没暴击则单倍伤害
+                end,
+            {Damage, DeltaHp} = calcHitAndDamage_damage(
+                BP_2_ATK_ADD_Src, MulCri,
+                BP_2_DEF_ADD_Des, BP_2_HP_MAX_ADD_Des, BP_2_HP_CUR_ADD_Des
+            ),
+            %% 修正目标血量并返回结果
+            HpNew = BP_2_HP_CUR_ADD_Des - DeltaHp,
+            BPSDes = object_rw:get_battle_props(UidDes),
+            ListBPFinal = lists:keyreplace(
+                ?BP_2_HP_CUR, 1, BPSDes#m_battleProps.listBPFinal,
+                {?BP_2_HP_CUR, ?BPUseType_ADD, HpNew}
+            ),
+            object_rw:set_battle_props(UidDes,
+                BPSDes#m_battleProps{listBPFinal = ListBPFinal}),
+            object_rw:set_hp(UidDes, erlang:trunc(HpNew)),
+            {true, IsCri, Damage, DeltaHp, HpNew < 1.0}
+    end.
+
+%%%-------------------------------------------------------------------
+%% internal:计算战斗伤害_获取指定属性用于后续计算
+-spec calcHitAndDamage_query(UID, ListBPIDF, ListBPID4) -> Ret when
+    UID :: uint64(), ListBPIDF :: [battlePropID(), ...], ListBPID4 :: [battlePropID(), ...],
+    Ret :: {ListNeedBPF, ListNeedBP4}, ListNeedBPF :: listBPU(), ListNeedBP4 :: listBPC().
+calcHitAndDamage_query(UID, ListBPIDF, ListBPID4) ->
+    %% 注1：1类、2类、3类属性，直接从 listBPFinal 字段取最终结果，减少因属性转化带来的计算量
+    %% 注2：4类属性中，有部分属性是需要与其它对象属性一起计算的，则需要从 listBP4 字段取结果，否则仍然从 listBPFinal 字段获取最终结果
+    #m_battleProps{
+        listBP4 = ListBP4,
+        listBPFinal = ListBPFinal
+    } = object_rw:get_battle_props(UID),
+    ListNeedBPF = [queryValueFromListBPU(ID, ListBPFinal) || ID <- ListBPIDF],
+    ListNeedBP4 = [queryValueFromListBPC(ID, ListBP4) || ID <- ListBPID4],
+    {ListNeedBPF, ListNeedBP4}.
+
+%%%-------------------------------------------------------------------
+%% internal:计算战斗伤害_判断是否命中
+-spec calcHitAndDamage_isHit(Hit3Add, Hit4Add, Hit4Mul, Flee3Add, Flee4Add, Flee4Mul) -> Ret when
+    Hit3Add :: float(), Hit4Add :: float(), Hit4Mul :: float(),
+    Flee3Add :: float(), Flee4Add :: float(), Flee4Mul :: float(), Ret :: boolean().
+calcHitAndDamage_isHit(Hit3Add, Hit4Add, Hit4Mul, Flee3Add, Flee4Add, Flee4Mul) ->
+    %% 参考calc_convert_3_/2
+    %% Percent = (1.0 / (1.0 + math:pow(2.71828, (-0.3 * (FleeDes - HitSrc))))) / 5.0,
+    %% todo Hit4Add, Hit4Mul, Flee4Add, Flee4Mul 这几个值因为设计问题暂时没用上，需要与策划进一步讨论
+    FleePercent = 2000 / (0.2 + 0.2 * math:pow(2.71828, (-0.3 * (Flee3Add - Hit3Add)))),    %% 放大10000倍用于下文概率计算
+    not (misc:rand(0, 9999) < erlang:trunc(FleePercent)).
+
+-spec calcHitAndDamage_damage(Atk, MulCri, Def, HpMax, HpCur) -> Ret when
+    Atk :: float(), MulCri :: float(), Def :: float(),
+    HpMax :: float(), HpCur :: float(), Ret :: {Damage, DeltaHp},
+    Damage :: float(), DeltaHp :: integer().
+calcHitAndDamage_damage(Atk, MulCri, Def, HpMax, HpCur) ->
+    %% fixme 防御效率 = 防御强度 / (防御强度 + 100) 若该算法固定，可单独提炼为一个4类属性用于快速计算
+    %% 策划原始伤害公式  【伤害值】* （1- （Target防御强度 / （Target防御强度 + 100））） = 【伤害结果】
+    %% 策划不在，根据实际微调为 伤害强度 * 伤害倍率 * (1 - 防御效率) = 伤害值
+    Damage = Atk * MulCri * (1 - (Def / (Def + 100))),
+    DeltaHp = erlang:trunc(erlang:min(Damage, HpCur)),
+    %%?DEBUG(
+    %%    "[DebugForBattle] calcHitAndDamage_damage Atk:~w MulCri:~w Def:~w HpMax:~w HpCur:~w Damage:~w DeltaHp:~w",
+    %%    [Atk, MulCri, Def, HpMax, HpCur, -Damage, -DeltaHp]
+    %%),
+    {-Damage, -DeltaHp}.    %% 取反表示变化方向

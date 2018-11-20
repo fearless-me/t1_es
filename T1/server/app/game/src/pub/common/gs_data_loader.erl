@@ -50,9 +50,9 @@ parallel_load(_IsCross) ->
 info({serv_start_ack, RunNo}) ->
     try
         gs_econfig:set_run_no(RunNo),
-        AreaId = gs_interface:get_area(),
+%%        AreaId = gs_interface:get_area(),
         Sid = gs_interface:get_sid(),
-        uid_gen:init(AreaId, Sid, RunNo),
+        uid_gen:init(Sid, RunNo),
         data_loader:task_over(serv_start)
     catch _:Err:ST ->
         misc:halt("save serv_start failed, error ~p, current stack ~p", [Err, ST])

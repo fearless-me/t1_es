@@ -141,16 +141,21 @@ stop_player_move_1(Uid, Pos) ->
     ok.
 
 %%-------------------------------------------------------------------
-is_player_can_walk(_Uid, _Pos, _End) -> true.
+is_player_can_walk(Uid, _Pos, _End) ->
+    map_rw:obj_exist(Uid).
 
 is_player_can_stop(Uid, Pos) ->
-    R1 = is_pos_valid(Pos),
-    is_distance_safe(R1, Uid, Pos).
+    case map_rw:obj_exist(Uid) of
+        true ->
+            R1 = is_pos_valid(Pos),
+            is_distance_safe(R1, Uid, Pos);
+        _Any -> false
+    end.
 
 is_distance_safe(true, _Uid, _Pos) -> true;
 is_distance_safe(False, _Uid, _Pos) -> False.
 
-is_pos_valid(_Pos) -> true.
+is_pos_valid(Pos) -> vector3:valid(Pos).
 
 %%-------------------------------------------------------------------
 make_path_list(Acc, _Start, [], _Speed) -> lists:reverse(Acc);

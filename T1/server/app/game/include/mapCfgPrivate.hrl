@@ -2,7 +2,7 @@
 -ifndef(mapCfgPrivate_hrl).
 -define(mapCfgPrivate_hrl, 1).
 
--include("type.hrl").
+-include("../../deps/pubs/include/type.hrl").
 
 
 %地图中的复活点
@@ -19,6 +19,20 @@
 -define(MapObjCollect, 5).
 %地图中的使用物品
 -define(MapObjUseItem, 6).
+
+-ifdef(AREA_SYNC_TYPE).
+%% 客户端，按照设置的摄像机高度，可以看见30*30格子的范围
+%% 服务器按照(30+6)/3=12的方式来设置
+%一个Grid行有多少个Cell
+-define(MaxGridCellRowNum, 12).
+%一个Grid列有多少个Cell
+-define(MaxGridCellColNum, 12).
+-else.
+%一个Grid行有多少个Cell
+-define(MaxGridCellRowNum, 30).
+%一个Grid列有多少个Cell
+-define(MaxGridCellColNum, 30).
+-endif.
 
 -type map_obj_type() :: 0 .. 6.
 %游戏地图配置，主要是从地图文件中读取后生成

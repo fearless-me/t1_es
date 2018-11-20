@@ -57,7 +57,7 @@ nodedown(NodeName) ->
     ok.
 %%%-------------------------------------------------------------------
 center_nodedown(true) ->
-    lawman_srv:cross_kick_all_player_to_born_map(center_nodedown),
+%%    lawman_srv:cross_kick_all_player_to_born_map(center_nodedown),
     ?TRY_CATCH_ONLY(gs_share:stop()),
     ok;
 center_nodedown(_IsCrossServer) ->
@@ -73,8 +73,8 @@ other_down(Info) ->
     ?WARN("other server down ~p",[Info]),
     ok.
 
-kick_all_player(true, Sid, GSNode) ->
-    lawman_srv:cross_clear_server_online_player_immediately(Sid, GSNode);
+%%kick_all_player(true, Sid, GSNode) ->
+%%    lawman_srv:cross_clear_server_online_player_immediately(Sid, GSNode);
 kick_all_player(_Any, _Sid, _GSNode) -> skip.
 
 %%%-------------------------------------------------------------------

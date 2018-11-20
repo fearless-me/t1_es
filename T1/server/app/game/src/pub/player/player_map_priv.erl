@@ -110,12 +110,12 @@ do_serve_change_map_call(ExitReq, JoinReq) ->
     #r_join_map_req{uid = Uid, tar_map_id = TarMid} = JoinReq,
 
     
-    CurMgr = map_creator_interface:map_mgr_lr(Uid, SrcMid),
+%%    CurMgr = map_creator_interface:map_mgr_lr(Uid, SrcMid),
     TarMgr = map_creator_interface:map_mgr_lr(Uid, TarMid),
 
 
-    ?INFO("player ~p, changeMap map_~p_~p:~p|~p -> map ~p | ~p",
-        [Uid, SrcMid, SrcLineId, SrcMpid, CurMgr, TarMid, TarMgr]),
+    ?INFO("player ~p, changeMap ~p|map_~p_~p -> map ~p | mgr ~p",
+        [Uid, SrcMpid, SrcMid, SrcLineId, TarMid, TarMgr]),
 
     case TarMgr of
         undefined -> skip;
@@ -123,23 +123,23 @@ do_serve_change_map_call(ExitReq, JoinReq) ->
     end,
 
     %% 2.
-    ExitAck = do_serve_change_map_call_exit(CurMgr, TarMgr, ExitReq),
+    ExitAck = do_serve_change_map_call_exit(SrcMpid, TarMgr, ExitReq),
     ?DEBUG("~w",[ExitAck]),
     do_serve_change_map_call_join(ExitAck, TarMgr, JoinReq).
 
 %% 先退出
 %% 这种情况可能是在跨服(比如跨服中切跨服地图，但是跨服挂了)
-do_serve_change_map_call_exit(undefined, undefined, #r_exit_map_req{map_id = Mid}) ->
-    #r_exit_map_ack{error = ?E_Exception, map_id = Mid};
-%% 这种情况可能是在跨服(跨服中去切普通服务器，但是跨服挂了)
 do_serve_change_map_call_exit(undefined, _TarMgr, #r_exit_map_req{map_id = Mid}) ->
-    #r_exit_map_ack{error = ?E_Success, map_id = Mid};
-%% 这种情况可能是在普通服切跨服，但是跨服不存在
-do_serve_change_map_call_exit(_CurMgr, undefined, #r_exit_map_req{map_id = Mid}) ->
+    #r_exit_map_ack{error = ?E_Exception, map_id = Mid};
+%%%% 这种情况可能是在跨服(跨服中去切普通服务器，但是跨服挂了)
+%%do_serve_change_map_call_exit(undefined, _TarMgr, #r_exit_map_req{map_id = Mid}) ->
+%%    #r_exit_map_ack{error = ?E_Success, map_id = Mid};
+%% 这种情况可能是在普通服切跨服，但是跨服不存在  | 也有可能是跨服切跨服
+do_serve_change_map_call_exit(_SrcMpid, undefined, #r_exit_map_req{map_id = Mid}) ->
     #r_exit_map_ack{error = ?E_MapNotExists, map_id = Mid};
 %% 这种是服务器安全的情况下
-do_serve_change_map_call_exit(CurMgr, _TarMgr, #r_exit_map_req{map_id = Mid} = ExitReq) ->
-    case catch map_mgr_interface:player_exit_map_call(CurMgr, ExitReq) of
+do_serve_change_map_call_exit(SrcMpid, _TarMgr, #r_exit_map_req{map_id = Mid} = ExitReq) ->
+    case catch map_interface:player_exit_call(SrcMpid, ExitReq) of
         #r_exit_map_ack{} = Ack -> Ack;
         _Err -> #r_exit_map_ack{error = ?E_Exception, map_id = Mid}
     end.
@@ -164,6 +164,11 @@ serve_change_map_call_ret(
     _Req, _Flag
 ) ->
     Uid = player_rw:get_uid(),
+
+    %% 优先处理，否则后面的更新会同步到跨服去
+    %% 就回造成玩家在跨服退出时会继续退出时进而会退出地图
+    player_cross_priv:change_map_after(OldMid, Mid, true),
+
     case map_creator_interface:normal_map(OldMid) of
         true ->
             catch gs_cache_interface:update_online_player(
@@ -193,8 +198,7 @@ serve_change_map_call_ret(
     player_rw:set_map(
         #m_player_map{map_id = Mid, line_id = LineId, map_pid = MPid}
     ),
-    player_cross_priv:change_map_after(OldMid, Mid, true),
-    ?WARN("player ~p enter map_~p_~p map_pid ~p", [Uid, Mid, LineId, MPid]),
+    ?WARN("player ~p enter ~p|map_~p_~p", [Uid, MPid, Mid, LineId]),
     hook_player:on_change_map(Mid, Mid),
     
     player_rw:set_status(?PS_GAME),
@@ -238,11 +242,11 @@ return_to_old_map_call() ->
 
 %%-------------------------------------------------------------------
 offline_call(Uid, MapID, LineId, MapPid) ->
-    Mgr = map_creator_interface:map_mgr_lr(Uid, MapID),
-    catch map_mgr_interface:player_exit_map_call(
-        Mgr,
-        #r_exit_map_req{map_id = MapID, line_id = LineId, map_pid = MapPid, uid = Uid}
-    ),
+%%    Mgr = map_creator_interface:map_mgr_lr(Uid, MapID),
+    Req = #r_exit_map_req{map_id = MapID, line_id = LineId, map_pid = MapPid, uid = Uid},
+    case catch map_interface:player_exit_call(MapPid, Req) of
+        Any -> ?WARN("player ~p exit ~p|map_~p_~p, ~p", [Uid, MapPid, MapID, LineId, Any])
+    end,
     ok.
 
 %%-------------------------------------------------------------------
@@ -257,11 +261,12 @@ kick_to_born_map(Req) ->
     Mid = map_creator_interface:born_map_id(),
     Pos = map_creator_interface:born_map_pos(),
     Mgr = map_creator_interface:map_mgr_lr(Uid, Mid),
+    #m_player_map{map_id = CurMapId} = player_rw:get_map(),
     ?WARN("kick player ~p to born map ~p", [Uid, Mid]),
     
     Ack = map_mgr_interface:player_join_map_call(
         Mgr, Req#r_join_map_req{tar_map_id = Mid, tar_pos = Pos}),
     
-    serve_change_map_call_ret(Mid, 0, Pos, Ack, Req, kick_born_map),
+    serve_change_map_call_ret(CurMapId, 0, Pos, Ack, Req, kick_born_map),
     ok.
 

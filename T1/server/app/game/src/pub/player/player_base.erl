@@ -48,9 +48,10 @@ send_init_data() ->
 
 send_base_info() ->
     #m_player_map{map_id = Mid} = player_rw:get_map(),
+    Uid = player_rw:get_uid(),
     Msg = #pk_GS2U_PlayerInitBase{
         %% UInt64 角色
-        uid = player_rw:get_uid(),
+        uid = Uid,
 %% String 角色
         name = player_rw:get_name(),
 %% Int32 等级
@@ -69,16 +70,20 @@ send_base_info() ->
         mapID = Mid
     },
     player_pub:send_net_msg(Msg),
+    %% init combat
+    BattleProps = gs_cache_interface:read_online_player_element(
+        Uid, #m_cache_online_player.battle_props),
+    MsgCombat = combat_prop_calc:battleProps2NetMsg(Uid, BattleProps),
+    player_pub:send_net_msg(MsgCombat),
     ok.
 
 %%-------------------------------------------------------------------
 start_walk(Tar) ->
-    #m_player_map{map_pid = MPid} = player_rw:get_map(),
     Uid = player_rw:get_uid(),
     case vector3:valid(Tar) of
         true ->
             Req = #r_player_start_move_req{uid = Uid, tar = Tar},
-            player_pub:start_move_(MPid, Req),
+            player_pub:start_move_(Req),
 %%            ?WARN("player start walk at ~p mapid ~p move to ~w", [Uid, MPid, Tar]),
             ok;
         _ ->
@@ -88,12 +93,11 @@ start_walk(Tar) ->
 
 %%-------------------------------------------------------------------
 stop_move(Pos) ->
-    #m_player_map{map_pid = MPid} = player_rw:get_map(),
     Uid = player_rw:get_uid(),
     case vector3:valid(Pos) of
         true ->
             Req = #r_player_stop_move_req{uid = Uid, pos = Pos},
-            player_pub:stop_move_(MPid, Req),
+            player_pub:stop_move_(Req),
 %%            ?WARN("player ~p mapid ~p stop on ~w", [Uid, MPid, Pos]),
             ok;
         _ ->

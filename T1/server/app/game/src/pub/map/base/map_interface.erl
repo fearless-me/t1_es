@@ -9,13 +9,13 @@
 %%%-------------------------------------------------------------------
 -module(map_interface).
 -author("mawenhong").
+-include("logger.hrl").
 -include("map_core.hrl").
 %% API
 %%--------------------------------
 %% WARNING!!! WARNING!!! WARNING!!!
 %% call
 -export([player_join_call/2, player_exit_call/2, player_teleport_call/2]).
--export([player_exit_map_exception_call/2]).
 -export([player_exit_map_exception_/2, clear_online_player_immediately_/1]).
 %%--------------------------------
 -export([player_move_/2, player_stop_move_/2, player_change_combat_prop_/2]).
@@ -36,13 +36,13 @@ player_teleport_call(MapPid, Req) ->
     gen_server:call(MapPid, {player_teleport, Req}, ?MAP_CALL_TIMEOUT).
 
 
-player_exit_map_exception_call(MapPid, Data) ->
-    gen_server:call(MapPid,{player_exit_exception, Data}, ?MAP_CALL_TIMEOUT).
+%%player_exit_map_exception_call(MapPid, Data) ->
+%%    gen_server:call(MapPid,{player_exit_exception, Data}, ?MAP_CALL_TIMEOUT).
 
 %%--------------------------------
 
 player_exit_map_exception_(MapPid, Data) ->
-    gen_server:cast(MapPid,{player_exit_exception_, Data}).
+    gen_server:cast(MapPid,{player_exit_exception_, self(), misc:registered_name(), Data}).
 
 clear_online_player_immediately_(Pid) ->
     ps:send(Pid, {event, clear_online_player_immediately}).

@@ -16,9 +16,8 @@
 
 -define(MNESIA_PLAYER_CROSS, m_share_player_cross_lock).
 -record(m_share_player_cross_lock, {uid = 0, src_sid = 0, cross_sid = 0, assign_time = 0}).
--record(m_cache_player_cross_info, {uid = 0, enter_time = 0}).
 
--record(r_to_cross_data, {aid, uid, player_pub, player_online}).
+-record(r_to_cross_data, {aid, uid, pid, player_pub, player_online}).
 -record(r_from_cross_data, {aid, uid, data}).
 
 

@@ -152,8 +152,8 @@ init(Args) ->
         put(?LogicModule, Module),
         Ret = Module:mod_init(ArgList),
         i_auto_effective_monitor(),
-        EffectiveMicroseconds = i_need_effective_monitor(),
-        ?INFO("~p|~p|~p|~p init ok", [misc:registered_name(), Module, self(), EffectiveMicroseconds]),
+        EffectiveMilliseconds = micro_to_milli(i_need_effective_monitor()),
+        ?INFO("~p|~p|~p|~p init ok", [misc:registered_name(), Module, self(), EffectiveMilliseconds]),
         Ret
     catch _ : Error : ST ->
         ?ERROR("module ~p,args ~p,error ~p,st ~p", [get(?LogicModule), Args, Error, ST]),
@@ -162,8 +162,8 @@ init(Args) ->
 
 init_loop(Module, ArgList) ->
     put(?LogicModule, Module),
-    EffectiveMicroseconds = i_need_effective_monitor(),
-    ?INFO("~p|~p|~p|~p init ok", [misc:registered_name(), Module, self(), EffectiveMicroseconds]),
+    EffectiveMilliseconds = micro_to_milli(i_need_effective_monitor()),
+    ?INFO("~p|~p|~p|~p init ok", [misc:registered_name(), Module, self(), EffectiveMilliseconds]),
     State = Module:mod_init(ArgList),
     gen_server:enter_loop(?MODULE, [], State).
 
@@ -180,12 +180,14 @@ init_loop(Module, ArgList) ->
 %% @end
 %%--------------------------------------------------------------------
 handle_call(inner_core_status, _From, State) ->
-    {reply, gen_serverw:status_self(), State};
+    try {reply, gen_serverw:status_self(), State}
+    catch _: Error : _->  {reply, Error, State}
+    end;
 handle_call(Request, From, State) ->
     Module = get(?LogicModule),
     try ?TC(Module:do_handle_call(Request, From, State), {Request, From})
     catch T : E : ST ->
-        ?ERROR("call ~w:~p,stack:~p", [T, E, ST]),
+        ?ERROR("~p|~p call ~w:~p,stack:~p", [self(), misc:registered_name(), T, E, ST]),
         {reply, E, State}
     end.
 %%--------------------------------------------------------------------
@@ -203,7 +205,7 @@ handle_cast(Request, State) ->
     Module = get(?LogicModule),
     try ?TC(Module:do_handle_cast(Request, State), Request)
     catch T : E : ST ->
-        ?ERROR("cast ~w:~p,stack:~p", [T, E, ST]),
+        ?ERROR("~p|~p cast ~w:~p,stack:~p", [self(), misc:registered_name(), T, E, ST]),
         {noreply, State}
     end.
 
@@ -232,7 +234,7 @@ handle_info(Info, State) ->
     Module = get(?LogicModule),
     try ?TC(Module:do_handle_info(Info, State), Info)
     catch T : E : ST ->
-        ?ERROR("~p info ~p:~p,stack:~p", [node(), T, E, ST]),
+        ?ERROR("~p ~p|~p info ~p:~p,stack:~p", [node(), self(), misc:registered_name(), T, E, ST]),
         {noreply, State}
     end.
 
@@ -274,14 +276,15 @@ tc_end(Msg) ->
 i_tc_warn(_, Time, DeadLine) when Time < DeadLine ->
     skip;
 i_tc_warn(Msg, Time, _) ->
+    Self = self(),
     erlang:spawn
     (
         fun()->
             Bin = lists:sublist(lists:flatten(io_lib:format("~w", [Msg])), 1, 128),
             ?WARN
             (
-                "***effective warning** ~p|~p|~p ** ~s ** use time ~p micro seconds",
-                [ get(?LogicModule), self(), misc:registered_name(), Bin, Time]
+                "***effective warning*** ~p|~p|~p ** ~s ** use time ~p micro seconds",
+                [ get(?LogicModule), Self, misc:registered_name(Self), Bin, Time]
             )
         end
     ).

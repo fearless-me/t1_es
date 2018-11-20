@@ -1,0 +1,110 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Welcome file</title>
+  <link rel="stylesheet" href="https://stackedit.io/style.css" />
+</head>
+
+<body class="stackedit">
+  <div class="stackedit__html"><h1 id="服务器"><strong>服务器</strong></h1>
+<h2 id="代码风格">代码风格</h2>
+<p><a href="https://github.com/feng19/erlang_guidelines">中文</a><br>
+<a href="https://github.com/inaka/erlang_guidelines">英文</a></p>
+<h2 id="基础原则">基础原则</h2>
+<p><em><strong>除了下面规定和基础逻辑外（包括但不限于玩家管理、地图管理、跨服、网络、数据库、玩家数据、全局数据规则），其他任何具体逻辑将由开发的执行者根据策划案来采取最优策略，如果基础逻辑由不满足或者不方便的地方，烦请@马文洪</strong></em></p>
+<ul>
+<li>带有_priv字样的逻辑一般不要修改，如需要修改请让设计者修改</li>
+<li>所有模块要很容易被替换掉、同一功能的代码集中</li>
+<li>模块谁设计谁负责，大部分情况下由原始设计者修改</li>
+<li>模块所需要的数据结构尽量不要到处给外部其他模块用，通过提供接口的方式让外部来获取数据</li>
+<li>逻辑模块（特别是玩家相关的模块）需要提供四个函数 on_login/1、 on_ready/0 、on_offline/0 、on_save/0</li>
+</ul>
+<blockquote>
+<p>on_login(Data) 登录时初始化数据<br>
+on_ready()  玩家成功完成所有数据的初始化且登录流程全部成功后调用<br>
+on_offline()   玩家下线时调用<br>
+on_save() -&gt; Data.  定时、主动、下线时调用，该函数返回要保存的数据</p>
+</blockquote>
+<blockquote>
+<p><strong>特别强调</strong><br>
+<s><em>不要</em></s> 在on_login里处理诸如发奖、给道具等等逻辑，因为在登录流程没有完全走完时，玩家的数据不会被回写，可能会造成数据异常，相关逻辑可以放入 on_ready/0。</p>
+</blockquote>
+<ul>
+<li>
+<p>函数名字fun_name_() 带下划线的表示异步访问，否则就是同步函数</p>
+</li>
+<li>
+<p>所有的带_interface的模块是提供给全局访问，可被任意进程调用，其他模块提供的接口请确认上下文环境</p>
+</li>
+<li>
+<p>record命名</p>
+</li>
+</ul>
+<blockquote>
+<p><em><strong>m_</strong></em> 需要存放在内存中比如ETS，进程字典  <em>m_cache_online_player</em><br>
+<em><strong>r_</strong></em> 进程间交互用或者函数参数等 <em>r_change_map_req</em><br>
+<em><strong>p_</strong></em>  持久化数据库用的 <em>p_player</em></p>
+</blockquote>
+<ul>
+<li>玩家数据划分<br>
+玩家数据分为私有数据和公共数据两部分</li>
+</ul>
+<blockquote>
+<p><em><strong>私有数据</strong></em>：这个部分数据仅需要玩家自己知道比如背包、任务等等，这部分数据完全存在玩家进程里<br>
+<em><strong>公共数据</strong></em>：这部分需要被除玩家自己以外的玩家知道的数据，这部分主要包括外观以及战斗数据。</p>
+</blockquote>
+
+<table>
+<thead>
+<tr>
+<th>类型</th>
+<th>说明</th>
+<th>存放位置</th>
+<th>访问模块</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>可读可写(私有) RW_PRIV</td>
+<td><code>'这部分有玩家进程操作（读写），其他模块只读，比如外观等等'</code></td>
+<td>玩家进程</td>
+<td>player_rw</td>
+</tr>
+<tr>
+<td>只读数据(公共) R_PUB</td>
+<td><code>战斗相关的，由玩家进程发起操作，地图进程进行计算和写入内存</code></td>
+<td>地图进程 ETS_CACHE_ONLINE_PLAYER</td>
+<td>object_rw gs_cache_interface</td>
+</tr>
+<tr>
+<td>可读可写(公共) RW_PUB</td>
+<td><code>玩家离线时能被访问到的数据</code></td>
+<td>ETS_CACHE_PLAYER_PUB</td>
+<td>gs_cache_interface</td>
+</tr>
+</tbody>
+</table><blockquote>
+<p>同步关系</p>
+</blockquote>
+<pre><code>开服时：加载全服务器角色的基础信息加入 ETS_CACHE_PLAYER_PUB
+上线时：由玩家进程加载玩家数据 《RW_PRIV》存入玩家进程;《R_PUB》写入ETS_CACHE_ONLINE_PLAYER 
+进地图：《R_PUB》将由ETS_CACHE_ONLINE_PLAYER取出，写入地图进程
+游戏中：《R_PUB》全部由地图进程来操作，基础逻辑会实时同步到ETS_CACHE_ONLINE_PLAYER
+下线时：抽取玩家进程的《RW_PRIV》 以及 ETS_CACHE_ONLINE_PLAYER中的《R_PUB》 回写玩家数据
+定时存：跟下线时保持一样的逻辑
+</code></pre>
+<ul>
+<li>全局公共数据<br>
+主要指非玩家数据，比如帮会、排行榜等等，这部分数据可以分为两部分</li>
+</ul>
+<blockquote>
+<p><em><strong>服务器数据</strong></em>：单服务器的全局数据（排行榜等）这个将由游戏服内的专属逻辑进程来操作<br>
+<em><strong>全游戏数据</strong></em>：这个主要包括社交方面的数据（帮会、好友、组队等）将由centerserver来操作</p>
+</blockquote>
+</div>
+</body>
+
+</html>

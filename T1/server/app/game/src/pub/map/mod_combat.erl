@@ -112,12 +112,29 @@ calculate_dmg(Uid, #skillCfg{id = SkillId} = SkillCfg, TargetUid, Serial) ->
         uid = TargetUid, src_uid = Uid, cause = ?HIT_REASON_SKILL, misc = SkillId, serial = Serial
     },
     mod_view:send_net_msg_to_visual(TargetUid, HitMsg),
-    
+
+    {IsHit, IsCri, _Damage, DeltaHp, _IsDead} =
+        combat_prop_calc:calcHitAndDamage(Uid, TargetUid),
+    Result =
+        case IsHit of
+            false ->
+                ?ESR_DODGE;
+            _ when IsCri =:= true ->
+                ?ESR_CRITICAL;
+            _ ->
+                ?ESR_NORMAL
+        end,
     HpMsg = #pk_GS2U_HPChange{
-        uid = TargetUid, src_uid = Uid, cause = ?HP_CHANGE_SKILL, result = ?ESR_CRITICAL, hp_change = -1000,
-        misc1 = SkillId, misc2 = 0, serial = Serial
+        uid = TargetUid,
+        cause = ?HP_CHANGE_SKILL,
+        result = Result,
+        hp_change = DeltaHp,
+        misc1 = SkillId,
+        src_uid = Uid,
+        serial = Serial
     },
     mod_view:send_net_msg_to_visual(TargetUid, HpMsg),
+
     ok.
 
 %% 选择技能目标

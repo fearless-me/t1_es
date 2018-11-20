@@ -13,19 +13,26 @@
 %% API
 -export([
     rpc_call_get_map_mgr/1,
-    rpc_cast_update_player/1
+    rpc_cast_update_player_from_game/1,
+    rpc_cast_update_player_from_cross/1
 ]).
 
 rpc_call_get_map_mgr(MapID) ->
     map_creator_interface:map_mgr_l(MapID).
 
-rpc_cast_update_player({?ETS_CACHE_PLAYER_PUB, Uid, Elements}) ->
-    gs_cache_interface:update_player_pub(Uid, Elements),
+rpc_cast_update_player_from_game({?ETS_CACHE_PLAYER_PUB, Uid, Elements}) ->
+    misc_ets:update_element(?ETS_CACHE_PLAYER_PUB, Uid, Elements),
     ok;
-rpc_cast_update_player({?ETS_CACHE_ONLINE_PLAYER, Uid, Elements}) ->
-    gs_cache_interface:update_online_player(Uid, Elements),
+rpc_cast_update_player_from_game({?ETS_CACHE_ONLINE_PLAYER, Uid, Elements}) ->
+    misc_ets:update_element(?ETS_CACHE_ONLINE_PLAYER, Uid, Elements),
     ok.
 
+rpc_cast_update_player_from_cross({?ETS_CACHE_PLAYER_PUB, Uid, Elements}) ->
+    misc_ets:update_element(?ETS_CACHE_PLAYER_PUB, Uid, Elements),
+    ok;
+rpc_cast_update_player_from_cross({?ETS_CACHE_ONLINE_PLAYER, Uid, Elements}) ->
+    misc_ets:update_element(?ETS_CACHE_ONLINE_PLAYER, Uid, Elements),
+    ok.
 
 %% fixme 完成跨服需要调整的 
 %% @todo 分类整理玩家数据

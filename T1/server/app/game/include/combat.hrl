@@ -57,9 +57,10 @@
 -define(HIT_REASON_ITEM, 1).    %% 使用物品
 
 %% 技能结果
--define(ESR_DODGE, 0).    %% 闪避
--define(ESR_CRITICAL, 1).    %% 暴击
--define(ESR_BLOCKED, 2).    %% 格挡
+-define(ESR_NORMAL, 0).    %% 普通
+-define(ESR_DODGE, 1).    %% 闪避
+-define(ESR_CRITICAL, 2).    %% 暴击
+-define(ESR_BLOCKED, 3).    %% 格挡
 
 
  -define(BUFF_FOREVER_LOGIC, 2147483647).
