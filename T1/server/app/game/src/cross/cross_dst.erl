@@ -65,5 +65,5 @@ rpc_call_player_prepare_leave(_BgPid) ->
 
 
 rpc_call_player_clear(BgPid) ->
-    catch cross_player_bg:clear(BgPid),
+    catch cross_player_bg:clear(BgPid, rpc_call_player_clear),
     ok.

@@ -60,6 +60,7 @@ start_all_map_mgr() ->
     IsCross = gs_interface:is_cross(),
     L = getCfg:get1KeyList(cfg_map),
     _ = [load_one_map(IsCross, getCfg:getCfgByArgs(cfg_map, MapID)) || MapID <- L],
+    check_mgr(misc_ets:size(?MAP_MGR_ETS)),
     ok.
 
 load_one_map(true, #mapCfg{is_cross = 0, id = MapID}) ->
@@ -76,6 +77,13 @@ do_load_one_map(#mapCfg{id = MapID}) ->
     misc_ets:write(?MAP_MGR_ETS, #m_map_mgr{map_id = MapID, mgr = Pid, line_ets = Ets}),
     ok.
 
+
+check_mgr(0)->
+    lists:foreach(
+        fun(_)->
+            ?FATAL("server ~p has *0* maps",[erlang:node()])
+        end, lists:seq(1, 5));
+check_mgr(_) -> skip.
 
 
 

@@ -13,14 +13,20 @@
 -include("logger.hrl").
 -include("gs_cache.hrl").
 -include("map_core.hrl").
+-include("pub_def.hrl").
+
 
 %% API
--export([clear/1]).
+-export([clear/1, clear/2]).
 -export([start_link/1]).
 -export([mod_init/1, on_terminate/2, do_handle_call/3, do_handle_info/2, do_handle_cast/2]).
 
-clear(Pid) -> gen_server:cast(Pid, offline).
 
+clear(Pid) -> gen_server:cast(Pid, clear).
+clear(Pid, Reason) -> gen_server:cast(Pid, {clear, Reason}).
+
+
+-define(EXCEPTION_CHECK, 3*60*1000).
 %%%===================================================================
 %%% public functions
 %%%===================================================================
@@ -39,11 +45,11 @@ mod_init([Aid, Uid, Pid]) ->
         set_uid(Uid),
         set_pid(Pid),
         PsName = misc:create_atom(?MODULE, [Aid]),
-        case erlang:whereis(PsName)of
+        case erlang:whereis(PsName) of
            undefined ->
                true = misc:loop_register_process(self(), PsName, 1);
            Pid ->
-               cross_player_bg:clear(Pid),
+               cross_player_bg:clear(Pid, repeat_login),
                true = misc:loop_register_process(self(), PsName, 5)
         end,
         ?WARN("~p bind player ~w of account ~p monitor pid ~p ref ~p",
@@ -68,6 +74,9 @@ do_handle_info({'EXIT', _From, Reason}, State) ->
 do_handle_info({'DOWN', _, process, _, _}, State) ->
     i_clear('DOWN'),
     {stop, normal, State};
+do_handle_info(tick_check, State) ->
+    i_tick_check(),
+    {noreply, State};
 do_handle_info(Info, State) ->
     ?ERROR("undeal info ~w", [Info]),
     {noreply, State}.
@@ -75,6 +84,9 @@ do_handle_info(Info, State) ->
 %%--------------------------------------------------------------------
 do_handle_cast(clear, State) ->
     catch i_clear(clear),
+    {stop, normal, State};
+do_handle_cast({clear, Reason}, State) ->
+    catch i_clear(Reason),
     {stop, normal, State};
 do_handle_cast(Request, State) ->
     ?ERROR("undeal cast ~w", [Request]),
@@ -96,12 +108,23 @@ get_pid() -> erlang:get(pid).
 set_ref(Ref) -> erlang:put(monitor_ref, Ref).
 get_ref() -> erlang:get(monitor_ref).
 
+i_tick_msg() ->
+    erlang:send_after(?EXCEPTION_CHECK, self(), tick_check).
+
+i_tick_check() ->
+    catch i_tick_msg(),
+    Uid = get_uid(),
+    IsInMap = object_priv:object_priv_exist(?OBJ_PLAYER, Uid),
+    IsOnline= gs_cache_interface:is_player_online(Uid),
+    catch ?if_else( not (IsInMap andalso IsOnline), i_clear(tick_check), skip),
+    ok.
+
 
 i_clear(Reason) ->
     Aid = get_aid(),
     Uid = get_uid(),
 
-    catch ?WARN("player ~w pid ~p of account ~p exit_map in cross reason ~p ...",
+    catch ?WARN("player ~w pid ~p of account ~p exit in cross reason ~p ...",
         [Uid, get_pid(), Aid, Reason]),
 
     catch erlang:demonitor(get_ref()),
@@ -109,18 +132,18 @@ i_clear(Reason) ->
         case object_priv:find_object_priv(?OBJ_PLAYER, Uid) of
             #m_cache_map_object_priv{map_pid = MPid} ->
                 catch map_interface:player_exit_map_exception_(MPid, Uid);
-            _ ->
+            _ -> skip
                 %% @doc 正常情况不需要这个，为了确保万无一失处理下
-                case catch gs_cache_interface:get_online_player(Uid) of
-                    #m_cache_online_player{map_pid = MapPid} ->
-                        catch map_interface:player_exit_map_exception_(MapPid, Uid);
-                    _ -> skip
-                end
+%%                case catch gs_cache_interface:get_online_player(Uid) of
+%%                    #m_cache_online_player{map_pid = MapPid} ->
+%%                        catch map_interface:player_exit_map_exception_(MapPid, Uid);
+%%                    _ -> skip
+%%                end
         end
     catch _:_:_  -> skip
     end,
 
     catch gs_cache_interface:offline(Aid, Uid),
-    catch ?WARN("player ~w pid ~p of account ~p exit_map in cross reason ~p ... done#",
+    catch ?WARN("player ~w pid ~p of account ~p exit in cross reason ~p ... done#",
         [Uid, get_pid(), Aid, Reason]),
     ok.

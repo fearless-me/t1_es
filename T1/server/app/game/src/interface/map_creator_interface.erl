@@ -24,7 +24,13 @@
     map_line_recover/1
 ]).
 
--export([status_/1, status/0]).
+-export([status_/1, status/0, check/0]).
+
+check()->
+    case misc_ets:size(?MAP_MGR_ETS) of
+        X when X > 0 -> true;
+        _ -> "server has *0* map(s)"
+    end.
 
 broadcast(Msg) ->
     erlang:spawn

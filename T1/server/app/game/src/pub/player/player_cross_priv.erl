@@ -155,7 +155,7 @@ clear() ->
 do_clear(undefined) -> skip;
 do_clear(_) ->
     catch erlang:demonitor(get_ref()),
-    catch erlang:exit(get_bgpid(), clear),
+    catch erlang:exit(get_bgpid(), clear_game),
     ok.
 
 

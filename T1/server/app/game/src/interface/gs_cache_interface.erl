@@ -32,7 +32,7 @@
     online/3, online_cross/2, offline/2
 ]).
 -export([
-    get_online_player_pid/1, get_online_player_socket/1, get_online_player_map_pid/1,
+    get_online_player_pid/1, get_online_player_socket/1, get_online_player_map_pid/1, is_player_online/1,
 %% ETS_CACHE_PLAYER_PUB
     add_player_pub/1, del_player_pub/1, get_player_pub/1, update_player_pub/2, read_player_pub_element/2,
 %% ETS_CACHE_PLAYER_ONLINE
@@ -179,6 +179,8 @@ get_online_player_map_pid(Uid) ->
     misc_ets:read_element(
         ?ETS_CACHE_ONLINE_PLAYER, Uid, #m_cache_online_player.map_pid).
 
+is_player_online(Uid) ->
+    misc_ets:member(?ETS_CACHE_ONLINE_PLAYER, Uid).
 %%-------------------------------------------------------------------
 %%-------------------------------------------------------------------
 add_account_socket(Aid, Pid, Socket) ->

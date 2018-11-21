@@ -11,6 +11,9 @@
 
 %% API
 -export([
+    %% 开启observer_cli
+    show/0, show/1,
+    
     %% 进程相关
     info/1, info/2,
     bin_leak/1,
@@ -35,6 +38,12 @@
     %% trace
     trace/5, trace_clear/0
 ]).
+
+show() ->
+    observer_cli:start().
+
+show(Node)->
+    observer_cli:start(Node).
 
 
 info(PidTerm)->

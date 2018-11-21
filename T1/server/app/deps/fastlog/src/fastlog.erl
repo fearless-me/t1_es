@@ -26,7 +26,7 @@
 
 -export([
     make_init_log/2,
-    discard/1
+    pause/0, continue/0, set_log_level/1
 ]).
 
 %% gen_server callbacks
@@ -69,9 +69,16 @@
 -ifdef(RELEASE).
 -define(LOG_LEVEL, info).
 -else.
--define(LOG_LEVEL, info).
+-define(LOG_LEVEL, get_env(log_level, debug)).
 -endif.
 
+%%-------------------------------------------------------------------
+pause() -> set_env(?DISCARD_FLAG, true).
+continue() -> set_env(?DISCARD_FLAG, false).
+set_log_level(Level) -> set_env(log_level, Level).
+%%-------------------------------------------------------------------
+
+%%-------------------------------------------------------------------
 fatal(Sink, Fmt) -> fatal_(?LOG_LEVEL, Sink, Fmt, []).
 fatal(Sink, Fmt, Arg) -> fatal_(?LOG_LEVEL, Sink, Fmt, Arg).
 
@@ -144,11 +151,6 @@ do_log(Level, Sink, F, A) ->
     end,
     ok.
 
--spec discard(IsDiscardLog :: true|false) -> ok.
-discard(IsDiscardLog) ->
-    set_env(?DISCARD_FLAG, IsDiscardLog),
-    ok.
-
 
 is_slave() -> get_env(?MASTER_NODE, undefined) =/= undefined.
 
@@ -162,13 +164,14 @@ make_init_log(Sink, Fname) ->
 %%
 %% @end
 %%--------------------------------------------------------------------
+-define(SWEEP_OPT, {spawn_opt,[{fullsweep_after, 50}]}).
 start_link(Fname) ->
     ParentPid = self(),
-    gen_server2:start_link({local, ?MODULE}, ?MODULE, [Fname, ParentPid], []).
+    gen_server2:start_link({local, ?MODULE}, ?MODULE, [Fname, ParentPid], [?SWEEP_OPT]).
 
 start_link(Sink, Fname) ->
     ParentPid = self(),
-    gen_server2:start_link({local, Sink}, ?MODULE, [Fname, ParentPid], []).
+    gen_server2:start_link({local, Sink}, ?MODULE, [Fname, ParentPid], [?SWEEP_OPT]).
 
 %%%===================================================================
 %%% gen_server callbacks

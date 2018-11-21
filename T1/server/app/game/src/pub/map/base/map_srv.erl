@@ -40,7 +40,7 @@ start_link(Params) ->
         ?MODULE, Params,
         [
             {timeout, ?MAP_INIT_TIMEOUT},
-            {spawn_opt, [{min_heap_size, 32 * 1024}, {min_bin_vheap_size, 32 * 1024}]}
+            {spawn_opt, [{min_heap_size, 256 * 1024}, {min_bin_vheap_size, 32 * 1024}]}
         ]
     ).
 
@@ -106,6 +106,8 @@ do_handle_info({start_move, Req}, State) ->
 do_handle_info({stop_move, Req}, State) ->
     mod_map_priv:player_stop_move(Req),
     {noreply, State};
+do_handle_info({'EXIT', _FromPid, force}, State) ->
+    {stop, normal, State};
 do_handle_info(stop_immediately, State) ->
     {stop, normal, State};
 do_handle_info({msg_broadcast, Msg}, State) ->
@@ -146,8 +148,8 @@ tick_clear_player() ->
     Maps = map_rw:obj_maps_with_type(?OBJ_PLAYER),
     erlang:spawn
     (fun() ->
+        MapName = misc:registered_name(Self),
         ClearAll =
-            MapName = misc:registered_name(Self),
             maps:fold
             (
                 fun(_, Uid, X) ->

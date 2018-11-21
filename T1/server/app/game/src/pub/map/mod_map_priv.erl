@@ -57,7 +57,7 @@ player_exit_call(S, From, #r_exit_map_req{uid = Uid}) ->
     ?TRY_CATCH_RET(do_player_exit_call(S, From, Uid, Obj), {reply, Ack, S}).
 
 do_player_exit_call(S, From, Uid, #m_cache_map_object_priv{} = Obj) ->
-    ?INFO("player ~p exit ~p | ~p from ~p", [Uid, self(), misc:registered_name(), From]),
+    ?INFO("player ~p exit ~p | ~p from ~w", [Uid, self(), misc:registered_name(), From]),
 
     ?TRY_CATCH_ERROR(map_rw:del_object(Obj), Err1),
     ?TRY_CATCH_ERROR(mod_view:sync_player_exit_map(Obj), Err2),
@@ -179,8 +179,8 @@ tick(S) ->
 
 tick_1(#m_map_state{status = ?MAP_READY_EXIT, protect_tick = Tick} = S, _Now) when Tick =< 0 ->
     PlayerSize = map_rw:obj_size_with_type(?OBJ_PLAYER),
-    ?WARN("**map_~p_~p destroy warning, player size ~p, force stop now",
-        [map_rw:map_id(), map_rw:line_id(), PlayerSize]),
+    ?WARN("**map_~p_~p destroy warning, player size ~p, force stop now~n~p",
+        [map_rw:map_id(), map_rw:line_id(), PlayerSize, map_rw:obj_maps_with_type(?OBJ_PLAYER)]),
     ?TRY_CATCH(real_stop_now(0)),
     S;
 tick_1(#m_map_state{status = ?MAP_READY_EXIT, protect_tick = TickMax} = S, _Now) ->

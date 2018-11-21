@@ -33,6 +33,7 @@ start() ->
     {ok, SupPid} = center_sup:start_link(),
     
     try
+        %%
         misc:fn_wrapper("config init", ?Wrap(cs_conf:start("center.ini")), stdio),
         misc:fn_wrapper("logger", ?Wrap(loggerS:start("center")), stdio),
         misc:fn_wrapper("error Logger", ?Wrap(common_error_logger:start(center_sup, center))),
@@ -40,7 +41,9 @@ start() ->
         misc:fn_wrapper("db share", ?Wrap(cs_share:start())),
         misc:fn_wrapper("db window", ?Wrap(cs_db_starter:start())),
         misc:fn_wrapper("auto compile and load", ?Wrap(fly:start())),
-        
+        misc:fn_wrapper("observer_cli", ?Wrap(misc:start_app(observer_cli))),
+
+        %%
         misc:fn_wrapper("dist monitor otp", ?Wrap(misc:start_otp(SupPid, cs_dist_monitor, worker))),
         misc:fn_wrapper("serv data loader", ?Wrap(misc:start_otp(SupPid, data_loader, worker, [cs_data_loader]))),
         misc:fn_wrapper("watchdog", ?Wrap(misc:start_otp(SupPid, watchdog, worker, [cs_watchdog]))),
@@ -48,12 +51,15 @@ start() ->
         misc:fn_wrapper("monitor/vms/system monitor", ?Wrap(misc:start_otp(SupPid, vms_monitor, worker, [0.5]))),
         misc:fn_wrapper("serv_cache", ?Wrap(misc:start_otp(SupPid, cs_cache_srv, worker))),
         misc:fn_wrapper("all logic process", ?Wrap(misc:start_otp(SupPid, cs_logic_sup, supervisor))),
-        
+
+        %%
         watchdog:wait_group(1),
-        
+
+        %%
         misc:fn_wrapper("distritbution", ?Wrap(start_dist(SupPid))),
         misc:fn_wrapper("server mgr", ?Wrap(misc:start_otp(SupPid, server_root_sup, supervisor))),
-        
+
+        %%
         watchdog:ready(true),
         ok
     catch _ : Err : ST ->

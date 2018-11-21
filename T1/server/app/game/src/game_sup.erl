@@ -41,6 +41,7 @@ start() ->
         misc:fn_wrapper("db share", ?Wrap(gs_share:start())),
         misc:fn_wrapper("db window", ?Wrap(gs_db_starter:start())),
         misc:fn_wrapper("auto compile and load", ?Wrap(fly:start())),
+        misc:fn_wrapper("observer_cli", ?Wrap(misc:start_app(observer_cli))),
         
         %%
         misc:fn_wrapper("cross_player_sup", ?Wrap(misc:start_otp(SupPid, cross_player_sup, supervisor))),

@@ -23,6 +23,7 @@ SOURCE_DIR += ../deps/db_share
 SOURCE_DIR += ../deps/db_proxy
 SOURCE_DIR += ../deps/gen_rpc
 SOURCE_DIR += ../deps/dist-otp
+SOURCE_DIR += ../deps/observer_cli
 
 #文件包含目录
 INCLUDE_DIR = -I ./include

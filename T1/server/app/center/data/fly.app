@@ -22,7 +22,8 @@
 								"../../deps/gen_rpc",
 								"../../deps/dist-otp",
 								"../../deps/db_share",
-								"../../deps/db_proxy"
+								"../../deps/db_proxy",
+								"../../deps/observer_cli"
                               ]
                     },
 					{inc_dirs,
@@ -56,7 +57,8 @@
 									"../../deps/gen_rpc",
 									"../../deps/dist-otp",
 									"../../deps/db_share",
-									"../../deps/db_proxy"
+									"../../deps/db_proxy",
+									"../../deps/observer_cli"
                                ]
 							},
 							{i, "../include"},

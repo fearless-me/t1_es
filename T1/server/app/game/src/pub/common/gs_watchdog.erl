@@ -24,6 +24,7 @@ task_list() ->
 
 base_task() ->
     [
+        ?WATCHDOG_TASK(fun map_creator_interface:check/0, "check server map mgr's size > 0"),
         ?WATCHDOG_TASK(fun data_loader:is_all_done/0, "load all data"),
         ?WATCHDOG_TASK(fun gs_cs_interface:is_center_ready/0, "connect to center")
     ].

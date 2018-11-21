@@ -431,7 +431,7 @@ format_memory_readable(Mem) ->
 
 
 %%-------------------------------------------------------------------
--define(CRASH_WAIT_SECONDS, 15).
+-define(CRASH_WAIT_SECONDS, 30).
 halt(Fmt, Args) -> misc:halt(io_lib:format(Fmt, Args)).
 halt(Msg) ->
     ?FATAL("~ts, after ~p second(s) app crash,~n",
@@ -482,11 +482,12 @@ system_info() ->
     "dirty schedulers cpu(on/max)(+SDcpu)   :   ~p / ~p~n\t"
     "dirty io schedulers(+SDio)             :   ~p ~n\t"
     "thread pool size(+A)                   :   ~p ~n\t"
-    "system version                         :   ~ts~n\t"
+    "OTP version                            :   ~ts~n\t"
     "ERTS vesion                            :   ~ts~n\t"
     "garbage collection info                :   ~p ~n\t"
     "ulimit -a                              :   ~ts~n\t"
-    "sytem monitor                          :   ~w~n"
+    "sytem monitor                          :   ~w~n\t"
+    "system_version                         :   ~ts~n"
     "======================================================================================================~n",
         [
             erlang:system_info(port_count), erlang:system_info(port_limit),
@@ -501,7 +502,8 @@ system_info() ->
             erlang:system_info(version),
             erlang:statistics(garbage_collection),
             ulimit(misc:os_type()),
-            erlang:system_monitor()
+            erlang:system_monitor(),
+            erlang:system_info(system_version)
         ]
     ),
     ok.

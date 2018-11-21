@@ -166,7 +166,8 @@ inner_update_player_cross(false, Uid, Params) ->
         true ->
             Node = cross_interface:get_cross_player_cross_node(Uid),
             grpc:cast(Node, cross_rpc, rpc_cast_update_player_from_game, [Params]),
-            catch ?DEBUG("update player ~p data from ~p to cross ~p params ~w",[Uid, node(), Node, Params]);
+%%            catch ?DEBUG("update player ~p data from ~p to cross ~p params ~w",[Uid, node(), Node, Params]),
+            ok;
         _Any -> skip
     end,
     ok;
@@ -175,6 +176,7 @@ inner_update_player_cross(_IsCross, Uid, Params) ->
     %%
     Node = cross_interface:get_cross_player_src_node(Uid),
     grpc:cast(Node, cross_rpc, rpc_cast_update_player_from_cross, [Params]),
-    catch ?DEBUG("update player ~p data from cross ~p to ~p params ~w",[Uid, node(), Node, Params]).
+%%    catch ?DEBUG("update player ~p data from cross ~p to ~p params ~w",[Uid, node(), Node, Params]),
+    ok.
 
 

@@ -277,14 +277,15 @@ i_tc_warn(_, Time, DeadLine) when Time < DeadLine ->
     skip;
 i_tc_warn(Msg, Time, _) ->
     Self = self(),
+    Mod  =  get(?LogicModule),
     erlang:spawn
     (
         fun()->
             Bin = lists:sublist(lists:flatten(io_lib:format("~w", [Msg])), 1, 128),
             ?WARN
             (
-                "***effective warning*** ~p|~p|~p ** ~s ** use time ~p micro seconds",
-                [ get(?LogicModule), Self, misc:registered_name(Self), Bin, Time]
+                "***effective warning*** ~p|~p|~p ** ~p(us) ** ~s **",
+                [ Mod, Self, misc:registered_name(Self), Time, Bin]
             )
         end
     ).

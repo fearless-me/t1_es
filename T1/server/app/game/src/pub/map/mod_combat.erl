@@ -37,7 +37,7 @@ use_skill(Aer, Der, SkillId, Serial) ->
 do_use_skill(Aer, Der, undefined, Serial, SkillId) ->
     NetMsg = #pk_GS2U_UseSkill{
         uid = Aer,
-        tar_uid = Der,
+%%        tar_uid = Der,
         skill_id = SkillId,
         serial = Serial,
         error_code = -1
@@ -48,7 +48,7 @@ do_use_skill(Aer, Der, SkillCfg, Serial, SkillId) ->
     TarUid = ?if_else(Der > 0, Der, Aer),
     NetMsg = #pk_GS2U_UseSkill{
         uid = Aer,
-        tar_uid = Der,
+%%        tar_uid = Der,
         skill_id = SkillId,
         serial = Serial,
         error_code = 0

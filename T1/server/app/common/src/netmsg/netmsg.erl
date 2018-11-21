@@ -171,14 +171,14 @@ decode(?GS2U_UpdateBuffList,Bin0) ->
 %GENERATED from file:combat.h => GS2U_UseSkill
 decode(?GS2U_UseSkill,Bin0) ->
 	{ V_uid, Bin1 } = read_uint64( Bin0 ),
-	{ V_tar_uid, Bin2 } = read_uint64( Bin1 ),
+	{ V_tar_uids, Bin2 } = read_array(Bin1, fun(X) -> read_uint64( X ) end),
 	{ V_skill_id, Bin3 } = read_uint32( Bin2 ),
 	{ V_serial, Bin4 } = read_uint32( Bin3 ),
 	{ V_spell_time, Bin5 } = read_uint32( Bin4 ),
 	{ V_error_code, Bin6 } = read_uint32( Bin5 ),
 	{ #pk_GS2U_UseSkill {
 		uid = V_uid,
-		tar_uid = V_tar_uid,
+		tar_uids = V_tar_uids,
 		skill_id = V_skill_id,
 		serial = V_serial,
 		spell_time = V_spell_time,
@@ -206,13 +206,13 @@ decode(?U2GS_SkillInterrupt,Bin0) ->
 decode(?U2GS_UseSkill,Bin0) ->
 	{ V_x, Bin1 } = read_float( Bin0 ),
 	{ V_y, Bin2 } = read_float( Bin1 ),
-	{ V_tar_uid, Bin3 } = read_uint64( Bin2 ),
+	{ V_tar_uids, Bin3 } = read_array(Bin2, fun(X) -> read_uint64( X ) end),
 	{ V_skill_id, Bin4 } = read_uint32( Bin3 ),
 	{ V_serial, Bin5 } = read_uint32( Bin4 ),
 	{ #pk_U2GS_UseSkill {
 		x = V_x,
 		y = V_y,
-		tar_uid = V_tar_uid,
+		tar_uids = V_tar_uids,
 		skill_id = V_skill_id,
 		serial = V_serial
 		},
@@ -897,7 +897,7 @@ encode(#pk_GS2U_UpdateBuffList{} = P) ->
 %GENERATED from file:combat.h => GS2U_UseSkill
 encode(#pk_GS2U_UseSkill{} = P) ->
 	Bin_uid = write_uint64( P#pk_GS2U_UseSkill.uid ),
-	Bin_tar_uid = write_uint64( P#pk_GS2U_UseSkill.tar_uid ),
+	Bin_tar_uids = write_array(P#pk_GS2U_UseSkill.tar_uids, fun(X) -> write_uint64( X ) end),
 	Bin_skill_id = write_uint32( P#pk_GS2U_UseSkill.skill_id ),
 	Bin_serial = write_uint32( P#pk_GS2U_UseSkill.serial ),
 	Bin_spell_time = write_uint32( P#pk_GS2U_UseSkill.spell_time ),
@@ -905,7 +905,7 @@ encode(#pk_GS2U_UseSkill{} = P) ->
 	[
 		<<?GS2U_UseSkill:?U16>>,
 		Bin_uid,
-		Bin_tar_uid,
+		Bin_tar_uids,
 		Bin_skill_id,
 		Bin_serial,
 		Bin_spell_time,
@@ -932,14 +932,14 @@ encode(#pk_U2GS_SkillInterrupt{} = P) ->
 encode(#pk_U2GS_UseSkill{} = P) ->
 	Bin_x = write_float( P#pk_U2GS_UseSkill.x ),
 	Bin_y = write_float( P#pk_U2GS_UseSkill.y ),
-	Bin_tar_uid = write_uint64( P#pk_U2GS_UseSkill.tar_uid ),
+	Bin_tar_uids = write_array(P#pk_U2GS_UseSkill.tar_uids, fun(X) -> write_uint64( X ) end),
 	Bin_skill_id = write_uint32( P#pk_U2GS_UseSkill.skill_id ),
 	Bin_serial = write_uint32( P#pk_U2GS_UseSkill.serial ),
 	[
 		<<?U2GS_UseSkill:?U16>>,
 		Bin_x,
 		Bin_y,
-		Bin_tar_uid,
+		Bin_tar_uids,
 		Bin_skill_id,
 		Bin_serial
 	];

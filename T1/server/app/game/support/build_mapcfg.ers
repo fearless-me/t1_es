@@ -54,7 +54,7 @@ listMap([], Acc) ->
 regExpTolist() ->
 	FileMapSet = "src/pub/config/chs/cfg_map_chs.erl",
 	MapBinary = readFile(FileMapSet),
-	Math1 = "\\bid = .+|\\bres1 = .+|\\bres2 = .+",
+	Math1 = "\\bid = .+|\\bres_barrier = .+|\\bres_mapinfo = .+",
 	{ok, Mp} = re:compile(Math1),
 	{match, Captured} = re:run(MapBinary, Mp, [global, {capture, all, list}]),
 	Ls = re:split(Captured, "\r", [{return, list}]),

@@ -2,7 +2,7 @@
 -ifndef(netmsg).
 -define(netmsg,1).
 
--define(ProtoVersion,653).
+-define(ProtoVersion,654).
 
 -record(pk_BattleProp,{
 	%% UInt32 属性ID
@@ -168,7 +168,7 @@
 	%% UInt64 角色ID
 	uid = 0,
 	%% UInt64 ID
-	tar_uid = 0,
+	tar_uids = [],
 	%% UInt32 技能id
 	skill_id = 0,
 	%% UInt32 序列号
@@ -215,7 +215,7 @@
 	%% Single 
 	y = 0.0,
 	%% UInt64 ID
-	tar_uid = 0,
+	tar_uids = [],
 	%% UInt32 技能id
 	skill_id = 0,
 	%% UInt32 序列号

@@ -44,7 +44,7 @@
 
 %%%===================================================================
 %% define
--record(state, {all = [], todo = [], mod, pause=false}).
+-record(state, {all = [], todo = [], mod, pause=false, tref}).
 -define(CHECK_TICK,  5000).
 
 pause() ->
@@ -139,8 +139,8 @@ mod_init(Mod) ->
     erlang:process_flag(priority, high),
     Tasks = i_init_all_task(Mod),
     i_show_task_group(Tasks),
-    timer:apply_interval(1000, ?MODULE, remove_done, []),
-    {ok, #state{all = Tasks, todo = Tasks, mod = Mod}}.
+    Tref = timer:apply_interval(?CHECK_TICK, ?MODULE, remove_done, []),
+    {ok, #state{all = Tasks, todo = Tasks, mod = Mod, tref = Tref}}.
 
 %%--------------------------------------------------------------------
 do_handle_call(status, _From, State) ->
@@ -289,7 +289,7 @@ i_remove_tasks([#watchdog_task{mfa =Mfa, tip = Tips} = Task | Left], Acc)->
     end.
 
 i_check_apply({'EXIT', Error}, Task) ->
-    ?FATAL("check task ~p error ~p", [Task, Error]),
+    ?WARN("check task ~p error ~p", [Task, Error]),
      error;
 i_check_apply(Else, _) -> Else.
 
