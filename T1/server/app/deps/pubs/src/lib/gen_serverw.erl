@@ -55,7 +55,7 @@
 
 %% define
 -define(LogicModule,                        myLogicModule).
--define(FULL_SWEEP,                         {fullsweep_after, 20}).
+-define(FULL_SWEEP,                         {fullsweep_after, 50}).
 -define(FULL_SWEEP_OPTIONS,                 {spawn_opt,[?FULL_SWEEP]}).
 -define(EFFECTIVE_MONITOR_GUARD,            effective_monitor_guard).
 -define(EFFECTIVE_MONITOR_INFO,             effective_monitor_info).
