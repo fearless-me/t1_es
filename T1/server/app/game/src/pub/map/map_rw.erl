@@ -9,10 +9,13 @@
 -module(map_rw).
 -author("mawenhong").
 -include("logger.hrl").
+-include("pub_def.hrl").
+-include("pub_rec.hrl").
 -include("map_core.hrl").
 -include("gs_cache.hrl").
 -include("rec_rw.hrl").
 -include("movement.hrl").
+
 
 %%
 -export([
@@ -24,7 +27,7 @@
     add_object/1, del_object/1,
     
     %%
-    detail_ets/0,
+    detail_ets/0, excl_ets/0,
     obj_exist/1,
     obj_maps_with_uid/1, obj_maps_with_type/1,
 
@@ -44,9 +47,10 @@
 %% define
 -define(MAPS_MON, monster_maps).
 -define(MAPS_PLAYER, player_maps).
--define(MAPS_NPC, pet_maps).
+-define(MAPS_NPC, npc_maps).
 -define(MAPS_PET, pet_maps).
--define(ETS_MAP_OBJ, map_obj_ets).
+-define(ETS_MAP_OBJ, map_obj_detail_ets__).
+-define(ETS_MAP_EXCL, map_excl_ets__).
 -define(MAP_ID, map_id__).
 -define(LINE_ID, line_id__).
 -define(MAP_HOOK, map_hook__).
@@ -61,8 +65,6 @@ init(State) ->
     obj_maps_with_type(?OBJ_MON, #{}),
     obj_maps_with_type(?OBJ_PET, #{}),
     obj_maps_with_type(?OBJ_NPC, #{}),
-    detail_ets(State#m_map_state.ets),
-    set_tick_info(#tick_info{}),
     ok.
 
 init_base(State) ->
@@ -71,6 +73,9 @@ init_base(State) ->
     erlang:put(?LINE_ID, State#m_map_state.line_id),
     erlang:put(?MAP_HOOK, State#m_map_state.hook_mod),
     erlang:put(?MOVE_TIMER, #m_move_timer{now = Now, latest_up = Now, delta = 0}),
+    erlang:put(?ETS_MAP_OBJ, State#m_map_state.ets),
+    erlang:put(?ETS_MAP_EXCL, State#m_map_state.excl_ets),
+    set_tick_info(#tick_info{}),
     ok.
 
 %%-------------------------------------------------------------------
@@ -79,8 +84,8 @@ line_id() -> erlang:get(?LINE_ID).
 hook_mod() -> erlang:get(?MAP_HOOK).
 
 %%-------------------------------------------------------------------
-detail_ets(Ets) -> erlang:put(?ETS_MAP_OBJ, Ets).
 detail_ets( ) -> erlang:get(?ETS_MAP_OBJ).
+excl_ets() -> erlang:get(?ETS_MAP_EXCL).
 
 %%-------------------------------------------------------------------
 obj_exist(Uid) ->
@@ -92,10 +97,10 @@ obj_maps_with_uid(Uid) ->
     obj_maps_with_type(Type).
 
 %%-------------------------------------------------------------------
-obj_maps_with_type(?OBJ_PLAYER) -> erlang:get(?MAPS_PLAYER);
-obj_maps_with_type(?OBJ_MON) -> erlang:get(?MAPS_MON);
-obj_maps_with_type(?OBJ_PET) -> erlang:get(?MAPS_PET);
-obj_maps_with_type(?OBJ_NPC) -> erlang:get(?MAPS_NPC).
+obj_maps_with_type(?OBJ_PLAYER) -> misc_ets:read_element(excl_ets(), ?MAPS_PLAYER, #pub_kv.value); %%erlang:get(?MAPS_PLAYER);
+obj_maps_with_type(?OBJ_MON) -> misc_ets:read_element(excl_ets(), ?MAPS_MON, #pub_kv.value); %%erlang:get(?MAPS_MON);
+obj_maps_with_type(?OBJ_PET) -> misc_ets:read_element(excl_ets(), ?MAPS_PET, #pub_kv.value); %%erlang:get(?MAPS_PET);
+obj_maps_with_type(?OBJ_NPC) -> misc_ets:read_element(excl_ets(), ?MAPS_NPC, #pub_kv.value). %%erlang:get(?MAPS_NPC).
 
 %%-------------------------------------------------------------------
 obj_maps_with_uid(Uid, Maps) ->
@@ -104,13 +109,17 @@ obj_maps_with_uid(Uid, Maps) ->
 
 
 obj_maps_with_type(?OBJ_PLAYER, Maps) ->
-    erlang:put(?MAPS_PLAYER, Maps);
+    misc_ets:write(excl_ets(), #pub_kv{key = ?MAPS_PLAYER, value = Maps});
+%%    erlang:put(?MAPS_PLAYER, Maps);
 obj_maps_with_type(?OBJ_MON, Maps) ->
-    erlang:put(?MAPS_MON, Maps);
+    misc_ets:write(excl_ets(), #pub_kv{key = ?MAPS_MON, value = Maps});
+%%    erlang:put(?MAPS_MON, Maps);
 obj_maps_with_type(?OBJ_PET, Maps) ->
-    erlang:put(?MAPS_PET, Maps);
+    misc_ets:write(excl_ets(), #pub_kv{key = ?MAPS_PET, value = Maps});
+%%    erlang:put(?MAPS_PET, Maps);
 obj_maps_with_type(?OBJ_NPC, Maps) ->
-    erlang:put(?MAPS_NPC, Maps).
+    misc_ets:write(excl_ets(), #pub_kv{key = ?MAPS_NPC, value = Maps}).
+%%    erlang:put(?MAPS_NPC, Maps).
 
 %%-------------------------------------------------------------------
 obj_size_with_uid(Uid) ->
@@ -175,8 +184,6 @@ do_check_tick(_Any, Milliseconds) when Milliseconds > ?MAP_TICK ->
     #tick_info{runs = 1, timeout = 1, max = Milliseconds, min = Milliseconds};
 do_check_tick(_Any, Milliseconds) ->
     #tick_info{runs = 1, timeout = 0, max = Milliseconds, min = Milliseconds}.
-
-
 
 
 %%-------------------------------------------------------------------

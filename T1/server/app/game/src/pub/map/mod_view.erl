@@ -11,6 +11,7 @@
 -include_lib("stdlib/include/assert.hrl").
 -include("logger.hrl").
 -include("pub_def.hrl").
+-include("pub_rec.hrl").
 -include("map_core.hrl").
 -include("netmsg.hrl").
 -include("rec_rw.hrl").
@@ -107,27 +108,26 @@ init_vis_tile(#recGameMapCfg{
     visual_w(VisW),
     visual_h(VisH),
     map_cell_size(CellSize),
-    ViewMaps = init_vis_tile_1(VisT, #{}),
-    erlang:put(?VIS_K, ViewMaps),
+    init_vis_tile_1(VisT),
+%%    erlang:put(?VIS_K, ViewMaps),
     ok.
 
 %%-------------------------------------------------------------------
-init_vis_tile_1(X, ViewMaps) when X < 0 ->
-    ?ERROR(""),
-    ViewMaps;
-init_vis_tile_1(X, ViewMaps) when X =:= 0 ->
-    ViewMaps;
-init_vis_tile_1(X, ViewMaps) ->
-%%    set_vis_tile(X, #m_vis_tile{index = X}),
+init_vis_tile_1(X) when X < 0 ->
+    ?ERROR("");
+init_vis_tile_1(X) when X =:= 0 ->
+    ok;
+init_vis_tile_1(X) ->
+    i_set_visual(X, #m_vis_tile{index = X}),
+    init_vis_tile_1(X - 1).
 
-    init_vis_tile_1(X - 1, ViewMaps#{ X => #m_vis_tile{index = X} }).
-%%init_vis_tile_1(X) when X < 0 ->
-%%    ?ERROR("");
-%%init_vis_tile_1(X) when X =:= 0 ->
-%%    ok;
-%%init_vis_tile_1(X) ->
-%%    set_vis_tile(X, #m_vis_tile{index = X}),
-%%    init_vis_tile_1(X - 1).
+%%init_vis_tile_1(X, ViewMaps) when X < 0 ->
+%%    ?ERROR(""),
+%%    ViewMaps;
+%%init_vis_tile_1(X, ViewMaps) when X =:= 0 ->
+%%    ViewMaps;
+%%init_vis_tile_1(X, ViewMaps) ->
+%%    init_vis_tile_1(X - 1, ViewMaps#{ X => #m_vis_tile{index = X} }).
 
 %%-------------------------------------------------------------------
 send_net_msg_to_visual(Uid, NetMsg) ->
@@ -491,15 +491,15 @@ get_vis_tile_around_index(VisTileIndex) ->
 
 %%-------------------------------------------------------------------
 get_vis_tile(VisTileIndex) ->
-    #{VisTileIndex := ViewTile} = erlang:get(?VIS_K),
-    ViewTile.
-%%    erlang:get({?VIS_K, VisTileIndex}).
+    i_get_visual(VisTileIndex).
+%%    #{VisTileIndex := ViewTile} = erlang:get(?VIS_K),
+%%    ViewTile.
 
 %%-------------------------------------------------------------------
 set_vis_tile(VisTileIndex, VisTile) ->
-    Maps = erlang:get(?VIS_K),
-    erlang:put(?VIS_K, Maps#{ VisTileIndex := VisTile}).
-%%    put({?VIS_K, VisTileIndex}, VisTile).
+    i_set_visual(VisTileIndex, VisTile).
+%%    Maps = erlang:get(?VIS_K),
+%%    erlang:put(?VIS_K, Maps#{ VisTileIndex := VisTile}).
 
 %%-------------------------------------------------------------------
 %%is_visible(_Self, _Target) -> true.
@@ -513,3 +513,10 @@ visual_h(Height) -> erlang:put(?VIS_H, Height).
 
 map_cell_size() -> erlang:get(?CELL_SIZE).
 map_cell_size(CS) -> erlang:put(?CELL_SIZE, CS).
+
+
+i_set_visual(Index, Tile) ->
+    misc_ets:write(map_rw:excl_ets(), #pub_kv{key = {?VIS_K, Index}, value = Tile}).
+
+i_get_visual(Index) ->
+    misc_ets:read_element(map_rw:excl_ets(), {?VIS_K, Index}, #pub_kv.value).

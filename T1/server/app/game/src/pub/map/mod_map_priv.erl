@@ -45,6 +45,7 @@ init(S) ->
     ok = init_monster(Conf),
     tick_msg(),
     ?TRY_CATCH(hook_map:on_map_create()),
+    catch ?INFO("~p|~p init ok",[self(), misc:registered_name()]),
     S.
 
 
@@ -283,8 +284,8 @@ start_stop_now(S) ->
 kick_all_player(_S) ->
     maps:fold(
         fun(_, Uid, _) ->
-            ?WARN("~p|~p kick player ~p", [self(), misc:registered_name(), Uid]),
-            catch player_interface:change_pre_map_(Uid)
+            ?WARN("~p|~p kick player to born map ~p", [self(), misc:registered_name(), Uid]),
+            catch player_interface:kick_to_born_map_(Uid)
         end, 0, map_rw:obj_maps_with_type(?OBJ_PLAYER)),
     ok.
 

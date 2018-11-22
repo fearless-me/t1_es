@@ -91,7 +91,7 @@ map_mgr_lr(Uid, MapID) ->
 
 
 %% 在跨服上找非跨服地图
-do_map_mgr_lr(true, Uid, #mapCfg{is_cross = 0, id = MapID}) ->
+do_map_mgr_lr(true, Uid, #mapCfg{is_cross = ?MAP_EXIST_TYPE_NORMAL, id = MapID}) ->
     Node = cross_interface:get_player_src_node(Uid),
     case cross_interface:get_remote_server_map_mgr(Node, MapID) of
         MgrPid when erlang:is_pid(MgrPid) -> MgrPid;
@@ -100,7 +100,7 @@ do_map_mgr_lr(true, Uid, #mapCfg{is_cross = 0, id = MapID}) ->
             undefined
     end;
 %% 在普通服务器招跨服地图
-do_map_mgr_lr(false, Uid, #mapCfg{is_cross = 1, id = MapID}) ->
+do_map_mgr_lr(false, Uid, #mapCfg{is_cross = ?MAP_EXIST_TYPE_CROSS, id = MapID}) ->
     IsCenterReady = gs_cs_interface:is_center_ready(),
     case IsCenterReady of
         true ->
@@ -118,7 +118,8 @@ do_map_mgr_lr(_Any, _Uid, #mapCfg{id = MapID}) ->
     case misc_ets:read(?MAP_MGR_ETS, MapID) of
         [#m_map_mgr{mgr = Mgr} | _] -> Mgr;
         _ -> undefined
-    end.
+    end;
+do_map_mgr_lr(_Any, _Uid, _) -> undefined.
 
 
 map_type(MapID) ->
@@ -151,7 +152,7 @@ born_map_pos() -> vector3:new(321, 0, 235).
 %%-------------------------------------------------------------------
 is_cross_map(MapId) ->
     case getCfg:getCfgByArgs(cfg_map, MapId) of
-        #mapCfg{is_cross = 1} -> true;
+        #mapCfg{is_cross = ?MAP_EXIST_TYPE_CROSS} -> true;
         _ -> false
     end.
 
@@ -203,12 +204,12 @@ status() ->
         io_lib:format("status(detail) error ~p~n", [Error])
     end.
 
--define(INFO_FMT, "~-10.w~-15.w~-10.w~-10.w~-10.w~-25.ts~-10.w~w~n").
--define(INFO_FMT_STR, "~-10.ts~-15.ts~-10.ts~-10.ts~-10.ts~-25.ts~-10.ts~ts~n").
+-define(INFO_FMT_BODY, "~-10.w~-15.w~-10.w~-10.w~-10.w~-15.ts~-25.ts~-10.w~w~n").
+-define(INFO_FMT_HEAD, "~-10.ts~-15.ts~-10.ts~-10.ts~-10.ts~-15ts~-25.ts~-10.ts~ts~n").
 line_status(MapId, LineEts, Extra) ->
     Overview = io_lib:format("~nmapid:~p  line count:~p~n", [MapId, misc_ets:size(LineEts)]),
     List = misc_ets:to_list(LineEts),
-    InfoHead = io_lib:format(?INFO_FMT_STR, ["line id", "pid", "limit", "in", "reserve", "deadline", "status", "extra"]),
+    InfoHead = io_lib:format(?INFO_FMT_HEAD, ["line id", "pid", "limit", "in", "reserve", "memory","deadline", "status", "extra"]),
     InfoAll = lists:map(
         fun(#m_map_line{
             line_id = LineId, pid = Pid,
@@ -216,8 +217,16 @@ line_status(MapId, LineEts, Extra) ->
             dead_line = DeadLine, status = Status
         }) ->
             ExtraInfo = line_status_extra(Pid, Status, Extra),
-            io_lib:format(?INFO_FMT,
-                [LineId, Pid, Limits, In, Reserve, misc_time:milli_seconds_to_str(DeadLine), Status, ExtraInfo])
+            {memory, Memory} = erlang:process_info(Pid, memory),
+            io_lib:format
+            (
+                ?INFO_FMT_BODY,
+                [
+                    LineId, Pid, Limits, In, Reserve,
+                    misc:format_memory_readable(Memory),
+                    misc_time:milli_seconds_to_str(DeadLine), Status, ExtraInfo
+                ]
+            )
         end, List),
     io_lib:format("~s~ts~s", [Overview, InfoHead, string:join(InfoAll, "")]).
 

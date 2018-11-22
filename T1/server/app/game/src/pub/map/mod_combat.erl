@@ -34,21 +34,15 @@
 use_skill(Aer, Der, SkillId, Serial) ->
     do_use_skill(Aer, Der, get_skill_cfg(SkillId), Serial, SkillId).
 
-do_use_skill(Aer, Der, undefined, Serial, SkillId) ->
+do_use_skill(Aer, DerList, #skillCfg{} = SkillCfg, Serial, SkillId) ->
+    TarUid = ?if_else(DerList > 0, DerList, Aer),
+
+    Attacker = object_rw:get(Aer),
+    Ders = get_targets(DerList),
+
     NetMsg = #pk_GS2U_UseSkill{
         uid = Aer,
-%%        tar_uid = Der,
-        skill_id = SkillId,
-        serial = Serial,
-        error_code = -1
-    },
-    gs_interface:send_net_msg(Aer,NetMsg),
-    ok;
-do_use_skill(Aer, Der, SkillCfg, Serial, SkillId) ->
-    TarUid = ?if_else(Der > 0, Der, Aer),
-    NetMsg = #pk_GS2U_UseSkill{
-        uid = Aer,
-%%        tar_uid = Der,
+        tar_uids = DerList,
         skill_id = SkillId,
         serial = Serial,
         error_code = 0
@@ -56,25 +50,43 @@ do_use_skill(Aer, Der, SkillCfg, Serial, SkillId) ->
     mod_view:send_net_msg_to_visual(Aer, NetMsg),
     
     %% 触发事件
-    ?TRY_CATCH(trigger_before_cast_event(Aer, Der, SkillCfg)),
+    ?TRY_CATCH(trigger_before_cast_event(Aer, DerList, SkillCfg)),
     
     %% 根据类型
     object_rw:set_skill_serial(Aer, Serial),
     use_skill_dispatcher(SkillCfg, Aer, TarUid, Serial),
     ?DEBUG("~p use skill ~p to tar ~p", [Aer, SkillId, TarUid]),
+    ok;
+do_use_skill(Aer, Der, undefined, Serial, SkillId) ->
+    NetMsg = #pk_GS2U_UseSkill{
+        uid = Aer,
+        tar_uids = Der,
+        skill_id = SkillId,
+        serial = Serial,
+        error_code = -1
+    },
+    gs_interface:send_net_msg(Aer,NetMsg),
     ok.
 
-use_skill_dispatcher(#skillCfg{casttype = ?SKILL_OP_INSTANT} = SkillCfg, Aer, Tar, Serial) ->
-    instant_skill(Aer, Tar, SkillCfg, Serial);
-use_skill_dispatcher(#skillCfg{casttype = ?SKILL_OP_CHANNEL} = SkillCfg, Aer, Tar, Serial) ->
-    channel_skill(Aer, Tar, SkillCfg, Serial);
-use_skill_dispatcher(#skillCfg{casttype = ?SKILL_OP_SPELL} = SkillCfg , Aer, Tar, Serial) ->
-    spell_skill(Aer, Tar, SkillCfg, Serial).
+get_targets([0]) ->
+    [];
+get_targets(TargetList) ->
+    F =
+        fun(Der, Acc) ->
+            case object_rw:get(Der) of
+                undefined ->
+                    Acc;
+                #m_object_rw{} = Obj ->
+                    [Obj | Acc]
+            end
+        end,
+    lists:foldl(F, [], TargetList).
 
-%% todo 引导类型技能
-channel_skill(Aer, Tar, SkillCfg, Serial) ->
-    active_skill_once(Aer, Tar, object_rw:get_cur_pos(Tar), SkillCfg, Serial),
-    ok.
+use_skill_dispatcher(#skillCfg{it_type = ?SKILL_SUB_TYPE_IT_SPELL} = SkillCfg , Aer, Tar, Serial) ->
+    spell_skill(Aer, Tar, SkillCfg, Serial);
+use_skill_dispatcher(#skillCfg{it_type = IT_Type} = SkillCfg, Aer, Tar, Serial)
+    when IT_Type =:= ?SKILL_SUB_TYPE_IT_INSTANT; IT_Type =:= ?SKILL_SUB_TYPE_IT_NORMAL ->
+    instant_skill(Aer, Tar, SkillCfg, Serial).
 
 %% todo 吟唱技能
 spell_skill(_Aer, _Tar, _SkillCfg, _Serial) ->

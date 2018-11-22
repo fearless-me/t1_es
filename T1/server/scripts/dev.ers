@@ -45,6 +45,7 @@
 
 
 -define(OP_TCP, 991).
+-define(OP_DBG, 992).
 -define(OP_SET_TERMINAL_COLOR_BELOW_WIN10, 997).
 -define(OP_SET_TERMINAL_COLOR, 998).
 -define(OP_SET_WINDOW_RSH, 999).
@@ -101,6 +102,7 @@ show_cmd(?DEV_MODE) ->
             " #~n"
             
     		"\t~-10.wtcp测试~n"
+			"\t~-10.w测试窗口~n"
             "\t~-10.wwindows控制台支持彩色显示(win10之前的版本)~n"
             "\t~-10.wwindows控制台支持彩色显示~n"
 			"\t~-10.wwindows支持部署分布式服务器~n"
@@ -119,7 +121,7 @@ show_cmd(?DEV_MODE) ->
 
                 ?OP_GEN_NETMSG, ?OP_GEN_RW_CODE, ?OP_GEN_ERRORCODE, ?OP_GEN_LOGDEFINE, ?OP_EXPORT_DBSTRUCT, ?OP_BAK_DBSTRUCT,
 
-                ?OP_TCP, ?OP_SET_TERMINAL_COLOR_BELOW_WIN10, ?OP_SET_TERMINAL_COLOR, ?OP_SET_WINDOW_RSH,
+                ?OP_TCP, ?OP_DBG, ?OP_SET_TERMINAL_COLOR_BELOW_WIN10, ?OP_SET_TERMINAL_COLOR, ?OP_SET_WINDOW_RSH,
                 ?OP_EXIT
             ]
         );
@@ -198,6 +200,8 @@ dispatchInput2(?OP_DIALYZER) ->
     erlang:spawn_monitor(fun() -> os:cmd("start dialyzer_tool.bat") end);
 dispatchInput2(?OP_TCP) ->
      erlang:spawn_monitor(fun() -> os:cmd("start tcp_test.bat") end);
+dispatchInput2(?OP_DBG) ->
+     erlang:spawn_monitor(fun() -> os:cmd("start dbg.bat") end);	 
 dispatchInput2(?OP_GEN_ERRORCODE) ->
     erlang:spawn_monitor(fun() -> os:cmd("start errorcode.bat") end);
  dispatchInput2(?OP_GEN_LOGDEFINE) ->

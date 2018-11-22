@@ -34,7 +34,7 @@ active_stop(Reason) ->
 
 -spec shutdown(Socket, How) -> ok when
     Socket :: port(),
-    How :: read | write | read_write.
+How :: read | write | read_write.
 shutdown(Socket, How) ->
     ranch_tcp:shutdown(Socket, How),
     ok.

@@ -58,6 +58,8 @@ start() ->
         misc:fn_wrapper("center window process", ?Wrap(misc:start_otp(SupPid, center_srv, worker))),
         
         watchdog:wait_all(), watchdog:ready(true),
+
+%%        background_gc:run(),
         
         misc:fn_wrapper("server tcp listener", ?Wrap(start_tcp_listener(SupPid))),
         ok

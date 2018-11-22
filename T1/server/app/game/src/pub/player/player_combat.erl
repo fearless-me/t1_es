@@ -151,7 +151,7 @@ do_use_skill(true, SkillId, Tar, Pos, Serial) ->
 do_use_skill(ErrAndFalse, SkillId, Tar, _Pos, Serial) ->
     NetMsg = #pk_GS2U_UseSkill{
         uid = player_rw:get_uid(),
-%%        tar_uid = Tar,
+        tar_uids = Tar,
         skill_id = SkillId,
         serial = Serial,
         error_code = ErrAndFalse

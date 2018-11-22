@@ -11,31 +11,48 @@
 -ifndef(GS_COMBAT_INC_HRL).
 -define(GS_COMBAT_INC_HRL, true).
 
-
-
 -include("battle_prop.hrl").    %% 属性定义
 
-%% 技能操作类型
--define(SKILL_OP_INSTANT, 1).  %% 瞬发
--define(SKILL_OP_CHANNEL, 2).  %% 引导
--define(SKILL_OP_SPELL, 3).    %% 吟唱
+%% 技能规划分类
+-define(SKILL_MAIN_TYPE_CAREER,      1). %% 职业技能
+-define(SKILL_MAIN_TYPE_COMMON,      2). %% 通用技能
+-define(SKILL_MAIN_TYPE_MONSTER,     3). %% 怪物技能
 
+%% 技能子类型
+-define(SKILL_SUB_TYPE_IT,           1). %% 主动
+-define(SKILL_SUB_TYPE_PT,           2). %% 被动
+
+%% 主动技能分类
+-define(SKILL_SUB_TYPE_IT_INSTANT,   1). %% 瞬发
+-define(SKILL_SUB_TYPE_IT_SPELL,     2). %% 吟唱
+-define(SKILL_SUB_TYPE_IT_NORMAL,    3). %% 普攻，普攻也是瞬发
+
+%% 被动技能分类
+-define(SKILL_SUB_TYPE_PT_EFFECT,    1). %% 被动效果
+-define(SKILL_SUB_TYPE_PT_TRIGGER,   2). %% 被触发类
+
+%% 主动生效分类
+-define(SKILL_SUB_TYPE_IT_TAKE_TYPE_NORMAL,      1). %% 正常生效
+-define(SKILL_SUB_TYPE_IT_TAKE_TYPE_IMMEDIATELY, 2). %% 立刻生效
+-define(SKILL_SUB_TYPE_IT_TAKE_TYPE_CONTINUE,    3). %% 持续施法
+
+%% 技能作用对象类型
+-define(SKILL_TARGET_PLAYER,  1). %% 玩家
+-define(SKILL_TARGET_MONSTER, 2). %% 怪物
+-define(SKILL_TARGET_PET,     3). %% 宠物
 
 %% 技能施法目标
--define(SKILL_CAST_TARGET_SINGLE, 1).
--define(SKILL_CAST_TARGET_DIRECTION, 2).
--define(SKILL_CAST_TARGET_POSITION, 3).
--define(SKILL_CAST_TARGET_FACE_DIR, 4).
+-define(SKILL_CAST_TARGET_SINGLE,    1). %% 单体目标
+-define(SKILL_CAST_TARGET_DIRECTION, 2). %% 方向
+-define(SKILL_CAST_TARGET_POSITION,  3). %% 指定地点
+-define(SKILL_CAST_TARGET_FACE_DIR,  4). %% 自身面向
 
 %% 技能目标范围类型
--define(SKILL_AREA_TYPE_SINGLE, 1).
--define(SKILL_AREA_TYPE_LINE,   2).
--define(SKILL_AREA_TYPE_CIRCLE, 3).
+-define(SKILL_AREA_TYPE_SINGLE, 1). %% 单体目标
+-define(SKILL_AREA_TYPE_LINE,   2). %% 线型
+-define(SKILL_AREA_TYPE_CIRCLE, 3). %% 圆形
 
-%%  技能作用目标类型
--define(SKILL_TARGET_PLAYER,  1).
--define(SKILL_TARGET_MONSTER, 2).
--define(SKILL_TARGET_PET,     4).
+
 
 
 

@@ -10,6 +10,35 @@
 -include("battle_prop.hrl").
 
 %% 语言包，翻译表
+
+%%-----------------------------------Fields Note-----------------------------------
+	%% desc__:
+	%% 行描述
+
+	%% id:
+	%% 翻译ID，不需要填，根据类型自动生成
+
+	%% enum_string_id:
+	%% 用于生成枚举的字符串标识
+
+	%% type:
+	%% 翻译类型
+	%% 1.服务器内部
+	%% 2.客户端内部
+	%% 3.客户端UI
+	%% 4.配置表翻译
+
+	%% notice_type:
+	%% 提示类型
+	%% 0忽略
+	%% 1仅绿字向上提示
+	%% 2仅聊天框提示
+	%% 3仅跑马灯提示
+
+	%% content:
+	%% 内容
+%%---------------------------------------------------------------------------------
+
 getRow(3) ->
 	#string_packageCfg{
 		desc__ = "tiancheng",
@@ -26,7 +55,7 @@ getRow(4) ->
 		enum_string_id = "",
 		type = 4,
 		notice_type = 0,
-		content = "拳击"
+		content = "101测试普攻"
 	};
 getRow(5) ->
 	#string_packageCfg{
@@ -35,7 +64,7 @@ getRow(5) ->
 		enum_string_id = "",
 		type = 4,
 		notice_type = 0,
-		content = "横扫拳击"
+		content = "101测试普攻2"
 	};
 getRow(6) ->
 	#string_packageCfg{
@@ -44,7 +73,7 @@ getRow(6) ->
 		enum_string_id = "",
 		type = 4,
 		notice_type = 0,
-		content = "蓄力重拳"
+		content = "101快速冲拳"
 	};
 getRow(7) ->
 	#string_packageCfg{
@@ -53,7 +82,7 @@ getRow(7) ->
 		enum_string_id = "",
 		type = 4,
 		notice_type = 0,
-		content = "佛山无影脚"
+		content = "爆破重拳"
 	};
 getRow(8) ->
 	#string_packageCfg{
@@ -62,16 +91,7 @@ getRow(8) ->
 		enum_string_id = "",
 		type = 4,
 		notice_type = 0,
-		content = "加班续命"
-	};
-getRow(9) ->
-	#string_packageCfg{
-		desc__ = "边回边打",
-		id = 9,
-		enum_string_id = "",
-		type = 4,
-		notice_type = 0,
-		content = "边回边打"
+		content = "破甲打击"
 	};
 getRow(0) ->
 	#string_packageCfg{
@@ -107,7 +127,7 @@ getRow(1000000) ->
 		enum_string_id = "",
 		type = 4,
 		notice_type = 0,
-		content = "1000000"
+		content = "剑圣"
 	};
 getRow(1000001) ->
 	#string_packageCfg{
@@ -127,6 +147,42 @@ getRow(1000002) ->
 		notice_type = 0,
 		content = "喵村"
 	};
+getRow(1000004) ->
+	#string_packageCfg{
+		desc__ = "防御强度被降低10%",
+		id = 1000004,
+		enum_string_id = "",
+		type = 4,
+		notice_type = 0,
+		content = "防御强度被降低10%"
+	};
+getRow(1000005) ->
+	#string_packageCfg{
+		desc__ = "破魔之道·零式",
+		id = 1000005,
+		enum_string_id = "",
+		type = 4,
+		notice_type = 0,
+		content = "破魔之道·零式"
+	};
+getRow(1000006) ->
+	#string_packageCfg{
+		desc__ = "增加自身20%AP",
+		id = 1000006,
+		enum_string_id = "",
+		type = 4,
+		notice_type = 0,
+		content = "增加自身20%AP"
+	};
+getRow(1000007) ->
+	#string_packageCfg{
+		desc__ = "流血，每3秒损失生命值",
+		id = 1000007,
+		enum_string_id = "",
+		type = 4,
+		notice_type = 0,
+		content = "流血，每3秒损失生命值"
+	};
 getRow(_) -> {}.
 
 getKeyList() -> [
@@ -136,13 +192,16 @@ getKeyList() -> [
 	{6},
 	{7},
 	{8},
-	{9},
 	{0},
 	{1},
 	{2},
 	{1000000},
 	{1000001},
-	{1000002}
+	{1000002},
+	{1000004},
+	{1000005},
+	{1000006},
+	{1000007}
 ].
 
 get1KeyList() -> [
@@ -152,12 +211,15 @@ get1KeyList() -> [
 	6,
 	7,
 	8,
-	9,
 	0,
 	1,
 	2,
 	1000000,
 	1000001,
-	1000002
+	1000002,
+	1000004,
+	1000005,
+	1000006,
+	1000007
 ].
 

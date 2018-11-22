@@ -63,10 +63,10 @@ start_all_map_mgr() ->
     check_mgr(misc_ets:size(?MAP_MGR_ETS)),
     ok.
 
-load_one_map(true, #mapCfg{is_cross = 0, id = MapID}) ->
+load_one_map(true, #mapCfg{is_cross = ?MAP_EXIST_TYPE_NORMAL, id = MapID}) ->
     ?WARN("~p This is a cross-server won't create normal map mgr ~p ", [node(), MapID]),
     ok;
-load_one_map(false, #mapCfg{is_cross = 1, id = MapID}) ->
+load_one_map(false, #mapCfg{is_cross = ?MAP_EXIST_TYPE_CROSS, id = MapID}) ->
     ?WARN("~p This is a normal-server won't create cross-server map mgr ~p ", [node(), MapID]),
     ok;
 load_one_map(_Any, MapCfg) -> do_load_one_map(MapCfg).
