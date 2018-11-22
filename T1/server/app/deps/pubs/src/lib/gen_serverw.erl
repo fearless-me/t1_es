@@ -282,7 +282,7 @@ i_tc_warn(Msg, Time, _) ->
     erlang:spawn
     (
         fun()->
-            Bin = lists:sublist(lists:flatten(io_lib:format("~w", [Msg])), 1, 128),
+            Bin = lists:sublist(lists:flatten(io_lib:format("~w", [Msg])), 1, 64),
             ?WARN
             (
                 "***effective warning*** ~p|~p|~p ** ~p(us) ** ~s **",
