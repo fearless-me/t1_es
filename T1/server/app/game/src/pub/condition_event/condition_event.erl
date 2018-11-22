@@ -55,8 +55,8 @@ condition_loop(
     end;
 condition_loop(Result, [_Condition | Conditions], Params) ->
     condition_loop(Result, Conditions, Params);
-condition_loop(_Result, _AnyOther, _Params) ->
-    true.
+condition_loop(Result, _AnyOther, _Params) ->
+    Result.
 
 %%-------------------------------------------------------------------
 event_loop([], _Params) -> skip;
