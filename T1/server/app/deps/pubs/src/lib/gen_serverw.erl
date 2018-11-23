@@ -65,7 +65,7 @@
                           0 -> catch accumulated_msg(0), MFA;
                           _ -> catch tc_start(), RetVal = MFA, catch tc_end(Msg), RetVal
                       end).
--record(msg_exe_monitor_info,{msg=0, timeout=0, max=0, min=0}).
+-record(msg_exe_monitor_info,{msg=0, timeout=0, max=0, min=0, start, latest}).
 %% 假设帧率是 20MS那么是50个消息/client/秒, 服务50client，
 %% 那么每个消息  1000*1000/2500 = 400micro seconds
 %% 所以每个消息最大处理时间(micro seconds)= 100000 / ClientCount / 1000 / frame_time
@@ -119,15 +119,16 @@ continue_effective_monitor(Name, Millisecond) ->
 status_self() ->
     try
         Base = erlang:get(?EFFECTIVE_MONITOR_GUARD),
-        Info =
-            case erlang:get(?EFFECTIVE_MONITOR_INFO) of
-                #msg_exe_monitor_info{max = Max, min = Min} = Info1 ->
-                    Info1#msg_exe_monitor_info{max = micro_to_milli(Max), min = micro_to_milli(Min)};
-                Any -> Any
-            end,
-        [{base, micro_to_milli(Base)}, Info]
+        Info = erlang:get(?EFFECTIVE_MONITOR_INFO),
+        [{base, micro_to_milli(Base)}, i_format_monitor_info(Info)]
     catch _ : Error : _  -> Error
     end.
+
+i_format_monitor_info(#msg_exe_monitor_info{
+    msg=MsgNum, timeout=Timeout, max=Max, min=Min, start=Start
+}) ->
+    [{MsgNum, Timeout},[micro_to_milli(Min), micro_to_milli(Max)],[Start, misc_time:localtime_int()]];
+i_format_monitor_info(_)-> undefined.
 
 micro_to_milli(Val) -> erlang:trunc(Val / 1000).
 
@@ -330,9 +331,9 @@ do_accumulated_msg(#msg_exe_monitor_info{msg = C, min = Min, max = Max} = Info, 
         min = erlang:min(Min, Milliseconds)
     };
 do_accumulated_msg(_Any, Milliseconds, Td) when Milliseconds > Td ->
-    #msg_exe_monitor_info{msg = 1, timeout = 1, max = Milliseconds, min = Milliseconds};
+    #msg_exe_monitor_info{msg = 1, timeout = 1, max = Milliseconds, min = Milliseconds, start = misc_time:localtime_int()};
 do_accumulated_msg(_Any, Milliseconds, _Td) ->
-    #msg_exe_monitor_info{msg = 1, timeout = 0, max = Milliseconds, min = Milliseconds}.
+    #msg_exe_monitor_info{msg = 1, timeout = 0, max = Milliseconds, min = Milliseconds, start = misc_time:localtime_int()}.
 
 
 

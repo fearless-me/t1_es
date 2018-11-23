@@ -166,12 +166,13 @@ status_() ->
             TotalCrossPlayer = gs_interface:total_cross_player(),
             MapsInfo = map_creator_interface:status(),
             io:format(
-                "~nSid:~w~n"
-                "IsCross:~w~n"
-                "onlines:~w~n"
-                "map_player:~w~n"
-                "cross_player:~w~n"
-                "monster:~w~n"
+                "~n"
+                "Sid          : ~w~n"
+                "IsCross      : ~w~n"
+                "Onlines      : ~w~n"
+                "Map player   : ~w~n"
+                "Cross player : ~w~n"
+                "Monster      : ~w~n"
                 "~ts~n", [Sid, IsCross, TotalOnline, TotalMapPlayer, TotalCrossPlayer, TotalMonster, MapsInfo])
         end
     ),

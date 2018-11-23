@@ -230,15 +230,22 @@ get_move_timer_delta() ->
 %%-------------------------------------------------------------------
 status()->
     [
-        {objects,   misc_ets:size(detail_ets())},
-        {player,    obj_size_with_type(?OBJ_PLAYER)},
-        {pet,       obj_size_with_type(?OBJ_PET)},
-        {npc,       obj_size_with_type(?OBJ_NPC)},
-        {monster,   obj_size_with_type(?OBJ_MON)},
-        {respawn,   0},
-        get_tick_info(), gen_serverw:status_self()
+        {t,   misc_ets:size(detail_ets())},
+        {u,   obj_size_with_type(?OBJ_PLAYER)},
+        {p,   obj_size_with_type(?OBJ_PET)},
+        {n,   obj_size_with_type(?OBJ_NPC)},
+        {m,   obj_size_with_type(?OBJ_MON)},
+        {r,   0},
+        format_tick(), gen_serverw:status_self()
     ].
 
+%% -record(tick_info,{runs = 0, timeout = 0, max = 0, min = 0}).
+format_tick()->
+    case get_tick_info() of
+        #tick_info{runs = Runs, timeout = Timeout, min = Min, max = Max} ->
+            {tick, {Runs, Timeout},[Min, Max]};
+        _ -> {tick, undefined}
+    end.
 
 
 

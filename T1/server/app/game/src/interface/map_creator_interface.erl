@@ -197,12 +197,12 @@ status() ->
         io_lib:format("status(detail) error ~p ~p~n", [Error, ST])
     end.
 
--define(INFO_FMT_BODY, "~-10.w~-15.w~-10.w~-10.w~-10.w~-15.ts~-25.ts~-10.w~w~n").
--define(INFO_FMT_HEAD, "~-10.ts~-15.ts~-10.ts~-10.ts~-10.ts~-15ts~-25.ts~-10.ts~ts~n").
+-define(INFO_FMT_BODY, "~-5.w~-18.w~-8.w~-6.w~-8.w~-12.ts~-20.ts~-10.w~w~n").
+-define(INFO_FMT_HEAD, "~-5.ts~-18.ts~-8.ts~-6.ts~-8.ts~-12ts~-20.ts~-10.ts~ts~n").
 line_status(MapId, LineEts, Extra) ->
-    Overview = io_lib:format("~nmapid:~p  line count:~p~n", [MapId, misc_ets:size(LineEts)]),
+    Overview = io_lib:format("~nMap:~p  Line Count:~p~n", [MapId, misc_ets:size(LineEts)]),
     List = misc_ets:to_list(LineEts),
-    InfoHead = io_lib:format(?INFO_FMT_HEAD, ["line id", "pid", "limit", "in", "reserve", "memory","deadline", "status", "extra"]),
+    InfoHead = io_lib:format(?INFO_FMT_HEAD, ["Id", "Pid", "Limit", "In", "Reserve", "Memory","Deadline", "Status", "Extra"]),
     InfoAll = lists:map(
         fun(#m_map_line{
             line_id = LineId, pid = Pid,

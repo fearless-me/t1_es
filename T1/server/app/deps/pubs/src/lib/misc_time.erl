@@ -10,7 +10,7 @@
 -author("mawenhong").
 %% API
 -export([micro_seconds/0, milli_seconds/0, utc_seconds/0, tz_seconds/0, localtime_seconds/0]).
--export([localtime_str/0, utc_str/0, milli_seconds_to_str/1, utc_seconds_to_str/1]).
+-export([localtime_str/0, localtime_int/0, utc_str/0, milli_seconds_to_str/1, utc_seconds_to_str/1]).
 -export([day_of_the_week/0, day_of_the_week/1, day_of_the_week/3]).
 -export([format_datetime/1]).
 
@@ -20,6 +20,7 @@
 -define(SECONDS_PER_DAY, 86400).
 -define(SECONDS_FROM_0_TO_1970, ?DAYS_FROM_0_TO_1970 * ?SECONDS_PER_DAY).
 -define(TIME_FMT, "~.4w-~.2.0w-~.2.0w ~.2.0w:~.2.0w:~.2.0w").
+-define(TIME_FMT_INT, "~.4w~.2.0w~.2.0w~.2.0w~.2.0w~.2.0w").
 
 micro_seconds() -> os:system_time(microsecond).
 
@@ -43,6 +44,10 @@ utc_seconds_to_str(UtcSeconds) ->
 localtime_str() ->
     {{Y, MO, D}, {H, MU, S}} = calendar:local_time(),
     lists:flatten(io_lib:format(?TIME_FMT, [Y, MO, D, H, MU, S])).
+
+localtime_int() ->
+    {{Y, MO, D}, {H, MU, S}} = calendar:local_time(),
+    list_to_integer(lists:flatten(io_lib:format(?TIME_FMT_INT, [Y, MO, D, H, MU, S]))).
 
 %%
 tz_seconds() ->
