@@ -11,12 +11,13 @@
 -author("mawenhong").
 -include("logger.hrl").
 -include("map_core.hrl").
+-include("error_code.hrl").
 %% API
 %%--------------------------------
 %% WARNING!!! WARNING!!! WARNING!!!
 %% call
 -export([player_join_call/2, player_exit_call/2, player_teleport_call/2]).
--export([player_exit_map_exception_/2, clear_online_player_immediately_/1]).
+-export([player_exit_map_exception_/2, player_exit_map_exception_try/2, clear_online_player_immediately_/1]).
 %%--------------------------------
 -export([player_move_/2, player_stop_move_/2, player_change_combat_prop_/2]).
 -export([status_/1]).
@@ -36,13 +37,22 @@ player_teleport_call(MapPid, Req) ->
     gen_server:call(MapPid, {player_teleport, Req}, ?MAP_CALL_TIMEOUT).
 
 
-%%player_exit_map_exception_call(MapPid, Data) ->
-%%    gen_server:call(MapPid,{player_exit_exception, Data}, ?MAP_CALL_TIMEOUT).
+player_exit_map_exception_call(MapPid, Uid) ->
+    gen_server:call(MapPid,{player_exit_exception, Uid}, ?MAP_CALL_TIMEOUT).
 
 %%--------------------------------
+player_exit_map_exception_try(MapPid, Uid) when is_pid(MapPid) ->
+    case player_exit_map_exception_call(MapPid, Uid) of
+        ?E_Success-> skip;
+        _Any -> player_exit_map_exception_(MapPid, Uid)
+    end;
+player_exit_map_exception_try(_,_)->
+    ok.
 
-player_exit_map_exception_(MapPid, Data) ->
-    gen_server:cast(MapPid,{player_exit_exception_, self(), misc:registered_name(), Data}).
+player_exit_map_exception_(MapPid, Uid) when is_pid(MapPid) ->
+    gen_server:cast(MapPid,{player_exit_exception_, self(), misc:registered_name(), Uid});
+player_exit_map_exception_(_MapPid, _Uid) ->
+    ok.
 
 clear_online_player_immediately_(Pid) ->
     ps:send(Pid, {event, clear_online_player_immediately}).

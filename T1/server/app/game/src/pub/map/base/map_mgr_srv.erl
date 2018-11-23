@@ -110,7 +110,7 @@ do_player_join_map_call_1(_Any, S, Req) ->
                 In >= 0,
                 (Limit > In orelse (Force andalso Limit + Reserve > In)),
                 DeadLine > Now + ?DEAD_LINE_PROTECT,
-                Status =:= ?MAP_NORMAL,
+                Status =:= ?MAP_RUNNING,
                 (TarLineId =:= 0 orelse CurLineID =:= TarLineId orelse Recover =:= ?MAP_LINE_RECOVER_ANY_NEW)
                 -> T
             end
@@ -186,7 +186,7 @@ create_new_line(S, MapID, LineID) ->
     %% 但是长时间存在的地图必须要调整内存相关属性，减少GC
     {ok, Pid} = map_sup:start_child([MapID, LineID, S#state.ets]),
     Line = #m_map_line{
-        map_id = MapID, line_id = LineID, pid = Pid, status = ?MAP_NORMAL,
+        map_id = MapID, line_id = LineID, pid = Pid, status = ?MAP_RUNNING,
         dead_line = misc_time:milli_seconds() + ?LINE_LIFETIME
     },
     erlang:send_after(?LINE_LIFETIME, self(), {stop_line, Line}),

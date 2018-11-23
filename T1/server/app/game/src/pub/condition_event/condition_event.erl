@@ -36,23 +36,19 @@ action(_Any,_Params) -> skip.
 %%-------------------------------------------------------------------
 %%    [[逻辑关系，主分类，分类的ID，参数1，参数2，参数3]]
 condition_loop(
-    _Result,
+    Result,
     [[?CONDITION_OR | _] = Condition | Conditions],
     Params
 ) ->
-    case condition_action:check(Condition, Params) of
-        true -> true;
-        _Any -> condition_loop(false, Conditions, Params)
-    end;
+    Bool = condition_action:check(Condition, Params) orelse Result,
+    condition_loop(Bool, Conditions, Params);
 condition_loop(
-    _Result,
+    Result,
     [[?CONDITION_AND | _] = Condition | Conditions],
     Params
 ) ->
-    case condition_action:check(Condition, Params) of
-        false -> false;
-        _Any -> condition_loop(true, Conditions, Params)
-    end;
+    Bool = condition_action:check(Condition, Params) andalso Result,
+    condition_loop(Bool, Conditions, Params);
 condition_loop(Result, [_Condition | Conditions], Params) ->
     condition_loop(Result, Conditions, Params);
 condition_loop(Result, _AnyOther, _Params) ->

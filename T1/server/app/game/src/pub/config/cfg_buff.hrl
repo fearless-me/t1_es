@@ -10,6 +10,8 @@
 
 	id,
 
+	name,
+
 	tips,
 
 	icon,

@@ -41,12 +41,12 @@ listMap([H, S, W | T], Acc) ->
 	I = string:str(H, "="),
 	Id = string:substr(H, I + 2),
 	L = string:str(S, "="),
-	Res1 = string:substr(S, L + 2),
+	PathGridRes = "maps/map" ++ string:substr(S, L + 2) ++ "_PathGrid.bytes",
 	V = string:str(W, "="),
-	Res2 = string:substr(W, V + 2),
+	MapInfoRes = "maps/map" ++ string:substr(W, V + 2) ++ "_MapInfo.bytes",
 
 	Mapid = erlang:list_to_integer(Id),
-	listMap(T, [{Mapid, Res1, Res2} | Acc]);
+	listMap(T, [{Mapid, PathGridRes, MapInfoRes} | Acc]);
 listMap([], Acc) ->
 	lists:reverse(Acc).
 

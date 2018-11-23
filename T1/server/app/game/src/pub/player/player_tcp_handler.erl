@@ -96,7 +96,6 @@ on_info_msg({net_msg, NetMsg}, S) ->
     player_tcp_handler:send_net_msg(NetMsg),
     S;
 on_info_msg({login_ack, Msg}, S) ->
-    ?DEBUG("login_ack:~p", [Msg]),
     player_priv:login_ack(Msg),
     S;
 on_info_msg({load_player_list_ack, List}, S) ->

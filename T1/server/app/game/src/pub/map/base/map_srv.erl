@@ -77,8 +77,8 @@ do_handle_call({player_join, Obj}, From, State) ->
     mod_map_priv:player_join_call(State, From, Obj);
 do_handle_call({player_exit, Req}, From, State) ->
     mod_map_priv:player_exit_call(State, From, Req);
-%%do_handle_call({player_exit_exception, Data}, _From, State) ->
-%%    mod_map_priv:player_exit_exception_call(State, Data);
+do_handle_call({player_exit_exception, Data}, _From, State) ->
+    mod_map_priv:player_exit_exception_call(State, Data);
 do_handle_call({player_teleport, Req}, From, State) ->
     mod_map_priv:force_teleport_call(State, From, Req);
 do_handle_call(Request, From, State) ->

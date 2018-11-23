@@ -112,7 +112,7 @@ remove_done() ->
 wait_all_loop(true) ->
     ok;
 wait_all_loop(Other) ->
-    ?WARN("wait current task done => ~ts ...", [Other]),
+    ?WARN("wait task => ~ts ...", [Other]),
     timer:sleep(?CHECK_TICK),
     wait_all_loop( watchdog:is_all_done()).
 
@@ -120,7 +120,7 @@ wait_all_loop(Other) ->
 wait_group_loop(true, _Priority) ->
     ok;
 wait_group_loop(Other, Priority) ->
-    ?WARN("wait current task done => ~ts ...", [Other]),
+    ?WARN("wait task => ~ts ...", [Other]),
     timer:sleep(?CHECK_TICK),
     wait_group_loop(watchdog:is_group_done(Priority), Priority).
 
@@ -250,7 +250,7 @@ i_group_done(Todos, Priority) ->
     end.
 
 i_format_ret_msg(Tips, Ret) ->
-    io_lib:format("~s ~p",[Tips, Ret]).
+    io_lib:format("~s // ~p",[Tips, Ret]).
 
 
 i_set_group_pause([], _Priority, _Pause)->

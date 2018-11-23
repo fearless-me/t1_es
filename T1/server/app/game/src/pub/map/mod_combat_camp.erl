@@ -6,13 +6,8 @@
 %%% @end
 %%% Created : 16. 十一月 2018 15:49
 %%%-------------------------------------------------------------------
--module(combat_filter).
+-module(mod_combat_camp).
 -author("tiancheng").
-
--include("cfg_skill.hrl").
 
 %% API
 -export([]).
-
-filter(Attack, TargetList, #skillCfg{} = SkillCfg) ->
-    ok.

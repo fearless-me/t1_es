@@ -242,10 +242,13 @@ return_to_old_map_call() ->
 
 %%-------------------------------------------------------------------
 offline_call(Uid, MapID, LineId, MapPid) ->
-%%    Mgr = map_creator_interface:map_mgr_lr(Uid, MapID),
-    Req = #r_exit_map_req{map_id = MapID, line_id = LineId, map_pid = MapPid, uid = Uid},
-    case catch map_interface:player_exit_call(MapPid, Req) of
-        Any -> ?WARN("player ~p exit ~p|map_~p_~p, ~p", [Uid, MapPid, MapID, LineId, Any])
+%%    Req = #r_exit_map_req{map_id = MapID, line_id = LineId, map_pid = MapPid, uid = Uid},
+%%    case catch map_interface:player_exit_call(MapPid, Req) of
+    case catch map_interface:player_exit_map_exception_try(MapPid, Uid) of
+        {'EXIT', Error} ->
+            ?ERROR("player ~p exit ~p|map_~p_~p, ~w", [Uid, MapPid, MapID, LineId, Error]);
+        _ ->
+            skip
     end,
     ok.
 
@@ -257,13 +260,14 @@ kick_to_born_map()->
     ok.
 
 kick_to_born_map(Req) ->
-    Uid = player_rw:get_aid(),
+    Uid = player_rw:get_uid(),
     Mid = map_creator_interface:born_map_id(),
     Pos = map_creator_interface:born_map_pos(),
     Mgr = map_creator_interface:map_mgr_lr(Uid, Mid),
-    #m_player_map{map_id = CurMapId} = player_rw:get_map(),
-    ?WARN("kick player ~p to born map ~p", [Uid, Mid]),
-    
+    #m_player_map{map_id = CurMapId, map_pid = MapPid} = player_rw:get_map(),
+    ?WARN("kick player ~p to born map from ~p|~p", [Uid, Mid, misc:registered_name(MapPid)]),
+
+    catch map_interface:player_exit_map_exception_try(MapPid, Uid),
     Ack = map_mgr_interface:player_join_map_call(
         Mgr, Req#r_join_map_req{tar_map_id = Mid, tar_pos = Pos}),
     

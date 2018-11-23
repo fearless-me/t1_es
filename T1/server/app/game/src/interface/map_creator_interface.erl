@@ -27,9 +27,16 @@
 -export([status_/1, status/0, check/0]).
 
 check()->
-    case misc_ets:size(?MAP_MGR_ETS) of
-        X when X > 0 -> true;
-        _ -> "server has *0* map(s)"
+    L0 = getCfg:get1KeyList(cfg_map),
+    L1 = [MapId || MapId <- L0, gameMapCfg:getMapCfg(MapId) =:= undefined],
+    case L1 of
+        [] ->
+            case misc_ets:size(?MAP_MGR_ETS) of
+                X when X > 0 -> true;
+                _ -> "server has *0* map(s)"
+            end;
+        _ ->
+            lists:flatten(io_lib:format("maps ~p gameMapCfg:getMapCfg/1 return undefined",[L1]))
     end.
 
 broadcast(Msg) ->
@@ -132,7 +139,11 @@ normal_map(MapID) ->
     map_creator_interface:map_type(MapID) =:= ?MAP_TYPE_NORMAL.
 
 %%-------------------------------------------------------------------
-map_data(MapID) -> gameMapCfg:getMapCfg(MapID).
+map_data(MapID) ->
+    case gameMapCfg:getMapCfg(MapID) of
+        undefined -> undefined;
+        Mod -> Mod:getRow(MapID)
+    end.
 
 %%-------------------------------------------------------------------
 map_init_pos(MapID) ->
@@ -157,29 +168,11 @@ is_cross_map(MapId) ->
     end.
 
 %%--------------------------------
-status_(all) ->
-    erlang:spawn(
-        fun() ->
-            try
-                QS = ets:fun2ms(fun(Info) -> {Info#m_map_mgr.map_id, Info#m_map_mgr.line_ets} end),
-                List = misc_ets:select(?MAP_MGR_ETS, QS),
-                Info = lists:map(fun({MapId, LineEts}) -> line_status(MapId, LineEts, all) end, List),
-                ?WARN("~ts", [string:join(Info, "\n")])
-            catch _ : Error: _ ->
-                ?WARN("status(all) error ~p", [Error])
-            end
-        end);
 status_(detail) ->
     erlang:spawn(
         fun() ->
-            try
-                QS = ets:fun2ms(fun(Info) -> {Info#m_map_mgr.map_id, Info#m_map_mgr.line_ets} end),
-                List = misc_ets:select(?MAP_MGR_ETS, QS),
-                Info = lists:map(fun({MapId, LineEts}) -> line_status(MapId, LineEts, detail) end, List),
-                ?WARN("~ts", [string:join(Info, "\n")])
-            catch _ : Error : _ ->
-                ?WARN("status(all_detail) error ~p", [Error])
-            end
+            Info = map_creator_interface:status(),
+            ?WARN("~ts", [Info])
         end);
 status_(MapId) ->
     erlang:spawn(
@@ -200,8 +193,8 @@ status() ->
         List = misc_ets:select(?MAP_MGR_ETS, QS),
         Info = lists:map(fun({MapId, LineEts}) -> line_status(MapId, LineEts, detail) end, List),
         string:join(Info, "\n")
-    catch _ : Error : _ ->
-        io_lib:format("status(detail) error ~p~n", [Error])
+    catch _ : Error : ST ->
+        io_lib:format("status(detail) error ~p ~p~n", [Error, ST])
     end.
 
 -define(INFO_FMT_BODY, "~-10.w~-15.w~-10.w~-10.w~-10.w~-15.ts~-25.ts~-10.w~w~n").
@@ -230,7 +223,7 @@ line_status(MapId, LineEts, Extra) ->
         end, List),
     io_lib:format("~s~ts~s", [Overview, InfoHead, string:join(InfoAll, "")]).
 
-line_status_extra(_Pid, Status, _) when Status =/= ?MAP_NORMAL ->
+line_status_extra(_Pid, Status, _) when Status =/= ?MAP_RUNNING ->
     killed;
 line_status_extra(Pid, _Status, detail) ->
     map_srv:status(Pid);

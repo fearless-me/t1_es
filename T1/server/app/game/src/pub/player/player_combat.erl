@@ -129,24 +129,31 @@ add_buff(SourceUid, BuffId, Level) ->
     ok.
 
 %%-------------------------------------------------------------------
-use_skill(SkillId, Tar, Pos, Serial) ->
-    ?DEBUG("~p use skill ~p serial ~p at pos ~w, Tar:~p", [player_rw:get_uid(), SkillId, Serial, Pos, Tar]),
-    R1 = check_cd(SkillId),
-    R2 = check_cost(R1, SkillId),
-    R3 = check_skill(R2, SkillId),
-    R4 = check_target(R3, SkillId, Tar),
-    ok = do_use_skill(R4, SkillId, Tar, Pos, Serial),
+use_skill(SkillId, TarList, Pos, Serial) ->
+    ?DEBUG("~p use skill ~p serial ~p at pos ~w, Tar:~p",
+        [player_rw:get_uid(), SkillId, Serial, Pos, TarList]),
+
+    Can =
+        case combat_interface:get_skill_cfg(SkillId) of
+            #skillCfg{} = SkillCfg ->
+                R1 = check_cd(SkillCfg),
+                R2 = check_cost(R1, SkillCfg),
+                check_target(R2, SkillCfg, TarList);
+            _ ->
+                -1
+        end,
+    do_use_skill(Can, SkillId, TarList, Pos, Serial),
     ok.
 
 %%-------------------------------------------------------------------
 do_use_skill(true, SkillId, Tar, Pos, Serial) ->
     Uid = player_rw:get_uid(),
-    Msg = #r_player_use_skill_req{
-        uid = Uid, skill_id = SkillId, tar = Tar, pos = Pos, serial = Serial},
     ?DEBUG("~p use skill ~p serial ~p send to map ~w",
         [Uid, SkillId, Serial, player_rw:get_map()]),
+
     update_skill_cd(SkillId),
-    player_pub:send_map_msg_(player_use_skill, Msg),
+    player_pub:send_map_msg_(player_use_skill,
+        #r_player_use_skill_req{uid = Uid, skill_id = SkillId, tar = Tar, pos = Pos, serial = Serial}),
     ok;
 do_use_skill(ErrAndFalse, SkillId, Tar, _Pos, Serial) ->
     NetMsg = #pk_GS2U_UseSkill{
@@ -164,25 +171,27 @@ update_skill_cd(_SkillId) ->
     ok.
 
 %%-------------------------------------------------------------------
-check_cd(_SkillId) ->
+check_cd(_SkillCfg) ->
     true.
 
-check_cost(true, _SkillId) ->
+check_cost(true, _SkillCfg) ->
     true;
-check_cost(ErrAndFalse, _SkillId) ->
+check_cost(ErrAndFalse, _SkillCfg) ->
     ErrAndFalse.
 
-check_skill(true, SkillId) ->
-    case getCfg:getCfgByArgs(cfg_skill, SkillId) of
-        #skillCfg{} -> true;
-        _ -> -1
+check_target(true, _SkillCfg, []) ->
+    -1;
+check_target(true, #skillCfg{purpose = Purpose}, TarList) ->
+    SelfUid = player_rw:get_uid(),
+    case Purpose of
+        ?SKILL_PURPOSE_DEC ->
+            case lists:member(SelfUid, TarList) of
+                true -> -1;
+                _ -> true
+            end;
+        _ -> true
     end;
-check_skill(ErrAndFalse, _SkillId) ->
-    ErrAndFalse.
-
-check_target(true, _SkillId, _Tar) ->
-    true;
-check_target(ErrAndFalse, _SkillId, _Tar) ->
+check_target(ErrAndFalse, _SkillCfg, _Tar) ->
     ErrAndFalse.
 
 

@@ -36,6 +36,10 @@
 -define(SKILL_SUB_TYPE_IT_TAKE_TYPE_IMMEDIATELY, 2). %% 立刻生效
 -define(SKILL_SUB_TYPE_IT_TAKE_TYPE_CONTINUE,    3). %% 持续施法
 
+%% 技能意图
+-define(SKILL_PURPOSE_DEC, 1).  %% 负面
+-define(SKILL_PURPOSE_ADD, 2).  %% 增益
+
 %% 技能作用对象类型
 -define(SKILL_TARGET_PLAYER,  1). %% 玩家
 -define(SKILL_TARGET_MONSTER, 2). %% 怪物

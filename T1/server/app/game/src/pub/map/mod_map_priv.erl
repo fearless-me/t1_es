@@ -66,9 +66,9 @@ do_player_exit_call(S, From, Uid, #m_cache_map_object_priv{} = Obj) ->
     ?TRY_CATCH_ERROR(dec_line_number(S#m_map_state.mgr_ets, map_rw:line_id()), Err4),
     Ack = #r_exit_map_ack{error = ?E_Success, map_id = map_rw:map_id(), line_id = map_rw:line_id() },
     {reply, Ack, S};
-do_player_exit_call(S, From, Uid, _) ->
-    ?WARN("~w req exit map ~w|~w from ~p, but obj not exists!",
-        [Uid, self(), misc:registered_name(),From]),
+do_player_exit_call(S, From, Uid, Obj) ->
+    ?WARN("~w req exit map ~w|~w from ~p, but obj is ~w",
+        [Uid, self(), misc:registered_name(),From, Obj]),
 %%    Obj = #m_cache_map_object_priv{uid = Uid, type = ?OBJ_PLAYER},
 %%    ?TRY_CATCH_ERROR(map_rw:del_object(Obj), Err1),
 %%    ?TRY_CATCH_ERROR(mod_view:sync_player_exit_map(Obj), Err2),
@@ -92,7 +92,7 @@ dec_line_number(Ets, LineId) ->
 %% call
 player_exit_exception_call(S, Uid) ->
     Obj = object_priv:find_object_priv(?OBJ_PLAYER, Uid),
-    ?WARN("player_exit_exception_call(~p)",[Uid]),
+    ?WARN("player_exit_exception_call(~p), ~w",[Uid, Obj]),
     ?TRY_CATCH(do_player_exit_call(S, undefined, Uid, Obj)),
     {reply, ?E_Success, S}.
 

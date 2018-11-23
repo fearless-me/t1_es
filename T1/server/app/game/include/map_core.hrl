@@ -47,9 +47,9 @@
 -define(ED_End, 9).
 
 %% 地图进程逻辑状态
--define(MAP_NORMAL, 1).     %% 正常状态
--define(MAP_READY_EXIT, 2). %% 准备结束状态
--define(MAP_EXIT, 3).       %% 立即结束状态
+-define(MAP_RUNNING, running).  %% 正常状态
+-define(MAP_READY_EXIT, dying). %% 准备结束状态
+-define(MAP_EXIT, dead).        %% 立即结束状态
 
 %% 地图线路存在时间
 %% @todo 要让地图来配置
@@ -85,9 +85,9 @@
 %% 视图
 -record(m_vis_tile, {index = 0, player = [], monster = [], npc = [], pet = []}).
 %% 地图进程状态
--record(m_map_state, {map_id = 0, line_id = 0, ets, mgr_ets, excl_ets, respawn = [], hook_mod, status = ?MAP_NORMAL, protect_tick = ?DEAD_LINE_PROTECT div ?MAP_TICK}).
+-record(m_map_state, {map_id = 0, line_id = 0, ets, mgr_ets, excl_ets, respawn = [], hook_mod, status = ?MAP_RUNNING, protect_tick = ?DEAD_LINE_PROTECT div ?MAP_TICK}).
 %% 地图线路
--record(m_map_line, {map_id = 0, line_id = 0, pid, limits = 150, in = 0, reserve = 10, dead_line = 0, status = ?MAP_NORMAL}).
+-record(m_map_line, {map_id = 0, line_id = 0, pid, limits = 150, in = 0, reserve = 10, dead_line = 0, status = ?MAP_RUNNING}).
 
 
 %% 地图单位类型

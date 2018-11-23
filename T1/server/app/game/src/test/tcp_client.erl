@@ -93,9 +93,9 @@ connect(Port, AccountIdx) ->
         loop_recv(),
         ?WARN("socket ~p, pid ~p bye~~!", [socket(), self()]),
         ok
-    catch
-        _ : Err: _ ->
-            ?ERROR("socket ~p, pid ~p err ~p bye~~!", [socket(), self(), Err])
+    catch _ : Err: _ ->
+            ?ERROR("player ~p of account ~p socket ~p, pid ~p err ~p bye~~!",
+                [get_aid(), get_uid(), socket(), self(), Err])
     end,
 
     ok.
@@ -136,8 +136,8 @@ handle(Msg) ->
     ok.
 
 
-handle_1(#pk_GS2U_LoginResult{}) ->
-%%    set_aid(Aid),
+handle_1(#pk_GS2U_LoginResult{aid = Aid}) ->
+    set_aid(Aid),
     ok;
 handle_1(#pk_GS2U_CreatePlayerResult{errorCode = ErrCode, uid = Uid}) ->
     case ErrCode of
@@ -162,14 +162,14 @@ handle_1(#pk_GS2U_UserPlayerList{info = Info}) ->
 handle_1(#pk_GS2U_GotoNewMap{map_id = MapId}) ->
     set_mid(MapId),
     ?INFO("~p GS2U_GotoNewMap ~p", [self(), MapId]),
-    case get_aid() of
+    case get_uid() of
         undefined ->
             send_msg(socket(), #pk_U2GS_GetPlayerInitData{});
         _ -> rand_walk()
     end,
     ok;
 handle_1(#pk_GS2U_PlayerInitBase{uid = Uid}) ->
-    set_aid(Uid),
+    set_uid(Uid),
     ets:insert(tcpc, {Uid, socket()}),
     ok;
 handle_1(#pk_GS2U_GetPlayerInitDataEnd{}) ->
@@ -185,6 +185,9 @@ socket() -> get(?SocketKey).
 set_aid(Aid) -> put('AID', Aid).
 get_aid() -> get('AID').
 
+set_uid(Uid) -> put('UID', Uid).
+get_uid() -> get('UID').
+
 set_mid(Mid) -> put('MID', Mid).
 get_mid() -> get('MID').
 
@@ -193,7 +196,7 @@ heartbeat() ->
     send_msg(socket(), Msg),
     ChangeMap = heartbeatcount(),
     MapId = get_mid(),
-    case get_aid() of
+    case get_uid() of
         undefined -> skip;
         _ when ChangeMap, MapId =/= 2 ->
             case getCfg:getCfgByArgs(cfg_map, 2) of

@@ -17,6 +17,9 @@
 	%% id:
 	%% BuffID,唯一Key
 
+	%% name:
+	%% Buff名字
+
 	%% tips:
 	%% 显示的描述内容
 
@@ -112,6 +115,7 @@ getRow(10000) ->
 	#buffCfg{
 		desc__ = "测试回血BUFF",
 		id = 10000,
+		name = "@@>测试回血BUFF<",
 		tips = "@@>1000000<",
 		icon = 99,
 		useType = 99,
@@ -138,6 +142,7 @@ getRow(10100) ->
 	#buffCfg{
 		desc__ = "防御降低10%",
 		id = 10100,
+		name = "@@>防御降低10%<",
 		tips = "@@>1000004<",
 		icon = 99,
 		useType = 0,
@@ -164,6 +169,7 @@ getRow(10101) ->
 	#buffCfg{
 		desc__ = "破魔之道零式增加20%AP，持续10秒",
 		id = 10101,
+		name = "@@>破魔之道零式增加20%AP，持续10秒<",
 		tips = "@@>1000006<",
 		icon = 5455,
 		useType = 0,
@@ -190,6 +196,7 @@ getRow(10102) ->
 	#buffCfg{
 		desc__ = "被破魔臂击中导致流血不止",
 		id = 10102,
+		name = "@@>被破魔臂击中导致流血不止<",
 		tips = "@@>1000007<",
 		icon = 555,
 		useType = 2,

@@ -54,9 +54,9 @@ login_ack(#r_login_ack{error = Error}) ->
 
 
 loop_check(true, Pid, N) when N > 0, is_pid(Pid) ->
-    ?WARN("player repeat_login ~p|~p loop check", [Pid, misc:registered_name(Pid)]),
+    ?WARN("~p player repeat_login ~p|~p loop check", [self(), Pid, misc:registered_name(Pid)]),
     ps:send(Pid, active_stop, repeat_login),
-    timer:sleep(2000),
+    timer:sleep(500),
     loop_check(misc:is_alive(Pid), Pid, N - 1);
 loop_check(_, _Pid, _N) ->
     ok.

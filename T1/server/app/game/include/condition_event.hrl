@@ -13,37 +13,51 @@
 
 %%-------------------------------------------------------------------
 %%-------------------------------------------------------------------
--define(CONDITION_OR, 0).
--define(CONDITION_AND, 1).
+-define(CONDITION_OR, 0).   % 或
+-define(CONDITION_AND, 1).  % 与
+
+%%-------------------------------------------------------------------
+%% 条件主分类
+%%-------------------------------------------------------------------
+%% 角色属性
+-define(CONDITION_PLAYER_PROP, 0).
+%% 是否有buff
+-define(CONDITION_BUFF_HAS, 1).
+
+%%-------------------------------------------------------------------
+%% 分类的ID:BUFF区分类型效果，BUFF检查类型
+%%-------------------------------------------------------------------
+%% BUFF ID
+-define(CONDITION_BUFF_HAS_ID, 0).
+%% BUFF 正面效果与负面效果
+-define(CONDITION_BUFF_HAS_PM, 1).
+%% BUFF效果
+-define(CONDITION_BUFF_HAS_EFFECT, 2).
+%% BUFF GroupID
+-define(CONDITION_BUFF_HAS_GROUP, 3).
 
 %%-------------------------------------------------------------------
 %% 逻辑判断
 %%-------------------------------------------------------------------
--define(LOGIC_EQ, 1). % =
--define(LOGIC_GT, 2). % >
--define(LOGIC_LT, 3). % <
--define(LOGIC_GE, 4). % >=
--define(LOGIC_LE, 5). % =<
--define(LOGIC_NE, 6). % !=
+-define(LOGIC_EQ, 4). % =
+-define(LOGIC_GT, 0). % >
+-define(LOGIC_LT, 2). % <
+-define(LOGIC_GE, 1). % >=
+-define(LOGIC_LE, 3). % =<
+-define(LOGIC_NE, 5). % !=
 
 
 %%-------------------------------------------------------------------
 %% 目标类型
 %%-------------------------------------------------------------------
--define(TARGET_SELF, 0).
--define(TARGET_OTHER, 1).
+-define(TARGET_SELF, 0).    % 自身
+-define(TARGET_OTHER, 1).   % 目标
 
 %%-------------------------------------------------------------------
-%% buff检查类型
+%% 是否存在
 %%-------------------------------------------------------------------
-%%按ID
--define(BUFF_CHECK_TYPE_ID,     0).
-%%按增益减益
--define(BUFF_CHECK_TYPE_EN_DE,  1).
-%%按效果
--define(BUFF_CHECK_TYPE_EFFECT, 2).
-%%按组
--define(BUFF_CHECK_TYPE_GROUP,  3).
+-define(EXIST, 0).      % 存在
+-define(NOT_EXIST, 1).  % 不存在
 
 
 %%-------------------------------------------------------------------
@@ -62,24 +76,6 @@
 -define(EVENT_DAMAGE_SUB_PERCENT, 1).
 %% 固定伤害
 -define(EVENT_DAMAGE_SUB_FIX, 2).
-
-%%-------------------------------------------------------------------
-%% 条件主类型
-%%-------------------------------------------------------------------
-%% 角色
--define(CONDITION_PLAYER, 0).
-%% 是否有buff
--define(CONDITION_BUFF_HAS, 1).
-%% 检查buff时间
--define(CONDITION_BUFF_CHECK_TIME, 2).
-
-%%-------------------------------------------------------------------
-%% 条件子类型
-%%-------------------------------------------------------------------
-%% 生命百分比
--define(CONDITION_PLAYER_SUB_HP_PERCENT, 1).
-%% 生命固定值
--define(CONDITION_PLAYER_SUB_HP, 2).
 
 
 

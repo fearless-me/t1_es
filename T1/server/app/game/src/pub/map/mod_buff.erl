@@ -163,15 +163,15 @@ del_buff_trigger(Uid, ?BUFF_REMOVE_DEATH) -> do_del_buff_cfg(Uid, #buffCfg.death
 del_buff_trigger(Uid, ?BUFF_REMOVE_LEAVE_MAP) -> do_del_buff_cfg(Uid, #buffCfg.mapRemove, [1]).
 
 %% 事件删除buff
-condition_event_del_buff(?BUFF_CHECK_TYPE_ID, Uid, BuffIdList) ->
+condition_event_del_buff(?CONDITION_BUFF_HAS_ID, Uid, BuffIdList) ->
     do_del_buff_cfg(Uid, #buffCfg.id, BuffIdList);
-condition_event_del_buff(?BUFF_CHECK_TYPE_EN_DE, Uid, [_1, _2]) ->
+condition_event_del_buff(?CONDITION_BUFF_HAS_PM, Uid, [_1, _2]) ->
     do_del_all(Uid);
-condition_event_del_buff(?BUFF_CHECK_TYPE_EN_DE, Uid, [Type]) ->
+condition_event_del_buff(?CONDITION_BUFF_HAS_PM, Uid, [Type]) ->
     ?if_else(Type == ?BUFF_DEBUFF, del_debuff(Uid), del_enbuff(Uid));
-condition_event_del_buff(?BUFF_CHECK_TYPE_EFFECT, Uid, EffectList) ->
+condition_event_del_buff(?CONDITION_BUFF_HAS_EFFECT, Uid, EffectList) ->
     do_del_buff_cfg(Uid, #buffCfg.effectType, EffectList);
-condition_event_del_buff(?BUFF_CHECK_TYPE_GROUP, Uid, GroupList) ->
+condition_event_del_buff(?CONDITION_BUFF_HAS_GROUP, Uid, GroupList) ->
     do_del_buff_cfg(Uid, #buffCfg.groupId, GroupList).
 
 %%-------------------------------------------------------------------
