@@ -215,7 +215,7 @@ heartbeat() ->
             send_msg(socket(), Msg3);
         _ when HeartbeatCount rem 10 == 0 ->
             Msg4 = #pk_U2GS_Chat{content = io_lib:format("&add_bp ~p ~p ~p",
-                [rand_tool:rand(1, 4), ?BPUseType_ADD, rand_tool:rand(1, 999999)])},
+                [rand_tool:rand(1, 4), ?BPUseType_ADD, rand_tool:rand(1, 777) * 1.1])},
             send_msg(socket(), Msg4);
         _ ->
             rand_walk()
