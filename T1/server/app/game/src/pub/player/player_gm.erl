@@ -1,3 +1,4 @@
+%% coding: latin-1
 %%%-------------------------------------------------------------------
 %%% @author mawenhong
 %%% @copyright (C) 2018, <COMPANY>
@@ -16,15 +17,15 @@
 -export([is_gm/1, on_gm/1]).
 -export([to_doc/0]).
 
--define(DOC_FILE, "GmCmd.txt").
+-define(DOC_FILE, "GmDoc.txt").
 -define(GM_CMD_LIST, [
     %% 权限等级、 指令、 回调函数、 说明
-    {0, "change_map", fun change_map/1, "切地图 &chang_map $MapId"},
-    {0, "change_group", fun change_group/1, "改变角色分组属性 &change_group $GroupId"},
-    {0, "add_buff", fun add_buff/1, "添加buff &add_buff $BuffId [$BuffLevel]"},
-    {0, "use_skill", fun use_skill/1, "使用技能 &use_skill $SkillId $TargetId"},
-    {0, "add_bp", fun add_bp/1, "添加战斗属性 &add_bp $bpId $bpUseType $bpValue"},
-    {0, "query_bp", fun query_bp/1, "查看战斗属性 &query_bp $bpId"}
+    {0, "change_map",  fun change_map/1, "切地图 &chang_map $MapId"},
+    {0, "change_group",fun change_group/1, "改变角色分组属性 &change_group $GroupId"},
+    {0, "add_buff",    fun add_buff/1, "添加buff &add_buff $BuffId [$BuffLevel]"},
+    {0, "use_skill",   fun use_skill/1, "使用技能 &use_skill $SkillId $TargetId"},
+    {0, "add_bp",      fun add_bp/1, "添加战斗属性 &add_bp $bpId $bpUseType $bpValue"},
+    {0, "query_bp",    fun query_bp/1, "查看战斗属性 &query_bp $bpId"}
 ]).
 
 
@@ -41,20 +42,26 @@ on_gm([_Mark | Content]) ->
     end,
     ok.
 %%-------------------------------------------------------------------
+-define(FMT_HEAD, "~-10.ts~.20ts~.150ts~n").
+-define(FMT_BODY, "~-10.w~.20ts~.150ts~n").
 to_doc() ->
     GenDoc =
         fun() ->
             NewList = lists:sort(fun({AL0, _, _, _}, {AL1, _, _, _}) -> AL0 < AL1 end, ?GM_CMD_LIST),
-            file:write_file(?DOC_FILE, ""),
-            lists:foreach(
+            file:write_file(?DOC_FILE, io_lib:format(?FMT_HEAD, ["Lv", "Cmd", "Desc"])),
+            lists:foreach
+            (
                 fun({AL, Cmd, _, Desc}) ->
-                    file:write_file(
+                    file:write_file
+                    (
                         ?DOC_FILE,
-                        io_lib:format("~p ~s \"~s\" ~n",
+                        io_lib:format(?FMT_BODY, %%"~p ~s \"~s\" ~n",
                             [AL, Cmd, unicode:characters_to_binary(Desc)]),
                         [append]
                     )
-                end, NewList)
+                end,
+                NewList
+            )
         end,
     erlang:spawn(GenDoc),
     ok.

@@ -17,16 +17,18 @@
 
 
 %% API
--export([clear/1, clear/2]).
+-export([clear/1, clear/2, ack/1]).
 -export([start_link/1]).
 -export([mod_init/1, on_terminate/2, do_handle_call/3, do_handle_info/2, do_handle_cast/2]).
 
-
+ack(Pid) -> gen_server:cast(Pid, ack).
 clear(Pid) -> gen_server:cast(Pid, clear).
 clear(Pid, Reason) -> gen_server:cast(Pid, {clear, Reason}).
 
 
 -define(EXCEPTION_CHECK, 3*60*1000).
+-define(ACK_CHECK, 30*1000).
+-define(ACK_FLAG, ack_check).
 %%%===================================================================
 %%% public functions
 %%%===================================================================
@@ -52,6 +54,8 @@ mod_init([Aid, Uid, Pid]) ->
                cross_player_bg:clear(Pid, repeat_login),
                true = misc:loop_register_process(self(), PsName, 5)
         end,
+        erlang:put(?ACK_FLAG, misc_time:utc_seconds()),
+        erlang:send_after(?ACK_CHECK, self(), ?ACK_FLAG),
         ?WARN("~p bind player ~w of account ~p monitor pid ~p ref ~p",
             [self(), Uid, Aid, Pid, Ref]),
         {ok, ok}
@@ -77,11 +81,17 @@ do_handle_info({'DOWN', _, process, _, _}, State) ->
 do_handle_info(tick_check, State) ->
     i_tick_check(),
     {noreply, State};
+do_handle_info(?ACK_FLAG, State) ->
+    i_ack_check(erlang:get(?ACK_FLAG)),
+    {noreply, State};
 do_handle_info(Info, State) ->
     ?ERROR("undeal info ~w", [Info]),
     {noreply, State}.
 
 %%--------------------------------------------------------------------
+do_handle_cast(ack, State) ->
+    catch erlang:erase(?ACK_FLAG),
+    {noreply, State};
 do_handle_cast(clear, State) ->
     catch i_clear(clear),
     {stop, normal, State};
@@ -108,6 +118,7 @@ get_pid() -> erlang:get(pid).
 set_ref(Ref) -> erlang:put(monitor_ref, Ref).
 get_ref() -> erlang:get(monitor_ref).
 
+%%--------------------------------------------------------------------
 i_tick_msg() ->
     erlang:send_after(?EXCEPTION_CHECK, self(), tick_check).
 
@@ -119,6 +130,11 @@ i_tick_check() ->
     catch ?if_else( not (IsInMap andalso IsOnline), i_clear(tick_check), skip),
     ok.
 
+%%--------------------------------------------------------------------
+i_ack_check(undefined)->
+    skip;
+i_ack_check(_)->
+    i_clear(ack_time_out).
 
 i_clear(Reason) ->
     Aid = get_aid(),

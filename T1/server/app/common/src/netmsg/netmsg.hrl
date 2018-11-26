@@ -2,7 +2,7 @@
 -ifndef(netmsg).
 -define(netmsg,1).
 
--define(ProtoVersion,654).
+-define(ProtoVersion,655).
 
 -record(pk_BattleProp,{
 	%% UInt32 属性ID
@@ -28,7 +28,7 @@
 	%% UInt32
 	level = 0,
 	%% UInt32
-	wrap = 0
+	layer = 0
 }).
 
 %% 

@@ -123,7 +123,6 @@ enter_cross_wrap()->
     Uid = player_rw:get_uid(),
     Node = cross_interface:get_player_cross_node(Uid),
     Data = cross_src:player_pub_data_to_cross(Aid, Uid),
-    gs_cache_interface:add_player_cross(Uid),
     case grpc:call(Node, cross_dst, rpc_call_player_enter, [Data]) of
         {true, BgPid} ->
             monitor_ack(Aid, Uid, BgPid),
@@ -138,7 +137,9 @@ monitor_ack(Aid, Uid, BgPid) ->
     Ref = erlang:monitor(process, BgPid),
     set_bgpid(BgPid),
     set_ref(Ref),
+    gs_cache_interface:add_player_cross(Uid),
     gs_cache_interface:update_online_player(Uid, {#m_cache_online_player.pid_bg, BgPid}),
+    cross_player_bg:ack(BgPid),
     ?WARN("player ~p of account ~p monitor BACK PROCESS ~p ref ~p",
         [Uid, Aid, BgPid, Ref]),
     ok.

@@ -48,3 +48,6 @@ _gsdata_
 /T1/tools/src/NetProtor/ReleaseStatic
 /T1/server/.idea
 /T1/server/app/game/doc
+/T1/tools/_Gadgets/CheckInSvn_MapsForServer.py
+/T1/tools/_Gadgets/EXCLUDE_All_ExceptMapInfoBytes.txt
+/T1/tools/_Gadgets/EXCLUDE_ServerMapOnly.txt

@@ -637,12 +637,12 @@ decode_BuffInfo(Bin0) ->
 	{ V_buff_id, Bin1 } = read_uint32( Bin0 ),
 	{ V_lifetime, Bin2 } = read_uint32( Bin1 ),
 	{ V_level, Bin3 } = read_uint32( Bin2 ),
-	{ V_wrap, Bin4 } = read_uint32( Bin3 ),
+	{ V_layer, Bin4 } = read_uint32( Bin3 ),
 	{ #pk_BuffInfo {
 		buff_id = V_buff_id,
 		lifetime = V_lifetime,
 		level = V_level,
-		wrap = V_wrap
+		layer = V_layer
 		},
 	Bin4 }.
 
@@ -1357,12 +1357,12 @@ encode_BuffInfo( #pk_BuffInfo{} = P ) ->
 	Bin_buff_id = write_uint32( P#pk_BuffInfo.buff_id ),
 	Bin_lifetime = write_uint32( P#pk_BuffInfo.lifetime ),
 	Bin_level = write_uint32( P#pk_BuffInfo.level ),
-	Bin_wrap = write_uint32( P#pk_BuffInfo.wrap ),
+	Bin_layer = write_uint32( P#pk_BuffInfo.layer ),
 	[
 		Bin_buff_id,
 		Bin_lifetime,
 		Bin_level,
-		Bin_wrap	
+		Bin_layer	
 ].
 
 %GENERATED from file:combat.h => SkillInfo

@@ -4,6 +4,7 @@
 -include("pub_def.hrl").
 -include("netmsg.hrl").
 -include("netconf.hrl").
+-include("battle_prop.hrl").
 -define(HeartBeat, 20000).
 
 %% API
@@ -192,13 +193,14 @@ set_mid(Mid) -> put('MID', Mid).
 get_mid() -> get('MID').
 
 heartbeat() ->
-    Msg = #pk_U2GS_HearBeat{},
-    send_msg(socket(), Msg),
-    ChangeMap = heartbeatcount(),
+    Msg1 = #pk_U2GS_HearBeat{},
+    send_msg(socket(), Msg1),
+    HeartbeatCount = heartbeatcount(),
     MapId = get_mid(),
+    CanChangeMap = HeartbeatCount rem (60000 div ?HeartBeat) == 0,
     case get_uid() of
         undefined -> skip;
-        _ when ChangeMap, MapId =/= 2 ->
+        CanChangeMap when MapId =/= 2 ->
             case getCfg:getCfgByArgs(cfg_map, 2) of
                 [] -> skip;
                 {} -> skip;
@@ -207,20 +209,23 @@ heartbeat() ->
                     Msg2 = #pk_U2GS_ChangeMap{map_id = 2, x = 324.1, y = 233.5},
                     send_msg(socket(), Msg2)
             end;
-        _ when ChangeMap, MapId =/= 1 ->
+        CanChangeMap when MapId =/= 1 ->
             ?INFO("##### ~p change map ~p -> 1", [self(), MapId]),
-            Msg2 = #pk_U2GS_ChangeMap{map_id = 1, x = 324.1, y = 233.5},
-            send_msg(socket(), Msg2);
+            Msg3 = #pk_U2GS_ChangeMap{map_id = 1, x = 324.1, y = 233.5},
+            send_msg(socket(), Msg3);
+        _ when HeartbeatCount rem 10 == 0 ->
+            Msg4 = #pk_U2GS_Chat{content = io_lib:format("&add_bp ~p ~p ~p",
+                [rand_tool:rand(1, 4), ?BPUseType_ADD, rand_tool:rand(1, 999999)])},
+            send_msg(socket(), Msg4);
         _ ->
             rand_walk()
     end,
     ok.
 
 heartbeatcount() ->
-    case get(heartbeatcount) of
-        undefined -> put(heartbeatcount, 1);
-        V -> put(heartbeatcount, V + 1), V rem (60 * 1000 div ?HeartBeat) == 0
-    end.
+    V = misc:get_dict_def(heartbeatcount, 0) + 1,
+    put(heartbeatcount, V),
+    V.
 
 rand_walk() ->
     PosList = [{243.2, 209.1}, {324.01, 138.49}, {324.1, 225.1}],

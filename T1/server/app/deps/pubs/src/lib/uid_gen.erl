@@ -196,13 +196,13 @@ uid_max(UIDType) ->
 %% 获取UID类型
 -spec uid_type(UID::uid_type()) -> uint32().
 uid_type(UID) ->
-    {_H, UIDType, _ADBID, _DBID, _UIDIndex, _IDRange} = parse(UID),
+    {_H, UIDType, _DBID, _UIDIndex, _IDRange} = parse(UID),
     UIDType.
 
 %% 通过UID获取DBID
 -spec parse_db_id(UID::uint64()) -> uint32().
 parse_db_id(UID) ->
-    {_, _, _, DBID, _, _} = parse(UID),
+    {_H, _UIDType, DBID, _UIDIndex, _IDRange} = parse(UID),
     DBID.
 
 gen(UIDType, DBID, IDIndex, IDRange) ->
@@ -225,7 +225,7 @@ gen_1(Type) ->
 %% ================以下两个方法仅针对角色UID================
 %% 角色UID转换为短UID
 short(UID) ->
-    {_H, _UIDType, _ADBID, DBID, UIDIndex, IDRange} = parse(UID),
+    {_H, _UIDType, DBID, UIDIndex, IDRange} = parse(UID),
     (IDRange bsl (?BIT_SVER + ?BIT_INDX)) bor (DBID bsl ?BIT_INDX) bor UIDIndex.
 %% 短角色UID转换为标准角色UID
 long(ShortID) ->

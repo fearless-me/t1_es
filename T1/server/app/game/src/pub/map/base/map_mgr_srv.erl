@@ -17,6 +17,7 @@
 -include("gs_ps_def.hrl").
 -include("map_core.hrl").
 -include("gs_cache.hrl").
+-include("cfg_map.hrl").
 
 
 %% API
@@ -184,11 +185,16 @@ create_new_line(S, MapID, LineID) ->
     %% @todo 此处要根据地图类型的不同来采取不同的策略
     %% 比如副本地图不用做任何优化
     %% 但是长时间存在的地图必须要调整内存相关属性，减少GC
+    #mapCfg{peopleLimit = Limit, lifetime = Lifetime} = getCfg:getCfgByArgs(cfg_map, MapID),
     {ok, Pid} = map_sup:start_child([MapID, LineID, S#state.ets]),
+
+    RealLifeTime = ?if_else(Lifetime == 0, ?UINT32_MAX, Lifetime),
     Line = #m_map_line{
         map_id = MapID, line_id = LineID, pid = Pid, status = ?MAP_RUNNING,
-        dead_line = misc_time:milli_seconds() + ?LINE_LIFETIME
+        limits = Limit,
+        dead_line = misc_time:milli_seconds() + RealLifeTime
     },
+    %% fixme 此处是为了测试用的
     erlang:send_after(?LINE_LIFETIME, self(), {stop_line, Line}),
     misc_ets:write(S#state.ets, Line),
     ?WARN("map_~p_~p ~p start, mgr ets ~p", [MapID, LineID, Pid, S#state.ets]),

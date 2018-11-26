@@ -59,7 +59,7 @@ start() ->
         
         watchdog:wait_all(), watchdog:ready(true),
 
-%%        background_gc:run(),
+        background_gc:run(),
         
         misc:fn_wrapper("server tcp listener", ?Wrap(start_tcp_listener(SupPid))),
         ok

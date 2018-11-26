@@ -16,6 +16,7 @@ struct SkillInfo
 	uint32 skill_id;
 	uint32 level;
 	uint32 cd_time;
+	uint32 slot_index;//技能盘孔位
 };
 
 
@@ -24,7 +25,7 @@ struct U2GS_UseSkill ->
 {
 	float	x;		// 施法者坐标
 	float	y;		// 
-	uint64	tar_uid; // ID
+	vector<uint64>	tar_uids; // ID
 	uint32 skill_id;// 技能id
 	uint32 serial;  // 序列号
 };
@@ -33,7 +34,7 @@ struct U2GS_UseSkill ->
 struct GS2U_UseSkill <-
 {
 	uint64 uid; 	 // 角色ID
-	uint64 tar_uid; // ID
+	vector<uint64> tar_uids; // ID
 	uint32 skill_id;// 技能id
 	uint32 serial;  // 序列号
 	uint32 spell_time; //吟唱时间(毫秒)
@@ -94,7 +95,7 @@ struct BuffInfo
 	uint32 buff_id;
 	uint32 lifetime;
 	uint32 level;
-	uint32 wrap;
+	uint32 layer;
 };
 
 // 添加buff
@@ -136,10 +137,29 @@ struct U2GS_DeleteBuff ->
 	uint32		buff_id;		// buff id
 };
 
+// 战斗属性单元值，仅包含加算值，主要用于显示
+struct BattleProp
+{
+  uint32  propID; // 属性ID
+  float addValue; // 加算值
+};
 
+// 战斗属性单元值扩展，包含了乘算值，用于客户端预览属性改变结果
+struct BattlePropEx
+{
+  uint32  propID; // 属性ID
+  float addValue; // 加算值
+  float mulValue; // 乘算值
+};
 
-
-
-
-
-
+// 同步战斗属性
+struct GS2U_BattleProps <-
+{
+	uint64  uid;  // 对象ID
+  uint32  career; // 职业ID，计算战斗属性时会使用到
+  vector<BattlePropEx>  listBP1;  // 1类属性
+  vector<BattlePropEx>  listBP2;  // 2类属性
+  vector<BattlePropEx>  listBP3;  // 3类属性
+  vector<BattlePropEx>  listBP4;  // 4类属性
+  vector<BattleProp>  listBPFinal;  // 最终属性
+};

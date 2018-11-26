@@ -26,7 +26,9 @@
 
 -export([
     make_init_log/2,
-    pause/0, continue/0, set_log_level/1
+    pause/0, continue/0,
+    log_level/1, log_level/0
+
 ]).
 
 %% gen_server callbacks
@@ -75,7 +77,8 @@
 %%-------------------------------------------------------------------
 pause() -> set_env(?DISCARD_FLAG, true).
 continue() -> set_env(?DISCARD_FLAG, false).
-set_log_level(Level) -> set_env(log_level, Level).
+log_level(Level) -> set_env(log_level, Level).
+log_level() -> get_env(log_level, ?LOG_LEVEL).
 %%-------------------------------------------------------------------
 
 %%-------------------------------------------------------------------

@@ -210,7 +210,11 @@ line_status(MapId, LineEts, Extra) ->
             dead_line = DeadLine, status = Status
         }) ->
             ExtraInfo = line_status_extra(Pid, Status, Extra),
-            {memory, Memory} = erlang:process_info(Pid, memory),
+            Memory =
+                case erlang:process_info(Pid, memory) of
+                    {memory, V} -> V;
+                    _ -> 0
+                end,
             io_lib:format
             (
                 ?INFO_FMT_BODY,

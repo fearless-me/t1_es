@@ -61,7 +61,7 @@
 -define(DEFAULT_VM_MEMORY_HIGH_WATERMARK, 0.4).
 %%
 -define(LARGE_HEAP, 100 * 1024 * 1024).
--define(LARGE_HEAP_GUARD_MIN, 1 * 1024 * 1024).
+-define(LARGE_HEAP_GUARD_MIN, 10 * 1024 * 1024).
 %%
 -define(LONG_GC, 500).
 -define(LONG_SCHEDULE, 500).
@@ -176,15 +176,14 @@ dump_info() ->
             misc:format_memory_readable(ProcessTotal), nodes(), SystemMem, AtomUsedMem, AtomMem, BinMem, CodeMem, EtsMem, Str1, Str2]),
     ok.
 
--define(MONITOR_FMT_HEAD, "~-20.w~-20.w~-20.w~-25.w~-25.w~w").
--define(MONITOR_FMT_BODY, "~-20.w~-20.w~-20.w~-25.ts~-25.ts~w").
+-define(MONITOR_FMT_HEAD, "~-18.w~-15.w~-22.w~-22.w~-10.w~w").
+-define(MONITOR_FMT_BODY, "~-18.w~-15.w~-22.ts~-22.ts~-10.w~w").
 dump_monitor() ->
     ?INFO_SINK(?VM_MONITOR_LOGGER, "system monitor total event ~p:",[ets:info(?REPORT_CACHE_ETS, size)]),
-    ?INFO_SINK(?VM_MONITOR_LOGGER, ?MONITOR_FMT_HEAD,[pid_or_port, event, info, start, latest, count]),
-    ets:tab2list(?REPORT_CACHE_ETS),
+    ?INFO_SINK(?VM_MONITOR_LOGGER, ?MONITOR_FMT_HEAD,[pid_or_port, event, start, latest, count, info]),
     ets:foldl(
         fun(#monitor_info{pid_or_port = PP, event = E, info = I, start = S, latest = L, count = C}, _)->
-            ?INFO_SINK(?VM_MONITOR_LOGGER, ?MONITOR_FMT_BODY,[PP, E, I, S, L, C])
+            ?INFO_SINK(?VM_MONITOR_LOGGER, ?MONITOR_FMT_BODY,[PP, E, S, L, C, I])
         end, 0, ?REPORT_CACHE_ETS),
 
     ok.

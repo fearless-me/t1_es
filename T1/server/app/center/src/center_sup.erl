@@ -59,6 +59,7 @@ start() ->
         misc:fn_wrapper("distritbution", ?Wrap(start_dist(SupPid))),
         misc:fn_wrapper("server mgr", ?Wrap(misc:start_otp(SupPid, server_root_sup, supervisor))),
 
+        background_gc:run(),
         %%
         watchdog:ready(true),
         ok

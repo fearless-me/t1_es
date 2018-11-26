@@ -102,10 +102,10 @@ as_record(Columns, Rows, RecordName, Fields, Fun)
     S = lists:seq(1, length(Columns)),
     P = lists:zip([binary_to_atom(C1, utf8) || C1 <- Columns], S),
     F = fun(FieldName) ->
-        case proplists:lookup(FieldName, P) of
+        case misc:get_value(FieldName, P, none) of
             none ->
                 fun(_) -> undefined end;
-            {FieldName, Pos} ->
+            Pos ->
                 fun(Row) -> lists:nth(Pos, Row) end
         end
         end,

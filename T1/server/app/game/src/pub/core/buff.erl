@@ -32,9 +32,9 @@ marshal(#m_buff{
     buff_id = BuffId,
     lifetime = Lifetime,
     level = Level,
-    layer = Wrap
+    layer = Layer
 }) ->
-    #pk_BuffInfo{buff_id = BuffId, lifetime = Lifetime, level = Level, wrap = Wrap}.
+    #pk_BuffInfo{buff_id = BuffId, lifetime = Lifetime, level = Level, layer = Layer}.
 
 get_cfg(BuffId) ->
     case getCfg:getCfgByArgs(cfg_buff, BuffId) of
