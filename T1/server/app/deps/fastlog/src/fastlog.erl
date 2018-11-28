@@ -49,7 +49,8 @@
 
 -define(DISCARD_FLAG, dicard_log).
 -define(MASTER_NODE, master_of_slave).
--define(CheckFlagMaxLogTimes, 100).
+-define(CHECK_FLAG_TIMES, 100).
+-define(MAX_OVERLOAD_MSG, 10000).
 -record(state, {monitorRef, counter, fileName, fd, fd_err, is_log_stdio, no_err_fd = false}).
 
 %%设置日志文件和错误文件的相关选项
@@ -453,7 +454,7 @@ is_error_log(warn) -> false;
 is_error_log(_) -> true.
 
 need_write_log(Cnt) when is_number(Cnt) ->
-    case Cnt > 0 andalso (Cnt rem ?CheckFlagMaxLogTimes) =:= 0 of
+    case Cnt > 0 andalso (Cnt rem ?CHECK_FLAG_TIMES) =:= 0 of
         true ->
             not (get_env(?DISCARD_FLAG, false) orelse check_msg_queue());
         _ ->
@@ -463,7 +464,7 @@ need_write_log(_Any) ->
     true.
 
 check_msg_queue()->
-    MaxLimit = get_env(discard_log_limit, 5000),
+    MaxLimit = get_env(overload_msg_len, ?MAX_OVERLOAD_MSG),
     case erlang:process_info(self(), message_queue_len) of
         {message_queue_len, MsgQ} -> MsgQ >= MaxLimit;
         _ -> false

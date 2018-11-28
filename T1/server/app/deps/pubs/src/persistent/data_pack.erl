@@ -9,19 +9,27 @@
 -module(data_pack).
 -author("Administrator").
 -include("logger.hrl").
+-include("db_record.hrl").
+-include("player_ext_data.hrl").
 
--record(buff,{id,time,layer,source,lifetime}).
--record(task,{id,type,sub_type,p1,p2,p3,p4}).
--record(skill, {id,level,cd,p1,p2,p3}).
--record(full_data,{buff, task, skill}).
+-record(buff, {id = 0, time = 0, layer = 0, source = 0, lifetime = 0}).
+-record(task, {id, type, sub_type, p1, p2, p3, p4}).
+-record(skill, {id, level, cd, p1, p2, p3}).
+-record(full_data, {buff, task, skill}).
 
 %% API
 -export([marshal/1, unmarshal/1]).
+%% todo 数据需要版本号，版本号根据什么来？ 能否自动生成？（尽量不要手动维护）
+%% todo 每个数据要怎么编码？怎么兼容？包括增加字段、删除字段？ 改名怎么办？
+%% todo 是否需要压缩？
+%% todo 要考虑效率、内存、对线上环境的影响
+%% todo 正确能用 -> 效率 -> 版本兼容
 
 %%
 marshal(Data) -> erlang:term_to_binary(Data).
 unmarshal(Bin) -> erlang:binary_to_term(Bin).
 
-test()->
-    version:getVersion(),
+test() ->
+    _Ext = #p_player_ext{},
+    ?DB_RECORD_VERSION,
     ok.

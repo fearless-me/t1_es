@@ -448,9 +448,9 @@ FileScanner::~FileScanner()
 													INDENT_FPRINT, "}\n" );
 												}
 
-												INDENT_FPRINT, "override public MessageType GetId() {\n" );
+												INDENT_FPRINT, "override public int GetId() {\n" );
 												if ( indent() ) {
-													INDENT_FPRINT, "return ID;\n" );
+													INDENT_FPRINT, "return (int)ID;\n" );
 													outdent();
 												}
 												INDENT_FPRINT, "}\n" );
@@ -772,7 +772,7 @@ FileScanner::~FileScanner()
 			);
 			for ( auto m : allMessages ) {
 				if ( m->type & MT_ServerToClient ) {
-					fprintf( fp, "            RegisterMessageId( MessageType.MSG_%s, %s.Create );\n", m->name.c_str(), m->name.c_str() );
+					fprintf( fp, "            RegisterMessageId( MessageType.MSG_%s, %s.Create, \"Network.Messages.%s\" );\n", m->name.c_str(), m->name.c_str(), m->name.c_str());
 				}
 			}
 			fprintf( fp, "        }\n" );

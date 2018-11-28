@@ -22,10 +22,9 @@
     BattleProps :: battleProps(),
     AddList :: listBPU(), DelList :: listBPU(),
     Ret :: battleProps().
-calc(BattleProps, [], []) ->
-    BattleProps;
 calc(BattleProps, AddList, DelList) ->
-    Ret1 = calc_add(AddList, BattleProps),
+    AddListReal = [?DEFAULT_BATTLE_PROP_USE(?BP_2_HP_CUR) | [?DEFAULT_BATTLE_PROP_USE(?BP_2_HP_MAX) | AddList]],
+    Ret1 = calc_add(AddListReal, BattleProps),
     Ret2 = calc_del(DelList, Ret1),
     calc_convert(Ret2).
 
@@ -36,8 +35,6 @@ calc(BattleProps, AddList, DelList) ->
     AddList :: listBPU(), MultiList :: listBPU(),
     AddList_Del :: listBPU(), MultiList_Del :: listBPU(),
     Ret :: battleProps().
-calc(BattleProps, [], [], [], []) ->
-    BattleProps;
 calc(BattleProps, AddList, MultiList, AddList_Del, MultiList_Del) ->
     %% 默认添加血量是为了属性列表中必然有血量相关属性
     AddListReal = [?DEFAULT_BATTLE_PROP_USE(?BP_2_HP_CUR) | [?DEFAULT_BATTLE_PROP_USE(?BP_2_HP_MAX) | AddList]],

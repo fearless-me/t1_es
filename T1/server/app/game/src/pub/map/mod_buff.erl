@@ -18,6 +18,7 @@
 -include("rec_rw.hrl").
 -include("condition_event.hrl").
 -include("cfg_buff.hrl").
+-include("module_process_define.hrl").
 
 %% API
 -export([
@@ -319,13 +320,17 @@ trigger_buff_event(TriggerCond, Uid, #m_buff{source = SrcUid, buff_id = BUffId})
 
 
 do_trigger_buff_event(?BUFF_ADD, SrcUid, TarUid, #buffCfg{onAdd = CondEvent}) ->
-    condition_event:action_all(CondEvent, [SrcUid, TarUid]);
+    condition_event:action_all(CondEvent, [SrcUid, TarUid],
+        condition_event_interface:init_self_ce_param(?MODULE_MAP_PROCESS));
 do_trigger_buff_event(?BUFF_REMOVE, SrcUid, TarUid, #buffCfg{onStop = CondEvent}) ->
-    condition_event:action_all(CondEvent, [SrcUid, TarUid]);
+    condition_event:action_all(CondEvent, [SrcUid, TarUid],
+        condition_event_interface:init_self_ce_param(?MODULE_MAP_PROCESS));
 do_trigger_buff_event(?BUFF_FINISH, SrcUid, TarUid, #buffCfg{onEnd = CondEvent}) ->
-    condition_event:action_all(CondEvent, [SrcUid, TarUid]);
+    condition_event:action_all(CondEvent, [SrcUid, TarUid],
+        condition_event_interface:init_self_ce_param(?MODULE_MAP_PROCESS));
 do_trigger_buff_event(?BUFF_TICK, SrcUid, TarUid, #buffCfg{onTick = CondEvent}) ->
-    condition_event:action_all(CondEvent, [SrcUid, TarUid]);
+    condition_event:action_all(CondEvent, [SrcUid, TarUid],
+        condition_event_interface:init_self_ce_param(?MODULE_MAP_PROCESS));
 do_trigger_buff_event(?BUFF_WRAP, _SrcUid, _TarUid, _Cfg) ->
     skip;
 do_trigger_buff_event(?BUFF_REPLACE, _SrcUid, _TarUid, _Cfg) ->

@@ -63,7 +63,7 @@
 %% 角色HP变化原因
 -define(HP_CHANGE_SKILL, 0). %% 技能伤害引起
 -define(HP_CHANGE_BUFF, 1). %% Buff伤害引起
--define(HP_CHANGE_OTHER, 2). %% 其它原因
+-define(HP_CHANGE_EVENT, 2). %% 事件原因
 
 
 

@@ -23,7 +23,7 @@
 
 %%-------------------------------------------------------------------
 on_info_msg({player_change_combat_prop, {Uid, AddList, MultiList, AddList_Del, MultiList_Del}}) ->
-    mod_combat_prop:change_combat_prop(Uid, AddList, MultiList, AddList_Del, MultiList_Del),
+    catch mod_combat_prop:change_combat_prop(Uid, AddList, MultiList, AddList_Del, MultiList_Del),
     ok;
 on_info_msg({player_use_skill, Req}) ->
     ?DEBUG("player_use_skill ~w", [Req]),

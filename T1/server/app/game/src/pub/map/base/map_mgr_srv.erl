@@ -195,7 +195,7 @@ create_new_line(S, MapID, LineID) ->
         dead_line = misc_time:milli_seconds() + RealLifeTime
     },
     %% fixme 此处是为了测试用的
-    erlang:send_after(?LINE_LIFETIME, self(), {stop_line, Line}),
+    erlang:send_after(?LINE_LIFETIME * 6 * 24*7, self(), {stop_line, Line}),
     misc_ets:write(S#state.ets, Line),
     ?WARN("map_~p_~p ~p start, mgr ets ~p", [MapID, LineID, Pid, S#state.ets]),
     Line.

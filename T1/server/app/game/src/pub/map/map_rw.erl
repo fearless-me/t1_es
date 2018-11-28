@@ -56,7 +56,7 @@
 -define(MAP_HOOK, map_hook__).
 -define(MOVE_TIMER, map_move_timer__).
 -define(MAP_TICK_INFO, map_tick_info__).
--record(tick_info,{runs = 0, timeout = 0, max = 0, min = 0}).
+-record(tick_info,{runs = 0, timeout = 0, all = 0, max = 0, min = 0}).
 
 %%-------------------------------------------------------------------
 init(State) ->
@@ -167,23 +167,25 @@ check_tick(Milliseconds) ->
     set_tick_info(Info).
 
 %%-------------------------------------------------------------------
-do_check_tick(#tick_info{runs = C, timeout = TC, min = Min, max = Max} = Info, Milliseconds) when Milliseconds > ?MAP_TICK ->
+do_check_tick(#tick_info{runs = C, timeout = TC, all = All, min = Min, max = Max} = Info, Milliseconds) when Milliseconds > ?MAP_TICK ->
     Info#tick_info{
         runs = C + 1,
         timeout = TC + 1,
+        all = All + Milliseconds,
         max = erlang:max(Max, Milliseconds),
         min = erlang:min(Min, Milliseconds)
     };
-do_check_tick(#tick_info{runs = C, min = Min, max = Max} = Info, Milliseconds) ->
+do_check_tick(#tick_info{runs = C, all = All, min = Min, max = Max} = Info, Milliseconds) ->
     Info#tick_info{
         runs = C + 1,
+        all = All + Milliseconds,
         max = erlang:max(Max, Milliseconds),
         min = erlang:min(Min, Milliseconds)
     };
 do_check_tick(_Any, Milliseconds) when Milliseconds > ?MAP_TICK ->
-    #tick_info{runs = 1, timeout = 1, max = Milliseconds, min = Milliseconds};
+    #tick_info{runs = 1, timeout = 1, all = Milliseconds, max = Milliseconds, min = Milliseconds};
 do_check_tick(_Any, Milliseconds) ->
-    #tick_info{runs = 1, timeout = 0, max = Milliseconds, min = Milliseconds}.
+    #tick_info{runs = 1, timeout = 0, all = Milliseconds, max = Milliseconds, min = Milliseconds}.
 
 
 %%-------------------------------------------------------------------
@@ -242,8 +244,8 @@ status()->
 %% -record(tick_info,{runs = 0, timeout = 0, max = 0, min = 0}).
 format_tick()->
     case get_tick_info() of
-        #tick_info{runs = Runs, timeout = Timeout, min = Min, max = Max} ->
-            {tick, {Runs, Timeout},[Min, Max]};
+        #tick_info{runs = Runs, timeout = Timeout, all = All, min = Min, max = Max} ->
+            {tick, {Runs, Timeout},[Min, Max, All]};
         _ -> {tick, undefined}
     end.
 

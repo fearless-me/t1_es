@@ -18,12 +18,12 @@
 
 on_event({event_damage, SrcUid, DstUid, Value}) ->
     HpMsg = #pk_GS2U_HPChange{
-        uid = DstUid, src_uid = SrcUid, cause = ?HP_CHANGE_OTHER, hp_change = -Value
+        uid = DstUid, src_uid = SrcUid, cause = ?HP_CHANGE_EVENT, hp_change = -Value
     },
     mod_view:send_net_msg_to_visual(DstUid, HpMsg);
 on_event({event_heal, SrcUid, DstUid, Value}) ->
     HpMsg = #pk_GS2U_HPChange{
-        uid = DstUid, src_uid = SrcUid, cause = ?HP_CHANGE_OTHER, hp_change = Value
+        uid = DstUid, src_uid = SrcUid, cause = ?HP_CHANGE_EVENT, hp_change = Value
     },
     mod_view:send_net_msg_to_visual(DstUid, HpMsg);
 on_event(Msg) ->

@@ -172,16 +172,16 @@ status_(detail) ->
     erlang:spawn(
         fun() ->
             Info = map_creator_interface:status(),
-            ?WARN("~ts", [Info])
+            io:format("~ts~n", [Info])
         end);
 status_(MapId) ->
     erlang:spawn(
         fun() ->
             try
                 LineEts = misc_ets:read_element(?MAP_MGR_ETS, MapId, #m_map_mgr.line_ets),
-                ?WARN("~ts", [line_status(MapId, LineEts, detail)])
+                io:format("~ts~n", [line_status(MapId, LineEts, detail)])
             catch _ : Error : _ ->
-                ?WARN("status(~p) error ~p", [MapId, Error])
+                io:format("status(~p) error ~p~n", [MapId, Error])
             end
         end),
     ok.

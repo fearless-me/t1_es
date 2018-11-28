@@ -17,6 +17,7 @@
 -include("combat.hrl").
 -include("rec_rw.hrl").
 -include("cfg_skill.hrl").
+-include("module_process_define.hrl").
 
 %% 瞬发技能放完就结束
 %% 吟唱技能设置到当前技能
@@ -64,55 +65,55 @@ use_skill_success(#m_object_rw{uid = Uid} = Attacker, [#m_object_rw{}|_] = Targe
 
     %% 根据类型
     object_rw:set_skill_serial(Uid, Serial),
+
     use_skill_dispatcher(SkillCfg, Attacker, TargetList, Serial),
     ?DEBUG("~p use skill ~p to tar ~p", [Uid, SkillId, DerList]),
     ok.
 
+%% 吟唱
 use_skill_dispatcher(#skillCfg{it_type = ?SKILL_SUB_TYPE_IT_SPELL} = SkillCfg , Aer, Tar, Serial) ->
     spell_skill(Aer, Tar, SkillCfg, Serial);
+%% 瞬时
 use_skill_dispatcher(#skillCfg{it_type = IT_Type} = SkillCfg, Aer, Tar, Serial)
     when IT_Type =:= ?SKILL_SUB_TYPE_IT_INSTANT; IT_Type =:= ?SKILL_SUB_TYPE_IT_NORMAL ->
     instant_skill(Aer, Tar, SkillCfg, Serial).
 
 %% todo 吟唱技能
-spell_skill(_Aer, _Tar, _SkillCfg, _Serial) ->
+spell_skill(_Aer, _Tar, #skillCfg{id = SkillID} = _SkillCfg, _Serial) ->
+    ?WARN("spell skill no realize:~p", [SkillID]),
     ok.
 
-%% todo 瞬发技能
-instant_skill(Aer, Tar, SkillCfg, Serial) ->
-    active_skill_once(Aer, Tar, object_rw:get_cur_pos(Tar), SkillCfg, Serial),
-    ok.
+%% 瞬发技能
+instant_skill(Aer, TarList, SkillCfg, Serial) ->
+    active_skill_once(Aer, TarList, SkillCfg, Serial).
 
-active_skill_once(_Aer, _Tar, undefined, _SkillCfg, _Serial) ->
-    ok;
-active_skill_once(Aer, Tar, Pos, SkillCfg, Serial) ->
-
-    ?TRY_CATCH(trigger_before_hit_event(Aer, Tar, SkillCfg)),
-
-    TargetList = calculate_target_list(Aer, Tar, SkillCfg, Pos),
-
-    %% todo 是否可以优化，因为这个是视野广播，不用给每个人发一次
-    %% todo 一次性广播给所有同样的消息，让客户端呢判断下
+active_skill_once(Aer, TarList, SkillCfg, Serial) ->
     F =
-        fun(HitUid) ->
-            calculate_dmg(Aer, SkillCfg, HitUid, Serial)
+        fun(#m_object_rw{} = Hit) ->
+            calculate_dmg(Aer, Hit, SkillCfg, Serial)
         end,
-
-    lists:foreach(F, TargetList),
-    ok.
+    lists:foreach(F, TarList).
 
 %%-------------------------------------------------------------------
-calculate_dmg(Uid, #skillCfg{id = SkillId} = SkillCfg, TargetUid, Serial) ->
+calculate_dmg(
+    #m_object_rw{uid = Uid} = Attack,
+    #m_object_rw{uid = TargetUid} = Target,
+    #skillCfg{id = SkillId} = SkillCfg, Serial
+) ->
+    %% 命中事件
+    ?TRY_CATCH(trigger_hit_event(Attack, [Target], SkillCfg)),
 
-    ?TRY_CATCH(trigger_hit_event(Uid, TargetUid, SkillCfg)),
-
+    %% 广播
     HitMsg = #pk_GS2U_HitTarget{
         uid = TargetUid, src_uid = Uid, cause = ?HIT_REASON_SKILL, misc = SkillId, serial = Serial
     },
     mod_view:send_net_msg_to_visual(TargetUid, HitMsg),
 
+    %% 计算伤害
     {IsHit, IsCri, _Damage, DeltaHp, _IsDead} =
         combat_prop_calc:calcHitAndDamage(Uid, TargetUid),
+
+    %% 血量变化
     Result =
         case IsHit of
             false ->
@@ -132,36 +133,6 @@ calculate_dmg(Uid, #skillCfg{id = SkillId} = SkillCfg, TargetUid, Serial) ->
         serial = Serial
     },
     mod_view:send_net_msg_to_visual(TargetUid, HpMsg),
-
-    ok.
-
-%% 选择技能目标
-calculate_target_list(Aer, Tar, SkillCfg, Pos) ->
-    %%todo  计算暴击、闪避、格挡等等
-    calculate_skill_effect(Aer, SkillCfg, Pos),
-    target_selector(Aer, Tar, Pos, SkillCfg).
-
-%% 根据目标选择
-target_selector(_Aer, Tar, _Pos, #skillCfg{casttarget = ?SKILL_CAST_TARGET_SINGLE}) ->
-    [Tar];
-target_selector(Aer, Tar, Pos, #skillCfg{casttarget = ?SKILL_CAST_TARGET_DIRECTION} = SkillCfg) ->
-    target_selector_area(Aer, Tar, Pos, SkillCfg);
-target_selector(Aer, Tar, Pos, #skillCfg{casttarget = ?SKILL_CAST_TARGET_POSITION} = SkillCfg) ->
-    target_selector_area(Aer, Tar, Pos, SkillCfg);
-target_selector(Aer, Tar, Pos, #skillCfg{casttarget = ?SKILL_CAST_TARGET_FACE_DIR} = SkillCfg) ->
-    target_selector_area(Aer, Tar, Pos, SkillCfg).
-
-%% 根据范围选择
-target_selector_area(_Aer, Tar, _Pos, #skillCfg{areatype = ?SKILL_AREA_TYPE_SINGLE})->
-    [Tar];
-target_selector_area(Aer, _Tar, Pos, #skillCfg{areatype = ?SKILL_AREA_TYPE_LINE, radius = Radius, target = SkillTarget})->
-    FaceDir = object_rw:get_dir(Aer),
-    skill_selector:rectangle(Aer, Pos, FaceDir, Radius, Radius, SkillTarget);
-target_selector_area(Aer, _Tar, Pos, #skillCfg{areatype = ?SKILL_AREA_TYPE_CIRCLE, radius = Radius, target = SkillTarget})->
-    skill_selector:circle(Aer, Pos, Radius, SkillTarget).
-
-%% 计算暴击、闪避、格挡等等
-calculate_skill_effect(_Uid, _SkillCfg, _TarUid) ->
     ok.
 
 %%-------------------------------------------------------------------
@@ -208,9 +179,9 @@ do_tick_cur_skill(Uid, #skillCfg{id = SkillId} = SkillCfg) ->
     object_rw:set_operate_time(Uid, OpTime1),
     case can_skill_active_tick(Uid, SkillCfg) of
         true ->
-            Pos = object_rw:get_persist_pos(Uid),
+%%            Pos = object_rw:get_persist_pos(Uid),
             ?TRY_CATCH(trigger_cast_tick_event(Uid, Uid, SkillCfg)),
-            ?TRY_CATCH(active_skill_once(Uid, Uid, Pos, SkillCfg, Serial), Err1, Stk1),
+            ?TRY_CATCH(active_skill_once(Uid, Uid, SkillCfg, Serial), Err1, Stk1),
             ?TRY_CATCH(check_end_skill_tick(Uid, SkillCfg), Err2, Stk2),
             ok;
         _ ->
@@ -283,18 +254,18 @@ is_using_skill(Aer) ->
     object_rw:get_skill_id(Aer, 0) > 0.
 
 
-%%
 trigger_before_cast_event(Aer, DerList, #skillCfg{beforecast = EventList}) ->
-    lists:foreach(
-        fun(Der) ->
-            condition_event:action_all(EventList, [Aer, Der])
-        end, DerList).
+    trigger_event(Aer, DerList, EventList).
+trigger_hit_event(Aer, DerList, #skillCfg{beforehit = EventList}) ->
+    trigger_event(Aer, DerList, EventList).
 
-trigger_cast_tick_event(Aer, Der,  #skillCfg{castingtick = EventList}) ->
-    condition_event:action_all(EventList, [Aer, Der]).
+%% TODO
+trigger_cast_tick_event(Aer, Der, #skillCfg{castingtick = EventList}) ->
+%%    condition_event:action_all(EventList, [Aer, Der]).
+    ok.
 
-trigger_before_hit_event(Aer, Der, #skillCfg{beforecast = EventList}) ->
-    condition_event:action_all(EventList, [Aer, Der]).
-
-trigger_hit_event(Aer, Der,  #skillCfg{beforehit = EventList}) ->
-    condition_event:action_all(EventList, [Aer, Der]).
+trigger_event(_Aer, [], _EventList) -> ok;
+trigger_event(Aer, [Der | DerList], EventList) ->
+    condition_event:action_all(EventList, [Aer, Der],
+        condition_event_interface:init_self_ce_param(?MODULE_MAP_PROCESS)),
+    trigger_event(Aer, DerList, EventList).

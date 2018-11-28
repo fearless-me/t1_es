@@ -11,6 +11,10 @@
 -ifndef(EVENT_CONDITION_HRL).
 -define(EVENT_CONDITION_HRL, true).
 
+%% 条件事件触发参数
+-define(CONDITION_EVENT_PARAMS_SP, src_pid).                % 源PID（触发条件事件的PID）
+-define(CONDITION_EVENT_PARAMS_MPT, module_process_type).   % 源模块类型
+
 %%-------------------------------------------------------------------
 %%-------------------------------------------------------------------
 -define(CONDITION_OR, 0).   % 或
@@ -65,21 +69,47 @@
 %%-------------------------------------------------------------------
 %% 伤害
 -define(EVENT_DAMAGE,    0).
-%% buff
+%% buff add
 -define(EVENT_ADD_BUFF,  1).
+%% buff del
 -define(EVENT_DEL_BUFF,  2).
 
 %%-------------------------------------------------------------------
-%% 事件子类型
+%% 伤害事件子类型
 %%-------------------------------------------------------------------
-%% 按比例伤害
--define(EVENT_DAMAGE_SUB_PERCENT, 1).
-%% 固定伤害
--define(EVENT_DAMAGE_SUB_FIX, 2).
+%% 属性伤害(根据取到的属性值造成伤害)
+-define(EVENT_DAMAGE_SUB_PROP, 1).
+%% 固定公式(其他特别计算方法，调用公式ID)
+-define(EVENT_DAMAGE_SUB_FIX_FORMULA, 2).
 
+%%-------------------------------------------------------------------
+%% 伤害事件结果类型
+%%-------------------------------------------------------------------
+%% 伤害
+-define(EVENT_DAMAGE_RESULT_TYPE_DAMAGE, 0).
+%% 治疗
+-define(EVENT_DAMAGE_RESULT_TYPE_TREAT, 1).
+%% 护盾
+-define(EVENT_DAMAGE_RESULT_TYPE_DEFENSE, 2).
 
+%%-------------------------------------------------------------------
+%% 伤害事件特殊选项(按位保存)
+%%-------------------------------------------------------------------
+%% 按正常逻辑
+-define(EVENT_DAMAGE_IGNORE_NORMAL, 0).
+%% 无视防御
+-define(EVENT_DAMAGE_IGNORE_DEFENSE, 1).
+%% 必定命中
+-define(EVENT_DAMAGE_CERTAINLY_HIT, 2).
+%% 必定暴击
+-define(EVENT_DAMAGE_CERTAINLY_DODGE, 4).
 
-
-
+%%-------------------------------------------------------------------
+%% BUFF事件免疫鉴定
+%%-------------------------------------------------------------------
+%% 判断免疫
+-define(EVENT_BUFF_JUDGE_IMMUNE, 0).
+%% 无视免疫
+-define(EVENT_BUFF_IGNORE_IMMUNE, 1).
 
 -endif.

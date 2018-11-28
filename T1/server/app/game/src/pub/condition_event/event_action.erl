@@ -8,65 +8,69 @@
 %%%-------------------------------------------------------------------
 -module(event_action).
 -author("mawenhong").
+
 -include("logger.hrl").
 -include("pub_def.hrl").
 -include("condition_event.hrl").
 -include("gs_common_rec.hrl").
-%%-include("cfg_conditional_event.hrl").
+-include("rec_rw.hrl").
 
 %% API
--export([action/2]).
+-export([action/3]).
 
-action(Event, OriginalParams) ->
+action(Event, OriginalParams, CEParams) ->
     RealParams = filter_params(Event, OriginalParams),
-    do_action(Event, RealParams).
+    do_action(Event, RealParams, CEParams).
 
 %%-------------------------------------------------------------------
-%% 1.调用目标：1.自己 2.目标
-%% 2.属性类型：1.生命值
-%% 3.千分比（int）
-%% 4.常数（int）
-%% 5.伤害类型： 1.伤害 2.治疗
-do_action([?EVENT_DAMAGE, ?EVENT_DAMAGE_SUB_PERCENT, P1, P2, P3, P4, P5], [Aer, Der]) ->
-    Tar = ?if_else(P1 == ?TARGET_SELF, Aer, Der),
-    Val = player_interface:get_attr(Tar, P2),
-    LastValue = Val * P3 / 1000 + P4,
-    case P5 of
-        1 -> combat_interface:event_damage(Aer, Tar, LastValue);
-        2 -> combat_interface:event_heal(Aer, Tar, LastValue)
-    end,
+%% [伤害， 属性伤害， 目标， 属性ID， 万分比， 常数， 结果类型， 吸血比例， 特殊选项]
+do_action([?EVENT_DAMAGE, ?EVENT_DAMAGE_SUB_PROP, ?TARGET_SELF, PropID, Percent, Const, ResultType, BloodPer, Extra],
+    [Attack, Target], _CEParams) ->
+    event_action_logic:event_damage_sub_prop(Attack, Target, Attack, PropID, Percent, Const, ResultType, BloodPer, Extra);
+do_action([?EVENT_DAMAGE, ?EVENT_DAMAGE_SUB_PROP, ?TARGET_OTHER, PropID, Percent, Const, ResultType, BloodPer, Extra],
+    [Attack, Target], _CEParams) ->
+    event_action_logic:event_damage_sub_prop(Attack, Target, Target, PropID, Percent, Const, ResultType, BloodPer, Extra);
+do_action([?EVENT_DAMAGE, ?EVENT_DAMAGE_SUB_FIX_FORMULA, ?TARGET_SELF, PropID, Percent, Const, ResultType, BloodPer, Extra],
+    [Attack, _Target], _CEParams) ->
+    ?ERROR("no realize EVENT_DAMAGE_SUB_FIX_FORMULA"),
+    ok;
+do_action([?EVENT_DAMAGE, ?EVENT_DAMAGE_SUB_PROP, ?TARGET_OTHER, PropID, Percent, Const, ResultType, BloodPer, Extra],
+    [Attack, Target], _CEParams) ->
+    ?ERROR("no realize EVENT_DAMAGE_SUB_FIX_FORMULA"),
     ok;
 
-%%1.添加BUFF
-%%主类型	1_BUFF相关
-%%子类型	0_添加BUFF
-%%对象	选项	int	0自身 1目标
-%%添加ID	填写值	int	填 BUFF ID啊
-%%添加时长	填写值	int	0或null则按照原buff配置时长添加
-%%Layer	填写值	int	添加层数，无法超过目标BUFF配置最大层数
-%%免疫鉴定	选项	Bool	0判断免疫 1无视免疫			*这条和Immune之间的冲突我再想想
-do_action([?EVENT_ADD_BUFF, P1, P2, P3, P4, P5], [Aer, Der]) ->
-    Tar = ?if_else(P1 == ?TARGET_SELF, Aer, Der),
+%%-------------------------------------------------------------------
+%% [添加BUFF， 对象， BuffID， 添加BUFF时长， 添加BUFF层数， 免疫判定]
+do_action([?EVENT_ADD_BUFF, Target, BuffID, Millisecond, Layer, Immune],
+    [#m_object_rw{uid = Uid1}, #m_object_rw{uid = Uid2}], _CEParams) ->
+    TargetUid =
+        case Target of
+            ?TARGET_SELF -> Uid1;
+            _ -> Uid2
+        end,
+
     Req = #r_player_add_buff_req{
-        uid = Tar, src_uid = Aer, buff_id = P2, lifetime = P3,
-        layer = P4, skip_immune = misc:i2b(P5)
+        uid   = TargetUid, src_uid = Uid1, buff_id = BuffID, lifetime = Millisecond,
+        layer = Layer, skip_immune = misc:i2b(Immune)
     },
-    player_interface:add_buff_(Tar, Req),
+    player_interface:add_buff_(TargetUid, Req),
     ok;
 
-%%2.移除BUFF
-%%主类型	1_BUFF相关
-%%子类型	1_删除BUFF
-%%对象	选项	int	0自身 1目标
-%%删除方式	选项	int	0按ID 1按正负 2按效果类 3按Group
-%%方式ID	填写值	int_array	可以填写数组值，基于方式不同解读不同（比如删除多个ID，删除多个种类等）
-do_action([?EVENT_DEL_BUFF, P1, P2, P3], [Aer, Der]) ->
-    Tar = ?if_else(P1 == ?TARGET_SELF, Aer, Der),
-    player_interface:del_buff_(Tar, P2, P3),
+%% [移除BUFF， 对象， BUFF区分类型， 参数]
+do_action([?EVENT_DEL_BUFF, Target, P2, P3], [#m_object_rw{uid = Uid1}, #m_object_rw{uid = Uid2}], _CEParams) ->
+    TargetUid =
+        case Target of
+            ?TARGET_SELF -> Uid1;
+            _ -> Uid2
+        end,
+
+    player_interface:del_buff_(TargetUid, P2, P3),
     ok;
 
-
-do_action(_Event, _Params) -> skip.
+%%-------------------------------------------------------------------
+do_action(Event, Params, CEParams) ->
+    ?WARN("no realize action:~p, param:~p, CEParams:~p", [Event, Params, CEParams]),
+    skip.
 
 
 %%-------------------------------------------------------------------
@@ -74,5 +78,3 @@ do_action(_Event, _Params) -> skip.
 %% 返回真实参数
 filter_params(_Event, OriginalParams) ->
     OriginalParams.
-
-

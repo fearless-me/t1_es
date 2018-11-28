@@ -411,6 +411,44 @@ getRow(10105) ->
 		action_bullet = "",
 		hurt_times = []
 	};
+getRow(234324) ->
+	#skillCfg{
+		desc__ = "",
+		id = 234324,
+		name = "@@>1000011<",
+		type = 1,
+		subType = 1,
+		it_type = 1,
+		pt_type = 1,
+		it_take_type = 1,
+		career = 0,
+		movable = 1,
+		continue_param = [],
+		sing_param = [],
+		purpose = 1,
+		target = 1,
+		casttarget = 1,
+		areatype = 1,
+		radius = 0,
+		arc = 0,
+		distance = [],
+		cost = [],
+		cooldown = 0,
+		flying = 0,
+		iconid = "",
+		castanim = "",
+		skilleffect = "",
+		hiteffect = "",
+		beforecast = [],
+		castingtick = [],
+		beforehit = [],
+		ishit = [],
+		action_before_cast = "",
+		action_casting_tick = "",
+		action_ishit = "",
+		action_bullet = "",
+		hurt_times = []
+	};
 getRow(_) -> {}.
 
 getKeyList() -> [
@@ -420,7 +458,8 @@ getKeyList() -> [
 	{10103},
 	{10104},
 	{10006},
-	{10105}
+	{10105},
+	{234324}
 ].
 
 get1KeyList() -> [
@@ -430,6 +469,7 @@ get1KeyList() -> [
 	10103,
 	10104,
 	10006,
-	10105
+	10105,
+	234324
 ].
 
