@@ -262,7 +262,7 @@ kick_to_born_map()->
 kick_to_born_map(Req) ->
     Uid = player_rw:get_uid(),
     Mid = map_creator_interface:born_map_id(),
-    Pos = map_creator_interface:born_map_pos(),
+    Pos = map_creator_interface:map_init_pos(Mid),
     Mgr = map_creator_interface:map_mgr_lr(Uid, Mid),
     #m_player_map{map_id = CurMapId, map_pid = MapPid} = player_rw:get_map(),
     ?WARN("kick player ~p to born map from ~p|~p", [Uid, Mid, misc:registered_name(MapPid)]),

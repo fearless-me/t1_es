@@ -43,7 +43,7 @@ online() ->
 calc_combat_prop() ->
     %% test begin
     BattleProps = #m_battleProps{
-        career = 1, %% fixme combat_prop_calc:?Career_1
+        career = 1, %% fixme prop_interface:?Career_1
         listBP1 = [
             #m_bp{id = ?BP_1_STR, add = 10.0},
             #m_bp{id = ?BP_1_AGI, add = 8.0},
@@ -70,13 +70,16 @@ calc_combat_prop() ->
     %% 注1.因算法会在所有列表为空时跳过计算，因此这里要传入不影响内容的非空列表
     %% 注2.考虑到可能的优化，低层属性可能会引起更多的计算，因此非空列表中使用高层属性
     %% 注3.通常战斗属性在地图中进行计算，这里仅初始化放在角色进程
-    BattlePropsNew = combat_prop_calc:calc(
+    BattlePropsNew = prop_interface:calc(
         BattleProps, [{?BP_4_HIT, ?BPUseType_ADD, 0.0}], []),
     gs_cache_interface:update_online_player(
         Uid, {#m_cache_online_player.battle_props, BattlePropsNew}),
+
+    HpValue = prop_interface:query_v_pf_bpu(?BP_2_HP_CUR, BattlePropsNew),
+
     %% 同步HP属性到快捷属性中
     gs_cache_interface:update_online_player(
-        Uid, {#m_cache_online_player.hp, erlang:trunc(1000.0)}
+        Uid, {#m_cache_online_player.hp, trunc(HpValue)}
     ),
     ok.
 
@@ -140,7 +143,7 @@ use_skill(SkillId, TarList, Pos, Serial) ->
                 R2 = check_cost(R1, SkillCfg),
                 check_target(R2, SkillCfg, TarList);
             _ ->
-                -1
+                1
         end,
     do_use_skill(Can, SkillId, TarList, Pos, Serial),
     ok.
@@ -180,13 +183,13 @@ check_cost(ErrAndFalse, _SkillCfg) ->
     ErrAndFalse.
 
 check_target(true, _SkillCfg, []) ->
-    -1;
+    2;
 check_target(true, #skillCfg{purpose = Purpose}, TarList) ->
     SelfUid = player_rw:get_uid(),
     case Purpose of
         ?SKILL_PURPOSE_DEC ->
             case lists:member(SelfUid, TarList) of
-                true -> -1;
+                true -> 2;
                 _ -> true
             end;
         _ -> true

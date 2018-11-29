@@ -18,13 +18,9 @@
     condition_buff_has/4
 ]).
 
-condition_player_prop(#m_battleProps{listBPFinal = ListBPFinal}, PropID, Logic, Value) ->
-    case lists:keyfind(PropID, 1, ListBPFinal) of
-        false ->
-            false;
-        {_, _, HaveValue} ->
-            condition_op:op(HaveValue, Logic, Value)
-    end;
+condition_player_prop(#m_battleProps{} = BP, PropID, Logic, Value) ->
+    HaveValue = prop_interface:query_v_pf_bpu(PropID, BP),
+    condition_op:op(HaveValue, Logic, Value);
 condition_player_prop(_, _PropID, _Logic, _Value) ->
     false.
 

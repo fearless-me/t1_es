@@ -15,6 +15,7 @@
 -include("gs_cache.hrl").
 -include("gs_common_rec.hrl").
 -include("combat.hrl").
+-include("combat_buff.hrl").
 -include("rec_rw.hrl").
 -include("condition_event.hrl").
 -include("cfg_buff.hrl").

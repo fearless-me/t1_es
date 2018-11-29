@@ -183,14 +183,14 @@ getRow(1000007) ->
 		notice_type = 0,
 		content = "流血，每3秒损失生命值"
 	};
-getRow(1000011) ->
+getRow(1000009) ->
 	#string_packageCfg{
-		desc__ = "3434 ",
-		id = 1000011,
+		desc__ = "",
+		id = 1000009,
 		enum_string_id = "",
 		type = 4,
 		notice_type = 0,
-		content = "3434 "
+		content = ""
 	};
 getRow(_) -> {}.
 
@@ -211,7 +211,7 @@ getKeyList() -> [
 	{1000005},
 	{1000006},
 	{1000007},
-	{1000011}
+	{1000009}
 ].
 
 get1KeyList() -> [
@@ -231,6 +231,6 @@ get1KeyList() -> [
 	1000005,
 	1000006,
 	1000007,
-	1000011
+	1000009
 ].
 

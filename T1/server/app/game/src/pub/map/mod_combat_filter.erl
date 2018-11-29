@@ -23,9 +23,9 @@
 -spec filter(AttackUid::integer(), [integer(), ...], #skillCfg{}) ->
     {#m_object_rw{}, [#m_object_rw{}, ...]} | ErrorCode when ErrorCode :: integer().
 filter(_, [], #skillCfg{}) ->
-    -1;
+    2;
 filter(undefined, _, #skillCfg{}) ->
-    -1;
+    2;
 filter(#m_object_rw{} = Attacker, [#m_object_rw{}|_] = TargetList, #skillCfg{} = _SkillCfg) ->
     {Attacker, TargetList};
 filter(AttackUid, TargetList, #skillCfg{} = SkillCfg) ->

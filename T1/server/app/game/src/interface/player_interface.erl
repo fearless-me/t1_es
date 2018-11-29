@@ -12,6 +12,7 @@
 -include("pub_def.hrl").
 -include("gs_cache.hrl").
 -include("combat.hrl").
+-include("combat_buff.hrl").
 -include("condition_event.hrl").
 -include("cfg_buff.hrl").
 

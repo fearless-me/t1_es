@@ -103,15 +103,18 @@ calculate_dmg(
     %% 命中事件
     ?TRY_CATCH(trigger_hit_event(Attack, [Target], SkillCfg)),
 
-    %% 广播
+    %% TODO 这里要修改
     HitMsg = #pk_GS2U_HitTarget{
         uid = TargetUid, src_uid = Uid, cause = ?HIT_REASON_SKILL, misc = SkillId, serial = Serial
     },
     mod_view:send_net_msg_to_visual(TargetUid, HitMsg),
 
     %% 计算伤害
-    {IsHit, IsCri, _Damage, DeltaHp, _IsDead} =
-        combat_prop_calc:calcHitAndDamage(Uid, TargetUid),
+    #m_hit_damage_result{
+        isHit = IsHit,
+        isCri = IsCri,
+        deltaHp = DeltaHp
+    } = mod_combat_prop:hitAndDamage(Attack, Target),
 
     %% 血量变化
     Result =

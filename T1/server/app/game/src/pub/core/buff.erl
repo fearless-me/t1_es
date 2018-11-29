@@ -12,6 +12,7 @@
 -include("gs_cache.hrl").
 -include("netmsg.hrl").
 -include("combat.hrl").
+-include("combat_buff.hrl").
 -include("cfg_buff.hrl").
 
 %% API

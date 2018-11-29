@@ -1,20 +1,68 @@
 %%%-------------------------------------------------------------------
-%%% @author mawenhong
+%%% @author tiancheng
 %%% @copyright (C) 2018, <COMPANY>
 %%% @doc
-%%%
+%%% 属性通用接口
 %%% @end
-%%% Created : 13. 六月 2018 15:25
+%%% Created : 29. 十一月 2018 14:51
 %%%-------------------------------------------------------------------
--module(combat_prop_calc).
--author("mawenhong").
+-module(prop_interface).
+-author("tiancheng").
+
 -include("logger.hrl").
 -include("combat.hrl").
 -include("netmsg.hrl").
 -include("type.hrl").
+-include("object.hrl").
 
 %% API
--export([calc/3, calc/5, battleProps2NetMsg/2, calcHitAndDamage/2]).
+-export([calc/3, calc/5, battleProps2NetMsg/2]).
+
+%% query
+-export([
+    query_pf_bpc/2,
+    query_pf_bpu/2,
+    query_v_pf_bpu/2
+]).
+
+%% calc damage
+-export([
+    calcHitAndDamage/2
+]).
+
+-spec query_pf_bpc(PropID::battlePropID(), #m_battleProps{}) -> battlePropCache().
+query_pf_bpc(PropID, #m_battleProps{} = BattleProps) ->
+    Pos = calc_id_to_pos(PropID),
+    ListBPC = erlang:element(Pos, BattleProps),
+    queryValueFromListBPC(PropID, ListBPC).
+
+-spec query_pf_bpu(PropID::battlePropID(), #m_battleProps{}) -> battlePropUse().
+query_pf_bpu(PropID, #m_battleProps{listBPFinal = ListBPFinal}) ->
+    queryValueFromListBPU(PropID, ListBPFinal).
+
+-spec query_v_pf_bpu(PropID::battlePropID(), #m_battleProps{}) -> Value::integer() | float().
+query_v_pf_bpu(PropID, #m_battleProps{listBPFinal = ListBPFinal}) ->
+    {_, _, Value} = queryValueFromListBPU(PropID, ListBPFinal),
+    Value.
+
+%%%-------------------------------------------------------------------
+%% internal,tool:从列表中查找一个属性值，没找到则返回默认值
+-spec queryValueFromListBPU(battlePropID(), listBPU()) -> battlePropUse().
+queryValueFromListBPU(ID, List) ->
+    case lists:keyfind(ID, 1, List) of
+        false ->
+            ?DEFAULT_BATTLE_PROP_USE(ID);
+        BPU ->
+            BPU
+    end.
+-spec queryValueFromListBPC(battlePropID(), listBPC()) -> battlePropCache().
+queryValueFromListBPC(ID, List) ->
+    case lists:keyfind(ID, #m_bp.id, List) of
+        false ->
+            ?DEFAULT_BATTLE_PROP_CACHE(ID);
+        BPC ->
+            BPC
+    end.
 
 %%%-------------------------------------------------------------------
 %% api:战斗属性的刷新
@@ -66,7 +114,7 @@ calc_max2cur(ListOld, ListNew) ->
     {_, _, MpNew} = queryValueFromListBPU(?BP_2_MP_CUR, ListNew),
     {_, _, MpMaxNew} = queryValueFromListBPU(?BP_2_MP_MAX, ListNew),
     ListReal =
-        case erlang:min(HpMaxNew, erlang:max(1.0, MpMaxNew - MpMaxOld + MpOld)) of
+        case erlang:min(MpMaxNew, erlang:max(1.0, MpMaxNew - MpMaxOld + MpOld)) of
             MpNew ->
                 ListNew;
             MpNew_ ->
@@ -82,7 +130,7 @@ calc_max2cur(ListOld, ListNew) ->
                     ListReal;
                 HpNew_ ->
                     lists:keystore(?BP_2_HP_CUR, 1, ListReal,
-                        {?BP_2_MP_CUR, ?BPUseType_ADD, HpNew_})
+                        {?BP_2_HP_CUR, ?BPUseType_ADD, HpNew_})
             end
     end.
 
@@ -252,67 +300,6 @@ calc_convert_finals([], Acc) ->
 %%%-------------------------------------------------------------------
 %% internal:战斗属性的刷新 之 转换属性 之 1类属性转换
 %% 同时得到1、2、3类属性的最终值
-
-%% todo 此处应该根据配置计算，临时用写死的宏计算
--define(Career_1,   1). %% 临时定义职业_战士
--define(Career_2,   2). %% 临时定义职业_法师
--define(Career_3,   3). %% 临时定义职业_刺客
--define(Career_4,   4). %% 临时定义职业_骑士
--define(Career_1_2, [
-    {?BP_1_STR, [{?BP_2_HP_MAX, 2.0}, {?BP_2_MP_MAX, 1.0}, {?BP_2_ATK, 3.0}, {?BP_2_DEF, 1.0}]},
-    {?BP_1_AGI, [{?BP_2_HP_MAX, 0.0}, {?BP_2_MP_MAX, 0.0}, {?BP_2_ATK, 1.0}, {?BP_2_DEF, 0.0}]},
-    {?BP_1_INT, [{?BP_2_HP_MAX, 0.0}, {?BP_2_MP_MAX, 2.0}, {?BP_2_ATK, 0.0}, {?BP_2_DEF, 0.0}]},
-    {?BP_1_STA, [{?BP_2_HP_MAX, 3.0}, {?BP_2_MP_MAX, 1.0}, {?BP_2_ATK, 0.0}, {?BP_2_DEF, 2.0}]}
-]).
--define(Career_1_3, [
-    {?BP_1_STR, [{?BP_3_HIT, 1.0}, {?BP_3_FLEE, 0.0}, {?BP_3_CRI, 1.0}, {?BP_3_FAST, 0.0}]},
-    {?BP_1_AGI, [{?BP_3_HIT, 2.0}, {?BP_3_FLEE, 2.0}, {?BP_3_CRI, 2.0}, {?BP_3_FAST, 2.0}]},
-    {?BP_1_INT, [{?BP_3_HIT, 1.0}, {?BP_3_FLEE, 0.0}, {?BP_3_CRI, 0.0}, {?BP_3_FAST, 0.0}]},
-    {?BP_1_STA, [{?BP_3_HIT, 0.0}, {?BP_3_FLEE, 0.0}, {?BP_3_CRI, 0.0}, {?BP_3_FAST, 0.0}]}
-]).
--define(Career_2_2, [
-    {?BP_1_STR, [{?BP_2_HP_MAX, 1.0}, {?BP_2_MP_MAX, 0.0}, {?BP_2_ATK, 1.0}, {?BP_2_DEF, 1.0}]},
-    {?BP_1_AGI, [{?BP_2_HP_MAX, 0.0}, {?BP_2_MP_MAX, 0.0}, {?BP_2_ATK, 1.0}, {?BP_2_DEF, 0.0}]},
-    {?BP_1_INT, [{?BP_2_HP_MAX, 0.0}, {?BP_2_MP_MAX, 3.0}, {?BP_2_ATK, 3.0}, {?BP_2_DEF, 0.0}]},
-    {?BP_1_STA, [{?BP_2_HP_MAX, 3.0}, {?BP_2_MP_MAX, 0.0}, {?BP_2_ATK, 0.0}, {?BP_2_DEF, 2.0}]}
-]).
--define(Career_2_3, [
-    {?BP_1_STR, [{?BP_3_HIT, 1.0}, {?BP_3_FLEE, 0.0}, {?BP_3_CRI, 0.0}, {?BP_3_FAST, 0.0}]},
-    {?BP_1_AGI, [{?BP_3_HIT, 1.0}, {?BP_3_FLEE, 2.0}, {?BP_3_CRI, 1.0}, {?BP_3_FAST, 1.0}]},
-    {?BP_1_INT, [{?BP_3_HIT, 2.0}, {?BP_3_FLEE, 0.0}, {?BP_3_CRI, 3.0}, {?BP_3_FAST, 2.0}]},
-    {?BP_1_STA, [{?BP_3_HIT, 0.0}, {?BP_3_FLEE, 0.0}, {?BP_3_CRI, 0.0}, {?BP_3_FAST, 0.0}]}
-]).
--define(Career_3_2, [
-    {?BP_1_STR, [{?BP_2_HP_MAX, 0.0}, {?BP_2_MP_MAX, 0.0}, {?BP_2_ATK, 2.0}, {?BP_2_DEF, 1.0}]},
-    {?BP_1_AGI, [{?BP_2_HP_MAX, 0.0}, {?BP_2_MP_MAX, 2.0}, {?BP_2_ATK, 3.0}, {?BP_2_DEF, 0.0}]},
-    {?BP_1_INT, [{?BP_2_HP_MAX, 0.0}, {?BP_2_MP_MAX, 2.0}, {?BP_2_ATK, 0.0}, {?BP_2_DEF, 0.0}]},
-    {?BP_1_STA, [{?BP_2_HP_MAX, 3.0}, {?BP_2_MP_MAX, 0.0}, {?BP_2_ATK, 0.0}, {?BP_2_DEF, 2.0}]}
-]).
--define(Career_3_3, [
-    {?BP_1_STR, [{?BP_3_HIT, 0.0}, {?BP_3_FLEE, 0.0}, {?BP_3_CRI, 0.0}, {?BP_3_FAST, 0.0}]},
-    {?BP_1_AGI, [{?BP_3_HIT, 3.0}, {?BP_3_FLEE, 3.0}, {?BP_3_CRI, 3.0}, {?BP_3_FAST, 2.0}]},
-    {?BP_1_INT, [{?BP_3_HIT, 0.0}, {?BP_3_FLEE, 0.0}, {?BP_3_CRI, 2.0}, {?BP_3_FAST, 0.0}]},
-    {?BP_1_STA, [{?BP_3_HIT, 0.0}, {?BP_3_FLEE, 0.0}, {?BP_3_CRI, 0.0}, {?BP_3_FAST, 0.0}]}
-]).
--define(Career_4_2, [
-    {?BP_1_STR, [{?BP_2_HP_MAX, 2.0}, {?BP_2_MP_MAX, 0.0}, {?BP_2_ATK, 2.0}, {?BP_2_DEF, 3.0}]},
-    {?BP_1_AGI, [{?BP_2_HP_MAX, 0.0}, {?BP_2_MP_MAX, 2.0}, {?BP_2_ATK, 1.0}, {?BP_2_DEF, 0.0}]},
-    {?BP_1_INT, [{?BP_2_HP_MAX, 0.0}, {?BP_2_MP_MAX, 2.0}, {?BP_2_ATK, 0.0}, {?BP_2_DEF, 0.0}]},
-    {?BP_1_STA, [{?BP_2_HP_MAX, 3.0}, {?BP_2_MP_MAX, 0.0}, {?BP_2_ATK, 1.0}, {?BP_2_DEF, 3.0}]}
-]).
--define(Career_4_3, [
-    {?BP_1_STR, [{?BP_3_HIT, 1.0}, {?BP_3_FLEE, 0.0}, {?BP_3_CRI, 0.0}, {?BP_3_FAST, 0.0}]},
-    {?BP_1_AGI, [{?BP_3_HIT, 2.0}, {?BP_3_FLEE, 2.0}, {?BP_3_CRI, 2.0}, {?BP_3_FAST, 1.0}]},
-    {?BP_1_INT, [{?BP_3_HIT, 0.0}, {?BP_3_FLEE, 0.0}, {?BP_3_CRI, 0.0}, {?BP_3_FAST, 0.0}]},
-    {?BP_1_STA, [{?BP_3_HIT, 0.0}, {?BP_3_FLEE, 0.0}, {?BP_3_CRI, 0.0}, {?BP_3_FAST, 0.0}]}
-]).
--define(Career2List, [
-    {?Career_1, ?Career_1_2, ?Career_1_3},
-    {?Career_2, ?Career_2_2, ?Career_2_3},
-    {?Career_3, ?Career_3_2, ?Career_3_3},
-    {?Career_4, ?Career_4_2, ?Career_4_3}
-]).
-
 -spec calc_convert_1(ListBP1, Career, ListBP1Final, ListBP2Acc, ListBP3Acc) -> Ret when
     ListBP1 :: listBPC(), Career :: integer(), ListBP1Final :: listBPU(),
     ListBP2Acc :: listBPC(), ListBP3Acc :: listBPC(),
@@ -363,15 +350,15 @@ calc_convert_3_(?BP_3_HIT, Value) ->
     %% 因此处无法获取目标数值，因此此处Target闪避值固定使用100.0代替
     %% 直译为代码：
     %% Percent = 1.0 - (1.0 / (1.0 + math:pow(2.71828, (-0.3 * (100.0 - Value))))) / 5.0
-    %% fixme pow(2.7, 714.7)将会报错，因此这里需要处理极值的问题
-    {?BP_4_HIT, 1.0 - (0.2 / (1 + math:pow(2.71828, (0.3 * Value - 30.0))))};
+    %% pow(2.7, 714.7)将会报错，因此这里需要处理极值的问题，极值为pow(2.7, 100)
+    {?BP_4_HIT, 1.0 - (0.2 / (1 + math:pow(2.71828, erlang:min((0.3 * Value - 30.0), 100))))};
 calc_convert_3_(?BP_3_FLEE, Value) ->
     %% 策划给的公式：
     %% 真实闪避率 = ( 1 / (1+e^(-0.3*(Target闪避值-User命中值)))) / 5
     %% 因此处无法获取目标数值，因此此处User命中值固定使用100.0代替
     %% 直译为代码：
     %% Percent = (1.0 / (1.0 + math:pow(2.71828, (-0.3 * (Value - 100.0))))) / 5.0
-    {?BP_4_FLEE, 0.2 / (1 + math:pow(2.71828, (30.0 - 0.3 * Value)))};
+    {?BP_4_FLEE, 0.2 / (1 + math:pow(2.71828, erlang:min((30.0 - 0.3 * Value), 100)))};
 calc_convert_3_(?BP_3_CRI, Value) ->
     {?BP_4_CRI, Value / (Value + 100)};
 calc_convert_3_(?BP_3_FAST, Value) ->
@@ -411,35 +398,10 @@ battleProps2NetMsg_use([], Acc) ->
     Acc.
 
 %%%-------------------------------------------------------------------
-%% internal,tool:从列表中查找一个属性值，没找到则返回默认值
--spec queryValueFromListBPU(battlePropID(), listBPU()) -> battlePropUse().
-queryValueFromListBPU(ID, List) ->
-    case lists:keyfind(ID, 1, List) of
-        false ->
-            ?DEFAULT_BATTLE_PROP_USE(ID);
-        BPU ->
-            BPU
-    end.
--spec queryValueFromListBPC(battlePropID(), listBPC()) -> battlePropCache().
-queryValueFromListBPC(ID, List) ->
-    case lists:keyfind(ID, #m_bp.id, List) of
-        false ->
-            ?DEFAULT_BATTLE_PROP_CACHE(ID);
-        BPC ->
-            BPC
-    end.
-
-%%%-------------------------------------------------------------------
 %% api:计算战斗伤害
 %% ListBPUExtra 表示本次计算中对来源属性修正，仅限于类型2、类型3的属性
--spec calcHitAndDamage(UidSrc::uint64(), UidDes::uint64()) -> Ret when
-    Ret :: {IsHit, IsCri, Damage, DeltaHp, IsDead},
-    IsHit :: boolean(),     %% 是否命中
-    IsCri :: boolean(),     %% 是否暴击
-    Damage :: float(),      %% 理论造成的伤害
-    DeltaHp :: integer(),   %% 实际的血量变化（会因为血量上下线、取整等原因与理论伤害不同）
-    IsDead :: boolean().    %% 目标是否死亡（可能与当前伤害无关）
-calcHitAndDamage(UidSrc, UidDes) ->
+-spec calcHitAndDamage(#m_battleProps{}, #m_battleProps{}) -> #m_hit_damage_result{}.
+calcHitAndDamage(#m_battleProps{} = AttackBps, #m_battleProps{} = DefenderBps) ->
     {
         [
             {_, _, BP_2_ATK_ADD_Src},
@@ -449,7 +411,7 @@ calcHitAndDamage(UidSrc, UidDes) ->
         [
             #m_bp{add = BP_4_HIT_ADD_Src, mul = BP_4_HIT_MUL_Src}
         ]
-    } = calcHitAndDamage_query(UidSrc, [?BP_2_ATK, ?BP_3_HIT, ?BP_4_CRI], [?BP_4_HIT]),
+    } = calcHitAndDamage_query(AttackBps, [?BP_2_ATK, ?BP_3_HIT, ?BP_4_CRI], [?BP_4_HIT]),
     {
         [
             {_, _, BP_2_DEF_ADD_Des},
@@ -460,13 +422,20 @@ calcHitAndDamage(UidSrc, UidDes) ->
         [
             #m_bp{add = BP_4_FLEE_ADD_Des, mul = BP_4_FLEE_MUL_Des}
         ]
-    } = calcHitAndDamage_query(UidDes, [?BP_2_DEF, ?BP_2_HP_MAX, ?BP_2_HP_CUR, ?BP_3_FLEE], [?BP_4_FLEE]),
-    case calcHitAndDamage_isHit(
-        BP_3_HIT_ADD_Src, BP_4_HIT_ADD_Src, BP_4_HIT_MUL_Src,
-        BP_3_FLEE_ADD_Des, BP_4_FLEE_ADD_Des, BP_4_FLEE_MUL_Des
-    ) of
+    } = calcHitAndDamage_query(DefenderBps, [?BP_2_DEF, ?BP_2_HP_MAX, ?BP_2_HP_CUR, ?BP_3_FLEE], [?BP_4_FLEE]),
+    case calcHitAndDamage_isHit(BP_3_HIT_ADD_Src, BP_4_HIT_ADD_Src, BP_4_HIT_MUL_Src,
+        BP_3_FLEE_ADD_Des, BP_4_FLEE_ADD_Des, BP_4_FLEE_MUL_Des) of
         false ->
-            {false, false, 0.0, 0, BP_2_HP_CUR_ADD_Des < 1.0}; %% 未命中，什么也不用说了
+            %% 未命中，什么也不用说了
+            #m_hit_damage_result{
+                attackBps = AttackBps,
+                defenseBps = DefenderBps,
+                isHit = false,
+                isCri = false,
+                damage = 0.0,
+                deltaHp = 0,
+                isDead = BP_2_HP_CUR_ADD_Des < 1.0
+            };
         true ->
             {IsCri, MulCri} =
                 case misc:rand(0, 9999) < erlang:trunc(BP_4_CRI_ADD_Src * 10000) of
@@ -481,15 +450,20 @@ calcHitAndDamage(UidSrc, UidDes) ->
             ),
             %% 修正目标血量并返回结果
             HpNew = BP_2_HP_CUR_ADD_Des - DeltaHp,
-            BPSDes = object_rw:get_battle_props(UidDes),
             ListBPFinal = lists:keyreplace(
-                ?BP_2_HP_CUR, 1, BPSDes#m_battleProps.listBPFinal,
+                ?BP_2_HP_CUR, 1, DefenderBps#m_battleProps.listBPFinal,
                 {?BP_2_HP_CUR, ?BPUseType_ADD, HpNew}
             ),
-            object_rw:set_battle_props(UidDes,
-                BPSDes#m_battleProps{listBPFinal = ListBPFinal}),
-            object_rw:set_hp(UidDes, erlang:trunc(HpNew)),
-            {true, IsCri, Damage, DeltaHp, HpNew < 1.0}
+            {true, IsCri, Damage, DeltaHp, HpNew < 1.0},
+            #m_hit_damage_result{
+                attackBps = AttackBps,
+                defenseBps = DefenderBps#m_battleProps{listBPFinal = ListBPFinal},
+                isHit = true,
+                isCri = IsCri,
+                damage = Damage,
+                deltaHp = DeltaHp,
+                isDead = HpNew < 1.0
+            }
     end.
 
 %%%-------------------------------------------------------------------
@@ -497,15 +471,11 @@ calcHitAndDamage(UidSrc, UidDes) ->
 -spec calcHitAndDamage_query(UID, ListBPIDF, ListBPID4) -> Ret when
     UID :: uint64(), ListBPIDF :: [battlePropID(), ...], ListBPID4 :: [battlePropID(), ...],
     Ret :: {ListNeedBPF, ListNeedBP4}, ListNeedBPF :: listBPU(), ListNeedBP4 :: listBPC().
-calcHitAndDamage_query(UID, ListBPIDF, ListBPID4) ->
+calcHitAndDamage_query(Props, ListBPIDF, ListBPID4) ->
     %% 注1：1类、2类、3类属性，直接从 listBPFinal 字段取最终结果，减少因属性转化带来的计算量
     %% 注2：4类属性中，有部分属性是需要与其它对象属性一起计算的，则需要从 listBP4 字段取结果，否则仍然从 listBPFinal 字段获取最终结果
-    #m_battleProps{
-        listBP4 = ListBP4,
-        listBPFinal = ListBPFinal
-    } = object_rw:get_battle_props(UID),
-    ListNeedBPF = [queryValueFromListBPU(ID, ListBPFinal) || ID <- ListBPIDF],
-    ListNeedBP4 = [queryValueFromListBPC(ID, ListBP4) || ID <- ListBPID4],
+    ListNeedBPF = [query_pf_bpu(ID, Props) || ID <- ListBPIDF],
+    ListNeedBP4 = [query_pf_bpc(ID, Props) || ID <- ListBPID4],
     {ListNeedBPF, ListNeedBP4}.
 
 %%%-------------------------------------------------------------------

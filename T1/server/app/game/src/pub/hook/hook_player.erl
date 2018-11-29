@@ -28,10 +28,19 @@ on_account_login(Aid, Pid, Sock) ->
     ok.
 
 %%-------------------------------------------------------------------
-on_create(Uid) ->
+on_create(#r_create_player_ack{
+    uid = Uid, acc_id = Aid, name = Name,
+    camp = Camp, career = Career, race = Race, sex = Sex, head = Head
+}) ->
+    Pub = #m_cache_player_pub{
+        uid = Uid, aid = Aid,
+        sid = gs_interface:get_sid(),
+        name = Name, level = 1, sex = Sex,
+        career = Career, race = Race, camp = Camp, head = Head
+    },
+    gs_cache_interface:add_player_pub(Pub),
     player_pub:send_net_msg(#pk_GS2U_CreatePlayerResult{uid = Uid}),
-    ?DEBUG("[hook]Aid ~p create new player ~w",
-        [player_rw:get_aid(), Uid]),
+    ?DEBUG("[hook]Aid ~p create new player ~w", [player_rw:get_aid(), Uid]),
     ok.
 
 %%-------------------------------------------------------------------

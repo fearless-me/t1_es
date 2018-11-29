@@ -2,7 +2,6 @@
 -define(gameMap_hrl, 1).
 
 -include("type.hrl").
--include("char.hrl").
 -include("pet.hrl").
 
 %%地图信息Ets，对应地图的ID，PID等等信息
@@ -336,10 +335,10 @@
     id = 0 :: uint16(),                    %%玩家的RoleID或者怪物的ID
     pid :: pid() | undefined,        %%对象（玩家，怪物等等）所在的进程ID
     netPid :: pid() | undefined,        %%玩家的网络进程
-    actionStatus = 0 :: action_status(),    %%动作状态
+    actionStatus = 0,    %%动作状态
     status = 0 :: uint(),                    %%用位表示的状态标志，由技能与BUFF产生的状态
     level = 1 :: uint16(),                    %%等级
-    career = 0 :: career(),                    %%职业
+    career = 0,                    %%职业
     hp = 0 :: uint(),                    %%HP
     maxHp = 0 :: uint(),                   %%MaxHp
     mp = 0 :: uint(),                    %%MP

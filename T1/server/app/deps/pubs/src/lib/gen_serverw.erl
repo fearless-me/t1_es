@@ -114,16 +114,16 @@ continue_effective_monitor(Name, Millisecond) ->
 
 status_self() ->
     try
-        Base = erlang:get(?EFFECTIVE_MONITOR_GUARD),
         Info = erlang:get(?EFFECTIVE_MONITOR_INFO),
-        [{base, Base}, i_format_monitor_info(Info)]
+        i_format_monitor_info(Info)
     catch _ : Error : _ -> Error
     end.
 
 i_format_monitor_info(#msg_exe_monitor_info{
     msg = MsgNum, timeout = Timeout, all = All, max = Max, min = Min, start = Start
 }) ->
-    [{MsgNum, Timeout}, [Min, Max, All], [Start, misc_time:localtime_int()]];
+    Base = erlang:get(?EFFECTIVE_MONITOR_GUARD),
+    [{MsgNum, Timeout, Base}, [Min, Max, All], [Start, misc_time:localtime_int()]];
 i_format_monitor_info(_) -> undefined.
 
 micro_to_milli(Val) -> erlang:trunc(Val / 1000).

@@ -411,11 +411,11 @@ getRow(10105) ->
 		action_bullet = "",
 		hurt_times = []
 	};
-getRow(234324) ->
+getRow(4325) ->
 	#skillCfg{
 		desc__ = "",
-		id = 234324,
-		name = "@@>1000011<",
+		id = 4325,
+		name = "@@>1000009<",
 		type = 1,
 		subType = 1,
 		it_type = 1,
@@ -459,7 +459,7 @@ getKeyList() -> [
 	{10104},
 	{10006},
 	{10105},
-	{234324}
+	{4325}
 ].
 
 get1KeyList() -> [
@@ -470,6 +470,6 @@ get1KeyList() -> [
 	10104,
 	10006,
 	10105,
-	234324
+	4325
 ].
 

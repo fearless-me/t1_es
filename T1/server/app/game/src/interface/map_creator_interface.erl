@@ -15,12 +15,13 @@
 -include("cfg_map.hrl").
 
 
+
 %% API
 -export([
     broadcast/1, select_all_map_pid/0,
     is_cross_map/1, map_data/1, map_type/1, normal_map/1,
     map_mgr_lr/2, map_mgr_l/1,
-    born_map_id/0, born_map_pos/0, map_init_pos/1,
+    born_map_id/0, map_init_pos/1,
     map_line_recover/1
 ]).
 
@@ -156,9 +157,6 @@ map_init_pos(MapID) ->
 
 %%-------------------------------------------------------------------
 born_map_id() -> 1.
-
-%%-------------------------------------------------------------------
-born_map_pos() -> vector3:new(321, 0, 235).
 
 %%-------------------------------------------------------------------
 is_cross_map(MapId) ->

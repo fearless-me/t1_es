@@ -245,7 +245,7 @@ status()->
 format_tick()->
     case get_tick_info() of
         #tick_info{runs = Runs, timeout = Timeout, all = All, min = Min, max = Max} ->
-            {tick, {Runs, Timeout},[Min, Max, All]};
+            {tick, {Runs, Timeout, ?MAP_TICK},[Min, Max, All]};
         _ -> {tick, undefined}
     end.
 

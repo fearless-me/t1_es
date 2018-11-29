@@ -14,6 +14,7 @@
 -include("gs_cache.hrl").
 -include("map_core.hrl").
 -include("combat.hrl").
+-include("combat_buff.hrl").
 -include("netmsg.hrl").
 
 

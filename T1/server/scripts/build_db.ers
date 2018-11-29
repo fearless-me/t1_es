@@ -59,6 +59,7 @@ main(_) ->
         "~n##########################################################~n"
     ),
 
+    color:error_log("~n** 如果没有数据结构变化不要执行此脚本,执行脚本会导致结构版本号变化 **~n~n"),
     Prompt = color:green(
         io_lib:format("~-2.w:默认 ~-2.w:自定义,~-2.w:退出 >> ",
             [?EXPORT_DEFAULT, ?EXPORT_USERDEF, 0]

@@ -14,6 +14,7 @@
 -include("db_record.hrl").
 -include("gs_cache.hrl").
 -include("gs_common_rec.hrl").
+-include("player_ext_data.hrl").
 
 %% API
 -export([online/1]).
@@ -22,12 +23,19 @@
 %%-------------------------------------------------------------------
 online(Player) ->
     #p_player{
+        version = _Version,
         aid = Aid, uid = Uid, sid = Sid,
         name = Name, level = Level, sex = Sex,
         race = Race, career = Career, head = Head,
-        map_id = Mid, line = LineId
+        map_id = Mid, line = LineId,
+        data = Data
     } = Player,
-    
+
+    FullData =
+        case catch data_pack:unmarshal(Data) of
+            #p_player_full_data{} = Ext -> Ext;
+            _ -> #p_player_full_data{}
+        end,
     RwRec = player_rw:to_record(),
     player_rw:init_default(RwRec#m_player_rw{
         uid = Uid, sid = Sid, aid = Aid,
@@ -35,7 +43,7 @@ online(Player) ->
         race = Race, career = Career, head = Head,
         map = #m_player_map{map_id = Mid, line_id = LineId}
     }),
-    ?DEBUG("player ~p of ~p enter map ~p", [Uid, Aid, Mid]),
+    ?DEBUG("player ~p of ~p enter map ~p, full data ~p", [Uid, Aid, Mid, FullData]),
     %% todo 设置buff， cd等等
     
     ok.
@@ -73,7 +81,7 @@ send_base_info() ->
     %% init combat
     BattleProps = gs_cache_interface:read_online_player_element(
         Uid, #m_cache_online_player.battle_props),
-    MsgCombat = combat_prop_calc:battleProps2NetMsg(Uid, BattleProps),
+    MsgCombat = prop_interface:battleProps2NetMsg(Uid, BattleProps),
     player_pub:send_net_msg(MsgCombat),
     ok.
 

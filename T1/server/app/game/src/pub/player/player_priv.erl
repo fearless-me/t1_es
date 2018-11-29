@@ -17,6 +17,7 @@
 -include("gs_common_rec.hrl").
 -include("db_record.hrl").
 -include("gs_cache.hrl").
+-include("player_ext_data.hrl").
 
 
 
@@ -24,7 +25,7 @@
 -export([init/0]).
 -export([login_ack/1]).
 -export([loaded_player_list/1]).
--export([create_player_/1, create_player_ack/1]).
+-export([create_player/6, create_player_ack/1]).
 -export([select_player/1]).
 -export([loaded_player/1]).
 -export([offline/1]).
@@ -120,16 +121,26 @@ loaded_player_list(RoleList) ->
     ok.
 
 %%-------------------------------------------------------------------
-create_player_(Req) ->
-    Aid = player_rw:get_aid(),
+create_player(Name, Career, Race, Sex, Head, Camp) ->
     player_rw:set_status(?PS_CREATING),
+    
+    Aid = player_rw:get_aid(),
+    Mid = map_creator_interface:born_map_id(),
+    Pos = map_creator_interface:map_init_pos(Mid),
+    Req = #r_create_player_req{
+        version = misc_time:milli_seconds(),
+        name = Name, camp = Camp, career = Career, race = Race, sex = Sex,
+        head = Head, mid = Mid, x = vector3:x(Pos), y = vector3:z(Pos),
+        sid = gs_interface:get_sid(),
+        data = data_pack:marshal(#p_player_full_data{})
+    },
     gs_db_interface:action_data_(Aid, create_player, {Aid, Req}),
     ok.
 
 %%-------------------------------------------------------------------
-create_player_ack(#r_create_player_ack{error = 0, uid = Uid}) ->
+create_player_ack(#r_create_player_ack{error = 0} = Ack) ->
     player_rw:set_status(?PS_WAIT_SELECT_CREATE),
-    hook_player:on_create(Uid),
+    hook_player:on_create(Ack),
     ok;
 create_player_ack(#r_create_player_ack{error = Err}) ->
     player_rw:set_status(?PS_WAIT_SELECT_CREATE),

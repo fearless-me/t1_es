@@ -13,6 +13,7 @@
 -include("gs_cache.hrl").
 -include("gs_common_rec.hrl").
 -include("db_record.hrl").
+-include("player_ext_data.hrl").
 
 -define(DB_QUERY_TIMEOUT, 15 * 1000).
 
@@ -66,37 +67,51 @@ handler(load_player_data, {_Aid, Uid}, FromPid, PoolId) ->
     ps:send(FromPid, load_player_data_ack, Player#p_player{name = binary_to_list(Name)}),
     ok;
 handler(create_player, {AccId, Req}, FromPid, PoolId) ->
-    #r_create_player_req{
+    #r_create_player_req
+    {
+        version = Version,
         sid = Sid, name = Name, camp = Camp, career = Career,
         race = Race, sex = Sex, head = Head, mid = Mid,
-        x = X, y = Y
+        x = X, y = Y, data = Data
     } = Req,
     Uid = uid_gen:player_uid(),
     Sql = gs_db_sql:sql(insert_player),
     Params = [AccId, Uid, Sid, Name, 1, Sex, Camp, Race, Career, Head,
-        Mid, 0, X, Y, Mid, 0, X, Y, misc_time:milli_seconds()],
+        Mid, 0, X, Y, Mid, 0, X, Y, Data, Version],
     Res = db:query(PoolId, Sql, Params, ?DB_QUERY_TIMEOUT),
     
     check_res(Res, Sql, Params),
-    ps:send(FromPid, create_player_ack,
-        #r_create_player_ack{
+    ps:send(
+        FromPid,
+        create_player_ack,
+        #r_create_player_ack
+        {
             error = 0,
-            uid = Uid, acc_id = AccId,
-            name = Name, camp = Camp,
-            career = Career, race = Race,
-            sex = Sex, head = Head
+            uid = Uid, acc_id = AccId, name = Name, camp = Camp,
+            race = Race, career = Career, sex = Sex, head = Head
         }
     ),
     ok;
-handler(save_player, Player, _FromPid, PoolId) ->
-    #m_cache_online_player{
-        uid = Uid, career = Career, level = Lv,
+handler(save_player, PlayerExt, _FromPid, PoolId) ->
+    #p_player_save
+    {
+        % 版本信息
+        version = Version,
+        % 基础信息
+        uid = Uid, race = Race, career = Career, level = Lv,
         map_id = Mid, line = Line, pos = Pos,
-        old_map_id = OMid, old_line = OLine, old_pos = OPos
-    } = Player,
+        old_map_id = OMid, old_line = OLine, old_pos = OPos,
+        % 完整数据
+        data = Data
+    } = PlayerExt,
     Sql = gs_db_sql:sql(save_player),
-    Params = [Career, Lv, Mid, Line, vector3:x(Pos), vector3:z(Pos),
-        OMid, OLine, vector3:x(OPos), vector3:z(OPos), misc_time:milli_seconds(), Uid],
+    Params = [
+        Race, Career, Lv,
+        Mid, Line, vector3:x(Pos), vector3:z(Pos),
+        OMid, OLine, vector3:x(OPos), vector3:z(OPos),
+        Data, Version,
+        Uid
+    ],
     Res = db:query(PoolId, Sql, Params),
     check_res(Res, Sql, Params),
     ok;

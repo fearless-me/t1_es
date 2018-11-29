@@ -43,12 +43,7 @@ handle(#pk_U2GS_RequestCreatePlayer{
     career = Career, race = Race,
     sex = Sex, head = Head
 }) ->
-    BornMid = map_creator_interface:born_map_id(),
-    V = map_creator_interface:born_map_pos(),
-    player_priv:create_player_(#r_create_player_req{
-        name = Name, camp = Camp, career = Career, race = Race, sex = Sex,
-        head = Head, mid = BornMid, x = vector3:x(V), y = vector3:z(V), sid = gs_interface:get_sid()
-    }),
+    player_priv:create_player(Name, Career, Race, Sex, Head, Camp),
     ok;
 handle(#pk_U2GS_SelPlayerEnterGame{uid = Uid}) ->
     player_priv:select_player(Uid),

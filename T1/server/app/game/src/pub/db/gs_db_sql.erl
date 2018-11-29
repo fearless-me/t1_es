@@ -25,11 +25,11 @@ sql(insert_acount) ->
      values(?,?,?,?,?,?,?,?,?,?,?);">>;
 sql(insert_player) ->
     <<"insert player(aid, uid, sid, name, level, sex, camp, race, career, head,
-    map_id, line, x, y, old_map_id, old_line, old_x, old_y, version)
-    values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)">>;
+    map_id, line, x, y, old_map_id, old_line, old_x, old_y, data, version)
+    values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)">>;
 sql(save_player) ->
-    <<"update player set career=?, level=?, map_id=?,line=?,x=?,y=?,"
-    "old_map_id=?, old_line=?, old_x=?, old_y=?, version = ? where uid=?">>;
+    <<"update player set race=?, career=?, level=?, map_id=?,line=?,x=?,y=?,"
+    "old_map_id=?, old_line=?, old_x=?, old_y=?, data=?, version = ? where uid=?">>;
 sql(load_player) ->
     <<"select * from player where uid = ?">>;
 sql(load_player_list) ->
