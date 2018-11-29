@@ -567,9 +567,8 @@ read_proc_file(IoDevice, Acc) ->
 
 cf_parse([], Acc) ->
     Acc;
-cf_parse([{_M, F, Arti, [{_, File}, {_, Line} | _]} | Left], Acc) ->
-    NewAcc = io_lib:format("~ts:~p ~p/~p|",
-        [filename:basename(File), Line, F, Arti]) ++ Acc,
+cf_parse([{_M, F, Arti, [{_, File}, {_, _Line} | _]} | Left], Acc) ->
+    NewAcc = Acc ++ io_lib:format("~ts:~p/~p|", [filename:basename(File, ".erl"), F, Arti]),
     cf_parse(Left, NewAcc).
 
 log_sort_mqueue(PPList) ->
