@@ -85,7 +85,6 @@
 -define(UNDERLINE, <<"\e[4m">>).
 
 -define(NEW_LINE, "\e[0m\n|").
--define(NEW_LINE(Color, _A_), ?render([?W(Color, _A_, 136)])).
 -define(I, <<" | ">>).
 -define(I2, <<"|">>).
 -define(W(_C_, _A_, _W_), {extend_color, _C_, _A_, _W_}).

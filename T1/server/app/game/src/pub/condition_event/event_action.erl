@@ -23,18 +23,20 @@ action(Event, OriginalParams, CEParams) ->
     do_action(Event, RealParams, CEParams).
 
 %%-------------------------------------------------------------------
-%% [伤害， 属性伤害， 目标， 属性ID， 万分比， 常数， 结果类型， 吸血比例， 特殊选项]
+%% [伤害， 属性伤害， 属性来源， 属性ID， 万分比， 常数， 结果类型， 吸血比例， 特殊选项]
 do_action([?EVENT_DAMAGE, ?EVENT_DAMAGE_SUB_PROP, ?TARGET_SELF, PropID, Percent, Const, ResultType, BloodPer, Extra],
-    [Attack, Target], _CEParams) ->
-    event_action_logic:event_damage_sub_prop(Attack, Target, Attack, PropID, Percent, Const, ResultType, BloodPer, Extra);
+    [Attack, Target], CEParams) ->
+    event_action_logic:event_damage_sub_prop(CEParams, Attack, Target, Attack,
+        PropID, Percent, Const, ResultType, BloodPer, Extra);
 do_action([?EVENT_DAMAGE, ?EVENT_DAMAGE_SUB_PROP, ?TARGET_OTHER, PropID, Percent, Const, ResultType, BloodPer, Extra],
-    [Attack, Target], _CEParams) ->
-    event_action_logic:event_damage_sub_prop(Attack, Target, Target, PropID, Percent, Const, ResultType, BloodPer, Extra);
+    [Attack, Target], CEParams) ->
+    event_action_logic:event_damage_sub_prop(CEParams, Attack, Target, Target,
+        PropID, Percent, Const, ResultType, BloodPer, Extra);
 do_action([?EVENT_DAMAGE, ?EVENT_DAMAGE_SUB_FIX_FORMULA, ?TARGET_SELF, PropID, Percent, Const, ResultType, BloodPer, Extra],
     [Attack, _Target], _CEParams) ->
     ?ERROR("no realize EVENT_DAMAGE_SUB_FIX_FORMULA"),
     ok;
-do_action([?EVENT_DAMAGE, ?EVENT_DAMAGE_SUB_PROP, ?TARGET_OTHER, PropID, Percent, Const, ResultType, BloodPer, Extra],
+do_action([?EVENT_DAMAGE, ?EVENT_DAMAGE_SUB_FIX_FORMULA, ?TARGET_OTHER, PropID, Percent, Const, ResultType, BloodPer, Extra],
     [Attack, Target], _CEParams) ->
     ?ERROR("no realize EVENT_DAMAGE_SUB_FIX_FORMULA"),
     ok;

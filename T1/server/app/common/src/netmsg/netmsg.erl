@@ -110,13 +110,13 @@ decode(?GS2U_HPChange,Bin0) ->
 
 %GENERATED from file:combat.h => GS2U_HitTarget
 decode(?GS2U_HitTarget,Bin0) ->
-	{ V_uid, Bin1 } = read_uint64( Bin0 ),
+	{ V_tar_uids, Bin1 } = read_array(Bin0, fun(X) -> read_uint64( X ) end),
 	{ V_src_uid, Bin2 } = read_uint64( Bin1 ),
 	{ V_cause, Bin3 } = read_uint32( Bin2 ),
 	{ V_misc, Bin4 } = read_uint32( Bin3 ),
 	{ V_serial, Bin5 } = read_uint32( Bin4 ),
 	{ #pk_GS2U_HitTarget {
-		uid = V_uid,
+		tar_uids = V_tar_uids,
 		src_uid = V_src_uid,
 		cause = V_cause,
 		misc = V_misc,
@@ -836,14 +836,14 @@ encode(#pk_GS2U_HPChange{} = P) ->
 
 %GENERATED from file:combat.h => GS2U_HitTarget
 encode(#pk_GS2U_HitTarget{} = P) ->
-	Bin_uid = write_uint64( P#pk_GS2U_HitTarget.uid ),
+	Bin_tar_uids = write_array(P#pk_GS2U_HitTarget.tar_uids, fun(X) -> write_uint64( X ) end),
 	Bin_src_uid = write_uint64( P#pk_GS2U_HitTarget.src_uid ),
 	Bin_cause = write_uint32( P#pk_GS2U_HitTarget.cause ),
 	Bin_misc = write_uint32( P#pk_GS2U_HitTarget.misc ),
 	Bin_serial = write_uint32( P#pk_GS2U_HitTarget.serial ),
 	[
 		<<?GS2U_HitTarget:?U16>>,
-		Bin_uid,
+		Bin_tar_uids,
 		Bin_src_uid,
 		Bin_cause,
 		Bin_misc,

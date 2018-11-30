@@ -2,7 +2,7 @@
 -ifndef(netmsg).
 -define(netmsg,1).
 
--define(ProtoVersion,655).
+-define(ProtoVersion,656).
 
 -record(pk_BattleProp,{
 	%% UInt32 属性ID
@@ -106,8 +106,8 @@
 %% // 命中目标
 -define(GS2U_HitTarget,35916).
 -record(pk_GS2U_HitTarget,{
-	%% UInt64角色ID
-	uid = 0,
+	%% UInt64 ID
+	tar_uids = [],
 	%% UInt64发起者ID
 	src_uid = 0,
 	%% UInt32原因 1 :使用技能

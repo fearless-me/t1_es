@@ -59,7 +59,7 @@ init() ->
     misc_ets:new(?ETS_CACHE_MAP_PLAYER_PRIV, [named_table, public, {keypos, #m_cache_map_object_priv.uid}, ?ETS_RC, ?ETS_WC]),
     misc_ets:new(?ETS_CACHE_MAP_MONSTER_PRIV, [named_table, public, {keypos, #m_cache_map_object_priv.uid}, ?ETS_RC, ?ETS_WC]),
     misc_ets:new(?ETS_CACHE_RATE_CONTROL_PRIV, [named_table, public, {keypos, #m_cache_rate_control.role_key}, ?ETS_RC, ?ETS_WC]),
-    misc_ets:new(?ETS_CACHE_RATE_CONTROL_KEY_PRIV, [named_table, public, {keypos, #pub_kv.key}, ?ETS_RC, ?ETS_WC]),
+    misc_ets:new(?ETS_CACHE_RATE_CONTROL_KEY_PRIV, [named_table, public, {keypos, #m_cache_rate_control_key.key}, ?ETS_RC, ?ETS_WC]),
     ok.
 
 %%-------------------------------------------------------------------

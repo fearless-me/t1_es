@@ -171,15 +171,10 @@ inner_update_player_cross(false, Uid, Params) ->
     end,
     ok;
 inner_update_player_cross(_IsCross, Uid,  {?ETS_CACHE_ONLINE_PLAYER, Uid, {Key , _}} = Params) ->
-    case misc_ets:member(?ETS_CACHE_RATE_CONTROL_KEY_PRIV, Key) of
-        true ->
-            case is_rate_control(Uid, Key) of
-                true -> skip;
-                _Any -> direct_update_player_cross(Uid, Params)
-            end;
-        _ -> direct_update_player_cross(Uid, Params)
+    case is_rate_control_continue(Uid, Key) of
+        true -> direct_update_player_cross(Uid, Params);
+        _Any -> skip
     end,
-
     ok;
 inner_update_player_cross(_IsCross, Uid, Params) ->
     %% @doc 打印日志看看是否需要把跨服数据同步到原服务器,经过测试实时同步数据可以让服务器消息堆积巨大
@@ -195,18 +190,18 @@ direct_update_player_cross(Uid, Params) ->
 
 %%-------------------------------------------------------------------
 %%-------------------------------------------------------------------
--define(ADD_RCK(Key), misc_ets:write(?ETS_CACHE_RATE_CONTROL_KEY_PRIV, #pub_kv{key = Key, value = Key})).
+-define(ADD_RCK(Key, RateSec), misc_ets:write(?ETS_CACHE_RATE_CONTROL_KEY_PRIV, #m_cache_rate_control_key{key = Key, limit = RateSec})).
 init_rate_control_key() ->
-    ?ADD_RCK(#m_cache_online_player.pos),
-    ?ADD_RCK(#m_cache_online_player.buff_list),
-    ?ADD_RCK(#m_cache_online_player.battle_props),
+    ?ADD_RCK(#m_cache_online_player.pos, 10),
+    ?ADD_RCK(#m_cache_online_player.buff_list, 5),
+    ?ADD_RCK(#m_cache_online_player.battle_props, 10),
     ok.
 
--define(ADD_RC(Uid, Key), misc_ets:write(?ETS_CACHE_RATE_CONTROL_PRIV, #m_cache_rate_control{role_key = {Uid, Key}, counter = 0})).
+-define(ADD_RC(Uid, Key), misc_ets:write(?ETS_CACHE_RATE_CONTROL_PRIV, #m_cache_rate_control{role_key = {Uid, Key}})).
 add_rate_control(Uid) ->
     ets:foldl
     (
-        fun(#pub_kv{value = V}, _)-> ?ADD_RC(Uid, V) end,
+        fun(#m_cache_rate_control_key{key = V}, _)-> ?ADD_RC(Uid, V) end,
         0,
         ?ETS_CACHE_RATE_CONTROL_KEY_PRIV
     ),
@@ -217,8 +212,28 @@ del_rate_control(Uid) ->
     misc_ets:match_delete(?ETS_CACHE_RATE_CONTROL_PRIV, Match),
     ok.
 
--define(RATE_SECONDS, 10).
-is_rate_control(Uid, Key) ->
-    New = misc_ets:update_counter(
-        ?ETS_CACHE_RATE_CONTROL_PRIV, {Uid, Key}, {#m_cache_rate_control.counter, 1}),
-    New rem (?RATE_SECONDS * (?ONS_SECOND_MS div ?MAP_TICK)) =/= 0.
+is_rate_control_continue(Uid, Key) ->
+    try
+        case misc_ets:member(?ETS_CACHE_RATE_CONTROL_KEY_PRIV, Key) of
+            true ->
+                Pri = {Uid, Key},
+                Now = misc_time:utc_seconds(),
+                Sec = misc_ets:read_element(?ETS_CACHE_RATE_CONTROL_KEY_PRIV, Key, #m_cache_rate_control_key.limit),
+                Lst = misc_ets:read_element(?ETS_CACHE_RATE_CONTROL_PRIV, Pri,  #m_cache_rate_control.latest),
+                Run = Lst + Sec =< Now,
+                update_rate_control_latest(Run, Pri, Now),
+                Run;
+            _Any -> true
+        end
+    catch _:_:_  ->
+        true
+    end.
+
+update_rate_control_latest(true, Key, Now) ->
+    misc_ets:update_element
+    (
+        ?ETS_CACHE_RATE_CONTROL_PRIV,
+        Key,
+        {#m_cache_rate_control.latest, Now}
+    );
+update_rate_control_latest(_Any, _Key, _Now) -> skip.

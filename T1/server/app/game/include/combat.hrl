@@ -18,11 +18,11 @@
     attackBps::#m_battleProps{},    %% 计算后的攻击者属性
     defenseBps::#m_battleProps{},   %% 计算后的防御者属性
 
-    isHit,     %% 是否命中
-    isCri,     %% 是否暴击
-    damage,    %% 理论造成的伤害
-    deltaHp,   %% 实际的血量变化（会因为血量上下线、取整等原因与理论伤害不同）
-    isDead     %% 目标是否死亡（可能与当前伤害无关）
+    isHit = false,     %% 是否命中
+    isCri = false,     %% 是否暴击
+    damage = 0,    %% 理论造成的伤害
+    deltaHp = 0,   %% 实际的血量变化（会因为血量上下线、取整等原因与理论伤害不同）
+    isDead = false     %% 目标是否死亡（可能与当前伤害无关）
 }).
 
 %% 技能规划分类

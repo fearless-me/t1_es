@@ -61,7 +61,8 @@ use_skill_success(#m_object_rw{uid = Uid} = Attacker, [#m_object_rw{}|_] = Targe
     mod_view:send_net_msg_to_visual(Uid, NetMsg),
 
     %% 触发事件
-    ?TRY_CATCH(trigger_before_cast_event(Attacker, TargetList, SkillCfg)),
+    CEParams = get_ce_param(SkillId, ?HP_CHANGE_SKILL, Serial),
+    ?TRY_CATCH(trigger_before_cast_event(Attacker, TargetList, SkillCfg, CEParams)),
 
     %% 根据类型
     object_rw:set_skill_serial(Uid, Serial),
@@ -87,55 +88,29 @@ spell_skill(_Aer, _Tar, #skillCfg{id = SkillID} = _SkillCfg, _Serial) ->
 instant_skill(Aer, TarList, SkillCfg, Serial) ->
     active_skill_once(Aer, TarList, SkillCfg, Serial).
 
-active_skill_once(Aer, TarList, SkillCfg, Serial) ->
+active_skill_once(#m_object_rw{uid = Uid} = Aer, TarList, #skillCfg{id = SkillId} = SkillCfg, Serial) ->
+    TargetUidList = [ID || #m_object_rw{uid = ID} <- TarList],
+    HitMsg = #pk_GS2U_HitTarget{
+        tar_uids = TargetUidList, src_uid = Uid, cause = ?HIT_REASON_SKILL, misc = SkillId, serial = Serial
+    },
+
     F =
-        fun(#m_object_rw{} = Hit) ->
+        fun(#m_object_rw{uid = TargetUid} = Hit) ->
+            gs_interface:send_net_msg(TargetUid, HitMsg),
+
             calculate_dmg(Aer, Hit, SkillCfg, Serial)
         end,
     lists:foreach(F, TarList).
 
 %%-------------------------------------------------------------------
 calculate_dmg(
-    #m_object_rw{uid = Uid} = Attack,
-    #m_object_rw{uid = TargetUid} = Target,
+    #m_object_rw{} = Attack,
+    #m_object_rw{} = Target,
     #skillCfg{id = SkillId} = SkillCfg, Serial
 ) ->
     %% 命中事件
-    ?TRY_CATCH(trigger_hit_event(Attack, [Target], SkillCfg)),
-
-    %% TODO 这里要修改
-    HitMsg = #pk_GS2U_HitTarget{
-        uid = TargetUid, src_uid = Uid, cause = ?HIT_REASON_SKILL, misc = SkillId, serial = Serial
-    },
-    mod_view:send_net_msg_to_visual(TargetUid, HitMsg),
-
-    %% 计算伤害
-    #m_hit_damage_result{
-        isHit = IsHit,
-        isCri = IsCri,
-        deltaHp = DeltaHp
-    } = mod_combat_prop:hitAndDamage(Attack, Target),
-
-    %% 血量变化
-    Result =
-        case IsHit of
-            false ->
-                ?ESR_DODGE;
-            _ when IsCri =:= true ->
-                ?ESR_CRITICAL;
-            _ ->
-                ?ESR_NORMAL
-        end,
-    HpMsg = #pk_GS2U_HPChange{
-        uid = TargetUid,
-        cause = ?HP_CHANGE_SKILL,
-        result = Result,
-        hp_change = DeltaHp,
-        misc1 = SkillId,
-        src_uid = Uid,
-        serial = Serial
-    },
-    mod_view:send_net_msg_to_visual(TargetUid, HpMsg),
+    CEParams = get_ce_param(SkillId, ?HP_CHANGE_SKILL, Serial),
+    ?TRY_CATCH(trigger_hit_event(Attack, [Target], SkillCfg, CEParams)),
     ok.
 
 %%-------------------------------------------------------------------
@@ -257,18 +232,25 @@ is_using_skill(Aer) ->
     object_rw:get_skill_id(Aer, 0) > 0.
 
 
-trigger_before_cast_event(Aer, DerList, #skillCfg{beforecast = EventList}) ->
-    trigger_event(Aer, DerList, EventList).
-trigger_hit_event(Aer, DerList, #skillCfg{beforehit = EventList}) ->
-    trigger_event(Aer, DerList, EventList).
+trigger_before_cast_event(Aer, DerList, #skillCfg{beforecast = EventList}, CEParams) ->
+    trigger_event(Aer, DerList, EventList, CEParams).
+trigger_hit_event(Aer, DerList, #skillCfg{beforehit = EventList}, CEParams) ->
+    trigger_event(Aer, DerList, EventList, CEParams).
 
 %% TODO
 trigger_cast_tick_event(Aer, Der, #skillCfg{castingtick = EventList}) ->
 %%    condition_event:action_all(EventList, [Aer, Der]).
     ok.
 
-trigger_event(_Aer, [], _EventList) -> ok;
-trigger_event(Aer, [Der | DerList], EventList) ->
-    condition_event:action_all(EventList, [Aer, Der],
-        condition_event_interface:init_self_ce_param(?MODULE_MAP_PROCESS)),
-    trigger_event(Aer, DerList, EventList).
+trigger_event(_Aer, [], _EventList, _CEParams) -> ok;
+trigger_event(Aer, [Der | DerList], EventList, CEParams) ->
+    condition_event:action_all(EventList, [Aer, Der], CEParams),
+    trigger_event(Aer, DerList, EventList, CEParams).
+
+get_ce_param(SkillId, Cause, Serial) ->
+    CEParams = condition_event_interface:init_self_ce_param(?MODULE_MAP_PROCESS),
+    CEParams#{
+        skillID => SkillId,
+        cause => Cause,
+        serial => Serial
+    }.

@@ -13,13 +13,15 @@
 -include("combat.hrl").
 -include("logger.hrl").
 -include("rec_rw.hrl").
+-include("netmsg.hrl").
 
 %% API
 -export([
     change_combat_prop/3,
     change_combat_prop/5,
 
-    hitAndDamage/2
+    hitAndDamage/6,
+    hitAndDamage/3
 ]).
 
 
@@ -52,17 +54,52 @@ change_combat_prop(Uid, AddList, MultiList, AddList_Del, MultiList_Del) ->
     ok.
 
 %% 伤害打击
--spec hitAndDamage(#m_object_rw{}, #m_object_rw{}) -> #m_hit_damage_result{}.
+-spec hitAndDamage(#m_object_rw{}, #m_object_rw{}, DamageValue::float(),
+    SkillID::integer(), SkillSerial::integer(), HPChangeReason::integer()) -> #m_hit_damage_result{}.
+hitAndDamage(
+    #m_object_rw{uid = Uid} = Attack,
+    #m_object_rw{uid = TargetUid} = Defense,
+    DamageValue, SkillID, SkillSerial, HPChangeReason) ->
+    #m_hit_damage_result{
+        isHit = IsHit,
+        isCri = IsCri,
+        deltaHp = DeltaHp
+    } = hitAndDamage(Attack, Defense, DamageValue),
+
+    %% 血量变化
+    Result =
+        case IsHit of
+            false ->
+                ?ESR_DODGE;
+            _ when IsCri =:= true ->
+                ?ESR_CRITICAL;
+            _ ->
+                ?ESR_NORMAL
+        end,
+
+    %% 通知客户端血量变化
+    HpMsg = #pk_GS2U_HPChange{
+        uid = TargetUid,
+        cause = HPChangeReason,
+        result = Result,
+        hp_change = DeltaHp,
+        misc1 = SkillID,
+        src_uid = Uid,
+        serial = SkillSerial
+    },
+    mod_view:send_net_msg_to_visual(TargetUid, HpMsg),
+    ok.
+
+-spec hitAndDamage(#m_object_rw{}, #m_object_rw{}, DamageValue::float()) -> #m_hit_damage_result{}.
 hitAndDamage(
     #m_object_rw{uid = Uid, battle_props = AttackBps},
-    #m_object_rw{uid = TargetUid, battle_props = DefenseBps}) ->
+    #m_object_rw{uid = TargetUid, battle_props = DefenseBps}, DamageValue) ->
     Ret = #m_hit_damage_result{
         attackBps = AttackBpsRet,
         defenseBps = DefenseBpsRet
-    } = prop_interface:calcHitAndDamage(AttackBps, DefenseBps),
+    } = prop_interface:calcHitAndDamage(AttackBps, DefenseBps, DamageValue),
     Ahp = fresh_prop(Uid, AttackBpsRet),
     Dhp = fresh_prop(TargetUid, DefenseBpsRet),
-
     ?DEBUG("hitAndDamage:~p(~p) -> ~p(~p)", [Uid, Ahp, TargetUid, Dhp]),
     Ret.
 

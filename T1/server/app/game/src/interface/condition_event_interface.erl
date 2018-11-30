@@ -20,6 +20,10 @@
     get_ce_mt/1
 ]).
 
+-export([
+    is_on_map/1
+]).
+
 %% init condition param
 -spec init_self_ce_param(ModuleProcessType::module_type()) -> map().
 init_self_ce_param(ModuleProcessType) ->
@@ -32,3 +36,10 @@ init_ce_param(Pid, ModuleProcessType) ->
 get_ce_sp(#{?CONDITION_EVENT_PARAMS_SP := Pid}) -> Pid.
 
 get_ce_mt(#{?CONDITION_EVENT_PARAMS_MPT := ModuleType}) -> ModuleType.
+
+is_on_map(#{
+    ?CONDITION_EVENT_PARAMS_SP := Pid,
+    ?CONDITION_EVENT_PARAMS_MPT := ModuleType} = CEParams) when is_map(CEParams) ->
+    Pid =:= self() andalso ModuleType =:= ?MODULE_MAP_PROCESS;
+is_on_map(_) ->
+    false.

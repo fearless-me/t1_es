@@ -2,7 +2,7 @@
 %%% @author tiancheng
 %%% @copyright (C) 2018, <COMPANY>
 %%% @doc
-%%% 属性通用接口
+%%% 属性通用接口 TODO 里面好多魔法数字，不完善，还需要修改
 %%% @end
 %%% Created : 29. 十一月 2018 14:51
 %%%-------------------------------------------------------------------
@@ -27,7 +27,7 @@
 
 %% calc damage
 -export([
-    calcHitAndDamage/2
+    calcHitAndDamage/3
 ]).
 
 -spec query_pf_bpc(PropID::battlePropID(), #m_battleProps{}) -> battlePropCache().
@@ -351,14 +351,14 @@ calc_convert_3_(?BP_3_HIT, Value) ->
     %% 直译为代码：
     %% Percent = 1.0 - (1.0 / (1.0 + math:pow(2.71828, (-0.3 * (100.0 - Value))))) / 5.0
     %% pow(2.7, 714.7)将会报错，因此这里需要处理极值的问题，极值为pow(2.7, 100)
-    {?BP_4_HIT, 1.0 - (0.2 / (1 + math:pow(2.71828, erlang:min((0.3 * Value - 30.0), 100))))};
+    {?BP_4_HIT, 1.0 - (0.2 / (1 + my_pow(2.71828, (0.3 * Value - 30.0))))};
 calc_convert_3_(?BP_3_FLEE, Value) ->
     %% 策划给的公式：
     %% 真实闪避率 = ( 1 / (1+e^(-0.3*(Target闪避值-User命中值)))) / 5
     %% 因此处无法获取目标数值，因此此处User命中值固定使用100.0代替
     %% 直译为代码：
     %% Percent = (1.0 / (1.0 + math:pow(2.71828, (-0.3 * (Value - 100.0))))) / 5.0
-    {?BP_4_FLEE, 0.2 / (1 + math:pow(2.71828, erlang:min((30.0 - 0.3 * Value), 100)))};
+    {?BP_4_FLEE, 0.2 / (1 + my_pow(2.71828, (30.0 - 0.3 * Value)))};
 calc_convert_3_(?BP_3_CRI, Value) ->
     {?BP_4_CRI, Value / (Value + 100)};
 calc_convert_3_(?BP_3_FAST, Value) ->
@@ -400,18 +400,18 @@ battleProps2NetMsg_use([], Acc) ->
 %%%-------------------------------------------------------------------
 %% api:计算战斗伤害
 %% ListBPUExtra 表示本次计算中对来源属性修正，仅限于类型2、类型3的属性
--spec calcHitAndDamage(#m_battleProps{}, #m_battleProps{}) -> #m_hit_damage_result{}.
-calcHitAndDamage(#m_battleProps{} = AttackBps, #m_battleProps{} = DefenderBps) ->
+-spec calcHitAndDamage(#m_battleProps{}, #m_battleProps{}, DamageValue::float()) -> #m_hit_damage_result{}.
+calcHitAndDamage(#m_battleProps{} = AttackBps, #m_battleProps{} = DefenderBps, DamageValue) ->
     {
         [
-            {_, _, BP_2_ATK_ADD_Src},
+%%            {_, _, BP_2_ATK_ADD_Src},
             {_, _, BP_3_HIT_ADD_Src},
             {_, _, BP_4_CRI_ADD_Src}
         ],
         [
             #m_bp{add = BP_4_HIT_ADD_Src, mul = BP_4_HIT_MUL_Src}
         ]
-    } = calcHitAndDamage_query(AttackBps, [?BP_2_ATK, ?BP_3_HIT, ?BP_4_CRI], [?BP_4_HIT]),
+    } = calcHitAndDamage_query(AttackBps, [?BP_3_HIT, ?BP_4_CRI], [?BP_4_HIT]),
     {
         [
             {_, _, BP_2_DEF_ADD_Des},
@@ -444,8 +444,7 @@ calcHitAndDamage(#m_battleProps{} = AttackBps, #m_battleProps{} = DefenderBps) -
                     _ ->
                         {false, 1.0}    %% 没暴击则单倍伤害
                 end,
-            {Damage, DeltaHp} = calcHitAndDamage_damage(
-                BP_2_ATK_ADD_Src, MulCri,
+            {Damage, DeltaHp} = calcHitAndDamage_damage(DamageValue, MulCri,
                 BP_2_DEF_ADD_Des, BP_2_HP_MAX_ADD_Des, BP_2_HP_CUR_ADD_Des
             ),
             %% 修正目标血量并返回结果
@@ -487,21 +486,23 @@ calcHitAndDamage_isHit(Hit3Add, Hit4Add, Hit4Mul, Flee3Add, Flee4Add, Flee4Mul) 
     %% 参考calc_convert_3_/2
     %% Percent = (1.0 / (1.0 + math:pow(2.71828, (-0.3 * (FleeDes - HitSrc))))) / 5.0,
     %% todo Hit4Add, Hit4Mul, Flee4Add, Flee4Mul 这几个值因为设计问题暂时没用上，需要与策划进一步讨论
-    FleePercent = 2000 / (0.2 + 0.2 * math:pow(2.71828, (-0.3 * (Flee3Add - Hit3Add)))),    %% 放大10000倍用于下文概率计算
+    FleePercent = 2000 / (0.2 + 0.2 * my_pow(2.71828, (-0.3 * (Flee3Add - Hit3Add)))),    %% 放大10000倍用于下文概率计算
     not (misc:rand(0, 9999) < erlang:trunc(FleePercent)).
 
--spec calcHitAndDamage_damage(Atk, MulCri, Def, HpMax, HpCur) -> Ret when
-    Atk :: float(), MulCri :: float(), Def :: float(),
+-spec calcHitAndDamage_damage(DamageValue, MulCri, Def, HpMax, HpCur) -> Ret when
+    DamageValue :: float(), MulCri :: float(), Def :: float(),
     HpMax :: float(), HpCur :: float(), Ret :: {Damage, DeltaHp},
     Damage :: float(), DeltaHp :: integer().
-calcHitAndDamage_damage(Atk, MulCri, Def, HpMax, HpCur) ->
+calcHitAndDamage_damage(DamageValue, MulCri, Def, HpMax, HpCur) ->
     %% fixme 防御效率 = 防御强度 / (防御强度 + 100) 若该算法固定，可单独提炼为一个4类属性用于快速计算
     %% 策划原始伤害公式  【伤害值】* （1- （Target防御强度 / （Target防御强度 + 100））） = 【伤害结果】
     %% 策划不在，根据实际微调为 伤害强度 * 伤害倍率 * (1 - 防御效率) = 伤害值
-    Damage = Atk * MulCri * (1 - (Def / (Def + 100))),
+    Damage = DamageValue * MulCri * (1 - (Def / (Def + 100))),
     DeltaHp = erlang:trunc(erlang:min(Damage, HpCur)),
     %%?DEBUG(
     %%    "[DebugForBattle] calcHitAndDamage_damage Atk:~w MulCri:~w Def:~w HpMax:~w HpCur:~w Damage:~w DeltaHp:~w",
     %%    [Atk, MulCri, Def, HpMax, HpCur, -Damage, -DeltaHp]
     %%),
     {-Damage, -DeltaHp}.    %% 取反表示变化方向
+
+my_pow(X, Y) -> math:pow(X, erlang:min(Y, 100)).

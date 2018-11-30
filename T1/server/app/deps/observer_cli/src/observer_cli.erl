@@ -283,7 +283,7 @@ render_scheduler_usage(SchedulerUsage, SchedulerNum) when SchedulerNum < 8 ->
                  Seq2, Process2, CPU2
              ])
          end || Seq1 <- lists:seq(1, HalfSchedulerNum)],
-    {HalfSchedulerNum, ?NEW_LINE(?GRAY_BG, "scheduler_usage") ++ CPU};
+    {HalfSchedulerNum, total_scheduler_usage(SchedulerUsage) ++ CPU};
 %% >= 8 will split 4 part
 render_scheduler_usage(SchedulerUsage, SchedulerNum) ->
     PosSchedulerNum = SchedulerNum div 4,
@@ -313,7 +313,21 @@ render_scheduler_usage(SchedulerUsage, SchedulerNum) ->
                  Seq4, Process4, CPU4
              ])
          end || Seq1 <- lists:seq(1, PosSchedulerNum)],
-    {PosSchedulerNum, ?NEW_LINE(?GRAY_BG, "scheduler_usage") ++ CPU}.
+
+    {PosSchedulerNum, total_scheduler_usage(SchedulerUsage) ++ CPU}.
+
+total_scheduler_usage(SchedulerUsage) ->
+    Avg = lists:foldl(fun({_, Usage}, All)-> All + Usage end, 0, SchedulerUsage),
+    Process = lists:duplicate(trunc(Avg * 100), ">"),
+    Percent = erlang:trunc(Avg*1000)/10,
+    Color =  case Avg >= ?CPU_ALARM_THRESHOLD of
+                 true -> ?RED;
+                 false -> ?GREEN
+             end,
+    ?render([?W(?GRAY_BG, "scheduler usage ", 136)]) ++ 
+    ?render([
+        ?W(Color, io_lib:format("total:~-124.s~p%", [Process, Percent]), 136)
+    ]).
 
 render_top_n_view(memory, MemoryList, Num, Pages, Page) ->
     Title = ?render([
