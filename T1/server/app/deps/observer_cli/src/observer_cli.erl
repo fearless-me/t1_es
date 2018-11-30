@@ -9,6 +9,7 @@
 -export([start/2]).
 -export([start_plugin/0]).
 
+-define(CPU_ALARM_THRESHOLD_AVG, 0.5).
 -define(CPU_ALARM_THRESHOLD, 0.8). %% cpu >= this value will be highlight
 -define(COUNT_ALARM_THRESHOLD, 0.85). %% port or process reach max_limit * 0.85 will be highlight
 -define(LAST_LINE, "q(quit) p(pause) r/rr(reduction) " ++
@@ -320,7 +321,7 @@ total_scheduler_usage(SchedulerUsage, SchedulerNum) ->
     Avg = lists:foldl(fun({_, Usage}, All)-> All + Usage end, 0, SchedulerUsage) / SchedulerNum,
     Process = lists:duplicate(trunc(Avg * 100), ">"),
     Percent = erlang:trunc(Avg*1000)/10,
-    Color =  case Avg >= ?CPU_ALARM_THRESHOLD of
+    Color =  case Avg >= ?CPU_ALARM_THRESHOLD_AVG of
                  true -> ?RED;
                  false -> ?GREEN
              end,
