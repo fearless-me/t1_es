@@ -166,11 +166,14 @@ menu(Mode) ->
 
     show_cmd(Mode),
 
-    InputNoStr = io:get_line("Please enter your choice:"),
-    [T | _] = string:tokens(string_strip(InputNoStr, "\n"), " "),
-    {IT, _} = string:to_integer(T),
-    Ret = dispatchInput2(IT),
-    wait(Ret),
+	try
+		InputNoStr = io:get_line("Please enter your choice:"),
+		[T | _] = string:tokens(string_strip(InputNoStr, "\n"), " "),
+		{IT, _} = string:to_integer(T),
+		Ret = dispatchInput2(IT),
+		wait(Ret)
+	catch _ :_ :_ -> skip
+	end,
     menu(Mode).
 
 dispatchInput2(?OP_EXIT) ->

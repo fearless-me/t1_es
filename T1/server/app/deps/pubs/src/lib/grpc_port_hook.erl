@@ -27,6 +27,8 @@ get_server_port() -> get_config(node()).
 %%-------------------------------------------------------------------
 get_config(undefined) ->
     0;
+get_config({Node, _}) ->
+    get_config(Node);
 get_config(Node) ->
     Port = do_node_port(Node),
     ?WARN("gen_rpc get port for node ~p port ~p", [Node, Port]),
@@ -39,6 +41,8 @@ do_node_port(Node) when is_list(Node) ->
     ?PORT_BASE + erlang:adler32(Node) rem ?PORT_MOD.
 
 %%-------------------------------------------------------------------
+get_config_rehash({Node, _}, Port) ->
+    get_config_rehash(Node, Port);
 get_config_rehash(_Node, Port) when Port < ?PORT_HASH_MIN ->
     ?PORT_HASH_MIN;
 get_config_rehash(_Node, Port) when Port > ?PORT_HASH_MAX ->
