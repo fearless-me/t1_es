@@ -238,14 +238,15 @@ status()->
         {n,   obj_size_with_type(?OBJ_NPC)},
         {m,   obj_size_with_type(?OBJ_MON)},
         {r,   0},
-        format_tick(), gen_serverw:status_self()
+        format_tick(),
+        gen_serverw:status_self()
     ].
 
 %% -record(tick_info,{runs = 0, timeout = 0, max = 0, min = 0}).
 format_tick()->
     case get_tick_info() of
         #tick_info{runs = Runs, timeout = Timeout, all = All, min = Min, max = Max} ->
-            {tick, {Runs, Timeout, ?MAP_TICK},[Min, Max, All]};
+            {tick, [Runs, Timeout],[Min, Max, ?MAP_TICK,  All]};
         _ -> {tick, undefined}
     end.
 

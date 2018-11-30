@@ -123,8 +123,8 @@ i_format_monitor_info(#msg_exe_monitor_info{
     msg = MsgNum, timeout = Timeout, all = All, max = Max, min = Min, start = Start
 }) ->
     Base = erlang:get(?EFFECTIVE_MONITOR_GUARD),
-    [{MsgNum, Timeout, Base}, [Min, Max, All], [Start, misc_time:localtime_int()]];
-i_format_monitor_info(_) -> undefined.
+    {all, [MsgNum, Timeout], [Min, Max, Base, All], [Start, misc_time:localtime_int()]};
+i_format_monitor_info(_) -> {all, undefined}.
 
 micro_to_milli(Val) -> erlang:trunc(Val / 1000).
 
