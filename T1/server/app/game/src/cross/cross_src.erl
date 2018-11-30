@@ -12,6 +12,7 @@
 -include("logger.hrl").
 -include("pub_def.hrl").
 -include("common_cross_inc.hrl").
+-include("gs_cache.hrl").
 
 
 %% API
@@ -43,5 +44,20 @@ player_pub_data_from_cross({badrpc, _} = X) ->
 player_pub_data_from_cross({badtcp, _} = X) ->
     ?ERROR("~p error: ~p ", [?FUNCTION_NAME, X]),
     false;
-player_pub_data_from_cross(_Any) ->
+player_pub_data_from_cross(#r_from_cross_data{
+    uid = Uid,
+    pos = Pos,
+    buff_list = BuffList,
+    battle_props = BattleProps
+}) ->
+    catch misc_ets:update_element
+    (
+        ?ETS_CACHE_ONLINE_PLAYER,
+        Uid,
+        [
+            {#m_cache_online_player.pos, Pos},
+            {#m_cache_online_player.buff_list, BuffList},
+            {#m_cache_online_player.battle_props, BattleProps}
+        ]
+    ),
     true.

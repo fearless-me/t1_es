@@ -15,6 +15,7 @@
 -include("common_rec.hrl").
 -include("common_cross_inc.hrl").
 -include("gs_cache.hrl").
+-include("map_core.hrl").
 
 %% API
 -export([
@@ -23,18 +24,16 @@
     get_player_src_sid/1, get_player_src_node/1,
     get_remote_server_map_mgr/2,
     get_player_cross_sid/1, get_player_cross_node/1,
-
     %%
     get_cross_player_cross_node/1,  get_cross_player_src_node/1,
-    
     %% 
     assign_cross_for_player/1, force_assign_cross_for_player/2,
-    
     %%
     update_player_cross/2,
-    
     %%
-    is_player_in_cross/1
+    is_player_in_cross/1,
+    %%
+    add_rate_control/1, del_rate_control/1, init_rate_control_key/0
 ]).
 
 get_cross_player_cross_node(Uid) ->
@@ -111,7 +110,7 @@ get_player_cross_node(Uid) -> inner_get_player_cross_node(Uid).
 %%-------------------------------------------------------------------
 get_remote_server_map_mgr(Node, MapID)
     when is_atom(Node), Node =/= undefined ->
-    grpc:call(Node, cross_rpc, rpc_call_get_map_mgr, [MapID]);
+    grpc:call({Node, MapID}, cross_rpc, rpc_call_get_map_mgr, [MapID]);
 get_remote_server_map_mgr(_Node, _MapID) -> undefined.
 
 get_all_cross_sid()->
@@ -165,18 +164,61 @@ inner_update_player_cross(false, Uid, Params) ->
     case cross_interface:is_player_in_cross(Uid) of
         true ->
             Node = cross_interface:get_cross_player_cross_node(Uid),
-            grpc:cast(Node, cross_rpc, rpc_cast_update_player_from_game, [Params]),
+            grpc:cast({Node, Uid}, cross_rpc, rpc_cast_update_player_from_game, [Params]),
 %%            catch ?DEBUG("update player ~p data from ~p to cross ~p params ~w",[Uid, node(), Node, Params]),
             ok;
         _Any -> skip
     end,
     ok;
+inner_update_player_cross(_IsCross, Uid,  {?ETS_CACHE_ONLINE_PLAYER, Uid, {Key , _}} = Params) ->
+    case misc_ets:member(?ETS_CACHE_RATE_CONTROL_KEY_PRIV, Key) of
+        true ->
+            case is_rate_control(Uid, Key) of
+                true -> skip;
+                _Any -> direct_update_player_cross(Uid, Params)
+            end;
+        _ -> direct_update_player_cross(Uid, Params)
+    end,
+
+    ok;
 inner_update_player_cross(_IsCross, Uid, Params) ->
     %% @doc 打印日志看看是否需要把跨服数据同步到原服务器,经过测试实时同步数据可以让服务器消息堆积巨大
     %%
+    direct_update_player_cross(Uid, Params).
+
+direct_update_player_cross(Uid, Params) ->
     Node = cross_interface:get_cross_player_src_node(Uid),
-    grpc:cast(Node, cross_rpc, rpc_cast_update_player_from_cross, [Params]),
-%%    catch ?DEBUG("update player ~p data from cross ~p to ~p params ~w",[Uid, node(), Node, Params]),
+    grpc:cast({Node, Uid}, cross_rpc, rpc_cast_update_player_from_cross, [Params]),
     ok.
 
 
+
+%%-------------------------------------------------------------------
+%%-------------------------------------------------------------------
+-define(ADD_RCK(Key), misc_ets:write(?ETS_CACHE_RATE_CONTROL_KEY_PRIV, #pub_kv{key = Key, value = Key})).
+init_rate_control_key() ->
+    ?ADD_RCK(#m_cache_online_player.pos),
+    ?ADD_RCK(#m_cache_online_player.buff_list),
+    ?ADD_RCK(#m_cache_online_player.battle_props),
+    ok.
+
+-define(ADD_RC(Uid, Key), misc_ets:write(?ETS_CACHE_RATE_CONTROL_PRIV, #m_cache_rate_control{role_key = {Uid, Key}, counter = 0})).
+add_rate_control(Uid) ->
+    ets:foldl
+    (
+        fun(#pub_kv{value = V}, _)-> ?ADD_RC(Uid, V) end,
+        0,
+        ?ETS_CACHE_RATE_CONTROL_KEY_PRIV
+    ),
+    ok.
+
+del_rate_control(Uid) ->
+    Match = #m_cache_rate_control{role_key = {Uid, _ = '_'}, _ =  '_'},
+    misc_ets:match_delete(?ETS_CACHE_RATE_CONTROL_PRIV, Match),
+    ok.
+
+-define(RATE_SECONDS, 10).
+is_rate_control(Uid, Key) ->
+    New = misc_ets:update_counter(
+        ?ETS_CACHE_RATE_CONTROL_PRIV, {Uid, Key}, {#m_cache_rate_control.counter, 1}),
+    New rem (?RATE_SECONDS * (?ONS_SECOND_MS div ?MAP_TICK)) =/= 0.

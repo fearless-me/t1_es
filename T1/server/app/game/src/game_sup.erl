@@ -83,7 +83,7 @@ start_tcp_listener(_SupPid) ->
             MaxConnection = gs_interface:get_max_connection(),
             tcp_listener:start_listener(
                 gs_player_listen_server,
-                10,
+                64,
                 [{port, Port}, {max_connections, MaxConnection}, {linger, {false, 0}}],
                 player_tcp_handler
             )

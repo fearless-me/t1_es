@@ -67,6 +67,10 @@
 -define(ETS_CACHE_MAP_PLAYER_PRIV, ets_cache_map_player_priv).
 -define(ETS_CACHE_MAP_MONSTER_PRIV, ets_cache_map_monster_priv).
 
+-record(m_cache_rate_control, {role_key, counter=0}).
+-define(ETS_CACHE_RATE_CONTROL_PRIV, ets_rate_control_priv).
+-define(ETS_CACHE_RATE_CONTROL_KEY_PRIV, ets_rate_control_key_priv).
+
 
 
 

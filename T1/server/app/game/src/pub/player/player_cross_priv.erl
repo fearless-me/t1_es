@@ -81,8 +81,9 @@ check()-> ok.
 
 %% 从跨服到普通服
 do_change_map_before(true, false) ->
+    Uid = player_rw:get_uid(),
     Node = get_bgnode(),
-    Ret = grpc:call(Node, cross_dst, rpc_call_player_prepare_leave, [get_bgpid()]),
+    Ret = grpc:call({Node, Uid}, cross_dst, rpc_call_player_prepare_leave, [Uid, get_bgpid()]),
     cross_src:player_pub_data_from_cross(Ret);
 %% 从普通服到跨服
 do_change_map_before(false, true) ->
@@ -123,7 +124,7 @@ enter_cross_wrap()->
     Uid = player_rw:get_uid(),
     Node = cross_interface:get_player_cross_node(Uid),
     Data = cross_src:player_pub_data_to_cross(Aid, Uid),
-    case grpc:call(Node, cross_dst, rpc_call_player_enter, [Data]) of
+    case grpc:call({Node, Uid}, cross_dst, rpc_call_player_enter, [Data]) of
         {true, BgPid} ->
             monitor_ack(Aid, Uid, BgPid),
             true;

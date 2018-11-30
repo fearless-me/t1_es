@@ -9,7 +9,7 @@
 -module(data_pack).
 -author("Administrator").
 -include("logger.hrl").
--include("db_record.hrl").
+%%-include("db_record.hrl").
 
 %%-record(buff, {id = 0, time = 0, layer = 0, source = 0, lifetime = 0}).
 %%-record(task, {id, type, sub_type, p1, p2, p3, p4}).

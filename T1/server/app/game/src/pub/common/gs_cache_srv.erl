@@ -29,6 +29,7 @@ start_link() ->
 mod_init(_Args) ->
     erlang:process_flag(trap_exit, true),
     gs_cache_interface:init(),
+    cross_interface:init_rate_control_key(),
     {ok, ok}.
 
 %%--------------------------------------------------------------------	

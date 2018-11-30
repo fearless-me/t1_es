@@ -245,6 +245,7 @@ init({Node}) ->
                 {ok, Socket} ->
                     case DriverMod:authenticate_server(Socket) of
                         ok ->
+                            true = erlang:monitor_node(Node, true),
                             {ok, #state{socket=Socket,
                                         driver=Driver,
                                         driver_mod=DriverMod,
@@ -359,6 +360,10 @@ handle_info({DriverError, Socket, Reason}, #state{socket=Socket, driver=Driver, 
 handle_info(timeout, #state{socket=Socket, driver=Driver} = State) ->
     ?log(info, "message=timeout event=client_inactivity_timeout driver=~s socket=\"~s\" action=stopping",
          [Driver, gen_rpc_helper:socket_to_string(Socket)]),
+    {stop, normal, State};
+
+handle_info({nodedown, NodeName}, State)->
+    ?log(warn, "event=nodedown ~p", [NodeName]),
     {stop, normal, State};
 
 %% Catch-all for info - our protocol is strict so die!

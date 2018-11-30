@@ -22,6 +22,7 @@
 -author("mawenhong").
 -include("logger.hrl").
 -include("pub_def.hrl").
+-include("pub_rec.hrl").
 -include("gs_cache.hrl").
 -include("db_record.hrl").
 
@@ -43,6 +44,7 @@
     add_player_cross/1, del_player_cross/1
 ]).
 
+
 %%-------------------------------------------------------------------
 init() ->
     misc_ets:new(?ETS_CACHE_PLAYER_PUB, [named_table, public, {keypos, #m_cache_player_pub.uid}, ?ETS_RC, ?ETS_WC]),
@@ -56,6 +58,8 @@ init() ->
     misc_ets:new(?ETS_CACHE_MAP_NPC_PRIV, [named_table, public, {keypos, #m_cache_map_object_priv.uid}, ?ETS_RC, ?ETS_WC]),
     misc_ets:new(?ETS_CACHE_MAP_PLAYER_PRIV, [named_table, public, {keypos, #m_cache_map_object_priv.uid}, ?ETS_RC, ?ETS_WC]),
     misc_ets:new(?ETS_CACHE_MAP_MONSTER_PRIV, [named_table, public, {keypos, #m_cache_map_object_priv.uid}, ?ETS_RC, ?ETS_WC]),
+    misc_ets:new(?ETS_CACHE_RATE_CONTROL_PRIV, [named_table, public, {keypos, #m_cache_rate_control.role_key}, ?ETS_RC, ?ETS_WC]),
+    misc_ets:new(?ETS_CACHE_RATE_CONTROL_KEY_PRIV, [named_table, public, {keypos, #pub_kv.key}, ?ETS_RC, ?ETS_WC]),
     ok.
 
 %%-------------------------------------------------------------------
@@ -140,24 +144,26 @@ add_online_player(#p_player{} = PPlayer, Pid, Socket) ->
         map_id = Mid, line = 0, pos = vector3:new(X, 0, Y),
         old_map_id = OMid, old_line = 1, old_pos = vector3:new(Ox, 0, Oy)
     },
-    misc_ets:write(?ETS_CACHE_ONLINE_PLAYER, Player),
-    ?INFO("add ETS_CACHE_ONLINE_PLAYER ~p",[Uid]),
+    gs_cache_interface:add_online_player(Player),
     ok.
 
 add_online_player(#m_cache_online_player{uid = Uid} = Player) ->
     misc_ets:write(?ETS_CACHE_ONLINE_PLAYER, Player),
+    cross_interface:add_rate_control(Uid),
     ?INFO("add ETS_CACHE_ONLINE_PLAYER ~p",[Uid]),
     ok.
 
 del_online_player(Uid) ->
     ?INFO("del player ~w from ETS_CACHE_PLAYER_ONLINE", [Uid]),
-    misc_ets:delete(?ETS_CACHE_ONLINE_PLAYER, Uid).
+    misc_ets:delete(?ETS_CACHE_ONLINE_PLAYER, Uid),
+    cross_interface:del_rate_control(Uid).
 
 get_online_player(Uid) ->
     case misc_ets:read(?ETS_CACHE_ONLINE_PLAYER, Uid) of
         [Player] -> Player;
         _ -> undefined
     end.
+
 update_online_player(Uid, Elements) ->
     misc_ets:update_element(?ETS_CACHE_ONLINE_PLAYER, Uid, Elements),
     cross_interface:update_player_cross(Uid, {?ETS_CACHE_ONLINE_PLAYER, Uid, Elements}),
@@ -181,6 +187,8 @@ get_online_player_map_pid(Uid) ->
 
 is_player_online(Uid) ->
     misc_ets:member(?ETS_CACHE_ONLINE_PLAYER, Uid).
+
+
 %%-------------------------------------------------------------------
 %%-------------------------------------------------------------------
 add_account_socket(Aid, Pid, Socket) ->
@@ -214,5 +222,6 @@ add_player_cross(Uid) ->
 del_player_cross(Uid) ->
     misc_ets:delete(?ETS_CACHE_PLAYER_CROSS, Uid),
     ok.
+
 
 

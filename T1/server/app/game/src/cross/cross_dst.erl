@@ -15,7 +15,7 @@
 %% API
 -export([
     rpc_call_player_enter/1, rpc_call_player_enter_only_update/1,
-    rpc_call_player_prepare_leave/1,
+    rpc_call_player_prepare_leave/2,
     rpc_call_player_clear/1
 ]).
 
@@ -60,8 +60,19 @@ rpc_call_player_enter_only_update(#r_to_cross_data{
 %% 返回给源服务器时玩家公共数据
 %% {@link cross_src:player_pub_data_from_cross}
 %%
-rpc_call_player_prepare_leave(_BgPid) ->
-    ok.
+rpc_call_player_prepare_leave(Uid, _BgPid) ->
+    #m_cache_online_player
+    {
+        pos = Pos,
+        buff_list = BuffList,
+        battle_props = BattleProps
+    } = gs_cache_interface:get_online_player(Uid),
+     #r_from_cross_data{
+         uid = Uid,
+         pos = Pos,
+         buff_list = BuffList,
+         battle_props = BattleProps
+     }.
 
 
 rpc_call_player_clear(BgPid) ->

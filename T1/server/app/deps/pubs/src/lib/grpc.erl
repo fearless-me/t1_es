@@ -25,6 +25,9 @@
 %% Misc functions
 -export([nodes/0]).
 
+%% client hash
+-export([client_hash/2]).
+
 %%% ===================================================
 %%% Library interface
 %%% ===================================================
@@ -32,39 +35,58 @@
 %% All functions are GUARD-ed in the sender module, no
 %% need for the overhead here
 -spec async_call(node_or_tuple(), atom() | tuple(), atom() | function()) -> term() | {badrpc, term()} | {badtcp | term()}.
+async_call({Node, Key}, M, F) ->
+    gen_rpc:async_call(client_hash(Node, Key), M, F);
 async_call(Node, M, F) ->
     gen_rpc:async_call(Node, M, F).
 
 -spec async_call(node_or_tuple(), atom() | tuple(), atom() | function(), list()) -> term() | {badrpc, term()} | {badtcp | term()}.
+async_call({Node, Key}, M, F, A) ->
+    gen_rpc:async_call(client_hash(Node, Key), M, F, A);
 async_call(Node, M, F, A) ->
     gen_rpc:async_call(Node, M, F, A).
 
 -spec call(node_or_tuple(), atom() | tuple(), atom() | function()) -> term() | {badrpc, term()} | {badtcp | term()}.
+call({Node, Key}, M, F) ->
+    gen_rpc:call(client_hash(Node, Key), M, F);
 call(Node, M, F) ->
     gen_rpc:call(Node, M, F).
 
 -spec call(node_or_tuple(), atom() | tuple(), atom() | function(), list()) -> term() | {badrpc, term()} | {badtcp | term()}.
+call({Node, Key}, M, F, A) ->
+    gen_rpc:call(client_hash(Node, Key), M, F, A);
 call(Node, M, F, A) ->
     gen_rpc:call(Node, M, F, A).
 
 -spec call(node_or_tuple(), atom() | tuple(), atom() | function(), list(), timeout() | undefined) ->
     term() | {badrpc, term()} | {badtcp | term()}.
+call({Node, Key}, M, F, A, RecvTO) ->
+    gen_rpc:call(client_hash(Node, Key), M, F, A, RecvTO);
 call(Node, M, F, A, RecvTO) ->
     gen_rpc:call(Node, M, F, A, RecvTO).
 
 -spec call(node_or_tuple(), atom() | tuple(), atom() | function(), list(), timeout() | undefined, timeout() | undefined) -> term() | {badrpc, term()} | {badtcp | term()}.
+
+call({Node, Key}, M, F, A, RecvTO, SendTO) ->
+    gen_rpc:call(client_hash(Node, Key), M, F, A, RecvTO, SendTO);
 call(Node, M, F, A, RecvTO, SendTO) ->
     gen_rpc:call(Node, M, F, A, RecvTO, SendTO).
 
 -spec cast(node_or_tuple(), atom() | tuple(), atom() | function()) -> true.
+cast({Node, Key}, M, F) ->
+    gen_rpc:cast(client_hash(Node, Key), M, F);
 cast(Node, M, F) ->
     gen_rpc:cast(Node, M, F).
 
 -spec cast(node_or_tuple(), atom() | tuple(), atom() | function(), list()) -> true.
+cast({Node, Key}, M, F, A) ->
+    gen_rpc:cast(client_hash(Node, Key), M, F, A);
 cast(Node, M, F, A) ->
     gen_rpc:cast(Node, M, F, A).
 
 -spec cast(node_or_tuple(), atom() | tuple(), atom() | function(), list(), timeout() | undefined) -> true.
+cast({Node, Key}, M, F, A, SendTO) ->
+    gen_rpc:cast(client_hash(Node, Key), M, F, A, SendTO);
 cast(Node, M, F, A, SendTO) ->
     gen_rpc:cast(Node, M, F, A, SendTO).
 
@@ -123,3 +145,11 @@ sbcast(Nodes, Name, Msg) when is_list(Nodes), is_atom(Name) ->
 -spec nodes() -> list().
 nodes() ->
     gen_rpc:nodes().
+
+-define(MULTI_CLIENT, 2).
+client_hash(Node, _Key) when ?MULTI_CLIENT == 1->
+    Node;
+client_hash(Node, Key)  when is_integer(Key) ->
+    {Node, Key rem ?MULTI_CLIENT + 1};
+client_hash(Node, Key) ->
+    {Node, erlang:phash2(Key) rem ?MULTI_CLIENT + 1}.

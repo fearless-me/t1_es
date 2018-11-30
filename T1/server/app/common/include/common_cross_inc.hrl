@@ -18,7 +18,7 @@
 -record(m_share_player_cross_lock, {uid = 0, src_sid = 0, cross_sid = 0, assign_time = 0}).
 
 -record(r_to_cross_data, {aid, uid, pid, player_pub, player_online}).
--record(r_from_cross_data, {aid, uid, data}).
+-record(r_from_cross_data, {uid, pos, buff_list, battle_props}).
 
 
 -endif.

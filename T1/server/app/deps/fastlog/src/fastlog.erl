@@ -27,7 +27,7 @@
 -export([
     make_init_log/2,
     pause/0, continue/0,
-    log_level/1, log_level/0
+    level/1, level/0
 
 ]).
 
@@ -78,8 +78,8 @@
 %%-------------------------------------------------------------------
 pause() -> set_env(?DISCARD_FLAG, true).
 continue() -> set_env(?DISCARD_FLAG, false).
-log_level(Level) -> set_env(log_level, Level).
-log_level() -> get_env(log_level, ?LOG_LEVEL).
+level(Level) -> set_env(log_level, Level), level().
+level() -> get_env(log_level, ?LOG_LEVEL).
 %%-------------------------------------------------------------------
 
 %%-------------------------------------------------------------------

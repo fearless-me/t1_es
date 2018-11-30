@@ -33,7 +33,7 @@ start_listener(Ref, NumAcceptors, Port, MaxConnection, Handler) ->
         Ref,
         NumAcceptors,
         ranch_tcp,
-        [{port, Port}, {max_connections, MaxConnection},{backlog, 512}],
+        [{port, Port}, {max_connections, MaxConnection}],
         tcp_handler,
         [{handler, Handler}]
     ),
@@ -45,7 +45,7 @@ start_listener(Ref, NumAcceptors, Port, MaxConnection, Handler, Conf) ->
         Ref,
         NumAcceptors,
         ranch_tcp,
-        [{port, Port}, {max_connections, MaxConnection}, {backlog, 512}],
+        [{port, Port}, {max_connections, MaxConnection}],
         tcp_handler,
         [{handler, Handler},{netConf,Conf}]
     ),
