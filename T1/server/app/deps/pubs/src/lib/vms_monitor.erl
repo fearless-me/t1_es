@@ -267,7 +267,6 @@ handle_info({monitor, PidOrPort, long_schedule, Info}, Logger) ->
 %% except that the tuple tagged with timeout is not present.
 handle_info({monitor, GcPid, large_heap, Info}, Logger) ->
     cache_monitor(GcPid, large_heap, Info),
-    catch erlang:spawn(fun()-> erlang:garbage_collect(GcPid) end),
     {noreply, Logger};
 %% {monitor, SusPid, busy_port, Port} is sent to MonitorPid.
 %% SusPid is the pid that got suspended when sending to Port.
