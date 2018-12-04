@@ -192,6 +192,78 @@ getRow(1000008) ->
 		notice_type = 0,
 		content = "机械城"
 	};
+getRow(1000010) ->
+	#string_packageCfg{
+		desc__ = "破坏拳击I",
+		id = 1000010,
+		enum_string_id = "",
+		type = 4,
+		notice_type = 0,
+		content = "破坏拳击I"
+	};
+getRow(1000011) ->
+	#string_packageCfg{
+		desc__ = "破坏拳击II",
+		id = 1000011,
+		enum_string_id = "",
+		type = 4,
+		notice_type = 0,
+		content = "破坏拳击II"
+	};
+getRow(1000012) ->
+	#string_packageCfg{
+		desc__ = "快速冲拳",
+		id = 1000012,
+		enum_string_id = "",
+		type = 4,
+		notice_type = 0,
+		content = "快速冲拳"
+	};
+getRow(1000013) ->
+	#string_packageCfg{
+		desc__ = "爆破重拳",
+		id = 1000013,
+		enum_string_id = "",
+		type = 4,
+		notice_type = 0,
+		content = "爆破重拳"
+	};
+getRow(1000016) ->
+	#string_packageCfg{
+		desc__ = "为T1的建设立下汗马之功。",
+		id = 1000016,
+		enum_string_id = "",
+		type = 4,
+		notice_type = 0,
+		content = "为T1的建设立下汗马之功。"
+	};
+getRow(1000015) ->
+	#string_packageCfg{
+		desc__ = "开国先锋",
+		id = 1000015,
+		enum_string_id = "",
+		type = 4,
+		notice_type = 0,
+		content = "开国先锋"
+	};
+getRow(1000014) ->
+	#string_packageCfg{
+		desc__ = "木桩测试",
+		id = 1000014,
+		enum_string_id = "",
+		type = 4,
+		notice_type = 0,
+		content = "木桩测试"
+	};
+getRow(1000017) ->
+	#string_packageCfg{
+		desc__ = "猎魔斩",
+		id = 1000017,
+		enum_string_id = "",
+		type = 4,
+		notice_type = 0,
+		content = "猎魔斩"
+	};
 getRow(_) -> {}.
 
 getKeyList() -> [
@@ -211,7 +283,15 @@ getKeyList() -> [
 	{1000005},
 	{1000006},
 	{1000007},
-	{1000008}
+	{1000008},
+	{1000010},
+	{1000011},
+	{1000012},
+	{1000013},
+	{1000016},
+	{1000015},
+	{1000014},
+	{1000017}
 ].
 
 get1KeyList() -> [
@@ -231,6 +311,14 @@ get1KeyList() -> [
 	1000005,
 	1000006,
 	1000007,
-	1000008
+	1000008,
+	1000010,
+	1000011,
+	1000012,
+	1000013,
+	1000016,
+	1000015,
+	1000014,
+	1000017
 ].
 

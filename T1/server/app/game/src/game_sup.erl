@@ -56,7 +56,7 @@ start() ->
         misc:fn_wrapper("serv data loader", ?Wrap(misc:start_otp(SupPid, data_loader, worker, [gs_data_loader]))),
         misc:fn_wrapper("all logic process", ?Wrap(misc:start_otp(SupPid, gs_logic_sup, supervisor))),
         misc:fn_wrapper("center window process", ?Wrap(misc:start_otp(SupPid, center_srv, worker))),
-        
+
         watchdog:wait_all(), watchdog:ready(true),
 
         background_gc:run(),

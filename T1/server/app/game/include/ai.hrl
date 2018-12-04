@@ -12,40 +12,50 @@
 -define(GS_AI_INC_HRL, true).
 -compile(nowarn_deprecated_type).
 
+-include("map_core.hrl").
+
 %%-------------------------------------------------------------------
 %% AI状态
--define(AIST_Null, 0).    %% 没有
--define(AIST_Idle, 1).    %% 空闲状态
--define(AIST_Pursue, 1).    %% 追击状态
--define(AIST_Attack, 2).    %% 攻击状态
--define(AIST_Flee, 3).    %% 逃跑状态
--type ai_state_type() :: ?AIST_Null .. ?AIST_Flee.
+-define(AI_STATE_NULL,   0).  %% 没有
+-define(AI_STATE_IDLE,   1).  %% 空闲状态
+-define(AI_STATE_PURSUE, 1).  %% 追击状态
+-define(AI_STATE_ATTACK, 2).  %% 攻击状态
+-define(AI_STATE_FLEE,   3).  %% 逃跑状态
+-define(AI_STATE_RETURN, 4).  %% 返回状态
+-define(AI_STATE_MAX, 4).
+
+-type ai_state_type() :: ?AI_STATE_NULL .. ?AI_STATE_MAX.
+-export_type([ai_state_type/0]).
 
 %%-------------------------------------------------------------------
 %% AI类型
--define(AIAT_Null, 0). %% 没有
--define(AIAT_Passive, 1). %% 被动型
--define(AIAT_Active, 2). %% 主动型
--define(AIAT_Barbett, 3). %% 炮塔型
--define(AIAT_Lamster, 4). %% 逃跑型
--type ai_action_type() :: ?AIAT_Null .. ?AIAT_Lamster.
+-define(AI_NULL, 0). %% 没有
+-define(AI_PASSIVE, 1). %% 被动型
+-define(AI_ACTIVE, 2). %% 主动型
+-define(AI_BARBETT, 3). %% 炮塔型
+-define(AI_LAMSTER, 4). %% 逃跑型
+-type ai_type() :: ?AI_NULL .. ?AI_LAMSTER.
+-export_type([ai_type/0]).
+
 
 %%-------------------------------------------------------------------
 %% AI数据
--define(EACT_NoAI, 0). %%无AI数据
--define(EACT_Indicate, 1). %%指定
--define(EACT_Random, 2). %%完全随机
--define(EACT_GroupRandom, 3). %%在组ID范围内随机
--type ai_create_type() :: ?EACT_NoAI..?EACT_GroupRandom.
+-define(AI_INIT_NULL, 0). %%无AI数据
+-define(AI_INIT_INDICATE, 1). %%指定
+-define(AI_INIT_RANDOM, 2). %%完全随机
+-define(AI_INIT_GROUP_RANDOM, 3). %%在组ID范围内随机
+-type ai_init_type() :: ?AI_INIT_NULL..?AI_INIT_GROUP_RANDOM.
+-export_type([ai_init_type/0]).
 
 %%-------------------------------------------------------------------
 %% 巡逻类型
--define(ECPT_Wood, 0).% 站立
--define(ECPT_Range, 1).% 自由
--define(ECPT_Path, 2).% 路径
--type ai_patrol_type() :: ?ECPT_Wood..?ECPT_Path.
+-define(AI_PATROL_WOOD, 0).% 站立
+-define(AI_PATROL_RANGE, 1).% 自由
+-define(AI_PATROL_PATH, 2).% 路径
+-type ai_patrol_type() :: ?AI_PATROL_WOOD..?AI_PATROL_PATH.
+-export_type([ai_patrol_type/0]).
 
--define(TICK_TIME, 200).
+-define(TICK_TIME, ?MAP_TICK).
 -define(TICK_PER_SECOND, 1000 div ?TICK_TIME).
 -define(AI_PATROL_REST_TICK_MIN, 5 * ?TICK_PER_SECOND).        %% 生物巡逻过程中休息的最小时间——5秒
 -define(AI_PATROL_REST_TICK_INTERVAL, 10 * ?TICK_PER_SECOND).        %% 生物巡逻过程中休息的最大差——10秒
@@ -61,8 +71,6 @@
 -define(AI_RETURN_TICK, 10 * ?TICK_PER_SECOND).        %%  生物在多少秒仇恨没有改变的情况下返回——10秒
 -define(AI_PURSUE_XZ_MAX, 50.0).
 
-
--define(AI_PATROL_RADIUS, 50).    %% 生物巡逻半径 todo 怪物配置表
 
 %% 仇恨数据：仇恨目标UID， 仇恨值， 是否激活
 -record(m_unit_enmity, {uid = 0, enmity = 0, active = true}).
@@ -116,12 +124,29 @@
 -define(CFE_MinEnimty, 4). %% 怪物仇恨列表内仇恨最小的玩家
 -type trigger_target() :: ?CFE_NULL .. ?CFE_MinEnimty.
 
+-record(ai_cfg,{
+    id = 0, ai_type, group_id,
+    buff_list, trigger_list
+}).
 
--record(m_ai_trigger_cfg, {
+-record(ai_trigger_cfg, {
     id, event :: trigger_event(), event_misc1, event_misc2, %% misc 会触发频率， 触发最大次数
     prob, state :: trigger_state(), state_misc1, state_misc2}).
 -record(m_ai_trigger, {
     is_active = false, active_tick = 0, trigger_times = 0, skill_id, target_type :: trigger_target(), cfg_id = 0
 }).
+
+
+-record(monster_cfg,{
+    id=0,
+    patrol_type = ?AI_PATROL_RANGE :: ai_patrol_type(),
+    patrol_radius = 10,
+    ai_init_type = ?AI_INIT_INDICATE :: ai_init_type(),
+    ai_id = 1,
+    ai_type = ?AI_PASSIVE :: ai_type()
+}).
+
+-define(get_monster_cfg(Id), #monster_cfg{id = Id}).
+-define(get_ai_cfg(Id), #ai_cfg{id = id}).
 
 -endif.

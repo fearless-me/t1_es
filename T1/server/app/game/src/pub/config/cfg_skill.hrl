@@ -58,6 +58,12 @@
 
 	hiteffect,
 
+	hp_steal,
+
+	special_options,
+
+	hurt_times,
+
 	beforecast,
 
 	castingtick,
@@ -72,9 +78,7 @@
 
 	action_ishit,
 
-	action_bullet,
-
-	hurt_times
+	action_bullet
  }).
 
 -endif.

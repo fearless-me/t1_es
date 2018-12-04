@@ -16,17 +16,16 @@
 
 
 %%
-transition(Uid, ?AIAT_Passive) ->
+transition(Uid, ?AI_PASSIVE) ->
     ai_transition_passive:transition(Uid);
 %%
-transition(Uid, ?AIAT_Active) ->
+transition(Uid, ?AI_ACTIVE) ->
     ai_transition_active:transition(Uid);
 %%
-transition(Uid, ?AIAT_Barbett) ->
+transition(Uid, ?AI_BARBETT) ->
     ai_transition_barbett:transition(Uid);
 %%
-transition(Uid, ?AIAT_Lamster) ->
+transition(Uid, ?AI_LAMSTER) ->
     ai_transition_lamster:transition(Uid);
 %%
-transition(_Uid, _Type) ->
-    ?AIST_Null.
+transition(_Uid, _Type) -> ?AI_NULL.

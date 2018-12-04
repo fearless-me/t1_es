@@ -18,7 +18,7 @@ on_enter(Uid) ->
     mod_ai:clear_all_enmity(Uid),
     mod_ai:reset_patrol_tick(Uid),
     mod_ai:reset_look_for_target_tick(Uid),
-    object_rw:set_fields(
+    object_rw:set_fields_direct(
         Uid,
         [
             {#m_object_rw.ai_is_patrol, false},

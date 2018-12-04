@@ -80,6 +80,7 @@
 	 set_ai_flee_dir/2, set_ai_flee_dir_direct/2, get_ai_flee_dir/1, get_ai_flee_dir/2, %#m_object_rw.ai_flee_dir 
 	 set_ai_flee_tick/2, set_ai_flee_tick_direct/2, get_ai_flee_tick/1, get_ai_flee_tick/2, %#m_object_rw.ai_flee_tick 
 	 set_ai_is_arrived_flee_pos/2, set_ai_is_arrived_flee_pos_direct/2, get_ai_is_arrived_flee_pos/1, get_ai_is_arrived_flee_pos/2, %#m_object_rw.ai_is_arrived_flee_pos 
+	 set_ai_arrived_return_pos/2, set_ai_arrived_return_pos_direct/2, get_ai_arrived_return_pos/1, get_ai_arrived_return_pos/2, %#m_object_rw.ai_arrived_return_pos 
 	 set_enmity_list/2, set_enmity_list_direct/2, get_enmity_list/1, get_enmity_list/2, %#m_object_rw.enmity_list 
 	 set_max_enmity_uid/2, set_max_enmity_uid_direct/2, get_max_enmity_uid/1, get_max_enmity_uid/2, %#m_object_rw.max_enmity_uid 
 	 set_ai_lock_target_tick/2, set_ai_lock_target_tick_direct/2, get_ai_lock_target_tick/1, get_ai_lock_target_tick/2, %#m_object_rw.ai_lock_target_tick 
@@ -1244,6 +1245,23 @@ set_ai_is_arrived_flee_pos(Uid, Val)->
     ?TRY_CATCH(hook_map:on_rw_update(Uid,{#m_object_rw.ai_is_arrived_flee_pos, Val})).
 set_ai_is_arrived_flee_pos_direct(Uid, Val) ->
     misc_ets:update_element(i_ets(), Uid, {#m_object_rw.ai_is_arrived_flee_pos, Val}),
+    ok.
+%%-------------------------------------------------------------------
+%% #m_object_rw.ai_arrived_return_pos
+get_ai_arrived_return_pos(Uid) ->
+    misc_ets:read_element(i_ets(), Uid, #m_object_rw.ai_arrived_return_pos).
+
+get_ai_arrived_return_pos(Uid, Def) ->
+    case misc_ets:read_element(i_ets(), Uid, #m_object_rw.ai_arrived_return_pos) of
+        undefined -> Def;
+        Any -> Any
+    end.
+    
+set_ai_arrived_return_pos(Uid, Val)->
+    misc_ets:update_element(i_ets(), Uid, {#m_object_rw.ai_arrived_return_pos, Val}),
+    ?TRY_CATCH(hook_map:on_rw_update(Uid,{#m_object_rw.ai_arrived_return_pos, Val})).
+set_ai_arrived_return_pos_direct(Uid, Val) ->
+    misc_ets:update_element(i_ets(), Uid, {#m_object_rw.ai_arrived_return_pos, Val}),
     ok.
 %%-------------------------------------------------------------------
 %% #m_object_rw.enmity_list

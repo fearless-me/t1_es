@@ -13,7 +13,8 @@
 -export([
     new/0, new/1,
     rand/0, rand/2,
-    seed/0
+    seed/0,
+    prob/1
 ]).
 
 
@@ -31,6 +32,10 @@ new() ->
 new(Seed) ->
     put(?RAND_KEY, Seed),
     Seed.
+
+prob(FProb) ->
+    X = erlang:trunc(FProb * 10000),
+    X =<rand_tool:rand(1, 10000).
 
 -spec rand() -> integer().
 rand() ->

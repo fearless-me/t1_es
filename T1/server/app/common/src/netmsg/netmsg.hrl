@@ -2,7 +2,7 @@
 -ifndef(netmsg).
 -define(netmsg,1).
 
--define(ProtoVersion,656).
+-define(ProtoVersion,657).
 
 -record(pk_BattleProp,{
 	%% UInt32 属性ID
@@ -116,6 +116,14 @@
 	misc = 0,
 	%% UInt32如果是技能，则为技能消息序列号
 	serial = 0
+}).
+
+%% 
+%% // 上线初始化技能
+-define(GS2U_SkillInit,63697).
+-record(pk_GS2U_SkillInit,{
+	%% SkillInfo
+	skills = []
 }).
 
 %% 

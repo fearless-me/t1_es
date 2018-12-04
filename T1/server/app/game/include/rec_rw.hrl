@@ -75,6 +75,9 @@
     
     %flee
     ai_flee_dst, ai_flee_dir, ai_flee_tick = 0, ai_is_arrived_flee_pos = false,
+
+    %返回
+    ai_arrived_return_pos=false,
     
     % 仇恨
     % 仇恨列表  最大仇恨id 锁定目标tick、 没有增加仇恨的tick

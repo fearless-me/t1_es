@@ -9,7 +9,7 @@
 -module(fastlog).
 -author("mawenhong").
 
--behaviour(gen_server2).
+-behaviour(gen_server).
 
 -include_lib("kernel/include/file.hrl").
 
@@ -26,10 +26,10 @@
 
 -export([
     make_init_log/2,
-    pause/0, continue/0,
-    level/1, level/0
-
+    is_pause/0, pause/0, continue/0, level/1, level/0,
+    stdio_pause/0, stdio_continue/0
 ]).
+
 
 %% gen_server callbacks
 -export([init/1,
@@ -47,11 +47,16 @@
 -define(MAX_LOG_CNT_ONE_FILE, 150000).
 -define(if_else(Cond, True, False), case Cond of true -> True; _ -> False end).
 
--define(DISCARD_FLAG, dicard_log).
+-define(DISCARD_ACTIVE,  active).
+-define(DISCARD_PASSIVE, passive).
+-define(DISCARD_FORBID,  forbid).
+-define(DISCARD_KEY, dicard_log).
+-define(DISCARD_STDIO_KEY, dicard_stdio_log).
 -define(MASTER_NODE, master_of_slave).
--define(CHECK_FLAG_TIMES, 100).
--define(MAX_OVERLOAD_MSG, 10000).
--record(state, {monitorRef, counter, fileName, fd, fd_err, is_log_stdio, no_err_fd = false}).
+-define(CHECK_FLAG_TIMES, 50).
+-define(MAX_OVERLOAD_MSG, 15000).
+-define(MAX_OVERLOAD_MSG_STDIO, 2500).
+-record(state, {monitorRef, counter=0, msg_number=0, fileName, fd, fd_err, is_log_stdio=false, no_err_fd = false}).
 
 %%设置日志文件和错误文件的相关选项
 -define(LogFileOptions, [
@@ -76,11 +81,15 @@
 -endif.
 
 %%-------------------------------------------------------------------
-pause() -> set_env(?DISCARD_FLAG, true).
-continue() -> set_env(?DISCARD_FLAG, false).
+pause() -> set_env(?DISCARD_KEY, ?DISCARD_ACTIVE).
+continue() -> set_env(?DISCARD_KEY, ?DISCARD_FORBID).
+is_pause() -> get_env(?DISCARD_KEY, ?DISCARD_FORBID) =/= ?DISCARD_FORBID.
 level(Level) -> set_env(log_level, Level), level().
 level() -> get_env(log_level, ?LOG_LEVEL).
+stdio_pause() -> set_env(?DISCARD_STDIO_KEY, ?DISCARD_ACTIVE).
+stdio_continue() -> set_env(?DISCARD_STDIO_KEY, ?DISCARD_FORBID).
 %%-------------------------------------------------------------------
+passive_pause() ->  set_env(?DISCARD_KEY, ?DISCARD_PASSIVE).
 
 %%-------------------------------------------------------------------
 fatal(Sink, Fmt) -> fatal_(?LOG_LEVEL, Sink, Fmt, []).
@@ -141,8 +150,11 @@ debug_(debug, Sink, Fmt, Arg) ->
 debug_(_, _Sink, _Fmt, _Arg) ->
     skip.
 
-
 do_log(Level, Sink, F, A) ->
+    do_log_2(get_env(?DISCARD_KEY, ?DISCARD_FORBID), Level, Sink, F, A).
+
+
+do_log_2(?DISCARD_FORBID, Level, Sink, F, A) ->
     {{YYYY, MM, DD}, {Hour, Min, Sec}} = erlang:localtime(),
     String =
         io_lib:format("[~.4w-~.2.0w-~.2.0w ~.2.0w:~.2.0w:~.2.0w][~w]~ts~n",
@@ -153,6 +165,8 @@ do_log(Level, Sink, F, A) ->
         MasterNode ->
             {Sink, MasterNode} ! {?MSG, Level, String}
     end,
+    ok;
+do_log_2(_Any, _Level, _Sink, _F, _A) ->
     ok.
 
 
@@ -168,14 +182,14 @@ make_init_log(Sink, Fname) ->
 %%
 %% @end
 %%--------------------------------------------------------------------
--define(SWEEP_OPT, {spawn_opt,[{fullsweep_after, 50}]}).
+-define(SWEEP_OPT, {spawn_opt, [{fullsweep_after, 50}]}).
 start_link(Fname) ->
     ParentPid = self(),
-    gen_server2:start_link({local, ?MODULE}, ?MODULE, [Fname, ParentPid], [?SWEEP_OPT]).
+    gen_server:start_link({local, ?MODULE}, ?MODULE, [Fname, ParentPid], [?SWEEP_OPT]).
 
 start_link(Sink, Fname) ->
     ParentPid = self(),
-    gen_server2:start_link({local, Sink}, ?MODULE, [Fname, ParentPid], [?SWEEP_OPT]).
+    gen_server:start_link({local, Sink}, ?MODULE, [Fname, ParentPid], [?SWEEP_OPT]).
 
 %%%===================================================================
 %%% gen_server callbacks
@@ -332,23 +346,23 @@ start_file_timer() ->
                end),
     ok.
 %%--------------------------------------------------------------------
-do_handle_info({?MSG, Level, String}, #state{counter = Cnt} = State) ->
-    case need_write_log(Cnt) of
+do_handle_info({?MSG, Level, String}, #state{msg_number = MsgNumber} = State) ->
+    case need_write_log(MsgNumber) of
         true ->
             write_log(Level, String, State),
             Res = check_rotation(State),
-            {noreply, Res};
+            {noreply, Res#state{msg_number = MsgNumber + 1}};
         _ ->
-            {noreply, State}
+            {noreply, State#state{msg_number = MsgNumber + 1}}
     end;
-do_handle_info({?MSG, Level, Fmt, Args, Time}, #state{counter = Cnt} = State) ->
-    case need_write_log(Cnt) of
+do_handle_info({?MSG, Level, Fmt, Args, Time}, #state{msg_number = MsgNumber} = State) ->
+    case need_write_log(MsgNumber) of
         true ->
             write_log(Level, Fmt, Args, Time, State),
             Res = check_rotation(State),
-            {noreply, Res};
+            {noreply, Res#state{msg_number = MsgNumber + 1}};
         _ ->
-            {noreply, State}
+            {noreply, State#state{msg_number = MsgNumber + 1}}
     end;
 do_handle_info(rotate_timer, #state{} = State) ->
     {ok, State2} = rotate(State),
@@ -393,23 +407,23 @@ check_rotation(State) ->
             State#state{counter = Cntr + 1}
     end.
 
-write_log(Level, String, #state{fd = Fd, fd_err = FdErr, is_log_stdio = Stdio, no_err_fd = NoErr}) ->
+write_log(Level, String, #state{fd = Fd, msg_number = Cnt, fd_err = FdErr, is_log_stdio = Stdio, no_err_fd = NoErr}) ->
     file:write(Fd, String),
-    write_console(Level, Stdio, String),
+    write_console(Level, String, Cnt, Stdio),
     case NoErr =:= false andalso is_error_log(Level) of
         true -> file:write(FdErr, String);
         _ -> skip
     end.
 
 write_log(Level, Fmt, Args,
-    {{YYYY, MM, DD}, {Hour, Min, Sec}}, #state{fd = Fd, fd_err = FdErr, is_log_stdio = Stdio, no_err_fd = NoErr}) ->
+    {{YYYY, MM, DD}, {Hour, Min, Sec}}, #state{fd = Fd, msg_number = Cnt, fd_err = FdErr, is_log_stdio = Stdio, no_err_fd = NoErr}) ->
 
     Str1 = io_lib:format(Fmt, Args),
     String =
         io_lib:format("[~.4w-~.2.0w-~.2.0w ~.2.0w:~.2.0w:~.2.0w] [~w] ~ts ~n",
             [YYYY, MM, DD, Hour, Min, Sec, Level, Str1]),
     file:write(Fd, String),
-    write_console(Level, Stdio, String),
+    write_console(Level, String, Cnt, Stdio),
     case NoErr =:= false andalso is_error_log(Level) of
         true -> file:write(FdErr, String);
         _ -> skip
@@ -417,56 +431,52 @@ write_log(Level, Fmt, Args,
 
 
 -ifndef(RELEASE).
-write_console(Level, Stdio, String) ->
-    case Stdio of
-        true -> erlang:spawn(
-            fun() ->
-                color_inout(Level, String)
-            end);
-        _ -> skip
-    end,
-    ok.
+write_console(Level, String, Cnt, IsShowStdio) ->
+    write_console_log(need_write_stdio_log(IsShowStdio, Cnt), Level, String).
 -else.
-write_console(Level, Stdio, String) ->
-    case os:type() of
-        {win32, _} ->
-            case Stdio of
-                true -> erlang:spawn(fun() -> color_inout(Level, String) end);
-                _ -> skip
-            end,
-            ok;
-        _ ->
-            skip
-    end,
-    skip.
+write_console(_L1, _String, _Cnt, _IsShowStdio) -> ok.
 -endif.
 
-color_inout(fatal, Msg) -> io:format(user, "~ts", [color:red(Msg)]);
-color_inout(error, Msg) -> io:format(user, "~ts", [color:red(Msg)]);
-color_inout(warn, Msg) -> io:format(user, "~ts", [color:yellow(Msg)]);
-color_inout(debug, Msg) -> io:format(user, "~ts", [color:green(Msg)]);
-color_inout(_, Msg) -> io:format(user, "~ts", [Msg]).
+write_console_log(true, Level, String) ->
+    color_inout(Level, String);
+write_console_log(_, _, _) -> skip.
 
 
-is_error_log(debug) -> false;
-is_error_log(info) -> false;
-is_error_log(warn) -> false;
-is_error_log(_) -> true.
 
-need_write_log(Cnt) when is_number(Cnt) ->
-    case Cnt > 0 andalso (Cnt rem ?CHECK_FLAG_TIMES) =:= 0 of
-        true ->
-            not (get_env(?DISCARD_FLAG, false) orelse check_msg_queue());
-        _ ->
-            true
-    end;
-need_write_log(_Any) ->
+%%
+need_write_stdio_log(fasle, _Cnt) ->
+    fasle;
+need_write_stdio_log(true, _Cnt) ->
+    get_env(?DISCARD_STDIO_KEY, ?DISCARD_FORBID) =:= ?DISCARD_FORBID.
+
+need_write_log(Cnt) ->
+    Flag = get_env(?DISCARD_KEY, ?DISCARD_FORBID),
+    case (Cnt rem ?CHECK_FLAG_TIMES) == 0 orelse Flag =:= ?DISCARD_PASSIVE of
+        true -> can_write_log_now(Flag);
+        _ -> Flag =:= ?DISCARD_FORBID
+    end.
+
+
+can_write_log_now(?DISCARD_ACTIVE) ->
+    false;
+can_write_log_now(?DISCARD_PASSIVE) ->
+    case msg_queue_overload(1) of
+        true -> skip;
+        _Any -> fastlog:continue()
+    end,
+    false;
+can_write_log_now(?DISCARD_FORBID) ->
+    MaxLimit = get_env(overload_message_queue_len, ?MAX_OVERLOAD_MSG),
+    case msg_queue_overload(MaxLimit) of
+        true -> passive_pause();
+        _Any -> skip
+    end,
     true.
 
-check_msg_queue()->
-    MaxLimit = get_env(overload_msg_len, ?MAX_OVERLOAD_MSG),
-    case erlang:process_info(self(), message_queue_len) of
-        {message_queue_len, MsgQ} -> MsgQ >= MaxLimit;
+msg_queue_overload(MaxLimit) ->
+    case catch erlang:process_info(whereis(?MODULE), message_queue_len) of
+        {message_queue_len, MsgQ} ->
+            MsgQ > MaxLimit;
         _ -> false
     end.
 
@@ -481,11 +491,11 @@ make_err_file_(Fname) ->
 make_file_(Dir, Fname, Suffix) ->
     TimeNow = time_format(erlang:localtime()),
     File = Dir ++ "/" ++ Fname ++ "." ++ TimeNow ++ Suffix ++ ".log",
-    {ok, Fd}  =
+    {ok, Fd} =
         case file:open(File, ?LogFileOptions) of
             {ok, _} = Res -> Res;
-            {error,eexist} -> file:open(File, ?LogFileOpenOpt);
-            Error -> io:format("*** create file ~s error ~p ~n",[File, Error]), Error
+            {error, eexist} -> file:open(File, ?LogFileOpenOpt);
+            Error -> io:format("*** create file ~s error ~p ~n", [File, Error]), Error
         end,
     file:write(Fd, <<16#EF, 16#BB, 16#BF>>),
     io:format("[~ts][info]create log file[~s] succ.~n", [time_format_str(erlang:localtime()), File]),
@@ -535,3 +545,17 @@ set_env(Key, Value) ->
 
 get_env(Key, Def) ->
     application:get_env(?MODULE, Key, Def).
+
+
+
+color_inout(fatal, Msg) -> io:format(user, "~ts", [color:red(Msg)]);
+color_inout(error, Msg) -> io:format(user, "~ts", [color:red(Msg)]);
+color_inout(warn, Msg) -> io:format(user, "~ts", [color:yellow(Msg)]);
+color_inout(debug, Msg) -> io:format(user, "~ts", [color:green(Msg)]);
+color_inout(_, Msg) -> io:format(user, "~ts", [Msg]).
+
+
+is_error_log(debug) -> false;
+is_error_log(info) -> false;
+is_error_log(warn) -> false;
+is_error_log(_) -> true.

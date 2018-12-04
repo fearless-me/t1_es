@@ -35,7 +35,7 @@ on_exit(_Uid) ->
 
 update(Uid) ->
     mod_ai:update_lock_target(Uid),
-    case mod_combat:can_ai_use_skill(Uid) of
+    case mod_combat:is_using_skill(Uid) of
         false ->
             mod_ai:count_down_attack_tick(Uid),
             TarUid = object_rw:get_ai_target_uid(Uid),
@@ -43,11 +43,9 @@ update(Uid) ->
             NowSkillId = object_rw:get_ai_use_skill_id(Uid),
             case TarUid > 0 andalso IsUseSkillNow of
                 true -> mod_ai:ai_use_skill(Uid, TarUid, NowSkillId);
-                _ -> skip
-            end,
-            ok;
-        _ ->
-            ok
+                _Any -> skip
+            end;
+        _ -> ok
     end,
     ok.
 

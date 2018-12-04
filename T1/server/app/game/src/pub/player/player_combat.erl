@@ -159,6 +159,8 @@ do_use_skill(true, SkillId, Tar, Pos, Serial) ->
         #r_player_use_skill_req{uid = Uid, skill_id = SkillId, tar = Tar, pos = Pos, serial = Serial}),
     ok;
 do_use_skill(ErrAndFalse, SkillId, Tar, _Pos, Serial) ->
+    ?ERROR("~p use skill ~p to ~p serial ~p failed:~p",
+        [player_rw:get_uid(), SkillId, Tar, Serial, ErrAndFalse]),
     NetMsg = #pk_GS2U_UseSkill{
         uid = player_rw:get_uid(),
         tar_uids = Tar,
@@ -196,5 +198,4 @@ check_target(true, #skillCfg{purpose = Purpose}, TarList) ->
     end;
 check_target(ErrAndFalse, _SkillCfg, _Tar) ->
     ErrAndFalse.
-
 

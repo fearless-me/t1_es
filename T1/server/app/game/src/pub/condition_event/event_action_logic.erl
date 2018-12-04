@@ -17,7 +17,7 @@
 
 %% API
 -export([
-    event_damage_sub_prop/10
+    event_damage_sub_prop/8
 ]).
 
 event_damage_sub_prop(
@@ -25,7 +25,7 @@ event_damage_sub_prop(
     #m_object_rw{uid = Atr} = Attack,
     #m_object_rw{uid = Tar} = Target,
     #m_object_rw{battle_props = #m_battleProps{} = BP} = _PropSrcTarget,
-    PropID, Percent, Const, ResultType, BloodPer, Extra) ->
+    PropID, Percent, Const, ResultType) ->
     %% 只能在地图进程中计算
     case condition_event_interface:is_on_map(CEParams) of
         true ->
@@ -38,10 +38,7 @@ event_damage_sub_prop(
                     ?EVENT_DAMAGE_RESULT_TYPE_DAMAGE ->
                         mod_combat_prop:hitAndDamage(Attack, Target, LastValue, SkillId, Serial, Cause);
                     ?EVENT_DAMAGE_RESULT_TYPE_TREAT ->
-                        mod_combat_prop:hitAndDamage(Attack, Target, LastValue, SkillId, Serial, Cause);
-                    ?EVENT_DAMAGE_RESULT_TYPE_DEFENSE ->
-                        ?ERROR("no realize EVENT_DAMAGE_RESULT_TYPE_DEFENSE"),
-                        ok
+                        mod_combat_prop:hitAndDamage(Attack, Target, LastValue, SkillId, Serial, Cause)
                 end,
 
             %% TODO 吸血根据实际伤害来计算最终数据

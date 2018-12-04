@@ -107,7 +107,7 @@ new_monster(#recMapObjData{
     init_rw_default(Uid),
     
     %% todo 怪物AI配置
-    mod_ai:init(Uid, ?AIAT_Active),
+    mod_ai:init(Uid, ?AI_ACTIVE),
     Req = #r_create_map_object_req{
         type = ?OBJ_MON,
         pid = self(), uid = Uid, data_id = Mid,

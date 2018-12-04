@@ -18,26 +18,26 @@
 
 %%-------------------------------------------------------------------
 -spec on_enter(Uid :: integer(), AiState :: ai_state_type()) -> ok.
-on_enter(Uid, ?AIST_Idle) ->
+on_enter(Uid, ?AI_STATE_IDLE) ->
     ai_state_idle:on_enter(Uid);
-on_enter(Uid, ?AIST_Pursue) ->
+on_enter(Uid, ?AI_STATE_PURSUE) ->
     ai_state_pursue:on_enter(Uid);
-on_enter(Uid, ?AIST_Attack) ->
+on_enter(Uid, ?AI_STATE_ATTACK) ->
     ai_state_attack:on_enter(Uid);
-on_enter(Uid, ?AIST_Flee) ->
+on_enter(Uid, ?AI_STATE_FLEE) ->
     ai_state_flee:on_enter(Uid);
 on_enter(_Uid, _AiState) ->
     ok.
 
 %%-------------------------------------------------------------------
 -spec on_exit(Uid :: integer(), AiState :: ai_state_type()) -> ok.
-on_exit(Uid, ?AIST_Idle) ->
+on_exit(Uid, ?AI_STATE_IDLE) ->
     ai_state_idle:on_exit(Uid);
-on_exit(Uid, ?AIST_Pursue) ->
+on_exit(Uid, ?AI_STATE_PURSUE) ->
     ai_state_pursue:on_exit(Uid);
-on_exit(Uid, ?AIST_Attack) ->
+on_exit(Uid, ?AI_STATE_ATTACK) ->
     ai_state_attack:on_exit(Uid);
-on_exit(Uid, ?AIST_Flee) ->
+on_exit(Uid, ?AI_STATE_FLEE) ->
     ai_state_flee:on_exit(Uid);
 on_exit(_Uid, _AiState) ->
     ok.
@@ -45,26 +45,26 @@ on_exit(_Uid, _AiState) ->
 
 %%-------------------------------------------------------------------
 -spec update(Uid :: integer(), AiState :: ai_state_type()) -> ok.
-update(Uid, ?AIST_Idle) ->
+update(Uid, ?AI_STATE_IDLE) ->
     ai_state_idle:update(Uid);
-update(Uid, ?AIST_Pursue) ->
+update(Uid, ?AI_STATE_PURSUE) ->
     ai_state_pursue:update(Uid);
-update(Uid, ?AIST_Attack) ->
+update(Uid, ?AI_STATE_ATTACK) ->
     ai_state_attack:update(Uid);
-update(Uid, ?AIST_Flee) ->
+update(Uid, ?AI_STATE_FLEE) ->
     ai_state_flee:update(Uid);
 update(_Uid, _AiState) ->
     ok.
 
 %%-------------------------------------------------------------------
 -spec on_event(Uid :: integer(), AiState :: ai_state_type(), Event :: integer()) -> ok.
-on_event(Uid, ?AIST_Idle, Event) ->
+on_event(Uid, ?AI_STATE_IDLE, Event) ->
     ai_state_idle:on_event(Uid, Event);
-on_event(Uid, ?AIST_Pursue, Event) ->
+on_event(Uid, ?AI_STATE_PURSUE, Event) ->
     ai_state_pursue:on_event(Uid, Event);
-on_event(Uid, ?AIST_Attack, Event) ->
+on_event(Uid, ?AI_STATE_ATTACK, Event) ->
     ai_state_attack:on_event(Uid, Event);
-on_event(Uid, ?AIST_Flee, Event) ->
+on_event(Uid, ?AI_STATE_FLEE, Event) ->
     ai_state_flee:on_event(Uid, Event);
 on_event(_Uid, _AiState, _Event) ->
     ok.

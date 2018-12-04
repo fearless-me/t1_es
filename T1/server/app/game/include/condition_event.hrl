@@ -78,9 +78,9 @@
 %% 伤害事件子类型
 %%-------------------------------------------------------------------
 %% 属性伤害(根据取到的属性值造成伤害)
--define(EVENT_DAMAGE_SUB_PROP, 1).
+-define(EVENT_DAMAGE_SUB_PROP, 0).
 %% 固定公式(其他特别计算方法，调用公式ID)
--define(EVENT_DAMAGE_SUB_FIX_FORMULA, 2).
+-define(EVENT_DAMAGE_SUB_FIX_FORMULA, 1).
 
 %%-------------------------------------------------------------------
 %% 伤害事件结果类型
@@ -89,8 +89,6 @@
 -define(EVENT_DAMAGE_RESULT_TYPE_DAMAGE, 0).
 %% 治疗
 -define(EVENT_DAMAGE_RESULT_TYPE_TREAT, 1).
-%% 护盾
--define(EVENT_DAMAGE_RESULT_TYPE_DEFENSE, 2).
 
 %%-------------------------------------------------------------------
 %% 伤害事件特殊选项(按位保存)
@@ -102,7 +100,7 @@
 %% 必定命中
 -define(EVENT_DAMAGE_CERTAINLY_HIT, 2).
 %% 必定暴击
--define(EVENT_DAMAGE_CERTAINLY_DODGE, 4).
+-define(EVENT_DAMAGE_CERTAINLY_CRITICAL, 4).
 
 %%-------------------------------------------------------------------
 %% BUFF事件免疫鉴定

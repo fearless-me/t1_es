@@ -31,9 +31,7 @@ action([Conditions, EventTrue, EventFalse], Params,
         true -> event_loop(EventTrue, Params, CEParams);
         _Any -> event_loop(EventFalse, Params, CEParams)
     end;
-action(Any, Params, CEParams) ->
-    ?ERROR("action Any:~p, Params:~p, CEParams:~p, stace:~p",
-        [Any, Params, CEParams, misc:callstack()]),
+action(_Any, _Params, _CEParams) ->
     skip.
 
 %%-------------------------------------------------------------------

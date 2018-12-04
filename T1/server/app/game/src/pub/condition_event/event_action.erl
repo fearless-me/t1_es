@@ -24,19 +24,19 @@ action(Event, OriginalParams, CEParams) ->
 
 %%-------------------------------------------------------------------
 %% [伤害， 属性伤害， 属性来源， 属性ID， 万分比， 常数， 结果类型， 吸血比例， 特殊选项]
-do_action([?EVENT_DAMAGE, ?EVENT_DAMAGE_SUB_PROP, ?TARGET_SELF, PropID, Percent, Const, ResultType, BloodPer, Extra],
+do_action([?EVENT_DAMAGE, ?EVENT_DAMAGE_SUB_PROP, ?TARGET_SELF, PropID, Percent, Const, ResultType],
     [Attack, Target], CEParams) ->
     event_action_logic:event_damage_sub_prop(CEParams, Attack, Target, Attack,
-        PropID, Percent, Const, ResultType, BloodPer, Extra);
-do_action([?EVENT_DAMAGE, ?EVENT_DAMAGE_SUB_PROP, ?TARGET_OTHER, PropID, Percent, Const, ResultType, BloodPer, Extra],
+        PropID, Percent, Const, ResultType);
+do_action([?EVENT_DAMAGE, ?EVENT_DAMAGE_SUB_PROP, ?TARGET_OTHER, PropID, Percent, Const, ResultType],
     [Attack, Target], CEParams) ->
     event_action_logic:event_damage_sub_prop(CEParams, Attack, Target, Target,
-        PropID, Percent, Const, ResultType, BloodPer, Extra);
-do_action([?EVENT_DAMAGE, ?EVENT_DAMAGE_SUB_FIX_FORMULA, ?TARGET_SELF, PropID, Percent, Const, ResultType, BloodPer, Extra],
+        PropID, Percent, Const, ResultType);
+do_action([?EVENT_DAMAGE, ?EVENT_DAMAGE_SUB_FIX_FORMULA, ?TARGET_SELF, PropID, Percent, Const, ResultType],
     [Attack, _Target], _CEParams) ->
     ?ERROR("no realize EVENT_DAMAGE_SUB_FIX_FORMULA"),
     ok;
-do_action([?EVENT_DAMAGE, ?EVENT_DAMAGE_SUB_FIX_FORMULA, ?TARGET_OTHER, PropID, Percent, Const, ResultType, BloodPer, Extra],
+do_action([?EVENT_DAMAGE, ?EVENT_DAMAGE_SUB_FIX_FORMULA, ?TARGET_OTHER, PropID, Percent, Const, ResultType],
     [Attack, Target], _CEParams) ->
     ?ERROR("no realize EVENT_DAMAGE_SUB_FIX_FORMULA"),
     ok;
@@ -45,28 +45,30 @@ do_action([?EVENT_DAMAGE, ?EVENT_DAMAGE_SUB_FIX_FORMULA, ?TARGET_OTHER, PropID, 
 %% [添加BUFF， 对象， BuffID， 添加BUFF时长， 添加BUFF层数， 免疫判定]
 do_action([?EVENT_ADD_BUFF, Target, BuffID, Millisecond, Layer, Immune],
     [#m_object_rw{uid = Uid1}, #m_object_rw{uid = Uid2}], _CEParams) ->
-    TargetUid =
-        case Target of
-            ?TARGET_SELF -> Uid1;
-            _ -> Uid2
-        end,
-
-    Req = #r_player_add_buff_req{
-        uid   = TargetUid, src_uid = Uid1, buff_id = BuffID, lifetime = Millisecond,
-        layer = Layer, skip_immune = misc:i2b(Immune)
-    },
-    player_interface:add_buff_(TargetUid, Req),
+    ?ERROR("no realize EVENT_ADD_BUFF"),
+%%    TargetUid =
+%%        case Target of
+%%            ?TARGET_SELF -> Uid1;
+%%            _ -> Uid2
+%%        end,
+%%
+%%    Req = #r_player_add_buff_req{
+%%        uid   = TargetUid, src_uid = Uid1, buff_id = BuffID, lifetime = Millisecond,
+%%        layer = Layer, skip_immune = misc:i2b(Immune)
+%%    },
+%%    player_interface:add_buff_(TargetUid, Req),
     ok;
 
 %% [移除BUFF， 对象， BUFF区分类型， 参数]
 do_action([?EVENT_DEL_BUFF, Target, P2, P3], [#m_object_rw{uid = Uid1}, #m_object_rw{uid = Uid2}], _CEParams) ->
-    TargetUid =
-        case Target of
-            ?TARGET_SELF -> Uid1;
-            _ -> Uid2
-        end,
-
-    player_interface:del_buff_(TargetUid, P2, P3),
+    ?ERROR("no realize EVENT_DEL_BUFF"),
+%%    TargetUid =
+%%        case Target of
+%%            ?TARGET_SELF -> Uid1;
+%%            _ -> Uid2
+%%        end,
+%%
+%%    player_interface:del_buff_(TargetUid, P2, P3),
     ok;
 
 %%-------------------------------------------------------------------

@@ -38,6 +38,8 @@ use_skill(Aer, DerList, SkillId, Serial) ->
         {#m_object_rw{} = Attacker, [#m_object_rw{}|_] = TargetList} ->
             use_skill_success(Attacker, TargetList, SkillCfg, Serial);
         ErrorCode ->
+            ?ERROR("~p use skill ~p to ~p serial ~p failed:~p",
+                [Aer, SkillId, DerList, Serial, ErrorCode]),
             %% failed
             NetMsg = #pk_GS2U_UseSkill{
                 uid = Aer,

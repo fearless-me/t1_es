@@ -118,25 +118,25 @@ set_active(Uid, EventType) ->
 
 can_active(_CfgId, EventType) ->
     %% todo 获取trigger 配置
-    Cfg = #m_ai_trigger_cfg{},
-    Cfg#m_ai_trigger_cfg.event =:= EventType.
+    Cfg = #ai_trigger_cfg{},
+    Cfg#ai_trigger_cfg.event =:= EventType.
 
 %%-------------------------------------------------------------------
 test_interval(#m_ai_trigger{cfg_id = _Id, active_tick = Tick, trigger_times = Times}) ->
     %% todo 获取trigger 配置
-    Cfg = #m_ai_trigger_cfg{},
-    #m_ai_trigger_cfg{event_misc1 = Period, event_misc2 = MaxTimes} = Cfg,
+    Cfg = #ai_trigger_cfg{},
+    #ai_trigger_cfg{event_misc1 = Period, event_misc2 = MaxTimes} = Cfg,
     (Period > 0 andalso Tick rem Period == 0) andalso
         (MaxTimes > 0 andalso Times < MaxTimes).
 
 %%-------------------------------------------------------------------
 test_trigger_event(Uid, #m_ai_trigger{cfg_id = _Id}) ->
     %% todo 获取trigger 配置
-    Cfg = #m_ai_trigger_cfg{},
+    Cfg = #ai_trigger_cfg{},
     test_trigger_event(Uid, Cfg);
-test_trigger_event(_Uid, #m_ai_trigger_cfg{event = ?ETEE_Null}) ->
+test_trigger_event(_Uid, #ai_trigger_cfg{event = ?ETEE_Null}) ->
     true;
-test_trigger_event(_Uid, #m_ai_trigger_cfg{prob = Prob}) ->
+test_trigger_event(_Uid, #ai_trigger_cfg{prob = Prob}) ->
     rand_tool:rand() rem 10000 =< Prob.
 
 %%-------------------------------------------------------------------
@@ -156,11 +156,11 @@ test_trigger_state(Uid, #m_ai_trigger{cfg_id = _Id}, #m_cache_map_object_priv{ui
             false;
         _ ->
             %% todo 获取trigger 配置
-            Cfg = #m_ai_trigger_cfg{},
+            Cfg = #ai_trigger_cfg{},
             test_trigger_state(Uid, Cfg, Obj)
     end;
 %% todo 持续增加判断
-test_trigger_state(_Uid, #m_ai_trigger_cfg{state = ?ETST_HPLower}, _Obj) ->
+test_trigger_state(_Uid, #ai_trigger_cfg{state = ?ETST_HPLower}, _Obj) ->
     true;
 test_trigger_state(_Uid, _Any, _None) ->
     false.
@@ -178,10 +178,10 @@ on_event(Uid, EventType) ->
 
 on_event_1(Uid, #m_ai_trigger{cfg_id = _Id} = Trigger, EventType) ->
     %% todo 获取trigger 配置
-    Cfg = #m_ai_trigger_cfg{},
+    Cfg = #ai_trigger_cfg{},
     on_event_2(Uid, Cfg, Trigger, EventType).
 
-on_event_2(Uid, #m_ai_trigger_cfg{event = EventType}, Trigger, EventType) ->
+on_event_2(Uid, #ai_trigger_cfg{event = EventType}, Trigger, EventType) ->
     #m_ai_trigger{target_type = TarType, active_tick = Tick} = Trigger,
     TarUid = mod_ai:get_target_by_type(Uid, TarType),
     case test_trigger_event(Uid, Trigger) of

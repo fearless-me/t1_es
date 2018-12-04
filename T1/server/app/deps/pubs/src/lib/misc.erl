@@ -481,9 +481,6 @@ system_info() ->
     "schedulers(on/max)(+S)                 :   ~p / ~p~n\t"
     "dirty schedulers cpu(on/max)(+SDcpu)   :   ~p / ~p~n\t"
     "dirty io schedulers(+SDio)             :   ~p ~n\t"
-    "thread pool size(+A)                   :   ~p ~n\t"
-    "OTP version                            :   ~ts~n\t"
-    "ERTS vesion                            :   ~ts~n\t"
     "garbage collection info                :   ~p ~n\t"
     "ulimit -a                              :   ~ts~n\t"
     "sytem monitor                          :   ~w~n\t"
@@ -497,9 +494,6 @@ system_info() ->
             erlang:system_info(schedulers_online), erlang:system_info(schedulers),
             erlang:system_info(dirty_cpu_schedulers_online), erlang:system_info(dirty_cpu_schedulers),
             erlang:system_info(dirty_io_schedulers),
-            erlang:system_info(thread_pool_size),
-            erlang:system_info(otp_release),
-            erlang:system_info(version),
             erlang:statistics(garbage_collection),
             ulimit(misc:os_type()),
             erlang:system_monitor(),

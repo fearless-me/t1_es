@@ -11,10 +11,11 @@
 -author("mawenhong").
 -include("logger.hrl").
 -include("pub_def.hrl").
+-include("rec_rw.hrl").
 -include("gs_cache.hrl").
 -include("movement.hrl").
 -include("ai.hrl").
--include("rec_rw.hrl").
+
 
 
 
@@ -28,7 +29,8 @@
     %% pursue
     get_pursue_unit/1, start_pursue/2, update_pursue/2, count_down_attack_tick/1,
     %% skill&combat
-    add_enmity/3, clear_enmity/3, on_ai_event/2, is_in_attack_dist/2, ai_use_skill/3,
+    add_enmity/3, clear_enmity/3, set_enmity_active/3,
+    on_ai_event/2, is_in_attack_dist/2, ai_use_skill/3,
     %% flee
     count_down_flee_tick/1, rand_flee_pos/1, start_flee/2, update_flee/1,
     get_target_by_type/2
@@ -47,11 +49,10 @@ init(Uid, AiType) ->
 
 %%-------------------------------------------------------------------
 init_patrol(Uid, PathList) ->
-    % todo 根据怪物巡逻的配置
-%%    _Did = object_rw:get_data_id(Uid),
-    PatrolType = ?ECPT_Path,
+    Did = object_rw:get_data_id(Uid),
+    #monster_cfg{patrol_type = PatrolType} = ?get_monster_cfg(Did),
     case PatrolType of
-        ?ECPT_Path ->
+        ?AI_PATROL_PATH ->
             object_rw:set_fields(
                 Uid,
                 [
@@ -68,16 +69,16 @@ init_patrol(Uid, PathList) ->
 
 %%-------------------------------------------------------------------
 init_ai(Uid) ->
-%%    _Did = object_rw:get_data_id(Uid),
-    CreateType = ?EACT_Indicate,
+    Did = object_rw:get_data_id(Uid),
+    #monster_cfg{ai_init_type = CreateType, ai_id = AiId } = ?get_monster_cfg(Did),
     case CreateType of
-        ?EACT_NoAI ->
+        ?AI_INIT_NULL ->
             object_rw:set_ai_id(Uid, 0);
-        ?EACT_Indicate ->
+        ?AI_INIT_INDICATE ->
+            object_rw:set_ai_id(Uid, AiId);
+        ?AI_INIT_RANDOM ->
             object_rw:set_ai_id(Uid, 0);
-        ?EACT_Random ->
-            object_rw:set_ai_id(Uid, 0);
-        ?EACT_GroupRandom ->
+        ?AI_INIT_GROUP_RANDOM ->
             object_rw:set_ai_id(Uid, 0);
         _ ->
             object_rw:set_ai_id(Uid, 0)
@@ -92,14 +93,7 @@ init_trigger(Uid) ->
     ok.
 
 %%-------------------------------------------------------------------
-init_transition(Uid) ->
-    % todo 根据怪物配置添加AI类型
-    case object_rw:get_ai_id(Uid, 0) of
-        0 -> skip;
-        _Id ->
-            _AiAction = ?AIAT_Active
-    end,
-    ok.
+init_transition(_Uid) -> ok.
 %%-------------------------------------------------------------------
 %%-------------------------------------------------------------------
 reset_patrol_tick(Uid) ->
@@ -123,12 +117,13 @@ update(_Any, _Now) ->
 
 %%-------------------------------------------------------------------
 do_update(Uid, true) ->
-    %% todo 获取怪物AI配置
-    AiAction = ?AIAT_Null,
+    %% 获取怪物AI配置
+    Did = object_rw:get_data_id(Uid),
+    #monster_cfg{ai_type = AiType } = ?get_monster_cfg(Did),
     State = object_rw:get_ai_state(Uid),
     
     ?TRY_CATCH(update_hook(Uid), Err1, Stk1),
-    ?TRY_CATCH(update_transition(Uid, AiAction), Err2, Stk2),
+    ?TRY_CATCH(update_transition(Uid, AiType), Err2, Stk2),
     ?TRY_CATCH(update_state(Uid, State), Err3, Stk3),
     ?TRY_CATCH(update_trigger(Uid), Err4, Stk4),
     ok;
@@ -141,11 +136,11 @@ update_hook(_Uid) ->
     ok.
 
 %%-------------------------------------------------------------------
-update_transition(_Uid, ?AIAT_Null) ->
+update_transition(_Uid, ?AI_NULL) ->
     skip;
-update_transition(Uid, AiAction) ->
+update_transition(Uid, AiType) ->
     OldState = object_rw:get_ai_state(Uid),
-    NewState = ai_transition:transition(Uid, AiAction),
+    NewState = ai_transition:transition(Uid, AiType),
     case NewState of
         OldState -> skip;
         _ -> change_state(Uid, OldState, NewState)
@@ -153,7 +148,7 @@ update_transition(Uid, AiAction) ->
     ok.
 
 %%-------------------------------------------------------------------
-update_state(_Uid, ?AIST_Null) ->
+update_state(_Uid, ?AI_STATE_NULL) ->
     ok;
 update_state(Uid, AiState) ->
     ai_state:update(Uid, AiState),
@@ -177,10 +172,10 @@ change_state(Uid, OldState, NewState) ->
 %% 巡逻
 %%-------------------------------------------------------------------
 update_patrol(Uid) ->
-%%    _Did = object_rw:get_data_id(Uid),
-    PatrolType = ?ECPT_Wood,
+    Did = object_rw:get_data_id(Uid),
+    #monster_cfg{patrol_type = PatrolType} = ?get_monster_cfg(Did),
     case PatrolType of
-        ?ECPT_Wood -> skip;
+        ?AI_PATROL_WOOD -> skip;
         _ ->
             IsPatrol = object_rw:get_ai_is_patrol(Uid),
             PatrolTick = object_rw:get_ai_patrol_rest_tick(Uid),
@@ -211,11 +206,12 @@ do_update_patrol(Uid, _IsPatrol, _ResetTick) ->
 %%-------------------------------------------------------------------
 start_patrol(Uid) ->
     % todo 根据怪物的配置来启动
-    PatrolType = ?ECPT_Wood,
+    Did = object_rw:get_data_id(Uid),
+    #monster_cfg{patrol_type = PatrolType} = ?get_monster_cfg(Did),
     do_start_patrol(Uid, PatrolType),
     ok.
 
-do_start_patrol(Uid, ?ECPT_Path) ->
+do_start_patrol(Uid, ?AI_PATROL_PATH) ->
     WPNum = object_rw:get_ai_wp_num(Uid),
     WPIdx = object_rw:get_ai_wp_idx(Uid),
     
@@ -252,11 +248,13 @@ do_start_patrol(Uid, ?ECPT_Path) ->
     % 怪物开始跑路
     do_started_patrol_1(Uid, TarPos),
     ok;
-do_start_patrol(Uid, ?ECPT_Range) ->
-    Diameter = ?AI_PATROL_RADIUS * 2,
+do_start_patrol(Uid, ?AI_PATROL_RANGE) ->
+    Did = object_rw:get_data_id(Uid),
+    #monster_cfg{patrol_radius = Radius} = ?get_monster_cfg(Did),
+    Diameter = Radius * 2,
     NowPos = object_rw:get_cur_pos(Uid),
-    X = vector3:x(NowPos) + ((rand_tool:rand() rem Diameter) - ?AI_PATROL_RADIUS),
-    Z = vector3:z(NowPos) + ((rand_tool:rand() rem Diameter) - ?AI_PATROL_RADIUS),
+    X = vector3:x(NowPos) + ((rand_tool:rand() rem Diameter) - Radius),
+    Z = vector3:z(NowPos) + ((rand_tool:rand() rem Diameter) - Radius),
     TarPos = vector3:new(X, 0, Z),
     
     % 怪物开始跑路
@@ -359,6 +357,17 @@ clear_enmity(Uid, TarUid, _SetMaxEnmity) ->
     EnList1 = clear_enmity(Uid, TarUid, false),
     sort_max_enmity(Uid, EnList1),
     ok.
+
+%%-------------------------------------------------------------------
+set_enmity_active(Uid, Tar, Active) ->
+    EnList0 = object_rw:get_enmity_list(Uid),
+    case lists:keyfind(Tar, #m_unit_enmity.uid, EnList0) of
+        #m_unit_enmity{} = Enmity ->
+            EnList1 = lists:keyreplace(Enmity#m_unit_enmity{active = Active}),
+            sort_max_enmity(Uid, EnList1);
+        _ ->
+            skip
+    end.
 
 %%-------------------------------------------------------------------
 update_look_for_enemy(Uid) ->
@@ -486,8 +495,8 @@ start_pursue(_Uid, _TarUid) -> ok.
 update_pursue(Uid, TarUid) when is_integer(TarUid), TarUid > 0 ->
     CheckTick = object_rw:get_ai_check_pursue_tick(Uid),
     NoEnmityTick = object_rw:get_no_inc_enmity_tick(Uid),
-    IsPursueFailed = object_rw:ai_pursue_failed(Uid),
-    IsCantPursue = object_rw:ai_cant_pursue(Uid),
+    IsPursueFailed = object_rw:get_ai_pursue_failed(Uid),
+    IsCantPursue = object_rw:get_ai_cant_pursue(Uid),
     object_rw:set_fields(
         Uid,
         [
@@ -601,7 +610,7 @@ ai_use_skill(Uid, SkillId, TarUid) ->
 count_down_flee_tick(Uid) ->
     Tick = object_rw:get_ai_flee_tick(Uid),
     object_rw:set_ai_flee_tick(Uid, Tick - 1),
-    ok.
+    Tick - 1.
 
 rand_flee_pos(Uid) ->
     V_X = (rand_tool:rand() rem ?AI_RANGE_FLEE_RADIUS) + ?AI_RANGE_FLEE_RADIUS,
@@ -618,7 +627,7 @@ rand_flee_pos(Uid) ->
             {#m_object_rw.ai_flee_dst, Pos2}
         ]
     ),
-    ok.
+    Pos2.
 
 start_flee(Uid, Dst) ->
     object_rw:set_fields(

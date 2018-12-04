@@ -124,6 +124,14 @@ decode(?GS2U_HitTarget,Bin0) ->
 		},
 	Bin5 };
 
+%GENERATED from file:combat.h => GS2U_SkillInit
+decode(?GS2U_SkillInit,Bin0) ->
+	{ V_skills, Bin1 } = read_array(Bin0, fun(X) -> decode_SkillInfo( X ) end),
+	{ #pk_GS2U_SkillInit {
+		skills = V_skills
+		},
+	Bin1 };
+
 %GENERATED from file:combat.h => GS2U_SkillInterrupt
 decode(?GS2U_SkillInterrupt,Bin0) ->
 	{ V_uid, Bin1 } = read_uint64( Bin0 ),
@@ -850,6 +858,14 @@ encode(#pk_GS2U_HitTarget{} = P) ->
 		Bin_serial
 	];
 
+%GENERATED from file:combat.h => GS2U_SkillInit
+encode(#pk_GS2U_SkillInit{} = P) ->
+	Bin_skills = write_array(P#pk_GS2U_SkillInit.skills, fun(X) -> encode_SkillInfo( X ) end),
+	[
+		<<?GS2U_SkillInit:?U16>>,
+		Bin_skills
+	];
+
 %GENERATED from file:combat.h => GS2U_SkillInterrupt
 encode(#pk_GS2U_SkillInterrupt{} = P) ->
 	Bin_uid = write_uint64( P#pk_GS2U_SkillInterrupt.uid ),
@@ -1476,6 +1492,7 @@ name(?GS2U_DeleteBuff) -> "GS2U_DeleteBuff";
 name(?GS2U_DeleteBuffList) -> "GS2U_DeleteBuffList";
 name(?GS2U_HPChange) -> "GS2U_HPChange";
 name(?GS2U_HitTarget) -> "GS2U_HitTarget";
+name(?GS2U_SkillInit) -> "GS2U_SkillInit";
 name(?GS2U_SkillInterrupt) -> "GS2U_SkillInterrupt";
 name(?GS2U_SpecialMove) -> "GS2U_SpecialMove";
 name(?GS2U_UpdateBuff) -> "GS2U_UpdateBuff";
@@ -1526,6 +1543,7 @@ cmd_list()->
 		,?GS2U_DeleteBuffList
 		,?GS2U_HPChange
 		,?GS2U_HitTarget
+		,?GS2U_SkillInit
 		,?GS2U_SkillInterrupt
 		,?GS2U_SpecialMove
 		,?GS2U_UpdateBuff

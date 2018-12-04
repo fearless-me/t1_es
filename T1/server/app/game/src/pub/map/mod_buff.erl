@@ -136,7 +136,7 @@ add_buff(_Any, Uid, BuffId, Level, SrcUid, Layer, LifeTime, BuffList) ->
 
 
 %% 检查能否添加buff（目标对象等等）
-can_add_buff(_Uid, _BuffId, true) ->
+can_add_buff(_Uid, _BuffId, false) ->
     true;
 can_add_buff(Uid, BuffId, true) ->
     case buff:get_cfg(BuffId) of
