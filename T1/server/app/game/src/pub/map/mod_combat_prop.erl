@@ -87,6 +87,7 @@ hitAndDamage(
         src_uid = Uid,
         serial = SkillSerial
     },
+    ?DEBUG("hitAndDamage ~p -> ~p DeltaHp:~p SkillID:~p", [Uid, TargetUid, DeltaHp, SkillID]),
     mod_view:send_net_msg_to_visual(TargetUid, HpMsg),
     ok.
 
@@ -100,6 +101,8 @@ hitAndDamage(
     } = prop_interface:calcHitAndDamage(AttackBps, DefenseBps, DamageValue),
     Ahp = fresh_prop(Uid, AttackBpsRet),
     Dhp = fresh_prop(TargetUid, DefenseBpsRet),
+
+    %% TODO 计算吸血
     ?DEBUG("hitAndDamage:~p(~p) -> ~p(~p)", [Uid, Ahp, TargetUid, Dhp]),
     Ret.
 

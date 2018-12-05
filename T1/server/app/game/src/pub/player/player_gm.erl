@@ -12,6 +12,7 @@
 
 -include("logger.hrl").
 -include("netmsg.hrl").
+-include("gs_cache.hrl").
 
 %% API
 -export([is_gm/1, on_gm/1]).
@@ -25,7 +26,9 @@
     {0, "add_buff",    fun add_buff/1, "添加buff &add_buff $BuffId [$BuffLevel]"},
     {0, "use_skill",   fun use_skill/1, "使用技能 &use_skill $SkillId $TargetId"},
     {0, "add_bp",      fun add_bp/1, "添加战斗属性 &add_bp $bpId $bpUseType $bpValue"},
-    {0, "query_bp",    fun query_bp/1, "查看战斗属性 &query_bp $bpId"}
+    {0, "query_bp",    fun query_bp/1, "查看战斗属性 &query_bp $bpId"},
+    {0, "query",       fun query/1, "查看自身当前属性 &query"},
+    {0, "goto",        fun goto/1, "跳转到坐标 &goto x y"}
 ]).
 
 
@@ -83,8 +86,9 @@ do_gm(_, _, _, _) -> skip.
 %%-------------------------------------------------------------------
 change_map([MapId | _]) ->
 %%    Delta = misc:rand(-5, 15) / 1.0,
-    Pos = vector3:new(324.1, 0, 233.1),
-    player_pub:change_map_(list_to_integer(MapId), 0, Pos),
+    ID = list_to_integer(MapId),
+    Pos = map_creator_interface:map_init_pos(ID),
+    player_pub:change_map_(ID, 0, Pos),
     ok.
 
 %%-------------------------------------------------------------------
@@ -144,3 +148,16 @@ query_bp([BattlePropId | _]) ->
     ?INFO("playerUid:~w use gm query_bp[~ts] result:~w", [player_rw:get_uid(), BattlePropId, Value]),
     ok.
 
+query(_) ->
+    Uid = player_rw:get_uid(),
+    #m_cache_online_player{
+        map_id = MapId, map_pid = MapPid, pos = Pos, hp = Hp
+    } = gs_cache_interface:get_online_player(Uid),
+
+    ?WARN("query self uid:~p mapID:~p mapPid:~p Pos:~p hp:~p",
+        [Uid, MapId, MapPid, Pos, Hp]),
+    ok.
+
+goto([X, Y|_]) ->
+    ?ERROR("think more..."),
+    ok.

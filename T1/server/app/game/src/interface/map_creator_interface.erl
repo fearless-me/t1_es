@@ -199,7 +199,7 @@ status() ->
 -define(INFO_FMT_HEAD, "~-5.ts~-18.ts~-8.ts~-6.ts~-8.ts~-12ts~-20.ts~-10.ts~ts~n").
 line_status(MapId, LineEts, Extra) ->
     Overview = io_lib:format("~nMap:~p  Line Count:~p~n", [MapId, misc_ets:size(LineEts)]),
-    List = misc_ets:to_list(LineEts),
+    List = lists:sort(misc_ets:to_list(LineEts)),
     InfoHead = io_lib:format(?INFO_FMT_HEAD, ["Id", "Pid", "Limit", "In", "Reserve", "Memory","Deadline", "Status", "Extra"]),
     InfoAll = lists:map(
         fun(#m_map_line{

@@ -75,7 +75,8 @@ send_base_info() ->
 %% Int32 头
         head = player_rw:get_head(),
 %% UInt16 角色
-        mapID = Mid
+        mapID = Mid,
+        skill_list = player_skill:get_skill_info_list()
     },
     player_pub:send_net_msg(Msg),
     %% init combat

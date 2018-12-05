@@ -124,14 +124,6 @@ decode(?GS2U_HitTarget,Bin0) ->
 		},
 	Bin5 };
 
-%GENERATED from file:combat.h => GS2U_SkillInit
-decode(?GS2U_SkillInit,Bin0) ->
-	{ V_skills, Bin1 } = read_array(Bin0, fun(X) -> decode_SkillInfo( X ) end),
-	{ #pk_GS2U_SkillInit {
-		skills = V_skills
-		},
-	Bin1 };
-
 %GENERATED from file:combat.h => GS2U_SkillInterrupt
 decode(?GS2U_SkillInterrupt,Bin0) ->
 	{ V_uid, Bin1 } = read_uint64( Bin0 ),
@@ -654,22 +646,6 @@ decode_BuffInfo(Bin0) ->
 		},
 	Bin4 }.
 
-%GENERATED from file:combat.h => SkillInfo
--spec decode_SkillInfo(Bin0) -> { #pk_SkillInfo{},LeftBin }
-	when Bin0 :: binary(), LeftBin :: binary().
-decode_SkillInfo(Bin0) ->
-	{ V_skill_id, Bin1 } = read_uint32( Bin0 ),
-	{ V_level, Bin2 } = read_uint32( Bin1 ),
-	{ V_cd_time, Bin3 } = read_uint32( Bin2 ),
-	{ V_slot_index, Bin4 } = read_uint32( Bin3 ),
-	{ #pk_SkillInfo {
-		skill_id = V_skill_id,
-		level = V_level,
-		cd_time = V_cd_time,
-		slot_index = V_slot_index
-		},
-	Bin4 }.
-
 %GENERATED from file:login.h => UserPlayerData
 -spec decode_UserPlayerData(Bin0) -> { #pk_UserPlayerData{},LeftBin }
 	when Bin0 :: binary(), LeftBin :: binary().
@@ -770,6 +746,22 @@ decode_LookInfoPlayer(Bin0) ->
 		},
 	Bin12 }.
 
+%GENERATED from file:player.h => SkillInfo
+-spec decode_SkillInfo(Bin0) -> { #pk_SkillInfo{},LeftBin }
+	when Bin0 :: binary(), LeftBin :: binary().
+decode_SkillInfo(Bin0) ->
+	{ V_skill_id, Bin1 } = read_uint32( Bin0 ),
+	{ V_level, Bin2 } = read_uint32( Bin1 ),
+	{ V_cd_time, Bin3 } = read_uint32( Bin2 ),
+	{ V_slot_index, Bin4 } = read_uint32( Bin3 ),
+	{ #pk_SkillInfo {
+		skill_id = V_skill_id,
+		level = V_level,
+		cd_time = V_cd_time,
+		slot_index = V_slot_index
+		},
+	Bin4 }.
+
 %GENERATED from file:combat.h => GS2U_AddBuff
 encode(#pk_GS2U_AddBuff{} = P) ->
 	Bin_uid = write_uint64( P#pk_GS2U_AddBuff.uid ),
@@ -856,14 +848,6 @@ encode(#pk_GS2U_HitTarget{} = P) ->
 		Bin_cause,
 		Bin_misc,
 		Bin_serial
-	];
-
-%GENERATED from file:combat.h => GS2U_SkillInit
-encode(#pk_GS2U_SkillInit{} = P) ->
-	Bin_skills = write_array(P#pk_GS2U_SkillInit.skills, fun(X) -> encode_SkillInfo( X ) end),
-	[
-		<<?GS2U_SkillInit:?U16>>,
-		Bin_skills
 	];
 
 %GENERATED from file:combat.h => GS2U_SkillInterrupt
@@ -1381,19 +1365,6 @@ encode_BuffInfo( #pk_BuffInfo{} = P ) ->
 		Bin_layer	
 ].
 
-%GENERATED from file:combat.h => SkillInfo
-encode_SkillInfo( #pk_SkillInfo{} = P ) ->
-	Bin_skill_id = write_uint32( P#pk_SkillInfo.skill_id ),
-	Bin_level = write_uint32( P#pk_SkillInfo.level ),
-	Bin_cd_time = write_uint32( P#pk_SkillInfo.cd_time ),
-	Bin_slot_index = write_uint32( P#pk_SkillInfo.slot_index ),
-	[
-		Bin_skill_id,
-		Bin_level,
-		Bin_cd_time,
-		Bin_slot_index	
-].
-
 %GENERATED from file:login.h => UserPlayerData
 encode_UserPlayerData( #pk_UserPlayerData{} = P ) ->
 	Bin_uid = write_uint64( P#pk_UserPlayerData.uid ),
@@ -1485,6 +1456,19 @@ encode_LookInfoPlayer( #pk_LookInfoPlayer{} = P ) ->
 		Bin_hp_per	
 ].
 
+%GENERATED from file:player.h => SkillInfo
+encode_SkillInfo( #pk_SkillInfo{} = P ) ->
+	Bin_skill_id = write_uint32( P#pk_SkillInfo.skill_id ),
+	Bin_level = write_uint32( P#pk_SkillInfo.level ),
+	Bin_cd_time = write_uint32( P#pk_SkillInfo.cd_time ),
+	Bin_slot_index = write_uint32( P#pk_SkillInfo.slot_index ),
+	[
+		Bin_skill_id,
+		Bin_level,
+		Bin_cd_time,
+		Bin_slot_index	
+].
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 name(?GS2U_AddBuff) -> "GS2U_AddBuff";
 name(?GS2U_BattleProps) -> "GS2U_BattleProps";
@@ -1492,7 +1476,6 @@ name(?GS2U_DeleteBuff) -> "GS2U_DeleteBuff";
 name(?GS2U_DeleteBuffList) -> "GS2U_DeleteBuffList";
 name(?GS2U_HPChange) -> "GS2U_HPChange";
 name(?GS2U_HitTarget) -> "GS2U_HitTarget";
-name(?GS2U_SkillInit) -> "GS2U_SkillInit";
 name(?GS2U_SkillInterrupt) -> "GS2U_SkillInterrupt";
 name(?GS2U_SpecialMove) -> "GS2U_SpecialMove";
 name(?GS2U_UpdateBuff) -> "GS2U_UpdateBuff";
@@ -1543,7 +1526,6 @@ cmd_list()->
 		,?GS2U_DeleteBuffList
 		,?GS2U_HPChange
 		,?GS2U_HitTarget
-		,?GS2U_SkillInit
 		,?GS2U_SkillInterrupt
 		,?GS2U_SpecialMove
 		,?GS2U_UpdateBuff

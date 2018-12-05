@@ -50,7 +50,9 @@ on_login(Player) ->
     cross_interface:assign_cross_for_player(Uid),
     player_base:online(Player),
     player_combat:online(),
+    %% 客户端需要优先这个数据
     player_base:send_init_data(),
+
     player_cross_priv:online(),
     player_map_priv:online_call(Player),
     player_alarm:online(),

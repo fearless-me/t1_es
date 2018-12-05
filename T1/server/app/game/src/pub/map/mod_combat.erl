@@ -69,8 +69,8 @@ use_skill_success(#m_object_rw{uid = Uid} = Attacker, [#m_object_rw{}|_] = Targe
     %% 根据类型
     object_rw:set_skill_serial(Uid, Serial),
 
-    use_skill_dispatcher(SkillCfg, Attacker, TargetList, Serial),
     ?DEBUG("~p use skill ~p to tar ~p", [Uid, SkillId, DerList]),
+    use_skill_dispatcher(SkillCfg, Attacker, TargetList, Serial),
     ok.
 
 %% 吟唱
@@ -112,7 +112,8 @@ calculate_dmg(
 ) ->
     %% 命中事件
     CEParams = get_ce_param(SkillId, ?HP_CHANGE_SKILL, Serial),
-    ?TRY_CATCH(trigger_hit_event(Attack, [Target], SkillCfg, CEParams)),
+    ?TRY_CATCH(trigger_hit_before_event(Attack, [Target], SkillCfg, CEParams), Error1, Stk1),
+    ?TRY_CATCH(trigger_hit_event(Attack, [Target], SkillCfg, CEParams), Error2, Stk2),
     ok.
 
 %%-------------------------------------------------------------------
@@ -236,7 +237,9 @@ is_using_skill(Aer) ->
 
 trigger_before_cast_event(Aer, DerList, #skillCfg{beforecast = EventList}, CEParams) ->
     trigger_event(Aer, DerList, EventList, CEParams).
-trigger_hit_event(Aer, DerList, #skillCfg{beforehit = EventList}, CEParams) ->
+trigger_hit_before_event(Aer, DerList, #skillCfg{beforehit = EventList}, CEParams) ->
+    trigger_event(Aer, DerList, EventList, CEParams).
+trigger_hit_event(Aer, DerList, #skillCfg{ishit = EventList}, CEParams) ->
     trigger_event(Aer, DerList, EventList, CEParams).
 
 %% TODO

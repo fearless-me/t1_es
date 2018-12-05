@@ -12,6 +12,7 @@
 -include("logger.hrl").
 -include("error_code.hrl").
 -include("pub_def.hrl").
+-include("pub_rec.hrl").
 -include("netmsg.hrl").
 -include("gs_cache.hrl").
 -include("gs_common_rec.hrl").
@@ -21,6 +22,7 @@
 
 
 %% 初始化， tick， 开始终止进程
+-export([init_priv/3]).
 -export([init/1, tick/1, start_stop_now/1, change_group/1]).
 -export([player_start_move/1, player_stop_move/1]).
 -export([broadcast_msg/2, broadcast_net_msg/2, broadcast_msg_view/1, broadcast_net_msg_view/1, broadcast_net_msg_view/2]).
@@ -33,10 +35,31 @@
 -export([player_exit_call/3]).
 -export([force_teleport_call/3]).
 -export([player_exit_exception_call/2]).
+
 %%--------------------------------
+-define(MAP_OBJ_DETAIL_ETS, map_obj_detail_ets__).
+-define(MAP_EXCL_ETS, map_excl_ets__).
+init_priv(MgrEts, MapID, LineID) ->
+    ProcessName = misc:create_atom(?MODULE, [MapID, LineID]),
+    true = erlang:register(ProcessName, self()),
+    Ets0 = misc_ets:new(?MAP_OBJ_DETAIL_ETS, [protected, set, {keypos, #m_object_rw.uid}, ?ETS_RC]),
+    Ets1 = misc_ets:new(?MAP_EXCL_ETS, [protected, set, {keypos, #pub_kv.key}, ?ETS_RC]),
+    #mapCfg{peopleLimit = Limit, lifetime = Lifetime} = getCfg:getCfgByArgs(cfg_map, MapID),
+    RealLifeTime = ?if_else(Lifetime == 0, ?UINT32_MAX, Lifetime),
+    Line = #m_map_line{
+        map_id = MapID, line_id = LineID, pid = self(), status = ?MAP_RUNNING,
+        limits = Limit,
+        dead_line = misc_time:milli_seconds() + RealLifeTime
+    },
+    misc_ets:write(MgrEts, Line),
+    ps:send(self(), init),
+    
+    #m_map_state{map_id = MapID, line_id = LineID, obj_ets = Ets0, mgr_ets = MgrEts, excl_ets = Ets1}.
 
 %%-------------------------------------------------------------------
+
 -spec init(S :: #m_map_state{}) -> #m_map_state{}.
+
 init(S) ->
     Conf = map_creator_interface:map_data(S#m_map_state.map_id),
     ok = map_rw:init(S),

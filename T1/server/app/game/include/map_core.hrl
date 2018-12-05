@@ -12,7 +12,7 @@
 -define(GS_MAP_CORE_HRL, true).
 
 -include("type.hrl").
--include("mapCfgPrivate.hrl").
+-include("gameMap.hrl").
 
 -define(MAP_EXIST_TYPE_NORMAL, 1). %% 普通服的地图
 -define(MAP_EXIST_TYPE_CROSS, 2).  %% 跨服地图
@@ -85,9 +85,9 @@
 %% 视图
 -record(m_vis_tile, {index = 0, player = [], monster = [], npc = [], pet = []}).
 %% 地图进程状态
--record(m_map_state, {map_id = 0, line_id = 0, ets, mgr_ets, excl_ets, respawn = [], hook_mod, status = ?MAP_RUNNING, protect_tick = ?DEAD_LINE_PROTECT div ?MAP_TICK}).
+-record(m_map_state, {map_id = 0, line_id = 0, obj_ets, mgr_ets, excl_ets, respawn = [], hook_mod, status = ?MAP_RUNNING, protect_tick = ?DEAD_LINE_PROTECT div ?MAP_TICK}).
 %% 地图线路
--record(m_map_line, {map_id = 0, line_id = 0, pid, limits = 150, in = 0, reserve = 10, dead_line = 0, status = ?MAP_RUNNING}).
+-record(m_map_line, {map_id = 0, line_id = 0, pid, obj_ets, limits = 150, in = 0, reserve = 10, dead_line = 0, status = ?MAP_RUNNING}).
 
 
 %% 地图单位类型

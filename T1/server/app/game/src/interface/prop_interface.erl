@@ -448,7 +448,7 @@ calcHitAndDamage(#m_battleProps{} = AttackBps, #m_battleProps{} = DefenderBps, D
                 BP_2_DEF_ADD_Des, BP_2_HP_MAX_ADD_Des, BP_2_HP_CUR_ADD_Des
             ),
             %% 修正目标血量并返回结果
-            HpNew = BP_2_HP_CUR_ADD_Des - DeltaHp,
+            HpNew = erlang:max(BP_2_HP_CUR_ADD_Des + DeltaHp, 0.0),
             ListBPFinal = lists:keyreplace(
                 ?BP_2_HP_CUR, 1, DefenderBps#m_battleProps.listBPFinal,
                 {?BP_2_HP_CUR, ?BPUseType_ADD, HpNew}
@@ -503,6 +503,6 @@ calcHitAndDamage_damage(DamageValue, MulCri, Def, HpMax, HpCur) ->
     %%    "[DebugForBattle] calcHitAndDamage_damage Atk:~w MulCri:~w Def:~w HpMax:~w HpCur:~w Damage:~w DeltaHp:~w",
     %%    [Atk, MulCri, Def, HpMax, HpCur, -Damage, -DeltaHp]
     %%),
-    {-Damage, -DeltaHp}.    %% 取反表示变化方向
+    {-Damage, -DeltaHp}.
 
 my_pow(X, Y) -> math:pow(X, erlang:min(Y, 100)).

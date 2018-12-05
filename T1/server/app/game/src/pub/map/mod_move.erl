@@ -197,7 +197,11 @@ tick_player_move(Obj, ?EMS_WALK) ->
 tick_player_move(_Obj, _Move) -> skip.
 
 %%-------------------------------------------------------------------
-tick_monster_move(Obj, ?EMS_WALK) ->
+tick_monster_move(Obj, Move)
+    when Move == ?EMS_MONSTER_FLEE;
+    Move == ?EMS_MONSTER_PATROL;
+    Move == ?EMS_MONSTER_WALK ->
+    
     #m_cache_map_object_priv{uid = Uid} = Obj,
     
     CurPos = object_rw:get_cur_pos(Uid),
@@ -316,7 +320,7 @@ on_obj_pos_changed(?OBJ_PLAYER, Uid, Tar) ->
     gs_cache_interface:update_online_player(Uid, {#m_cache_online_player.pos, Tar}),
     ok;
 on_obj_pos_changed(Type, Uid, Tar) ->
-    ?ERROR("on_obj_pos_changed(~w,~w,~w)", [Type, Uid, Tar]),
+    ?DEBUG("on_obj_pos_changed(~w,~w,~w)", [Type, Uid, Tar]),
     ok.
 
 %%-------------------------------------------------------------------

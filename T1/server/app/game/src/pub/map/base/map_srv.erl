@@ -55,20 +55,13 @@ call_reply(FromPid, Ret) ->
 %%%===================================================================
 %%% Internal functions
 %%%===================================================================
--define(MAP_OBJ_DETAIL_ETS, map_obj_detail_ets__).
--define(MAP_EXCL_ETS, map_excl_ets__).
+
 mod_init([MapID, MapLine, MgrEts]) ->
     erlang:process_flag(trap_exit, true),
     erlang:process_flag(priority, high),
-    ProcessName = misc:create_atom(?MODULE, [MapID, MapLine]),
-    true = erlang:register(ProcessName, self()),
-    Ets0 = misc_ets:new(?MAP_OBJ_DETAIL_ETS, [protected, set, {keypos, #m_object_rw.uid}, ?ETS_RC]),
-    Ets1 = misc_ets:new(?MAP_EXCL_ETS, [protected, set, {keypos, #pub_kv.key}, ?ETS_RC]),
-    ?INFO("map ~p:~p started", [ProcessName, self()]),
-    ps:send(self(), init),
     i_tick_clear_msg(),
     gen_serverw:continue_effective_monitor(self(), ?MAP_TICK),
-    {ok, #m_map_state{map_id = MapID, line_id = MapLine, ets = Ets0, mgr_ets = MgrEts, excl_ets = Ets1}}.
+    {ok, mod_map_priv:init_priv(MgrEts, MapID, MapLine)}.
 
 %%--------------------------------------------------------------------
 do_handle_call(status, _From, State) ->

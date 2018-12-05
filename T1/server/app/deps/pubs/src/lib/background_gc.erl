@@ -19,7 +19,7 @@
     terminate/2, code_change/3]).
 
 -define(MAX_RATIO, 0.01).
--define(MAX_INTERVAL, 240000).
+-define(MAX_INTERVAL,  4 * 60 * 1000).
 %%每30分钟GC一次
 -define(IDEAL_INTERVAL, 10 * 60 * 1000).
 

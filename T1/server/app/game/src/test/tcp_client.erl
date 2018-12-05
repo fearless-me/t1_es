@@ -15,6 +15,7 @@
 -export([connect/2]).
 -export([handle/1, handle/2]).
 -export([move/2]).
+-export([close/1]).
 
 move(X, Y) ->
     tcp_codec:init(#net_conf{}),
@@ -27,6 +28,28 @@ move(X, Y) ->
                 _ -> skip
             end
     end,
+    ok.
+
+close(0) ->
+    ets:foldl
+    (
+        fun({_, Socket}, _)->
+            gen_tcp:close(Socket)
+        end,
+        0,
+        tcpc
+    );
+close(N) ->
+    ets:foldl
+    (
+        fun
+            ({_, Socket}, X) when X < N ->
+                gen_tcp:close(Socket);
+            (_, X) -> X+1
+        end,
+        0,
+        tcpc
+    ),
     ok.
 
 

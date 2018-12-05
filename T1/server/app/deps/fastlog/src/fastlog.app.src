@@ -8,5 +8,11 @@
                   stdlib
                  ]},
   {mod, { fastlog_app, []}},
-  {env, [{show_in_stdio,true},{mkdir_restart, true},{createfile_restart, false},{overload_msg_len, 10000}]}
+  {env, [
+      {logdir, "log"},
+      {show_in_stdio,true},
+      {mkdir_restart, true},
+      {createfile_restart, true},
+      {overload_message_queue_len, 20000}
+  ]}
  ]}.

@@ -40,6 +40,7 @@
 	 set_seg_move_time/2, set_seg_move_time_direct/2, get_seg_move_time/1, get_seg_move_time/2, %#m_object_rw.seg_move_time 
 	 set_force_stopped/2, set_force_stopped_direct/2, get_force_stopped/1, get_force_stopped/2, %#m_object_rw.force_stopped 
 	 set_move_path_list/2, set_move_path_list_direct/2, get_move_path_list/1, get_move_path_list/2, %#m_object_rw.move_path_list 
+	 set_born_pos/2, set_born_pos_direct/2, get_born_pos/1, get_born_pos/2, %#m_object_rw.born_pos 
 	 set_skill_id/2, set_skill_id_direct/2, get_skill_id/1, get_skill_id/2, %#m_object_rw.skill_id 
 	 set_target_uid/2, set_target_uid_direct/2, get_target_uid/1, get_target_uid/2, %#m_object_rw.target_uid 
 	 set_skill_serial/2, set_skill_serial_direct/2, get_skill_serial/1, get_skill_serial/2, %#m_object_rw.skill_serial 
@@ -565,6 +566,23 @@ set_move_path_list(Uid, Val)->
     ?TRY_CATCH(hook_map:on_rw_update(Uid,{#m_object_rw.move_path_list, Val})).
 set_move_path_list_direct(Uid, Val) ->
     misc_ets:update_element(i_ets(), Uid, {#m_object_rw.move_path_list, Val}),
+    ok.
+%%-------------------------------------------------------------------
+%% #m_object_rw.born_pos
+get_born_pos(Uid) ->
+    misc_ets:read_element(i_ets(), Uid, #m_object_rw.born_pos).
+
+get_born_pos(Uid, Def) ->
+    case misc_ets:read_element(i_ets(), Uid, #m_object_rw.born_pos) of
+        undefined -> Def;
+        Any -> Any
+    end.
+    
+set_born_pos(Uid, Val)->
+    misc_ets:update_element(i_ets(), Uid, {#m_object_rw.born_pos, Val}),
+    ?TRY_CATCH(hook_map:on_rw_update(Uid,{#m_object_rw.born_pos, Val})).
+set_born_pos_direct(Uid, Val) ->
+    misc_ets:update_element(i_ets(), Uid, {#m_object_rw.born_pos, Val}),
     ok.
 %%-------------------------------------------------------------------
 %% #m_object_rw.skill_id

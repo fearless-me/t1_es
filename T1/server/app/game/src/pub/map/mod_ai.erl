@@ -72,14 +72,15 @@ init_ai(Uid) ->
     Did = object_rw:get_data_id(Uid),
     #monster_cfg{ai_init_type = CreateType, ai_id = AiId } = ?get_monster_cfg(Did),
     case CreateType of
-        ?AI_INIT_NULL ->
-            object_rw:set_ai_id(Uid, 0);
         ?AI_INIT_INDICATE ->
-            object_rw:set_ai_id(Uid, AiId);
+            object_rw:set_ai_id(Uid, AiId),
+            object_rw:set_ai_state(Uid, ?AI_STATE_IDLE);
         ?AI_INIT_RANDOM ->
-            object_rw:set_ai_id(Uid, 0);
+            object_rw:set_ai_id(Uid, 0),
+            object_rw:set_ai_state(Uid, ?AI_STATE_IDLE);
         ?AI_INIT_GROUP_RANDOM ->
-            object_rw:set_ai_id(Uid, 0);
+            object_rw:set_ai_id(Uid, 0),
+            object_rw:set_ai_state(Uid, ?AI_STATE_IDLE);
         _ ->
             object_rw:set_ai_id(Uid, 0)
     end,
@@ -97,7 +98,7 @@ init_transition(_Uid) -> ok.
 %%-------------------------------------------------------------------
 %%-------------------------------------------------------------------
 reset_patrol_tick(Uid) ->
-    ResetTick = rand_tool:rand() div ?AI_PATROL_REST_TICK_INTERVAL + ?AI_PATROL_REST_TICK_MIN,
+    ResetTick = rand_tool:rand() rem ?AI_PATROL_REST_TICK_INTERVAL + ?AI_PATROL_REST_TICK_MIN,
     object_rw:set_ai_patrol_rest_tick(Uid, ResetTick),
     ok.
 
@@ -250,11 +251,11 @@ do_start_patrol(Uid, ?AI_PATROL_PATH) ->
     ok;
 do_start_patrol(Uid, ?AI_PATROL_RANGE) ->
     Did = object_rw:get_data_id(Uid),
+    Pos = object_rw:get_born_pos(Uid),
     #monster_cfg{patrol_radius = Radius} = ?get_monster_cfg(Did),
     Diameter = Radius * 2,
-    NowPos = object_rw:get_cur_pos(Uid),
-    X = vector3:x(NowPos) + ((rand_tool:rand() rem Diameter) - Radius),
-    Z = vector3:z(NowPos) + ((rand_tool:rand() rem Diameter) - Radius),
+    X = vector3:x(Pos) + ((rand_tool:rand() rem Diameter) - Radius),
+    Z = vector3:z(Pos) + ((rand_tool:rand() rem Diameter) - Radius),
     TarPos = vector3:new(X, 0, Z),
     
     % 怪物开始跑路

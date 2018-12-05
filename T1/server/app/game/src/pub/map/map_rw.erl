@@ -73,7 +73,7 @@ init_base(State) ->
     erlang:put(?LINE_ID, State#m_map_state.line_id),
     erlang:put(?MAP_HOOK, State#m_map_state.hook_mod),
     erlang:put(?MOVE_TIMER, #m_move_timer{now = Now, latest_up = Now, delta = 0}),
-    erlang:put(?ETS_MAP_OBJ, State#m_map_state.ets),
+    erlang:put(?ETS_MAP_OBJ, State#m_map_state.obj_ets),
     erlang:put(?ETS_MAP_EXCL, State#m_map_state.excl_ets),
     set_tick_info(#tick_info{}),
     ok.

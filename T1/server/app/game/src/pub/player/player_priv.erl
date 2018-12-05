@@ -18,7 +18,7 @@
 -include("db_record.hrl").
 -include("gs_cache.hrl").
 -include("player_ext_data.hrl").
-
+-include("object.hrl").
 
 
 %% 逻辑层不要调用这些接口
@@ -129,7 +129,7 @@ create_player(Name, Career, Race, Sex, Head, Camp) ->
     Pos = map_creator_interface:map_init_pos(Mid),
     Req = #r_create_player_req{
         version = misc_time:milli_seconds(),
-        name = Name, camp = Camp, career = Career, race = Race, sex = Sex,
+        name = Name, camp = Camp, career = ?CAREER_DETAIL(Career, 0, 1), race = Race, sex = Sex,
         head = Head, mid = Mid, x = vector3:x(Pos), y = vector3:z(Pos),
         sid = gs_interface:get_sid(),
         data = data_pack:marshal(#p_player_full_data{})

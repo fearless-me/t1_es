@@ -42,8 +42,10 @@ get_targets(TargetList) ->
             case object_rw:get(Der) of
                 undefined ->
                     Acc;
-                #m_object_rw{} = Obj ->
-                    [Obj | Acc]
+                #m_object_rw{hp = Hp} = Obj when Hp > 0 ->
+                    [Obj | Acc];
+                _ ->
+                    Acc
             end
         end,
     lists:foldl(F, [], TargetList).

@@ -119,14 +119,6 @@
 }).
 
 %% 
-%% // 上线初始化技能
--define(GS2U_SkillInit,63697).
--record(pk_GS2U_SkillInit,{
-	%% SkillInfo
-	skills = []
-}).
-
-%% 
 %% // 技能打断
 -define(GS2U_SkillInterrupt,59398).
 -record(pk_GS2U_SkillInterrupt,{
@@ -187,17 +179,6 @@
 	error_code = 0
 }).
 
--record(pk_SkillInfo,{
-	%% UInt32
-	skill_id = 0,
-	%% UInt32
-	level = 0,
-	%% UInt32
-	cd_time = 0,
-	%% UInt32技能盘孔位
-	slot_index = 0
-}).
-
 %% 
 %% // 删除buff
 -define(U2GS_DeleteBuff,19504).
@@ -215,6 +196,17 @@
 }).
 
 %% 
+%% //////////////////////////////////////////////////////////////////////////
+%% //<-发出去     ;      ->收消息
+%% //不用使用int uint long 
+%% // 支持使用 string float int32 uint32 int64 uint64
+%% /////////////////////////////////////////////////////////////////////////
+%% //不用使用int uint long 
+%% //不用使用int uint long 
+%% //不用使用int uint long 
+%% //不用使用int uint long 
+%% //不用使用int uint long 
+%% //不用使用int uint long 
 %% // 技能攻击
 -define(U2GS_UseSkill,2416).
 -record(pk_U2GS_UseSkill,{
@@ -617,6 +609,17 @@
 	level = 0,
 	%% UInt32当前血量百分比
 	hp_per = 0
+}).
+
+-record(pk_SkillInfo,{
+	%% UInt32
+	skill_id = 0,
+	%% UInt32
+	level = 0,
+	%% UInt32
+	cd_time = 0,
+	%% UInt32技能盘孔位
+	slot_index = 0
 }).
 
 %% 

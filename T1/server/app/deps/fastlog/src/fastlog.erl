@@ -9,7 +9,9 @@
 -module(fastlog).
 -author("mawenhong").
 
--behaviour(gen_server).
+-define(IMPL_MOD, gen_server).
+
+-behaviour(?IMPL_MOD).
 
 -include_lib("kernel/include/file.hrl").
 
@@ -53,21 +55,24 @@
 -define(DISCARD_KEY, dicard_log).
 -define(DISCARD_STDIO_KEY, dicard_stdio_log).
 -define(MASTER_NODE, master_of_slave).
--define(CHECK_FLAG_TIMES, 50).
--define(MAX_OVERLOAD_MSG, 15000).
+-define(CHECK_FLAG_TIMES, 10).
+-define(MAX_OVERLOAD_MSG, 20000).
 -define(MAX_OVERLOAD_MSG_STDIO, 2500).
--record(state, {monitorRef, counter=0, msg_number=0, fileName, fd, fd_err, is_log_stdio=false, no_err_fd = false}).
+-define(FILE_CACHE, 128*1024).
+-define(FILE_CACHE_TIMEOUT, 2000).
+-record(state, {monitorRef, counter=0, writes=0, msg_counter =0, fileName, fd, fd_err, is_log_stdio=false, no_err_fd = false}).
 
 %%设置日志文件和错误文件的相关选项
--define(LogFileOptions, [
-    exclusive, append, raw, binary, delayed_write
-]).
+-define(DELAY_WRITE, delayed_write).%%{delayed_write, ?FILE_CACHE, ?FILE_CACHE_TIMEOUT}).
+-define(LogFileOpenOpt, [append, raw, binary, ?DELAY_WRITE]).
 
--define(ErrorLogFileOptions, [
-    exclusive, append, raw, binary, delayed_write
-]).
+-define(LogFileOptions, ?LogFileOpenOpt).
+%%    [exclusive, append, raw, binary, {delayed_write, ?FILE_CACHE, ?FILE_CACHE_TIMEOUT}]).
 
--define(LogFileOpenOpt, [append, raw, binary, delayed_write]).
+-define(ErrorLogFileOptions, ?LogFileOpenOpt).
+%%    [exclusive, append, raw, binary, {delayed_write, ?FILE_CACHE, ?FILE_CACHE_TIMEOUT}]).
+
+
 
 
 %%%===================================================================
@@ -156,12 +161,14 @@ do_log(Level, Sink, F, A) ->
 
 do_log_2(?DISCARD_FORBID, Level, Sink, F, A) ->
     {{YYYY, MM, DD}, {Hour, Min, Sec}} = erlang:localtime(),
-    String =
-        io_lib:format("[~.4w-~.2.0w-~.2.0w ~.2.0w:~.2.0w:~.2.0w][~w]~ts~n",
-            [YYYY, MM, DD, Hour, Min, Sec, Level, io_lib:format(F, A)]),
+    String = io_lib:format
+    (
+        "[~.4w-~.2.0w-~.2.0w ~.2.0w:~.2.0w:~.2.0w][~w]" ++ F ++ "~n",
+        [YYYY, MM, DD, Hour, Min, Sec, Level] ++ A
+    ),
     case get_env(?MASTER_NODE, undefined) of
         undefined ->
-            Sink ! {?MSG, Level, String};
+            Sink ! {?MSG, Level, list_to_binary(String)};
         MasterNode ->
             {Sink, MasterNode} ! {?MSG, Level, String}
     end,
@@ -173,7 +180,7 @@ do_log_2(_Any, _Level, _Sink, _F, _A) ->
 is_slave() -> get_env(?MASTER_NODE, undefined) =/= undefined.
 
 make_init_log(Sink, Fname) ->
-    gen_server2:call(Sink, {make_init_log, Fname}).
+    ?IMPL_MOD:call(Sink, {make_init_log, Fname}).
 
 
 %%--------------------------------------------------------------------
@@ -185,11 +192,11 @@ make_init_log(Sink, Fname) ->
 -define(SWEEP_OPT, {spawn_opt, [{fullsweep_after, 50}]}).
 start_link(Fname) ->
     ParentPid = self(),
-    gen_server:start_link({local, ?MODULE}, ?MODULE, [Fname, ParentPid], [?SWEEP_OPT]).
+    ?IMPL_MOD:start_link({local, ?MODULE}, ?MODULE, [Fname, ParentPid], [?SWEEP_OPT]).
 
 start_link(Sink, Fname) ->
     ParentPid = self(),
-    gen_server:start_link({local, Sink}, ?MODULE, [Fname, ParentPid], [?SWEEP_OPT]).
+    ?IMPL_MOD:start_link({local, Sink}, ?MODULE, [Fname, ParentPid], [?SWEEP_OPT]).
 
 %%%===================================================================
 %%% gen_server callbacks
@@ -346,23 +353,23 @@ start_file_timer() ->
                end),
     ok.
 %%--------------------------------------------------------------------
-do_handle_info({?MSG, Level, String}, #state{msg_number = MsgNumber} = State) ->
+do_handle_info({?MSG, Level, String}, #state{writes = Wr, msg_counter = MsgNumber} = State) ->
     case need_write_log(MsgNumber) of
         true ->
             write_log(Level, String, State),
             Res = check_rotation(State),
-            {noreply, Res#state{msg_number = MsgNumber + 1}};
+            {noreply, Res#state{writes = Wr + 1, msg_counter = MsgNumber + 1}};
         _ ->
-            {noreply, State#state{msg_number = MsgNumber + 1}}
+            {noreply, State#state{msg_counter = MsgNumber + 1}}
     end;
-do_handle_info({?MSG, Level, Fmt, Args, Time}, #state{msg_number = MsgNumber} = State) ->
+do_handle_info({?MSG, Level, Fmt, Args, Time}, #state{writes = Wr, msg_counter = MsgNumber} = State) ->
     case need_write_log(MsgNumber) of
         true ->
             write_log(Level, Fmt, Args, Time, State),
             Res = check_rotation(State),
-            {noreply, Res#state{msg_number = MsgNumber + 1}};
+            {noreply, Res#state{writes = Wr + 1, msg_counter = MsgNumber + 1}};
         _ ->
-            {noreply, State#state{msg_number = MsgNumber + 1}}
+            {noreply, State#state{msg_counter = MsgNumber + 1}}
     end;
 do_handle_info(rotate_timer, #state{} = State) ->
     {ok, State2} = rotate(State),
@@ -407,8 +414,9 @@ check_rotation(State) ->
             State#state{counter = Cntr + 1}
     end.
 
-write_log(Level, String, #state{fd = Fd, msg_number = Cnt, fd_err = FdErr, is_log_stdio = Stdio, no_err_fd = NoErr}) ->
+write_log(Level, String, #state{fd = Fd, msg_counter = Cnt, fd_err = FdErr, is_log_stdio = Stdio, no_err_fd = NoErr}) ->
     file:write(Fd, String),
+    
     write_console(Level, String, Cnt, Stdio),
     case NoErr =:= false andalso is_error_log(Level) of
         true -> file:write(FdErr, String);
@@ -416,7 +424,7 @@ write_log(Level, String, #state{fd = Fd, msg_number = Cnt, fd_err = FdErr, is_lo
     end.
 
 write_log(Level, Fmt, Args,
-    {{YYYY, MM, DD}, {Hour, Min, Sec}}, #state{fd = Fd, msg_number = Cnt, fd_err = FdErr, is_log_stdio = Stdio, no_err_fd = NoErr}) ->
+    {{YYYY, MM, DD}, {Hour, Min, Sec}}, #state{fd = Fd, msg_counter = Cnt, fd_err = FdErr, is_log_stdio = Stdio, no_err_fd = NoErr}) ->
 
     Str1 = io_lib:format(Fmt, Args),
     String =

@@ -137,6 +137,7 @@ new(
     object_rw:set_fields_direct(
         Uid,
         [
+            {#m_object_rw.born_pos, Pos},
             {#m_object_rw.level, Level},
             {#m_object_rw.name, Name},
             {#m_object_rw.sex, Sex},

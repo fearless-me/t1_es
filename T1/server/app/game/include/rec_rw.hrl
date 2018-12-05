@@ -42,6 +42,7 @@
     move_start_time = 0, seg_move_time = 0,  % 分段已经移动时间
     %% stopped 是否被强制停下，比如在追击，巡逻过程中等等
     force_stopped = false, move_path_list = [],
+    born_pos, % 出生点
     
     %%-------------------------------------------------------------------
     %% 战斗相关

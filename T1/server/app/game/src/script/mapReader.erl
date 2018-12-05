@@ -8,7 +8,6 @@
 -include("type.hrl").
 -include("cfg_map.hrl").
 -include("map_core.hrl").
--include("mapCfgPrivate.hrl").
 
 -compile(nowarn_unused_vars).
 %%

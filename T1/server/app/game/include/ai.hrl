@@ -56,7 +56,7 @@
 -export_type([ai_patrol_type/0]).
 
 -define(TICK_TIME, ?MAP_TICK).
--define(TICK_PER_SECOND, 1000 div ?TICK_TIME).
+-define(TICK_PER_SECOND, (1000 div ?TICK_TIME)).
 -define(AI_PATROL_REST_TICK_MIN, 5 * ?TICK_PER_SECOND).        %% 生物巡逻过程中休息的最小时间——5秒
 -define(AI_PATROL_REST_TICK_INTERVAL, 10 * ?TICK_PER_SECOND).        %% 生物巡逻过程中休息的最大差——10秒
 -define(AI_LOOK_FOR_ENEMY_TICK_MIN, 1 * ?TICK_PER_SECOND).        %% 生物锁敌的间隔的最小时间——1秒

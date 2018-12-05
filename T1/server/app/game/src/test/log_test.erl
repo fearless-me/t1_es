@@ -9,6 +9,7 @@
 %%%-------------------------------------------------------------------
 -module(log_test).
 -author("mawenhong").
+-include("logger.hrl").
 
 %% API
 -export([
@@ -45,16 +46,16 @@ loop(N) ->
 do1(0, Pid) ->
     Pid ! over;
 do1(X, Pid) ->
-    fastlog:debug("xxxxxxxxxxxxxxxxxxxxxasdfadsfaasf我是中国人asdfadfadafd", []),
-    fastlog:debug("~w,~p,~p,~p,~ts",
+    ?DEBUG("xxxxxxxxxxxxxxxxxxxxxasdfadsfaasf我是中国人asdfadfadafd", []),
+    ?DEBUG("~p,~p,~p,~p,~ts",
         [misc:callstack(), rand:uniform(), ?MODULE, ?LINE, "hello"]),
-    fastlog:info("~w,~p,~p,~p,~ts",
+    ?INFO("~p,~p,~p,~p,~ts",
         [misc:callstack(), rand:uniform(), ?MODULE, ?LINE, "hello"]),
-    fastlog:warn("~w,~p,~p,~p,~ts",
+    ?WARN("~p,~p,~p,~p,~ts",
         [misc:callstack(), rand:uniform(), ?MODULE, ?LINE, "hello"]),
-    fastlog:error("errrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr", []),
-    fastlog:error("~w,~p,~p,~p,~ts",
+    ?ERROR("errrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr", []),
+    ?ERROR("~p,~p,~p,~p,~ts",
         [misc:callstack(), rand:uniform(), ?MODULE, ?LINE, "hellosdafdas"]),
-    fastlog:fatal("~w,~p,~p,~p,~ts",
+    ?FATAL("~p,~p,~p,~p,~ts",
         [misc:callstack(), rand:uniform(), ?MODULE, ?LINE, "hello"]),
     do1(X - 1, Pid).
