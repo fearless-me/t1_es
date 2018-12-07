@@ -14,6 +14,16 @@
 -include("netmsg.hrl").
 -include("type.hrl").
 -include("object.hrl").
+-include("common_def.hrl").
+
+%% 0按正常逻辑
+-define(PROP_CALC_SPECIAL_OPTION_NORMAL, 0).
+%% 1无视防御
+-define(PROP_CALC_SPECIAL_OPTION_IGNORE_DEFENSE, 1).
+%% 2必定命中
+-define(PROP_CALC_SPECIAL_OPTION_CERTAINLY_HIT, 2).
+%% 4必定暴击
+-define(PROP_CALC_SPECIAL_OPTION_CERTAINLY_CS, 4).
 
 %% API
 -export([calc/3, calc/5, battleProps2NetMsg/2]).
@@ -27,7 +37,8 @@
 
 %% calc damage
 -export([
-    calcHitAndDamage/3
+    calcHitAndDamage/4,
+    calcTreat/5
 ]).
 
 -spec query_pf_bpc(PropID::battlePropID(), #m_battleProps{}) -> battlePropCache().
@@ -398,20 +409,69 @@ battleProps2NetMsg_use([], Acc) ->
     Acc.
 
 %%%-------------------------------------------------------------------
-%% api:计算战斗伤害
-%% ListBPUExtra 表示本次计算中对来源属性修正，仅限于类型2、类型3的属性
--spec calcHitAndDamage(#m_battleProps{}, #m_battleProps{}, DamageValue::float()) -> #m_hit_damage_result{}.
-calcHitAndDamage(#m_battleProps{} = AttackBps, #m_battleProps{} = DefenderBps, DamageValue) ->
+%% 计算治疗
+-spec calcTreat(#m_battleProps{}, #m_battleProps{},
+    TreatValue::float(), SpecialOptions::integer(), IsSuckBloodFlag::boolean()) -> #m_hit_damage_result{}.
+calcTreat(#m_battleProps{} = AttackBps, #m_battleProps{} = DefenderBps, TreatValue, SpecialOptions, IsSuckBloodFlag) ->
     {
         [
-%%            {_, _, BP_2_ATK_ADD_Src},
+            {_, _, BP_2_HP_MAX_ADD_Des},
+            {_, _, BP_2_HP_CUR_ADD_Des}
+        ],
+        []
+    } = calcHitQuery(DefenderBps, [?BP_2_HP_MAX, ?BP_2_HP_CUR], []),
+
+    %% 暴击
+    {IsCri, MulCri} =
+        case IsSuckBloodFlag of
+            true ->
+                %% 吸血不暴击
+                {false, 1.0};
+            _ ->
+                case sp_get_cri(SpecialOptions) of
+                    true ->
+                        {true, 2.0};
+                    _ ->
+                        {[{_, _, BP_4_CRI_ADD_Src}], []} = calcHitQuery(AttackBps, [?BP_4_CRI], []),
+                        case misc:rand(0, ?PERCENT) < erlang:trunc(BP_4_CRI_ADD_Src * ?PERCENT) of
+                            true ->
+                                {true, 2.0};    %% fixme 暴击固定为2倍伤害
+                            _ ->
+                                {false, 1.0}    %% 没暴击则单倍伤害
+                        end
+                end
+        end,
+
+    %% 修正目标血量并返回结果
+    HpNew = erlang:min(BP_2_HP_CUR_ADD_Des + (TreatValue * MulCri), BP_2_HP_MAX_ADD_Des),
+    ListBPFinal = lists:keyreplace(
+        ?BP_2_HP_CUR, 1, DefenderBps#m_battleProps.listBPFinal,
+        {?BP_2_HP_CUR, ?BPUseType_ADD, HpNew}
+    ),
+    #m_hit_damage_result{
+        attackBps = AttackBps,
+        defenseBps = DefenderBps#m_battleProps{listBPFinal = ListBPFinal},
+        isHit = true,
+        isCri = IsCri,
+        damage = 0.0,
+        deltaHp = HpNew - BP_2_HP_CUR_ADD_Des,
+        isDead = HpNew < 1.0
+    }.
+
+%% api:计算战斗伤害
+%% ListBPUExtra 表示本次计算中对来源属性修正，仅限于类型2、类型3的属性
+-spec calcHitAndDamage(#m_battleProps{}, #m_battleProps{},
+    DamageValue::float(), SpecialOptions::integer()) -> #m_hit_damage_result{}.
+calcHitAndDamage(#m_battleProps{} = AttackBps, #m_battleProps{} = DefenderBps, DamageValue, SpecialOptions) ->
+    {
+        [
             {_, _, BP_3_HIT_ADD_Src},
             {_, _, BP_4_CRI_ADD_Src}
         ],
         [
             #m_bp{add = BP_4_HIT_ADD_Src, mul = BP_4_HIT_MUL_Src}
         ]
-    } = calcHitAndDamage_query(AttackBps, [?BP_3_HIT, ?BP_4_CRI], [?BP_4_HIT]),
+    } = calcHitQuery(AttackBps, [?BP_3_HIT, ?BP_4_CRI], [?BP_4_HIT]),
     {
         [
             {_, _, BP_2_DEF_ADD_Des},
@@ -422,42 +482,62 @@ calcHitAndDamage(#m_battleProps{} = AttackBps, #m_battleProps{} = DefenderBps, D
         [
             #m_bp{add = BP_4_FLEE_ADD_Des, mul = BP_4_FLEE_MUL_Des}
         ]
-    } = calcHitAndDamage_query(DefenderBps, [?BP_2_DEF, ?BP_2_HP_MAX, ?BP_2_HP_CUR, ?BP_3_FLEE], [?BP_4_FLEE]),
-    case calcHitAndDamage_isHit(BP_3_HIT_ADD_Src, BP_4_HIT_ADD_Src, BP_4_HIT_MUL_Src,
-        BP_3_FLEE_ADD_Des, BP_4_FLEE_ADD_Des, BP_4_FLEE_MUL_Des) of
+    } = calcHitQuery(DefenderBps, [?BP_2_DEF, ?BP_2_HP_MAX, ?BP_2_HP_CUR, ?BP_3_FLEE], [?BP_4_FLEE]),
+
+    %% 是否命中
+    IsHit =
+        case sp_get_hit(SpecialOptions) of
+            true ->
+                true;
+            _ ->
+                calcHitAndDamage_isHit(BP_3_HIT_ADD_Src, BP_4_HIT_ADD_Src, BP_4_HIT_MUL_Src,
+                    BP_3_FLEE_ADD_Des, BP_4_FLEE_ADD_Des, BP_4_FLEE_MUL_Des)
+        end,
+
+    case IsHit of
         false ->
             %% 未命中，什么也不用说了
             #m_hit_damage_result{
                 attackBps = AttackBps,
                 defenseBps = DefenderBps,
-                isHit = false,
+                isHit = IsHit,
                 isCri = false,
                 damage = 0.0,
                 deltaHp = 0,
                 isDead = BP_2_HP_CUR_ADD_Des < 1.0
             };
         true ->
+            %% 暴击
             {IsCri, MulCri} =
-                case misc:rand(0, 9999) < erlang:trunc(BP_4_CRI_ADD_Src * 10000) of
+                case sp_get_cri(SpecialOptions) of
                     true ->
-                        {true, 2.0};    %% fixme 暴击固定为2倍伤害
+                        {true, 2.0};
                     _ ->
-                        {false, 1.0}    %% 没暴击则单倍伤害
+                        case misc:rand(0, ?PERCENT) < erlang:trunc(BP_4_CRI_ADD_Src * ?PERCENT) of
+                            true ->
+                                {true, 2.0};    %% fixme 暴击固定为2倍伤害
+                            _ ->
+                                {false, 1.0}    %% 没暴击则单倍伤害
+                        end
                 end,
+
+            %% 是否无视防御
+            BP_2_DEF_ADD_Des2 = sp_get_defense(SpecialOptions, BP_2_DEF_ADD_Des),
+
             {Damage, DeltaHp} = calcHitAndDamage_damage(DamageValue, MulCri,
-                BP_2_DEF_ADD_Des, BP_2_HP_MAX_ADD_Des, BP_2_HP_CUR_ADD_Des
+                BP_2_DEF_ADD_Des2, BP_2_HP_MAX_ADD_Des, BP_2_HP_CUR_ADD_Des
             ),
+
             %% 修正目标血量并返回结果
             HpNew = erlang:max(BP_2_HP_CUR_ADD_Des + DeltaHp, 0.0),
             ListBPFinal = lists:keyreplace(
                 ?BP_2_HP_CUR, 1, DefenderBps#m_battleProps.listBPFinal,
                 {?BP_2_HP_CUR, ?BPUseType_ADD, HpNew}
             ),
-            {true, IsCri, Damage, DeltaHp, HpNew < 1.0},
             #m_hit_damage_result{
                 attackBps = AttackBps,
                 defenseBps = DefenderBps#m_battleProps{listBPFinal = ListBPFinal},
-                isHit = true,
+                isHit = IsHit,
                 isCri = IsCri,
                 damage = Damage,
                 deltaHp = DeltaHp,
@@ -467,10 +547,10 @@ calcHitAndDamage(#m_battleProps{} = AttackBps, #m_battleProps{} = DefenderBps, D
 
 %%%-------------------------------------------------------------------
 %% internal:计算战斗伤害_获取指定属性用于后续计算
--spec calcHitAndDamage_query(UID, ListBPIDF, ListBPID4) -> Ret when
+-spec calcHitQuery(UID, ListBPIDF, ListBPID4) -> Ret when
     UID :: uint64(), ListBPIDF :: [battlePropID(), ...], ListBPID4 :: [battlePropID(), ...],
     Ret :: {ListNeedBPF, ListNeedBP4}, ListNeedBPF :: listBPU(), ListNeedBP4 :: listBPC().
-calcHitAndDamage_query(Props, ListBPIDF, ListBPID4) ->
+calcHitQuery(Props, ListBPIDF, ListBPID4) ->
     %% 注1：1类、2类、3类属性，直接从 listBPFinal 字段取最终结果，减少因属性转化带来的计算量
     %% 注2：4类属性中，有部分属性是需要与其它对象属性一起计算的，则需要从 listBP4 字段取结果，否则仍然从 listBPFinal 字段获取最终结果
     ListNeedBPF = [query_pf_bpu(ID, Props) || ID <- ListBPIDF],
@@ -487,7 +567,7 @@ calcHitAndDamage_isHit(Hit3Add, Hit4Add, Hit4Mul, Flee3Add, Flee4Add, Flee4Mul) 
     %% Percent = (1.0 / (1.0 + math:pow(2.71828, (-0.3 * (FleeDes - HitSrc))))) / 5.0,
     %% todo Hit4Add, Hit4Mul, Flee4Add, Flee4Mul 这几个值因为设计问题暂时没用上，需要与策划进一步讨论
     FleePercent = 2000 / (0.2 + 0.2 * my_pow(2.71828, (-0.3 * (Flee3Add - Hit3Add)))),    %% 放大10000倍用于下文概率计算
-    not (misc:rand(0, 9999) < erlang:trunc(FleePercent)).
+    not (misc:rand(0, ?PERCENT) < erlang:trunc(FleePercent)).
 
 -spec calcHitAndDamage_damage(DamageValue, MulCri, Def, HpMax, HpCur) -> Ret when
     DamageValue :: float(), MulCri :: float(), Def :: float(),
@@ -506,3 +586,26 @@ calcHitAndDamage_damage(DamageValue, MulCri, Def, HpMax, HpCur) ->
     {-Damage, -DeltaHp}.
 
 my_pow(X, Y) -> math:pow(X, erlang:min(Y, 100)).
+
+%%%-------------------------------------------------------------------
+%%%特殊事件处理
+sp_get_defense(SpecialOptions, Defense) ->
+    case check_sp(SpecialOptions, ?PROP_CALC_SPECIAL_OPTION_IGNORE_DEFENSE) of
+        true -> 0;
+        _ -> Defense
+    end.
+
+sp_get_hit(SpecialOptions) ->
+    check_sp(SpecialOptions, ?PROP_CALC_SPECIAL_OPTION_CERTAINLY_HIT).
+
+sp_get_cri(SpecialOptions) ->
+    check_sp(SpecialOptions, ?PROP_CALC_SPECIAL_OPTION_CERTAINLY_CS).
+
+check_sp(0, _Flag) ->
+    false;
+check_sp(SpecialOptions, Flag)
+    when is_integer(SpecialOptions),SpecialOptions > 0,is_integer(Flag),Flag > 0 ->
+    (SpecialOptions band Flag) /= 0;
+check_sp(_SpecialOptions, _Flag) ->
+    false.
+%%%-------------------------------------------------------------------

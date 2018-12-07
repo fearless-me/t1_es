@@ -44,6 +44,7 @@ mod_init([MapID]) ->
     erlang:process_flag(priority, high),
     EtsAtom = misc:create_atom(?MAP_LINES, [MapID]),
     Ets = misc_ets:new(EtsAtom, [named_table, public, {keypos, #m_map_line.line_id}, ?ETS_RC]),
+    catch tick_recycle_line_msg(MapID),
     ?INFO("mapMgr ~p started, line ets:~p,mapID:~p", [ProcessName, Ets, MapID]),
     {ok, #state{ets = Ets, map_id = MapID}}.
 
@@ -64,13 +65,16 @@ do_handle_call(Request, From, State) ->
     {reply, ok, State}.
 
 %%--------------------------------------------------------------------
-do_handle_info({stop_line, Line}, State) ->
-    stop_map_line(State, Line),
+do_handle_info({deadline_stop, Line}, State) ->
+    stop_map_line(State, Line, deadline_stop),
     {noreply, State};
 do_handle_info({force_del_line_now, Line}, State) ->
     force_del_line(State, Line),
     {noreply, State};
 do_handle_info(broadcast, State) ->
+    {noreply, State};
+do_handle_info(tick_recyle_line_msg, State) ->
+    recycle_line(State),
     {noreply, State};
 do_handle_info(Info, State) ->
     ?ERROR("undeal info ~w", [Info]),
@@ -97,7 +101,7 @@ do_player_join_map_call_1(_Any, S, Req) ->
     #r_join_map_req{
         tar_map_id = MapID, tar_line_id = TarLineId, force = Force
     } = Req,
-    
+
     Recover = map_creator_interface:map_line_recover(MapID),
     Now = misc_time:milli_seconds(),
     MS =
@@ -119,11 +123,11 @@ do_player_join_map_call_1(_Any, S, Req) ->
     Res =
         case misc_ets:select(S#state.ets, MS, 2) of
             {[Line1], _Continue} -> Line1;
-            {[Line11, _], _Continue} when Line11#m_map_line.line_id  =:= TarLineId -> Line11;
+            {[Line11, _], _Continue} when Line11#m_map_line.line_id =:= TarLineId -> Line11;
             {[_, Line22], _Continue} -> Line22;
-            EndOfTable ->  EndOfTable
+            EndOfTable -> EndOfTable
         end,
-    
+
     i_player_join_map_call(Res, Recover, Req, S).
 
 %%--------------------------------------------------------------------
@@ -145,7 +149,7 @@ i_player_join_map_call(_Any, Recover, Req, State) ->
         #m_map_line{} = Line ->
             i_player_join_map_call(Line, Recover, Req, State);
         Error ->
-            ?ERROR("create map ~p new line error ~p",[State#state.map_id, Error]),
+            ?ERROR("create map ~p new line error ~p", [State#state.map_id, Error]),
             #r_join_map_ack{map_id = Req#r_join_map_req.tar_map_id, error = ?E_MapCreateLineFailed}
     end.
 
@@ -153,9 +157,9 @@ i_player_join_map_call(_Any, Recover, Req, State) ->
 do_player_exit_map_call(S, Req) ->
     %%1.
     #r_exit_map_req{uid = Uid, line_id = LineID, map_id = Mid} = Req,
-    
+
     ?WARN("player ~p exit map_~p_~p", [Uid, S#state.map_id, LineID]),
-    
+
     %2.
     case misc_ets:read(S#state.ets, LineID) of
         [#m_map_line{pid = Pid}] ->
@@ -189,7 +193,7 @@ create_new_line(S, MapID, LineID) ->
 
     [Line] = misc_ets:read(S#state.ets, LineID),
     %% fixme 此处是为了测试用的
-    erlang:send_after(?LINE_LIFETIME * 6 * 24*7, self(), {stop_line, Line}),
+    erlang:send_after(?LINE_LIFETIME * 6 * 24 * 7, self(), {deadline_stop, Line}),
     ?WARN("map_~p_~p ~p start, mgr ets ~p", [MapID, LineID, Pid, S#state.ets]),
     Line.
 
@@ -203,9 +207,9 @@ next_line_id() ->
     put('LINE_ID', LineID),
     LineID.
 
-stop_map_line(S, Line) ->
+stop_map_line(S, Line, Reason) ->
     #m_map_line{map_id = Mid, line_id = LineId, pid = Pid} = Line,
-    ?WARN("~p|map_~p_~p will be stopped", [Pid, Mid, LineId]),
+    ?WARN("~p|map_~p_~p will be stopped reason ~p", [Pid, Mid, LineId, Reason]),
     % 预留保护时间让玩家退出
     erlang:send_after(?DEAD_LINE_PROTECT, self(), {force_del_line_now, Line}),
     misc_ets:update_element(S#state.ets, LineId, {#m_map_line.status, ?MAP_READY_EXIT}),
@@ -217,7 +221,7 @@ force_del_line(S, Line) ->
     IsAlive = misc:is_alive(Pid),
     ?TRY_CATCH_ONLY(clear_line_player(IsAlive, Mid, LineId)),
     ?WARN("~p|map_~p_~p will be killed(force:~p)", [Pid, Mid, LineId, IsAlive]),
-    catch erlang:exit(Pid, normal),
+    catch erlang:exit(Pid, force),
     misc_ets:delete(S#state.ets, LineId),
 
     ok.
@@ -225,10 +229,34 @@ force_del_line(S, Line) ->
 clear_line_player(true, Mid, Line) ->
     erlang:spawn
     (
-        fun()->
-            Match = #m_cache_map_object_priv{map_id = Mid, line_id = Line, _ =  '_'},
+        fun() ->
+            Match = #m_cache_map_object_priv{map_id = Mid, line_id = Line, _ = '_'},
             misc_ets:match_delete(?ETS_CACHE_MAP_PLAYER_PRIV, Match)
         end
     );
 clear_line_player(_, _Mid, _Line) -> skip.
 
+tick_recycle_line_msg(MapId) ->
+    case map_creator_interface:can_recycle_no_player(MapId) of
+        true -> erlang:send_after(?MAP_MGR_RECYCLE_TIME, self(), tick_recyle_line_msg);
+        _Any -> skip
+    end.
+
+recycle_line(S) ->
+    catch do_recycle_line(S),
+    catch tick_recycle_line_msg(S#state.map_id),
+    ok.
+
+do_recycle_line(S) ->
+    MS =
+        ets:fun2ms
+        (
+            fun(#m_map_line{in = In, status = Status} = T)
+                when In == 0, Status =:= ?MAP_RUNNING -> T
+            end
+        ),
+    case misc_ets:select(S#state.ets, MS, ?MAP_MGR_RECYCLE_THR) of
+        {Matched, _Continue} ->
+            lists:foreach(fun(Line) -> stop_map_line(S, Line, recycle_line) end, Matched);
+        _EndOfTable -> skip
+    end.

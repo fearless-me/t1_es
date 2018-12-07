@@ -43,9 +43,9 @@ close(N) ->
     ets:foldl
     (
         fun
-            ({_, Socket}, X) when X < N ->
-                gen_tcp:close(Socket);
-            (_, X) -> X+1
+            ({_, Socket}, X1) when X1 < N ->
+                gen_tcp:close(Socket), X1+1;
+            (_, X2) -> X2+1
         end,
         0,
         tcpc
@@ -53,7 +53,8 @@ close(N) ->
     ok.
 
 
-c(Port) -> c(Port, 0).
+c(Port) ->
+    c(Port, misc_time:milli_seconds()).
 
 c(Port, AccountIdx) ->
     spawn(fun() -> tcp_client:connect(Port, AccountIdx) end).
@@ -69,7 +70,7 @@ nc(N, Port, Interval) ->
             lists:foreach
             (
                 fun(_) ->
-                    tcp_client:c(Port, 0),
+                    tcp_client:c(Port, misc_time:micro_seconds()),
                     timer:sleep(Interval)
                 end,
                 lists:seq(1, N)
@@ -93,18 +94,14 @@ connect(Port, AccountIdx) ->
 
         {ok, Socket} = ranch_tcp:connect({127, 0, 0, 1}, Port, [{active, false}]),
         socket(Socket),
-        Idx = case AccountIdx of
-                  0 -> misc_time:milli_seconds();
-                  _ -> AccountIdx
-              end,
         Msg1 = #pk_U2GS_Login_Normal{
-            platformAccount = "test_net" ++ integer_to_list(Idx),
+            platformAccount = "c" ++ integer_to_list(AccountIdx),
             platformName = "test",
             platformNickName = "",
             time = misc_time:utc_seconds(),
             sign = "owner"
         },
-
+            
         send_msg(Socket, Msg1),
         recv_msg(Socket),
 
@@ -118,8 +115,12 @@ connect(Port, AccountIdx) ->
         ?WARN("socket ~p, pid ~p bye~~!", [socket(), self()]),
         ok
     catch _ : Err: _ ->
-            ?ERROR("player ~p of account ~p socket ~p, pid ~p err ~p bye~~!",
-                [get_aid(), get_uid(), socket(), self(), Err])
+            catch misc_ets:delete(tcpc, get_uid()),
+            ?ERROR
+            (
+                "player ~p of account ~p socket ~p, pid ~p err ~p bye~~!",
+                [get_uid(), get_aid(), socket(), self(), Err]
+            )
     end,
 
     ok.

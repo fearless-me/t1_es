@@ -63,7 +63,7 @@ use_skill_success(#m_object_rw{uid = Uid} = Attacker, [#m_object_rw{}|_] = Targe
     mod_view:send_net_msg_to_visual(Uid, NetMsg),
 
     %% 触发事件
-    CEParams = get_ce_param(SkillId, ?HP_CHANGE_SKILL, Serial),
+    CEParams = get_ce_param(SkillCfg, ?HP_CHANGE_SKILL, Serial),
     ?TRY_CATCH(trigger_before_cast_event(Attacker, TargetList, SkillCfg, CEParams)),
 
     %% 根据类型
@@ -108,10 +108,10 @@ active_skill_once(#m_object_rw{uid = Uid} = Aer, TarList, #skillCfg{id = SkillId
 calculate_dmg(
     #m_object_rw{} = Attack,
     #m_object_rw{} = Target,
-    #skillCfg{id = SkillId} = SkillCfg, Serial
+    #skillCfg{} = SkillCfg, Serial
 ) ->
     %% 命中事件
-    CEParams = get_ce_param(SkillId, ?HP_CHANGE_SKILL, Serial),
+    CEParams = get_ce_param(SkillCfg, ?HP_CHANGE_SKILL, Serial),
     ?TRY_CATCH(trigger_hit_before_event(Attack, [Target], SkillCfg, CEParams), Error1, Stk1),
     ?TRY_CATCH(trigger_hit_event(Attack, [Target], SkillCfg, CEParams), Error2, Stk2),
     ok.
@@ -252,10 +252,12 @@ trigger_event(Aer, [Der | DerList], EventList, CEParams) ->
     condition_event:action_all(EventList, [Aer, Der], CEParams),
     trigger_event(Aer, DerList, EventList, CEParams).
 
-get_ce_param(SkillId, Cause, Serial) ->
+get_ce_param(#skillCfg{id = SkillId, hp_steal = HpSteal, special_options = SpecialOptions}, Cause, Serial) ->
     CEParams = condition_event_interface:init_self_ce_param(?MODULE_MAP_PROCESS),
     CEParams#{
         skillID => SkillId,
         cause => Cause,
-        serial => Serial
+        serial => Serial,
+        hp_steal => HpSteal,
+        special_options => SpecialOptions
     }.

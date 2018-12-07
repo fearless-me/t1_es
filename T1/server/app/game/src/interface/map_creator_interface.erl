@@ -20,6 +20,7 @@
 -export([
     broadcast/1, select_all_map_pid/0,
     is_cross_map/1, map_data/1, map_type/1, normal_map/1,
+    can_recycle_no_player/1,
     map_mgr_lr/2, map_mgr_l/1,
     born_map_id/0, map_init_pos/1,
     map_line_recover/1
@@ -165,6 +166,12 @@ is_cross_map(MapId) ->
         _ -> false
     end.
 
+can_recycle_no_player(MapId) ->
+    case getCfg:getCfgByArgs(cfg_map, MapId) of
+        #mapCfg{type = ?MAP_TYPE_NORMAL} -> true;
+        _ -> false
+    end.
+
 %%--------------------------------
 status_(detail) ->
     erlang:spawn(
@@ -198,8 +205,9 @@ status() ->
 -define(INFO_FMT_BODY, "~-5.w~-18.w~-8.w~-6.w~-8.w~-12.ts~-20.ts~-10.w~w~n").
 -define(INFO_FMT_HEAD, "~-5.ts~-18.ts~-8.ts~-6.ts~-8.ts~-12ts~-20.ts~-10.ts~ts~n").
 line_status(MapId, LineEts, Extra) ->
-    Overview = io_lib:format("~nMap:~p  Line Count:~p~n", [MapId, misc_ets:size(LineEts)]),
     List = lists:sort(misc_ets:to_list(LineEts)),
+    Total = lists:map(fun(#m_map_line{in = Players})-> Players end, List),
+    Overview = io_lib:format("~nMap:~p  Line Count:~p Palyers:~p~n", [MapId, misc_ets:size(LineEts), lists:sum(Total)]),
     InfoHead = io_lib:format(?INFO_FMT_HEAD, ["Id", "Pid", "Limit", "In", "Reserve", "Memory","Deadline", "Status", "Extra"]),
     InfoAll = lists:map(
         fun(#m_map_line{

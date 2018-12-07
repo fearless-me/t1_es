@@ -59,19 +59,20 @@
 %% sensible value.
 -define(MEMORY_SIZE_FOR_UNKNOWN_OS, 1073741824).
 -define(DEFAULT_VM_MEMORY_HIGH_WATERMARK, 0.4).
-%%
+%% setting: bytes -> words
+%% return: All sizes are in words.
 -define(LARGE_HEAP, 100 * 1024 * 1024).
 -define(LARGE_HEAP_GUARD_MIN, 10 * 1024 * 1024).
-%%
+%%  milliseconds
 -define(LONG_GC, 500).
+%% milliseconds
 -define(LONG_SCHEDULE, 500).
-%%
 -define(VM_MONITOR_LOGGER, monitor_logger).
 -define(REPORT_CACHE_ETS, system_monitor_ets__).
 
 %%
 -record(state, {total_memory, memory_limit, memory_config_limit, timeout, timer, alarmed, alarm_funs}).
--record(monitor_info, {pid_or_port, event, info, start, latest, count = 0, need_flush = true}).
+-record(monitor_info, {pid_or_port, name, event, info, start, latest, count = 0, need_flush = true}).
 
 
 %%----------------------------------------------------------------------------
@@ -627,6 +628,7 @@ cache_monitor(PidOrPort, Event, Info) ->
                 ?REPORT_CACHE_ETS,
                 #monitor_info{
                     pid_or_port = PidOrPort,
+                    name = register_name(PidOrPort),
                     event = Event,
                     info = Info,
                     start = Now,
@@ -657,5 +659,9 @@ cache_monitor(PidOrPort, Event, Info) ->
             )
     end,
     ok.
+
+register_name(Pid) when is_pid(Pid) ->
+    misc:registered_name(Pid);
+register_name(_) -> is_port.
 
 

@@ -13,7 +13,7 @@
 -include("gs_cache.hrl").
 -include("ai.hrl").
 -include("rec_rw.hrl").
-
+-include("common_def.hrl").
 
 %% API
 
@@ -137,7 +137,7 @@ test_trigger_event(Uid, #m_ai_trigger{cfg_id = _Id}) ->
 test_trigger_event(_Uid, #ai_trigger_cfg{event = ?ETEE_Null}) ->
     true;
 test_trigger_event(_Uid, #ai_trigger_cfg{prob = Prob}) ->
-    rand_tool:rand() rem 10000 =< Prob.
+    rand_tool:rand() rem ?PERCENT =< Prob.
 
 %%-------------------------------------------------------------------
 test_trigger_state(_Uid, _Trigger, 0) ->

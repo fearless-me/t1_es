@@ -112,7 +112,7 @@ getRow(2) ->
 		id = 2,
 		name = "@@>1000008<",
 		level = 1,
-		is_cross = 2,
+		is_cross = 1,
 		peopleLimit = 100,
 		lifetime = 0,
 		type = 1,

@@ -9,6 +9,8 @@
 -module(rand_tool).
 -author("mawenhong").
 
+-include("common_def.hrl").
+
 %% API
 -export([
     new/0, new/1,
@@ -34,8 +36,8 @@ new(Seed) ->
     Seed.
 
 prob(FProb) ->
-    X = erlang:trunc(FProb * 10000),
-    X =<rand_tool:rand(1, 10000).
+    X = erlang:trunc(FProb * ?PERCENT),
+    X =<rand_tool:rand(1, ?PERCENT).
 
 -spec rand() -> integer().
 rand() ->

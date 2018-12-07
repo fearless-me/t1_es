@@ -169,10 +169,9 @@ scheduler_usage(Interval) ->
 scheduler_statistics(Interval)->
     erlang:system_flag(scheduling_statistics,enable),
     timer:sleep(Interval),
-    Res0 = erlang:system_info(scheduling_statistics),
-    Res1 = erlang:system_info(total_scheduling_statistics),
+    Res = erlang:system_info(total_scheduling_statistics),
     erlang:system_flag(scheduling_statistics,disable),
-    {Res0, Res1}.
+    Res.
 
 
 

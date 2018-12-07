@@ -57,6 +57,11 @@
 %% 地图进程退出状态保护时间，让玩家加退出等等
 %% 超过这个时间强杀
 -define(DEAD_LINE_PROTECT,  20 * 1000).
+%% @doc
+%% mgr周期回收掉没有人的地图线路
+%% 多长时间回收一次，一次最多回收几条线路
+-define(MAP_MGR_RECYCLE_TIME, 3*60*1000).
+-define(MAP_MGR_RECYCLE_THR, 1).
 
 %% 地图call调用超时时间
 %% 上线、切线、下线

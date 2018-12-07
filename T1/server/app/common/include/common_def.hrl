@@ -44,4 +44,8 @@
 -define(SYSTEM_GUID_TEAM, 102).
 -define(SYSTEM_GUID_FRIEND, 103).
 
+
+%% 万分比
+-define(PERCENT, 10000).
+
 -endif.

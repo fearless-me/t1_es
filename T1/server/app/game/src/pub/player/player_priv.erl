@@ -23,7 +23,7 @@
 
 %% 逻辑层不要调用这些接口
 -export([init/0]).
--export([login_ack/1]).
+-export([login/3, login_ack/1]).
 -export([loaded_player_list/1]).
 -export([create_player/6, create_player_ack/1]).
 -export([select_player/1]).
@@ -34,6 +34,16 @@
 init() ->
     player_rw:init_default(),
     player_rw:set_status(?PS_INIT),
+    ok.
+
+%%-------------------------------------------------------------------
+login(PlatName, PlatAccount, Token)->
+    ?DEBUG("s~p|~ts login",[self(), PlatAccount]),
+    player_rw:set_status(?PS_VERIFY),
+    login_interface:login_(#r_login_req{
+        plat_name = PlatName, plat_account_name = PlatAccount,
+        access_token = Token, player_pid = self()
+    }),
     ok.
 
 %%-------------------------------------------------------------------
@@ -152,6 +162,7 @@ select_player(Uid) ->
     player_rw:set_status(?PS_WAIT_LOAD),
     player_rw:set_uid(Uid),
     gs_db_interface:action_data_(Aid, load_player_data, {Aid, Uid}),
+    
     ok.
 
 %%-------------------------------------------------------------------

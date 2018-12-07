@@ -18,8 +18,10 @@ sql(load_all_role_info) ->
     <<"select * from player where sid=? limit ?,?">>;
 sql(load_all_role_info_cnt) ->
     <<"select count(*) from player where sid=?">>;
-sql(load_acount) ->
+sql(load_account) ->
     <<"select * from account where account_crc = ?">>;
+sql(load_account_aid) ->
+    <<"select * from account where aid = ?">>;
 sql(insert_acount) ->
     <<"insert account(aid,account,account_crc, plat_account, plat_name, device, imei, idfa, mac, create_time, version_hash_code)
      values(?,?,?,?,?,?,?,?,?,?,?);">>;

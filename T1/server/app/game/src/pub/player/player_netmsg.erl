@@ -31,12 +31,7 @@ handle(#pk_U2GS_Login_Normal{
     platformAccount = PlatAccount,
     sign = Token
 }) ->
-    ?DEBUG("mod_login:login_"),
-    player_rw:set_status(?PS_VERIFY),
-    login_interface:login_(#r_login_req{
-        plat_name = PlatName, plat_account_name = PlatAccount,
-        access_token = Token, player_pid = self()
-    }),
+    player_priv:login(PlatName, PlatAccount, Token),
     ok;
 handle(#pk_U2GS_RequestCreatePlayer{
     name = Name, camp = Camp,

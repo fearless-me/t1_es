@@ -14,16 +14,20 @@
 -include("logger.hrl").
 -include("rec_rw.hrl").
 -include("netmsg.hrl").
+-include("cfg_skill.hrl").
 
 %% API
 -export([
     change_combat_prop/3,
     change_combat_prop/5,
 
-    hitAndDamage/6,
-    hitAndDamage/3
-]).
+    hit_damage/8,
+    hit_damage/4,
 
+    treat/8,    %% 带吸血标志
+    treat/7,
+    treat/5
+]).
 
 change_combat_prop(Uid, AddList, MultiList) ->
     change_combat_prop(Uid, AddList, MultiList, [], []),
@@ -53,57 +57,104 @@ change_combat_prop(Uid, AddList, MultiList, AddList_Del, MultiList_Del) ->
     gs_interface:send_net_msg(Uid, prop_interface:battleProps2NetMsg(Uid, BattlePropsNew_)),
     ok.
 
-%% 伤害打击
--spec hitAndDamage(#m_object_rw{}, #m_object_rw{}, DamageValue::float(),
-    SkillID::integer(), SkillSerial::integer(), HPChangeReason::integer()) -> #m_hit_damage_result{}.
-hitAndDamage(
-    #m_object_rw{uid = Uid} = Attack,
-    #m_object_rw{uid = TargetUid} = Defense,
-    DamageValue, SkillID, SkillSerial, HPChangeReason) ->
-    #m_hit_damage_result{
-        isHit = IsHit,
-        isCri = IsCri,
-        deltaHp = DeltaHp
-    } = hitAndDamage(Attack, Defense, DamageValue),
+%% 治疗
+-spec treat(#m_object_rw{}, #m_object_rw{}, TreatValue::float(),
+    SkillID::integer(), SkillSerial::integer(), HPChangeReason::integer(),
+    SpecialOptions::integer()) -> #m_hit_damage_result{}.
+treat(#m_object_rw{} = Attack, #m_object_rw{} = Defense,
+    TreatValue, Misc1, SkillSerial, HPChangeReason, SpecialOptions) ->
+    treat(Attack, Defense, TreatValue, Misc1, SkillSerial, HPChangeReason, SpecialOptions, false).
 
-    %% 血量变化
-    Result =
-        case IsHit of
-            false ->
-                ?ESR_DODGE;
-            _ when IsCri =:= true ->
-                ?ESR_CRITICAL;
-            _ ->
-                ?ESR_NORMAL
-        end,
+%% 治疗
+-spec treat(#m_object_rw{}, #m_object_rw{}, TreatValue::float(),
+    SkillID::integer(), SkillSerial::integer(), HPChangeReason::integer(),
+    SpecialOptions::integer(), IsSuckBloodFlag::boolean()) -> #m_hit_damage_result{}.
+treat(#m_object_rw{uid = Uid} = Attack, #m_object_rw{uid = TargetUid} = Defense,
+    TreatValue, Misc1, SkillSerial, HPChangeReason, SpecialOptions, IsSuckBloodFlag) when TreatValue > 0 ->
+    Result = #m_hit_damage_result{} = treat(Attack, Defense, TreatValue, SpecialOptions, IsSuckBloodFlag),
 
     %% 通知客户端血量变化
     HpMsg = #pk_GS2U_HPChange{
         uid = TargetUid,
-        cause = HPChangeReason,
-        result = Result,
-        hp_change = DeltaHp,
-        misc1 = SkillID,
         src_uid = Uid,
+        cause = HPChangeReason,
+        misc1 = Misc1,
         serial = SkillSerial
     },
-    ?DEBUG("hitAndDamage ~p -> ~p DeltaHp:~p SkillID:~p", [Uid, TargetUid, DeltaHp, SkillID]),
-    mod_view:send_net_msg_to_visual(TargetUid, HpMsg),
+    broadcast_hp_change(Result, HpMsg);
+treat(_Attack, _Defense, _TreatValue, _Misc1, _SkillSerial, _HPChangeReason, _SpecialOptions, _IsSuckBloodFlag) ->
     ok.
 
--spec hitAndDamage(#m_object_rw{}, #m_object_rw{}, DamageValue::float()) -> #m_hit_damage_result{}.
-hitAndDamage(
+%% 伤害打击
+-spec hit_damage(#m_object_rw{}, #m_object_rw{}, DamageValue::float(),
+    SkillID::integer(), SkillSerial::integer(), HPChangeReason::integer(),
+    HpSteal::integer(), SpecialOptions::integer()) -> #m_hit_damage_result{}.
+hit_damage(
+    #m_object_rw{uid = Uid} = Attack,
+    #m_object_rw{uid = TargetUid} = Defense,
+    DamageValue, Misc1, SkillSerial, HPChangeReason, HpSteal, SpecialOptions) ->
+    Result = #m_hit_damage_result{deltaHp = DeltaHp}
+        = hit_damage(Attack, Defense, DamageValue, SpecialOptions),
+
+    HpMsg = #pk_GS2U_HPChange{
+        uid = TargetUid,
+        src_uid = Uid,
+        cause = HPChangeReason,
+        misc1 = Misc1,
+        serial = SkillSerial
+    },
+    broadcast_hp_change(Result, HpMsg),
+
+    %% 吸血根据实际伤害来计算最终数据
+    Attack2 = object_rw:get_uid(Uid),
+    treat(Attack2, Attack2, erlang:abs(DeltaHp) * HpSteal,
+        Misc1, SkillSerial, HPChangeReason, 0, true).
+
+broadcast_hp_change(
+    #m_hit_damage_result{isHit = IsHit, isCri = IsCri, deltaHp = DeltaHp},
+    #pk_GS2U_HPChange{uid = TargetUid, src_uid = Uid, misc1 = Misc1} = HpMsg) ->
+    %% 血量变化
+    Result =
+        case IsHit of
+            false -> ?ESR_DODGE;
+            _ when IsCri =:= true -> ?ESR_CRITICAL;
+            _ -> ?ESR_NORMAL
+        end,
+
+    %% 通知客户端血量变化
+    Msg = HpMsg#pk_GS2U_HPChange{
+        hp_change = DeltaHp,
+        result = Result
+    },
+    ?DEBUG("hp_change ~p -> ~p DeltaHp:~p Misc1:~p", [Uid, TargetUid, DeltaHp, Misc1]),
+    mod_view:send_net_msg_to_visual(TargetUid, Msg),
+    ok.
+
+-spec hit_damage(#m_object_rw{}, #m_object_rw{}, DamageValue::float(),
+    SpecialOptions::integer()) -> #m_hit_damage_result{}.
+hit_damage(
     #m_object_rw{uid = Uid, battle_props = AttackBps},
-    #m_object_rw{uid = TargetUid, battle_props = DefenseBps}, DamageValue) ->
+    #m_object_rw{uid = TargetUid, battle_props = DefenseBps}, DamageValue, SpecialOptions) ->
     Ret = #m_hit_damage_result{
         attackBps = AttackBpsRet,
         defenseBps = DefenseBpsRet
-    } = prop_interface:calcHitAndDamage(AttackBps, DefenseBps, DamageValue),
+    } = prop_interface:calcHitAndDamage(AttackBps, DefenseBps, DamageValue, SpecialOptions),
     Ahp = fresh_prop(Uid, AttackBpsRet),
     Dhp = fresh_prop(TargetUid, DefenseBpsRet),
-
-    %% TODO 计算吸血
     ?DEBUG("hitAndDamage:~p(~p) -> ~p(~p)", [Uid, Ahp, TargetUid, Dhp]),
+    Ret.
+
+-spec treat(#m_object_rw{}, #m_object_rw{}, TreatValue::float(),
+    SpecialOptions::integer(), IsSuckBloodFlag::boolean()) -> #m_hit_damage_result{}.
+treat(
+    #m_object_rw{uid = Uid, battle_props = AttackBps},
+    #m_object_rw{uid = TargetUid, battle_props = DefenseBps}, TreatValue, SpecialOptions, IsSuckBloodFlag) ->
+    Ret = #m_hit_damage_result{
+        defenseBps = DefenseBpsRet
+    } = prop_interface:calcTreat(AttackBps, DefenseBps, TreatValue, SpecialOptions, IsSuckBloodFlag),
+    Dhp = fresh_prop(TargetUid, DefenseBpsRet),
+
+    ?DEBUG("treat:~p target:~p(~p)", [Uid, TargetUid, Dhp]),
     Ret.
 
 fresh_prop(Uid, #m_battleProps{} = Bp) ->
