@@ -319,8 +319,8 @@ on_obj_pos_change(Uid, Tar) ->
 on_obj_pos_changed(?OBJ_PLAYER, Uid, Tar) ->
     gs_cache_interface:update_online_player(Uid, {#m_cache_online_player.pos, Tar}),
     ok;
-on_obj_pos_changed(Type, Uid, Tar) ->
-    ?DEBUG("on_obj_pos_changed(~w,~w,~w)", [Type, Uid, Tar]),
+on_obj_pos_changed(_Type, _Uid, _Tar) ->
+%%    ?DEBUG("on_obj_pos_changed(~w,~w,~w)", [Type, Uid, Tar]),
     ok.
 
 %%-------------------------------------------------------------------
@@ -386,7 +386,7 @@ do_start_monster_walk(Uid, Dst, MoveState) ->
     TotalDist = lists:foldl(
         fun(#m_move_pos{dist = DistCur}, Acc) -> Acc + DistCur end, 0, PathList),
     TotalTime = TotalDist / Speed * 1000,
-    ?WARN("monster ~p start move from ~w to ~w, dist ~w, ~w(ms)",
+    ?DEBUG("monster ~p start move from ~w to ~w, dist ~w, ~w(ms)",
         [Uid, Start, lists:last(Way), TotalDist, TotalTime]),
     
     %
@@ -403,8 +403,8 @@ is_can_monster_walk(Uid, _Dst, _MoveState, _NeedCheck) ->
 
 
 %%-------------------------------------------------------------------
-tick_monster_walk(Uid, CurPos, [], _MoveTime) ->
-    ?WARN("mapid ~p monster ~w arrived ~w", [self(), Uid, CurPos]),
+tick_monster_walk(Uid, _CurPos, [], _MoveTime) ->
+%%    ?WARN("mapid ~p monster ~w arrived ~w", [self(), Uid, CurPos]),
 
     object_rw:set_fields(
         Uid,
