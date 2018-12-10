@@ -121,7 +121,7 @@
 	%% 吸血比例（万分比）
 
 	%% special_options:
-	%% 特殊选项（填和值）0按正常逻辑，1无视防御，2必定命中，4必定暴击
+	%% 特殊选项（填和值）[正常逻辑，无视防御，必定命中，必定暴击]
 
 	%% hurt_times:
 	%% 技能伤害时间点
@@ -180,7 +180,7 @@ getRow(10110000) ->
 		skilleffect = "1_1_1",
 		hiteffect = "1_1_1",
 		hp_steal = 0,
-		special_options = 0,
+		special_options = 1,
 		hurt_times = 200,
 		beforecast = [],
 		castingtick = [],

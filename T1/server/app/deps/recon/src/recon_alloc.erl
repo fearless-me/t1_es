@@ -263,7 +263,6 @@ fragmentation(Keyword) ->
 %% Cache can be tweaked using three VM flags: `+MMmcs', `+MMrmcbf', and
 %% `+MMamcbf'.
 %%
-
 %% `+MMmcs' stands for the maximum amount of cached memory segments. Its
 %% default value is '10' and can be anything from 0 to 30. Increasing
 %% it first and verifying if cache hits get better should be the first
@@ -336,7 +335,7 @@ average_block_sizes(Keyword) ->
 %% larger than the `sbct', it gets sent to a single block carrier. When the
 %% data is smaller than the `sbct', it gets placed into a multiblock carrier.
 %%
-%% mbcs are to be prefered to sbcs because they basically represent pre-
+%% mbcs are to be preferred to sbcs because they basically represent pre-
 %% allocated memory, whereas sbcs will map to one call to sys_alloc
 %% or mseg_alloc, which is more expensive than redistributing
 %% data that was obtained for multiblock carriers. Moreover, the VM is able to

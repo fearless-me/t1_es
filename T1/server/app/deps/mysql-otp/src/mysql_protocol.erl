@@ -43,9 +43,9 @@
 -define(error_pattern, <<?ERROR, _/binary>>).
 -define(eof_pattern, <<?EOF, _:4/binary>>).
 
-%% @doc Performs a handshake using the supplied functions for communication.
-%% Returns an ok or an error record. Raises errors when various unimplemented
-%% features are requested.
+%% @doc Performs a handshake using the supplied socket and socket module for
+%% communication. Returns an ok or an error record. Raises errors when various
+%% unimplemented features are requested.
 -spec handshake(Username :: iodata(), Password :: iodata(),
                 Database :: iodata() | undefined,
                 SockModule :: module(), SSLOpts :: list() | undefined,
@@ -57,15 +57,19 @@ handshake(Username, Password, Database, SockModule0, SSLOpts, Socket0,
           SetFoundRows) ->
     SeqNum0 = 0,
     {ok, HandshakePacket, SeqNum1} = recv_packet(SockModule0, Socket0, SeqNum0),
-    Handshake = parse_handshake(HandshakePacket),
-    {ok, SockModule, Socket, SeqNum2}
-    = maybe_do_ssl_upgrade(SockModule0, Socket0, SeqNum1, Handshake,
-                           SSLOpts, Database, SetFoundRows),
-    Response = build_handshake_response(Handshake, Username, Password,
-                                        Database, SetFoundRows),
-    {ok, SeqNum3} = send_packet(SockModule, Socket, Response, SeqNum2),
-    handshake_finish_or_switch_auth(Handshake, Password, SockModule, Socket,
-                                    SeqNum3).
+    case parse_handshake(HandshakePacket) of
+        #handshake{} = Handshake ->
+            {ok, SockModule, Socket, SeqNum2} =
+                maybe_do_ssl_upgrade(SockModule0, Socket0, SeqNum1, Handshake,
+                                     SSLOpts, Database, SetFoundRows),
+            Response = build_handshake_response(Handshake, Username, Password,
+                                                Database, SetFoundRows),
+            {ok, SeqNum3} = send_packet(SockModule, Socket, Response, SeqNum2),
+            handshake_finish_or_switch_auth(Handshake, Password, SockModule,
+                                            Socket, SeqNum3);
+        #error{} = Error ->
+            Error
+    end.
 
 handshake_finish_or_switch_auth(Handshake = #handshake{status = Status}, Password,
                                 SockModule, Socket, SeqNum0) ->
@@ -204,7 +208,7 @@ fetch_execute_response(SockModule, Socket, Timeout) ->
 %% @doc Parses a handshake. This is the first thing that comes from the server
 %% when connecting. If an unsupported version or variant of the protocol is used
 %% an error is raised.
--spec parse_handshake(binary()) -> #handshake{}.
+-spec parse_handshake(binary()) -> #handshake{} | #error{}.
 parse_handshake(<<10, Rest/binary>>) ->
     %% Protocol version 10.
     {ServerVersion, Rest1} = nulterm_str(Rest),
@@ -241,6 +245,10 @@ parse_handshake(<<10, Rest/binary>>) ->
                status = StatusFlags,
                auth_plugin_data = AuthPluginData,
                auth_plugin_name = AuthPluginName1};
+parse_handshake(<<?ERROR, ErrNo:16/little, Msg/binary>>) ->
+    %% 'Too many connections' in MariaDB 10.1.21
+    %% (Error packet in pre-4.1 protocol)
+    #error{code = ErrNo, msg = Msg};
 parse_handshake(<<Protocol:8, _/binary>>) when Protocol /= 10 ->
     error(unknown_protocol).
 
@@ -264,17 +272,35 @@ server_version_to_list(ServerVersion) ->
 maybe_do_ssl_upgrade(SockModule0, Socket0, SeqNum1, _Handshake, undefined,
                      _Database, _SetFoundRows) ->
     {ok, SockModule0, Socket0, SeqNum1};
-maybe_do_ssl_upgrade(SockModule0, Socket0, SeqNum1, Handshake, SSLOpts,
+maybe_do_ssl_upgrade(gen_tcp, Socket0, SeqNum1, Handshake, SSLOpts,
                      Database, SetFoundRows) ->
     Response = build_handshake_response(Handshake, Database, SetFoundRows),
-    {ok, SeqNum2} = send_packet(SockModule0, Socket0, Response, SeqNum1),
-    case mysql_sock_ssl:connect(Socket0, SSLOpts, 5000) of
+    {ok, SeqNum2} = send_packet(gen_tcp, Socket0, Response, SeqNum1),
+    case ssl_connect(Socket0, SSLOpts, 5000) of
         {ok, SSLSocket} ->
             {ok, ssl, SSLSocket, SeqNum2};
         {error, Reason} ->
             exit({failed_to_upgrade_socket, Reason})
     end.
 
+ssl_connect(Port, ConfigSSLOpts, Timeout) ->
+    DefaultSSLOpts = [{versions, [tlsv1]}, {verify, verify_peer}],
+    MandatorySSLOpts = [{active, false}],
+    MergedSSLOpts = merge_ssl_options(DefaultSSLOpts, MandatorySSLOpts, ConfigSSLOpts),
+    ssl:connect(Port, MergedSSLOpts, Timeout).
+
+-spec merge_ssl_options(list(), list(), list()) -> list().
+merge_ssl_options(DefaultSSLOpts, MandatorySSLOpts, ConfigSSLOpts) ->
+    SSLOpts1 =
+    lists:foldl(fun({Key, _} = Opt, OptsAcc) ->
+                        lists:keystore(Key, 1, OptsAcc, Opt)
+                end, DefaultSSLOpts, ConfigSSLOpts),
+    lists:foldl(fun({Key, _} = Opt, OptsAcc) ->
+                        lists:keystore(Key, 1, OptsAcc, Opt)
+                end, SSLOpts1, MandatorySSLOpts).
+
+%% @doc This function is used when upgrading to encrypted socket. In other,
+%% cases, build_handshake_response/5 is used.
 -spec build_handshake_response(#handshake{}, iodata() | undefined, boolean()) ->
     binary().
 build_handshake_response(Handshake, Database, SetFoundRows) ->

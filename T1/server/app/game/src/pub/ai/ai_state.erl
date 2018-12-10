@@ -26,6 +26,8 @@ on_enter(Uid, ?AI_STATE_ATTACK) ->
     ai_state_attack:on_enter(Uid);
 on_enter(Uid, ?AI_STATE_FLEE) ->
     ai_state_flee:on_enter(Uid);
+on_enter(Uid, ?AI_STATE_RETURN) ->
+    ai_state_return:on_enter(Uid);
 on_enter(_Uid, _AiState) ->
     ok.
 
@@ -39,6 +41,8 @@ on_exit(Uid, ?AI_STATE_ATTACK) ->
     ai_state_attack:on_exit(Uid);
 on_exit(Uid, ?AI_STATE_FLEE) ->
     ai_state_flee:on_exit(Uid);
+on_exit(Uid, ?AI_STATE_RETURN) ->
+    ai_state_return:on_exit(Uid);
 on_exit(_Uid, _AiState) ->
     ok.
 
@@ -53,6 +57,8 @@ update(Uid, ?AI_STATE_ATTACK) ->
     ai_state_attack:update(Uid);
 update(Uid, ?AI_STATE_FLEE) ->
     ai_state_flee:update(Uid);
+update(Uid, ?AI_STATE_RETURN) ->
+    ai_state_return:update(Uid);
 update(_Uid, _AiState) ->
     ok.
 
@@ -66,6 +72,8 @@ on_event(Uid, ?AI_STATE_ATTACK, Event) ->
     ai_state_attack:on_event(Uid, Event);
 on_event(Uid, ?AI_STATE_FLEE, Event) ->
     ai_state_flee:on_event(Uid, Event);
+on_event(Uid, ?AI_STATE_RETURN, Event) ->
+    ai_state_return:on_event(Uid, Event);
 on_event(_Uid, _AiState, _Event) ->
     ok.
 

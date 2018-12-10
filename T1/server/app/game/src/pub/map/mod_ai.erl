@@ -33,6 +33,9 @@
     on_ai_event/2, is_in_attack_dist/2, ai_use_skill/3,
     %% flee
     count_down_flee_tick/1, rand_flee_pos/1, start_flee/2, update_flee/1,
+    %% return
+    start_return/1, update_return/1,
+    %%
     get_target_by_type/2
 ]).
 
@@ -702,3 +705,17 @@ get_target_by_type(Uid, ?CFE_RandPlayer) ->
     end;
 get_target_by_type(Uid, ?CFE_MinEnimty) ->
     get_max_enmity_uid(Uid).
+
+%%-------------------------------------------------------------------
+%%-------------------------------------------------------------------
+start_return(Uid) ->
+    BornPos = object_rw:get_born_pos(Uid),
+    ?TRY_CATCH(mod_move:on_obj_pos_change(Uid, BornPos)),
+    ok.
+
+update_return(Uid) ->
+    case object_rw:get_cur_move(Uid) of
+        true -> object_rw:set_ai_arrived_return_pos_direct(Uid, true);
+        _Any -> skip
+    end,
+    ok.

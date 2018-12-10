@@ -64,6 +64,8 @@ init(S) ->
     Conf = map_creator_interface:map_data(S#m_map_state.map_id),
     ok = map_rw:init(S),
     ok = mod_view:init_vis_tile(Conf),
+    mod_progress_core:init(),
+
     ok = init_npc(Conf),
     ok = init_monster(Conf),
     tick_msg(),
@@ -221,6 +223,7 @@ tick_obj(S, Now) ->
 
     % 更新各个对象
     %------------------
+    ?TRY_CATCH(mod_progress_core:tick(Now), Err1_1, Stk1_1),
     ?TRY_CATCH(tick_player(S, Now), Err2, Stk2),
     ?TRY_CATCH(tick_monster(S, Now), Err3, Stk3),
     ?TRY_CATCH(tick_pet(S, Now), Err4, Stk4),

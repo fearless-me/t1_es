@@ -2,7 +2,7 @@
 -ifndef(netmsg).
 -define(netmsg,1).
 
--define(ProtoVersion,657).
+-define(ProtoVersion,658).
 
 -record(pk_BattleProp,{
 	%% UInt32 属性ID
@@ -701,6 +701,45 @@
 	dst_x = 0.0,
 	%% Single坐标Y
 	dst_y = 0.0
+}).
+
+%% 
+%% //////////////////////////////////////////////////////////////////////////
+%% //<-发出去     ;      ->收消息
+%% // 不用使用int uint long 
+%% // 支持使用 string float int32 uint32 int64 uint64
+%% /////////////////////////////////////////////////////////////////////////
+%% //不用使用int uint long 
+%% //不用使用int uint long 
+%% //不用使用int uint long 
+%% //不用使用int uint long 
+%% //不用使用int uint long 
+%% //不用使用int uint long 
+%% // 服务器进度同步
+-define(GS2U_ProgressSync,14012).
+-record(pk_GS2U_ProgressSync,{
+	%% UInt64
+	uid = 0,
+	%% UInt64
+	object_uid = 0,
+	%% UInt32
+	flag_id = 0,
+	%% UInt16
+	progress_type = 0,
+	%% UInt32 进度持续时间，毫秒
+	time_ms = 0,
+	%% Byte 阶段，1start，2break，3hit
+	phase = 0,
+	%% UInt32 参数，可能是技能ID，采集物ID等
+	param = 0
+}).
+
+%% 
+%% // 客户端主动打断进度
+-define(U2GS_BreakProgress,63094).
+-record(pk_U2GS_BreakProgress,{
+	%% UInt32
+	flag_id = 0
 }).
 
 -endif. %%NetmsgRecords

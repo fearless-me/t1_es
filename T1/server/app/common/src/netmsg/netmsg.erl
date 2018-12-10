@@ -602,7 +602,35 @@ decode(?U2GS_PlayerWalk,Bin0) ->
 		dst_x = V_dst_x,
 		dst_y = V_dst_y
 		},
-	Bin4 }.
+	Bin4 };
+
+%GENERATED from file:progress.h => GS2U_ProgressSync
+decode(?GS2U_ProgressSync,Bin0) ->
+	{ V_uid, Bin1 } = read_uint64( Bin0 ),
+	{ V_object_uid, Bin2 } = read_uint64( Bin1 ),
+	{ V_flag_id, Bin3 } = read_uint32( Bin2 ),
+	{ V_progress_type, Bin4 } = read_uint16( Bin3 ),
+	{ V_time_ms, Bin5 } = read_uint32( Bin4 ),
+	{ V_phase, Bin6 } = read_uint8( Bin5 ),
+	{ V_param, Bin7 } = read_uint32( Bin6 ),
+	{ #pk_GS2U_ProgressSync {
+		uid = V_uid,
+		object_uid = V_object_uid,
+		flag_id = V_flag_id,
+		progress_type = V_progress_type,
+		time_ms = V_time_ms,
+		phase = V_phase,
+		param = V_param
+		},
+	Bin7 };
+
+%GENERATED from file:progress.h => U2GS_BreakProgress
+decode(?U2GS_BreakProgress,Bin0) ->
+	{ V_flag_id, Bin1 } = read_uint32( Bin0 ),
+	{ #pk_U2GS_BreakProgress {
+		flag_id = V_flag_id
+		},
+	Bin1 }.
 
 %GENERATED from file:combat.h => BattleProp
 -spec decode_BattleProp(Bin0) -> { #pk_BattleProp{},LeftBin }
@@ -1330,6 +1358,34 @@ encode(#pk_U2GS_PlayerWalk{} = P) ->
 		Bin_dst_y
 	];
 
+%GENERATED from file:progress.h => GS2U_ProgressSync
+encode(#pk_GS2U_ProgressSync{} = P) ->
+	Bin_uid = write_uint64( P#pk_GS2U_ProgressSync.uid ),
+	Bin_object_uid = write_uint64( P#pk_GS2U_ProgressSync.object_uid ),
+	Bin_flag_id = write_uint32( P#pk_GS2U_ProgressSync.flag_id ),
+	Bin_progress_type = write_uint16( P#pk_GS2U_ProgressSync.progress_type ),
+	Bin_time_ms = write_uint32( P#pk_GS2U_ProgressSync.time_ms ),
+	Bin_phase = write_uint8( P#pk_GS2U_ProgressSync.phase ),
+	Bin_param = write_uint32( P#pk_GS2U_ProgressSync.param ),
+	[
+		<<?GS2U_ProgressSync:?U16>>,
+		Bin_uid,
+		Bin_object_uid,
+		Bin_flag_id,
+		Bin_progress_type,
+		Bin_time_ms,
+		Bin_phase,
+		Bin_param
+	];
+
+%GENERATED from file:progress.h => U2GS_BreakProgress
+encode(#pk_U2GS_BreakProgress{} = P) ->
+	Bin_flag_id = write_uint32( P#pk_U2GS_BreakProgress.flag_id ),
+	[
+		<<?U2GS_BreakProgress:?U16>>,
+		Bin_flag_id
+	];
+
 encode(_) -> noMatch.
 
 %GENERATED from file:combat.h => BattleProp
@@ -1515,6 +1571,8 @@ name(?U2GS_GetRemoteObjInfo) -> "U2GS_GetRemoteObjInfo";
 name(?U2GS_HearBeat) -> "U2GS_HearBeat";
 name(?U2GS_PlayerStopWalk) -> "U2GS_PlayerStopWalk";
 name(?U2GS_PlayerWalk) -> "U2GS_PlayerWalk";
+name(?GS2U_ProgressSync) -> "GS2U_ProgressSync";
+name(?U2GS_BreakProgress) -> "U2GS_BreakProgress";
 name(MsgID) -> "ErrorNetMsg_" ++ erlang:integer_to_list(MsgID).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1565,5 +1623,7 @@ cmd_list()->
 		,?U2GS_HearBeat
 		,?U2GS_PlayerStopWalk
 		,?U2GS_PlayerWalk
+		,?GS2U_ProgressSync
+		,?U2GS_BreakProgress
 
 	].

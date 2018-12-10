@@ -1,33 +1,37 @@
-﻿
-## UML diagrams
+﻿```erlang
+monster新增字段
+patrol_type : 巡逻类型 0 站立 1 自由 2 路径
+patrol_radius = 10,
+ai_init_type ：ai初始化类型： 0 无AI， 1 指定AI id， 2 完全随机 3 在分组类随机
+ai_id  : ai id
+ai_type ： ai类型 0无类型，1 被动 2 主动 3炮塔
 
-You can render UML diagrams using [Mermaid](https://mermaidjs.github.io/). For example, this will produce a sequence diagram:
+ai配置定义
+id
+type ai类型
+group 组
+[buffid1, ...]
+[{技能id,触发器,目标}, ...]
 
-```mermaid
-sequenceDiagram
-Alice ->> Bob: Hello Bob, how are you?
-Bob-->>John: How about you John?
-Bob--x Alice: I am good thanks!
-Bob-x John: I am good thanks!
-Note right of John: Bob thinks a long<br/>long time, so long<br/>that the text does<br/>not fit on a row.
+目标:
+0 ：群体技能
+1 ：自己
+2 ：当前目标
+3 ：仇恨列表最大
 
-Bob-->Alice: Checking with John...
-Alice->John: Yes... John, how are you?
+
+AI触发器配置定义：
+id
+event 事件
+[参数1,...]
+prop 概率
+cond 条件
+[参数1， ...]
+eg.被攻击时 当血量低于 80% ，100%触发
+
+
 ```
 
-And this will produce a flow chart:
-
-```mermaid
-
-graph LR
-
-A[Square Rect] -- Link text --> B((Circle))
-A --> C(Round Rect)
-B --> D{Rhombus}
-C --> D
-
-
-```
 
 ```mermaid
 

@@ -64,7 +64,7 @@ mod_init({Ref, Socket, ranch_tcp, Opts}) ->
     Handler = misc:get_value(handler, Opts, false),
     SockOpts = misc:get_value(sock_opts, Opts, [{active, once}]),
     NetConf = misc:get_value(netConf, Opts, #net_conf{max_msg_bytes = 16 * 1024}),
-    ok = ranch:accept_ack(Ref),
+    {ok, _} = ranch:handshake(Ref, []),
     ok = ranch_tcp:setopts(Socket, SockOpts),
     ok = tcp_codec:init(NetConf),
     {ok, S} = Handler:on_init(Socket),
