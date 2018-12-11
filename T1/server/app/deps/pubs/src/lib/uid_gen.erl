@@ -11,6 +11,7 @@
 -include("logger.hrl").
 -include("pub_def.hrl").
 -include("type.hrl").
+-include("uid_object_type.hrl").
 
 %% API
 -export([tmp_uid/0]).
@@ -27,25 +28,6 @@
 -export([short/1, long/1]).
 -export([parse/1]).
 -export([init/2]).
-
-
-%%数据库中UID的类型，取值范围为[0,31]
--define(UID_TYPE_START,     0).      %% 开始值
-
-%% 服务器运行时需要的
--define(UID_TYPE_TEMP,      0).      %% 队伍(临时且不保存的)
-%%(1- 10)预留给地图对象
--define(UID_TYPE_MON,       1).      %% 怪物
--define(UID_TYPE_NPC,       2).      %% NPC
--define(UID_TYPE_PET,       3).      %% PET
--define(UID_TYPE_PLAYER,    4).      %% 玩家
-%%其他逻辑上需要的UID
--define(UID_TYPE_ACCOUNT,   11).      %% 账号
--define(UID_TYPE_ITEM,      12).      %% 道具
--define(UID_TYPE_MAIL,      13).      %% 邮件
-
--define(UID_TYPE_END,      63).      %% 结束值
--type uid_type() :: ?UID_TYPE_START .. ?UID_TYPE_END.
 
 %%%-------------------------------------------------------------------
 

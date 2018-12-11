@@ -99,7 +99,7 @@ waiting_for_auth(info, {Driver,Socket,Data}, #state{socket=Socket, driver=Driver
     end;
 
 waiting_for_auth(timeout, _Timeout, #state{socket=Socket, driver=Driver, peer=Peer} = State) ->
-    ?log(notice, "event=timed_out_waiting_for_auth driver=~s socket=\"~s\" peer=\"~s\"",
+    ?log(warn, "event=timed_out_waiting_for_auth driver=~s socket=\"~s\" peer=\"~s\"",
          [Driver, gen_rpc_helper:socket_to_string(Socket), gen_rpc_helper:peer_to_string(Peer)]),
     {stop, timed_out_waiting_for_auth, State};
 
@@ -222,7 +222,7 @@ waiting_for_data(info, {DriverError, Socket, _Reason} = Msg, #state{socket=Socke
     handle_event(info, Msg, waiting_for_data, State).
 
 handle_event(info, {DriverClosed, Socket}, _StateName, #state{socket=Socket, driver=Driver, driver_closed=DriverClosed, peer=Peer} = State) ->
-    ?log(notice, "message=channel_closed driver=~s socket=\"~s\" peer=\"~s\" action=stopping",
+    ?log(warn, "message=channel_closed driver=~s socket=\"~s\" peer=\"~s\" action=stopping",
          [Driver, gen_rpc_helper:socket_to_string(Socket), gen_rpc_helper:peer_to_string(Peer)]),
     {stop, normal, State};
 

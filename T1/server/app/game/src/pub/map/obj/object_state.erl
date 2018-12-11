@@ -9,8 +9,12 @@
 -module(object_state).
 -author("Administrator").
 
+-include("combat.hrl").
+
 %% API
 -export([set/2, unset/2, test/2, test_some/2]).
+
+-export([in_battle/1]).
 
 %%%-------------------------------------------------------------------
 set(Uid, State) ->
@@ -67,3 +71,6 @@ i_unset(All, State) ->
 
 i_test(All, State) ->
     misc:test_bit(All, State).
+
+in_battle(Uid) ->
+    misc_time:milli_seconds() - object_rw:get_battle_in_time(Uid) < ?BATTLE_STATE_CONTINUE_TIME.

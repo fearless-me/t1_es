@@ -13,6 +13,7 @@
 
 -include("type.hrl").
 -include("gameMap.hrl").
+-include("uid_object_type.hrl").
 
 -define(MAP_EXIST_TYPE_NORMAL, 1). %% 普通服的地图
 -define(MAP_EXIST_TYPE_CROSS, 2).  %% 跨服地图
@@ -68,7 +69,7 @@
 -define(MAP_CALL_TIMEOUT, 15000).
 %% 地图初始化超时时间
 -define(MAP_INIT_TIMEOUT, 60000).
--define(MAP_TICK_CLEAR_PLAYER_LOCAL, 60*1000).
+-define(MAP_TICK_CLEAR_PLAYER_LOCAL, 2*60*1000).
 -define(MAP_TICK_CLEAR_PLAYER_CROSS, 5*60*1000).
 
 %% 地图进程心跳（毫秒）
@@ -93,20 +94,6 @@
 -record(m_map_state, {map_id = 0, line_id = 0, obj_ets, mgr_ets, excl_ets, respawn = [], hook_mod, status = ?MAP_RUNNING, protect_tick = ?DEAD_LINE_PROTECT div ?MAP_TICK}).
 %% 地图线路
 -record(m_map_line, {map_id = 0, line_id = 0, pid, obj_ets, limits = 150, in = 0, reserve = 10, dead_line = 0, status = ?MAP_RUNNING}).
-
-
-%% 地图单位类型
-%% @doc 服务器用于分类地图对象，尽量与UID的类型定义一致
-%% {@link m_cache_map_object}
--define(OBJ_ERR, 0).
--define(OBJ_MIN, 1).
--define(OBJ_MON, 1).
--define(OBJ_NPC, 2).
--define(OBJ_PET, 3).
--define(OBJ_PLAYER, 4).
--define(OBJ_STATIC, 5).
--define(OBJ_MAX, 5).
-
 
 -endif. %% INC_MAP_HRL
 

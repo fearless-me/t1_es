@@ -55,7 +55,9 @@ log(warn, Fmt) ->
 log(error, Fmt) ->
     loggerS:error(Fmt);
 log(fatal, Fmt) ->
-    loggerS:fatal(Fmt).
+    loggerS:fatal(Fmt);
+log(_, Fmt) ->
+    loggerS:error(Fmt).
 
 log(debug, Fmt, Args) ->
     loggerS:debug(Fmt, Args);
@@ -66,7 +68,9 @@ log(warn, Fmt, Args) ->
 log(error, Fmt, Args) ->
     loggerS:error(Fmt, Args);
 log(fatal, Fmt, Args) ->
-    loggerS:fatal(Fmt, Args).
+    loggerS:fatal(Fmt, Args);
+log(_, Fmt, Args) ->
+    loggerS:error(Fmt, Args).
 
 %%-------------------------------------------------------------------
 %%-------------------------------------------------------------------
@@ -79,7 +83,9 @@ log_sink(warn, Sink, Fmt) ->
 log_sink(error, Sink, Fmt) ->
     fastlog:error(Sink, Fmt);
 log_sink(fatal, Sink, Fmt) ->
-    fastlog:fatal(Sink, Fmt).
+    fastlog:fatal(Sink, Fmt);
+log_sink(_, Sink, Fmt) ->
+    fastlog:error(Sink, Fmt).
 
 log_sink(debug, Sink, Fmt, Args) ->
     fastlog:debug(Sink, Fmt, Args);
@@ -90,7 +96,9 @@ log_sink(warn, Sink, Fmt, Args) ->
 log_sink(error, Sink, Fmt, Args) ->
     fastlog:error(Sink, Fmt, Args);
 log_sink(fatal, Sink, Fmt, Args) ->
-    fastlog:fatal(Sink, Fmt, Args).
+    fastlog:fatal(Sink, Fmt, Args);
+log_sink(_, Sink, Fmt, Args) ->
+    fastlog:error(Sink, Fmt, Args).
 
 %%-------------------------------------------------------------------
 %%-------------------------------------------------------------------

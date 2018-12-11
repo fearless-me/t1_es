@@ -88,13 +88,13 @@ do_handle_cast(Request, State) ->
 %%--------------------------------------------------------------------
 do_player_join_map_call(S, Req) ->
     #r_join_map_req{uid = Uid} = Req,
-    Exists = object_priv:object_priv_exist(?OBJ_PLAYER, Uid),
+    Exists = object_priv:object_priv_exist(?UID_TYPE_PLAYER, Uid),
     do_player_join_map_call_1(Exists, S, Req).
 
 do_player_join_map_call_1(true, _S, Req) ->
     #r_join_map_req{uid = Uid, tar_map_id = TarMapID, tar_line_id = TarLineId} = Req,
     ?ERROR("player ~p req join map ~p|~p, but player already in map ~w",
-        [Uid, TarMapID, TarLineId, object_priv:find_object_priv(?OBJ_PLAYER, Uid)]),
+        [Uid, TarMapID, TarLineId, object_priv:find_object_priv(?UID_TYPE_PLAYER, Uid)]),
     #r_join_map_ack{map_id = TarMapID, error = ?E_Exception};
 do_player_join_map_call_1(_Any, S, Req) ->
     %1. 选线
@@ -102,33 +102,61 @@ do_player_join_map_call_1(_Any, S, Req) ->
         tar_map_id = MapID, tar_line_id = TarLineId, force = Force
     } = Req,
 
+    case TarLineId > 0 of
+        true -> misc_ets:read(S#state.ets, TarLineId);
+        _ -> undefined
+    end,
+
     Recover = map_creator_interface:map_line_recover(MapID),
+    Res = i_select_line(TarLineId, S, MapID, Force),
+    i_player_join_map_call(Res, Recover, Req, S).
+
+
+-define(MAP_COND(Limit, In, Reserve, Force, Now, DeadLine, Status),
+    In >= 0,
+    (Limit > In orelse (Force andalso Limit + Reserve > In)),
+    DeadLine > Now + ?DEAD_LINE_PROTECT,
+    Status =:= ?MAP_RUNNING
+).
+
+i_select_line(0, S, MapID, Force) ->
     Now = misc_time:milli_seconds(),
+    Recover = map_creator_interface:map_line_recover(MapID),
     MS =
-        ets:fun2ms(
-            fun(#m_map_line{
-                line_id = CurLineID,
-                limits = Limit, in = In, reserve = Reserve,
-                dead_line = DeadLine, status = Status
-            } = T
-            ) when
-                In >= 0,
-                (Limit > In orelse (Force andalso Limit + Reserve > In)),
-                DeadLine > Now + ?DEAD_LINE_PROTECT,
-                Status =:= ?MAP_RUNNING,
-                (TarLineId =:= 0 orelse CurLineID =:= TarLineId orelse Recover =:= ?MAP_LINE_RECOVER_ANY_NEW)
-                -> T
+        ets:fun2ms
+        (
+            fun
+                (
+                    #m_map_line
+                    {
+                        limits = Limit, in = In, reserve = Reserve,
+                        dead_line = DeadLine, status = Status
+                    } = T
+                ) when
+                    ?MAP_COND(Limit, In, Reserve, Force, Now, DeadLine, Status),
+                    Recover =:= ?MAP_LINE_RECOVER_ANY_NEW
+                    -> T
             end
         ),
-    Res =
-        case misc_ets:select(S#state.ets, MS, 2) of
-            {[Line1], _Continue} -> Line1;
-            {[Line11, _], _Continue} when Line11#m_map_line.line_id =:= TarLineId -> Line11;
-            {[_, Line22], _Continue} -> Line22;
-            EndOfTable -> EndOfTable
-        end,
+    case misc_ets:select(S#state.ets, MS, 1) of
+        {[Line1 | _], _Continue} -> Line1;
+        EndOfTable -> EndOfTable
+    end;
+i_select_line(TarLine, S, MapID, Force) ->
+    Now = misc_time:milli_seconds(),
+    case misc_ets:read(S#state.ets, TarLine) of
+        [
+            #m_map_line
+            {
+                limits = Limit, in = In, reserve = Reserve,
+                dead_line = DeadLine, status = Status
+            }  = T
+        ] when ?MAP_COND(Limit, In, Reserve, Force, Now, DeadLine, Status) ->
+            T;
+        _ ->
+            i_select_line(0, S, MapID, Force)
+    end.
 
-    i_player_join_map_call(Res, Recover, Req, S).
 
 %%--------------------------------------------------------------------
 %%1.可以进入一条线

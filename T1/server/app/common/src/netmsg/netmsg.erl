@@ -445,6 +445,22 @@ decode(?GS2U_RemoteMonster,Bin0) ->
 		},
 	Bin5 };
 
+%GENERATED from file:player.h => GS2U_RemoteNpc
+decode(?GS2U_RemoteNpc,Bin0) ->
+	{ V_uid, Bin1 } = read_uint64( Bin0 ),
+	{ V_did, Bin2 } = read_uint32( Bin1 ),
+	{ V_level, Bin3 } = read_int32( Bin2 ),
+	{ V_cur_x, Bin4 } = read_float( Bin3 ),
+	{ V_cur_y, Bin5 } = read_float( Bin4 ),
+	{ #pk_GS2U_RemoteNpc {
+		uid = V_uid,
+		did = V_did,
+		level = V_level,
+		cur_x = V_cur_x,
+		cur_y = V_cur_y
+		},
+	Bin5 };
+
 %GENERATED from file:player.h => GS2U_RemotePet
 decode(?GS2U_RemotePet,Bin0) ->
 	{ V_uid, Bin1 } = read_uint64( Bin0 ),
@@ -494,30 +510,26 @@ decode(?GS2U_RemoveRemote,Bin0) ->
 %GENERATED from file:player.h => GS2U_SyncStand
 decode(?GS2U_SyncStand,Bin0) ->
 	{ V_uid, Bin1 } = read_uint64( Bin0 ),
-	{ V_type, Bin2 } = read_uint32( Bin1 ),
-	{ V_cur_x, Bin3 } = read_float( Bin2 ),
-	{ V_cur_y, Bin4 } = read_float( Bin3 ),
+	{ V_cur_x, Bin2 } = read_float( Bin1 ),
+	{ V_cur_y, Bin3 } = read_float( Bin2 ),
 	{ #pk_GS2U_SyncStand {
 		uid = V_uid,
-		type = V_type,
 		cur_x = V_cur_x,
 		cur_y = V_cur_y
 		},
-	Bin4 };
+	Bin3 };
 
 %GENERATED from file:player.h => GS2U_SyncWalk
 decode(?GS2U_SyncWalk,Bin0) ->
 	{ V_uid, Bin1 } = read_uint64( Bin0 ),
-	{ V_type, Bin2 } = read_uint32( Bin1 ),
-	{ V_src_x, Bin3 } = read_float( Bin2 ),
-	{ V_src_y, Bin4 } = read_float( Bin3 ),
-	{ V_dst_x, Bin5 } = read_float( Bin4 ),
-	{ V_dst_y, Bin6 } = read_float( Bin5 ),
-	{ V_move_time, Bin7 } = read_int32( Bin6 ),
-	{ V_speed, Bin8 } = read_float( Bin7 ),
+	{ V_src_x, Bin2 } = read_float( Bin1 ),
+	{ V_src_y, Bin3 } = read_float( Bin2 ),
+	{ V_dst_x, Bin4 } = read_float( Bin3 ),
+	{ V_dst_y, Bin5 } = read_float( Bin4 ),
+	{ V_move_time, Bin6 } = read_int32( Bin5 ),
+	{ V_speed, Bin7 } = read_float( Bin6 ),
 	{ #pk_GS2U_SyncWalk {
 		uid = V_uid,
-		type = V_type,
 		src_x = V_src_x,
 		src_y = V_src_y,
 		dst_x = V_dst_x,
@@ -525,7 +537,7 @@ decode(?GS2U_SyncWalk,Bin0) ->
 		move_time = V_move_time,
 		speed = V_speed
 		},
-	Bin8 };
+	Bin7 };
 
 %GENERATED from file:player.h => U2GS_ChangeMap
 decode(?U2GS_ChangeMap,Bin0) ->
@@ -1199,6 +1211,22 @@ encode(#pk_GS2U_RemoteMonster{} = P) ->
 		Bin_cur_y
 	];
 
+%GENERATED from file:player.h => GS2U_RemoteNpc
+encode(#pk_GS2U_RemoteNpc{} = P) ->
+	Bin_uid = write_uint64( P#pk_GS2U_RemoteNpc.uid ),
+	Bin_did = write_uint32( P#pk_GS2U_RemoteNpc.did ),
+	Bin_level = write_int32( P#pk_GS2U_RemoteNpc.level ),
+	Bin_cur_x = write_float( P#pk_GS2U_RemoteNpc.cur_x ),
+	Bin_cur_y = write_float( P#pk_GS2U_RemoteNpc.cur_y ),
+	[
+		<<?GS2U_RemoteNpc:?U16>>,
+		Bin_uid,
+		Bin_did,
+		Bin_level,
+		Bin_cur_x,
+		Bin_cur_y
+	];
+
 %GENERATED from file:player.h => GS2U_RemotePet
 encode(#pk_GS2U_RemotePet{} = P) ->
 	Bin_uid = write_uint64( P#pk_GS2U_RemotePet.uid ),
@@ -1248,13 +1276,11 @@ encode(#pk_GS2U_RemoveRemote{} = P) ->
 %GENERATED from file:player.h => GS2U_SyncStand
 encode(#pk_GS2U_SyncStand{} = P) ->
 	Bin_uid = write_uint64( P#pk_GS2U_SyncStand.uid ),
-	Bin_type = write_uint32( P#pk_GS2U_SyncStand.type ),
 	Bin_cur_x = write_float( P#pk_GS2U_SyncStand.cur_x ),
 	Bin_cur_y = write_float( P#pk_GS2U_SyncStand.cur_y ),
 	[
 		<<?GS2U_SyncStand:?U16>>,
 		Bin_uid,
-		Bin_type,
 		Bin_cur_x,
 		Bin_cur_y
 	];
@@ -1262,7 +1288,6 @@ encode(#pk_GS2U_SyncStand{} = P) ->
 %GENERATED from file:player.h => GS2U_SyncWalk
 encode(#pk_GS2U_SyncWalk{} = P) ->
 	Bin_uid = write_uint64( P#pk_GS2U_SyncWalk.uid ),
-	Bin_type = write_uint32( P#pk_GS2U_SyncWalk.type ),
 	Bin_src_x = write_float( P#pk_GS2U_SyncWalk.src_x ),
 	Bin_src_y = write_float( P#pk_GS2U_SyncWalk.src_y ),
 	Bin_dst_x = write_float( P#pk_GS2U_SyncWalk.dst_x ),
@@ -1272,7 +1297,6 @@ encode(#pk_GS2U_SyncWalk{} = P) ->
 	[
 		<<?GS2U_SyncWalk:?U16>>,
 		Bin_uid,
-		Bin_type,
 		Bin_src_x,
 		Bin_src_y,
 		Bin_dst_x,
@@ -1558,6 +1582,7 @@ name(?GS2U_LookInfoPlayer) -> "GS2U_LookInfoPlayer";
 name(?GS2U_MonsterList) -> "GS2U_MonsterList";
 name(?GS2U_PlayerInitBase) -> "GS2U_PlayerInitBase";
 name(?GS2U_RemoteMonster) -> "GS2U_RemoteMonster";
+name(?GS2U_RemoteNpc) -> "GS2U_RemoteNpc";
 name(?GS2U_RemotePet) -> "GS2U_RemotePet";
 name(?GS2U_RemotePlayer) -> "GS2U_RemotePlayer";
 name(?GS2U_RemoveRemote) -> "GS2U_RemoveRemote";
@@ -1610,6 +1635,7 @@ cmd_list()->
 		,?GS2U_MonsterList
 		,?GS2U_PlayerInitBase
 		,?GS2U_RemoteMonster
+		,?GS2U_RemoteNpc
 		,?GS2U_RemotePet
 		,?GS2U_RemotePlayer
 		,?GS2U_RemoveRemote

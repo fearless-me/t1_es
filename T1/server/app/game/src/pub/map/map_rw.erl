@@ -61,10 +61,10 @@
 %%-------------------------------------------------------------------
 init(State) ->
     init_base(State),
-    obj_maps_with_type(?OBJ_PLAYER, #{}),
-    obj_maps_with_type(?OBJ_MON, #{}),
-    obj_maps_with_type(?OBJ_PET, #{}),
-    obj_maps_with_type(?OBJ_NPC, #{}),
+    obj_maps_with_type(?UID_TYPE_PLAYER, #{}),
+    obj_maps_with_type(?UID_TYPE_MON, #{}),
+    obj_maps_with_type(?UID_TYPE_PET, #{}),
+    obj_maps_with_type(?UID_TYPE_NPC, #{}),
     ok.
 
 init_base(State) ->
@@ -97,10 +97,10 @@ obj_maps_with_uid(Uid) ->
     obj_maps_with_type(Type).
 
 %%-------------------------------------------------------------------
-obj_maps_with_type(?OBJ_PLAYER) -> misc_ets:read_element(excl_ets(), ?MAPS_PLAYER, #pub_kv.value); %%erlang:get(?MAPS_PLAYER);
-obj_maps_with_type(?OBJ_MON) -> misc_ets:read_element(excl_ets(), ?MAPS_MON, #pub_kv.value); %%erlang:get(?MAPS_MON);
-obj_maps_with_type(?OBJ_PET) -> misc_ets:read_element(excl_ets(), ?MAPS_PET, #pub_kv.value); %%erlang:get(?MAPS_PET);
-obj_maps_with_type(?OBJ_NPC) -> misc_ets:read_element(excl_ets(), ?MAPS_NPC, #pub_kv.value). %%erlang:get(?MAPS_NPC).
+obj_maps_with_type(?UID_TYPE_PLAYER) -> misc_ets:read_element(excl_ets(), ?MAPS_PLAYER, #pub_kv.value); %%erlang:get(?MAPS_PLAYER);
+obj_maps_with_type(?UID_TYPE_MON) -> misc_ets:read_element(excl_ets(), ?MAPS_MON, #pub_kv.value); %%erlang:get(?MAPS_MON);
+obj_maps_with_type(?UID_TYPE_PET) -> misc_ets:read_element(excl_ets(), ?MAPS_PET, #pub_kv.value); %%erlang:get(?MAPS_PET);
+obj_maps_with_type(?UID_TYPE_NPC) -> misc_ets:read_element(excl_ets(), ?MAPS_NPC, #pub_kv.value). %%erlang:get(?MAPS_NPC).
 
 %%-------------------------------------------------------------------
 obj_maps_with_uid(Uid, Maps) ->
@@ -108,16 +108,16 @@ obj_maps_with_uid(Uid, Maps) ->
     obj_maps_with_type(Type, Maps).
 
 
-obj_maps_with_type(?OBJ_PLAYER, Maps) ->
+obj_maps_with_type(?UID_TYPE_PLAYER, Maps) ->
     misc_ets:write(excl_ets(), #pub_kv{key = ?MAPS_PLAYER, value = Maps});
 %%    erlang:put(?MAPS_PLAYER, Maps);
-obj_maps_with_type(?OBJ_MON, Maps) ->
+obj_maps_with_type(?UID_TYPE_MON, Maps) ->
     misc_ets:write(excl_ets(), #pub_kv{key = ?MAPS_MON, value = Maps});
 %%    erlang:put(?MAPS_MON, Maps);
-obj_maps_with_type(?OBJ_PET, Maps) ->
+obj_maps_with_type(?UID_TYPE_PET, Maps) ->
     misc_ets:write(excl_ets(), #pub_kv{key = ?MAPS_PET, value = Maps});
 %%    erlang:put(?MAPS_PET, Maps);
-obj_maps_with_type(?OBJ_NPC, Maps) ->
+obj_maps_with_type(?UID_TYPE_NPC, Maps) ->
     misc_ets:write(excl_ets(), #pub_kv{key = ?MAPS_NPC, value = Maps}).
 %%    erlang:put(?MAPS_NPC, Maps).
 
@@ -126,14 +126,14 @@ obj_size_with_uid(Uid) ->
     Type = object_rw:get_type(Uid),
     obj_size_with_type(Type).
 
-obj_size_with_type(?OBJ_PLAYER) ->
-    maps:size(map_rw:obj_maps_with_type(?OBJ_PLAYER));
-obj_size_with_type(?OBJ_MON) ->
-    maps:size(map_rw:obj_maps_with_type(?OBJ_MON));
-obj_size_with_type(?OBJ_PET) ->
-    maps:size(map_rw:obj_maps_with_type(?OBJ_PET));
-obj_size_with_type(?OBJ_NPC) ->
-    maps:size(map_rw:obj_maps_with_type(?OBJ_NPC)).
+obj_size_with_type(?UID_TYPE_PLAYER) ->
+    maps:size(map_rw:obj_maps_with_type(?UID_TYPE_PLAYER));
+obj_size_with_type(?UID_TYPE_MON) ->
+    maps:size(map_rw:obj_maps_with_type(?UID_TYPE_MON));
+obj_size_with_type(?UID_TYPE_PET) ->
+    maps:size(map_rw:obj_maps_with_type(?UID_TYPE_PET));
+obj_size_with_type(?UID_TYPE_NPC) ->
+    maps:size(map_rw:obj_maps_with_type(?UID_TYPE_NPC)).
 
 %%-------------------------------------------------------------------
 add_uid_to_maps(Type, Uid) ->
@@ -189,24 +189,24 @@ do_check_tick(_Any, Milliseconds) ->
 
 
 %%-------------------------------------------------------------------
-add_object(#m_cache_map_object_priv{type = ?OBJ_MON, uid = Uid} = Obj) ->
+add_object(#m_cache_map_object_priv{type = ?UID_TYPE_MON, uid = Uid} = Obj) ->
     misc_ets:write(?ETS_CACHE_MAP_MONSTER_PRIV, Obj),
-    map_rw:add_uid_to_maps(?OBJ_MON, Uid),
+    map_rw:add_uid_to_maps(?UID_TYPE_MON, Uid),
     ok;
-add_object(#m_cache_map_object_priv{type = ?OBJ_PLAYER, uid = Uid} = Obj) ->
+add_object(#m_cache_map_object_priv{type = ?UID_TYPE_PLAYER, uid = Uid} = Obj) ->
     misc_ets:write(?ETS_CACHE_MAP_PLAYER_PRIV, Obj),
-    map_rw:add_uid_to_maps(?OBJ_PLAYER, Uid),
+    map_rw:add_uid_to_maps(?UID_TYPE_PLAYER, Uid),
     ok;
 add_object(_) ->
     ok.
 
-del_object(#m_cache_map_object_priv{uid = Uid, type = ?OBJ_MON}) ->
+del_object(#m_cache_map_object_priv{uid = Uid, type = ?UID_TYPE_MON}) ->
     misc_ets:delete(?ETS_CACHE_MAP_MONSTER_PRIV, Uid),
-    map_rw:del_uid_from_maps(?OBJ_MON, Uid),
+    map_rw:del_uid_from_maps(?UID_TYPE_MON, Uid),
     ok;
-del_object(#m_cache_map_object_priv{uid = Uid, type = ?OBJ_PLAYER}) ->
+del_object(#m_cache_map_object_priv{uid = Uid, type = ?UID_TYPE_PLAYER}) ->
     misc_ets:delete(?ETS_CACHE_MAP_PLAYER_PRIV, Uid),
-    map_rw:del_uid_from_maps(?OBJ_PLAYER, Uid),
+    map_rw:del_uid_from_maps(?UID_TYPE_PLAYER, Uid),
     ok;
 del_object(_) ->
     ok.
@@ -233,10 +233,10 @@ get_move_timer_delta() ->
 status()->
     [
         {t,   misc_ets:size(detail_ets())},
-        {u,   obj_size_with_type(?OBJ_PLAYER)},
-        {p,   obj_size_with_type(?OBJ_PET)},
-        {n,   obj_size_with_type(?OBJ_NPC)},
-        {m,   obj_size_with_type(?OBJ_MON)},
+        {u,   obj_size_with_type(?UID_TYPE_PLAYER)},
+        {p,   obj_size_with_type(?UID_TYPE_PET)},
+        {n,   obj_size_with_type(?UID_TYPE_NPC)},
+        {m,   obj_size_with_type(?UID_TYPE_MON)},
         {r,   0},
         format_tick(),
         gen_serverw:status_self()

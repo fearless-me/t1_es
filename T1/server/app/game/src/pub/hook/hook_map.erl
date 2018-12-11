@@ -89,15 +89,15 @@ on_rw_update(Uid, {Pos, Value}) ->
 
 %%-------------------------------------------------------------------
 %% 刷到ets供全局访问
-on_rw_update(?OBJ_PLAYER, Uid, #m_object_rw.cur_pos, CurPos) ->
+on_rw_update(?UID_TYPE_PLAYER, Uid, #m_object_rw.cur_pos, CurPos) ->
     gs_cache_interface:update_online_player(Uid, {#m_cache_online_player.pos, CurPos});
-on_rw_update(?OBJ_PLAYER, Uid, #m_object_rw.hp, Hp) ->
+on_rw_update(?UID_TYPE_PLAYER, Uid, #m_object_rw.hp, Hp) ->
     gs_cache_interface:update_online_player(Uid, {#m_cache_online_player.hp,Hp});
-on_rw_update(?OBJ_PLAYER, Uid, #m_object_rw.buff_list, BuffList) ->
+on_rw_update(?UID_TYPE_PLAYER, Uid, #m_object_rw.buff_list, BuffList) ->
     gs_cache_interface:update_online_player(Uid, {#m_cache_online_player.buff_list, BuffList});
-on_rw_update(?OBJ_PLAYER, Uid, #m_object_rw.battle_props, BattleProps) ->
+on_rw_update(?UID_TYPE_PLAYER, Uid, #m_object_rw.battle_props, BattleProps) ->
     gs_cache_interface:update_online_player(Uid, {#m_cache_online_player.battle_props, BattleProps});
-on_rw_update(?OBJ_PLAYER, Uid, #m_object_rw.state, State) ->
+on_rw_update(?UID_TYPE_PLAYER, Uid, #m_object_rw.state, State) ->
     gs_cache_interface:update_online_player(Uid, {#m_cache_online_player.state, State});
 on_rw_update(_ObjType, _Uid, _Key, _Value) ->
     ok.

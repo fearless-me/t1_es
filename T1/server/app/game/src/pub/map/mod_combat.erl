@@ -19,17 +19,15 @@
 -include("cfg_skill.hrl").
 -include("module_process_define.hrl").
 
-%% 瞬发技能放完就结束
-%% 吟唱技能设置到当前技能
-%% 引导技能也设置到当前技能
-%% 还有些技能可能释放完就结束，但是会持续作用
-%% 吟唱技能多次伤害的技能支持配置每一次计算伤害的时间 #m_combat_rw.cur_dmg_index / operate_time
-%% 引导技能要看策划需求，如果每次一样就设置cd
-
+%% 吟唱技能会有一个施放过程，其余全是瞬发技能
 %% API
 -export([
-    use_skill/4, tick/2, interrupt_skill/1,
-    dispatcher/5, can_ai_use_skill/1, is_using_skill/1
+    use_skill/4
+]).
+
+-export([
+    is_using_skill/1,
+    is_in_battle/1
 ]).
 
 use_skill(Aer, DerList, SkillId, Serial) ->
@@ -66,8 +64,8 @@ use_skill_success(#m_object_rw{uid = Uid} = Attacker, [#m_object_rw{}|_] = Targe
     CEParams = get_ce_param(SkillCfg, ?HP_CHANGE_SKILL, Serial),
     ?TRY_CATCH(trigger_before_cast_event(Attacker, TargetList, SkillCfg, CEParams)),
 
-    %% 根据类型
-    object_rw:set_skill_serial(Uid, Serial),
+    %% 进入战斗状态
+    object_rw:set_battle_in_time(Uid, misc_time:milli_seconds()),
 
     ?DEBUG("~p use skill ~p to tar ~p", [Uid, SkillId, DerList]),
     use_skill_dispatcher(SkillCfg, Attacker, TargetList, Serial),
@@ -81,7 +79,7 @@ use_skill_dispatcher(#skillCfg{it_type = IT_Type} = SkillCfg, Aer, Tar, Serial)
     when IT_Type =:= ?SKILL_SUB_TYPE_IT_INSTANT; IT_Type =:= ?SKILL_SUB_TYPE_IT_NORMAL ->
     instant_skill(Aer, Tar, SkillCfg, Serial).
 
-%% todo 吟唱技能
+%% todo 吟唱技能 使用通用进度流程
 spell_skill(_Aer, _Tar, #skillCfg{id = SkillID} = _SkillCfg, _Serial) ->
     ?WARN("spell skill no realize:~p", [SkillID]),
     ok.
@@ -107,133 +105,23 @@ active_skill_once(#m_object_rw{uid = Uid} = Aer, TarList, #skillCfg{id = SkillId
 %%-------------------------------------------------------------------
 calculate_dmg(
     #m_object_rw{} = Attack,
-    #m_object_rw{} = Target,
+    #m_object_rw{uid = Uid} = Target,
     #skillCfg{} = SkillCfg, Serial
 ) ->
+    %% 进入战斗状态
+    object_rw:set_battle_in_time(Uid, misc_time:milli_seconds()),
+
     %% 命中事件
     CEParams = get_ce_param(SkillCfg, ?HP_CHANGE_SKILL, Serial),
     ?TRY_CATCH(trigger_hit_before_event(Attack, [Target], SkillCfg, CEParams), Error1, Stk1),
     ?TRY_CATCH(trigger_hit_event(Attack, [Target], SkillCfg, CEParams), Error2, Stk2),
     ok.
 
-%%-------------------------------------------------------------------
-interrupt_skill(Uid) ->
-    SkillId = object_rw:get_skill_id(Uid),
-    object_rw:set_fields(
-        Uid,
-        [
-            {#m_object_rw.skill_id, 0},
-            {#m_object_rw.target_uid, 0},
-            {#m_object_rw.skill_serial, 0},
-            {#m_object_rw.persist_pos, vector3:new()},
-            {#m_object_rw.cur_dmg_index,0},
-            {#m_object_rw.operate_time, 0},
-            {#m_object_rw.spell_time, 0},
-            {#m_object_rw.channel_cd, 0},
-            {#m_object_rw.skill_queue, []}
-        ]
-    ),
-    Msg = #pk_GS2U_SkillInterrupt{uid = Uid, skill_id = SkillId},
-    mod_view:send_net_msg_to_visual(Uid, Msg),
-    ok.
-
-
-%%-------------------------------------------------------------------
-tick(Obj, Now) ->
-    ?TRY_CATCH(tick_cur_skill(Obj), Err1, Stk1),
-    ?TRY_CATCH(tick_skill_queue(Obj), Err2, Stk2),
-    ok.
-
-
-%%todo 引导技能、吟唱技能
-tick_cur_skill(#m_cache_map_object_priv{uid = Uid}) ->
-    CurSkillId = object_rw:get_skill_id(Uid),
-    do_tick_cur_skill(Uid, combat_interface:get_skill_cfg(CurSkillId)),
-    ok.
-
-
-do_tick_cur_skill(Uid, #skillCfg{id = SkillId} = SkillCfg) ->
-    ?WARN("uid ~p tick skill ~p", [Uid, SkillId]),
-    Serial = object_rw:get_skill_serial(Uid),
-    OpTime0 = object_rw:get_operate_time(Uid, 0),
-    OpTime1 = OpTime0 + ?MAP_TICK,
-    object_rw:set_operate_time(Uid, OpTime1),
-    case can_skill_active_tick(Uid, SkillCfg) of
-        true ->
-%%            Pos = object_rw:get_persist_pos(Uid),
-            ?TRY_CATCH(trigger_cast_tick_event(Uid, Uid, SkillCfg)),
-            ?TRY_CATCH(active_skill_once(Uid, Uid, SkillCfg, Serial), Err1, Stk1),
-            ?TRY_CATCH(check_end_skill_tick(Uid, SkillCfg), Err2, Stk2),
-            ok;
-        _ ->
-            skip
-    end,
-    %%
-
-    ok;
-do_tick_cur_skill(_Uid, undefined) ->
-    ok.
-
-can_skill_active_tick(_Uid, _SkillCfg) ->
-    true.
-
-check_end_skill_tick(Uid, _SkillCfg) ->
-    _OpTime = object_rw:get_operate_time(Uid),
-    %% todo 到达最大时间? 到达最大次数?
-    interrupt_skill(Uid).
-
-%%todo 放完就不管的，但是要持续生效的技能
-%%todo 创建了一个 OBJ_STATIC
-tick_skill_queue(#m_cache_map_object_priv{uid = Uid}) ->
-    Queue0 = object_rw:get_skill_queue(Uid),
-    Queue1 = tick_skill_queue(Uid, Queue0, []),
-    object_rw:set_skill_queue(Uid, Queue1),
-    ok.
-
-tick_skill_queue(_Uid, [], Acc) -> Acc;
-tick_skill_queue(Uid, [Elm | Queue], Acc) ->
-    case ?TRY_CATCH_RET(tick_one_skill_queue(Uid, Elm), error) of
-        error -> tick_skill_queue(Uid, Queue, Acc);
-        NewElm -> tick_skill_queue(Uid, Queue, [NewElm | Acc])
-    end.
-
-tick_one_skill_queue(_Uid, Elm) ->
-    Elm.
-
-%%-------------------------------------------------------------------
-dispatcher(?OBJ_PLAYER, ?OBJ_PLAYER, Aer, Der, SkillId) ->
-    player_vs_player(Aer, Der, SkillId);
-dispatcher(?OBJ_PLAYER, ?OBJ_MON, Aer, Der, SkillId) ->
-    player_vs_mon(Aer, Der, SkillId);
-dispatcher(?OBJ_MON, ?OBJ_PLAYER, Aer, Der, SkillId) ->
-    mon_vs_player(Aer, Der, SkillId);
-dispatcher(AType, DType, Aer, Der, SkillId) ->
-    ?WARN("~p(~p) vs ~p(~p) skill", [Aer, AType, Der, DType, SkillId]).
-
-
-%%-------------------------------------------------------------------
-player_vs_player(Aer, Der, SkillId) ->
-    ?INFO("~w vs ~w skill ~p", [Aer, Der, SkillId]),
-    ok.
-
-%%-------------------------------------------------------------------
-player_vs_mon(Aer, Der, SkillId) ->
-    ?INFO("~w vs ~w skill ~p", [Aer, Der, SkillId]),
-    ok.
-
-%%-------------------------------------------------------------------
-mon_vs_player(Aer, Der, SkillId) ->
-    ?INFO("~w vs ~w skill ~p", [Aer, Der, SkillId]),
-    ok.
-
-
-can_ai_use_skill(_Aer) ->
-    true.
-
-
 is_using_skill(Aer) ->
-    object_rw:get_skill_id(Aer, 0) > 0.
+    mod_progress_skill:is_using_skill(Aer).
 
+is_in_battle(Aer) ->
+    object_state:in_battle(Aer).
 
 trigger_before_cast_event(Aer, DerList, #skillCfg{beforecast = EventList}, CEParams) ->
     trigger_event(Aer, DerList, EventList, CEParams).
@@ -242,7 +130,7 @@ trigger_hit_before_event(Aer, DerList, #skillCfg{beforehit = EventList}, CEParam
 trigger_hit_event(Aer, DerList, #skillCfg{ishit = EventList}, CEParams) ->
     trigger_event(Aer, DerList, EventList, CEParams).
 
-%% TODO
+%% TODO 使用通用进度流程
 trigger_cast_tick_event(Aer, Der, #skillCfg{castingtick = EventList}) ->
 %%    condition_event:action_all(EventList, [Aer, Der]).
     ok.

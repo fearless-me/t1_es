@@ -39,6 +39,9 @@ on_info_msg({sync_player_to_map, Uid}) ->
 on_info_msg({player_del_buff, Uid, OpType, Params}) ->
     mod_buff:condition_event_del_buff(OpType, Uid, Params),
     ok;
+on_info_msg({net_msg_get_remote_obj_info, Msg}) ->
+    mod_map_sync:net_msg_get_remote_obj_info(Msg),
+    ok;
 on_info_msg(Info) ->
     ?ERROR("info:~p", [Info]),
     ok.

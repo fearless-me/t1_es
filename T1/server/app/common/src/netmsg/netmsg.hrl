@@ -2,7 +2,7 @@
 -ifndef(netmsg).
 -define(netmsg,1).
 
--define(ProtoVersion,658).
+-define(ProtoVersion,659).
 
 -record(pk_BattleProp,{
 	%% UInt32 属性ID
@@ -472,6 +472,21 @@
 }).
 
 %% 
+-define(GS2U_RemoteNpc,43395).
+-record(pk_GS2U_RemoteNpc,{
+	%% UInt64唯一ID
+	uid = 0,
+	%% UInt32配置表ID
+	did = 0,
+	%% Int32等级
+	level = 0,
+	%% Single坐标X
+	cur_x = 0.0,
+	%% Single坐标Y
+	cur_y = 0.0
+}).
+
+%% 
 -define(GS2U_RemotePet,31693).
 -record(pk_GS2U_RemotePet,{
 	%% UInt64唯一ID
@@ -516,13 +531,11 @@
 }).
 
 %% 
-%% // 移动
+%% // 标准
 -define(GS2U_SyncStand,30047).
 -record(pk_GS2U_SyncStand,{
 	%% UInt64唯一ID
 	uid = 0,
-	%% UInt321 怪物；2 NPC 3 宠物 4 玩家
-	type = 0,
 	%% Single坐标X
 	cur_x = 0.0,
 	%% Single坐标Y
@@ -535,8 +548,6 @@
 -record(pk_GS2U_SyncWalk,{
 	%% UInt64 唯一ID
 	uid = 0,
-	%% UInt321 怪物；2 NPC 3 宠物 4 玩家
-	type = 0,
 	%% Single坐标X
 	src_x = 0.0,
 	%% Single坐标Y
@@ -669,7 +680,7 @@
 }).
 
 %% 
-%% //
+%% // 获取远程对象
 -define(U2GS_GetRemoteObjInfo,16443).
 -record(pk_U2GS_GetRemoteObjInfo,{
 	%% UInt64 唯一ID列表

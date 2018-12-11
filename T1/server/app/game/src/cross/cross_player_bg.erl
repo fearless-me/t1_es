@@ -125,7 +125,7 @@ i_tick_msg() ->
 i_tick_check() ->
     catch i_tick_msg(),
     Uid = get_uid(),
-    IsInMap = object_priv:object_priv_exist(?OBJ_PLAYER, Uid),
+    IsInMap = object_priv:object_priv_exist(?UID_TYPE_PLAYER, Uid),
     IsOnline= gs_cache_interface:is_player_online(Uid),
     catch ?if_else( not (IsInMap andalso IsOnline), i_clear(tick_check), skip),
     ok.
@@ -145,7 +145,7 @@ i_clear(Reason) ->
 
     catch erlang:demonitor(get_ref()),
     try
-        case object_priv:find_object_priv(?OBJ_PLAYER, Uid) of
+        case object_priv:find_object_priv(?UID_TYPE_PLAYER, Uid) of
             #m_cache_map_object_priv{map_pid = MPid} ->
                 catch map_interface:player_exit_map_exception_(MPid, Uid);
             _ -> skip

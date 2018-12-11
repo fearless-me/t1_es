@@ -21,7 +21,10 @@
 ]).
 
 -export([
-    add_progress/2
+    add_progress/2,
+
+    break_progress_by_flag/2,
+    break_progress_by_type/2
 ]).
 
 -export([
@@ -29,7 +32,8 @@
     get_progress_list/1,
 
     get_flag_id/0,
-    can_add_progress_type/2,
+
+    get_progress_type/2,
     have_progress_type/2
 ]).
 
@@ -68,10 +72,38 @@ add_progress(SrcUid, #m_progress_details{progress_type = PT} = Details) ->
     end.
 
 break_progress_by_type(SrcUid, ProgressType) ->
-    ok.
+    List = get_progress_list(),
+    case lists:keyfind(SrcUid, #m_progress_main.src_uid, List) of
+        false ->
+            skip;
+        #m_progress_main{progress_list = L} = Main ->
+            List2 =
+                case lists:keydelete(ProgressType, #m_progress_details.progress_type, L) of
+                    [] ->
+                        lists:keydelete(SrcUid, #m_progress_main.src_uid, List);
+                    NL ->
+                        lists:keystore(SrcUid, #m_progress_main.src_uid, List, Main#m_progress_main{progress_list = NL})
+                end,
+            save_progress_list(List2)
+    end,
+    true.
 
 break_progress_by_flag(SrcUid, FlagId) ->
-    ok.
+    List = get_progress_list(),
+    case lists:keyfind(SrcUid, #m_progress_main.src_uid, List) of
+        false ->
+            skip;
+        #m_progress_main{progress_list = L} = Main ->
+            List2 =
+                case lists:keydelete(FlagId, #m_progress_details.flag_id, L) of
+                    [] ->
+                        lists:keydelete(SrcUid, #m_progress_main.src_uid, List);
+                    NL ->
+                        lists:keystore(SrcUid, #m_progress_main.src_uid, List, Main#m_progress_main{progress_list = NL})
+                end,
+            save_progress_list(List2)
+    end,
+    true.
 
 tick_progress(Now, SrcUid, [#m_progress_details{}|_] = List) ->
     F =
@@ -171,9 +203,14 @@ can_add_progress_type(SrcUid, _AddType) ->
         _ -> false
     end.
 
-have_progress_type(SrcUid, AddType) ->
+get_progress_type(SrcUid, AddType) ->
     L = get_progress_list(SrcUid),
-    case [Type || #m_progress_details{progress_type = Type} <- L, Type /= ?PROGRESS_TYPE_KERNEL] of
-        [] -> false;
-        List -> lists:member(AddType, List)
+    lists:keyfind(AddType, #m_progress_details.progress_type, L).
+
+have_progress_type(SrcUid, AddType) ->
+    case get_progress_type(SrcUid, AddType) of
+        #m_progress_details{} ->
+            true;
+        _ ->
+            false
     end.

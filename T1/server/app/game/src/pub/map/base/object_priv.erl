@@ -60,7 +60,7 @@ new_player(Pid, Uid, Group, Pos, Face) ->
     ),
 
     Req = #r_create_map_object_req{
-        type = ?OBJ_PLAYER,
+        type = ?UID_TYPE_PLAYER,
         pid = Pid, uid = Uid, data_id = 0,
         owner = 0, group = Group,
         pos = Pos, face = Face,
@@ -78,7 +78,7 @@ new_static(Group, Pos, Face) ->
     Uid = uid_gen:mon_uid(),
     init_rw_default(Uid),
     Req = #r_create_map_object_req{
-        type = ?OBJ_STATIC,
+        type = ?UID_TYPE_STATIC,
         pid = self(), uid = Uid, data_id = 0,
         owner = 0, group = Group,
         pos = Pos, face = Face,
@@ -109,7 +109,7 @@ new_monster(#recMapObjData{
     %% todo 怪物AI配置
     mod_ai:init(Uid, ?AI_ACTIVE),
     Req = #r_create_map_object_req{
-        type = ?OBJ_MON,
+        type = ?UID_TYPE_MON,
         pid = self(), uid = Uid, data_id = Mid,
         owner = 0, group = Group,
         pos = Pos, face = vector3:new(0.1, 0, 0.5),
@@ -190,33 +190,33 @@ find_object_priv(Uid) ->
     Type = object_rw:get_type(Uid),
     object_priv:find_object_priv(Type, Uid).
 
-find_object_priv(?OBJ_PLAYER, Uid) ->
+find_object_priv(?UID_TYPE_PLAYER, Uid) ->
     case misc_ets:read(?ETS_CACHE_MAP_PLAYER_PRIV, Uid) of
         [#m_cache_map_object_priv{} = Obj | _] -> Obj;
         _ -> undefined
     end;
-find_object_priv(?OBJ_MON, Uid) ->
+find_object_priv(?UID_TYPE_MON, Uid) ->
     case misc_ets:read(?ETS_CACHE_MAP_MONSTER_PRIV, Uid) of
         [#m_cache_map_object_priv{} = Obj | _] -> Obj;
         _ -> undefined
     end;
-find_object_priv(?OBJ_PET, Uid) ->
+find_object_priv(?UID_TYPE_PET, Uid) ->
     case misc_ets:read(?ETS_CACHE_MAP_PET_PRIV, Uid) of
         [#m_cache_map_object_priv{} = Obj | _] -> Obj;
         _ -> undefined
     end;
-find_object_priv(?OBJ_NPC, Uid) ->
+find_object_priv(?UID_TYPE_NPC, Uid) ->
     case misc_ets:read(?ETS_CACHE_MAP_NPC_PRIV, Uid) of
         [#m_cache_map_object_priv{} = Obj | _] -> Obj;
         _ -> undefined
     end;
 find_object_priv(_Type, _Uid) -> undefined.
 
-object_priv_exist(?OBJ_PLAYER, Uid) ->
+object_priv_exist(?UID_TYPE_PLAYER, Uid) ->
     misc_ets:member(?ETS_CACHE_MAP_PLAYER_PRIV, Uid);
-object_priv_exist(?OBJ_MON, Uid) ->
+object_priv_exist(?UID_TYPE_MON, Uid) ->
     misc_ets:member(?ETS_CACHE_MAP_MONSTER_PRIV, Uid);
-object_priv_exist(?OBJ_PET, Uid) ->
+object_priv_exist(?UID_TYPE_PET, Uid) ->
     misc_ets:member(?ETS_CACHE_MAP_PET_PRIV, Uid);
-object_priv_exist(?OBJ_NPC, Uid) ->
+object_priv_exist(?UID_TYPE_NPC, Uid) ->
     misc_ets:member(?ETS_CACHE_MAP_NPC_PRIV, Uid).

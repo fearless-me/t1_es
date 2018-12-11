@@ -84,8 +84,13 @@ do_gm(_, _, _, _) -> skip.
 %%-------------------------------------------------------------------
 
 %%-------------------------------------------------------------------
+change_map([MapId, LineId | _]) ->
+    ID = list_to_integer(MapId),
+    LD = list_to_integer(LineId),
+    Pos = map_creator_interface:map_init_pos(ID),
+    player_pub:change_map_(ID, LD, Pos),
+    ok;
 change_map([MapId | _]) ->
-%%    Delta = misc:rand(-5, 15) / 1.0,
     ID = list_to_integer(MapId),
     Pos = map_creator_interface:map_init_pos(ID),
     player_pub:change_map_(ID, 0, Pos),

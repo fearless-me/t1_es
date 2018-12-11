@@ -107,15 +107,15 @@ do_serve_change_map_call(ExitReq, JoinReq) ->
 
     %% 1.
     #r_exit_map_req{uid = Uid, map_id = SrcMid, line_id = SrcLineId, map_pid = SrcMpid} = ExitReq,
-    #r_join_map_req{uid = Uid, tar_map_id = TarMid} = JoinReq,
+    #r_join_map_req{uid = Uid, tar_map_id = TarMid, tar_line_id = TarLid} = JoinReq,
 
     
 %%    CurMgr = map_creator_interface:map_mgr_lr(Uid, SrcMid),
     TarMgr = map_creator_interface:map_mgr_lr(Uid, TarMid),
 
 
-    ?INFO("player ~p, changeMap ~p|map_~p_~p -> map ~p | mgr ~p",
-        [Uid, SrcMpid, SrcMid, SrcLineId, TarMid, TarMgr]),
+    ?INFO("player ~p, changeMap ~p|map_~p_~p -> map ~p ~p | mgr ~p",
+        [Uid, SrcMpid, SrcMid, SrcLineId, TarMid, TarLid, TarMgr]),
 
     case TarMgr of
         undefined -> skip;

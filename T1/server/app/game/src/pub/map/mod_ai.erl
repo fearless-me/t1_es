@@ -445,14 +445,14 @@ is_target_valid(_TargetUid) ->
 
 %%-------------------------------------------------------------------
 reset_look_for_target_tick(Uid) ->
-    ResetTick = rand_tool:rand() div ?AI_LOOK_FOR_ENEMY_TICK_INTERVAL + ?AI_LOOK_FOR_ENEMY_TICK_MIN,
+    ResetTick = rand_tool:rand() rem ?AI_LOOK_FOR_ENEMY_TICK_INTERVAL + ?AI_LOOK_FOR_ENEMY_TICK_MIN,
     object_rw:set_ai_look_for_target_tick(Uid, ResetTick),
     ok.
 
 %%-------------------------------------------------------------------
 %%-------------------------------------------------------------------
 reset_lock_target_time(Uid) ->
-    ResetTick = rand_tool:rand() div ?AI_LOCK_TARGET_TICK_INTERVAL + ?AI_LOCK_TARGET_MIN_TICK,
+    ResetTick = rand_tool:rand() rem ?AI_LOCK_TARGET_TICK_INTERVAL + ?AI_LOCK_TARGET_MIN_TICK,
     object_rw:set_ai_look_for_target_tick(Uid, ResetTick),
     ok.
 

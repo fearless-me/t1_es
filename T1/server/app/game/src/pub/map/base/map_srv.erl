@@ -141,7 +141,7 @@ do_handle_cast(Request, State) ->
 %%--------------------------------------------------------------------
 tick_clear_player() ->
     Self = self(),
-    Maps = map_rw:obj_maps_with_type(?OBJ_PLAYER),
+    Maps = map_rw:obj_maps_with_type(?UID_TYPE_PLAYER),
     erlang:spawn
     (fun() ->
         MapName = misc:registered_name(Self),

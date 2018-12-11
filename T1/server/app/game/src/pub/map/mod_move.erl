@@ -178,9 +178,9 @@ make_move_r(Start, End, Speed) ->
 tick(Obj, _Now) -> tick_dispatcher(Obj).
 
 %%-------------------------------------------------------------------
-tick_dispatcher(#m_cache_map_object_priv{type = ?OBJ_PLAYER, uid = Uid} = Obj) ->
+tick_dispatcher(#m_cache_map_object_priv{type = ?UID_TYPE_PLAYER, uid = Uid} = Obj) ->
     tick_player_move(Obj,   object_rw:get_cur_move(Uid));
-tick_dispatcher(#m_cache_map_object_priv{type = ?OBJ_MON, uid = Uid} = Obj) ->
+tick_dispatcher(#m_cache_map_object_priv{type = ?UID_TYPE_MON, uid = Uid} = Obj) ->
     tick_monster_move(Obj,  object_rw:get_cur_move(Uid));
 tick_dispatcher(_Obj) -> skip.
 
@@ -316,7 +316,7 @@ on_obj_pos_change(Uid, Tar) ->
     on_obj_pos_changed(object_rw:get_type(Uid), Uid, Tar),
     ok.
 
-on_obj_pos_changed(?OBJ_PLAYER, Uid, Tar) ->
+on_obj_pos_changed(?UID_TYPE_PLAYER, Uid, Tar) ->
     gs_cache_interface:update_online_player(Uid, {#m_cache_online_player.pos, Tar}),
     ok;
 on_obj_pos_changed(_Type, _Uid, _Tar) ->
@@ -330,11 +330,10 @@ cal_move_msg(Uid) ->
 do_cal_move_msg(?EMS_WALK, Uid) ->
     Src = object_rw:get_start_pos(Uid),
     Dst = object_rw:get_dest_pos(Uid),
-    Type = object_rw:get_type(Uid),
     Speed = get_move_speed_by_state(Uid, ?EMS_WALK),
     StartTime = object_rw:get_move_start_time(Uid),
     #pk_GS2U_SyncWalk{
-        uid = Uid, type = Type,
+        uid = Uid,
         move_time = map_rw:get_move_timer_pass_time(StartTime),
         src_x = vector3:x(Src), src_y = vector3:z(Src),
         dst_x = vector3:x(Dst), dst_y = vector3:z(Dst),
@@ -342,10 +341,8 @@ do_cal_move_msg(?EMS_WALK, Uid) ->
     };
 do_cal_move_msg(?EMS_STAND, Uid) ->
     Pos = object_rw:get_start_pos(Uid),
-    Type = object_rw:get_type(Uid),
     #pk_GS2U_SyncStand{
         uid = Uid,
-        type = Type,
         cur_x = vector3:x(Pos),
         cur_y = vector3:z(Pos)
     };
@@ -354,11 +351,10 @@ do_cal_move_msg(
 ) when S =:= ?EMS_MONSTER_PATROL;S =:= ?EMS_MONSTER_WALK;S =:= ?EMS_MONSTER_FLEE ->
     Src = object_rw:get_start_pos(Uid),
     Dst = object_rw:get_dest_pos(Uid),
-    Type = object_rw:get_type(Uid),
     Speed = get_move_speed_by_state(Uid, S),
     StartTime = object_rw:get_move_start_time(Uid),
     #pk_GS2U_SyncWalk{
-        uid = Uid, type = Type,
+        uid = Uid,
         move_time = map_rw:get_move_timer_pass_time(StartTime),
         src_x = vector3:x(Src), src_y = vector3:z(Src),
         dst_x = vector3:x(Dst), dst_y = vector3:z(Dst),

@@ -41,15 +41,7 @@
 	 set_force_stopped/2, set_force_stopped_direct/2, get_force_stopped/1, get_force_stopped/2, %#m_object_rw.force_stopped 
 	 set_move_path_list/2, set_move_path_list_direct/2, get_move_path_list/1, get_move_path_list/2, %#m_object_rw.move_path_list 
 	 set_born_pos/2, set_born_pos_direct/2, get_born_pos/1, get_born_pos/2, %#m_object_rw.born_pos 
-	 set_skill_id/2, set_skill_id_direct/2, get_skill_id/1, get_skill_id/2, %#m_object_rw.skill_id 
-	 set_target_uid/2, set_target_uid_direct/2, get_target_uid/1, get_target_uid/2, %#m_object_rw.target_uid 
-	 set_skill_serial/2, set_skill_serial_direct/2, get_skill_serial/1, get_skill_serial/2, %#m_object_rw.skill_serial 
-	 set_persist_pos/2, set_persist_pos_direct/2, get_persist_pos/1, get_persist_pos/2, %#m_object_rw.persist_pos 
-	 set_cur_dmg_index/2, set_cur_dmg_index_direct/2, get_cur_dmg_index/1, get_cur_dmg_index/2, %#m_object_rw.cur_dmg_index 
-	 set_operate_time/2, set_operate_time_direct/2, get_operate_time/1, get_operate_time/2, %#m_object_rw.operate_time 
-	 set_spell_time/2, set_spell_time_direct/2, get_spell_time/1, get_spell_time/2, %#m_object_rw.spell_time 
-	 set_channel_cd/2, set_channel_cd_direct/2, get_channel_cd/1, get_channel_cd/2, %#m_object_rw.channel_cd 
-	 set_skill_queue/2, set_skill_queue_direct/2, get_skill_queue/1, get_skill_queue/2, %#m_object_rw.skill_queue 
+	 set_battle_in_time/2, set_battle_in_time_direct/2, get_battle_in_time/1, get_battle_in_time/2, %#m_object_rw.battle_in_time 
 	 set_hp/2, set_hp_direct/2, get_hp/1, get_hp/2, %#m_object_rw.hp 
 	 set_max_hp/2, set_max_hp_direct/2, get_max_hp/1, get_max_hp/2, %#m_object_rw.max_hp 
 	 set_battle_props/2, set_battle_props_direct/2, get_battle_props/1, get_battle_props/2, %#m_object_rw.battle_props 
@@ -585,157 +577,21 @@ set_born_pos_direct(Uid, Val) ->
     misc_ets:update_element(i_ets(), Uid, {#m_object_rw.born_pos, Val}),
     ok.
 %%-------------------------------------------------------------------
-%% #m_object_rw.skill_id
-get_skill_id(Uid) ->
-    misc_ets:read_element(i_ets(), Uid, #m_object_rw.skill_id).
+%% #m_object_rw.battle_in_time
+get_battle_in_time(Uid) ->
+    misc_ets:read_element(i_ets(), Uid, #m_object_rw.battle_in_time).
 
-get_skill_id(Uid, Def) ->
-    case misc_ets:read_element(i_ets(), Uid, #m_object_rw.skill_id) of
+get_battle_in_time(Uid, Def) ->
+    case misc_ets:read_element(i_ets(), Uid, #m_object_rw.battle_in_time) of
         undefined -> Def;
         Any -> Any
     end.
     
-set_skill_id(Uid, Val)->
-    misc_ets:update_element(i_ets(), Uid, {#m_object_rw.skill_id, Val}),
-    ?TRY_CATCH(hook_map:on_rw_update(Uid,{#m_object_rw.skill_id, Val})).
-set_skill_id_direct(Uid, Val) ->
-    misc_ets:update_element(i_ets(), Uid, {#m_object_rw.skill_id, Val}),
-    ok.
-%%-------------------------------------------------------------------
-%% #m_object_rw.target_uid
-get_target_uid(Uid) ->
-    misc_ets:read_element(i_ets(), Uid, #m_object_rw.target_uid).
-
-get_target_uid(Uid, Def) ->
-    case misc_ets:read_element(i_ets(), Uid, #m_object_rw.target_uid) of
-        undefined -> Def;
-        Any -> Any
-    end.
-    
-set_target_uid(Uid, Val)->
-    misc_ets:update_element(i_ets(), Uid, {#m_object_rw.target_uid, Val}),
-    ?TRY_CATCH(hook_map:on_rw_update(Uid,{#m_object_rw.target_uid, Val})).
-set_target_uid_direct(Uid, Val) ->
-    misc_ets:update_element(i_ets(), Uid, {#m_object_rw.target_uid, Val}),
-    ok.
-%%-------------------------------------------------------------------
-%% #m_object_rw.skill_serial
-get_skill_serial(Uid) ->
-    misc_ets:read_element(i_ets(), Uid, #m_object_rw.skill_serial).
-
-get_skill_serial(Uid, Def) ->
-    case misc_ets:read_element(i_ets(), Uid, #m_object_rw.skill_serial) of
-        undefined -> Def;
-        Any -> Any
-    end.
-    
-set_skill_serial(Uid, Val)->
-    misc_ets:update_element(i_ets(), Uid, {#m_object_rw.skill_serial, Val}),
-    ?TRY_CATCH(hook_map:on_rw_update(Uid,{#m_object_rw.skill_serial, Val})).
-set_skill_serial_direct(Uid, Val) ->
-    misc_ets:update_element(i_ets(), Uid, {#m_object_rw.skill_serial, Val}),
-    ok.
-%%-------------------------------------------------------------------
-%% #m_object_rw.persist_pos
-get_persist_pos(Uid) ->
-    misc_ets:read_element(i_ets(), Uid, #m_object_rw.persist_pos).
-
-get_persist_pos(Uid, Def) ->
-    case misc_ets:read_element(i_ets(), Uid, #m_object_rw.persist_pos) of
-        undefined -> Def;
-        Any -> Any
-    end.
-    
-set_persist_pos(Uid, Val)->
-    misc_ets:update_element(i_ets(), Uid, {#m_object_rw.persist_pos, Val}),
-    ?TRY_CATCH(hook_map:on_rw_update(Uid,{#m_object_rw.persist_pos, Val})).
-set_persist_pos_direct(Uid, Val) ->
-    misc_ets:update_element(i_ets(), Uid, {#m_object_rw.persist_pos, Val}),
-    ok.
-%%-------------------------------------------------------------------
-%% #m_object_rw.cur_dmg_index
-get_cur_dmg_index(Uid) ->
-    misc_ets:read_element(i_ets(), Uid, #m_object_rw.cur_dmg_index).
-
-get_cur_dmg_index(Uid, Def) ->
-    case misc_ets:read_element(i_ets(), Uid, #m_object_rw.cur_dmg_index) of
-        undefined -> Def;
-        Any -> Any
-    end.
-    
-set_cur_dmg_index(Uid, Val)->
-    misc_ets:update_element(i_ets(), Uid, {#m_object_rw.cur_dmg_index, Val}),
-    ?TRY_CATCH(hook_map:on_rw_update(Uid,{#m_object_rw.cur_dmg_index, Val})).
-set_cur_dmg_index_direct(Uid, Val) ->
-    misc_ets:update_element(i_ets(), Uid, {#m_object_rw.cur_dmg_index, Val}),
-    ok.
-%%-------------------------------------------------------------------
-%% #m_object_rw.operate_time
-get_operate_time(Uid) ->
-    misc_ets:read_element(i_ets(), Uid, #m_object_rw.operate_time).
-
-get_operate_time(Uid, Def) ->
-    case misc_ets:read_element(i_ets(), Uid, #m_object_rw.operate_time) of
-        undefined -> Def;
-        Any -> Any
-    end.
-    
-set_operate_time(Uid, Val)->
-    misc_ets:update_element(i_ets(), Uid, {#m_object_rw.operate_time, Val}),
-    ?TRY_CATCH(hook_map:on_rw_update(Uid,{#m_object_rw.operate_time, Val})).
-set_operate_time_direct(Uid, Val) ->
-    misc_ets:update_element(i_ets(), Uid, {#m_object_rw.operate_time, Val}),
-    ok.
-%%-------------------------------------------------------------------
-%% #m_object_rw.spell_time
-get_spell_time(Uid) ->
-    misc_ets:read_element(i_ets(), Uid, #m_object_rw.spell_time).
-
-get_spell_time(Uid, Def) ->
-    case misc_ets:read_element(i_ets(), Uid, #m_object_rw.spell_time) of
-        undefined -> Def;
-        Any -> Any
-    end.
-    
-set_spell_time(Uid, Val)->
-    misc_ets:update_element(i_ets(), Uid, {#m_object_rw.spell_time, Val}),
-    ?TRY_CATCH(hook_map:on_rw_update(Uid,{#m_object_rw.spell_time, Val})).
-set_spell_time_direct(Uid, Val) ->
-    misc_ets:update_element(i_ets(), Uid, {#m_object_rw.spell_time, Val}),
-    ok.
-%%-------------------------------------------------------------------
-%% #m_object_rw.channel_cd
-get_channel_cd(Uid) ->
-    misc_ets:read_element(i_ets(), Uid, #m_object_rw.channel_cd).
-
-get_channel_cd(Uid, Def) ->
-    case misc_ets:read_element(i_ets(), Uid, #m_object_rw.channel_cd) of
-        undefined -> Def;
-        Any -> Any
-    end.
-    
-set_channel_cd(Uid, Val)->
-    misc_ets:update_element(i_ets(), Uid, {#m_object_rw.channel_cd, Val}),
-    ?TRY_CATCH(hook_map:on_rw_update(Uid,{#m_object_rw.channel_cd, Val})).
-set_channel_cd_direct(Uid, Val) ->
-    misc_ets:update_element(i_ets(), Uid, {#m_object_rw.channel_cd, Val}),
-    ok.
-%%-------------------------------------------------------------------
-%% #m_object_rw.skill_queue
-get_skill_queue(Uid) ->
-    misc_ets:read_element(i_ets(), Uid, #m_object_rw.skill_queue).
-
-get_skill_queue(Uid, Def) ->
-    case misc_ets:read_element(i_ets(), Uid, #m_object_rw.skill_queue) of
-        undefined -> Def;
-        Any -> Any
-    end.
-    
-set_skill_queue(Uid, Val)->
-    misc_ets:update_element(i_ets(), Uid, {#m_object_rw.skill_queue, Val}),
-    ?TRY_CATCH(hook_map:on_rw_update(Uid,{#m_object_rw.skill_queue, Val})).
-set_skill_queue_direct(Uid, Val) ->
-    misc_ets:update_element(i_ets(), Uid, {#m_object_rw.skill_queue, Val}),
+set_battle_in_time(Uid, Val)->
+    misc_ets:update_element(i_ets(), Uid, {#m_object_rw.battle_in_time, Val}),
+    ?TRY_CATCH(hook_map:on_rw_update(Uid,{#m_object_rw.battle_in_time, Val})).
+set_battle_in_time_direct(Uid, Val) ->
+    misc_ets:update_element(i_ets(), Uid, {#m_object_rw.battle_in_time, Val}),
     ok.
 %%-------------------------------------------------------------------
 %% #m_object_rw.hp

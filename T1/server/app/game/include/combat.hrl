@@ -13,6 +13,9 @@
 
 -include("battle_prop.hrl").    %% 属性定义
 
+%% 战斗状态持续时间，5秒
+-define(BATTLE_STATE_CONTINUE_TIME, 5000).
+
 %% 伤害打击返回结果
 -record(m_hit_damage_result, {
     attackBps::#m_battleProps{},    %% 计算后的攻击者属性
