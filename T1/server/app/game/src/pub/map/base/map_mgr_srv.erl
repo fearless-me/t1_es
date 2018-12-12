@@ -254,15 +254,17 @@ force_del_line(S, Line) ->
 
     ok.
 
-clear_line_player(true, Mid, Line) ->
+clear_line_player(_, Mid, Line) ->
     erlang:spawn
     (
         fun() ->
             Match = #m_cache_map_object_priv{map_id = Mid, line_id = Line, _ = '_'},
-            misc_ets:match_delete(?ETS_CACHE_MAP_PLAYER_PRIV, Match)
+            misc_ets:match_delete(?ETS_CACHE_MAP_PLAYER_PRIV, Match),
+            misc_ets:match_delete(?ETS_CACHE_MAP_MONSTER_PRIV, Match),
+            misc_ets:match_delete(?ETS_CACHE_MAP_NPC_PRIV, Match),
+            misc_ets:match_delete(?ETS_CACHE_MAP_PET_PRIV, Match)
         end
-    );
-clear_line_player(_, _Mid, _Line) -> skip.
+    ).
 
 tick_recycle_line_msg(MapId) ->
     case map_creator_interface:can_recycle_no_player(MapId) of
