@@ -21,6 +21,9 @@
 -record(r_create_player_req, {sid, name, camp, career, race, sex, head, x, y, mid, version, data}).
 -record(r_create_player_ack, {error = 0, uid = 0, acc_id = 0, name = "",
     camp = 0, career = 0, race = 0, sex = 0, head = 0}).
+%% 删角色
+-record(r_delete_player_req,{aid,uid}).
+-record(r_delete_player_ack,{uid,res}).
 %% 改变属性
 -record(r_player_change_prop_req, {uid, add, multi, add_del, multi_del}).
 %% 开始移动

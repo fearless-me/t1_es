@@ -41,7 +41,7 @@ handler(load_all_role_info, Sid, FromPid, PoolId) ->
             ResLoad = db:query(PoolId, SqlLoad, [Sid, Start, End], ?DB_QUERY_TIMEOUT * 5),
             check_res(ResLoad, SqlLoad, [Sid, Start, End]),
             ResList0 = db:as_record(ResLoad, p_player, record_info(fields, p_player)),
-            ResList1 = [Player#p_player{name = binary_to_list(Player#p_player.name)} || Player <- ResList0],
+            ResList1 = [Player#p_player{name = binary_to_list(Player#p_player.name)} || Player <- ResList0, Player#p_player.delete_flag == 0],
             ps:send(FromPid, load_all_role_info_ack, ResList1)
         end, lists:seq(1, SeqNo)),
     
@@ -52,19 +52,20 @@ handler(load_player_list, AccId, FromPid, PoolId) ->
     Res = db:query(PoolId, Sql, [AccId], ?DB_QUERY_TIMEOUT),
     check_res(Res, Sql, [AccId]),
     PL1 = db:as_record(Res, p_player, record_info(fields, p_player)),
-    PL2 = lists:map(
-        fun(#p_player{name = Name} = Player) ->
-            Player#p_player{name = binary_to_list(Name)}
-        end, PL1),
+    PL2 = [Player#p_player{name = binary_to_list(Player#p_player.name)} || Player <- PL1, Player#p_player.delete_flag == 0],
     ps:send(FromPid, load_player_list_ack, PL2),
     ok;
 handler(load_player_data, {_Aid, Uid}, FromPid, PoolId) ->
     Sql = gs_db_sql:sql(load_player),
     Res = db:query(PoolId, Sql, [Uid], ?DB_QUERY_TIMEOUT),
     check_res(Res, Sql, [Uid]),
-    [#p_player{name = Name} = Player] =
+    [#p_player{name = Name, delete_flag = DeleteFlag} = Player] =
         db:as_record(Res, p_player, record_info(fields, p_player)),
-    ps:send(FromPid, load_player_data_ack, Player#p_player{name = binary_to_list(Name)}),
+    Data = case DeleteFlag of
+               0 ->Player#p_player{name = binary_to_list(Name)};
+               _ -> undefined
+           end,
+    ps:send(FromPid, load_player_data_ack, Data),
     ok;
 handler(create_player, {AccId, Req}, FromPid, PoolId) ->
     #r_create_player_req
@@ -114,6 +115,14 @@ handler(save_player, PlayerExt, _FromPid, PoolId) ->
     ],
     Res = db:query(PoolId, Sql, Params),
     check_res(Res, Sql, Params),
+    ok;
+handler(delete_player, Msg, FromPid, PoolId) ->
+    #r_delete_player_req{aid = Aid, uid = Uid} = Msg,
+    Sql = gs_db_sql:sql(delete_player),
+    Params = [misc_time:utc_seconds(), Uid, Aid],
+    Res = db:query(PoolId, Sql, Params),
+    check_res(Res, Sql, Params),
+    ps:send(FromPid, delete_player_ack, #r_delete_player_ack{uid = Uid, res = db:succeed(Res)}),
     ok;
 handler(MsgId, Msg, FromPid, _PoolId) ->
     ?ERROR("undeal msg ~w ~w from ~p", [MsgId, Msg, FromPid]),

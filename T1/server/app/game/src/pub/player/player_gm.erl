@@ -84,6 +84,13 @@ do_gm(_, _, _, _) -> skip.
 %%-------------------------------------------------------------------
 
 %%-------------------------------------------------------------------
+change_map([MapId, LineId, Force | _]) ->
+    ID = list_to_integer(MapId),
+    LD = list_to_integer(LineId),
+    FC = list_to_integer(Force),
+    Pos = map_creator_interface:map_init_pos(ID),
+    player_pub:change_map_(ID, LD, Pos, misc:i2b(FC)),
+    ok;
 change_map([MapId, LineId | _]) ->
     ID = list_to_integer(MapId),
     LD = list_to_integer(LineId),

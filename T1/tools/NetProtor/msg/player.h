@@ -16,6 +16,15 @@ struct U2GS_GetPlayerInitData ->
 {
 };
 
+// skill 数据
+struct SkillInfo
+{
+	uint32 skill_id;
+	uint32 level;
+	uint32 cd_time;
+	uint32 slot_index;//技能盘孔位
+};
+
 // 测试用
 struct GS2U_PlayerInitBase <-
 {
@@ -112,7 +121,6 @@ struct GS2U_GotoNewMap <-
 struct GS2U_SyncWalk <-
 {
 	uint64	uid;	 // 唯一ID
-	uint32  type;	 //1 怪物；2 NPC 3 宠物 4 玩家
 	float	src_x;	 //坐标X
 	float	src_y;	 //坐标Y
 	float	dst_x;	 //坐标X
@@ -121,16 +129,15 @@ struct GS2U_SyncWalk <-
 	float	speed; //移动速度
 };
 
-// 移动
+// 标准
 struct GS2U_SyncStand <-
 {
 	uint64  uid;	 //唯一ID
-	uint32  type;	 //1 怪物；2 NPC 3 宠物 4 玩家
 	float	cur_x;	 //坐标X
 	float	cur_y;	 //坐标Y
 };
 
-//
+// 获取远程对象
 struct U2GS_GetRemoteObjInfo ->
 {
 	vector<uint64> uids; // 唯一ID列表
@@ -160,6 +167,15 @@ struct GS2U_RemotePet <-
 {
 	uint64  uid;	 //唯一ID
 	uint64 	owner;   //主人
+	uint32	did;     //配置表ID
+	int32   level;   //等级
+	float	cur_x;	 //坐标X
+	float	cur_y;	 //坐标Y
+};
+
+struct GS2U_RemoteNpc <-
+{
+	uint64  uid;	 //唯一ID
 	uint32	did;     //配置表ID
 	int32   level;   //等级
 	float	cur_x;	 //坐标X

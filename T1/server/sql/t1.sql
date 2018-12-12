@@ -162,6 +162,8 @@ CREATE TABLE `player` (
   `old_line` int(11) unsigned DEFAULT 1,
   `old_x` float unsigned DEFAULT 100,
   `old_y` float unsigned DEFAULT 100,
+  `delete_flag` int(10) unsigned DEFAULT 0,
+  `delete_time` int(10) unsigned DEFAULT 0,
   `data` blob DEFAULT NULL,
   `version` bigint(20) unsigned NOT NULL,
   PRIMARY KEY (`uid`),
@@ -235,4 +237,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-11-14 16:15:25
+-- Dump completed on 2018-12-12 10:54:34

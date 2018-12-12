@@ -2,7 +2,7 @@ echo off
 cls
 
 echo delete client message sources...
-del "..\\..\\Client\\Assets\\Code\\Base\\Net\\Messages\\*.cs" /s /q
+del "..\\..\\Client\\Assets\\Hot_Update\\Base\\Net\\Messages\\*.cs" /s /q
 
 echo delete server message sources...
 del "..\\..\\Server\\app\\common\\src\\netmsg\\msg*" /s /q
@@ -36,7 +36,7 @@ echo current directory: %cd%
 ::COPY "..\\Out\\MessageType.cs" "..\\msg" /Y
 
 echo copy net message sources to client
-XCOPY "..\\Out" "..\\..\\..\\Client\\Assets\\Code\\Base\\Net\\Messages" /s /c /i /d /y /EXCLUDE:EXCLUDE_erl.txt
+XCOPY "..\\Out" "..\\..\\..\\Client\\Assets\\Hot_Update\\Base\\Net\\Messages" /s /c /i /d /y /EXCLUDE:EXCLUDE_erl.txt
 
 echo copy net message sources to server
 XCOPY ..\\out ..\\..\\..\\Server\\app\\common\\src\\netmsg /s /c /i /d /y /EXCLUDE:EXCLUDE_cs.txt

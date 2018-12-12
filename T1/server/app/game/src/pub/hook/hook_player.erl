@@ -17,7 +17,7 @@
 
 
 %% API
--export([on_account_login/3, on_create/1, on_login/1, on_offline/0]).
+-export([on_account_login/3, on_create/1, on_login/1, on_offline/0, on_delete/1]).
 -export([on_tick/0, on_second/0, on_minute/0, on_hour/0, on_sharp/1]).
 -export([on_change_map/2, on_rw_update/2]).
 
@@ -80,6 +80,12 @@ on_offline() ->
     ?TRY_CATCH(gs_cache_interface:offline(Aid, Uid), Err3, St3),
     ?WARN("player ~p exit map_~p_~p", [Uid, Mid, LineId]),
     ok.
+
+%%-------------------------------------------------------------------
+on_delete(Uid) ->
+    gs_cache_interface:del_player_pub(Uid),
+    ok.
+
 
 %%-------------------------------------------------------------------
 on_change_map(OldMap, NewMap) ->

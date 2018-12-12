@@ -29,7 +29,7 @@
     % 改变分组
     change_group_/1,
     % 换地图、回之前的地图
-    change_map_/3, change_pre_map_/0, kick_to_born_map_/1,
+    change_map_/3, change_map_/4, change_pre_map_/0, kick_to_born_map_/1,
     % 改变战斗属性
     player_change_combat_prop_/1,
     % 本地图传送、开始移动、停止移动
@@ -106,7 +106,10 @@ change_pre_map_() ->
 
 %%-------------------------------------------------------------------
 change_map_(DestMapID, LineId, TarPos) ->
-    ps:send(self(), passive_change_req, {DestMapID, LineId, TarPos}).
+    player_pub:change_map_(DestMapID, LineId, TarPos, false).
+
+change_map_(DestMapID, LineId, TarPos, Force) ->
+    ps:send(self(), passive_change_req, {DestMapID, LineId, TarPos, Force}).
 
 kick_to_born_map_(Reason) ->
     ?WARN("kick player ~p to born map ~p",[player_rw:get_uid(), Reason]),

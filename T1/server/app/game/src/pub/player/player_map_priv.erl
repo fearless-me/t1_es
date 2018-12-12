@@ -35,8 +35,12 @@
 %% todo teleport_call / offline_call 是需要call调用，等后面来确定
 
 -export([
-    online_call/1, offline_call/4, serve_change_map_call/3,
-    teleport_call/1, return_to_old_map_call/0, kick_to_born_map/0
+    online_call/1,
+    offline_call/4,
+    serve_change_map_call/3,serve_change_map_call/4,
+    teleport_call/1,
+    return_to_old_map_call/0,
+    kick_to_born_map/0
 ]).
 
 
@@ -88,6 +92,10 @@ do_online_call_1(Mgr, Req) ->
 
 %%-------------------------------------------------------------------
 serve_change_map_call(TarMid, TarLineId, TarPos) ->
+    serve_change_map_call(TarMid, TarLineId, TarPos, false),
+    ok.
+
+serve_change_map_call(TarMid, TarLineId, TarPos, Force) ->
     player_rw:set_status(?PS_CHANGE_MAP),
     Uid = player_rw:get_uid(),
     #m_cache_online_player{
@@ -96,11 +104,13 @@ serve_change_map_call(TarMid, TarLineId, TarPos) ->
 
 
     ExitReq = #r_exit_map_req{uid = Uid, map_id = SrcMid, line_id = SrcLineId, map_pid = SrcMPid},
-    JoinReq = #r_join_map_req{uid = Uid, group = 0, pid = self(), tar_map_id = TarMid, tar_line_id = TarLineId, tar_pos = TarPos},
-    
+    JoinReq = #r_join_map_req{uid = Uid, pid = self(),
+        tar_map_id = TarMid, tar_line_id = TarLineId, tar_pos = TarPos, force = Force andalso TarLineId > 0 },
+
     Ack = do_serve_change_map_call(ExitReq, JoinReq),
     serve_change_map_call_ret(SrcMid, SrcLineId, SrcPos, Ack, JoinReq, gaming),
     ok.
+
 
 %%-------------------------------------------------------------------
 do_serve_change_map_call(ExitReq, JoinReq) ->

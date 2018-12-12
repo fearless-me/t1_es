@@ -10,7 +10,7 @@
 //不用使用int uint long 
 //不用使用int uint long 
 struct U2GS_Login_Normal ->
-{
+{	
 	string	platformAccount;		// 平台帐号（游戏内帐号用平台id来绑定创建）
 	string 	platformName;			// 平台名
 	string	platformNickName;		// 平台昵称，没有就填空串

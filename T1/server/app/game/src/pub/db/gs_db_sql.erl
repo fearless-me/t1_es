@@ -34,6 +34,8 @@ sql(save_player) ->
     "old_map_id=?, old_line=?, old_x=?, old_y=?, data=?, version = ? where uid=?">>;
 sql(load_player) ->
     <<"select * from player where uid = ?">>;
+sql(delete_player) ->
+    <<"update player set delete_flag = 1, delete_time = ? where uid = ? and aid = ?">>;
 sql(load_player_list) ->
     <<"select * from player where aid = ?">>;
 sql(_) ->

@@ -783,10 +783,11 @@ FileScanner::~FileScanner()
 		}
 	}
 	CGen2Erlang maker(version);
-    CGenLuaDescTable::version = version;
-    CGenLuaDescTable aa(outFilePath, sourceGenInfos);
-	maker.make( outFilePath, sourceGenInfos );
-	CGenLuaDescTable _maker( outFilePath, sourceGenInfos );
+	maker.make(outFilePath, sourceGenInfos);
+
+ //   CGenLuaDescTable::version = version;
+ //   CGenLuaDescTable aa(outFilePath, sourceGenInfos);
+	//CGenLuaDescTable _maker( outFilePath, sourceGenInfos );
 }
 
 MetaInfo FileScanner::process( const std::vector< MatchResult >& matchResults, const std::string& fileName )

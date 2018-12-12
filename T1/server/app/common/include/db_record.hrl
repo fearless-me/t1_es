@@ -7,7 +7,7 @@
 -define(DB_TABLE_RECORD_HRL, true).
 
 
--define(DB_RECORD_VERSION, 1543221365).
+-define(DB_RECORD_VERSION, 1544583283).
 
 %% t1_data.player
 %% aid bigint(20) unsigned "" DEFAULT "" COMMENT "" KEY MUL
@@ -29,12 +29,14 @@
 %% old_line int(11) unsigned "" DEFAULT 1 COMMENT "" KEY ""
 %% old_x float unsigned "" DEFAULT 100 COMMENT "" KEY ""
 %% old_y float unsigned "" DEFAULT 100 COMMENT "" KEY ""
+%% delete_flag int(10) unsigned "" DEFAULT 0 COMMENT "" KEY ""
+%% delete_time int(10) unsigned "" DEFAULT 0 COMMENT "" KEY ""
 %% data blob "" DEFAULT "" COMMENT "" KEY ""
 %% version bigint(20) unsigned "" DEFAULT "" COMMENT "" KEY ""
 -record(p_player,{
 	aid=0,uid=undefined,sid=0,name="",level=1,wing_level=0,sex=0,camp=0,
 	race=1,career=1,head=1,map_id=1,line=0,x=0.0,y=0.0,old_map_id=1,old_line=1,
-	old_x=0.0,old_y=0.0,data= <<>>,version=0
+	old_x=0.0,old_y=0.0,delete_flag=0,delete_time=0,data= <<>>,version=0
 }).
 
 

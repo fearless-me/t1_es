@@ -10,16 +10,6 @@
 //不用使用int uint long 
 //不用使用int uint long 
 
-// skill 数据
-struct SkillInfo
-{
-	uint32 skill_id;
-	uint32 level;
-	uint32 cd_time;
-	uint32 slot_index;//技能盘孔位
-};
-
-
 // 技能攻击
 struct U2GS_UseSkill ->
 {
@@ -67,7 +57,7 @@ struct GS2U_SpecialMove <-
 // 命中目标
 struct GS2U_HitTarget <-
 {
-	uint64		uid;			//角色ID
+	vector<uint64>	tar_uids; 	// ID
 	uint64		src_uid;		//发起者ID
 	uint32		cause;			//原因 1 :使用技能
 	uint32		misc;			//如果是技能，则为技能ID

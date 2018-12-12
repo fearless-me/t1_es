@@ -262,7 +262,7 @@ tc_start() ->
 tc_end(Msg) ->
     Td = misc:get_dict_def(?EFFECTIVE_MONITOR_GUARD, ?EFFECTIVE_MONITOR_MIN_MILLISECOND),
     Tf = case get(?TIMELINE_KEY) of
-             undefine -> 0;
+             undefined -> 0;
              StartTime -> micro_to_milli(misc_time:micro_seconds() - StartTime)
          end,
     accumulated_msg(Tf),

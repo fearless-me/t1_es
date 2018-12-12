@@ -99,22 +99,22 @@ on_info_msg({login_ack, Msg}, S) ->
     player_priv:login_ack(Msg),
     S;
 on_info_msg({load_player_list_ack, List}, S) ->
-    ?DEBUG("load_player_list_ack:~p", [List]),
     player_priv:loaded_player_list(List),
     S;
 on_info_msg({load_player_data_ack, Player}, S) ->
-    ?DEBUG("load_player_data_ack"),
     player_priv:loaded_player(Player),
     S;
 on_info_msg({create_player_ack, Ack}, S) ->
-    ?DEBUG("create_player_ack"),
     player_priv:create_player_ack(Ack),
+    S;
+on_info_msg({delete_player_ack, Ack}, S) ->
+    player_priv:delete_player_ack(Ack),
     S;
 on_info_msg(return_to_pre_map_req, S) ->
     player_map_priv:return_to_old_map_call(),
     S;
-on_info_msg({passive_change_req, {DestMapID, LineId, TarPos}}, S) ->
-    player_map_priv:serve_change_map_call(DestMapID, LineId, TarPos),
+on_info_msg({passive_change_req, {DestMapID, LineId, TarPos, Force}}, S) ->
+    player_map_priv:serve_change_map_call(DestMapID, LineId, TarPos, Force),
     S;
 on_info_msg(passive_kick_to_born_map, S) ->
     player_map_priv:kick_to_born_map(),

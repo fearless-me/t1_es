@@ -40,6 +40,9 @@ handle(#pk_U2GS_RequestCreatePlayer{
 }) ->
     player_priv:create_player(Name, Career, Race, Sex, Head, Camp),
     ok;
+handle(#pk_U2GS_RequestDeletePlayer{uid = Uid}) ->
+    player_priv:delete_player(Uid),
+    ok;
 handle(#pk_U2GS_SelPlayerEnterGame{uid = Uid}) ->
     player_priv:select_player(Uid),
     ok;
@@ -68,7 +71,7 @@ handle(#pk_U2GS_ChangeMap{map_id = MapId, x = X, y = Y}) ->
 handle(#pk_U2GS_GetRemoteObjInfo{uids = UidList}) ->
     Uid = player_rw:get_uid(),
     #m_player_map{map_pid = MapPid} = player_rw:get_map(),
-    ps:send(MapPid, net_msg_get_remote_obj_info, {Uid, UidList}),
+    ps:send(MapPid, net_msg_get_remote_obj_info, {Uid, UidList, self()}),
     ok;
 handle(#pk_U2GS_Chat{content = Content}) ->
     case player_gm:is_gm(Content) of

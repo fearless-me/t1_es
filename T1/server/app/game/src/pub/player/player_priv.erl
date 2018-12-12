@@ -19,6 +19,7 @@
 -include("gs_cache.hrl").
 -include("player_ext_data.hrl").
 -include("object.hrl").
+-include("error_code.hrl").
 
 
 %% 逻辑层不要调用这些接口
@@ -29,6 +30,7 @@
 -export([select_player/1]).
 -export([loaded_player/1]).
 -export([offline/1]).
+-export([delete_player/1, delete_player_ack/1]).
 
 %%-------------------------------------------------------------------
 init() ->
@@ -200,6 +202,28 @@ offline_1(Status, Reason) ->
         [Uid, self(), player_pub:socket(), Status, Reason]),
     
     ok.
+
+
+%%-------------------------------------------------------------------
+delete_player(Uid) ->
+    catch ?WARN("player ~p pid ~p sock ~p will be deleted",
+        [Uid, self(), player_pub:socket()]),
+
+    %%TODO 要做安全性检查
+    Aid = player_rw:get_aid(),
+    gs_db_interface:action_data_(Aid, delete_player, #r_delete_player_req{aid = Aid, uid = Uid}),
+    ok.
+
+delete_player_ack(#r_delete_player_ack{uid = Uid, res = true}) ->
+    hook_player:on_delete(Uid),
+    player_pub:send_net_msg(#pk_GS2U_DeletePlayerResult{uid = Uid, errorCode = ?E_Success}),
+    catch ?WARN("player ~p pid ~p sock ~p is deleted",
+        [Uid, self(), player_pub:socket()]),
+    ok;
+delete_player_ack(#r_delete_player_ack{uid = Uid}) ->
+    player_pub:send_net_msg(#pk_GS2U_DeletePlayerResult{uid = Uid, errorCode = -1}),
+    ok.
+
 
 %%-------------------------------------------------------------------
 flush_cache(transfer_to_cross) -> ok;
