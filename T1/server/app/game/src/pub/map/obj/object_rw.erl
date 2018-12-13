@@ -123,7 +123,7 @@ get_uid(Uid) ->
     misc_ets:read_element(i_ets(), Uid, #m_object_rw.uid).
 
 get_uid(Uid, Def) ->
-    case misc_ets:read_element(i_ets(), Uid, #m_object_rw.uid) of
+    case misc_ets:read_element(i_ets(), Uid, #m_object_rw.uid, undefined) of
         undefined -> Def;
         Any -> Any
     end.
@@ -140,7 +140,7 @@ get_pid(Uid) ->
     misc_ets:read_element(i_ets(), Uid, #m_object_rw.pid).
 
 get_pid(Uid, Def) ->
-    case misc_ets:read_element(i_ets(), Uid, #m_object_rw.pid) of
+    case misc_ets:read_element(i_ets(), Uid, #m_object_rw.pid, undefined) of
         undefined -> Def;
         Any -> Any
     end.
@@ -157,7 +157,7 @@ get_data_id(Uid) ->
     misc_ets:read_element(i_ets(), Uid, #m_object_rw.data_id).
 
 get_data_id(Uid, Def) ->
-    case misc_ets:read_element(i_ets(), Uid, #m_object_rw.data_id) of
+    case misc_ets:read_element(i_ets(), Uid, #m_object_rw.data_id, undefined) of
         undefined -> Def;
         Any -> Any
     end.
@@ -174,7 +174,7 @@ get_group(Uid) ->
     misc_ets:read_element(i_ets(), Uid, #m_object_rw.group).
 
 get_group(Uid, Def) ->
-    case misc_ets:read_element(i_ets(), Uid, #m_object_rw.group) of
+    case misc_ets:read_element(i_ets(), Uid, #m_object_rw.group, undefined) of
         undefined -> Def;
         Any -> Any
     end.
@@ -191,7 +191,7 @@ get_owner(Uid) ->
     misc_ets:read_element(i_ets(), Uid, #m_object_rw.owner).
 
 get_owner(Uid, Def) ->
-    case misc_ets:read_element(i_ets(), Uid, #m_object_rw.owner) of
+    case misc_ets:read_element(i_ets(), Uid, #m_object_rw.owner, undefined) of
         undefined -> Def;
         Any -> Any
     end.
@@ -208,7 +208,7 @@ get_type(Uid) ->
     misc_ets:read_element(i_ets(), Uid, #m_object_rw.type).
 
 get_type(Uid, Def) ->
-    case misc_ets:read_element(i_ets(), Uid, #m_object_rw.type) of
+    case misc_ets:read_element(i_ets(), Uid, #m_object_rw.type, undefined) of
         undefined -> Def;
         Any -> Any
     end.
@@ -225,7 +225,7 @@ get_level(Uid) ->
     misc_ets:read_element(i_ets(), Uid, #m_object_rw.level).
 
 get_level(Uid, Def) ->
-    case misc_ets:read_element(i_ets(), Uid, #m_object_rw.level) of
+    case misc_ets:read_element(i_ets(), Uid, #m_object_rw.level, undefined) of
         undefined -> Def;
         Any -> Any
     end.
@@ -242,7 +242,7 @@ get_name(Uid) ->
     misc_ets:read_element(i_ets(), Uid, #m_object_rw.name).
 
 get_name(Uid, Def) ->
-    case misc_ets:read_element(i_ets(), Uid, #m_object_rw.name) of
+    case misc_ets:read_element(i_ets(), Uid, #m_object_rw.name, undefined) of
         undefined -> Def;
         Any -> Any
     end.
@@ -259,7 +259,7 @@ get_sex(Uid) ->
     misc_ets:read_element(i_ets(), Uid, #m_object_rw.sex).
 
 get_sex(Uid, Def) ->
-    case misc_ets:read_element(i_ets(), Uid, #m_object_rw.sex) of
+    case misc_ets:read_element(i_ets(), Uid, #m_object_rw.sex, undefined) of
         undefined -> Def;
         Any -> Any
     end.
@@ -276,7 +276,7 @@ get_career(Uid) ->
     misc_ets:read_element(i_ets(), Uid, #m_object_rw.career).
 
 get_career(Uid, Def) ->
-    case misc_ets:read_element(i_ets(), Uid, #m_object_rw.career) of
+    case misc_ets:read_element(i_ets(), Uid, #m_object_rw.career, undefined) of
         undefined -> Def;
         Any -> Any
     end.
@@ -293,7 +293,7 @@ get_race(Uid) ->
     misc_ets:read_element(i_ets(), Uid, #m_object_rw.race).
 
 get_race(Uid, Def) ->
-    case misc_ets:read_element(i_ets(), Uid, #m_object_rw.race) of
+    case misc_ets:read_element(i_ets(), Uid, #m_object_rw.race, undefined) of
         undefined -> Def;
         Any -> Any
     end.
@@ -310,7 +310,7 @@ get_camp(Uid) ->
     misc_ets:read_element(i_ets(), Uid, #m_object_rw.camp).
 
 get_camp(Uid, Def) ->
-    case misc_ets:read_element(i_ets(), Uid, #m_object_rw.camp) of
+    case misc_ets:read_element(i_ets(), Uid, #m_object_rw.camp, undefined) of
         undefined -> Def;
         Any -> Any
     end.
@@ -327,7 +327,7 @@ get_state(Uid) ->
     misc_ets:read_element(i_ets(), Uid, #m_object_rw.state).
 
 get_state(Uid, Def) ->
-    case misc_ets:read_element(i_ets(), Uid, #m_object_rw.state) of
+    case misc_ets:read_element(i_ets(), Uid, #m_object_rw.state, undefined) of
         undefined -> Def;
         Any -> Any
     end.
@@ -344,7 +344,7 @@ get_move_speed(Uid) ->
     misc_ets:read_element(i_ets(), Uid, #m_object_rw.move_speed).
 
 get_move_speed(Uid, Def) ->
-    case misc_ets:read_element(i_ets(), Uid, #m_object_rw.move_speed) of
+    case misc_ets:read_element(i_ets(), Uid, #m_object_rw.move_speed, undefined) of
         undefined -> Def;
         Any -> Any
     end.
@@ -361,7 +361,7 @@ get_cur_move(Uid) ->
     misc_ets:read_element(i_ets(), Uid, #m_object_rw.cur_move).
 
 get_cur_move(Uid, Def) ->
-    case misc_ets:read_element(i_ets(), Uid, #m_object_rw.cur_move) of
+    case misc_ets:read_element(i_ets(), Uid, #m_object_rw.cur_move, undefined) of
         undefined -> Def;
         Any -> Any
     end.
@@ -378,7 +378,7 @@ get_next_move(Uid) ->
     misc_ets:read_element(i_ets(), Uid, #m_object_rw.next_move).
 
 get_next_move(Uid, Def) ->
-    case misc_ets:read_element(i_ets(), Uid, #m_object_rw.next_move) of
+    case misc_ets:read_element(i_ets(), Uid, #m_object_rw.next_move, undefined) of
         undefined -> Def;
         Any -> Any
     end.
@@ -395,7 +395,7 @@ get_vis_tile_idx(Uid) ->
     misc_ets:read_element(i_ets(), Uid, #m_object_rw.vis_tile_idx).
 
 get_vis_tile_idx(Uid, Def) ->
-    case misc_ets:read_element(i_ets(), Uid, #m_object_rw.vis_tile_idx) of
+    case misc_ets:read_element(i_ets(), Uid, #m_object_rw.vis_tile_idx, undefined) of
         undefined -> Def;
         Any -> Any
     end.
@@ -412,7 +412,7 @@ get_cur_pos(Uid) ->
     misc_ets:read_element(i_ets(), Uid, #m_object_rw.cur_pos).
 
 get_cur_pos(Uid, Def) ->
-    case misc_ets:read_element(i_ets(), Uid, #m_object_rw.cur_pos) of
+    case misc_ets:read_element(i_ets(), Uid, #m_object_rw.cur_pos, undefined) of
         undefined -> Def;
         Any -> Any
     end.
@@ -429,7 +429,7 @@ get_start_pos(Uid) ->
     misc_ets:read_element(i_ets(), Uid, #m_object_rw.start_pos).
 
 get_start_pos(Uid, Def) ->
-    case misc_ets:read_element(i_ets(), Uid, #m_object_rw.start_pos) of
+    case misc_ets:read_element(i_ets(), Uid, #m_object_rw.start_pos, undefined) of
         undefined -> Def;
         Any -> Any
     end.
@@ -446,7 +446,7 @@ get_dest_pos(Uid) ->
     misc_ets:read_element(i_ets(), Uid, #m_object_rw.dest_pos).
 
 get_dest_pos(Uid, Def) ->
-    case misc_ets:read_element(i_ets(), Uid, #m_object_rw.dest_pos) of
+    case misc_ets:read_element(i_ets(), Uid, #m_object_rw.dest_pos, undefined) of
         undefined -> Def;
         Any -> Any
     end.
@@ -463,7 +463,7 @@ get_face(Uid) ->
     misc_ets:read_element(i_ets(), Uid, #m_object_rw.face).
 
 get_face(Uid, Def) ->
-    case misc_ets:read_element(i_ets(), Uid, #m_object_rw.face) of
+    case misc_ets:read_element(i_ets(), Uid, #m_object_rw.face, undefined) of
         undefined -> Def;
         Any -> Any
     end.
@@ -480,7 +480,7 @@ get_dir(Uid) ->
     misc_ets:read_element(i_ets(), Uid, #m_object_rw.dir).
 
 get_dir(Uid, Def) ->
-    case misc_ets:read_element(i_ets(), Uid, #m_object_rw.dir) of
+    case misc_ets:read_element(i_ets(), Uid, #m_object_rw.dir, undefined) of
         undefined -> Def;
         Any -> Any
     end.
@@ -497,7 +497,7 @@ get_move_start_time(Uid) ->
     misc_ets:read_element(i_ets(), Uid, #m_object_rw.move_start_time).
 
 get_move_start_time(Uid, Def) ->
-    case misc_ets:read_element(i_ets(), Uid, #m_object_rw.move_start_time) of
+    case misc_ets:read_element(i_ets(), Uid, #m_object_rw.move_start_time, undefined) of
         undefined -> Def;
         Any -> Any
     end.
@@ -514,7 +514,7 @@ get_seg_move_time(Uid) ->
     misc_ets:read_element(i_ets(), Uid, #m_object_rw.seg_move_time).
 
 get_seg_move_time(Uid, Def) ->
-    case misc_ets:read_element(i_ets(), Uid, #m_object_rw.seg_move_time) of
+    case misc_ets:read_element(i_ets(), Uid, #m_object_rw.seg_move_time, undefined) of
         undefined -> Def;
         Any -> Any
     end.
@@ -531,7 +531,7 @@ get_force_stopped(Uid) ->
     misc_ets:read_element(i_ets(), Uid, #m_object_rw.force_stopped).
 
 get_force_stopped(Uid, Def) ->
-    case misc_ets:read_element(i_ets(), Uid, #m_object_rw.force_stopped) of
+    case misc_ets:read_element(i_ets(), Uid, #m_object_rw.force_stopped, undefined) of
         undefined -> Def;
         Any -> Any
     end.
@@ -548,7 +548,7 @@ get_move_path_list(Uid) ->
     misc_ets:read_element(i_ets(), Uid, #m_object_rw.move_path_list).
 
 get_move_path_list(Uid, Def) ->
-    case misc_ets:read_element(i_ets(), Uid, #m_object_rw.move_path_list) of
+    case misc_ets:read_element(i_ets(), Uid, #m_object_rw.move_path_list, undefined) of
         undefined -> Def;
         Any -> Any
     end.
@@ -565,7 +565,7 @@ get_born_pos(Uid) ->
     misc_ets:read_element(i_ets(), Uid, #m_object_rw.born_pos).
 
 get_born_pos(Uid, Def) ->
-    case misc_ets:read_element(i_ets(), Uid, #m_object_rw.born_pos) of
+    case misc_ets:read_element(i_ets(), Uid, #m_object_rw.born_pos, undefined) of
         undefined -> Def;
         Any -> Any
     end.
@@ -582,7 +582,7 @@ get_battle_in_time(Uid) ->
     misc_ets:read_element(i_ets(), Uid, #m_object_rw.battle_in_time).
 
 get_battle_in_time(Uid, Def) ->
-    case misc_ets:read_element(i_ets(), Uid, #m_object_rw.battle_in_time) of
+    case misc_ets:read_element(i_ets(), Uid, #m_object_rw.battle_in_time, undefined) of
         undefined -> Def;
         Any -> Any
     end.
@@ -599,7 +599,7 @@ get_hp(Uid) ->
     misc_ets:read_element(i_ets(), Uid, #m_object_rw.hp).
 
 get_hp(Uid, Def) ->
-    case misc_ets:read_element(i_ets(), Uid, #m_object_rw.hp) of
+    case misc_ets:read_element(i_ets(), Uid, #m_object_rw.hp, undefined) of
         undefined -> Def;
         Any -> Any
     end.
@@ -616,7 +616,7 @@ get_max_hp(Uid) ->
     misc_ets:read_element(i_ets(), Uid, #m_object_rw.max_hp).
 
 get_max_hp(Uid, Def) ->
-    case misc_ets:read_element(i_ets(), Uid, #m_object_rw.max_hp) of
+    case misc_ets:read_element(i_ets(), Uid, #m_object_rw.max_hp, undefined) of
         undefined -> Def;
         Any -> Any
     end.
@@ -633,7 +633,7 @@ get_battle_props(Uid) ->
     misc_ets:read_element(i_ets(), Uid, #m_object_rw.battle_props).
 
 get_battle_props(Uid, Def) ->
-    case misc_ets:read_element(i_ets(), Uid, #m_object_rw.battle_props) of
+    case misc_ets:read_element(i_ets(), Uid, #m_object_rw.battle_props, undefined) of
         undefined -> Def;
         Any -> Any
     end.
@@ -650,7 +650,7 @@ get_buff_list(Uid) ->
     misc_ets:read_element(i_ets(), Uid, #m_object_rw.buff_list).
 
 get_buff_list(Uid, Def) ->
-    case misc_ets:read_element(i_ets(), Uid, #m_object_rw.buff_list) of
+    case misc_ets:read_element(i_ets(), Uid, #m_object_rw.buff_list, undefined) of
         undefined -> Def;
         Any -> Any
     end.
@@ -667,7 +667,7 @@ get_ai_state(Uid) ->
     misc_ets:read_element(i_ets(), Uid, #m_object_rw.ai_state).
 
 get_ai_state(Uid, Def) ->
-    case misc_ets:read_element(i_ets(), Uid, #m_object_rw.ai_state) of
+    case misc_ets:read_element(i_ets(), Uid, #m_object_rw.ai_state, undefined) of
         undefined -> Def;
         Any -> Any
     end.
@@ -684,7 +684,7 @@ get_pre_ai_state(Uid) ->
     misc_ets:read_element(i_ets(), Uid, #m_object_rw.pre_ai_state).
 
 get_pre_ai_state(Uid, Def) ->
-    case misc_ets:read_element(i_ets(), Uid, #m_object_rw.pre_ai_state) of
+    case misc_ets:read_element(i_ets(), Uid, #m_object_rw.pre_ai_state, undefined) of
         undefined -> Def;
         Any -> Any
     end.
@@ -701,7 +701,7 @@ get_ai_transition(Uid) ->
     misc_ets:read_element(i_ets(), Uid, #m_object_rw.ai_transition).
 
 get_ai_transition(Uid, Def) ->
-    case misc_ets:read_element(i_ets(), Uid, #m_object_rw.ai_transition) of
+    case misc_ets:read_element(i_ets(), Uid, #m_object_rw.ai_transition, undefined) of
         undefined -> Def;
         Any -> Any
     end.
@@ -718,7 +718,7 @@ get_ai_triggers(Uid) ->
     misc_ets:read_element(i_ets(), Uid, #m_object_rw.ai_triggers).
 
 get_ai_triggers(Uid, Def) ->
-    case misc_ets:read_element(i_ets(), Uid, #m_object_rw.ai_triggers) of
+    case misc_ets:read_element(i_ets(), Uid, #m_object_rw.ai_triggers, undefined) of
         undefined -> Def;
         Any -> Any
     end.
@@ -735,7 +735,7 @@ get_ai_pause(Uid) ->
     misc_ets:read_element(i_ets(), Uid, #m_object_rw.ai_pause).
 
 get_ai_pause(Uid, Def) ->
-    case misc_ets:read_element(i_ets(), Uid, #m_object_rw.ai_pause) of
+    case misc_ets:read_element(i_ets(), Uid, #m_object_rw.ai_pause, undefined) of
         undefined -> Def;
         Any -> Any
     end.
@@ -752,7 +752,7 @@ get_ai_id(Uid) ->
     misc_ets:read_element(i_ets(), Uid, #m_object_rw.ai_id).
 
 get_ai_id(Uid, Def) ->
-    case misc_ets:read_element(i_ets(), Uid, #m_object_rw.ai_id) of
+    case misc_ets:read_element(i_ets(), Uid, #m_object_rw.ai_id, undefined) of
         undefined -> Def;
         Any -> Any
     end.
@@ -769,7 +769,7 @@ get_ai_wp_list(Uid) ->
     misc_ets:read_element(i_ets(), Uid, #m_object_rw.ai_wp_list).
 
 get_ai_wp_list(Uid, Def) ->
-    case misc_ets:read_element(i_ets(), Uid, #m_object_rw.ai_wp_list) of
+    case misc_ets:read_element(i_ets(), Uid, #m_object_rw.ai_wp_list, undefined) of
         undefined -> Def;
         Any -> Any
     end.
@@ -786,7 +786,7 @@ get_ai_wp_num(Uid) ->
     misc_ets:read_element(i_ets(), Uid, #m_object_rw.ai_wp_num).
 
 get_ai_wp_num(Uid, Def) ->
-    case misc_ets:read_element(i_ets(), Uid, #m_object_rw.ai_wp_num) of
+    case misc_ets:read_element(i_ets(), Uid, #m_object_rw.ai_wp_num, undefined) of
         undefined -> Def;
         Any -> Any
     end.
@@ -803,7 +803,7 @@ get_ai_wp_idx(Uid) ->
     misc_ets:read_element(i_ets(), Uid, #m_object_rw.ai_wp_idx).
 
 get_ai_wp_idx(Uid, Def) ->
-    case misc_ets:read_element(i_ets(), Uid, #m_object_rw.ai_wp_idx) of
+    case misc_ets:read_element(i_ets(), Uid, #m_object_rw.ai_wp_idx, undefined) of
         undefined -> Def;
         Any -> Any
     end.
@@ -820,7 +820,7 @@ get_ai_is_reverse_patrol(Uid) ->
     misc_ets:read_element(i_ets(), Uid, #m_object_rw.ai_is_reverse_patrol).
 
 get_ai_is_reverse_patrol(Uid, Def) ->
-    case misc_ets:read_element(i_ets(), Uid, #m_object_rw.ai_is_reverse_patrol) of
+    case misc_ets:read_element(i_ets(), Uid, #m_object_rw.ai_is_reverse_patrol, undefined) of
         undefined -> Def;
         Any -> Any
     end.
@@ -837,7 +837,7 @@ get_ai_is_patrol(Uid) ->
     misc_ets:read_element(i_ets(), Uid, #m_object_rw.ai_is_patrol).
 
 get_ai_is_patrol(Uid, Def) ->
-    case misc_ets:read_element(i_ets(), Uid, #m_object_rw.ai_is_patrol) of
+    case misc_ets:read_element(i_ets(), Uid, #m_object_rw.ai_is_patrol, undefined) of
         undefined -> Def;
         Any -> Any
     end.
@@ -854,7 +854,7 @@ get_ai_patrol_rest_tick(Uid) ->
     misc_ets:read_element(i_ets(), Uid, #m_object_rw.ai_patrol_rest_tick).
 
 get_ai_patrol_rest_tick(Uid, Def) ->
-    case misc_ets:read_element(i_ets(), Uid, #m_object_rw.ai_patrol_rest_tick) of
+    case misc_ets:read_element(i_ets(), Uid, #m_object_rw.ai_patrol_rest_tick, undefined) of
         undefined -> Def;
         Any -> Any
     end.
@@ -871,7 +871,7 @@ get_ai_look_for_target_tick(Uid) ->
     misc_ets:read_element(i_ets(), Uid, #m_object_rw.ai_look_for_target_tick).
 
 get_ai_look_for_target_tick(Uid, Def) ->
-    case misc_ets:read_element(i_ets(), Uid, #m_object_rw.ai_look_for_target_tick) of
+    case misc_ets:read_element(i_ets(), Uid, #m_object_rw.ai_look_for_target_tick, undefined) of
         undefined -> Def;
         Any -> Any
     end.
@@ -888,7 +888,7 @@ get_ai_pursue_tar_pos(Uid) ->
     misc_ets:read_element(i_ets(), Uid, #m_object_rw.ai_pursue_tar_pos).
 
 get_ai_pursue_tar_pos(Uid, Def) ->
-    case misc_ets:read_element(i_ets(), Uid, #m_object_rw.ai_pursue_tar_pos) of
+    case misc_ets:read_element(i_ets(), Uid, #m_object_rw.ai_pursue_tar_pos, undefined) of
         undefined -> Def;
         Any -> Any
     end.
@@ -905,7 +905,7 @@ get_ai_pursue_failed(Uid) ->
     misc_ets:read_element(i_ets(), Uid, #m_object_rw.ai_pursue_failed).
 
 get_ai_pursue_failed(Uid, Def) ->
-    case misc_ets:read_element(i_ets(), Uid, #m_object_rw.ai_pursue_failed) of
+    case misc_ets:read_element(i_ets(), Uid, #m_object_rw.ai_pursue_failed, undefined) of
         undefined -> Def;
         Any -> Any
     end.
@@ -922,7 +922,7 @@ get_ai_cant_pursue(Uid) ->
     misc_ets:read_element(i_ets(), Uid, #m_object_rw.ai_cant_pursue).
 
 get_ai_cant_pursue(Uid, Def) ->
-    case misc_ets:read_element(i_ets(), Uid, #m_object_rw.ai_cant_pursue) of
+    case misc_ets:read_element(i_ets(), Uid, #m_object_rw.ai_cant_pursue, undefined) of
         undefined -> Def;
         Any -> Any
     end.
@@ -939,7 +939,7 @@ get_ai_check_pursue_tick(Uid) ->
     misc_ets:read_element(i_ets(), Uid, #m_object_rw.ai_check_pursue_tick).
 
 get_ai_check_pursue_tick(Uid, Def) ->
-    case misc_ets:read_element(i_ets(), Uid, #m_object_rw.ai_check_pursue_tick) of
+    case misc_ets:read_element(i_ets(), Uid, #m_object_rw.ai_check_pursue_tick, undefined) of
         undefined -> Def;
         Any -> Any
     end.
@@ -956,7 +956,7 @@ get_ai_target_uid(Uid) ->
     misc_ets:read_element(i_ets(), Uid, #m_object_rw.ai_target_uid).
 
 get_ai_target_uid(Uid, Def) ->
-    case misc_ets:read_element(i_ets(), Uid, #m_object_rw.ai_target_uid) of
+    case misc_ets:read_element(i_ets(), Uid, #m_object_rw.ai_target_uid, undefined) of
         undefined -> Def;
         Any -> Any
     end.
@@ -973,7 +973,7 @@ get_ai_enter_combat_time(Uid) ->
     misc_ets:read_element(i_ets(), Uid, #m_object_rw.ai_enter_combat_time).
 
 get_ai_enter_combat_time(Uid, Def) ->
-    case misc_ets:read_element(i_ets(), Uid, #m_object_rw.ai_enter_combat_time) of
+    case misc_ets:read_element(i_ets(), Uid, #m_object_rw.ai_enter_combat_time, undefined) of
         undefined -> Def;
         Any -> Any
     end.
@@ -990,7 +990,7 @@ get_ai_enter_combat_pos(Uid) ->
     misc_ets:read_element(i_ets(), Uid, #m_object_rw.ai_enter_combat_pos).
 
 get_ai_enter_combat_pos(Uid, Def) ->
-    case misc_ets:read_element(i_ets(), Uid, #m_object_rw.ai_enter_combat_pos) of
+    case misc_ets:read_element(i_ets(), Uid, #m_object_rw.ai_enter_combat_pos, undefined) of
         undefined -> Def;
         Any -> Any
     end.
@@ -1007,7 +1007,7 @@ get_ai_use_skill_id(Uid) ->
     misc_ets:read_element(i_ets(), Uid, #m_object_rw.ai_use_skill_id).
 
 get_ai_use_skill_id(Uid, Def) ->
-    case misc_ets:read_element(i_ets(), Uid, #m_object_rw.ai_use_skill_id) of
+    case misc_ets:read_element(i_ets(), Uid, #m_object_rw.ai_use_skill_id, undefined) of
         undefined -> Def;
         Any -> Any
     end.
@@ -1024,7 +1024,7 @@ get_ai_attack_wait_tick(Uid) ->
     misc_ets:read_element(i_ets(), Uid, #m_object_rw.ai_attack_wait_tick).
 
 get_ai_attack_wait_tick(Uid, Def) ->
-    case misc_ets:read_element(i_ets(), Uid, #m_object_rw.ai_attack_wait_tick) of
+    case misc_ets:read_element(i_ets(), Uid, #m_object_rw.ai_attack_wait_tick, undefined) of
         undefined -> Def;
         Any -> Any
     end.
@@ -1041,7 +1041,7 @@ get_ai_skill_serial(Uid) ->
     misc_ets:read_element(i_ets(), Uid, #m_object_rw.ai_skill_serial).
 
 get_ai_skill_serial(Uid, Def) ->
-    case misc_ets:read_element(i_ets(), Uid, #m_object_rw.ai_skill_serial) of
+    case misc_ets:read_element(i_ets(), Uid, #m_object_rw.ai_skill_serial, undefined) of
         undefined -> Def;
         Any -> Any
     end.
@@ -1058,7 +1058,7 @@ get_ai_flee_dst(Uid) ->
     misc_ets:read_element(i_ets(), Uid, #m_object_rw.ai_flee_dst).
 
 get_ai_flee_dst(Uid, Def) ->
-    case misc_ets:read_element(i_ets(), Uid, #m_object_rw.ai_flee_dst) of
+    case misc_ets:read_element(i_ets(), Uid, #m_object_rw.ai_flee_dst, undefined) of
         undefined -> Def;
         Any -> Any
     end.
@@ -1075,7 +1075,7 @@ get_ai_flee_dir(Uid) ->
     misc_ets:read_element(i_ets(), Uid, #m_object_rw.ai_flee_dir).
 
 get_ai_flee_dir(Uid, Def) ->
-    case misc_ets:read_element(i_ets(), Uid, #m_object_rw.ai_flee_dir) of
+    case misc_ets:read_element(i_ets(), Uid, #m_object_rw.ai_flee_dir, undefined) of
         undefined -> Def;
         Any -> Any
     end.
@@ -1092,7 +1092,7 @@ get_ai_flee_tick(Uid) ->
     misc_ets:read_element(i_ets(), Uid, #m_object_rw.ai_flee_tick).
 
 get_ai_flee_tick(Uid, Def) ->
-    case misc_ets:read_element(i_ets(), Uid, #m_object_rw.ai_flee_tick) of
+    case misc_ets:read_element(i_ets(), Uid, #m_object_rw.ai_flee_tick, undefined) of
         undefined -> Def;
         Any -> Any
     end.
@@ -1109,7 +1109,7 @@ get_ai_is_arrived_flee_pos(Uid) ->
     misc_ets:read_element(i_ets(), Uid, #m_object_rw.ai_is_arrived_flee_pos).
 
 get_ai_is_arrived_flee_pos(Uid, Def) ->
-    case misc_ets:read_element(i_ets(), Uid, #m_object_rw.ai_is_arrived_flee_pos) of
+    case misc_ets:read_element(i_ets(), Uid, #m_object_rw.ai_is_arrived_flee_pos, undefined) of
         undefined -> Def;
         Any -> Any
     end.
@@ -1126,7 +1126,7 @@ get_ai_arrived_return_pos(Uid) ->
     misc_ets:read_element(i_ets(), Uid, #m_object_rw.ai_arrived_return_pos).
 
 get_ai_arrived_return_pos(Uid, Def) ->
-    case misc_ets:read_element(i_ets(), Uid, #m_object_rw.ai_arrived_return_pos) of
+    case misc_ets:read_element(i_ets(), Uid, #m_object_rw.ai_arrived_return_pos, undefined) of
         undefined -> Def;
         Any -> Any
     end.
@@ -1143,7 +1143,7 @@ get_enmity_list(Uid) ->
     misc_ets:read_element(i_ets(), Uid, #m_object_rw.enmity_list).
 
 get_enmity_list(Uid, Def) ->
-    case misc_ets:read_element(i_ets(), Uid, #m_object_rw.enmity_list) of
+    case misc_ets:read_element(i_ets(), Uid, #m_object_rw.enmity_list, undefined) of
         undefined -> Def;
         Any -> Any
     end.
@@ -1160,7 +1160,7 @@ get_max_enmity_uid(Uid) ->
     misc_ets:read_element(i_ets(), Uid, #m_object_rw.max_enmity_uid).
 
 get_max_enmity_uid(Uid, Def) ->
-    case misc_ets:read_element(i_ets(), Uid, #m_object_rw.max_enmity_uid) of
+    case misc_ets:read_element(i_ets(), Uid, #m_object_rw.max_enmity_uid, undefined) of
         undefined -> Def;
         Any -> Any
     end.
@@ -1177,7 +1177,7 @@ get_ai_lock_target_tick(Uid) ->
     misc_ets:read_element(i_ets(), Uid, #m_object_rw.ai_lock_target_tick).
 
 get_ai_lock_target_tick(Uid, Def) ->
-    case misc_ets:read_element(i_ets(), Uid, #m_object_rw.ai_lock_target_tick) of
+    case misc_ets:read_element(i_ets(), Uid, #m_object_rw.ai_lock_target_tick, undefined) of
         undefined -> Def;
         Any -> Any
     end.
@@ -1194,7 +1194,7 @@ get_no_inc_enmity_tick(Uid) ->
     misc_ets:read_element(i_ets(), Uid, #m_object_rw.no_inc_enmity_tick).
 
 get_no_inc_enmity_tick(Uid, Def) ->
-    case misc_ets:read_element(i_ets(), Uid, #m_object_rw.no_inc_enmity_tick) of
+    case misc_ets:read_element(i_ets(), Uid, #m_object_rw.no_inc_enmity_tick, undefined) of
         undefined -> Def;
         Any -> Any
     end.

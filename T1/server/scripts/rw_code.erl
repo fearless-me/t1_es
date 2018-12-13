@@ -9,8 +9,8 @@
 -module(rw_code).
 -author("mawenhong").
 
--include("db_record.hrl").
--include("rec_rw.hrl").
+-include("../app/game/include/rec_rw.hrl").
+
 -define(LogFileOptions, [exclusive, append, raw, binary]).
 %% API
 -export([run/0]).
@@ -42,60 +42,15 @@ run_halt([run_from_scripts_ket]) ->
     halt().
 
 run() ->
+    generate_code(),
+    ok.
+
+
+generate_code() ->
     try
-%%        multi_to_code(
-%%            "..\\src\\pub\\map\\object_rw.erl",
-%%            object_rw,
-%%            [
-%%                ["logger.hrl", "pub_def.hrl", "rec_rw.hrl"],
-%%                [
-%%                    {m_object_rw, record_info(fields, m_object_rw), [], ["Uid"], "hook_map:on_rw_update"}
-%%                ]
-%%            ]
-%%        ),
-%%        multi_to_code(
-%%            "..\\src\\pub\\map\\combat_rw.erl",
-%%            combat_rw,
-%%            [
-%%                ["logger.hrl", "pub_def.hrl", "rec_rw.hrl"],
-%%                [
-%%                    {m_combat_rw, record_info(fields, m_combat_rw), [], ["Uid"], []}
-%%                ]
-%%            ]
-%%        ),
-%%        multi_to_code(
-%%            "..\\src\\pub\\core\\combat_prop_rw.erl",
-%%            combat_prop_rw,
-%%            [
-%%                ["logger.hrl", "pub_def.hrl", "rec_rw.hrl"],
-%%                [
-%%                    {m_combat_prop_rw, record_info(fields, m_combat_prop_rw), [], ["Uid"], []}
-%%                ]
-%%            ]
-%%        ),
-%%        multi_to_code(
-%%            "..\\src\\pub\\map\\move_rw.erl",
-%%            move_rw,
-%%            [
-%%                ["logger.hrl", "pub_def.hrl", "rec_rw.hrl"],
-%%                [
-%%                    {m_move_rw, record_info(fields, m_move_rw), [], ["Uid"], "hook_map:on_rw_update"}
-%%                ]
-%%            ]
-%%        ),
-%%        multi_to_code(
-%%            "..\\src\\pub\\map\\ai_rw.erl",
-%%            ai_rw,
-%%            [
-%%                ["logger.hrl", "pub_def.hrl", "ai.hrl", "rec_rw.hrl"],
-%%                [
-%%                    {m_ai_rw, record_info(fields, m_ai_rw), [], ["Uid"], []}
-%%                ]
-%%            ]
-%%        ),
         multi_to_code
         (
-            "..\\src\\pub\\player\\player_rw.erl",
+            "..\\app\\game\\src\\pub\\player\\player_rw.erl",
             player_rw,
             [
                 ["logger.hrl", "pub_def.hrl", "player_status.hrl", "rec_rw.hrl"],
@@ -106,7 +61,7 @@ run() ->
         ),
         object_rw
         (
-            "..\\src\\pub\\map\\obj\\object_rw.erl",
+            "..\\app\\game\\src\\pub\\map\\obj\\object_rw.erl",
             record_info(fields, m_object_rw)
         ),
         ok
@@ -114,6 +69,8 @@ run() ->
         color:error_log("~p,~p~n", [Err, ST])
     end,
     ok.
+
+
 
 
 
@@ -629,7 +586,7 @@ get_~p(Uid) ->
     misc_ets:read_element(i_ets(), Uid, #m_object_rw.~p).
 
 get_~p(Uid, Def) ->
-    case misc_ets:read_element(i_ets(), Uid, #m_object_rw.~p) of
+    case misc_ets:read_element(i_ets(), Uid, #m_object_rw.~p, undefined) of
         undefined -> Def;
         Any -> Any
     end.

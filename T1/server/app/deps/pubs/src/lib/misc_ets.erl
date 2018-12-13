@@ -28,7 +28,7 @@
     foldl/3,   %% ets 遍历
     member/2, %% 查看key是在ets中
     %% 按key取值, ... , 读取值的某个元素
-    read/2, read/3, read_element/3,
+    read/2, read/3, read_element/3, read_element/4,
     write/2,%% 插入ets
     delete/2, %% 按key删除值
     %% 按key更新值的某个字段
@@ -85,6 +85,12 @@ read(Tab, Key, Def) ->
 %%-------------------------------------------------------------------
 read_element(Tab, Key, Pos)->
     ets:lookup_element(Tab, Key, Pos).
+
+read_element(Tab, Key, Pos, Def)->
+    case catch ets:lookup_element(Tab, Key, Pos) of
+        {'EXIT', _} -> Def;
+        Val -> Val
+    end.
 
 %%-------------------------------------------------------------------
 write(Tab,Val) ->   ets:insert(Tab, Val).

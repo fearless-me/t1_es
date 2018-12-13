@@ -221,7 +221,7 @@ create_new_line(S, MapID, LineID) ->
 
     [Line] = misc_ets:read(S#state.ets, LineID),
     %% fixme 此处是为了测试用的
-    erlang:send_after(?LINE_LIFETIME * 6 * 24 * 7, self(), {deadline_stop, Line}),
+    erlang:send_after(?LINE_LIFETIME, self(), {deadline_stop, Line}),
     ?WARN("map_~p_~p ~p start, mgr ets ~p", [MapID, LineID, Pid, S#state.ets]),
     Line.
 
@@ -254,7 +254,7 @@ force_del_line(S, Line) ->
 
     ok.
 
-clear_line_player(_, Mid, Line) ->
+clear_line_player(true, Mid, Line) ->
     erlang:spawn
     (
         fun() ->
@@ -264,7 +264,8 @@ clear_line_player(_, Mid, Line) ->
             misc_ets:match_delete(?ETS_CACHE_MAP_NPC_PRIV, Match),
             misc_ets:match_delete(?ETS_CACHE_MAP_PET_PRIV, Match)
         end
-    ).
+    );
+clear_line_player(_, _Mid, _Line) -> skip.
 
 tick_recycle_line_msg(MapId) ->
     case map_creator_interface:can_recycle_no_player(MapId) of

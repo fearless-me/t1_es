@@ -209,7 +209,7 @@ serve_change_map_call_ret(
         #m_player_map{map_id = Mid, line_id = LineId, map_pid = MPid}
     ),
     ?WARN("player ~p enter ~p|map_~p_~p", [Uid, MPid, Mid, LineId]),
-    hook_player:on_change_map(Mid, Mid),
+    hook_player:on_change_map(OldMid, Mid),
     
     player_rw:set_status(?PS_GAME),
     ok;

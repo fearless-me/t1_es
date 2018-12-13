@@ -48,7 +48,7 @@ init_priv(MgrEts, MapID, LineID) ->
     RealLifeTime = ?if_else(Lifetime == 0, ?UINT32_MAX, Lifetime),
     Line = #m_map_line{
         map_id = MapID, line_id = LineID, pid = self(), status = ?MAP_RUNNING,
-        limits = Limit,
+        limits = Limit,  obj_ets = Ets0,
         dead_line = misc_time:milli_seconds() + RealLifeTime
     },
     misc_ets:write(MgrEts, Line),
@@ -130,12 +130,12 @@ player_join_call(S, From, #r_join_map_req{uid = Uid, pid = Pid, group = Group, t
         Obj = object_priv:new_player(Pid, Uid, Group, Pos, vector3:new(0.1, 0, 0.5)),
         send_goto_map_msg(Uid, Pos),
         map_rw:add_object(Obj),
+        X = misc_ets:update_counter(S#m_map_state.mgr_ets, map_rw:line_id(), {#m_map_line.in, 1}),
         map_srv:call_reply(From, ?E_Success),
         ?TRY_CATCH(mod_view:sync_player_join_map(Obj)),
         ?TRY_CATCH(hook_map:on_player_join(Uid), Err1, St1),
-        X = misc_ets:update_counter(S#m_map_state.mgr_ets, map_rw:line_id(), {#m_map_line.in, 1}),
         ?DEBUG("uid ~p, join map ~w, name ~p, map players ~p",
-            [object_priv:get_uid(Obj), self(), misc:registered_name(), X]),
+            [Uid, self(), misc:registered_name(), X]),
         {noreply, S}
     catch _ : Error : ST ->
         ?TRY_CATCH_ONLY(map_rw:del_object(#m_cache_map_object_priv{uid = Uid, type = ?UID_TYPE_PLAYER})),
@@ -214,8 +214,8 @@ tick_1(#m_map_state{status = ?MAP_READY_EXIT, protect_tick = TickMax} = S, _Now)
     ?TRY_CATCH(real_stop_now(PlayerSize)),
     S#m_map_state{protect_tick = TickMax - 1};
 tick_1(S, Now) ->
-    ?TRY_CATCH(tick_msg(), Err1, Stk1),
     ?TRY_CATCH(tick_obj(S, Now), Err2, Stk2),
+    ?TRY_CATCH(tick_msg(), Err1, Stk1),
     S.
 
 tick_obj(S, Now) ->
@@ -237,11 +237,10 @@ tick_obj(S, Now) ->
 tick_player(_S, Now) ->
     maps:fold(
         fun(_, Uid, _) ->
-            tick_player_1(object_priv:find_object_priv(?UID_TYPE_PLAYER, Uid), Uid, Now)
+            catch tick_player_1(object_priv:find_object_priv(?UID_TYPE_PLAYER, Uid), Uid, Now)
         end, 0, map_rw:obj_maps_with_type(?UID_TYPE_PLAYER)).
 
 tick_player_1(undefined, Uid, _Now) ->
-    %% @todo 加入异常处理删除该玩家
     map_rw:del_uid_from_maps(?UID_TYPE_PLAYER, Uid),
     ?ERROR("tick player ~p may be leave map", [Uid]);
 tick_player_1(Obj, _, Now) ->
@@ -253,7 +252,7 @@ tick_player_1(Obj, _, Now) ->
 tick_monster(_S, Now) ->
     maps:fold(
         fun(_, Uid, _) ->
-            tick_monster_1(object_priv:find_object_priv(?UID_TYPE_MON, Uid), Uid, Now)
+            catch tick_monster_1(object_priv:find_object_priv(?UID_TYPE_MON, Uid), Uid, Now)
         end, 0, map_rw:obj_maps_with_type(?UID_TYPE_MON)).
 
 tick_monster_1(undefined, Uid, _Now) ->
@@ -268,7 +267,7 @@ tick_monster_1(Obj, _, Now) ->
 tick_pet(_S, Now) ->
     maps:fold(
         fun(_, Uid, _) ->
-            tick_pet_1(object_priv:find_object_priv(?UID_TYPE_PET, Uid), Uid, Now)
+            catch tick_pet_1(object_priv:find_object_priv(?UID_TYPE_PET, Uid), Uid, Now)
         end, 0, map_rw:obj_maps_with_type(?UID_TYPE_PET)).
 
 tick_pet_1(undefined, Uid, _Now) ->
@@ -290,9 +289,23 @@ tick_update_after(_S, _Now) -> ok.
 %%-------------------------------------------------------------------
 real_stop_now(0) ->
     ?INFO("~p|~p stop now", [self(), misc:registered_name()]),
+    clear_all_obj(),
     ps:send(self(), stop_immediately);
 real_stop_now(_Players) ->
     tick_msg(),
+    ok.
+
+clear_all_obj()->
+    do_clear_all_obj(?UID_TYPE_MON,  ?ETS_CACHE_MAP_MONSTER_PRIV),
+    do_clear_all_obj(?UID_TYPE_NPC,  ?ETS_CACHE_MAP_NPC_PRIV),
+    do_clear_all_obj(?UID_TYPE_PET,  ?ETS_CACHE_MAP_PET_PRIV),
+    ok.
+
+do_clear_all_obj(Type, Ets) ->
+    maps:fold(
+        fun(_, Uid, _) ->
+            misc_ets:delete(Ets, Uid)
+        end, 0, map_rw:obj_maps_with_type(Type)),
     ok.
 
 %%-------------------------------------------------------------------
@@ -311,6 +324,7 @@ kick_all_player(_S) ->
             catch player_interface:kick_to_born_map_(Uid)
         end, 0, map_rw:obj_maps_with_type(?UID_TYPE_PLAYER)),
     ok.
+
 
 %%-------------------------------------------------------------------
 -spec player_start_move(Req :: #r_player_start_move_req{}) -> ok | error.
