@@ -4,7 +4,7 @@
 %% ====================================================================
 %% API functions
 %% ====================================================================
--include("../include/mapCfgPrivate.hrl").
+-include("mapCfgPrivate.hrl").
 -include("../src/pub/config/cfg_map.hrl").
 
 -define(ERROR_OUT(F, A), logout(F, A)).
