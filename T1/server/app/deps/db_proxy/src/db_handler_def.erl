@@ -13,5 +13,5 @@
 -export([handler/4]).
 %% API
 handler(MsgId, Msg, FromPid, PoolId) ->
-    ?ERROR("undeal msg ~w ~w from ~p, pool ~p", [MsgId, Msg, FromPid, PoolId]),
+    ?ERROR("msg ~w ~w from ~p, pool ~p", [MsgId, Msg, FromPid, PoolId]),
     ok.

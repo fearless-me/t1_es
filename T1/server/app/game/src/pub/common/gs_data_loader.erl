@@ -66,4 +66,4 @@ info(load_all_role_info_ack_end) ->
     data_loader:task_over(load_all_role_info),
     ok;
 info(Info) ->
-    ?ERROR("undeal info ~w", [Info]).
+    ?ERROR("info ~w", [Info]).

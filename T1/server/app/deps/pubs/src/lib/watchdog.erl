@@ -155,7 +155,7 @@ do_handle_call(task_all_done, _From, State) ->
 do_handle_call( {task_group_done, Priority}, _From, State) ->
     {reply, i_group_done(State#state.todo, Priority), State};
 do_handle_call(Request, From, State) ->
-    ?ERROR("undeal call ~w from ~w", [Request, From]),
+    ?ERROR("call ~w from ~w", [Request, From]),
     {reply, ok, State}.
 
 %%--------------------------------------------------------------------
@@ -174,7 +174,7 @@ do_handle_info(remove_done, State) ->
         _Ant -> {noreply, State#state{todo = i_remove_done(State#state.todo)}}
     end;
 do_handle_info(Info, State) ->
-    ?ERROR("undeal info ~p", [Info]),
+    ?ERROR("info ~p", [Info]),
     {noreply, State}.
 
 %%--------------------------------------------------------------------
@@ -183,7 +183,7 @@ do_handle_cast(continue, State) ->
 do_handle_cast({continue, Priority}, State) ->
     {noreply, State#state{todo = i_set_group_pause(State#state.todo, Priority, false)}};
 do_handle_cast(Request, State) ->
-    ?ERROR("undeal cast ~w", [Request]),
+    ?ERROR("cast ~w", [Request]),
     {noreply, State}.
 
 %%--------------------------------------------------------------------

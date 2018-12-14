@@ -62,19 +62,19 @@ mod_init(_Args) ->
 do_handle_call({add_pool, PoolRef, Conf}, _From, State) ->
     {reply, start_db_pool(PoolRef, Conf), State};
 do_handle_call(Request, From, State) ->
-    ?ERROR("undeal call ~w from ~w", [Request, From]),
+    ?ERROR("call ~w from ~w", [Request, From]),
     {reply, ok, State}.
 
 %%--------------------------------------------------------------------
 do_handle_info({'EXIT', _Pid, normal}, State) ->
     {noreply, State};
 do_handle_info(Info, State) ->
-    ?ERROR("undeal info ~w", [Info]),
+    ?ERROR("info ~w", [Info]),
     {noreply, State}.
 
 %%--------------------------------------------------------------------
 do_handle_cast(Request, State) ->
-    ?ERROR("undeal cast ~w", [Request]),
+    ?ERROR("cast ~w", [Request]),
     {noreply, State}.
 
 

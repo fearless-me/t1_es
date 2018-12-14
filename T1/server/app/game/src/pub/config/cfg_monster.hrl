@@ -30,6 +30,12 @@
 
 	ai,
 
+	attack_type,
+
+	move_type,
+
+	alerting_area,
+
 	guarding_area,
 
 	guarding_speed,
@@ -76,11 +82,15 @@
 
 	skill_condition_param1,
 
+	skill_target_type1,
+
 	skill_id2,
 
 	skill_condition2,
 
 	skill_condition_param2,
+
+	skill_target_type2,
 
 	skill_id3,
 
@@ -88,17 +98,23 @@
 
 	skill_condition_param3,
 
+	skill_target_type3,
+
 	skill_id4,
 
 	skill_condition4,
 
 	skill_condition_param4,
 
+	skill_target_type4,
+
 	skill_id5,
 
 	skill_condition5,
 
 	skill_condition_param5,
+
+	skill_target_type5,
 
 	born_event,
 

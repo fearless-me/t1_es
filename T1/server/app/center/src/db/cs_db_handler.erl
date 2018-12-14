@@ -23,7 +23,7 @@ handler(serv_start, Sid, FromPid, PoolId) ->
     ps:send(FromPid, serv_start_ack, RunNo),
     ok;
 handler(MsgId, Msg, FromPid, _PoolId) ->
-    ?ERROR("undeal msg ~w ~w from ~p", [MsgId, Msg, FromPid]),
+    ?ERROR("msg ~w ~w from ~p", [MsgId, Msg, FromPid]),
     ok.
 
 

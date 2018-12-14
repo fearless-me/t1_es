@@ -391,7 +391,7 @@ call({make_init_log, Fname}, _From, State) ->
     FdErr = ?if_else(NoErr, undefined, make_err_file_(Fname)),
     {reply, true, State#state{fd = Fd, fd_err = FdErr, fileName = Fname}};
 call(Request, From, State) ->
-    io:format("undeal call ~w from ~w", [Request, From]),
+    io:format("call ~w from ~w", [Request, From]),
     {noreply, ok, State}.
 
 %%--------------------------------------------------------------------

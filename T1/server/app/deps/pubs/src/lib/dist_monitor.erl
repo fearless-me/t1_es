@@ -48,7 +48,7 @@ do_handle_call(all_slaves_stared, _From, #state{wait = Wait } = State) ->
     Ret = ?if_else(Wait =:= [], true, Wait),
     {reply, Ret, State};
 do_handle_call(Request, From, State) ->
-    ?ERROR("undeal call ~w from ~w", [Request, From]),
+    ?ERROR("call ~w from ~w", [Request, From]),
     {reply, ok, State}.
 
 %%--------------------------------------------------------------------
@@ -66,12 +66,12 @@ do_handle_info({nodedown, Node}, State) ->
     ?FATAL("***** distribution  ***slave node ~p is down ***",[Node]),
     {noreply, State};
 do_handle_info(Info, State) ->
-    ?ERROR("undeal info ~w", [Info]),
+    ?ERROR("info ~w", [Info]),
     {noreply, State}.
 
 %%--------------------------------------------------------------------
 do_handle_cast(Request, State) ->
-    ?ERROR("undeal cast ~w", [Request]),
+    ?ERROR("cast ~w", [Request]),
     {noreply, State}.
 
 %%--------------------------------------------------------------------

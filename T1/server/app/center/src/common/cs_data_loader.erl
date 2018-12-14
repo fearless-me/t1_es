@@ -52,4 +52,4 @@ info({serv_start_ack, RunNo}) ->
     end,
     ok;
 info(Info) ->
-    ?ERROR("undeal info ~w", [Info]).
+    ?ERROR("info ~w", [Info]).

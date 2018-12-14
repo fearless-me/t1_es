@@ -61,7 +61,7 @@ do_handle_call({exit_map, Req}, _From, State) ->
 %%    Ret = player_exit_map_exception_call(State, Uid, LineId),
 %%    {reply, Ret, State};
 do_handle_call(Request, From, State) ->
-    ?ERROR("undeal call ~w from ~w", [Request, From]),
+    ?ERROR("call ~w from ~w", [Request, From]),
     {reply, ok, State}.
 
 %%--------------------------------------------------------------------
@@ -77,12 +77,12 @@ do_handle_info(tick_recyle_line_msg, State) ->
     recycle_line(State),
     {noreply, State};
 do_handle_info(Info, State) ->
-    ?ERROR("undeal info ~w", [Info]),
+    ?ERROR("info ~w", [Info]),
     {noreply, State}.
 
 %%--------------------------------------------------------------------
 do_handle_cast(Request, State) ->
-    ?ERROR("undeal cast ~w", [Request]),
+    ?ERROR("cast ~w", [Request]),
     {noreply, State}.
 
 %%--------------------------------------------------------------------

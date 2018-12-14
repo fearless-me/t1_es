@@ -47,7 +47,7 @@ do_handle_call(start_worker, _From, State) ->
     #db_mgr_state{pool = PoolRef, worker_no = WorkerNo, func = Func} = State,
     {reply, init_worker(WorkerNo, PoolRef, Func), State};
 do_handle_call(Request, From, State) ->
-    ?ERROR("undeal call ~w from ~w", [Request, From]),
+    ?ERROR("call ~w from ~w", [Request, From]),
     {reply, error, State}.
 
 %%--------------------------------------------------------------------
@@ -56,12 +56,12 @@ do_handle_info({scheduler, {HashKey, Msg}}, State) ->
     db_son:scheduler_(Worker, Msg),
     {noreply, State};
 do_handle_info(Info, State) ->
-    ?ERROR("undeal info ~w", [Info]),
+    ?ERROR("info ~w", [Info]),
     {noreply, State}.
 
 %%--------------------------------------------------------------------
 do_handle_cast(Request, State) ->
-    ?ERROR("undeal cast ~w", [Request]),
+    ?ERROR("cast ~w", [Request]),
     {noreply, State}.
 
 %%--------------------------------------------------------------------

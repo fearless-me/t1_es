@@ -49,18 +49,30 @@
 
 	%% camp:
 	%% 阵营
-	%% 1.敌对怪物
-	%% 2.中立怪物
-	%% 3.友好怪物
+	%% 1.敌对
+	%% 2.中立
+	%% 3.友好
 
 	%% buff_born:
 	%% 出生BUFF组，怪物创建时附带
 
 	%% ai:
-	%% AI脚本
-	%% 1.攻击仇恨最高目标
-	%% 2.随机攻击目标
-	%% 3.攻击血量最高目标
+	%% 特殊AI（AI脚本，填0为默认AI）
+
+	%% attack_type:
+	%% AI攻击类型
+	%% 1.被动攻击
+	%% 2.主动攻击
+	%% 3.炮塔
+
+	%% move_type:
+	%% 移动类型
+	%% 1.站立不动
+	%% 2.自由巡逻
+	%% 3.指定路径巡逻
+
+	%% alerting_area:
+	%% 警戒范围，主动怪生效，进入该范围将进入战斗
 
 	%% guarding_area:
 	%% 巡逻范围，进入范围加入仇恨列表
@@ -133,6 +145,14 @@
 	%% skill_condition_param1:
 	%% 技能1释放条件参数
 
+	%% skill_target_type1:
+	%% 技能1释放选择目标类型
+	%% 1.仇恨最高
+	%% 2.距离最近
+	%% 3.抽取列表中随机一个
+	%% 4.自己
+	%% 5.随机友方
+
 	%% skill_id2:
 	%% 技能2技能ID
 
@@ -141,6 +161,14 @@
 
 	%% skill_condition_param2:
 	%% 技能2释放条件参数
+
+	%% skill_target_type2:
+	%% 技能2释放选择目标类型
+	%% 1.仇恨最高
+	%% 2.距离最近
+	%% 3.抽取列表中随机一个
+	%% 4.自己
+	%% 5.随机友方
 
 	%% skill_id3:
 	%% 技能3技能ID
@@ -151,6 +179,14 @@
 	%% skill_condition_param3:
 	%% 技能3释放条件参数
 
+	%% skill_target_type3:
+	%% 技能3释放选择目标类型
+	%% 1.仇恨最高
+	%% 2.距离最近
+	%% 3.抽取列表中随机一个
+	%% 4.自己
+	%% 5.随机友方
+
 	%% skill_id4:
 	%% 技能4技能ID
 
@@ -159,6 +195,14 @@
 
 	%% skill_condition_param4:
 	%% 技能4释放条件参数
+
+	%% skill_target_type4:
+	%% 技能4释放选择目标类型
+	%% 1.仇恨最高
+	%% 2.距离最近
+	%% 3.抽取列表中随机一个
+	%% 4.自己
+	%% 5.随机友方
 
 	%% skill_id5:
 	%% 技能5技能ID
@@ -169,6 +213,14 @@
 	%% skill_condition_param5:
 	%% 技能5释放条件参数
 
+	%% skill_target_type5:
+	%% 技能5释放选择目标类型
+	%% 1.仇恨最高
+	%% 2.距离最近
+	%% 3.抽取列表中随机一个
+	%% 4.自己
+	%% 5.随机友方
+
 	%% born_event:
 	%% 出生事件
 
@@ -176,31 +228,34 @@
 	%% 死亡事件
 %%---------------------------------------------------------------------------------
 
-getRow(1) ->
+getRow(11) ->
 	#monsterCfg{
 		desc__ = "",
-		id = 1,
-		name = "@@>1000018<",
-		title = "@@>1000019<",
-		describe = "@@>1000020<",
-		icon = "1",
-		level = 10,
-		type = 3,
+		id = 11,
+		name = "@@>1000021<",
+		title = "@@>1000022<",
+		describe = "@@>1000023<",
+		icon = "",
+		level = 0,
+		type = 1,
 		sub_type = 1,
 		camp = 1,
 		buff_born = [],
-		ai = 1,
-		guarding_area = 30,
-		guarding_speed = 10,
-		pursuing_area = 100,
-		pursuing_speed = 20,
-		recover_takeoff = 2,
+		ai = 0,
+		attack_type = 1,
+		move_type = 1,
+		alerting_area = 0,
+		guarding_area = 0,
+		guarding_speed = 0,
+		pursuing_area = 0,
+		pursuing_speed = 0,
+		recover_takeoff = 1,
 		dropId = 0,
-		model = "1",
-		animation_born = "1",
-		animation_death = "1",
-		sound_death = "1",
-		strength_id = 1,
+		model = "",
+		animation_born = "",
+		animation_death = "",
+		sound_death = "",
+		strength_id = 0,
 		coefficient_hp = 0.0,
 		coefficient_defense = 0.0,
 		coefficient_attack = 0.0,
@@ -213,28 +268,95 @@ getRow(1) ->
 		skill_id1 = 0,
 		skill_condition1 = 0,
 		skill_condition_param1 = [],
+		skill_target_type1 = 1,
 		skill_id2 = 0,
 		skill_condition2 = 0,
 		skill_condition_param2 = [],
+		skill_target_type2 = 1,
 		skill_id3 = 0,
 		skill_condition3 = 0,
 		skill_condition_param3 = [],
+		skill_target_type3 = 1,
 		skill_id4 = 0,
 		skill_condition4 = 0,
 		skill_condition_param4 = [],
+		skill_target_type4 = 1,
 		skill_id5 = 0,
 		skill_condition5 = 0,
 		skill_condition_param5 = [],
+		skill_target_type5 = 1,
+		born_event = [],
+		death_event = []
+	};
+getRow(1) ->
+	#monsterCfg{
+		desc__ = "",
+		id = 1,
+		name = "@@>1000024<",
+		title = "@@>1000025<",
+		describe = "@@>1000026<",
+		icon = "1",
+		level = 10,
+		type = 1,
+		sub_type = 1,
+		camp = 1,
+		buff_born = [],
+		ai = 0,
+		attack_type = 1,
+		move_type = 1,
+		alerting_area = 0,
+		guarding_area = 0,
+		guarding_speed = 0,
+		pursuing_area = 0,
+		pursuing_speed = 0,
+		recover_takeoff = 1,
+		dropId = 0,
+		model = "1",
+		animation_born = "1",
+		animation_death = "1",
+		sound_death = "1",
+		strength_id = 0,
+		coefficient_hp = 0.0,
+		coefficient_defense = 0.0,
+		coefficient_attack = 0.0,
+		coefficient_critical = 0.0,
+		coefficient_hit = 0.0,
+		coefficient_dodge = 0.0,
+		coefficient_quickness = 0.0,
+		skill_attack1 = 0,
+		skill_attack2 = 0,
+		skill_id1 = 0,
+		skill_condition1 = 0,
+		skill_condition_param1 = [],
+		skill_target_type1 = 1,
+		skill_id2 = 0,
+		skill_condition2 = 0,
+		skill_condition_param2 = [],
+		skill_target_type2 = 1,
+		skill_id3 = 0,
+		skill_condition3 = 0,
+		skill_condition_param3 = [],
+		skill_target_type3 = 1,
+		skill_id4 = 0,
+		skill_condition4 = 0,
+		skill_condition_param4 = [],
+		skill_target_type4 = 1,
+		skill_id5 = 0,
+		skill_condition5 = 0,
+		skill_condition_param5 = [],
+		skill_target_type5 = 1,
 		born_event = [],
 		death_event = []
 	};
 getRow(_) -> {}.
 
 getKeyList() -> [
+	{11},
 	{1}
 ].
 
 get1KeyList() -> [
+	11,
 	1
 ].
 

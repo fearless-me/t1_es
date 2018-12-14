@@ -17,5 +17,5 @@ handler(dblog, Msg, _FromPid, PoolId) ->
 handler(dblog_month, {YearMoth, Msg}, _FromPid, PoolId) ->
     common_db_log_handler:log_month(Msg, PoolId, YearMoth);
 handler(MsgId, Msg, FromPid, _PoolId) ->
-    ?ERROR("undeal msg ~w ~w from ~p", [MsgId, Msg, FromPid]),
+    ?ERROR("msg ~w ~w from ~p", [MsgId, Msg, FromPid]),
     ok.

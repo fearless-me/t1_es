@@ -44,7 +44,7 @@ register_ack(MgrPid, {false, Reason}) ->
         [self(), erlang:node(MgrPid), Reason]),
     ok;
 register_ack(MgrPid, Data) ->
-    ?ERROR("[~p]register to centerServer[~p] undeal[~p]",
+    ?ERROR("[~p]register to centerServer[~p] [~p]",
         [self(), erlang:node(MgrPid), Data]),
     ok.
 

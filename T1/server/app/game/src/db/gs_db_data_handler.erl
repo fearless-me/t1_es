@@ -125,7 +125,7 @@ handler(delete_player, Msg, FromPid, PoolId) ->
     ps:send(FromPid, delete_player_ack, #r_delete_player_ack{uid = Uid, res = db:succeed(Res)}),
     ok;
 handler(MsgId, Msg, FromPid, _PoolId) ->
-    ?ERROR("undeal msg ~w ~w from ~p", [MsgId, Msg, FromPid]),
+    ?ERROR("msg ~w ~w from ~p", [MsgId, Msg, FromPid]),
     ok.
 
 

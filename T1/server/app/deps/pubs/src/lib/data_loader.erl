@@ -123,7 +123,7 @@ do_handle_call(task_all_done, _From, State) ->
 do_handle_call( {task_group_done, Priority}, _From, State) ->
     {reply, i_group_done(State#state.todo, Priority), State};
 do_handle_call(Request, From, State) ->
-    ?ERROR("undeal call ~w from ~w", [Request, From]),
+    ?ERROR("call ~w from ~w", [Request, From]),
     {reply, ok, State}.
 
 %%--------------------------------------------------------------------
@@ -145,7 +145,7 @@ do_handle_info(Info, #state{mod = Mod} = State) ->
 
 %%--------------------------------------------------------------------
 do_handle_cast(Request, State) ->
-    ?ERROR("undeal cast ~w", [Request]),
+    ?ERROR("cast ~w", [Request]),
     {noreply, State}.
 
 %%--------------------------------------------------------------------

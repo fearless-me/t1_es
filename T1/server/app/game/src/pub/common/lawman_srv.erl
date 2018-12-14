@@ -74,7 +74,7 @@ mod_init(_Args) ->
 
 %%--------------------------------------------------------------------	
 do_handle_call(Request, From, State) ->
-    ?ERROR("undeal call ~w from ~w", [Request, From]),
+    ?ERROR("call ~w from ~w", [Request, From]),
     {reply, ok, State}.
 
 %%--------------------------------------------------------------------
@@ -82,7 +82,7 @@ do_handle_info({clear_done, Sid}, State) ->
     ?TRY_CATCH_ERROR(i_done_clear(Sid)),
     {noreply, State};
 do_handle_info(Info, State) ->
-    ?ERROR("undeal info ~w", [Info]),
+    ?ERROR("info ~w", [Info]),
     {noreply, State}.
 
 %%--------------------------------------------------------------------
@@ -96,7 +96,7 @@ do_handle_cast({kick_all_player_to_born_map, Reason}, State) ->
     i_kick_all_player_to_born_map(Reason),
     {noreply, State};
 do_handle_cast(Request, State) ->
-    ?ERROR("undeal cast ~w", [Request]),
+    ?ERROR("cast ~w", [Request]),
     {noreply, State}.
 
 %%--------------------------------------------------------------------

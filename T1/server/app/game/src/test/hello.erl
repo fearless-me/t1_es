@@ -61,7 +61,7 @@ init_data_one(X, Map) ->
 
 %%--------------------------------------------------------------------	
 do_handle_call(Request, From, State) ->
-    ?ERROR("undeal call ~w from ~w", [Request, From]),
+    ?ERROR("call ~w from ~w", [Request, From]),
     {reply, ok, State}.
 
 loop_rand(0) -> skip;
@@ -120,12 +120,12 @@ do_handle_info(new, State) ->
     tc(Old, erlang:process_info(self(), memory), ?FUNCTION_NAME),
     {noreply, State};
 do_handle_info(Info, State) ->
-    ?ERROR("undeal info ~w", [Info]),
+    ?ERROR("info ~w", [Info]),
     {noreply, State}.
 
 %%--------------------------------------------------------------------
 do_handle_cast(Request, State) ->
-    ?ERROR("undeal cast ~w", [Request]),
+    ?ERROR("cast ~w", [Request]),
     {noreply, State}.
 
 tc({_, Old}, {_, New}, _FuncName) when Old =:= New->

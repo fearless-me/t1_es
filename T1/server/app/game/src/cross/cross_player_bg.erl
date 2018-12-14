@@ -68,7 +68,7 @@ mod_init([Aid, Uid, Pid]) ->
 
 %%--------------------------------------------------------------------	
 do_handle_call(Request, From, State) ->
-    ?ERROR("undeal call ~w from ~w", [Request, From]),
+    ?ERROR("call ~w from ~w", [Request, From]),
     {reply, ok, State}.
 
 %%--------------------------------------------------------------------
@@ -85,7 +85,7 @@ do_handle_info(?ACK_FLAG, State) ->
     i_ack_check(erlang:get(?ACK_FLAG)),
     {noreply, State};
 do_handle_info(Info, State) ->
-    ?ERROR("undeal info ~w", [Info]),
+    ?ERROR("info ~w", [Info]),
     {noreply, State}.
 
 %%--------------------------------------------------------------------
@@ -99,7 +99,7 @@ do_handle_cast({clear, Reason}, State) ->
     catch i_clear(Reason),
     {stop, normal, State};
 do_handle_cast(Request, State) ->
-    ?ERROR("undeal cast ~w", [Request]),
+    ?ERROR("cast ~w", [Request]),
     {noreply, State}.
 
 %%--------------------------------------------------------------------

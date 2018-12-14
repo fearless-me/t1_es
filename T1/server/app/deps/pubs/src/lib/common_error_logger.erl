@@ -65,7 +65,7 @@ handle_info(trunk_file, #state{fname = Fname} = State) ->
     trunk_at_next_hour(),
     {noreply, State#state{fd = File}};
 handle_info(Info, State) ->
-    ?ERROR("undeal info ~w", [Info]),
+    ?ERROR("info ~w", [Info]),
     {noreply, State}.
 
 

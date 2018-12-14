@@ -51,7 +51,7 @@ handler(account_login, Req, _FromPid, PoolId) ->
     end,
     ok;
 handler(MsgId, Msg, FromPid, _PoolId) ->
-    ?ERROR("undeal msg ~w ~w from ~p", [MsgId, Msg, FromPid]),
+    ?ERROR("msg ~w ~w from ~p", [MsgId, Msg, FromPid]),
     ok.
 
 %%-------------------------------------------------------------------
