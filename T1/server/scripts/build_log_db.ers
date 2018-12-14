@@ -1,0 +1,309 @@
+#!/usr/bin/env escript
+%% coding: latin-1
+
+%%包含头文件
+%%ebin下包含app
+%%emysql.app
+%%localLog.app
+
+%% ====================================================================
+%% API functions
+%% ====================================================================
+-include("../app/common/include/db_log_def.hrl").
+
+-record(rec_db_table,
+{
+    'Name',        %%表名
+    'Comment'        %%表注释
+}).
+
+-record(rec_db_table_field,
+{
+    'Field',        %%表的字段名
+    'Type',            %%字段类型
+    'Key',            %%是否是关键字
+    'Default',        %%字段默认值
+    'Extra',        %%额外信息
+    'Comment'        %%字段注释
+}).
+
+-define(EXPORT_DEFAULT, 1).
+-define(EXPORT_USERDEF, 2).
+
+-define(EXPORT_HRL_FILE, "../app/common/include/db_log_record.hrl").
+-define(EXPORT_SQL_FILE, "../app/common/src/common_db_log_handler.erl").
+-define(HEADER_SEC,
+    "%%% This File Is AUTO GENERATED, Don't Modify it MANUALLY!!!\n"
+    "%%% This File Is AUTO GENERATED, Don't Modify it MANUALLY!!!\n"
+    "%%% This File Is AUTO GENERATED, Don't Modify it MANUALLY!!!\n"
+    "-author(\"Hello World\").\n\n"
+).
+
+-define(SPLIT, "%%-------------------------------------------------------------------\n").
+
+-define(DEFINE_MACRO_S, "-ifndef(DB_TABLE_LOG_RECORD_HRL).\n-define(DB_TABLE_LOG_RECORD_HRL, true).\n").
+-define(DEFINE_MACRO_E, "-endif.\n").
+-define(DB_RECORD_VERSION, os:system_time(seconds)).
+-define(TYPE_RE, [
+    {"int", integer}, {"char", string}, {"(float|double)", float},
+    {"(blob|text)", blob}, {"(datetime|timestamp)", datetime}
+]).
+
+-define(LINE_BR, 9).
+
+main(_) ->
+    os:cmd("chcp 65001"),
+    code:add_path("../app/game/ebin"),
+    color:warn_log(
+        "~n##############生成数据库表结构 erlang代码#####################~n~n"
+        "** 导出代码需要依赖 mysql-otp~n"
+        "** 所以务必确保已经生成 game 项目的代码~n"
+        "** 默认使用: localhost root 1234 t1_log~n"
+        "** 自定义导出为参数为 $Host $User $Password #Database1 ...#DatabaseN~n"
+        "~n##########################################################~n"
+    ),
+
+    color:error_log("~n** 如果没有数据结构变化不要执行此脚本,执行脚本会导致结构版本号变化 **~n~n"),
+    Prompt = color:green(
+        io_lib:format("~-2.w:默认 ~-2.w:自定义,~-2.w:退出 >> ",
+            [?EXPORT_DEFAULT, ?EXPORT_USERDEF, 0]
+        )),
+    InputNoStr = io:get_line(Prompt),
+    [T | _] = string:tokens(string_strip(InputNoStr, "\n"), " "),
+    {IT, _} = string:to_integer(T),
+    dispatchInput2(IT),
+    ok.
+
+dispatchInput2(0) -> ok;
+dispatchInput2(?EXPORT_DEFAULT) ->
+    export_all_database(["localhost", "root", "1234", ["t1_log"]]),
+    main([]);
+dispatchInput2(?EXPORT_USERDEF) ->
+    InputNoStr = io:get_line("$Host $User $Password #Database1 ... :"),
+    case string:tokens(string_strip(InputNoStr, "\n"), " ") of
+        [Host, User, Password, Databases] ->
+            export_all_database([Host, User, Password, Databases]);
+        _ ->
+            color:error_log("输入的格式应该为: $Host $User $Password #Database1 ...#DatabaseN")
+    end,
+    main([]);
+dispatchInput2(_) -> main([]).
+
+
+export_all_database([Host, User, Password, Databases]) ->
+    file:write_file(?EXPORT_HRL_FILE, ""),
+    write_file(?EXPORT_HRL_FILE, "~ts", [?HEADER_SEC]),
+    write_file(?EXPORT_HRL_FILE, ?DEFINE_MACRO_S),
+    write_file(?EXPORT_HRL_FILE, "~n~n-define(DB_RECORD_VERSION, ~p).~n", [?DB_RECORD_VERSION]),
+
+    file:write_file(?EXPORT_SQL_FILE, ""),
+    write_file(?EXPORT_SQL_FILE, "-module(~ts).\n\n",[filename:basename(?EXPORT_SQL_FILE, ".erl")]),
+    write_file(?EXPORT_SQL_FILE, "~ts", [?HEADER_SEC]),
+    write_file(?EXPORT_SQL_FILE, ?SPLIT),
+    write_file(?EXPORT_SQL_FILE, "-include(\"logger.hrl\").\n"),
+    write_file(?EXPORT_SQL_FILE, "-include(\"db_log_record.hrl\").\n\n"),
+    write_file(?EXPORT_SQL_FILE, "-define(DB_QUERY_TIMEOUT, 15 * 1000).\n\n"),
+
+    write_file(?EXPORT_SQL_FILE, ?SPLIT),
+    write_file(?EXPORT_SQL_FILE, "-export([log/2, log_month/3]).\n\n"),
+    write_file(?EXPORT_SQL_FILE, ?SPLIT),
+    write_file(?EXPORT_SQL_FILE, "log(R, PoolId) -> i_log(R, PoolId, unuse).\n"),
+    write_file(?EXPORT_SQL_FILE, "log_month(R, PoolId, YearMonth) -> i_log(R, PoolId, YearMonth).\n\n"),
+    write_file(?EXPORT_SQL_FILE, ?SPLIT),
+
+
+
+
+    lists:foreach(
+        fun(Database) ->
+            export_database(Host, User, Password, Database)
+        end, Databases),
+    write_file(?EXPORT_HRL_FILE, ?DEFINE_MACRO_E),
+    write_file(?EXPORT_SQL_FILE, "i_log(_,_,_)-> skip.\n\n"),
+    write_file(?EXPORT_SQL_FILE,
+        "%%-------------------------------------------------------------------
+check_res(Res, Sql, Params) -> check_res_1(db:succeed(Res), Sql, Res, Params).
+
+check_res_1(true, Sql, _Res, _Params) -> ?DEBUG(\"[success] ~ts\", [Sql]);
+check_res_1(_, Sql, Res, Params) -> ?ERROR(\"ret: ~p, sql: ~ts, params: ~p\", [Res, Sql, Params])."),
+
+ok.
+
+export_database(Host, User, Password, Database) ->
+    color:warn_log("~nexport database ~s...", [Database]),
+    {ok, Pid} = mysql:start_link([{host, Host}, {user, User}, {password, Password}, {database, Database}]),
+    R3 = mysql:query(Pid, "SHOW TABLE STATUS FROM " ++ Database),
+    Ret = db:as_record(R3, rec_db_table, record_info(fields, rec_db_table)),
+    lists:foreach(fun(Rec) -> read_table_fields(Pid, Database, Rec#rec_db_table.'Name') end, Ret),
+    color:warn_log("export database ~s done!~n", [Database]),
+    ok.
+
+read_table_fields(Pid, Database, Tab) ->
+    TabName = safe_binary_to_list(Tab),
+    Ret = mysql:query(Pid, "SHOW FULL COLUMNS FROM " ++ TabName),
+    FieldList1 = db:as_record(Ret, rec_db_table_field, record_info(fields, rec_db_table_field)),
+    FieldList2 = [FieldRecord || FieldRecord <- FieldList1, FieldRecord#rec_db_table_field.'Field' =/= <<"auto_id__">>],
+    color:warn_log("~n ~p~n", [FieldList2]),
+    Str = format_fields(FieldList2),
+    RecordName = "p_" ++  TabName,
+    write_file(?EXPORT_HRL_FILE, "~n%% ~s.~s~s\n",
+        [safe_binary_to_list(Database), TabName, format_fields_desc(FieldList2, "")]),
+    write_file(?EXPORT_HRL_FILE, "-record(~ts,{\n\t~s\n}).\n\n", [RecordName, Str]),
+    color:info_log("\texport table ~s done!", [TabName]),
+    format_field_sql(FieldList2, RecordName, TabName),
+    ok.
+
+format_fields_desc([], Acc) ->
+    Acc;
+format_fields_desc([Field | FieldList], Acc) ->
+    format_fields_desc(FieldList, Acc ++ "\n" ++ format_field_desc(Field)).
+
+format_field_desc(#rec_db_table_field{'Field' = Name, 'Type' = Type, 'Comment' = Comment, 'Extra' = Extra, 'Key' = Key, 'Default' = Default}) ->
+    string:join(
+        [
+            "%%",
+            safe_binary_to_list(Name),
+            safe_binary_to_list(Type),
+            safe_binary_to_list(Extra),
+            "DEFAULT", safe_binary_to_list(Default),
+            "COMMENT", safe_binary_to_list(Comment),
+            "KEY", safe_binary_to_list(Key)
+        ], " ").
+
+format_field_sql(FieldList, Record, TabName) ->
+    NameList1 =
+        [safe_binary_to_list(Rec#rec_db_table_field.'Field') || Rec <- FieldList],
+    Field = string:join(NameList1, ","),
+    Value = string:join(lists:duplicate(erlang:length(FieldList), "?"), ","),
+    Param = ["R#"++Record++"."++Name || Name <- NameList1],
+
+    {_, Param2} = lists:foldl(
+        fun
+            (Name, {N, Acc}) when N rem 3 =:= 0 ->
+                {N + 1, ["\n\t" ++ Name] ++ Acc};
+            (Name, {N, Acc}) ->
+                {N + 1, [Name] ++ Acc}
+        end, {1, []}, Param),
+    FmtParam = string:join(lists:reverse(Param2), ", "),
+    case is_month_table(TabName) of
+        true ->
+            write_file(?EXPORT_SQL_FILE, "i_log(#~ts{} = R, PoolId, YearMonth)->\n",[Record]),
+            write_file(?EXPORT_SQL_FILE, "\tSql = io_lib:format(\"insert into ~ts_~~p(~ts)\n\tvalues(~ts)\",[YearMonth]),\n",[TabName, Field, Value]);
+        _Any ->
+            write_file(?EXPORT_SQL_FILE, "i_log(#~ts{} = R, PoolId, _)->\n",[Record]),
+            write_file(?EXPORT_SQL_FILE, "\tSql = \"insert into ~ts(~ts)\n\tvalues(~ts)\",~n",[TabName, Field, Value])
+    end,
+
+    write_file(?EXPORT_SQL_FILE, "\tParams = [~ts],~n",[FmtParam]),
+    write_file(?EXPORT_SQL_FILE, "
+    Res = db:query(PoolId, Sql, Params, ?DB_QUERY_TIMEOUT),
+    check_res(Res, Sql, Params),
+    ok;\n"),      
+
+    ok.
+
+
+is_month_table(TabName) ->
+    case lists:member(TabName, ?MON_TABLE) of
+        true -> true;
+        _Any -> lists:member(list_to_atom(TabName), ?MON_TABLE)
+    end.
+
+format_fields(FieldList) ->
+    NameList1 =
+        [
+            {
+                safe_binary_to_list(Rec#rec_db_table_field.'Field'),
+                Rec#rec_db_table_field.'Type',
+                Rec#rec_db_table_field.'Default',
+                Rec#rec_db_table_field.'Key'
+            } || Rec <- FieldList
+        ],
+    {_, NameList2} = lists:foldl(
+        fun
+            ({Name, Type, Default, IsKey}, {N, Acc}) when N rem ?LINE_BR =:= 0 ->
+                {N + 1, ["\n\t" ++ Name ++ "=" ++ field_default(Type, Default, IsKey)] ++ Acc};
+            ({Name, Type, Default, IsKey}, {N, Acc}) ->
+                {N + 1, [Name ++ "=" ++ field_default(Type, Default, IsKey)] ++ Acc}
+        end, {1, []}, NameList1),
+    string:join(lists:reverse(NameList2), ",").
+field_default(_FieldType, _Default, <<"PRI">>) ->
+    "undefined";
+field_default(FieldType, Default, _) ->
+    Type = field_type(FieldType),
+    get_field_default(Type, Default).
+
+get_field_default(integer, Default) ->
+    case catch binary_to_integer(Default) of
+        {'EXIT', _} -> "0";
+        _Value -> safe_binary_to_list(Default)
+    end;
+get_field_default(float, Default) ->
+    case catch binary_to_float(Default) of
+        {'EXIT', _} -> "0.0";
+        _Value -> safe_binary_to_list(Default)
+    end;
+get_field_default(string, Default) ->
+    case catch binary_to_list(Default) of
+        {'EXIT', _} -> "\"\"";
+        _Value -> safe_binary_to_list(Default)
+    end;
+get_field_default(blob, Default) ->
+    io_lib:format(" ~p", [safe_binary(Default)]);
+get_field_default(datetime, Default) ->
+    case catch binary_to_list(Default) of
+        {'EXIT', _} -> "\"1970-01-01 00:00:00\"";
+        "\"\"" -> "\"1970-01-01 00:00:00\"";
+        Value ->
+            case string:str(Value, "timestamp") of
+                0 -> safe_binary_to_list(Default);
+                _ -> "\"1970-01-01 00:00:00\""
+            end
+    end;
+get_field_default(_, _) ->
+    "".
+
+field_type(Type) ->
+    List = binary_to_list(Type),
+    get_field_type(List, ?TYPE_RE).
+
+get_field_type(_FieldType, []) ->
+    unknown;
+get_field_type(FieldType, [{Re, Type} | TypeRe]) ->
+    case re:run(FieldType, Re) of
+        {match, _} -> Type;
+        _ -> get_field_type(FieldType, TypeRe)
+    end.
+
+
+safe_binary(null) -> <<>>;
+safe_binary(Bin) -> Bin.
+
+safe_binary_to_list(null) ->
+    "\"\"";
+safe_binary_to_list(<<>>) ->
+    "\"\"";
+safe_binary_to_list(Bin) when is_binary(Bin) ->
+    binary_to_list(Bin);
+safe_binary_to_list(List) when is_list(List) ->
+    List;
+safe_binary_to_list(Other) ->
+    io_lib:format("~w", [Other]).
+
+
+
+string_strip(Str, []) ->
+    Str;
+string_strip(Str, [CH | L]) ->
+    string_strip(string:strip(Str, both, CH), L).
+
+%%-------------------------------------------------------------------
+write_file(FileName, Fmt) ->
+    file:write_file(FileName, Fmt, [append]).
+%%-------------------------------------------------------------------
+write_file(FileName, Fmt, Args) ->
+%%  color:info_log(Fmt, Args),
+    file:write_file(FileName, io_lib:format(Fmt, Args), [append]).
+
+
+

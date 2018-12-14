@@ -8,6 +8,7 @@
 %%%-------------------------------------------------------------------
 -module(mysql_pool_test).
 -author("mawenhong").
+-include("db_log_record.hrl").
 
 %% API
 -export([
@@ -16,6 +17,15 @@
 ]).
 
 -export([test/0]).
+-export([test_log/0]).
+
+test_log()->
+    Rec = #p_log_money{
+        aid=111111,uid=2222222,sid=1,name="test_log",level=1,camp=0,race=1,career=1,
+        head=1,map_id=1,line=0
+    },
+    gs_db_interface:action_log_(1111111, Rec),
+    ok.
 
 start_alone() ->
     application:ensure_all_started(mysql_poolboy),

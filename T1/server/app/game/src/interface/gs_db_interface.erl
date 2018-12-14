@@ -30,8 +30,11 @@
     action_account_/3, action_account_/4,
 %%    action_account_all_/2, action_account_all_/3,
 %% 公共库
-    action_public_/3, action_public_/4
+    action_public_/3, action_public_/4,
 %%    action_public_all_/2, action_public_all_/3
+
+%% 日志库
+    action_log_/2, action_log_month_/3
 ]).
 
 %%-------------------------------------------------------------------
@@ -140,3 +143,17 @@ action_public_(HashKey, MsgId, Msg, FromPid) ->
 %%    erlang:length(Members).
 %%-------------------------------------------------------------------
 
+
+%%-------------------------------------------------------------------
+%% 日志库
+-spec action_log_(HashKey :: integer(), Msg :: any()) -> ok.
+action_log_(HashKey, Msg) ->
+    {Year,Month,_} = erlang:date(),
+    Mgr = db_proxy:checkout_pool(?LOG_DB_POOL_NAME),
+    db_mgr:scheduler_(Mgr, HashKey, {dblog_month, {Year * 100 + Month, Msg}, self()}).
+
+-spec action_log_month_(HashKey :: integer(), Msg :: any(), FromPid :: pid()) -> ok.
+action_log_month_(HashKey, Msg, FromPid) ->
+    {Year,Month,_} = erlang:date(),
+    Mgr = db_proxy:checkout_pool(?LOG_DB_POOL_NAME),
+    db_mgr:scheduler_(Mgr, HashKey, {dblog_month, {Year * 100 + Month, Msg}, FromPid}).

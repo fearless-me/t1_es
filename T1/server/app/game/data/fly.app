@@ -31,7 +31,6 @@
 							"../../deps/gen_rpc/include",
 							"../../deps/gen_rpc/include",
 							"../../common/include"
-							"../../common/include"
 						]
 					},
 					{opts,

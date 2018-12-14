@@ -42,6 +42,8 @@
 -define(OP_EXPORT_DBSTRUCT, 915).
 -define(OP_BAK_DBSTRUCT, 916).
 
+-define(OP_EXPORT_LOG_DBSTRUCT, 917).
+-define(OP_BAK_LOG_DBSTRUCT, 918).
 
 
 -define(OP_TCP, 991).
@@ -97,8 +99,11 @@ show_cmd(?DEV_MODE) ->
             "\t~-10.w生成代码_*_rw(根据rec_rw.hrl)~n"
             "\t~-10.w生成代码_error_code.hrl~n"
             "\t~-10.w生成代码_common_logdb_def.hrl~n"
+			" #~n"
             "\t~-10.w生成代码_db_record.hrl~n"
-            "\t~-10.w备份数据库表结构~n"
+            "\t~-10.w备份[游戏]数据库表结构~n"
+			"\t~-10.w生成代码_db_log_record.hrl~n"
+            "\t~-10.w备份[日志]数据库表结构~n"
             " #~n"
             
     		"\t~-10.wtcp测试~n"
@@ -119,7 +124,8 @@ show_cmd(?DEV_MODE) ->
 				
 				?OP_EDIT_NETMSG, ?OP_EDIT_ERRORCODE,  ?OP_EDIT_LOGDEFINE,
 
-                ?OP_GEN_NETMSG, ?OP_GEN_RW_CODE, ?OP_GEN_ERRORCODE, ?OP_GEN_LOGDEFINE, ?OP_EXPORT_DBSTRUCT, ?OP_BAK_DBSTRUCT,
+                ?OP_GEN_NETMSG, ?OP_GEN_RW_CODE, ?OP_GEN_ERRORCODE, ?OP_GEN_LOGDEFINE, 
+				?OP_EXPORT_DBSTRUCT, ?OP_BAK_DBSTRUCT, ?OP_EXPORT_LOG_DBSTRUCT, ?OP_BAK_LOG_DBSTRUCT,
 
                 ?OP_TCP, ?OP_DBG, ?OP_SET_TERMINAL_COLOR_BELOW_WIN10, ?OP_SET_TERMINAL_COLOR, ?OP_SET_WINDOW_RSH,
                 ?OP_EXIT
@@ -217,6 +223,10 @@ dispatchInput2(?OP_EXPORT_DBSTRUCT) ->
     erlang:spawn_monitor(fun() -> os:cmd("start subcall.bat escript.exe build_db.ers") end);
 dispatchInput2(?OP_BAK_DBSTRUCT) ->
     erlang:spawn_monitor(fun() -> os:cmd("start bak_db.bat") end);
+dispatchInput2(?OP_EXPORT_LOG_DBSTRUCT) ->
+    erlang:spawn_monitor(fun() -> os:cmd("start subcall.bat escript.exe build_log_db.ers") end);
+dispatchInput2(?OP_BAK_DBSTRUCT) ->
+    erlang:spawn_monitor(fun() -> os:cmd("start bak_log_db.bat") end);
 
 %% 
 dispatchInput2(?OP_EDIT_NETMSG) ->
