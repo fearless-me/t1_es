@@ -2,7 +2,7 @@
 -ifndef(netmsg).
 -define(netmsg,1).
 
--define(ProtoVersion,659).
+-define(ProtoVersion,660).
 
 -record(pk_BattleProp,{
 	%% UInt32 属性ID
@@ -59,6 +59,18 @@
 	listBP4 = [],
 	%% BattleProp 最终属性
 	listBPFinal = []
+}).
+
+%% 
+%% // 死亡
+-define(GS2U_Dead,24104).
+-record(pk_GS2U_Dead,{
+	%% UInt64角色ID
+	uid = 0,
+	%% UInt64
+	killer_uid = 0,
+	%% String
+	killer_name = ""
 }).
 
 %% 
@@ -185,6 +197,12 @@
 -record(pk_U2GS_DeleteBuff,{
 	%% UInt32 buff id
 	buff_id = 0
+}).
+
+%% 
+%% // 请求复活
+-define(U2GS_Revive,48171).
+-record(pk_U2GS_Revive,{
 }).
 
 %% 
@@ -412,21 +430,6 @@
 }).
 
 %% 
-%% // 玩家外观信息
--define(GS2U_LookInfoPlayer,18166).
--record(pk_GS2U_LookInfoPlayer,{
-	%% LookInfoPlayer
-	player_list = []
-}).
-
-%% 
--define(GS2U_MonsterList,32656).
--record(pk_GS2U_MonsterList,{
-	%% LookInfoMonster 视野范围内怪物列表
-	monster_list = []
-}).
-
-%% 
 %% // 测试用
 -define(GS2U_PlayerInitBase,32262).
 -record(pk_GS2U_PlayerInitBase,{
@@ -562,66 +565,6 @@
 	speed = 0.0
 }).
 
--record(pk_LookInfoMonster,{
-	%% UInt64
-	uid = 0,
-	%% UInt32 怪物 ID	
-	did = 0,
-	%% Single 怪物坐标
-	x = 0.0,
-	%% Single
-	y = 0.0,
-	%% Single旋转坐标W
-	rotW = 0.0,
-	%% Single 怪物移动的目标点X
-	targetX = 0.0,
-	%% Single 怪物移动的目标点Y
-	targetY = 0.0,
-	%% Single 怪物移动速度
-	move_speed = 0.0,
-	%% UInt32 当前血量百分比
-	hp_per = 0,
-	%% Int32 阵营
-	camp = 0,
-	%% UInt64 归属
-	owner = 0,
-	%% UInt64 怪物所属分组ID
-	groupID = 0,
-	%% UInt64 怪物所属军团ID
-	guildID = 0,
-	%% String 名字
-	name = "",
-	%% UInt32怪物等级
-	level = 0
-}).
-
--record(pk_LookInfoPlayer,{
-	%% UInt64角色ID
-	uid = 0,
-	%% String名字
-	name = "",
-	%% Single坐标X
-	x = 0.0,
-	%% Single坐标Y
-	y = 0.0,
-	%% Int32 种族
-	race = 0,
-	%% UInt32职业
-	career = 0,
-	%% Int32 性别
-	sex = 0,
-	%% Int32阵营
-	camp = 0,
-	%% Int32头
-	head = 0,
-	%% Single移动速度
-	move_speed = 0.0,
-	%% Int32当前等级	
-	level = 0,
-	%% UInt32当前血量百分比
-	hp_per = 0
-}).
-
 -record(pk_SkillInfo,{
 	%% UInt32
 	skill_id = 0,
@@ -643,6 +586,14 @@
 	x = 0.0,
 	%% Single
 	y = 0.0
+}).
+
+%% 
+%% // 改变移动速度
+-define(U2GS_ChangeSpeed,15377).
+-record(pk_U2GS_ChangeSpeed,{
+	%% Single移动速度
+	speed = 0.0
 }).
 
 %% 

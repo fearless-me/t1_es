@@ -197,6 +197,10 @@ add_object(#m_cache_map_object_priv{type = ?UID_TYPE_PLAYER, uid = Uid} = Obj) -
     misc_ets:write(?ETS_CACHE_MAP_PLAYER_PRIV, Obj),
     map_rw:add_uid_to_maps(?UID_TYPE_PLAYER, Uid),
     ok;
+add_object(#m_cache_map_object_priv{type = ?UID_TYPE_NPC, uid = Uid} = _Obj) ->
+%%    misc_ets:write(?ETS_CACHE_MAP_PLAYER_PRIV, Obj),
+    map_rw:add_uid_to_maps(?UID_TYPE_NPC, Uid),
+    ok;
 add_object(_) ->
     ok.
 

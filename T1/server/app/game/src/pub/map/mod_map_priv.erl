@@ -166,14 +166,11 @@ init_monster(#recGameMapCfg{
 }) ->
     lists:foreach(
         fun(MData) ->
-            init_all_monster_1(MData)
+            init_one_monster(MData)
         end, MonsterList).
 
-init_all_monster_1(Mdata) ->
+init_one_monster(Mdata) ->
     Obj = object_priv:new_monster(Mdata),
-    init_all_monster_2(Obj).
-
-init_all_monster_2(Obj) ->
     Uid = object_priv:get_uid(Obj),
     VisIndex = mod_view:pos_to_vis_index(object_rw:get_cur_pos(Uid)),
     map_rw:add_object(Obj),
@@ -187,9 +184,20 @@ init_all_monster_2(Obj) ->
 init_npc(#recGameMapCfg{
     mapNpc = NpcList
 }) ->
-    init_all_npc(NpcList).
+    lists:foreach(
+        fun(MData) ->
+            init_one_npc(MData)
+        end, NpcList).
 
-init_all_npc(_NL) ->
+
+init_one_npc(Mdata) ->
+    Obj = object_priv:new_npc(Mdata),
+    Uid = object_priv:get_uid(Obj),
+    VisIndex = mod_view:pos_to_vis_index(object_rw:get_cur_pos(Uid)),
+    map_rw:add_object(Obj),
+    mod_view:add_obj_to_vis_tile(Obj, VisIndex),
+    ?DEBUG("map_~p_~p create npc ~p, uid ~p, visIndex ~p",
+        [map_rw:map_id(), map_rw:line_id(), object_priv:get_data_id(Obj), Uid, VisIndex]),
     ok.
 
 %%-------------------------------------------------------------------

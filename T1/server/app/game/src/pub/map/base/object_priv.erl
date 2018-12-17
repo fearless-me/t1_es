@@ -23,6 +23,7 @@
     new_player/5, del_player/1,
     new_monster/1, del_monster/1,
     new_static/3, del_static/1,
+    new_npc/1,
     
     get_uid/1, get_pid/1,
     get_data_id/1, get_owner/1, get_type/1,
@@ -121,6 +122,28 @@ new_monster(#recMapObjData{
 del_monster(Uid) ->
     del_all_rw(Uid),
     ok.
+
+%%-------------------------------------------------------------------
+new_npc(#recMapObjData{
+    id = Mid,
+    mapX = X,
+    mapY = Y,
+    name = Name,
+    groupID = Group
+}) ->
+
+    Uid = uid_gen:npc_uid(),
+    Pos = vector3:new(X, 0.0, Y),
+    init_rw_default(Uid),
+
+    Req = #r_create_map_object_req{
+        type = ?UID_TYPE_NPC,
+        pid = self(), uid = Uid, data_id = Mid,
+        owner = 0, group = Group,
+        pos = Pos, face = vector3:new(0.1, 0, 0.5),
+        level = 1, name = erlang:binary_to_list(Name), sex = 0, race = 1, career = 1
+    },
+    new(Req).
 %%-------------------------------------------------------------------
 new(
     #r_create_map_object_req{

@@ -354,6 +354,96 @@ getRow(1000027) ->
 		notice_type = 0,
 		content = "白策测试"
 	};
+getRow(1000028) ->
+	#string_packageCfg{
+		desc__ = "元素冲击·快",
+		id = 1000028,
+		enum_string_id = "",
+		type = 4,
+		notice_type = 0,
+		content = "元素冲击·快"
+	};
+getRow(1000029) ->
+	#string_packageCfg{
+		desc__ = "元素冲击·慢",
+		id = 1000029,
+		enum_string_id = "",
+		type = 4,
+		notice_type = 0,
+		content = "元素冲击·慢"
+	};
+getRow(1000030) ->
+	#string_packageCfg{
+		desc__ = "元素之锤",
+		id = 1000030,
+		enum_string_id = "",
+		type = 4,
+		notice_type = 0,
+		content = "元素之锤"
+	};
+getRow(1000031) ->
+	#string_packageCfg{
+		desc__ = "元素光束",
+		id = 1000031,
+		enum_string_id = "",
+		type = 4,
+		notice_type = 0,
+		content = "元素光束"
+	};
+getRow(1000034) ->
+	#string_packageCfg{
+		desc__ = "1",
+		id = 1000034,
+		enum_string_id = "",
+		type = 4,
+		notice_type = 0,
+		content = "1"
+	};
+getRow(1000033) ->
+	#string_packageCfg{
+		desc__ = "测试",
+		id = 1000033,
+		enum_string_id = "",
+		type = 4,
+		notice_type = 0,
+		content = "测试"
+	};
+getRow(1000032) ->
+	#string_packageCfg{
+		desc__ = "测试NPC",
+		id = 1000032,
+		enum_string_id = "",
+		type = 4,
+		notice_type = 0,
+		content = "测试NPC"
+	};
+getRow(1000037) ->
+	#string_packageCfg{
+		desc__ = "开国功臣！",
+		id = 1000037,
+		enum_string_id = "",
+		type = 4,
+		notice_type = 0,
+		content = "开国功臣！"
+	};
+getRow(1000036) ->
+	#string_packageCfg{
+		desc__ = "测试",
+		id = 1000036,
+		enum_string_id = "",
+		type = 4,
+		notice_type = 0,
+		content = "测试"
+	};
+getRow(1000035) ->
+	#string_packageCfg{
+		desc__ = "木桩",
+		id = 1000035,
+		enum_string_id = "",
+		type = 4,
+		notice_type = 0,
+		content = "木桩"
+	};
 getRow(_) -> {}.
 
 getKeyList() -> [
@@ -391,7 +481,17 @@ getKeyList() -> [
 	{1000026},
 	{1000025},
 	{1000024},
-	{1000027}
+	{1000027},
+	{1000028},
+	{1000029},
+	{1000030},
+	{1000031},
+	{1000034},
+	{1000033},
+	{1000032},
+	{1000037},
+	{1000036},
+	{1000035}
 ].
 
 get1KeyList() -> [
@@ -429,6 +529,16 @@ get1KeyList() -> [
 	1000026,
 	1000025,
 	1000024,
-	1000027
+	1000027,
+	1000028,
+	1000029,
+	1000030,
+	1000031,
+	1000034,
+	1000033,
+	1000032,
+	1000037,
+	1000036,
+	1000035
 ].
 

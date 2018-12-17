@@ -7,6 +7,7 @@
 
 getMod(cfg_string_package) -> cfg_string_package_chs;
 getMod(cfg_skill) -> cfg_skill_chs;
+getMod(cfg_npc) -> cfg_npc_chs;
 getMod(cfg_monster) -> cfg_monster_chs;
 getMod(cfg_map) -> cfg_map_chs;
 getMod(cfg_item) -> cfg_item_chs;

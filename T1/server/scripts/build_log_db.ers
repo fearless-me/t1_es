@@ -163,22 +163,34 @@ export_database(Host, User, Password, Database) ->
     {ok, Pid} = mysql:start_link([{host, Host}, {user, User}, {password, Password}, {database, Database}]),
     R3 = mysql:query(Pid, "SHOW TABLE STATUS FROM " ++ Database),
     Ret = db:as_record(R3, rec_db_table, record_info(fields, rec_db_table)),
-    lists:foreach(fun(Rec) -> read_table_fields(Pid, Database, Rec#rec_db_table.'Name') end, Ret),
+    lists:foreach(
+        fun(Rec) ->
+            TableName = safe_binary_to_list(Rec#rec_db_table.'Name'),
+            case is_month_table_split(TableName) of
+                true ->
+                    color:warn_log("\t[ skip ]~ts", [TableName]);
+                _Any ->
+                    read_table_fields(Pid, Database, Rec#rec_db_table.'Name')
+            end
+        end, Ret),
+
     color:warn_log("export database ~s done!~n", [Database]),
+
     ok.
+
 
 read_table_fields(Pid, Database, Tab) ->
     TabName = safe_binary_to_list(Tab),
     Ret = mysql:query(Pid, "SHOW FULL COLUMNS FROM " ++ TabName),
     FieldList1 = db:as_record(Ret, rec_db_table_field, record_info(fields, rec_db_table_field)),
     FieldList2 = [FieldRecord || FieldRecord <- FieldList1, FieldRecord#rec_db_table_field.'Field' =/= <<"auto_id__">>],
-    color:warn_log("~n ~p~n", [FieldList2]),
+%%    color:warn_log("~n ~p~n", [FieldList2]),
     Str = format_fields(FieldList2),
-    RecordName = "p_" ++  TabName,
+    RecordName = "p_" ++ TabName,
     write_file(?EXPORT_HRL_FILE, "~n%% ~s.~s~s\n",
         [safe_binary_to_list(Database), TabName, format_fields_desc(FieldList2, "")]),
     write_file(?EXPORT_HRL_FILE, "-record(~ts,{\n\t~s\n}).\n\n", [RecordName, Str]),
-    color:info_log("\texport table ~s done!", [TabName]),
+    color:info_log("\t[ done ]~s!", [TabName]),
     format_field_sql(FieldList2, RecordName, TabName),
     ok.
 
@@ -204,7 +216,7 @@ format_field_sql(FieldList, Record, TabName) ->
         [safe_binary_to_list(Rec#rec_db_table_field.'Field') || Rec <- FieldList],
     Field = string:join(NameList1, ","),
     Value = string:join(lists:duplicate(erlang:length(FieldList), "?"), ","),
-    Param = ["R#"++Record++"."++Name || Name <- NameList1],
+    Param = ["R#" ++ Record ++ "." ++ Name || Name <- NameList1],
 
     {_, Param2} = lists:foldl(
         fun
@@ -216,18 +228,18 @@ format_field_sql(FieldList, Record, TabName) ->
     FmtParam = string:join(lists:reverse(Param2), ", "),
     case is_month_table(TabName) of
         true ->
-            write_file(?EXPORT_SQL_FILE, "i_log(#~ts{} = R, PoolId, YearMonth)->\n",[Record]),
-            write_file(?EXPORT_SQL_FILE, "\tSql = io_lib:format(\"insert into ~ts_~~p(~ts)\n\tvalues(~ts)\",[YearMonth]),\n",[TabName, Field, Value]);
+            write_file(?EXPORT_SQL_FILE, "i_log(#~ts{} = R, PoolId, YearMonth)->\n", [Record]),
+            write_file(?EXPORT_SQL_FILE, "\tSql = io_lib:format(\"insert into ~ts_~~p(~ts)\n\tvalues(~ts)\",[YearMonth]),\n", [TabName, Field, Value]);
         _Any ->
-            write_file(?EXPORT_SQL_FILE, "i_log(#~ts{} = R, PoolId, _)->\n",[Record]),
-            write_file(?EXPORT_SQL_FILE, "\tSql = \"insert into ~ts(~ts)\n\tvalues(~ts)\",~n",[TabName, Field, Value])
+            write_file(?EXPORT_SQL_FILE, "i_log(#~ts{} = R, PoolId, _)->\n", [Record]),
+            write_file(?EXPORT_SQL_FILE, "\tSql = \"insert into ~ts(~ts)\n\tvalues(~ts)\",~n", [TabName, Field, Value])
     end,
 
-    write_file(?EXPORT_SQL_FILE, "\tParams = [~ts],~n",[FmtParam]),
+    write_file(?EXPORT_SQL_FILE, "\tParams = [~ts],~n", [FmtParam]),
     write_file(?EXPORT_SQL_FILE, "
     Res = db:query(PoolId, Sql, Params, ?DB_QUERY_TIMEOUT),
     check_res(Res, Sql, Params),
-    ok;\n"),      
+    ok;\n"),
 
     ok.
 
@@ -236,6 +248,16 @@ is_month_table(TabName) ->
     case lists:member(TabName, ?MON_TABLE) of
         true -> true;
         _Any -> lists:member(list_to_atom(TabName), ?MON_TABLE)
+    end.
+
+is_month_table_split(CurTab) ->
+    case is_month_table(CurTab) of
+        true -> false;
+        _Any ->
+            TabName = safe_binary_to_list(CurTab),
+            TabList = [safe_binary_to_list(Tab) || Tab <- ?MON_TABLE],
+            CheckRs = [TabX || TabX <- TabList, string:str(TabName, TabX) > 0],
+            CheckRs =/= []
     end.
 
 format_fields(FieldList) ->
@@ -317,7 +339,7 @@ safe_binary_to_list(Bin) when is_binary(Bin) ->
 safe_binary_to_list(List) when is_list(List) ->
     List;
 safe_binary_to_list(Other) ->
-    io_lib:format("~w", [Other]).
+    lists:flatten(io_lib:format("~w", [Other])).
 
 
 

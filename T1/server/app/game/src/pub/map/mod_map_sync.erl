@@ -56,6 +56,19 @@ send_remote_info(_MasterUid, Uid, NetPid) ->
                     _ ->
                         undefined
                 end;
+            ?UID_TYPE_NPC ->
+                case object_rw:get(Uid) of
+                    #m_object_rw{cur_pos = Pos} = Obj ->
+                        #pk_GS2U_RemoteNpc{
+                            uid = Uid,
+                            level = Obj#m_object_rw.level,
+                            did = Obj#m_object_rw.data_id,
+                            cur_x = vector3:x(Pos),
+                            cur_y = vector3:z(Pos)
+                        };
+                    _ ->
+                        undefined
+                end;
             _ ->
                 undefined
         end,

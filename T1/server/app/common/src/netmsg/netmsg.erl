@@ -66,6 +66,18 @@ decode(?GS2U_BattleProps,Bin0) ->
 		},
 	Bin7 };
 
+%GENERATED from file:combat.h => GS2U_Dead
+decode(?GS2U_Dead,Bin0) ->
+	{ V_uid, Bin1 } = read_uint64( Bin0 ),
+	{ V_killer_uid, Bin2 } = read_uint64( Bin1 ),
+	{ V_killer_name, Bin3 } = read_string( Bin2 ),
+	{ #pk_GS2U_Dead {
+		uid = V_uid,
+		killer_uid = V_killer_uid,
+		killer_name = V_killer_name
+		},
+	Bin3 };
+
 %GENERATED from file:combat.h => GS2U_DeleteBuff
 decode(?GS2U_DeleteBuff,Bin0) ->
 	{ V_uid, Bin1 } = read_uint64( Bin0 ),
@@ -193,6 +205,13 @@ decode(?U2GS_DeleteBuff,Bin0) ->
 		buff_id = V_buff_id
 		},
 	Bin1 };
+
+%GENERATED from file:combat.h => U2GS_Revive
+decode(?U2GS_Revive,Bin0) ->
+	{ #pk_U2GS_Revive {
+
+		},
+	Bin0 };
 
 %GENERATED from file:combat.h => U2GS_SkillInterrupt
 decode(?U2GS_SkillInterrupt,Bin0) ->
@@ -383,22 +402,6 @@ decode(?GS2U_KickByServer,Bin0) ->
 		},
 	Bin1 };
 
-%GENERATED from file:player.h => GS2U_LookInfoPlayer
-decode(?GS2U_LookInfoPlayer,Bin0) ->
-	{ V_player_list, Bin1 } = read_array(Bin0, fun(X) -> decode_LookInfoPlayer( X ) end),
-	{ #pk_GS2U_LookInfoPlayer {
-		player_list = V_player_list
-		},
-	Bin1 };
-
-%GENERATED from file:player.h => GS2U_MonsterList
-decode(?GS2U_MonsterList,Bin0) ->
-	{ V_monster_list, Bin1 } = read_array(Bin0, fun(X) -> decode_LookInfoMonster( X ) end),
-	{ #pk_GS2U_MonsterList {
-		monster_list = V_monster_list
-		},
-	Bin1 };
-
 %GENERATED from file:player.h => GS2U_PlayerInitBase
 decode(?GS2U_PlayerInitBase,Bin0) ->
 	{ V_uid, Bin1 } = read_uint64( Bin0 ),
@@ -550,6 +553,14 @@ decode(?U2GS_ChangeMap,Bin0) ->
 		y = V_y
 		},
 	Bin3 };
+
+%GENERATED from file:player.h => U2GS_ChangeSpeed
+decode(?U2GS_ChangeSpeed,Bin0) ->
+	{ V_speed, Bin1 } = read_float( Bin0 ),
+	{ #pk_U2GS_ChangeSpeed {
+		speed = V_speed
+		},
+	Bin1 };
 
 %GENERATED from file:player.h => U2GS_Chat
 decode(?U2GS_Chat,Bin0) ->
@@ -716,76 +727,6 @@ decode_UserPlayerData(Bin0) ->
 		},
 	Bin11 }.
 
-%GENERATED from file:player.h => LookInfoMonster
--spec decode_LookInfoMonster(Bin0) -> { #pk_LookInfoMonster{},LeftBin }
-	when Bin0 :: binary(), LeftBin :: binary().
-decode_LookInfoMonster(Bin0) ->
-	{ V_uid, Bin1 } = read_uint64( Bin0 ),
-	{ V_did, Bin2 } = read_uint32( Bin1 ),
-	{ V_x, Bin3 } = read_float( Bin2 ),
-	{ V_y, Bin4 } = read_float( Bin3 ),
-	{ V_rotW, Bin5 } = read_float( Bin4 ),
-	{ V_targetX, Bin6 } = read_float( Bin5 ),
-	{ V_targetY, Bin7 } = read_float( Bin6 ),
-	{ V_move_speed, Bin8 } = read_float( Bin7 ),
-	{ V_hp_per, Bin9 } = read_uint32( Bin8 ),
-	{ V_camp, Bin10 } = read_int32( Bin9 ),
-	{ V_owner, Bin11 } = read_uint64( Bin10 ),
-	{ V_groupID, Bin12 } = read_uint64( Bin11 ),
-	{ V_guildID, Bin13 } = read_uint64( Bin12 ),
-	{ V_name, Bin14 } = read_string( Bin13 ),
-	{ V_level, Bin15 } = read_uint32( Bin14 ),
-	{ #pk_LookInfoMonster {
-		uid = V_uid,
-		did = V_did,
-		x = V_x,
-		y = V_y,
-		rotW = V_rotW,
-		targetX = V_targetX,
-		targetY = V_targetY,
-		move_speed = V_move_speed,
-		hp_per = V_hp_per,
-		camp = V_camp,
-		owner = V_owner,
-		groupID = V_groupID,
-		guildID = V_guildID,
-		name = V_name,
-		level = V_level
-		},
-	Bin15 }.
-
-%GENERATED from file:player.h => LookInfoPlayer
--spec decode_LookInfoPlayer(Bin0) -> { #pk_LookInfoPlayer{},LeftBin }
-	when Bin0 :: binary(), LeftBin :: binary().
-decode_LookInfoPlayer(Bin0) ->
-	{ V_uid, Bin1 } = read_uint64( Bin0 ),
-	{ V_name, Bin2 } = read_string( Bin1 ),
-	{ V_x, Bin3 } = read_float( Bin2 ),
-	{ V_y, Bin4 } = read_float( Bin3 ),
-	{ V_race, Bin5 } = read_int32( Bin4 ),
-	{ V_career, Bin6 } = read_uint32( Bin5 ),
-	{ V_sex, Bin7 } = read_int32( Bin6 ),
-	{ V_camp, Bin8 } = read_int32( Bin7 ),
-	{ V_head, Bin9 } = read_int32( Bin8 ),
-	{ V_move_speed, Bin10 } = read_float( Bin9 ),
-	{ V_level, Bin11 } = read_int32( Bin10 ),
-	{ V_hp_per, Bin12 } = read_uint32( Bin11 ),
-	{ #pk_LookInfoPlayer {
-		uid = V_uid,
-		name = V_name,
-		x = V_x,
-		y = V_y,
-		race = V_race,
-		career = V_career,
-		sex = V_sex,
-		camp = V_camp,
-		head = V_head,
-		move_speed = V_move_speed,
-		level = V_level,
-		hp_per = V_hp_per
-		},
-	Bin12 }.
-
 %GENERATED from file:player.h => SkillInfo
 -spec decode_SkillInfo(Bin0) -> { #pk_SkillInfo{},LeftBin }
 	when Bin0 :: binary(), LeftBin :: binary().
@@ -830,6 +771,18 @@ encode(#pk_GS2U_BattleProps{} = P) ->
 		Bin_listBP3,
 		Bin_listBP4,
 		Bin_listBPFinal
+	];
+
+%GENERATED from file:combat.h => GS2U_Dead
+encode(#pk_GS2U_Dead{} = P) ->
+	Bin_uid = write_uint64( P#pk_GS2U_Dead.uid ),
+	Bin_killer_uid = write_uint64( P#pk_GS2U_Dead.killer_uid ),
+	Bin_killer_name = write_string( P#pk_GS2U_Dead.killer_name ),
+	[
+		<<?GS2U_Dead:?U16>>,
+		Bin_uid,
+		Bin_killer_uid,
+		Bin_killer_name
 	];
 
 %GENERATED from file:combat.h => GS2U_DeleteBuff
@@ -958,6 +911,13 @@ encode(#pk_U2GS_DeleteBuff{} = P) ->
 	[
 		<<?U2GS_DeleteBuff:?U16>>,
 		Bin_buff_id
+	];
+
+%GENERATED from file:combat.h => U2GS_Revive
+encode(#pk_U2GS_Revive{}) ->
+	[
+		<<?U2GS_Revive:?U16>>
+
 	];
 
 %GENERATED from file:combat.h => U2GS_SkillInterrupt
@@ -1149,22 +1109,6 @@ encode(#pk_GS2U_KickByServer{} = P) ->
 		Bin_reason
 	];
 
-%GENERATED from file:player.h => GS2U_LookInfoPlayer
-encode(#pk_GS2U_LookInfoPlayer{} = P) ->
-	Bin_player_list = write_array(P#pk_GS2U_LookInfoPlayer.player_list, fun(X) -> encode_LookInfoPlayer( X ) end),
-	[
-		<<?GS2U_LookInfoPlayer:?U16>>,
-		Bin_player_list
-	];
-
-%GENERATED from file:player.h => GS2U_MonsterList
-encode(#pk_GS2U_MonsterList{} = P) ->
-	Bin_monster_list = write_array(P#pk_GS2U_MonsterList.monster_list, fun(X) -> encode_LookInfoMonster( X ) end),
-	[
-		<<?GS2U_MonsterList:?U16>>,
-		Bin_monster_list
-	];
-
 %GENERATED from file:player.h => GS2U_PlayerInitBase
 encode(#pk_GS2U_PlayerInitBase{} = P) ->
 	Bin_uid = write_uint64( P#pk_GS2U_PlayerInitBase.uid ),
@@ -1315,6 +1259,14 @@ encode(#pk_U2GS_ChangeMap{} = P) ->
 		Bin_map_id,
 		Bin_x,
 		Bin_y
+	];
+
+%GENERATED from file:player.h => U2GS_ChangeSpeed
+encode(#pk_U2GS_ChangeSpeed{} = P) ->
+	Bin_speed = write_float( P#pk_U2GS_ChangeSpeed.speed ),
+	[
+		<<?U2GS_ChangeSpeed:?U16>>,
+		Bin_speed
 	];
 
 %GENERATED from file:player.h => U2GS_Chat
@@ -1472,70 +1424,6 @@ encode_UserPlayerData( #pk_UserPlayerData{} = P ) ->
 		Bin_oldMapID	
 ].
 
-%GENERATED from file:player.h => LookInfoMonster
-encode_LookInfoMonster( #pk_LookInfoMonster{} = P ) ->
-	Bin_uid = write_uint64( P#pk_LookInfoMonster.uid ),
-	Bin_did = write_uint32( P#pk_LookInfoMonster.did ),
-	Bin_x = write_float( P#pk_LookInfoMonster.x ),
-	Bin_y = write_float( P#pk_LookInfoMonster.y ),
-	Bin_rotW = write_float( P#pk_LookInfoMonster.rotW ),
-	Bin_targetX = write_float( P#pk_LookInfoMonster.targetX ),
-	Bin_targetY = write_float( P#pk_LookInfoMonster.targetY ),
-	Bin_move_speed = write_float( P#pk_LookInfoMonster.move_speed ),
-	Bin_hp_per = write_uint32( P#pk_LookInfoMonster.hp_per ),
-	Bin_camp = write_int32( P#pk_LookInfoMonster.camp ),
-	Bin_owner = write_uint64( P#pk_LookInfoMonster.owner ),
-	Bin_groupID = write_uint64( P#pk_LookInfoMonster.groupID ),
-	Bin_guildID = write_uint64( P#pk_LookInfoMonster.guildID ),
-	Bin_name = write_string( P#pk_LookInfoMonster.name ),
-	Bin_level = write_uint32( P#pk_LookInfoMonster.level ),
-	[
-		Bin_uid,
-		Bin_did,
-		Bin_x,
-		Bin_y,
-		Bin_rotW,
-		Bin_targetX,
-		Bin_targetY,
-		Bin_move_speed,
-		Bin_hp_per,
-		Bin_camp,
-		Bin_owner,
-		Bin_groupID,
-		Bin_guildID,
-		Bin_name,
-		Bin_level	
-].
-
-%GENERATED from file:player.h => LookInfoPlayer
-encode_LookInfoPlayer( #pk_LookInfoPlayer{} = P ) ->
-	Bin_uid = write_uint64( P#pk_LookInfoPlayer.uid ),
-	Bin_name = write_string( P#pk_LookInfoPlayer.name ),
-	Bin_x = write_float( P#pk_LookInfoPlayer.x ),
-	Bin_y = write_float( P#pk_LookInfoPlayer.y ),
-	Bin_race = write_int32( P#pk_LookInfoPlayer.race ),
-	Bin_career = write_uint32( P#pk_LookInfoPlayer.career ),
-	Bin_sex = write_int32( P#pk_LookInfoPlayer.sex ),
-	Bin_camp = write_int32( P#pk_LookInfoPlayer.camp ),
-	Bin_head = write_int32( P#pk_LookInfoPlayer.head ),
-	Bin_move_speed = write_float( P#pk_LookInfoPlayer.move_speed ),
-	Bin_level = write_int32( P#pk_LookInfoPlayer.level ),
-	Bin_hp_per = write_uint32( P#pk_LookInfoPlayer.hp_per ),
-	[
-		Bin_uid,
-		Bin_name,
-		Bin_x,
-		Bin_y,
-		Bin_race,
-		Bin_career,
-		Bin_sex,
-		Bin_camp,
-		Bin_head,
-		Bin_move_speed,
-		Bin_level,
-		Bin_hp_per	
-].
-
 %GENERATED from file:player.h => SkillInfo
 encode_SkillInfo( #pk_SkillInfo{} = P ) ->
 	Bin_skill_id = write_uint32( P#pk_SkillInfo.skill_id ),
@@ -1552,6 +1440,7 @@ encode_SkillInfo( #pk_SkillInfo{} = P ) ->
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 name(?GS2U_AddBuff) -> "GS2U_AddBuff";
 name(?GS2U_BattleProps) -> "GS2U_BattleProps";
+name(?GS2U_Dead) -> "GS2U_Dead";
 name(?GS2U_DeleteBuff) -> "GS2U_DeleteBuff";
 name(?GS2U_DeleteBuffList) -> "GS2U_DeleteBuffList";
 name(?GS2U_HPChange) -> "GS2U_HPChange";
@@ -1562,6 +1451,7 @@ name(?GS2U_UpdateBuff) -> "GS2U_UpdateBuff";
 name(?GS2U_UpdateBuffList) -> "GS2U_UpdateBuffList";
 name(?GS2U_UseSkill) -> "GS2U_UseSkill";
 name(?U2GS_DeleteBuff) -> "U2GS_DeleteBuff";
+name(?U2GS_Revive) -> "U2GS_Revive";
 name(?U2GS_SkillInterrupt) -> "U2GS_SkillInterrupt";
 name(?U2GS_UseSkill) -> "U2GS_UseSkill";
 name(?GS2U_CreatePlayerResult) -> "GS2U_CreatePlayerResult";
@@ -1578,8 +1468,6 @@ name(?GS2U_GetPlayerInitDataEnd) -> "GS2U_GetPlayerInitDataEnd";
 name(?GS2U_GotoNewMap) -> "GS2U_GotoNewMap";
 name(?GS2U_HearBeat) -> "GS2U_HearBeat";
 name(?GS2U_KickByServer) -> "GS2U_KickByServer";
-name(?GS2U_LookInfoPlayer) -> "GS2U_LookInfoPlayer";
-name(?GS2U_MonsterList) -> "GS2U_MonsterList";
 name(?GS2U_PlayerInitBase) -> "GS2U_PlayerInitBase";
 name(?GS2U_RemoteMonster) -> "GS2U_RemoteMonster";
 name(?GS2U_RemoteNpc) -> "GS2U_RemoteNpc";
@@ -1589,6 +1477,7 @@ name(?GS2U_RemoveRemote) -> "GS2U_RemoveRemote";
 name(?GS2U_SyncStand) -> "GS2U_SyncStand";
 name(?GS2U_SyncWalk) -> "GS2U_SyncWalk";
 name(?U2GS_ChangeMap) -> "U2GS_ChangeMap";
+name(?U2GS_ChangeSpeed) -> "U2GS_ChangeSpeed";
 name(?U2GS_Chat) -> "U2GS_Chat";
 name(?U2GS_ExitGame) -> "U2GS_ExitGame";
 name(?U2GS_GetPlayerInitData) -> "U2GS_GetPlayerInitData";
@@ -1605,6 +1494,7 @@ cmd_list()->
 	[
 		?GS2U_AddBuff
 		,?GS2U_BattleProps
+		,?GS2U_Dead
 		,?GS2U_DeleteBuff
 		,?GS2U_DeleteBuffList
 		,?GS2U_HPChange
@@ -1615,6 +1505,7 @@ cmd_list()->
 		,?GS2U_UpdateBuffList
 		,?GS2U_UseSkill
 		,?U2GS_DeleteBuff
+		,?U2GS_Revive
 		,?U2GS_SkillInterrupt
 		,?U2GS_UseSkill
 		,?GS2U_CreatePlayerResult
@@ -1631,8 +1522,6 @@ cmd_list()->
 		,?GS2U_GotoNewMap
 		,?GS2U_HearBeat
 		,?GS2U_KickByServer
-		,?GS2U_LookInfoPlayer
-		,?GS2U_MonsterList
 		,?GS2U_PlayerInitBase
 		,?GS2U_RemoteMonster
 		,?GS2U_RemoteNpc
@@ -1642,6 +1531,7 @@ cmd_list()->
 		,?GS2U_SyncStand
 		,?GS2U_SyncWalk
 		,?U2GS_ChangeMap
+		,?U2GS_ChangeSpeed
 		,?U2GS_Chat
 		,?U2GS_ExitGame
 		,?U2GS_GetPlayerInitData

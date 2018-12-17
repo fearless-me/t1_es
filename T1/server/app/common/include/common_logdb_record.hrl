@@ -5,7 +5,7 @@
 -define(DB_TABLE_LOG_RECORD_HRL, true).
 
 
--define(DB_RECORD_VERSION, 1545039720).
+-define(DB_RECORD_VERSION, 1545041379).
 
 %% t1_log.log_money
 %% aid bigint(20) unsigned "" DEFAULT "" COMMENT "" KEY MUL
