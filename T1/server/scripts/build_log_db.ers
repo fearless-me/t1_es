@@ -9,7 +9,7 @@
 %% ====================================================================
 %% API functions
 %% ====================================================================
--include("../app/common/include/db_log_def.hrl").
+-include("../app/common/include/common_logdb_month_table.hrl").
 
 -record(rec_db_table,
 {
@@ -30,14 +30,15 @@
 -define(EXPORT_DEFAULT, 1).
 -define(EXPORT_USERDEF, 2).
 
--define(EXPORT_HRL_FILE, "../app/common/include/db_log_record.hrl").
+-define(EXPORT_HRL_FILE, "../app/common/include/common_logdb_record.hrl").
 -define(EXPORT_SQL_FILE, "../app/common/src/common_db_log_handler.erl").
 -define(HEADER_SEC,
     "%%% This File Is AUTO GENERATED, Don't Modify it MANUALLY!!!\n"
     "%%% This File Is AUTO GENERATED, Don't Modify it MANUALLY!!!\n"
     "%%% This File Is AUTO GENERATED, Don't Modify it MANUALLY!!!\n"
-    "-author(\"Hello World\").\n\n"
 ).
+
+-define(HEADER_AUTHOR,  "-author(\"Hello World\").\n\n").
 
 -define(SPLIT, "%%-------------------------------------------------------------------\n").
 
@@ -93,26 +94,53 @@ dispatchInput2(_) -> main([]).
 export_all_database([Host, User, Password, Databases]) ->
     file:write_file(?EXPORT_HRL_FILE, ""),
     write_file(?EXPORT_HRL_FILE, "~ts", [?HEADER_SEC]),
+    write_file(?EXPORT_SQL_FILE, "~ts", [?HEADER_AUTHOR]),
     write_file(?EXPORT_HRL_FILE, ?DEFINE_MACRO_S),
     write_file(?EXPORT_HRL_FILE, "~n~n-define(DB_RECORD_VERSION, ~p).~n", [?DB_RECORD_VERSION]),
 
     file:write_file(?EXPORT_SQL_FILE, ""),
-    write_file(?EXPORT_SQL_FILE, "-module(~ts).\n\n",[filename:basename(?EXPORT_SQL_FILE, ".erl")]),
     write_file(?EXPORT_SQL_FILE, "~ts", [?HEADER_SEC]),
+    write_file(?EXPORT_SQL_FILE, "-module(~ts).\n",[filename:basename(?EXPORT_SQL_FILE, ".erl")]),
+    write_file(?EXPORT_SQL_FILE, "~ts", [?HEADER_AUTHOR]),
     write_file(?EXPORT_SQL_FILE, ?SPLIT),
     write_file(?EXPORT_SQL_FILE, "-include(\"logger.hrl\").\n"),
-    write_file(?EXPORT_SQL_FILE, "-include(\"db_log_record.hrl\").\n\n"),
+    write_file(?EXPORT_SQL_FILE, "-include(\"~ts\").\n\n", [filename:basename(?EXPORT_HRL_FILE)]),
+
     write_file(?EXPORT_SQL_FILE, "-define(DB_QUERY_TIMEOUT, 15 * 1000).\n\n"),
 
+    write_file(?EXPORT_SQL_FILE, "~ts", [?HEADER_SEC]),
     write_file(?EXPORT_SQL_FILE, ?SPLIT),
-    write_file(?EXPORT_SQL_FILE, "-export([log/2, log_month/3]).\n\n"),
+    write_file(?EXPORT_SQL_FILE, "-export([log/2, log_month/3]).\n"),
+    write_file(?EXPORT_SQL_FILE, "-export([check/3]).\n\n"),
     write_file(?EXPORT_SQL_FILE, ?SPLIT),
     write_file(?EXPORT_SQL_FILE, "log(R, PoolId) -> i_log(R, PoolId, unuse).\n"),
     write_file(?EXPORT_SQL_FILE, "log_month(R, PoolId, YearMonth) -> i_log(R, PoolId, YearMonth).\n\n"),
     write_file(?EXPORT_SQL_FILE, ?SPLIT),
 
+    write_file(?EXPORT_SQL_FILE,
+"check(PoolId, Table, YearMonthList) ->
+    ResList1 = [i_check(PoolId, Table, YearMonth) || YearMonth <- YearMonthList],
+    ResList2 = [Res || Res <- ResList1, Res =/= true],
+    case ResList2 of
+        [] -> true;
+        _  -> ResList2
+    end.
+"
+    ),
 
-
+    write_file(?EXPORT_SQL_FILE,
+"i_check(PoolId, Table, YearMonth) ->
+    Sql = io_lib:format(\"create table if not exists ~p_~p like ~p\",[Table, YearMonth, Table]),
+    Res = db:query(PoolId, Sql, [], ?DB_QUERY_TIMEOUT),
+    check_res(Res, Sql, []),
+    case db:succeed(Res) of
+        true -> true;
+        _Any -> Res
+    end.
+"
+    ),
+    write_file(?EXPORT_SQL_FILE, ?SPLIT),
+    write_file(?EXPORT_SQL_FILE, "~ts", [?HEADER_SEC]),
 
     lists:foreach(
         fun(Database) ->
@@ -120,6 +148,7 @@ export_all_database([Host, User, Password, Databases]) ->
         end, Databases),
     write_file(?EXPORT_HRL_FILE, ?DEFINE_MACRO_E),
     write_file(?EXPORT_SQL_FILE, "i_log(_,_,_)-> skip.\n\n"),
+    write_file(?EXPORT_SQL_FILE, "~ts", [?HEADER_SEC]),
     write_file(?EXPORT_SQL_FILE,
         "%%-------------------------------------------------------------------
 check_res(Res, Sql, Params) -> check_res_1(db:succeed(Res), Sql, Res, Params).

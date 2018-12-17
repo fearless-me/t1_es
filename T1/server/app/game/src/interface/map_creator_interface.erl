@@ -25,6 +25,7 @@
     born_map_id/0, map_init_pos/1,
     map_line_recover/1
 ]).
+-export([is_block/2, is_block/3]).
 
 -export([status_/1, status/0, check/0]).
 
@@ -146,6 +147,35 @@ map_data(MapID) ->
         undefined -> undefined;
         Mod -> Mod:getRow(MapID)
     end.
+
+is_block(MapID, Pos) ->
+    is_block(MapID, vector3:x(Pos), vector3:z(Pos)).
+
+is_block(MapID, FX, FZ) ->
+    case map_data(MapID) of
+        #recGameMapCfg{colCellNum = ColCellNum, rowCellNum = RowCellNum, cellSize = CellSize, block = BlockBin} ->
+            case CellSize >= 1 of
+                true ->
+                    X = erlang:trunc(FX / CellSize),
+                    Y = erlang:trunc(FZ / CellSize),
+                    if
+                        Y >= RowCellNum orelse Y < 0 ->
+                            true;
+                        X >= ColCellNum orelse X < 0 ->
+                            true;
+                        true ->
+                            Pos = Y * ColCellNum + X,
+                            %阻挡信息中0是阻挡，1是非阻挡
+                            IsBlock = binary:at(BlockBin, Pos),
+                            IsBlock =:= 0
+                    end;
+                _ ->
+                    true
+            end;
+        _ ->
+            true
+    end.
+
 
 %%-------------------------------------------------------------------
 map_init_pos(MapID) ->

@@ -31,8 +31,11 @@
     action_account_/3, action_account_/4,
 %%    action_account_all_/2, action_account_all_/3,
 %% 公共库
-    action_public_/3, action_public_/4
+    action_public_/3, action_public_/4,
 %%    action_public_all_/2, action_public_all_/3
+
+%% 日志库
+    action_log_/2, action_log_month_/3, action_log_check_/2
 ]).
 
 -spec action_data_(HashKey :: integer(), MsgId :: atom(), Msg :: any()) -> ok.
@@ -144,3 +147,24 @@ action_public_(HashKey, MsgId, Msg, FromPid) ->
 %%    erlang:length(Members).
 %%-------------------------------------------------------------------
 
+
+%%-------------------------------------------------------------------
+%% 日志库
+-spec action_log_(HashKey :: integer(), Msg :: any()) -> ok.
+action_log_(HashKey, Msg) ->
+    YearMonth = gs_db_checker:year_month(),
+    Mgr = db_proxy:checkout_pool(?LOG_DB_POOL_NAME),
+    db_mgr:scheduler_(Mgr, HashKey, {dblog_month, {YearMonth, Msg}, self()}).
+
+-spec action_log_month_(HashKey :: integer(), Msg :: any(), FromPid :: pid()) -> ok.
+action_log_month_(HashKey, Msg, FromPid) ->
+    YearMonth = gs_db_checker:year_month(),
+    Mgr = db_proxy:checkout_pool(?LOG_DB_POOL_NAME),
+    db_mgr:scheduler_(Mgr, HashKey, {dblog_month, {YearMonth, Msg}, FromPid}).
+
+
+-spec action_log_check_(HashKey :: integer(), Table :: any()) -> ok.
+action_log_check_(HashKey, Table) ->
+    YearMonthList = misc_time:last_two_month(),
+    Mgr = db_proxy:checkout_pool(?LOG_DB_POOL_NAME),
+    db_mgr:scheduler_(Mgr, HashKey, {dblog_month_check, {misc:to_atom(Table), YearMonthList}, self()}).

@@ -264,7 +264,7 @@ i_set_group_pause(Todos, Priority, Pause) ->
 
 
 i_remove_done(Todos) ->
-    i_remove_groups(Todos, []).
+    lists:reverse(i_remove_groups(Todos, [])).
 
 i_remove_groups([], Acc) ->
     Acc;

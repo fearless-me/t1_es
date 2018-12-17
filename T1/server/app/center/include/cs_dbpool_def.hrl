@@ -15,6 +15,7 @@
 -define(DATA_DB_POOL_NAME, pdb_pool).
 -define(ACCOUNT_DB_POOL_NAME, adb_pool).
 -define(PUBLIC_DB_POOL_NAME, pubdb_pool).
+-define(LOG_DB_POOL_NAME, logdb_pool).
 -define(INIT_DB_POOL_TIMEOUT, 50 * 1000).
 
 -endif.

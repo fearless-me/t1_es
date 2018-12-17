@@ -1,13 +1,11 @@
 %%% This File Is AUTO GENERATED, Don't Modify it MANUALLY!!!
 %%% This File Is AUTO GENERATED, Don't Modify it MANUALLY!!!
 %%% This File Is AUTO GENERATED, Don't Modify it MANUALLY!!!
--author("Hello World").
-
 -ifndef(DB_TABLE_LOG_RECORD_HRL).
 -define(DB_TABLE_LOG_RECORD_HRL, true).
 
 
--define(DB_RECORD_VERSION, 1544776200).
+-define(DB_RECORD_VERSION, 1545039720).
 
 %% t1_log.log_money
 %% aid bigint(20) unsigned "" DEFAULT "" COMMENT "" KEY MUL

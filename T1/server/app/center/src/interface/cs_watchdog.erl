@@ -18,16 +18,17 @@
 
 task_list() ->
     [
-        ?WATCHDOG_TASK_GROUP(1, load_all_data, priority_1()),
-        ?WATCHDOG_TASK_GROUP(2, start_master_slave, priority_2(), true)
+        ?WATCHDOG_TASK_GROUP(1, base_task, base_task()),
+        ?WATCHDOG_TASK_GROUP(2, normal_task, normal_task(), true)
     ].
 
-priority_1() ->
+base_task() ->
     [
         ?WATCHDOG_TASK(fun data_loader:is_all_done/0, "load all data")
     ].
 
-priority_2() ->
+normal_task() ->
     [
+        ?WATCHDOG_TASK(fun db_checker:is_all_done/0, "check all month log table"),
         ?WATCHDOG_TASK(fun dist_monitor:is_all_slaves_stared/0, "wait start all slave nodes")
     ].

@@ -43,7 +43,6 @@ start() ->
 %%                conn => 64, max_conn => 128, worker => 64, func => fun gs_db_log_handler:handler/4
 %%            },
 %%            db_proxy:add_pool(?LOG_DB_POOL_NAME, Conf, ?INIT_DB_POOL_TIMEOUT),
-%%            db_pool_init(Pid, get_log_db_conf, [], ?LOG_DB_POOL_NAME, fun gs_db_log_handler:handler/4),
             ?INFO("init log db pool done"),
             ?INFO("#"),
             ok;

@@ -6,7 +6,7 @@
 %%% @end
 %%% Created : 08. 十一月 2018 15:56
 %%%-------------------------------------------------------------------
--module(lawman_srv).
+-module(netmsg_controller).
 -author("Administrator").
 
 -behaviour(gen_serverw).

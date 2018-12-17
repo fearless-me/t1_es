@@ -62,14 +62,15 @@ do_teleport_call(MapPid, NewPos) ->
 %%-------------------------------------------------------------------
 online_call(Player) ->
     #p_player{
-        uid = Uid, map_id = Mid, x = X, y = Y,
+        uid = Uid, map_id = Mid, line = LineId, x = X, y = Y,
         old_map_id = OldMid, old_line = OldLine, old_x = OX, old_y = OY
     } = Player,
     
     Pos = vector3:new(OX, 0, OY),
     Tar = vector3:new(X, 0, Y),
     Req = #r_join_map_req{
-        uid = Uid, pid = self(), tar_map_id = Mid, tar_pos = Tar
+        uid = Uid, pid = self(),
+        tar_map_id = Mid, tar_line_id = LineId, tar_pos = Tar, force = LineId > 0
     },
     Ack = do_online_call(Mid, Req),
     

@@ -60,7 +60,7 @@ start_master(_SupPid) ->
     start_master_slave('192.168.18.52', center_guild, lists:concat([Args, Sid + 2])),
     start_master_slave('192.168.18.52', center_activity, lists:concat([Args, Sid + 3])),
     
-    watchdog:continue_group(2),
+
     %%/////////////////////////////////////////
     watchdog:wait_group(2),
     ?WARN("try to start distribution mode done #"),

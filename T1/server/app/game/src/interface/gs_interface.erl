@@ -140,16 +140,16 @@ forbid_account(Aid) ->
 
 
 forbid_net_msg(MsgIdOrList) ->
-    catch lawman_srv:forbid_msg(MsgIdOrList).
+    catch netmsg_controller:forbid_msg(MsgIdOrList).
 
 is_net_msg_forbig(MsgId) ->
-    case catch lawman_srv:is_msg_forbid(MsgId) of
+    case catch netmsg_controller:is_msg_forbid(MsgId) of
         {'EXIT', _} -> false;
         Res -> Res
     end.
 
 allow_net_msg(MsgIdOrList) ->
-    catch lawman_srv:allow_msg(MsgIdOrList).
+    catch netmsg_controller:allow_msg(MsgIdOrList).
 
 %%-------------------------------------------------------------------
 fix_pos(_MapId, _Pos) ->

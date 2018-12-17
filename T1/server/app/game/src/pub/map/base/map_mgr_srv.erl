@@ -112,14 +112,13 @@ do_player_join_map_call_1(_Any, S, Req) ->
     i_player_join_map_call(Res, Recover, Req, S).
 
 
--define(MAP_COND(Limit, In, Reserve, Force, Now, DeadLine, Status),
+-define(MAP_COND(In, Now, DeadLine, Status),
     In >= 0,
-    (Limit > In orelse (Force andalso Limit + Reserve > In)),
     DeadLine > Now + ?DEAD_LINE_PROTECT,
     Status =:= ?MAP_RUNNING
 ).
 
-i_select_line(0, S, MapID, Force) ->
+i_select_line(0, S, MapID, _Force) ->
     Now = misc_time:milli_seconds(),
     Recover = map_creator_interface:map_line_recover(MapID),
     MS =
@@ -129,13 +128,12 @@ i_select_line(0, S, MapID, Force) ->
                 (
                     #m_map_line
                     {
-                        limits = Limit, in = In, reserve = Reserve,
+                        limits = Limit, in = In,
                         dead_line = DeadLine, status = Status
                     } = T
-                ) when
-                    ?MAP_COND(Limit, In, Reserve, Force, Now, DeadLine, Status),
-                    Recover =:= ?MAP_LINE_RECOVER_ANY_NEW
-                    -> T
+                ) when ?MAP_COND(In, Now, DeadLine, Status),
+                    Recover =:= ?MAP_LINE_RECOVER_ANY_NEW,
+                    Limit > In -> T
             end
         ),
     case misc_ets:select(S#state.ets, MS, 1) of
@@ -150,11 +148,11 @@ i_select_line(TarLine, S, MapID, Force) ->
             {
                 limits = Limit, in = In, reserve = Reserve,
                 dead_line = DeadLine, status = Status
-            }  = T
-        ] when ?MAP_COND(Limit, In, Reserve, Force, Now, DeadLine, Status) ->
-            T;
-        _ ->
-            i_select_line(0, S, MapID, Force)
+            } = T
+        ] when ?MAP_COND(In, Now, DeadLine, Status),
+            (Limit > In orelse (Force andalso Limit + Reserve > In))
+            -> T;
+        _ -> i_select_line(0, S, MapID, Force)
     end.
 
 

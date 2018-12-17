@@ -33,7 +33,7 @@ start() ->
     {ok, SupPid} = game_sup:start_link(),
     
     try
-        %%
+        %% 基础设施
         misc:fn_wrapper("config init", ?Wrap(gs_econfig:start("game.ini")), stdio),
         misc:fn_wrapper("logger", ?Wrap(loggerS:start( log_file_name())), stdio),
         misc:fn_wrapper("error Logger", ?Wrap(common_error_logger:start(game_sup, game))),
@@ -43,10 +43,10 @@ start() ->
         misc:fn_wrapper("auto compile and load", ?Wrap(fly:start())),
         misc:fn_wrapper("observer_cli", ?Wrap(misc:start_app(observer_cli))),
         
-        %%
+        %% 逻辑基础
+        misc:fn_wrapper("db checker", ?Wrap(misc:start_otp(SupPid, db_checker, worker, [gs_db_checker]))),
         misc:fn_wrapper("cross_player_sup", ?Wrap(misc:start_otp(SupPid, cross_player_sup, supervisor))),
-        misc:fn_wrapper("lawman_srv", ?Wrap(misc:start_otp(SupPid, lawman_srv, worker))),
-        misc:fn_wrapper("watchdog", ?Wrap(misc:start_otp(SupPid, watchdog, worker, [gs_watchdog]))),
+        misc:fn_wrapper("netmsg_controller", ?Wrap(misc:start_otp(SupPid, netmsg_controller, worker))),
         misc:fn_wrapper("gc", ?Wrap(misc:start_otp(SupPid, background_gc, worker))),
         misc:fn_wrapper("monitor/vms/system monitor", ?Wrap(misc:start_otp(SupPid, vms_monitor, worker, [0.5]))),
         misc:fn_wrapper("map root supervisor", ?Wrap(misc:start_otp(SupPid, map_root_sup, supervisor))),
@@ -55,12 +55,21 @@ start() ->
         misc:fn_wrapper("broadcast mod", ?Wrap(misc:start_otp(SupPid, broadcast_srv, worker))),
         misc:fn_wrapper("serv data loader", ?Wrap(misc:start_otp(SupPid, data_loader, worker, [gs_data_loader]))),
         misc:fn_wrapper("all logic process", ?Wrap(misc:start_otp(SupPid, gs_logic_sup, supervisor))),
+            
+        %% 等待所有数据加载完毕
+        misc:fn_wrapper("watchdog", ?Wrap(misc:start_otp(SupPid, watchdog, worker, [gs_watchdog]))),
+        watchdog:wait_group(1),
+
+        %% 等连接中心服
         misc:fn_wrapper("center window process", ?Wrap(misc:start_otp(SupPid, center_srv, worker))),
+        watchdog:continue_group(2),
 
+
+        %% 等待所有任务完成
         watchdog:wait_all(), watchdog:ready(true),
-
         background_gc:run(),
-        
+
+        %% 最后开启网络
         misc:fn_wrapper("server tcp listener", ?Wrap(start_tcp_listener(SupPid))),
         ok
     catch _ : Err : ST ->

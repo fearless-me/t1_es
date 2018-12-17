@@ -8,7 +8,7 @@
 %%%-------------------------------------------------------------------
 -module(mysql_pool_test).
 -author("mawenhong").
--include("db_log_record.hrl").
+-include("common_logdb_record.hrl").
 
 %% API
 -export([

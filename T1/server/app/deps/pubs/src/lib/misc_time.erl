@@ -12,7 +12,7 @@
 -export([micro_seconds/0, milli_seconds/0, utc_seconds/0, tz_seconds/0, localtime_seconds/0]).
 -export([localtime_str/0, localtime_int/0, utc_str/0, milli_seconds_to_str/1, utc_seconds_to_str/1]).
 -export([day_of_the_week/0, day_of_the_week/1, day_of_the_week/3]).
--export([format_datetime/1]).
+-export([format_datetime/1, last_two_month/0]).
 
 
 
@@ -73,3 +73,21 @@ format_datetime({{Y, MO, D}, {H, MU, S}}) ->
     lists:flatten(io_lib:format(?TIME_FMT, [Y, MO, D, H, MU, S]));
 format_datetime(Other) ->
     lists:flatten(io_lib:format("~p",[Other])).
+
+last_two_month()->
+    {Year,Month,_} = erlang:date(),
+    case Month of
+        12 ->
+            [
+                year_month_to_integer(Year, Month),
+                year_month_to_integer(Year+1, 1)
+            ];
+        _ ->
+            [
+                year_month_to_integer(Year, Month),
+                year_month_to_integer(Year, Month + 1)
+            ]
+    end.
+
+year_month_to_integer(Year,Month) ->
+    erlang:trunc(Year * 100 + Month).
