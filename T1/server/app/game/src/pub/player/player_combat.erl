@@ -13,7 +13,7 @@
 -include("gs_cache.hrl").
 -include("gs_common_rec.hrl").
 -include("cfg_skill.hrl").
-
+-include("object.hrl").
 -include("combat.hrl").
 
 %% API
@@ -44,26 +44,9 @@ calc_combat_prop() ->
     %% test begin
     BattleProps = #m_battleProps{
         career = 1, %% fixme prop_interface:?Career_1
-        listBP1 = [
-            #m_bp{id = ?BP_1_STR, add = 10.0},
-            #m_bp{id = ?BP_1_AGI, add = 8.0},
-            #m_bp{id = ?BP_1_INT, add = 10.0},
-            #m_bp{id = ?BP_1_STA, add = 10.0}
-        ],
-        listBP2 = [
-            #m_bp{id = ?BP_2_HP_MAX, add = 50.0},
-            #m_bp{id = ?BP_2_HP_CUR, add = 50.0},
-            #m_bp{id = ?BP_2_MP_MAX, add = 40.0},
-            #m_bp{id = ?BP_2_MP_CUR, add = 40.0},
-            #m_bp{id = ?BP_2_ATK, add = 38.0},
-            #m_bp{id = ?BP_2_DEF, add = 30.0}
-        ],
-        listBP3 = [
-            #m_bp{id = ?BP_3_HIT, add = 36.0},
-            #m_bp{id = ?BP_3_FLEE, add = 16.0},
-            #m_bp{id = ?BP_3_CRI, add = 26.0}
-            #m_bp{id = ?BP_3_FAST, add = 16.0}
-        ]
+        listBP1 = ?LIST_BP1,
+        listBP2 = ?LIST_BP2,
+        listBP3 = ?LIST_BP3
     },
     %% test end
     Uid = player_rw:get_uid(),

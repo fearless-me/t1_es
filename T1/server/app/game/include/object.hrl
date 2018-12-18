@@ -28,6 +28,33 @@
 -define(CAREER_DETAIL(MainCareer, TransferTimes, SubCareerIndex),
     MainCareer * 100 + TransferTimes * 10 + SubCareerIndex).
 
+%% 默认初始属性
+-define(LIST_BP1, [
+    #m_bp{id = ?BP_1_STR, add = 10.0},
+    #m_bp{id = ?BP_1_AGI, add = 8.0},
+    #m_bp{id = ?BP_1_INT, add = 10.0},
+    #m_bp{id = ?BP_1_STA, add = 10.0}
+]).
+
+-define(LIST_BP2, [
+    #m_bp{id = ?BP_2_HP_MAX, add = 50.0},
+    #m_bp{id = ?BP_2_HP_CUR, add = 50.0},
+    #m_bp{id = ?BP_2_MP_MAX, add = 40.0},
+    #m_bp{id = ?BP_2_MP_CUR, add = 40.0},
+    #m_bp{id = ?BP_2_ATK, add = 38.0},
+    #m_bp{id = ?BP_2_DEF, add = 30.0},
+    #m_bp{id = ?BP_2_SPEED, add = 10.0}
+]).
+
+-define(LIST_BP3, [
+    #m_bp{id = ?BP_3_HIT, add = 36.0},
+    #m_bp{id = ?BP_3_FLEE, add = 16.0},
+    #m_bp{id = ?BP_3_CRI, add = 26.0}
+    #m_bp{id = ?BP_3_FAST, add = 16.0}
+]).
+
+
+
 -define(Career_1_2, [
     {?BP_1_STR, [{?BP_2_HP_MAX, 2.0}, {?BP_2_MP_MAX, 1.0}, {?BP_2_ATK, 3.0}, {?BP_2_DEF, 1.0}]},
     {?BP_1_AGI, [{?BP_2_HP_MAX, 0.0}, {?BP_2_MP_MAX, 0.0}, {?BP_2_ATK, 1.0}, {?BP_2_DEF, 0.0}]},

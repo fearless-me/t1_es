@@ -2,7 +2,7 @@
 -ifndef(netmsg).
 -define(netmsg,1).
 
--define(ProtoVersion,660).
+-define(ProtoVersion,661).
 
 -record(pk_BattleProp,{
 	%% UInt32 属性ID
@@ -589,14 +589,6 @@
 }).
 
 %% 
-%% // 改变移动速度
--define(U2GS_ChangeSpeed,15377).
--record(pk_U2GS_ChangeSpeed,{
-	%% Single移动速度
-	speed = 0.0
-}).
-
-%% 
 %% // 聊天消息(客户端发送)
 -define(U2GS_Chat,11258).
 -record(pk_U2GS_Chat,{
@@ -653,16 +645,15 @@
 }).
 
 %% 
+%% // 移动到目标点，包含请求的移动速度
 -define(U2GS_PlayerWalk,56544).
 -record(pk_U2GS_PlayerWalk,{
 	%% Single坐标X
-	src_x = 0.0,
-	%% Single坐标Y
-	src_y = 0.0,
-	%% Single坐标X
 	dst_x = 0.0,
 	%% Single坐标Y
-	dst_y = 0.0
+	dst_y = 0.0,
+	%% Single移动速度
+	speed = 0.0
 }).
 
 %% 

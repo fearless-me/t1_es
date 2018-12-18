@@ -49,9 +49,9 @@ handle(#pk_U2GS_SelPlayerEnterGame{uid = Uid}) ->
 handle(#pk_U2GS_GetPlayerInitData{}) ->
 %%    lib_player_base:send_init_data(),
     ok;
-handle(#pk_U2GS_PlayerWalk{dst_x = DX, dst_y = DY}) ->
+handle(#pk_U2GS_PlayerWalk{dst_x = DX, dst_y = DY, speed = Speed}) ->
     Tar = vector3:new(DX, 0, DY),
-    player_base:start_walk(Tar),
+    player_base:start_walk(Tar, Speed),
     ok;
 handle(#pk_U2GS_PlayerStopWalk{cur_x = X, cur_y = Y}) ->
     Pos = vector3:new(X, 0, Y),
@@ -78,6 +78,8 @@ handle(#pk_U2GS_Chat{content = Content}) ->
         true -> player_gm:on_gm(Content);
         _Any -> skip
     end,
+    ok;
+handle(#pk_U2GS_Revive{}) ->
     ok;
 handle(_Msg) ->
 %%    ?DEBUG("~p", [Msg]),

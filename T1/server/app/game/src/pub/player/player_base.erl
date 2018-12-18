@@ -19,7 +19,7 @@
 %% API
 -export([online/1]).
 -export([send_init_data/0]).
--export([start_walk/1, stop_move/1]).
+-export([start_walk/2, stop_move/1]).
 %%-------------------------------------------------------------------
 online(Player) ->
     #p_player{
@@ -87,11 +87,11 @@ send_base_info() ->
     ok.
 
 %%-------------------------------------------------------------------
-start_walk(Tar) ->
+start_walk(Tar, Speed) ->
     Uid = player_rw:get_uid(),
     case vector3:valid(Tar) of
         true ->
-            Req = #r_player_start_move_req{uid = Uid, tar = Tar},
+            Req = #r_player_start_move_req{uid = Uid, tar = Tar, speed = Speed},
             player_pub:start_move_(Req),
 %%            ?WARN("player start walk at ~p mapid ~p move to ~w", [Uid, MPid, Tar]),
             ok;

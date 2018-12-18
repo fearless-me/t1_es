@@ -27,7 +27,7 @@
 %% 改变属性
 -record(r_player_change_prop_req, {uid, add, multi, add_del, multi_del}).
 %% 开始移动
--record(r_player_start_move_req, {uid = 0, tar}).
+-record(r_player_start_move_req, {uid = 0, tar, speed}).
 %% 强制停下
 -record(r_player_stop_move_req, {uid, pos}).
 %% 退出地图

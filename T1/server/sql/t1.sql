@@ -212,15 +212,24 @@ CREATE TABLE `serv_restart` (
 /*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`127.0.0.1` PROCEDURE `get_serv_start`( IN sid INT)
-BEGIN
-		DECLARE runs INT DEFAULT 0;
-		SELECT run_no INTO runs FROM `serv_restart` WHERE serv_id = sid;
-		IF runs <> 0 THEN 
-			UPDATE `serv_restart` SET `run_no` = runs + 1, latest = UNIX_TIMESTAMP() WHERE serv_id = sid;	
-		ELSE
-			INSERT serv_restart(`serv_id`,`run_no`,`latest`) VALUES(sid,  1, UNIX_TIMESTAMP());
-		END IF;
-		SELECT run_no FROM `serv_restart` WHERE serv_id = sid;
+BEGIN
+
+		DECLARE runs INT DEFAULT 0;
+
+		SELECT run_no INTO runs FROM `serv_restart` WHERE serv_id = sid;
+
+		IF runs <> 0 THEN 
+
+			UPDATE `serv_restart` SET `run_no` = runs + 1, latest = UNIX_TIMESTAMP() WHERE serv_id = sid;	
+
+		ELSE
+
+			INSERT serv_restart(`serv_id`,`run_no`,`latest`) VALUES(sid,  1, UNIX_TIMESTAMP());
+
+		END IF;
+
+		SELECT run_no FROM `serv_restart` WHERE serv_id = sid;
+
 	END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;

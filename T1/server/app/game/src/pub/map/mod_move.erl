@@ -14,13 +14,14 @@
 -include("map_core.hrl").
 -include("rec_rw.hrl").
 -include("movement.hrl").
+-include("battle_prop.hrl").
 -include_lib("stdlib/include/assert.hrl").
 
 %% API
 -export([
     init/3, tick/2,
     stop_move/2, stop_move_force/2,
-    start_player_walk/3, on_obj_pos_change/2, stop_player_move/2,
+    start_player_walk/4, on_obj_pos_change/2, stop_player_move/2,
     start_monster_walk/4, is_can_monster_walk/4
 ]).
 -export([cal_move_msg/1]).
@@ -43,7 +44,7 @@ init(Uid, Pos, Face) ->
     ),
     ok.
 
-start_walk_set(Uid, CurMove, NextMove, Src, Dst, Face, Dir, Now, PathList) ->
+start_walk_set(Uid, CurMove, NextMove, Src, Dst, Face, Dir, Now, PathList, Speed) ->
     object_rw:set_fields(
         Uid,
         [
@@ -56,6 +57,7 @@ start_walk_set(Uid, CurMove, NextMove, Src, Dst, Face, Dir, Now, PathList) ->
             {#m_object_rw.seg_move_time, 0},
             {#m_object_rw.move_start_time, Now},
             {#m_object_rw.force_stopped, false},
+            {#m_object_rw.move_speed, Speed},
             {#m_object_rw.move_path_list, PathList}
         ]
     ),
@@ -77,9 +79,9 @@ stop_move_set(Uid, Pos) ->
     ok.
 
 %%-------------------------------------------------------------------
-start_player_walk(Uid, Start, End) ->
+start_player_walk(Uid, Start, End, Speed) ->
     case is_player_can_walk(Uid, Start, End) of
-        true -> start_player_walk_1(Uid, Start, End);
+        true -> start_player_walk_1(Uid, Start, End, Speed);
         _ -> error
     end.
 
@@ -105,24 +107,29 @@ test_dir() ->
     vector3:subtract(E, S).
 -endif.
 
-start_player_walk_1(Uid, Start, End) ->
+start_player_walk_1(Uid, Start, End, Speed) ->
 %%    Dir = test_dir(),
 %%    Way = test_path(),
     
     Way = [End],
     Dir = vector3:subtract(End, Start),
-    Speed = get_move_speed_by_state(Uid, ?EMS_WALK),
-    PathList = make_path_list([], Start, Way, Speed),
+
+    %% 不能超过最大移动速度
+    MaxSpeed = prop_interface:query_v_pf_bpu(?BP_2_SPEED, object_rw:get_battle_props((Uid))),
+
+    RealSpeed = erlang:min(Speed, MaxSpeed),
+    PathList = make_path_list([], Start, Way, RealSpeed),
     Now = map_rw:get_move_timer_now(),
+
     %% 调试日志
 %%    TotalDist = lists:foldl(
 %%        fun(#m_move_pos{dist = DistCur}, Acc) -> Acc + DistCur end, 0, PathList),
 %%    TotalTime = TotalDist / Speed * 1000,
 %%    ?WARN("player ~p start move from ~w to ~w, dist ~w, ~w(ms)",
 %%        [Uid, Start, lists:last(Way), TotalDist, TotalTime]),
-    
+
     % 路点变化时同步到ETS
-    start_walk_set(Uid, ?EMS_WALK, ?EMS_STAND, Start, End, Dir, Dir, Now, PathList),
+    start_walk_set(Uid, ?EMS_WALK, ?EMS_STAND, Start, End, Dir, Dir, Now, PathList, RealSpeed),
     on_obj_pos_change(Uid, Start),
     mod_view:sync_movement_to_big_visual_tile(Uid),
     hook_map:on_start_move(Uid),
@@ -386,7 +393,7 @@ do_start_monster_walk(Uid, Dst, MoveState) ->
         [Uid, Start, lists:last(Way), TotalDist, TotalTime]),
     
     %
-    start_walk_set(Uid, MoveState, ?EMS_STAND, Start, Dst, Dir, Dir, Now, PathList),
+    start_walk_set(Uid, MoveState, ?EMS_STAND, Start, Dst, Dir, Dir, Now, PathList, Speed),
     mod_view:sync_movement_to_big_visual_tile(Uid),
     hook_map:on_start_move(Uid),
     true.

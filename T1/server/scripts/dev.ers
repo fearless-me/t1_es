@@ -26,6 +26,9 @@
 -define(OP_DEL_LOG_CS, 222).
 -define(OP_PK_CS, 2222).
 
+-define(OP_DB_CONFIG, 801).
+-define(OP_CS_CONFIG, 802).
+
 -define(OP_DEL_LOG_ALL, 9).
 
 -define(OP_REF, 901).
@@ -80,6 +83,10 @@ show_cmd(?DEV_MODE) ->
     		"\t~-10.wcs_打包~n"
             " #~n"
 
+            "\t~-10.w修改开服所需要的数据库IP和密码~n"
+            "\t~-10.w修改中心服节点IP~n"
+            " #~n"
+
             "\t~-10.w删除日志(all)~n"
             " #~n"
 
@@ -97,7 +104,7 @@ show_cmd(?DEV_MODE) ->
 
             "\t~-10.w生成代码_网络消息~n"
             "\t~-10.w生成代码_*_rw(根据rec_rw.hrl)~n"
-            "\t~-10.w生成代码_error_code.hrl~n"
+         %%   "\t~-10.w生成代码_error_code.hrl~n"
             "\t~-10.w生成代码_common_logdb_def.hrl~n"
 			" #~n"
             "\t~-10.w生成代码_db_record.hrl~n"
@@ -118,13 +125,19 @@ show_cmd(?DEV_MODE) ->
 
     			?OP_START_CS, ?OP_COMPILE_CS, ?OP_DEL_LOG_CS, ?OP_PK_CS,
 
+                ?OP_DB_CONFIG, ?OP_CS_CONFIG,
+
                 ?OP_DEL_LOG_ALL,
 
                 ?OP_REF, ?OP_DIALYZER,
 				
 				?OP_EDIT_NETMSG, ?OP_EDIT_ERRORCODE,  ?OP_EDIT_LOGDEFINE,
 
-                ?OP_GEN_NETMSG, ?OP_GEN_RW_CODE, ?OP_GEN_ERRORCODE, ?OP_GEN_LOGDEFINE, 
+                ?OP_GEN_NETMSG, ?OP_GEN_RW_CODE,
+                %% ?OP_GEN_ERRORCODE,
+                ?OP_GEN_LOGDEFINE,
+
+                 
 				?OP_EXPORT_DBSTRUCT, ?OP_BAK_DBSTRUCT, ?OP_EXPORT_LOG_DBSTRUCT, ?OP_BAK_LOG_DBSTRUCT,
 
                 ?OP_TCP, ?OP_DBG, ?OP_SET_TERMINAL_COLOR_BELOW_WIN10, ?OP_SET_TERMINAL_COLOR, ?OP_SET_WINDOW_RSH,
@@ -145,6 +158,10 @@ show_cmd(_) ->
     		"\t~-10.wcs_删除日志~n"
     		" #~n"
 
+            "\t~-10.w修改开服所需要的数据库IP和密码~n"
+            "\t~-10.w修改中心服节点IP~n"
+            " #~n"
+
             "\t~-10.w删除日志(all)~n"
             " #~n"
 
@@ -156,6 +173,8 @@ show_cmd(_) ->
                 ?OP_START_GS, ?OP_COMPILE_GS, ?OP_DEL_LOG_GS,
 
     			?OP_START_CS, ?OP_COMPILE_CS, ?OP_DEL_LOG_CS,
+
+                ?OP_DB_CONFIG, ?OP_CS_CONFIG,
 
                 ?OP_DEL_LOG_ALL,
 
@@ -241,7 +260,15 @@ dispatchInput2(?OP_SET_TERMINAL_COLOR_BELOW_WIN10) ->
 dispatchInput2(?OP_SET_TERMINAL_COLOR) ->
      erlang:spawn_monitor(fun() -> os:cmd("start /WAIT terminal_color.bat") end);	
 dispatchInput2(?OP_SET_WINDOW_RSH) ->
-     erlang:spawn_monitor(fun() -> os:cmd("start /WAIT win_rsh.bat") end);		 
+     erlang:spawn_monitor(fun() -> os:cmd("start /WAIT win_rsh.bat") end);
+
+dispatchInput2(?OP_DB_CONFIG) ->
+    Cmd = db_config_params(),
+    erlang:spawn_monitor(fun() -> os:cmd(Cmd) end);
+dispatchInput2(?OP_CS_CONFIG) ->
+    Cmd = cs_config_params(),
+    erlang:spawn_monitor(fun() -> os:cmd(Cmd) end);
+
 dispatchInput2(_) ->
     color:error_log("\t!!! error retry !!!~n~n").
 
@@ -263,3 +290,45 @@ string_strip(Str, []) ->
     Str;
 string_strip(Str, [CH | L]) ->
     string_strip(string:strip(Str, both, CH), L).
+
+db_config_params()->
+    color:info_log(
+        "输入的参数格式为:~n"
+        "\t1). 新数据库IP 新数据库密码~n"
+        "\t2). 旧数据库IP 旧数据库密码 新数据库IP 新数据库密码~n"
+        "第一种格式默认: 旧数据库IP = 127.0.0.1 旧数据库密码=1234~n"
+    ),
+
+    InputNoStr = io:get_line("请输入参数:"),
+    Tokens = string:tokens(string_strip(InputNoStr, "\n"), " "),
+    [OH, OP, NH, NP] =
+    case Tokens of
+        [_, _, _, _| _] -> Tokens;
+        [_, _] -> ["127.0.0.1", "1234"] ++ Tokens
+    end,
+    lists:flatten(
+        io_lib:format(
+        "cd change_config && start run_ps.bat d.ps1 ~ts ~ts ~ts ~ts ",[OH, OP, NH, NP]
+        )
+    ).
+
+cs_config_params()->
+    color:info_log(
+        "替换中心服启动脚本中节点的IP, 输入的参数格式为:~n"
+        "\t1). 中心服 IP~n"
+        "\t2). 中心服旧IP 中心服新IP~n"
+        "第一种格式默认: 中心服旧IP = 127.0.0.1~n"
+    ),
+
+    InputNoStr = io:get_line("请输入参数:"),
+    Tokens = string:tokens(string_strip(InputNoStr, "\n"), " "),
+    [OH, NH | _] =
+        case Tokens of
+            [_, _| _] -> Tokens;
+            [_] -> ["127.0.0.1"] ++ Tokens
+        end,
+    lists:flatten(
+        io_lib:format(
+            "cd change_config && start run_ps.bat c.ps1 ~ts ~ts",[OH, NH]
+        )
+    ).

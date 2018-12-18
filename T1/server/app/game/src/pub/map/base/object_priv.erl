@@ -13,6 +13,7 @@
 -include("map_core.hrl").
 -include("gs_cache.hrl").
 -include("cfg_monster.hrl").
+-include("cfg_npc.hrl").
 -include("ai.hrl").
 -include("rec_rw.hrl").
 -include("gs_common_rec.hrl").
@@ -135,6 +136,8 @@ new_npc(#recMapObjData{
     Uid = uid_gen:npc_uid(),
     Pos = vector3:new(X, 0.0, Y),
     init_rw_default(Uid),
+
+    #npcCfg{} = getCfg:getCfgByArgs(cfg_npc, Mid),
 
     Req = #r_create_map_object_req{
         type = ?UID_TYPE_NPC,

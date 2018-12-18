@@ -554,14 +554,6 @@ decode(?U2GS_ChangeMap,Bin0) ->
 		},
 	Bin3 };
 
-%GENERATED from file:player.h => U2GS_ChangeSpeed
-decode(?U2GS_ChangeSpeed,Bin0) ->
-	{ V_speed, Bin1 } = read_float( Bin0 ),
-	{ #pk_U2GS_ChangeSpeed {
-		speed = V_speed
-		},
-	Bin1 };
-
 %GENERATED from file:player.h => U2GS_Chat
 decode(?U2GS_Chat,Bin0) ->
 	{ V_channel, Bin1 } = read_int32( Bin0 ),
@@ -615,17 +607,15 @@ decode(?U2GS_PlayerStopWalk,Bin0) ->
 
 %GENERATED from file:player.h => U2GS_PlayerWalk
 decode(?U2GS_PlayerWalk,Bin0) ->
-	{ V_src_x, Bin1 } = read_float( Bin0 ),
-	{ V_src_y, Bin2 } = read_float( Bin1 ),
-	{ V_dst_x, Bin3 } = read_float( Bin2 ),
-	{ V_dst_y, Bin4 } = read_float( Bin3 ),
+	{ V_dst_x, Bin1 } = read_float( Bin0 ),
+	{ V_dst_y, Bin2 } = read_float( Bin1 ),
+	{ V_speed, Bin3 } = read_float( Bin2 ),
 	{ #pk_U2GS_PlayerWalk {
-		src_x = V_src_x,
-		src_y = V_src_y,
 		dst_x = V_dst_x,
-		dst_y = V_dst_y
+		dst_y = V_dst_y,
+		speed = V_speed
 		},
-	Bin4 };
+	Bin3 };
 
 %GENERATED from file:progress.h => GS2U_ProgressSync
 decode(?GS2U_ProgressSync,Bin0) ->
@@ -1261,14 +1251,6 @@ encode(#pk_U2GS_ChangeMap{} = P) ->
 		Bin_y
 	];
 
-%GENERATED from file:player.h => U2GS_ChangeSpeed
-encode(#pk_U2GS_ChangeSpeed{} = P) ->
-	Bin_speed = write_float( P#pk_U2GS_ChangeSpeed.speed ),
-	[
-		<<?U2GS_ChangeSpeed:?U16>>,
-		Bin_speed
-	];
-
 %GENERATED from file:player.h => U2GS_Chat
 encode(#pk_U2GS_Chat{} = P) ->
 	Bin_channel = write_int32( P#pk_U2GS_Chat.channel ),
@@ -1322,16 +1304,14 @@ encode(#pk_U2GS_PlayerStopWalk{} = P) ->
 
 %GENERATED from file:player.h => U2GS_PlayerWalk
 encode(#pk_U2GS_PlayerWalk{} = P) ->
-	Bin_src_x = write_float( P#pk_U2GS_PlayerWalk.src_x ),
-	Bin_src_y = write_float( P#pk_U2GS_PlayerWalk.src_y ),
 	Bin_dst_x = write_float( P#pk_U2GS_PlayerWalk.dst_x ),
 	Bin_dst_y = write_float( P#pk_U2GS_PlayerWalk.dst_y ),
+	Bin_speed = write_float( P#pk_U2GS_PlayerWalk.speed ),
 	[
 		<<?U2GS_PlayerWalk:?U16>>,
-		Bin_src_x,
-		Bin_src_y,
 		Bin_dst_x,
-		Bin_dst_y
+		Bin_dst_y,
+		Bin_speed
 	];
 
 %GENERATED from file:progress.h => GS2U_ProgressSync
@@ -1477,7 +1457,6 @@ name(?GS2U_RemoveRemote) -> "GS2U_RemoveRemote";
 name(?GS2U_SyncStand) -> "GS2U_SyncStand";
 name(?GS2U_SyncWalk) -> "GS2U_SyncWalk";
 name(?U2GS_ChangeMap) -> "U2GS_ChangeMap";
-name(?U2GS_ChangeSpeed) -> "U2GS_ChangeSpeed";
 name(?U2GS_Chat) -> "U2GS_Chat";
 name(?U2GS_ExitGame) -> "U2GS_ExitGame";
 name(?U2GS_GetPlayerInitData) -> "U2GS_GetPlayerInitData";
@@ -1531,7 +1510,6 @@ cmd_list()->
 		,?GS2U_SyncStand
 		,?GS2U_SyncWalk
 		,?U2GS_ChangeMap
-		,?U2GS_ChangeSpeed
 		,?U2GS_Chat
 		,?U2GS_ExitGame
 		,?U2GS_GetPlayerInitData

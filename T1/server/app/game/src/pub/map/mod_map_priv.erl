@@ -191,6 +191,7 @@ init_npc(#recGameMapCfg{
 
 
 init_one_npc(Mdata) ->
+    
     Obj = object_priv:new_npc(Mdata),
     Uid = object_priv:get_uid(Obj),
     VisIndex = mod_view:pos_to_vis_index(object_rw:get_cur_pos(Uid)),
@@ -337,8 +338,8 @@ kick_all_player(_S) ->
 %%-------------------------------------------------------------------
 -spec player_start_move(Req :: #r_player_start_move_req{}) -> ok | error.
 player_start_move(Req) ->
-    #r_player_start_move_req{uid = Uid, tar = Dst} = Req,
-    mod_move:start_player_walk(Uid, object_rw:get_cur_pos(Uid), Dst).
+    #r_player_start_move_req{uid = Uid, tar = Dst, speed = Speed} = Req,
+    mod_move:start_player_walk(Uid, object_rw:get_cur_pos(Uid), Dst, Speed).
 
 %%-------------------------------------------------------------------
 -spec player_stop_move(Req :: #r_player_stop_move_req{}) -> ok | error.
