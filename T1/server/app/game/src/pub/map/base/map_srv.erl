@@ -121,8 +121,8 @@ do_handle_info({net_msg_broadcast_view, ViewNetMsg}, State) ->
 do_handle_info({change_group, Msg}, State) ->
     mod_map_priv:change_group(Msg),
     {noreply, State};
-do_handle_info({condition_event, ConditionEventMsg}, State) ->
-    mod_map_condition_event:on_event(ConditionEventMsg),
+do_handle_info({request_revive, Msg}, State) ->
+    mod_combat_revive:request_revive(Msg),
     {noreply, State};
 do_handle_info(Info, State) ->
     mod_map:on_info_msg(Info),

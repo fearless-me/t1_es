@@ -80,6 +80,7 @@ handle(#pk_U2GS_Chat{content = Content}) ->
     end,
     ok;
 handle(#pk_U2GS_Revive{}) ->
+    player_revive:revive(),
     ok;
 handle(_Msg) ->
 %%    ?DEBUG("~p", [Msg]),

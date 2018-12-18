@@ -26,7 +26,9 @@
 
     treat/8,    %% 带吸血标志
     treat/7,
-    treat/5
+    treat/5,
+
+    hp_percent/1
 ]).
 
 change_combat_prop(Uid, AddList, MultiList) ->
@@ -61,54 +63,73 @@ change_combat_prop(Uid, AddList, MultiList, AddList_Del, MultiList_Del) ->
 -spec treat(#m_object_rw{}, #m_object_rw{}, TreatValue::float(),
     SkillID::integer(), SkillSerial::integer(), HPChangeReason::integer(),
     SpecialOptions::integer()) -> #m_hit_damage_result{}.
-treat(#m_object_rw{} = Attack, #m_object_rw{} = Defense,
+treat(#m_object_rw{uid = Uid, battle_props = AttackBps} = Attack,
+    #m_object_rw{uid = TargetUid, battle_props = DefenseBps} = Defense,
     TreatValue, Misc1, SkillSerial, HPChangeReason, SpecialOptions) ->
-    treat(Attack, Defense, TreatValue, Misc1, SkillSerial, HPChangeReason, SpecialOptions, false).
+    case can(Uid, TargetUid) of
+        true ->
+            treat(Attack, Defense, TreatValue, Misc1, SkillSerial, HPChangeReason, SpecialOptions, false);
+        _ ->
+            ?DEFAULT_DAMAGE_RESULT(AttackBps, DefenseBps, mod_combat_revive:is_dead(DefenseBps))
+    end.
 
 %% 治疗
 -spec treat(#m_object_rw{}, #m_object_rw{}, TreatValue::float(),
     SkillID::integer(), SkillSerial::integer(), HPChangeReason::integer(),
     SpecialOptions::integer(), IsSuckBloodFlag::boolean()) -> #m_hit_damage_result{}.
-treat(#m_object_rw{uid = Uid} = Attack, #m_object_rw{uid = TargetUid} = Defense,
+treat(#m_object_rw{uid = Uid, battle_props = AttackBps} = Attack,
+    #m_object_rw{uid = TargetUid, battle_props = DefenseBps} = Defense,
     TreatValue, Misc1, SkillSerial, HPChangeReason, SpecialOptions, IsSuckBloodFlag) when TreatValue > 0 ->
-    Result = #m_hit_damage_result{} = treat(Attack, Defense, TreatValue, SpecialOptions, IsSuckBloodFlag),
+    case can(Uid, TargetUid) of
+        true ->
+            Result = #m_hit_damage_result{} = treat(Attack, Defense, TreatValue, SpecialOptions, IsSuckBloodFlag),
 
-    %% 通知客户端血量变化
-    HpMsg = #pk_GS2U_HPChange{
-        uid = TargetUid,
-        src_uid = Uid,
-        cause = HPChangeReason,
-        misc1 = Misc1,
-        serial = SkillSerial
-    },
-    broadcast_hp_change(Result, HpMsg);
-treat(_Attack, _Defense, _TreatValue, _Misc1, _SkillSerial, _HPChangeReason, _SpecialOptions, _IsSuckBloodFlag) ->
-    ok.
+            %% 通知客户端血量变化
+            HpMsg = #pk_GS2U_HPChange{
+                uid = TargetUid,
+                src_uid = Uid,
+                cause = HPChangeReason,
+                misc1 = Misc1,
+                serial = SkillSerial
+            },
+            broadcast_hp_change(Result, HpMsg);
+        _ ->
+            ?DEFAULT_DAMAGE_RESULT(AttackBps, DefenseBps, mod_combat_revive:is_dead(DefenseBps))
+    end;
+treat(#m_object_rw{battle_props = ABps}, #m_object_rw{battle_props = DBps},
+    _TreatValue, _Misc1, _SkillSerial, _HPChangeReason, _SpecialOptions, _IsSuckBloodFlag) ->
+    ?DEFAULT_DAMAGE_RESULT(ABps, DBps, mod_combat_revive:is_dead(DBps)).
 
 %% 伤害打击
 -spec hit_damage(#m_object_rw{}, #m_object_rw{}, DamageValue::float(),
     SkillID::integer(), SkillSerial::integer(), HPChangeReason::integer(),
     HpSteal::integer(), SpecialOptions::integer()) -> #m_hit_damage_result{}.
 hit_damage(
-    #m_object_rw{uid = Uid} = Attack,
-    #m_object_rw{uid = TargetUid} = Defense,
+    #m_object_rw{uid = Uid, battle_props = AttackBps} = Attack,
+    #m_object_rw{uid = TargetUid, battle_props = DefenseBps} = Defense,
     DamageValue, Misc1, SkillSerial, HPChangeReason, HpSteal, SpecialOptions) ->
-    Result = #m_hit_damage_result{deltaHp = DeltaHp}
-        = hit_damage(Attack, Defense, DamageValue, SpecialOptions),
+    case can(Uid, TargetUid) of
+        true ->
+            Result = #m_hit_damage_result{deltaHp = DeltaHp}
+                = hit_damage(Attack, Defense, DamageValue, SpecialOptions),
 
-    HpMsg = #pk_GS2U_HPChange{
-        uid = TargetUid,
-        src_uid = Uid,
-        cause = HPChangeReason,
-        misc1 = Misc1,
-        serial = SkillSerial
-    },
-    broadcast_hp_change(Result, HpMsg),
+            HpMsg = #pk_GS2U_HPChange{
+                uid = TargetUid,
+                src_uid = Uid,
+                cause = HPChangeReason,
+                misc1 = Misc1,
+                serial = SkillSerial
+            },
+            broadcast_hp_change(Result, HpMsg),
 
-    %% 吸血根据实际伤害来计算最终数据
-    Attack2 = object_rw:get_uid(Uid),
-    treat(Attack2, Attack2, erlang:abs(DeltaHp) * HpSteal,
-        Misc1, SkillSerial, HPChangeReason, 0, true).
+            %% 吸血根据实际伤害来计算最终数据
+            Attack2 = object_rw:get_uid(Uid),
+            treat(Attack2, Attack2, erlang:abs(DeltaHp) * HpSteal,
+                Misc1, SkillSerial, HPChangeReason, 0, true),
+            Result;
+        _ ->
+            ?DEFAULT_DAMAGE_RESULT(AttackBps, DefenseBps, mod_combat_revive:is_dead(DefenseBps))
+    end.
 
 broadcast_hp_change(
     #m_hit_damage_result{isHit = IsHit, isCri = IsCri, deltaHp = DeltaHp},
@@ -124,6 +145,7 @@ broadcast_hp_change(
     %% 通知客户端血量变化
     Msg = HpMsg#pk_GS2U_HPChange{
         hp_change = DeltaHp,
+        hp_percent = mod_combat_prop:hp_percent(TargetUid),
         result = Result
     },
     ?DEBUG("hp_change ~p -> ~p DeltaHp:~p Misc1:~p", [Uid, TargetUid, DeltaHp, Misc1]),
@@ -135,27 +157,50 @@ broadcast_hp_change(
 hit_damage(
     #m_object_rw{uid = Uid, battle_props = AttackBps},
     #m_object_rw{uid = TargetUid, battle_props = DefenseBps}, DamageValue, SpecialOptions) ->
-    Ret = #m_hit_damage_result{
-        attackBps = AttackBpsRet,
-        defenseBps = DefenseBpsRet
-    } = prop_interface:calcHitAndDamage(AttackBps, DefenseBps, DamageValue, SpecialOptions),
-    Ahp = fresh_prop(Uid, AttackBpsRet),
-    Dhp = fresh_prop(TargetUid, DefenseBpsRet),
-    ?DEBUG("hitAndDamage:~p(~p) -> ~p(~p)", [Uid, Ahp, TargetUid, Dhp]),
-    Ret.
+    case can(Uid, TargetUid) of
+        true ->
+            Ret = #m_hit_damage_result{
+                attackBps = AttackBpsRet,
+                defenseBps = DefenseBpsRet,
+                isDead = IsDead
+            } = prop_interface:calcHitAndDamage(AttackBps, DefenseBps, DamageValue, SpecialOptions),
+            Ahp = fresh_prop(Uid, AttackBpsRet),
+            Dhp = fresh_prop(TargetUid, DefenseBpsRet),
+
+            case IsDead of
+                true ->
+                    mod_combat_revive:dead(Uid, TargetUid);
+                _ ->
+                    skip
+            end,
+            ?DEBUG("hitAndDamage:~p(~p) -> ~p(~p)", [Uid, Ahp, TargetUid, Dhp]),
+            Ret;
+        _ ->
+            ?DEFAULT_DAMAGE_RESULT(AttackBps, DefenseBps, mod_combat_revive:is_dead(DefenseBps))
+    end.
 
 -spec treat(#m_object_rw{}, #m_object_rw{}, TreatValue::float(),
     SpecialOptions::integer(), IsSuckBloodFlag::boolean()) -> #m_hit_damage_result{}.
 treat(
     #m_object_rw{uid = Uid, battle_props = AttackBps},
     #m_object_rw{uid = TargetUid, battle_props = DefenseBps}, TreatValue, SpecialOptions, IsSuckBloodFlag) ->
-    Ret = #m_hit_damage_result{
-        defenseBps = DefenseBpsRet
-    } = prop_interface:calcTreat(AttackBps, DefenseBps, TreatValue, SpecialOptions, IsSuckBloodFlag),
-    Dhp = fresh_prop(TargetUid, DefenseBpsRet),
+    case can(Uid, TargetUid) of
+        true ->
+            Ret = #m_hit_damage_result{
+                defenseBps = DefenseBpsRet
+            } = prop_interface:calcTreat(AttackBps, DefenseBps, TreatValue, SpecialOptions, IsSuckBloodFlag),
+            Dhp = fresh_prop(TargetUid, DefenseBpsRet),
 
-    ?DEBUG("treat:~p target:~p(~p)", [Uid, TargetUid, Dhp]),
-    Ret.
+            ?DEBUG("treat:~p target:~p(~p)", [Uid, TargetUid, Dhp]),
+            Ret;
+        _ ->
+            ?DEFAULT_DAMAGE_RESULT(AttackBps, DefenseBps, mod_combat_revive:is_dead(DefenseBps))
+    end.
+
+can(Uid, Uid) ->
+    not mod_combat_revive:is_dead(Uid);
+can(Uid, Target) ->
+    (not mod_combat_revive:is_dead(Uid)) andalso (not mod_combat_revive:is_dead(Target)).
 
 fresh_prop(Uid, #m_battleProps{} = Bp) ->
     object_rw:set_battle_props(Uid, Bp),
@@ -165,3 +210,9 @@ fresh_prop(Uid, #m_battleProps{} = Bp) ->
     MaxHp = prop_interface:query_v_pf_bpu(?BP_2_HP_MAX, Bp),
     object_rw:set_max_hp(Uid, erlang:trunc(MaxHp)),
     Hp.
+
+hp_percent(Uid) ->
+    Bp = object_rw:get_battle_props(Uid),
+    Hp = prop_interface:query_v_pf_bpu(?BP_2_HP_CUR, Bp),
+    MaxHp = prop_interface:query_v_pf_bpu(?BP_2_HP_MAX, Bp),
+    player_interface:get_hp_percent(Hp, MaxHp).

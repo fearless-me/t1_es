@@ -35,6 +35,7 @@ send_remote_info(_MasterUid, Uid, NetPid) ->
                             uid = Uid,
                             level = Obj#m_object_rw.level,
                             did = Obj#m_object_rw.data_id,
+                            hp_percent = mod_combat_prop:hp_percent(Uid),
                             cur_x = vector3:x(Pos),
                             cur_y = vector3:z(Pos)
                         };
@@ -50,6 +51,7 @@ send_remote_info(_MasterUid, Uid, NetPid) ->
                             name = Obj#m_object_rw.name,
                             career = Obj#m_object_rw.career,
                             race = Obj#m_object_rw.race,
+                            hp_percent = mod_combat_prop:hp_percent(Uid),
                             cur_x = vector3:x(Pos),
                             cur_y = vector3:z(Pos)
                         };

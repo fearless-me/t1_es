@@ -2,7 +2,7 @@
 -ifndef(netmsg).
 -define(netmsg,1).
 
--define(ProtoVersion,661).
+-define(ProtoVersion,662).
 
 -record(pk_BattleProp,{
 	%% UInt32 属性ID
@@ -104,6 +104,8 @@
 	result = 0,
 	%% Int32HP变化值
 	hp_change = 0,
+	%% Int32当前百分比
+	hp_percent = 0,
 	%% UInt64发起者ID
 	src_uid = 0,
 	%% UInt32根据原因来定义
@@ -152,6 +154,16 @@
 	x = 0.0,
 	%% Single
 	y = 0.0
+}).
+
+%% 
+%% // 血量同步
+-define(GS2U_SyncHp,43499).
+-record(pk_GS2U_SyncHp,{
+	%% UInt64角色ID
+	uid = 0,
+	%% Int32当前百分比
+	hp_percent = 0
 }).
 
 %% 
@@ -468,6 +480,8 @@
 	did = 0,
 	%% Int32等级	
 	level = 0,
+	%% Int32当前百分比
+	hp_percent = 0,
 	%% Single坐标X
 	cur_x = 0.0,
 	%% Single坐标Y
@@ -519,6 +533,8 @@
 	career = 0,
 	%% Int32种族
 	race = 0,
+	%% Int32当前百分比
+	hp_percent = 0,
 	%% Single坐标X
 	cur_x = 0.0,
 	%% Single坐标Y

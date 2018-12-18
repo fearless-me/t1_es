@@ -153,11 +153,11 @@ is_block(MapID, Pos) ->
 
 is_block(MapID, FX, FZ) ->
     case map_data(MapID) of
-        #recGameMapCfg{colCellNum = ColCellNum, rowCellNum = RowCellNum, cellSize = CellSize, block = BlockBin} ->
+        #recGameMapCfg{worldPos = {DeltaX, _, DeltaZ}, colCellNum = ColCellNum, rowCellNum = RowCellNum, cellSize = CellSize, block = BlockBin} ->
             case CellSize >= 1 of
                 true ->
-                    X = erlang:trunc(FX / CellSize),
-                    Y = erlang:trunc(FZ / CellSize),
+                    X = erlang:trunc((DeltaX + FX) / CellSize),
+                    Y = erlang:trunc((DeltaZ + FZ) / CellSize),
                     if
                         Y >= RowCellNum orelse Y < 0 ->
                             true;

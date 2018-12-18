@@ -18,7 +18,10 @@
 -define(CAREER_START,   0).
 -define(CAREER_1,       1). %% 小红帽
 -define(CAREER_2,       2). %% 双马尾
--define(CAREER_END,     3).
+-define(CAREER_3,       3). %% undefined
+-define(CAREER_4,       4). %% undefined
+-define(CAREER_5,       5). %% 法师猫
+-define(CAREER_END,     6).
 -type careerType() :: ?CAREER_START .. ?CAREER_END.
 
 %% 主职业
@@ -43,7 +46,7 @@
     #m_bp{id = ?BP_2_MP_CUR, add = 40.0},
     #m_bp{id = ?BP_2_ATK, add = 38.0},
     #m_bp{id = ?BP_2_DEF, add = 30.0},
-    #m_bp{id = ?BP_2_SPEED, add = 10.0}
+    #m_bp{id = ?BP_2_SPEED, add = 5.0}
 ]).
 
 -define(LIST_BP3, [
@@ -67,22 +70,14 @@
     {?BP_1_INT, [{?BP_3_HIT, 1.0}, {?BP_3_FLEE, 0.0}, {?BP_3_CRI, 0.0}, {?BP_3_FAST, 0.0}]},
     {?BP_1_STA, [{?BP_3_HIT, 0.0}, {?BP_3_FLEE, 0.0}, {?BP_3_CRI, 0.0}, {?BP_3_FAST, 0.0}]}
 ]).
--define(Career_2_2, [
-    {?BP_1_STR, [{?BP_2_HP_MAX, 1.0}, {?BP_2_MP_MAX, 0.0}, {?BP_2_ATK, 1.0}, {?BP_2_DEF, 1.0}]},
-    {?BP_1_AGI, [{?BP_2_HP_MAX, 0.0}, {?BP_2_MP_MAX, 0.0}, {?BP_2_ATK, 1.0}, {?BP_2_DEF, 0.0}]},
-    {?BP_1_INT, [{?BP_2_HP_MAX, 0.0}, {?BP_2_MP_MAX, 3.0}, {?BP_2_ATK, 3.0}, {?BP_2_DEF, 0.0}]},
-    {?BP_1_STA, [{?BP_2_HP_MAX, 3.0}, {?BP_2_MP_MAX, 0.0}, {?BP_2_ATK, 0.0}, {?BP_2_DEF, 2.0}]}
-]).
--define(Career_2_3, [
-    {?BP_1_STR, [{?BP_3_HIT, 1.0}, {?BP_3_FLEE, 0.0}, {?BP_3_CRI, 0.0}, {?BP_3_FAST, 0.0}]},
-    {?BP_1_AGI, [{?BP_3_HIT, 1.0}, {?BP_3_FLEE, 2.0}, {?BP_3_CRI, 1.0}, {?BP_3_FAST, 1.0}]},
-    {?BP_1_INT, [{?BP_3_HIT, 2.0}, {?BP_3_FLEE, 0.0}, {?BP_3_CRI, 3.0}, {?BP_3_FAST, 2.0}]},
-    {?BP_1_STA, [{?BP_3_HIT, 0.0}, {?BP_3_FLEE, 0.0}, {?BP_3_CRI, 0.0}, {?BP_3_FAST, 0.0}]}
-]).
+
 
 -define(Career2List, [
     {?CAREER_1, ?Career_1_2, ?Career_1_3},
-    {?CAREER_2, ?Career_2_2, ?Career_2_3}
+    {?CAREER_2, ?Career_1_2, ?Career_1_3},
+    {?CAREER_3, ?Career_1_2, ?Career_1_3},
+    {?CAREER_4, ?Career_1_2, ?Career_1_3},
+    {?CAREER_5, ?Career_1_2, ?Career_1_3}
 ]).
 
 

@@ -28,6 +28,9 @@
     isDead = false     %% 目标是否死亡（可能与当前伤害无关）
 }).
 
+-define(DEFAULT_DAMAGE_RESULT(ABps, DBps, IsDead),
+    #m_hit_damage_result{attackBps = ABps, defenseBps = DBps, isDead = IsDead}).
+
 %% 技能规划分类
 -define(SKILL_MAIN_TYPE_CAREER,      1). %% 职业技能
 -define(SKILL_MAIN_TYPE_COMMON,      2). %% 通用技能

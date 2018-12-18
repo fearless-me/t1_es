@@ -93,10 +93,10 @@ getRow(8) ->
 		notice_type = 0,
 		content = "破甲打击"
 	};
-getRow(0) ->
+getRow(9) ->
 	#string_packageCfg{
 		desc__ = "test_server",
-		id = 0,
+		id = 9,
 		enum_string_id = "server_system",
 		type = 1,
 		notice_type = 0,
@@ -444,6 +444,42 @@ getRow(1000035) ->
 		notice_type = 0,
 		content = "木桩"
 	};
+getRow(10) ->
+	#string_packageCfg{
+		desc__ = "",
+		id = 10,
+		enum_string_id = "combat_skill",
+		type = 1,
+		notice_type = 0,
+		content = "技能不存在"
+	};
+getRow(16) ->
+	#string_packageCfg{
+		desc__ = "11111111",
+		id = 16,
+		enum_string_id = "11111111",
+		type = 1,
+		notice_type = 0,
+		content = "11111111"
+	};
+getRow(15) ->
+	#string_packageCfg{
+		desc__ = "22222222",
+		id = 15,
+		enum_string_id = "22222222",
+		type = 1,
+		notice_type = 0,
+		content = "22222222"
+	};
+getRow(14) ->
+	#string_packageCfg{
+		desc__ = "333333333",
+		id = 14,
+		enum_string_id = "333333333",
+		type = 1,
+		notice_type = 0,
+		content = "333333333"
+	};
 getRow(_) -> {}.
 
 getKeyList() -> [
@@ -453,7 +489,7 @@ getKeyList() -> [
 	{6},
 	{7},
 	{8},
-	{0},
+	{9},
 	{1},
 	{2},
 	{1000000},
@@ -491,7 +527,11 @@ getKeyList() -> [
 	{1000032},
 	{1000037},
 	{1000036},
-	{1000035}
+	{1000035},
+	{10},
+	{16},
+	{15},
+	{14}
 ].
 
 get1KeyList() -> [
@@ -501,7 +541,7 @@ get1KeyList() -> [
 	6,
 	7,
 	8,
-	0,
+	9,
 	1,
 	2,
 	1000000,
@@ -539,6 +579,10 @@ get1KeyList() -> [
 	1000032,
 	1000037,
 	1000036,
-	1000035
+	1000035,
+	10,
+	16,
+	15,
+	14
 ].
 

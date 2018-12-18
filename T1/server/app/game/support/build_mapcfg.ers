@@ -7,14 +7,14 @@
 -include("mapCfgPrivate.hrl").
 -include("../src/pub/config/cfg_map.hrl").
 
--define(ERROR_OUT(F, A), logout(F, A)).
--define(ERROR_OUT(F), logout(F, [])).
--define(WARN_OUT(F, A), logout(F, A)).
--define(WARN_OUT(F), logout(F, [])).
--define(LOG_OUT(F, A), logout(F, A)).
--define(LOG_OUT(F), logout(F, [])).
--define(DEBUG_OUT(F, A), logout(F, A)).
--define(DEBUG_OUT(F), logout(F, [])).
+-define(ERROR_OUT(F, A), error_log("[Error][~p]"++F, [?LINE] ++ A)).
+-define(ERROR_OUT(F), error_log("[Error][~p]"++F, [?LINE]))).
+-define(WARN_OUT(F, A), warn_log("[Warn][~p]"++F, [?LINE] ++ A)).
+-define(WARN_OUT(F), warn_log("[Warn][~p]"++F, [?LINE] )).
+-define(LOG_OUT(F, A),info_log("[Info][~p]"++F, [?LINE] ++ A)).
+-define(LOG_OUT(F), info_log("[Info][~p]"++F, [?LINE])).
+-define(DEBUG_OUT(F, A), info_log("[Debug][~p]"++F, [?LINE] ++ A)).
+-define(DEBUG_OUT(F), info_log("[Debug][~p]"++F, [?LINE]))).
 
 -compile(nowarn_unused_vars).
 %% ====================================================================
@@ -29,8 +29,7 @@ main(_) ->
 	c:cd("../game/data/"),
  	{ok, Array} = loadAllMaps(Maps),
 	c:cd("../"),
-   	writeInfoToFile(Array, Maps),
-    ok.
+   	writeInfoToFile(Array, Maps),ok.
 
 %% ====================================================================
 %% Internal functions
@@ -82,7 +81,7 @@ writeInfoToFile(ArCfg, Maps) ->
 
 writeToCfgModule(Maps) ->
     {ok, Cwd} = file:get_cwd(),
-    io:format("~ts~n",[Cwd]),
+    ?LOG_OUT("~ts~n",[Cwd]),
 	FileName = io_lib:format("./src/pub/mapcfgs/gameMapCfg.erl",[]),
 	file:write_file(FileName, ""),
 	Mod = io_lib:format("-module(gameMapCfg).\n",[]),
@@ -176,12 +175,8 @@ loadAllMaps([{MapId, Res1, Res2} | T]) ->
 		RetArCfg = readMapInfo(MapId, Res2, NewArCfg),
 		put(mapsettingArCfg, RetArCfg),
 		loadAllMaps(T)
-	catch
-		A:Why ->
-			%%io:format("error cateh ~p,~p,~p,~n", [erlang:get_stacktrace(), A, Why])
-			callstack()
+	catch _:Error:ST -> ?ERROR_OUT("~p,~p",[Error, ST])
 	end.
-callstack() -> try erlang:error(callStack) catch _ : _ : ST -> ST end.
 
 -spec readMap(MapID, FileName, ArCfg) -> array:array() when
 	MapID :: mapId(), FileName :: string(), ArCfg :: array:array().
@@ -191,7 +186,7 @@ readMap(MapID, FileName, ArCfg) when erlang:is_integer(MapID) andalso MapID > 0 
 		{ok, #recGameMapCfg{} = Cfg} ->
 			array:set(MapID, Cfg, ArCfg);
 		Other ->
-			io:format("throw~p~n", [Other]),
+			?ERROR_OUT("throw~p~n", [Other]),
 			throw(Other)
 	end.
 
@@ -205,7 +200,7 @@ readMapInfo(MapID, FileName, ArCfg) when erlang:is_integer(MapID) andalso MapID 
 			WayPtList = array:get(?MapObjWayPt, Info),
 			case erlang:length(WayPtList) =< 0 of
 				true ->
-					io:format("地图[~p]没有路点信息，无法设置地图初始点 fileName:~s", [MapID, FileName]),
+					?ERROR_OUT("地图[~p]没有路点信息，无法设置地图初始点 fileName:~s", [MapID, FileName]),
 					throw("Map No Way Point, Can't Set Map Init Pos");
 				_ ->
 					skip
@@ -233,7 +228,7 @@ readMapInfo(MapID, FileName, ArCfg) when erlang:is_integer(MapID) andalso MapID 
 
 			array:set(MapID, NewMapCfg, ArCfg);
 		OtherInfo ->
-			io:format("Read MapID[~p] File[~s] Error~p",[MapID,FileName, OtherInfo]),
+			?ERROR_OUT("Read MapID[~p] File[~s] Error~p",[MapID,FileName, OtherInfo]),
 			throw(OtherInfo)
 	end.
 
@@ -250,7 +245,7 @@ loadMapFromFile(MapID, Filename) when erlang:is_list(Filename) ->
 			Cfg = loadMapFromBinary(MapID, Bin),
 			{ok, Cfg};
 		Error ->
-			io:format("Load Map[ID:~p] File[~ts] Failed ", [MapID, Filename]),
+			?ERROR_OUT("Load Map[ID:~p] File[~ts] Failed ", [MapID, Filename]),
 			Error
 	end.
 
@@ -281,7 +276,7 @@ loadMapFromBinary(MapID, Bin) when erlang:is_integer(MapID) andalso MapID > 0 an
 			skip;
 		_ ->
 			%%文件不是PathGrid文件，策划配置填错了
-			io:format("Error Cfg of Map[~p] PathFile", [MapID]),
+			?ERROR_OUT("Error Cfg of Map[~p] PathFile", [MapID]),
 			throw("Error Cfg of Map Path File")
 	end,
 	%检查文件大小
@@ -290,15 +285,17 @@ loadMapFromBinary(MapID, Bin) when erlang:is_integer(MapID) andalso MapID > 0 an
 		true ->
 			ok;
 		false ->
+		    ?ERROR_OUT("FileSize =:= BinSize, ~p = ~p~n",[FileSize, BinSize]),
 			throw("Error Map Data")
 	end,
 
 	%检查文件头大小
 	RemainDataSize = erlang:byte_size(RemainData),
-	case (FileSize - RemainDataSize) =:= HeaderSize of
+	case (FileSize - RemainDataSize) == HeaderSize of
 		true ->
 			ok;
 		false ->
+		    ?ERROR_OUT("(FileSize - RemainDataSize) =:= HeaderSize, ~p - ~p= ~p~n",[FileSize, RemainDataSize, HeaderSize]),
 			throw("Error Map Data")
 	end,
 
@@ -311,14 +308,19 @@ loadMapFromBinary(MapID, Bin) when erlang:is_integer(MapID) andalso MapID > 0 an
 
 	if
 		Offset1 > BinSize ->
+		    ?ERROR_OUT("Offset1 > BinSize, ~p = ~p~n",[Offset1, BinSize]),
 			throw("Map File Internal Error,Overflow!");
 		Offset2 > BinSize ->
+		    ?ERROR_OUT("Offset2 > BinSize, ~p = ~p~n",[Offset2, BinSize]),
 			throw("Map File Internal Error,Overflow!");
 		Offset3 > BinSize ->
+		    ?ERROR_OUT("Offset3 > BinSize, ~p = ~p~n",[Offset3, BinSize]),
 			throw("Map File Internal Error,Overflow!");
 		Offset4 > BinSize ->
+		    ?ERROR_OUT("Offset4 > BinSize, ~p = ~p~n",[Offset4, BinSize]),
 			throw("Map File Internal Error,Overflow!");
 		Offset5 > BinSize ->
+		    ?ERROR_OUT("Offset5 > BinSize, ~p = ~p~n",[Offset5, BinSize]),
 			throw("Map File Internal Error,Overflow!");
 		true ->
 			ok
@@ -326,9 +328,11 @@ loadMapFromBinary(MapID, Bin) when erlang:is_integer(MapID) andalso MapID > 0 an
 	TotalCellNum = TotalColCellNum * TotalRowCellNum,
 	if
 		BlockInfoLen /= TotalCellNum ->
+		    ?ERROR_OUT("BlockInfoLen /= (TotalColCellNum * TotalRowCellNum), ~p = ~p*~p~n",[BlockInfoLen, TotalColCellNum, TotalRowCellNum]),
 			throw("Map File Internal Logic Error");
-		(HeightInfoLen / 4) /= TotalCellNum ->
-			throw("Map File Internal Logic Error");
+%%		(HeightInfoLen / 4) /= TotalCellNum ->
+%%		    ?ERROR_OUT("(HeightInfoLen / 4) /= TotalCellNum, ~p = ~p~n",[HeightInfoLen, TotalCellNum]),
+%%			throw("Map File Internal Logic Error");
 		true ->
 			ok
 	end,
@@ -365,7 +369,7 @@ loadMapInfoFromBinary(Bin, FileName) ->
 			skip;
 		_ ->
 			%%不是MapInfo文件，策划配置填错了
-			io:format("Error Cfg of Map MapInfo File ~ts", [FileName]),
+			?ERROR_OUT("Error Cfg of Map MapInfo File ~ts", [FileName]),
 			throw("Error Cfg of Map MapInfo File")
 	end,
 	%检查文件大小
@@ -374,7 +378,7 @@ loadMapInfoFromBinary(Bin, FileName) ->
 		true ->
 			ok;
 		false ->
-			io:format("error Filesize:~s, FileSize:~p, BinSize:~p ", [FileName, FileSize, BinSize]),
+			?ERROR_OUT("error Filesize:~s, FileSize:~p, BinSize:~p ", [FileName, FileSize, BinSize]),
 			throw("Error Map Info Data FileSize")
 	end,
 
@@ -384,7 +388,7 @@ loadMapInfoFromBinary(Bin, FileName) ->
 		true ->
 			ok;
 		false ->
-			io:format("error HeaderSize:~s, HeaderSize:~p, RemainDataSize:~p ", [FileName, HeaderSize, RemainDataSize]),
+			?ERROR_OUT("error HeaderSize:~s, HeaderSize:~p, RemainDataSize:~p ", [FileName, HeaderSize, RemainDataSize]),
 			throw("Error Map Info Data HeaderSize")
 	end,
 
@@ -400,28 +404,28 @@ loadMapInfoFromBinary(Bin, FileName) ->
 
 	if
 		Offset1 > BinSize ->
-			io:format("error Overflow:~s, FileSize:~p, BinSize:~p ", [FileName, FileSize, BinSize]),
+			?ERROR_OUT("error Overflow:~s, FileSize:~p, BinSize:~p ", [FileName, FileSize, BinSize]),
 			throw("Map File Internal Error,Overflow!");
 		Offset2 > BinSize ->
-			io:format("error Overflow:~s, FileSize:~p, BinSize:~p ", [FileName, FileSize, BinSize]),
+			?ERROR_OUT("error Overflow:~s, FileSize:~p, BinSize:~p ", [FileName, FileSize, BinSize]),
 			throw("Map File Internal Error,Overflow!");
 		Offset3 > BinSize ->
-			io:format("error Overflow:~s, FileSize:~p, BinSize:~p ", [FileName, FileSize, BinSize]),
+			?ERROR_OUT("error Overflow:~s, FileSize:~p, BinSize:~p ", [FileName, FileSize, BinSize]),
 			throw("Map File Internal Error,Overflow!");
 		Offset4 > BinSize ->
-			io:format("error Overflow:~s, FileSize:~p, BinSize:~p ", [FileName, FileSize, BinSize]),
+			?ERROR_OUT("error Overflow:~s, FileSize:~p, BinSize:~p ", [FileName, FileSize, BinSize]),
 			throw("Map File Internal Error,Overflow!");
 		Offset5 > BinSize ->
-			io:format("error Overflow:~s, FileSize:~p, BinSize:~p ", [FileName, FileSize, BinSize]),
+			?ERROR_OUT("error Overflow:~s, FileSize:~p, BinSize:~p ", [FileName, FileSize, BinSize]),
 			throw("Map File Internal Error,Overflow!");
 		Offset6 > BinSize ->
-			io:format("error Overflow:~s, FileSize:~p, BinSize:~p ", [FileName, FileSize, BinSize]),
+			?ERROR_OUT("error Overflow:~s, FileSize:~p, BinSize:~p ", [FileName, FileSize, BinSize]),
 			throw("Map File Internal Error,Overflow!");
 		Offset7 > BinSize ->
-			io:format("error Overflow:~s, FileSize:~p, BinSize:~p ", [FileName, FileSize, BinSize]),
+			?ERROR_OUT("error Overflow:~s, FileSize:~p, BinSize:~p ", [FileName, FileSize, BinSize]),
 			throw("Map File Internal Error,Overflow!");
 		<<"EOF", 0>> /= EOFFlag ->
-			io:format("error EOF Flag:~s, FileSize:~p, BinSize:~p ", [FileName, FileSize, BinSize]),
+			?ERROR_OUT("error EOF Flag:~s, FileSize:~p, BinSize:~p ", [FileName, FileSize, BinSize]),
 			throw("Map File Error, No EOF Flag");
 		true ->
 			ok
@@ -601,7 +605,7 @@ readFile(FileName) ->
 		{ok, Binary} ->
 			Binary;
 		Ret ->
-			io:format("Read File:~p failed By:~p!~n", [FileName, Ret]),
+			?ERROR_OUT("Read File:~p failed By:~p!~n", [FileName, Ret]),
 			[]
 	end.
 
@@ -609,7 +613,7 @@ checkFileContent(FileName, Content) ->
 	Bin = erlang:list_to_binary(Content),
 	case file:read_file(FileName) of
 		{ok, Bin} ->
-			io:format("...~s no change~n", [FileName]);
+			?LOG_OUT("...~s no change~n", [FileName]);
 		_Other ->
 			%% 加入编译方式
 			%% "%% coding: latin-1\r\n"
@@ -617,9 +621,9 @@ checkFileContent(FileName, Content) ->
 			Bin2 = <<Title/binary, Bin/binary>>,
 			case file:write_file(FileName, Bin2) of
 				ok ->
-					io:format("Write File:~s OK~n", [FileName]);
+					?LOG_OUT("Write File:~s OK~n", [FileName]);
 				{error, Reason} ->
-					io:format("Write File:~s Failed by:~p~n", [FileName, Reason])
+					?ERROR_OUT("Write File:~s Failed by:~p~n", [FileName, Reason])
 			end
 	end,
 	ok.
@@ -670,11 +674,74 @@ binary_read_int(Bin) when erlang:is_binary(Bin) ->
 	<<C:?S32, Left/binary>> = Bin,
 	{C, Left}.
 
--spec logout(F, A) -> string() when F :: string(), A :: list().
-logout(F, A) ->
-	{Date, Time} = erlang:localtime(),
-	{YYYY, MM, DD} = Date,
-	{Hour, Min, Sec} = Time,
-	String = io_lib:format(F, A),
-	io:format("[~.4w-~.2.0w-~.2.0w ~.2.0w:~.2.0w:~.2.0w] ~ts ~n",
-		[YYYY, MM, DD, Hour, Min, Sec, String]).
+%%-spec logout(F, A) -> string() when F :: string(), A :: list().
+%%logout(F, A) ->
+%%	{Date, Time} = erlang:localtime(),
+%%	{YYYY, MM, DD} = Date,
+%%	{Hour, Min, Sec} = Time,
+%%	String = io_lib:format(F, A),
+%%	io:format("[~.4w-~.2.0w-~.2.0w ~.2.0w:~.2.0w:~.2.0w] ~ts ~n",
+%%		[YYYY, MM, DD, Hour, Min, Sec, String]).
+
+
+
+%%info_log(Fmt)-> info_log(Fmt, []).
+info_log(Fmt, Args)-> io:format("~ts~n", [green(io_lib:format(Fmt,Args))]).
+
+%%warn_log(Fmt)-> warn_log(Fmt, []).
+warn_log(Fmt, Args) -> io:format("~ts~n", [yellow(io_lib:format(Fmt,Args))]).
+
+%%error_log(Fmt) -> error_log(Fmt, []).
+error_log(Fmt, Args)-> io:format("~ts~n", [red(io_lib:format(Fmt,Args))]).
+
+%% ====================================================================
+-define(ESC, <<"\e[">>).
+-define(RST, <<"0">>).
+-define(BOLD, <<"1">>).
+-define(SEP, <<";">>).
+-define(END, <<"m">>).
+
+%% Colors
+-define(BLACK, <<"30">>).
+-define(RED, <<"31">>).
+-define(GREEN, <<"32">>).
+-define(YELLOW, <<"33">>).
+-define(BLUE, <<"34">>).
+-define(MAGENTA, <<"35">>).
+-define(CYAN, <<"36">>).
+-define(WHITE, <<"37">>).
+-define(DEFAULT, <<"39">>).
+
+%% Background colors
+-define(BLACK_BG, <<"40">>).
+-define(RED_BG, <<"41">>).
+-define(GREEN_BG, <<"42">>).
+-define(YELLOW_BG, <<"43">>).
+-define(BLUE_BG, <<"44">>).
+-define(MAGENTA_BG, <<"45">>).
+-define(CYAN_BG, <<"46">>).
+-define(WHITE_BG, <<"47">>).
+-define(DEFAULT_BG, <<"49">>).
+
+%% RGB
+-define(RGB_FG, [<<"38">>, ?SEP, <<"5">>]).
+-define(RGB_BG, [<<"48">>, ?SEP, <<"5">>]).
+
+%% True 24-bit colors
+-define(TRUE_COLOR_FG, [<<"38">>, ?SEP, <<"2">>]).
+-define(TRUE_COLOR_BG, [<<"48">>, ?SEP, <<"2">>]).
+
+
+
+
+red(Text)        -> [color(?RED),        Text, reset()].
+green(Text)      -> [color(?GREEN),      Text, reset()].
+yellow(Text)     -> [color(?YELLOW),     Text, reset()].
+
+%% Internal
+color(Color) ->
+	<<?ESC/binary, Color/binary, ?END/binary>>.
+
+reset() ->
+	<<?ESC/binary, ?RST/binary, ?END/binary>>.
+

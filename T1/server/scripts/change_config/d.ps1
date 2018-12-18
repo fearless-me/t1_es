@@ -13,38 +13,25 @@ if($_ -is [System.IO.FileInfo])
 	$CurFile = $SqlPath + $CurName
 	Write-Host("处理 $CurFile ")
 	$MyFile = [System.IO.File]::ReadAllLines($CurFile, $Utf8NoBomEncoding); 
-	[System.IO.File]::WriteAllLines($CurFile, $MyFile, $Utf8BomEncoding);	
-	(Get-Content $CurFile).replace($DatabaseHost_Old, $DatabaseHost_New) | Set-Content $CurFile -encoding utf8;
-	(Get-Content $CurFile).replace($DatabasePass_Old, $DatabasePass_New) | Set-Content $CurFile -encoding utf8;
-	$MyFile = [System.IO.File]::ReadAllLines($CurFile, $Utf8BomEncoding); 
+	$MyFile = $MyFile.replace($DatabaseHost_Old, $DatabaseHost_New).replace($DatabasePass_Old, $DatabasePass_New)
 	[System.IO.File]::WriteAllLines($CurFile, $MyFile, $Utf8NoBomEncoding);
 
 }
 }
 
-$CenterIni = "..\..\app\center\data\center.ini";
+# 
 Write-Host("处理$CenterIni");
-
+$CenterIni = "..\..\app\center\data\center.ini";
 $MyFile = [System.IO.File]::ReadAllLines($CenterIni, $Utf8NoBomEncoding); 
-[System.IO.File]::WriteAllLines($CenterIni, $MyFile, $Utf8BomEncoding);
-	
-(Get-Content $CenterIni).replace($DatabaseHost_Old, $DatabaseHost_New) | Set-Content $CenterIni -encoding utf8;
-(Get-Content $CenterIni).replace($DatabasePass_Old, $DatabasePass_New) | Set-Content $CenterIni -encoding utf8;
-
-$MyFile = [System.IO.File]::ReadAllLines($CenterIni, $Utf8BomEncoding); 
+$MyFile = $MyFile.replace($DatabaseHost_Old, $DatabaseHost_New).replace($DatabasePass_Old, $DatabasePass_New)
 [System.IO.File]::WriteAllLines($CenterIni, $MyFile, $Utf8NoBomEncoding);
 
 
-$GameIni = "..\..\app\game\data\game.ini";
+#
 Write-Host("处理$GameIni");
-
+$GameIni = "..\..\app\game\data\game.ini";
 $MyFile = [System.IO.File]::ReadAllLines($GameIni, $Utf8NoBomEncoding); 
-[System.IO.File]::WriteAllLines($GameIni, $MyFile, $Utf8BomEncoding);
-
-(Get-Content $GameIni).replace($DatabaseHost_Old, $DatabaseHost_New) | Set-Content $GameIni -encoding utf8;
-(Get-Content $GameIni).replace($DatabasePass_Old, $DatabasePass_New) | Set-Content $GameIni -encoding utf8;
-
-$MyFile = [System.IO.File]::ReadAllLines($GameIni, $Utf8BomEncoding); 
+$MyFile = $MyFile.replace($DatabaseHost_Old, $DatabaseHost_New).replace($DatabasePass_Old, $DatabasePass_New)
 [System.IO.File]::WriteAllLines($GameIni, $MyFile, $Utf8NoBomEncoding);
 
 

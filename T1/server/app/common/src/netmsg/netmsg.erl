@@ -104,21 +104,23 @@ decode(?GS2U_HPChange,Bin0) ->
 	{ V_cause, Bin2 } = read_uint32( Bin1 ),
 	{ V_result, Bin3 } = read_uint32( Bin2 ),
 	{ V_hp_change, Bin4 } = read_int32( Bin3 ),
-	{ V_src_uid, Bin5 } = read_uint64( Bin4 ),
-	{ V_misc1, Bin6 } = read_uint32( Bin5 ),
-	{ V_misc2, Bin7 } = read_uint32( Bin6 ),
-	{ V_serial, Bin8 } = read_uint32( Bin7 ),
+	{ V_hp_percent, Bin5 } = read_int32( Bin4 ),
+	{ V_src_uid, Bin6 } = read_uint64( Bin5 ),
+	{ V_misc1, Bin7 } = read_uint32( Bin6 ),
+	{ V_misc2, Bin8 } = read_uint32( Bin7 ),
+	{ V_serial, Bin9 } = read_uint32( Bin8 ),
 	{ #pk_GS2U_HPChange {
 		uid = V_uid,
 		cause = V_cause,
 		result = V_result,
 		hp_change = V_hp_change,
+		hp_percent = V_hp_percent,
 		src_uid = V_src_uid,
 		misc1 = V_misc1,
 		misc2 = V_misc2,
 		serial = V_serial
 		},
-	Bin8 };
+	Bin9 };
 
 %GENERATED from file:combat.h => GS2U_HitTarget
 decode(?GS2U_HitTarget,Bin0) ->
@@ -159,6 +161,16 @@ decode(?GS2U_SpecialMove,Bin0) ->
 		y = V_y
 		},
 	Bin4 };
+
+%GENERATED from file:combat.h => GS2U_SyncHp
+decode(?GS2U_SyncHp,Bin0) ->
+	{ V_uid, Bin1 } = read_uint64( Bin0 ),
+	{ V_hp_percent, Bin2 } = read_int32( Bin1 ),
+	{ #pk_GS2U_SyncHp {
+		uid = V_uid,
+		hp_percent = V_hp_percent
+		},
+	Bin2 };
 
 %GENERATED from file:combat.h => GS2U_UpdateBuff
 decode(?GS2U_UpdateBuff,Bin0) ->
@@ -437,16 +449,18 @@ decode(?GS2U_RemoteMonster,Bin0) ->
 	{ V_uid, Bin1 } = read_uint64( Bin0 ),
 	{ V_did, Bin2 } = read_uint32( Bin1 ),
 	{ V_level, Bin3 } = read_int32( Bin2 ),
-	{ V_cur_x, Bin4 } = read_float( Bin3 ),
-	{ V_cur_y, Bin5 } = read_float( Bin4 ),
+	{ V_hp_percent, Bin4 } = read_int32( Bin3 ),
+	{ V_cur_x, Bin5 } = read_float( Bin4 ),
+	{ V_cur_y, Bin6 } = read_float( Bin5 ),
 	{ #pk_GS2U_RemoteMonster {
 		uid = V_uid,
 		did = V_did,
 		level = V_level,
+		hp_percent = V_hp_percent,
 		cur_x = V_cur_x,
 		cur_y = V_cur_y
 		},
-	Bin5 };
+	Bin6 };
 
 %GENERATED from file:player.h => GS2U_RemoteNpc
 decode(?GS2U_RemoteNpc,Bin0) ->
@@ -489,18 +503,20 @@ decode(?GS2U_RemotePlayer,Bin0) ->
 	{ V_name, Bin3 } = read_string( Bin2 ),
 	{ V_career, Bin4 } = read_int32( Bin3 ),
 	{ V_race, Bin5 } = read_int32( Bin4 ),
-	{ V_cur_x, Bin6 } = read_float( Bin5 ),
-	{ V_cur_y, Bin7 } = read_float( Bin6 ),
+	{ V_hp_percent, Bin6 } = read_int32( Bin5 ),
+	{ V_cur_x, Bin7 } = read_float( Bin6 ),
+	{ V_cur_y, Bin8 } = read_float( Bin7 ),
 	{ #pk_GS2U_RemotePlayer {
 		uid = V_uid,
 		level = V_level,
 		name = V_name,
 		career = V_career,
 		race = V_race,
+		hp_percent = V_hp_percent,
 		cur_x = V_cur_x,
 		cur_y = V_cur_y
 		},
-	Bin7 };
+	Bin8 };
 
 %GENERATED from file:player.h => GS2U_RemoveRemote
 decode(?GS2U_RemoveRemote,Bin0) ->
@@ -801,6 +817,7 @@ encode(#pk_GS2U_HPChange{} = P) ->
 	Bin_cause = write_uint32( P#pk_GS2U_HPChange.cause ),
 	Bin_result = write_uint32( P#pk_GS2U_HPChange.result ),
 	Bin_hp_change = write_int32( P#pk_GS2U_HPChange.hp_change ),
+	Bin_hp_percent = write_int32( P#pk_GS2U_HPChange.hp_percent ),
 	Bin_src_uid = write_uint64( P#pk_GS2U_HPChange.src_uid ),
 	Bin_misc1 = write_uint32( P#pk_GS2U_HPChange.misc1 ),
 	Bin_misc2 = write_uint32( P#pk_GS2U_HPChange.misc2 ),
@@ -811,6 +828,7 @@ encode(#pk_GS2U_HPChange{} = P) ->
 		Bin_cause,
 		Bin_result,
 		Bin_hp_change,
+		Bin_hp_percent,
 		Bin_src_uid,
 		Bin_misc1,
 		Bin_misc2,
@@ -855,6 +873,16 @@ encode(#pk_GS2U_SpecialMove{} = P) ->
 		Bin_uid,
 		Bin_x,
 		Bin_y
+	];
+
+%GENERATED from file:combat.h => GS2U_SyncHp
+encode(#pk_GS2U_SyncHp{} = P) ->
+	Bin_uid = write_uint64( P#pk_GS2U_SyncHp.uid ),
+	Bin_hp_percent = write_int32( P#pk_GS2U_SyncHp.hp_percent ),
+	[
+		<<?GS2U_SyncHp:?U16>>,
+		Bin_uid,
+		Bin_hp_percent
 	];
 
 %GENERATED from file:combat.h => GS2U_UpdateBuff
@@ -1134,6 +1162,7 @@ encode(#pk_GS2U_RemoteMonster{} = P) ->
 	Bin_uid = write_uint64( P#pk_GS2U_RemoteMonster.uid ),
 	Bin_did = write_uint32( P#pk_GS2U_RemoteMonster.did ),
 	Bin_level = write_int32( P#pk_GS2U_RemoteMonster.level ),
+	Bin_hp_percent = write_int32( P#pk_GS2U_RemoteMonster.hp_percent ),
 	Bin_cur_x = write_float( P#pk_GS2U_RemoteMonster.cur_x ),
 	Bin_cur_y = write_float( P#pk_GS2U_RemoteMonster.cur_y ),
 	[
@@ -1141,6 +1170,7 @@ encode(#pk_GS2U_RemoteMonster{} = P) ->
 		Bin_uid,
 		Bin_did,
 		Bin_level,
+		Bin_hp_percent,
 		Bin_cur_x,
 		Bin_cur_y
 	];
@@ -1186,6 +1216,7 @@ encode(#pk_GS2U_RemotePlayer{} = P) ->
 	Bin_name = write_string( P#pk_GS2U_RemotePlayer.name ),
 	Bin_career = write_int32( P#pk_GS2U_RemotePlayer.career ),
 	Bin_race = write_int32( P#pk_GS2U_RemotePlayer.race ),
+	Bin_hp_percent = write_int32( P#pk_GS2U_RemotePlayer.hp_percent ),
 	Bin_cur_x = write_float( P#pk_GS2U_RemotePlayer.cur_x ),
 	Bin_cur_y = write_float( P#pk_GS2U_RemotePlayer.cur_y ),
 	[
@@ -1195,6 +1226,7 @@ encode(#pk_GS2U_RemotePlayer{} = P) ->
 		Bin_name,
 		Bin_career,
 		Bin_race,
+		Bin_hp_percent,
 		Bin_cur_x,
 		Bin_cur_y
 	];
@@ -1427,6 +1459,7 @@ name(?GS2U_HPChange) -> "GS2U_HPChange";
 name(?GS2U_HitTarget) -> "GS2U_HitTarget";
 name(?GS2U_SkillInterrupt) -> "GS2U_SkillInterrupt";
 name(?GS2U_SpecialMove) -> "GS2U_SpecialMove";
+name(?GS2U_SyncHp) -> "GS2U_SyncHp";
 name(?GS2U_UpdateBuff) -> "GS2U_UpdateBuff";
 name(?GS2U_UpdateBuffList) -> "GS2U_UpdateBuffList";
 name(?GS2U_UseSkill) -> "GS2U_UseSkill";
@@ -1480,6 +1513,7 @@ cmd_list()->
 		,?GS2U_HitTarget
 		,?GS2U_SkillInterrupt
 		,?GS2U_SpecialMove
+		,?GS2U_SyncHp
 		,?GS2U_UpdateBuff
 		,?GS2U_UpdateBuffList
 		,?GS2U_UseSkill

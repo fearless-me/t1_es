@@ -15,6 +15,7 @@
 -include("combat_buff.hrl").
 -include("condition_event.hrl").
 -include("cfg_buff.hrl").
+-include("common_def.hrl").
 
 %% API
 -export([
@@ -24,7 +25,7 @@
     %% 给玩家所在地图进程发消息
     send_map_msg_/2, send_map_msg_/3,
     %% 取得玩家属性
-    get_attr/2, get_hp/1, get_hp_percent/1,
+    get_attr/2, get_hp/1, get_hp_percent/2,
     %% 玩家地图进程id
     get_map_pid/1,
     get_cur_pos/1, %% 当前坐标
@@ -46,8 +47,8 @@ get_hp(Uid) ->
     gs_cache_interface:read_online_player_element(Uid, #m_cache_online_player.hp).
 
 %%-------------------------------------------------------------------
-get_hp_percent(_Uid) ->
-    1.0.
+get_hp_percent(CurHp, MaxHp) ->
+    erlang:trunc((CurHp / MaxHp) * ?PERCENT).
 
 %%-------------------------------------------------------------------
 get_map_pid(Uid) ->

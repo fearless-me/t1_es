@@ -39,7 +39,8 @@
     % 给我所在地图所有玩家进程发消息或者发送网络消息
     broadcast_map_msg_/1, broadcast_map_msg_/2, broadcast_map_net_msg_/1,
     % 给我视野范围内的所有玩家进程发消息或者发送网络消息
-    broadcast_map_view_msg_/1, broadcast_map_view_msg_/2, broadcast_map_view_net_msg_/1
+    broadcast_map_view_msg_/1, broadcast_map_view_msg_/2, broadcast_map_view_net_msg_/1,
+    request_revive/1
 ]).
 
 
@@ -146,7 +147,10 @@ player_change_combat_prop_(Req) ->
     map_interface:player_change_combat_prop_(MapPid, Req),
     ok.
 
-
+request_revive(Req) ->
+    #m_player_map{map_pid = MapPid} = player_rw:get_map(),
+    ps:send(MapPid, request_revive, Req),
+    ok.
 
 
 

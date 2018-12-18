@@ -132,6 +132,9 @@
     X:?F32,                                    %X坐标
     Y:?F32,                                    %Y坐标
     Z:?F32,                                    %Z坐标
+    X1:?F32,                                    %X坐标
+    Y1:?F32,                                    %Y坐标
+    Z1:?F32,                                    %Z坐标
     HeightRangeLimitLow:?F32,                %高度范围，最低值
     HeightRangeLimitHigh:?F32,                %高度范围，最高值
     BlockInfoOffset:?S32,                    %阻挡信息在文件中的偏移(uint)

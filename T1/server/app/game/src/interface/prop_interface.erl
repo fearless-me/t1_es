@@ -455,7 +455,7 @@ calcTreat(#m_battleProps{} = AttackBps, #m_battleProps{} = DefenderBps, TreatVal
         isCri = IsCri,
         damage = 0.0,
         deltaHp = HpNew - BP_2_HP_CUR_ADD_Des,
-        isDead = HpNew < 1.0
+        isDead = HpNew =< 0
     }.
 
 %% api:计算战斗伤害
@@ -504,7 +504,7 @@ calcHitAndDamage(#m_battleProps{} = AttackBps, #m_battleProps{} = DefenderBps, D
                 isCri = false,
                 damage = 0.0,
                 deltaHp = 0,
-                isDead = BP_2_HP_CUR_ADD_Des < 1.0
+                isDead = BP_2_HP_CUR_ADD_Des =< 0
             };
         true ->
             %% 暴击
@@ -541,7 +541,7 @@ calcHitAndDamage(#m_battleProps{} = AttackBps, #m_battleProps{} = DefenderBps, D
                 isCri = IsCri,
                 damage = Damage,
                 deltaHp = DeltaHp,
-                isDead = HpNew < 1.0
+                isDead = HpNew =< 0
             }
     end.
 
