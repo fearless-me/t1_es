@@ -4,44 +4,41 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ReadMe.html</title>
+  <title>服务器编程说明.md</title>
   <link rel="stylesheet" href="https://stackedit.io/style.css" />
 </head>
 
 <body class="stackedit">
   <div class="stackedit__html"><h1 id="服务器"><strong>服务器</strong></h1>
-<h2 id="代码风格">代码风格</h2>
+<ul>
+<li><a href="#%E4%BB%A3%E7%A0%81%E9%A3%8E%E6%A0%BC">代码风格</a></li>
+<li><a href="#%E5%9F%BA%E7%A1%80%E5%8E%9F%E5%88%99">基础原则</a></li>
+<li><a href="#%E7%8E%A9%E5%AE%B6%E6%95%B0%E6%8D%AE%E5%AD%98%E5%82%A8%E6%A0%BC%E5%BC%8F"> 玩家数据存储格式</a></li>
+<li><a href="#%E6%95%B0%E6%8D%AE%E5%BA%93%E6%97%A5%E5%BF%97">数据库日志</a></li>
+</ul>
+<h3 id="代码风格">代码风格</h3>
 <p><a href="https://github.com/feng19/erlang_guidelines">中文</a><br>
 <a href="https://github.com/inaka/erlang_guidelines">英文</a></p>
-<h2 id="基础原则">基础原则</h2>
+<h3 id="基础原则">基础原则</h3>
 <p><strong>除了下面规定和基础逻辑外（包括但不限于玩家管理、地图管理、跨服、网络、数据库、玩家数据、全局数据规则），其他任何具体逻辑将由开发的执行者根据策划案来采取最优策略，如果基础逻辑由不满足或者不方便的地方，烦请@马文洪</strong></p>
 <ul>
 <li>带有_priv字样的逻辑一般不要修改，如需要修改请让设计者修改</li>
 <li>所有模块要很容易被替换掉、同一功能的代码集中</li>
 <li>模块谁设计谁负责，大部分情况下由原始设计者修改</li>
 <li>模块所需要的数据结构尽量不要暴露给外部其他模块用，通过提供接口的方式让外部来获取数据</li>
-<li>逻辑模块（特别是玩家相关的）需要提供四个函数 <em><strong>on_login/1、 on_ready/0 、on_offline/0 、on_save/0</strong></em></li>
+<li>逻辑模块（特别是玩家相关的）需要提供四个函数 <code>on_login/1</code>、 <code>on_ready/0</code> 、<code>on_offline/0</code> 、<code>on_save/0</code></li>
 </ul>
 <blockquote>
-<p><strong>on_login</strong> 登录时初始化数据<br>
-<strong>on_ready()</strong> 玩家成功完成所有数据的初始化且登录流程全部成功后调用<br>
-<strong>on_offline()</strong> 玩家下线时调用<br>
-<strong>on_save() -&gt; Data.</strong> 定时、主动、下线时调用，该函数返回要保存的数据</p>
-</blockquote>
-<blockquote>
-<p><strong>特别强调</strong><br>
-<em><strong>不要</strong></em> 在<strong>on_login</strong>里处理诸如发奖、给道具等等逻辑，因为在登录流程没有完全走完时，玩家的数据不会被回写，可能会造成数据异常，相关逻辑可以放入 <strong>on_ready/0</strong>。</p>
+<p><code>on_login/1</code> 登录时初始化数据<br>
+<code>on_ready/0</code> 玩家成功完成所有数据的初始化且登录流程全部成功后调用<br>
+<code>on_offline/0</code> 玩家下线时调用<br>
+<code>on_save/0</code> 定时、主动、下线时调用，该函数返回要保存的数据<br>
+❗️<em><strong>不要</strong></em> 在<code>on_login/1</code>里处理诸如发奖、给道具等等逻辑，因为在登录流程没有全部成功，玩家的数据不会被回写，可能会造成数据异常，相关逻辑可以放入 <code>on_ready/0</code></p>
 </blockquote>
 <ul>
-<li>
-<p>函数名字<strong>fun_name_</strong> 带下划线的表示异步访问，否则就是同步函数</p>
-</li>
-<li>
-<p>所有的带<strong>interface</strong>的模块是提供给全局访问，可被任意进程调用，其他模块提供的接口请确认上下文</p>
-</li>
-<li>
-<p>record命名</p>
-</li>
+<li>函数名字<strong>fun_name_</strong> 带下划线的表示异步访问，否则就是同步函数</li>
+<li>所有的带<strong>interface</strong>的模块是提供给全局访问，可被任意进程调用，其他模块提供的接口请确认上下文</li>
+<li>record命名</li>
 </ul>
 <blockquote>
 <p><strong>m_</strong> 需要存放在内存中比如ETS，进程字典 m_cache_online_player<br>
@@ -97,17 +94,16 @@
 定时存：跟下线时保持一样的逻辑
 
 </code></pre>
-<ul>
-<li>玩家数据存储格式(<em><strong>初版</strong></em>)</li>
-</ul>
+<h3 id="玩家数据存储格式">玩家数据存储格式</h3>
+<p>❗️<em><strong>初版</strong></em> ❗️</p>
 <blockquote>
 <p>数据采用打包存储<br>
-每个模块<strong>on_save/0</strong>返回的数据，需要在<strong>player_save:full_save_data/0</strong>中注册版本号<br>
-<strong>不允许</strong>删除结构定义或者改结构名字<br>
-<strong>不允许</strong>改变字段顺序，改变顺序时必须重新定义<br>
-<strong>不允许</strong>删除数据字段，删除时必须重新定义<br>
-<strong>可以</strong>改字段名字，但需要保持字段数据类型一致<br>
-每个模块各自维护数据不同版本之间的转换（<strong>on_login/1</strong>时进行数据转换）</p>
+每个模块<code>on_save/0</code>返回的数据，需要在<code>player_save:full_save_data/0</code>中注册版本号<br>
+❗️<strong>不允许</strong>删除结构定义或者改结构名字<br>
+❗️<strong>不允许</strong>改变字段顺序，改变顺序时必须重新定义<br>
+❗️<strong>不允许</strong>删除数据字段，删除时必须重新定义<br>
+❗️<strong>可以</strong>改字段名字，但需要保持字段数据类型一致<br>
+每个模块各自维护数据不同版本之间的转换（<code>on_login/1</code>时进行数据转换）</p>
 </blockquote>
 <pre class=" language-erlang"><code class="prism  language-erlang">	<span class="token comment">%% 数据结构维护的例子</span>
 	<span class="token operator">-</span><span class="token function">record</span><span class="token punctuation">(</span><span class="token atom">p_buff_0</span><span class="token punctuation">,</span><span class="token punctuation">{</span><span class="token atom">id</span><span class="token punctuation">,</span><span class="token atom">cd</span><span class="token punctuation">,</span><span class="token atom">time</span><span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">.</span>
@@ -129,6 +125,17 @@
 <blockquote>
 <p><em><strong>服务器数据</strong></em>：单服务器的全局数据（排行榜等）这个将由游戏服内的专属逻辑进程来操作<br>
 <em><strong>全游戏数据</strong></em>：这个主要包括社交方面的数据（帮会、好友、组队等）将由centerserver来操作</p>
+</blockquote>
+<h3 id="数据库日志">数据库日志</h3>
+<ol>
+<li>新建数据库表</li>
+<li>使用<code>工具集中</code>中的<code>917</code>命令导出代码</li>
+<li>如果是需要按月分表，在 <code>common_logdb_month_table.hrl</code>的中<code>GAME_MONTH_TABLE</code>(游戏服)或者<code>CENTER_MONTH_TABLE</code>(中心服)加入表名字。</li>
+<li>使用<code>gs_interface:action_log_/2</code>或者<code>gs_interface:action_log_/3</code></li>
+</ol>
+<blockquote>
+<p>❗️ 假设数据库表名: <code>log_player_create</code>, 那么表明可以是 <code>'log_player_create'</code> 或者 <code>"log_player_create"</code><br>
+❗️ <code>gs_interface:action_log_(Uid, #p_log_player_create{}).</code></p>
 </blockquote>
 </div>
 </body>
