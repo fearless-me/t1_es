@@ -16,35 +16,53 @@
 <li>安装mysql</li>
 </ul>
 <blockquote>
-<p>mysql安装目录bin目录放入环境变量 path中<br>
-❗️ 如果嫌安装mysql麻烦，非正式环境可以安装 <code>\\ToolsDev\\mariadb-10.2.9-winx64.msi</code>这个跟mysql一样的</p>
+<p><code>mysql</code>安装目录<code>bin</code>目录放入环境变量<code>path</code>中<br>
+❗️ 如果嫌安装mysql麻烦，非正式环境可以安装 <code>\ToolsDev\mariadb-10.2.9-winx64.msi</code>这个跟mysql一样的</p>
 </blockquote>
 <ul>
 <li>安装Erlang OTP-21</li>
 </ul>
 <blockquote>
-<p>安装文件位于项目目录 <code>\\ToolsDev\\otp_win64_21.1.exe</code><br>
-将安装目录（一般是: <code>C:\\Program Files\\erl10.1\\bin</code>）放入环境变量 path中</p>
+<p>安装文件位于项目目录 <code>\ToolsDev\otp_win64_21.1.exe</code><br>
+将安装目录（一般是: <code>C:\Program Files\erl10.1\bin</code>）放入环境变量 <code>path</code>中</p>
 </blockquote>
 <h2 id="导入数据库结构">导入数据库结构</h2>
-<h4 id="数据库root账号密码是-1234">数据库<em>root</em>账号密码是 <em>1234</em></h4>
+<h4 id="数据库root账号密码是-1234">数据库<code>root</code>账号密码是 <code>1234</code></h4>
 <ul>
 <li>运行 <code>Server\\sql\\导入数据库结构.bat</code></li>
 </ul>
 <h4 id="数据库root账号密码是其他">数据库<em>root</em>账号密码是其他</h4>
 <ul>
-<li>把所有<code>.sql</code>和<code>.bat</code>中的1234换成你的密码</li>
-<li>把<code>Server\\app\\game\\data\\game.ini</code>中的1234换成你的密码再运行</li>
-<li>把<code>Server\\app\\center\\data\\center.ini</code>中的1234换成你的密码再运行</li>
-<li>运行 Server\sql\导入数据库结构.bat</li>
+<li>👍 自动替换</li>
+</ul>
+<blockquote>
+<p>使用工具脚本中的<code>801</code>命令按提示输入替换<br>
+<code>192.168.18.88 haha</code> 表示将所有配置中数据相关的IP<code>127.0.0.1</code>替换成 <code>192.168.18.88</code>    数据密码<code>1234</code>替换成<code>haha</code><br>
+<code>11.11.11.11 abcd 192.168.18.88 haha</code>表示将所有配置中数据相关的IP<code>11.11.11.11</code>替换成 <code>192.168.18.88</code>    数据密码<code>abcd</code>替换成<code>haha</code></p>
+</blockquote>
+<ul>
+<li>👎手动修改</li>
+</ul>
+<blockquote>
+<p>把所有<code>.sql</code>和<code>.bat</code>中的<code>1234</code>换成你的密码<br>
+把<code>Server\app\game\data\game.ini</code>中的<code>1234</code>换成你的密码再运行<br>
+把<code>Server\app\center\data\center.ini</code>中的<code>1234</code>换成你的密码再运行</p>
+</blockquote>
+<ul>
+<li>运行 <code>Server\sql\导入数据库结构.bat</code></li>
 </ul>
 <h2 id="编译开服">编译&amp;开服</h2>
 <blockquote>
 <p>下面两个2选1<br>
-运行运行 <code>Server\\_非_程序员.bat</code><br>
-运行运行 <code>Server\\_真_程序员.bat</code></p>
+运行运行 <code>Server\_非_程序员.bat</code><br>
+运行运行 <code>Server\_真_程序员.bat</code></p>
 </blockquote>
-<p>*** OVER ***</p>
+<h2 id="可能遇到的问题">可能遇到的问题</h2>
+<blockquote>
+<p>❗️ 游戏服连不上中心服， 使用工具脚本中的<code>802</code>命令，把中心服的节点名改成自己的IP(<code>不能是 127.0.0.1</code>)</p>
+</blockquote>
+<hr>
+<p>🌞  🌞  🌞  🌞  🌞</p>
 </div>
 </body>
 
