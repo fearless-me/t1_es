@@ -8,8 +8,8 @@
 %%%-------------------------------------------------------------------
 -author("Administrator").
 
--ifndef(DB_LOG_DEF_HRL).
--define(DB_LOG_DEF_HRL, true).
+-ifndef(COMMON_LOGDB_MONTH_TABLE).
+-define(COMMON_LOGDB_MONTH_TABLE, true).
 
 %% 表名字可是 字符串或者是原子: log_money | "log_money" 都可以
 %%-------------------------------------------------------------------
