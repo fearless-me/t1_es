@@ -233,9 +233,9 @@ heartbeat() ->
                     Msg2 = #pk_U2GS_ChangeMap{map_id = 2, x = 324.1, y = 233.5},
                     send_msg(socket(), Msg2)
             end;
-        _ when CanChangeMap, MapId =/= 1 ->
+        _ when CanChangeMap, MapId =/= 3 ->
             ?INFO("##### ~p change map ~p -> 1", [self(), MapId]),
-            Msg3 = #pk_U2GS_ChangeMap{map_id = 1, x = 324.1, y = 233.5},
+            Msg3 = #pk_U2GS_ChangeMap{map_id = 3, x = 324.1, y = 233.5},
             send_msg(socket(), Msg3);
         _ when HeartbeatCount rem 2 == 0 ->
             Msg4 = #pk_U2GS_Chat{content = io_lib:format("&add_bp ~p ~p ~p",

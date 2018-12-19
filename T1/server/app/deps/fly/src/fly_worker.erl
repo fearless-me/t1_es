@@ -298,8 +298,13 @@ do_process_inc_files(SrcFile, Forms) ->
 process_src_file_incs_1(PidList, []) ->
     PidList;
 process_src_file_incs_1(PidList, [SrcFile | SrcFiles]) ->
-    Pid = erlang:spawn_monitor(fun() -> process_inc_files(SrcFile) end),
-    process_src_file_incs_1([Pid | PidList], SrcFiles).
+    case filelib:file_size(SrcFile) of
+         Int when Int > 512*1024 ->
+             PidList;
+         _->
+             Pid = erlang:spawn_monitor(fun() -> process_inc_files(SrcFile) end),
+             process_src_file_incs_1([Pid | PidList], SrcFiles)
+    end.
 
 src_file_include(HrlFiles, []) ->
     HrlFiles;

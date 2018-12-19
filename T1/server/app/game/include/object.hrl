@@ -46,7 +46,7 @@
     #m_bp{id = ?BP_2_MP_CUR, add = 40.0},
     #m_bp{id = ?BP_2_ATK, add = 38.0},
     #m_bp{id = ?BP_2_DEF, add = 30.0},
-    #m_bp{id = ?BP_2_SPEED, add = 5.0}
+    #m_bp{id = ?BP_2_SPEED, add = 6.0}
 ]).
 
 -define(LIST_BP3, [

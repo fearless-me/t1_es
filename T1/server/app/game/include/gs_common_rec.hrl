@@ -44,7 +44,8 @@
 -record(r_player_add_buff_req, {uid = 0, src_uid = 0, buff_id = 0, level = 1, lifetime=0, layer=1, skip_immune=false}).
 
 %%初始化地图对象所需要的信息
--record(r_create_map_object_req,{type, pid, uid, data_id, owner, group, pos, face, level, name, sex, race, career}).
+-record(r_create_map_object_req,{type, pid, uid, data_id, owner, group, pos, face,
+    level, name, sex, race, career, battle_props=[], buff_list=[] }).
 
 
 

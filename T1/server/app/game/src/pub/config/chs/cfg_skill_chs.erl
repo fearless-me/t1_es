@@ -109,13 +109,13 @@
 	%% icon ID
 
 	%% castanim:
-	%% 动作主类型 _ 子类型 _ id，实际上只用填写文件名，不用写路径
+	%% 职业(3)分类(1)ID(1)
 
 	%% skilleffect:
-	%% 同上
+	%% 职业_分类_ID
 
 	%% hiteffect:
-	%% 同上
+	%% 职业_分类_ID
 
 	%% hp_steal:
 	%% 吸血比例（万分比）
@@ -176,7 +176,7 @@ getRow(10110000) ->
 		cooldown = 1200,
 		flying = 0,
 		iconid = "99",
-		castanim = "1_1_1",
+		castanim = 10111,
 		skilleffect = "1_1_1",
 		hiteffect = "1_1_1",
 		hp_steal = 0,
@@ -216,7 +216,7 @@ getRow(10110001) ->
 		cooldown = 0,
 		flying = 0,
 		iconid = "98",
-		castanim = "1_1_2",
+		castanim = 10112,
 		skilleffect = "1_1_2",
 		hiteffect = "1_1_2",
 		hp_steal = 0,
@@ -256,7 +256,7 @@ getRow(10100000) ->
 		cooldown = 2000,
 		flying = 0,
 		iconid = "97",
-		castanim = "1_1_3",
+		castanim = 10121,
 		skilleffect = "1_1_3",
 		hiteffect = "1_1_3",
 		hp_steal = 0,
@@ -296,7 +296,7 @@ getRow(10100001) ->
 		cooldown = 5000,
 		flying = 0,
 		iconid = "96",
-		castanim = "1_1_4",
+		castanim = 10122,
 		skilleffect = "1_1_4",
 		hiteffect = "1_1_4",
 		hp_steal = 0,
@@ -336,7 +336,7 @@ getRow(11100001) ->
 		cooldown = 5000,
 		flying = 500,
 		iconid = "66",
-		castanim = "1_2_1",
+		castanim = 11121,
 		skilleffect = "1_2_1",
 		hiteffect = "1_2_1",
 		hp_steal = 0,
@@ -376,7 +376,7 @@ getRow(50110000) ->
 		cooldown = 1000,
 		flying = 500,
 		iconid = "501000",
-		castanim = "501_1_1",
+		castanim = 50111,
 		skilleffect = "501_1_1",
 		hiteffect = "501_1_1",
 		hp_steal = 0,
@@ -416,7 +416,7 @@ getRow(50110001) ->
 		cooldown = 1500,
 		flying = 500,
 		iconid = "501000",
-		castanim = "501_1_2",
+		castanim = 50112,
 		skilleffect = "501_1_2",
 		hiteffect = "501_1_2",
 		hp_steal = 0,
@@ -456,7 +456,7 @@ getRow(50100000) ->
 		cooldown = 5000,
 		flying = 100,
 		iconid = "501001",
-		castanim = "501_1_3",
+		castanim = 50121,
 		skilleffect = "501_1_3",
 		hiteffect = "501_1_3",
 		hp_steal = 0,
@@ -496,7 +496,7 @@ getRow(50100002) ->
 		cooldown = 5000,
 		flying = 300,
 		iconid = "501002",
-		castanim = "501_1_5",
+		castanim = 50123,
 		skilleffect = "501_1_5",
 		hiteffect = "501_1_5",
 		hp_steal = 0,
@@ -506,6 +506,46 @@ getRow(50100002) ->
 		castingtick = [],
 		beforehit = [],
 		ishit = [[[],[],[]],[[0,0,0,1004,20000,0,0,0],[],[],[]],[[],[],[],[]]],
+		action_before_cast = "",
+		action_casting_tick = "",
+		action_ishit = "",
+		action_bullet = ""
+	};
+getRow(50100001) ->
+	#skillCfg{
+		desc__ = "先随便加一个技能占格子",
+		id = 50100001,
+		name = "@@>1000038<",
+		type = 1,
+		subType = 1,
+		it_type = 1,
+		pt_type = 1,
+		it_take_type = 1,
+		career = 501,
+		movable = 2,
+		continue_param = [],
+		sing_param = [],
+		purpose = 1,
+		target = 1,
+		casttarget = 1,
+		areatype = 1,
+		radius = 0,
+		arc = 0,
+		distance = [0,7],
+		cost = [],
+		cooldown = 2000,
+		flying = 100,
+		iconid = "501003",
+		castanim = 50122,
+		skilleffect = "501_2_2",
+		hiteffect = "501_2_2",
+		hp_steal = 0,
+		special_options = 0,
+		hurt_times = 100,
+		beforecast = [],
+		castingtick = [],
+		beforehit = [],
+		ishit = [[[],[],[]],[[0,0,0,1004,12000,0,0,0],[],[],[]],[[],[],[],[]]],
 		action_before_cast = "",
 		action_casting_tick = "",
 		action_ishit = "",
@@ -522,7 +562,8 @@ getKeyList() -> [
 	{50110000},
 	{50110001},
 	{50100000},
-	{50100002}
+	{50100002},
+	{50100001}
 ].
 
 get1KeyList() -> [
@@ -534,6 +575,7 @@ get1KeyList() -> [
 	50110000,
 	50110001,
 	50100000,
-	50100002
+	50100002,
+	50100001
 ].
 

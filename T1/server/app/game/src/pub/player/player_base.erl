@@ -107,7 +107,7 @@ stop_move(Pos) ->
         true ->
             Req = #r_player_stop_move_req{uid = Uid, pos = Pos},
             player_pub:stop_move_(Req),
-%%            ?WARN("player ~p mapid ~p stop on ~w", [Uid, MPid, Pos]),
+%%            ?WARN("player ~p stop on ~w", [Uid, Pos]),
             ok;
         _ ->
             ?DEBUG("### error stop pos ~w", [Pos])

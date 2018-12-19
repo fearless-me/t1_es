@@ -125,8 +125,8 @@ start_player_walk_1(Uid, Start, End, Speed) ->
 %%    TotalDist = lists:foldl(
 %%        fun(#m_move_pos{dist = DistCur}, Acc) -> Acc + DistCur end, 0, PathList),
 %%    TotalTime = TotalDist / Speed * 1000,
-%%    ?WARN("player ~p start move from ~w to ~w, dist ~w, ~w(ms)",
-%%        [Uid, Start, lists:last(Way), TotalDist, TotalTime]),
+%%    ?WARN("player ~p start move from ~w to ~w, dist ~w, speed ~p, ~w(ms)",
+%%        [Uid, Start, lists:last(Way), TotalDist, RealSpeed, TotalTime]),
 
     % 路点变化时同步到ETS
     start_walk_set(Uid, ?EMS_WALK, ?EMS_STAND, Start, End, Dir, Dir, Now, PathList, RealSpeed),
@@ -201,7 +201,8 @@ tick_player_move(Obj, ?EMS_WALK) ->
     MovedTime = object_rw:get_seg_move_time(Uid),
     tick_role_walk(Uid, CurPos, PathList, MovedTime + Delta),
     ok;
-tick_player_move(_Obj, _Move) -> skip.
+tick_player_move(_Obj, _Move) ->    skip.
+%%    ?DEBUG("~w, ~p",[_Obj, _Move]).
 
 %%-------------------------------------------------------------------
 tick_monster_move(Obj, Move)
@@ -220,8 +221,8 @@ tick_monster_move(Obj, Move)
 tick_monster_move(_Obj, _Move) -> skip.
 
 %%-------------------------------------------------------------------
-tick_role_walk(Uid, _CurPos, [], _MoveTime) ->
-%%    ?WARN("mapid ~p player ~w arrived ~w", [self(), Uid, CurPos]),
+tick_role_walk(Uid, CurPos, [], _MoveTime) ->
+    ?WARN("mapid ~p player ~w arrived ~w", [self(), Uid, CurPos]),
     object_rw:set_fields(
         Uid,
         [
@@ -238,8 +239,7 @@ tick_role_walk(Uid, _CurPos, PathList, MoveTime) ->
     {NewPos, NewPathList, MoreTime} = linear_pos(PathList, MoveTime, keep),
 
 %%    ?DEBUG("mapid ~p ~w from ~w to ~w move time ~p",
-%%        [self(), Obj#m_map_obj.uid, CurPos, NewPos, MoveTime]),
-%%    ?DEBUG("# ~p,~p", [NewPos#vector3.x, NewPos#vector3.z]),
+%%        [self(), Uid, _CurPos, NewPos, MoveTime]),
     on_obj_pos_change(Uid, NewPos),
     
     case NewPathList of
@@ -382,18 +382,20 @@ do_start_monster_walk(Uid, Dst, MoveState) ->
     Start = object_rw:get_cur_pos(Uid),
     Dir = vector3:subtract(Dst, Start),
     Now = map_rw:get_move_timer_now(),
+    MaxSpeed = prop_interface:query_v_pf_bpu(?BP_2_SPEED, object_rw:get_battle_props((Uid))),
     Speed = object_rw:get_move_speed(Uid),
-    PathList = make_path_list([], Start, Way, Speed),
-    
+    RealSpeed = erlang:min(Speed, MaxSpeed),
+    PathList = make_path_list([], Start, Way, RealSpeed),
+                    
     %%
-    TotalDist = lists:foldl(
-        fun(#m_move_pos{dist = DistCur}, Acc) -> Acc + DistCur end, 0, PathList),
-    TotalTime = TotalDist / Speed * 1000,
-    ?DEBUG("monster ~p start move from ~w to ~w, dist ~w, ~w(ms)",
-        [Uid, Start, lists:last(Way), TotalDist, TotalTime]),
+%%    TotalDist = lists:foldl(
+%%        fun(#m_move_pos{dist = DistCur}, Acc) -> Acc + DistCur end, 0, PathList),
+%%    TotalTime = TotalDist / RealSpeed * 1000,
+%%    ?DEBUG("monster ~p, speed ~p, start move from ~w to ~w, dist ~w, ~w(ms)",
+%%        [Uid, RealSpeed, Start, lists:last(Way), TotalDist, TotalTime]),
     
     %
-    start_walk_set(Uid, MoveState, ?EMS_STAND, Start, Dst, Dir, Dir, Now, PathList, Speed),
+    start_walk_set(Uid, MoveState, ?EMS_STAND, Start, Dst, Dir, Dir, Now, PathList, RealSpeed),
     mod_view:sync_movement_to_big_visual_tile(Uid),
     hook_map:on_start_move(Uid),
     true.

@@ -33,7 +33,7 @@
 
 %% 视野范围
 %% @todo 这个应该让地图自己配置
--define(VIS_DIST, 16).
+-define(VIS_DIST, 64).
 
 %% 九宫格方向
 -define(ED_Center, 0). %% 中间

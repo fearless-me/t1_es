@@ -175,7 +175,7 @@ init_one_monster(Mdata) ->
     VisIndex = mod_view:pos_to_vis_index(object_rw:get_cur_pos(Uid)),
     map_rw:add_object(Obj),
     mod_view:add_obj_to_vis_tile(Obj, VisIndex),
-    hook_map:on_monster_create(Uid),
+    hook_map:on_monster_create(Uid, object_priv:get_data_id(Obj)),
     ?DEBUG("map_~p_~p create monster ~p, uid ~p, visIndex ~p",
         [map_rw:map_id(), map_rw:line_id(), object_priv:get_data_id(Obj), Uid, VisIndex]),
     ok.

@@ -52,7 +52,7 @@ get_skill_info_list() ->
                                                     slot_index = SlotIndex
                                                 } | AccL]};
                                         _ ->
-                                            SlotIndex, AccL
+                                            {SlotIndex, AccL}
                                     end
                             end;
                         _ ->

@@ -42,6 +42,9 @@ on_info_msg({player_del_buff, Uid, OpType, Params}) ->
 on_info_msg({net_msg_get_remote_obj_info, Msg}) ->
     mod_map_sync:net_msg_get_remote_obj_info(Msg),
     ok;
+on_info_msg({monster_add_born_buff, Msg}) ->
+    mod_monster:add_born_buff(Msg),
+    ok;
 on_info_msg(Info) ->
     ?ERROR("info:~p", [Info]),
     ok.

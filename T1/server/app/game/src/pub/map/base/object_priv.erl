@@ -15,6 +15,7 @@
 -include("cfg_monster.hrl").
 -include("cfg_npc.hrl").
 -include("ai.hrl").
+-include("object.hrl").
 -include("rec_rw.hrl").
 -include("gs_common_rec.hrl").
 
@@ -53,20 +54,14 @@ new_player(Pid, Uid, Group, Pos, Face) ->
     init_rw_default(Uid),
     BattleProps = gs_cache_interface:read_online_player_element(Uid, #m_cache_online_player.battle_props),
     BuffList = gs_cache_interface:read_online_player_element(Uid, #m_cache_online_player.buff_list),
-    object_rw:set_fields_direct(
-        Uid,
-        [
-            {#m_object_rw.battle_props, BattleProps},
-            {#m_object_rw.buff_list, BuffList}
-        ]
-    ),
-
+    
     Req = #r_create_map_object_req{
         type = ?UID_TYPE_PLAYER,
         pid = Pid, uid = Uid, data_id = 0,
         owner = 0, group = Group,
         pos = Pos, face = Face,
-        level = 1, name = "", sex = 0, race = 1, career = 1
+        level = 1, name = "", sex = 0, race = 1, career = 1,
+        battle_props = BattleProps, buff_list =  BuffList
     },
 
     new(Req).
@@ -107,7 +102,15 @@ new_monster(#recMapObjData{
     Uid = uid_gen:mon_uid(),
     Pos = vector3:new(X, 0.0, Y),
     init_rw_default(Uid),
-    
+    BattleProps = #m_battleProps{
+        career = 1, %% fixme prop_interface:?Career_1
+        listBP1 = ?LIST_BP1,
+        listBP2 = ?LIST_BP2,
+        listBP3 = ?LIST_BP3
+    },
+
+    BattlePropsNew = prop_interface:calc(
+        BattleProps, [{?BP_4_HIT, ?BPUseType_ADD, 0.0}], []),
     %% todo 怪物AI配置
     mod_ai:init(Uid, ?AI_ACTIVE),
     Req = #r_create_map_object_req{
@@ -115,7 +118,8 @@ new_monster(#recMapObjData{
         pid = self(), uid = Uid, data_id = Mid,
         owner = 0, group = Group,
         pos = Pos, face = vector3:new(0.1, 0, 0.5),
-        level = 1, name = "", sex = 0, race = 1, career = 1
+        level = 1, name = "", sex = 0, race = 1, career = 1,
+        battle_props = BattlePropsNew, buff_list = []
     },
     new(Req).
 
@@ -155,7 +159,9 @@ new(
         owner = Owner, group = Group,
         pos = Pos, face = Face,
         level = Level, name = Name, sex = Sex,
-        race = Race, career = Career
+        race = Race, career = Career,
+        battle_props = BattleProps,
+        buff_list = BuffList
     }
 ) ->
     mod_move:init(Uid, Pos, Face),
@@ -172,7 +178,9 @@ new(
             {#m_object_rw.data_id, Did},
             {#m_object_rw.group, Group},
             {#m_object_rw.pid, Pid},
-            {#m_object_rw.type, Type}
+            {#m_object_rw.type, Type},
+            {#m_object_rw.battle_props, BattleProps},
+            {#m_object_rw.buff_list, BuffList}
         ]
     ),
     

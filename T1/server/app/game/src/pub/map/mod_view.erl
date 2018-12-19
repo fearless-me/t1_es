@@ -39,6 +39,7 @@
 -define(VIS_W, map_vis_w__).
 -define(VIS_H, map_vis_h__).
 -define(CELL_SIZE, map_cell_size__).
+-define(WORLD_POS, map_world_pos__).
 
 
 sync_player_join_group(Uid, Group) ->
@@ -96,7 +97,8 @@ sync_del_pet(_Uid) -> ok.
 init_vis_tile(#recGameMapCfg{
     colCellNum = Col,
     rowCellNum = Row,
-    cellSize = CellSize
+    cellSize = CellSize,
+    worldPos = {X, Y, Z}
 }) ->
     VisW = (erlang:trunc(Col * 1) div ?VIS_DIST) + 1,
     VisH = (erlang:trunc(Row * 1) div ?VIS_DIST) + 1,
@@ -109,6 +111,7 @@ init_vis_tile(#recGameMapCfg{
     visual_h(VisH),
     map_cell_size(CellSize),
     init_vis_tile_1(VisT),
+    world_pos(vector3:new(X, Y, Z)),
 %%    erlang:put(?VIS_K, ViewMaps),
     ok.
 
@@ -447,9 +450,10 @@ pos_to_vis_index(Pos) ->
 
 %% vector3 
 pos_to_vis_index(Pos, VisTileWidth, ViewDist) ->
+    WorldPos = world_pos(),
     CellSize = map_cell_size(),
-    IndexX = trunc(vector3:x(Pos) / CellSize / ?TILE_SCALE / ViewDist) + 1,
-    IndexZ = trunc(vector3:z(Pos) / CellSize / ?TILE_SCALE / ViewDist) + 1,
+    IndexX = trunc((vector3:x(Pos) - vector3:x(WorldPos)) / CellSize / ?TILE_SCALE / ViewDist) + 1,
+    IndexZ = trunc((vector3:z(Pos) - vector3:z(WorldPos)) / CellSize / ?TILE_SCALE / ViewDist) + 1,
     
     (IndexZ * VisTileWidth + IndexX).
 
@@ -520,3 +524,6 @@ i_set_visual(Index, Tile) ->
 
 i_get_visual(Index) ->
     misc_ets:read_element(map_rw:excl_ets(), {?VIS_K, Index}, #pub_kv.value).
+
+world_pos(Pos) -> erlang:put(?WORLD_POS, Pos).
+world_pos() -> erlang:get(?WORLD_POS).

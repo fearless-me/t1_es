@@ -480,6 +480,15 @@ getRow(14) ->
 		notice_type = 0,
 		content = "333333333"
 	};
+getRow(1000038) ->
+	#string_packageCfg{
+		desc__ = "占位技能Q",
+		id = 1000038,
+		enum_string_id = "",
+		type = 4,
+		notice_type = 0,
+		content = "占位技能Q"
+	};
 getRow(_) -> {}.
 
 getKeyList() -> [
@@ -531,7 +540,8 @@ getKeyList() -> [
 	{10},
 	{16},
 	{15},
-	{14}
+	{14},
+	{1000038}
 ].
 
 get1KeyList() -> [
@@ -583,6 +593,7 @@ get1KeyList() -> [
 	10,
 	16,
 	15,
-	14
+	14,
+	1000038
 ].
 

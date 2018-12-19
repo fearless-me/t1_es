@@ -58,10 +58,10 @@ info({serv_start_ack, RunNo}) ->
         misc:halt("save serv_start failed, error ~p, current stack ~p", [Err, ST])
     end,
     ok;
-info({load_all_role_info_ack, List}) ->
-    lists:foreach(
-        fun(Player) -> gs_cache_interface:add_player_pub(Player) end, List),
-    ok;
+%%info({load_all_role_info_ack, List}) ->
+%%    lists:foreach(
+%%        fun(Player) -> gs_cache_interface:add_player_pub(Player) end, List),
+%%    ok;
 info(load_all_role_info_ack_end) ->
     data_loader:task_over(load_all_role_info),
     ok;

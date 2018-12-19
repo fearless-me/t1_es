@@ -16,7 +16,9 @@
 
 -spec async(function()) -> {pid(), reference()}.
 async(Fun) when erlang:is_function(Fun) ->
-    async(erlang, apply, [Fun, []]).
+    async(erlang, apply, [Fun, []]);
+async({Fun,Args}) when erlang:is_function(Fun),is_list(Args) ->
+    async(erlang, apply, [Fun, Args]).
 
 -spec async(atom(), function()) -> {pid(), reference()}.
 async(Node, Fun) when erlang:is_function(Fun) ->
@@ -116,7 +118,8 @@ async_do(TaskOwner, TaskOwnerInfo, MFA) ->
             {TaskOwner, Ref1} ->
                 Ref1
         end,
-    erlang:send(TaskOwner, {Ref, do_apply(TaskOwnerInfo, MFA)}).
+    erlang:send(TaskOwner, {Ref, do_apply(TaskOwnerInfo, MFA)}),
+    catch erlang:unlink(TaskOwner).
 
 get_info(Pid) ->
     Name =

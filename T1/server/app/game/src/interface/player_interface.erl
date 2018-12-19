@@ -48,7 +48,7 @@ get_hp(Uid) ->
 
 %%-------------------------------------------------------------------
 get_hp_percent(CurHp, MaxHp) ->
-    erlang:trunc((CurHp / MaxHp) * ?PERCENT).
+    erlang:max(erlang:trunc((CurHp / MaxHp) * ?PERCENT), ?PERCENT).
 
 %%-------------------------------------------------------------------
 get_map_pid(Uid) ->

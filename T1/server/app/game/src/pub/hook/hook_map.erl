@@ -16,6 +16,7 @@
 -include("combat.hrl").
 -include("combat_buff.hrl").
 -include("netmsg.hrl").
+-include("cfg_monster.hrl").
 
 
 -export([
@@ -29,8 +30,8 @@
     on_player_join/1, on_player_exit/1,
 
     %%------------------------怪物-------------------------------------------
-    on_monster_create/1, on_monster_dead/1,
-    
+    on_monster_create/2, on_monster_dead/1,
+
     %%-------------------------------------------------------------------
     on_rw_update/2
 ]).
@@ -71,7 +72,14 @@ on_player_exit(Uid) ->
     ok.
 %%-------------------------------------------------------------------
 %% 怪物
-on_monster_create(_Uid) ->
+on_monster_create(Uid, DataId) ->
+    case getCfg:getCfgByArgs(cfg_monster, DataId) of
+        #monsterCfg{buff_born = []} ->
+            ok;
+        #monsterCfg{} ->
+            ps:send(self(), monster_add_born_buff, {Uid, DataId});
+        _ -> skip
+    end,
     ok.
 
 on_monster_dead(Uid) ->
@@ -92,7 +100,7 @@ on_rw_update(Uid, {Pos, Value}) ->
 on_rw_update(?UID_TYPE_PLAYER, Uid, #m_object_rw.cur_pos, CurPos) ->
     gs_cache_interface:update_online_player(Uid, {#m_cache_online_player.pos, CurPos});
 on_rw_update(?UID_TYPE_PLAYER, Uid, #m_object_rw.hp, Hp) ->
-    gs_cache_interface:update_online_player(Uid, {#m_cache_online_player.hp,Hp});
+    gs_cache_interface:update_online_player(Uid, {#m_cache_online_player.hp, Hp});
 on_rw_update(?UID_TYPE_PLAYER, Uid, #m_object_rw.buff_list, BuffList) ->
     gs_cache_interface:update_online_player(Uid, {#m_cache_online_player.buff_list, BuffList});
 on_rw_update(?UID_TYPE_PLAYER, Uid, #m_object_rw.battle_props, BattleProps) ->

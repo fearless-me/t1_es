@@ -25,15 +25,15 @@ handler(load_all_role_info, Sid, FromPid, PoolId) ->
     Sql = gs_db_sql:sql(load_all_role_info_cnt),
     Res = db:query(PoolId, Sql, [Sid], ?DB_QUERY_TIMEOUT),
     check_res(Res, Sql, [Sid]),
-    Load = 100,
+    Load = 1000,
     Count = db:scalar(Res),
     SeqNo =
         case Count rem Load of
             0 when Count > Load -> Count div Load;
             _ -> (Count div Load) + 1
         end,
-    
-    lists:foreach(
+
+    LoadFunc =
         fun(Batch) ->
             Start = (Batch - 1) * Load,
             End = Batch * Load,
@@ -42,9 +42,12 @@ handler(load_all_role_info, Sid, FromPid, PoolId) ->
             check_res(ResLoad, SqlLoad, [Sid, Start, End]),
             ResList0 = db:as_record(ResLoad, p_player, record_info(fields, p_player)),
             ResList1 = [Player#p_player{name = binary_to_list(Player#p_player.name)} || Player <- ResList0, Player#p_player.delete_flag == 0],
-            ps:send(FromPid, load_all_role_info_ack, ResList1)
-        end, lists:seq(1, SeqNo)),
-    
+            lists:foreach(fun(Player) -> gs_cache_interface:add_player_pub(Player) end, ResList1),
+            true
+        end,
+
+    PidList = [task:async({LoadFunc, [Batch]}) || Batch <- lists:seq(1, SeqNo)],
+    lists:foreach(fun(PidRef) -> task:await(PidRef, infinity) == true end, PidList),
     ps:send(FromPid, load_all_role_info_ack_end),
     ok;
 handler(load_player_list, AccId, FromPid, PoolId) ->
@@ -62,7 +65,7 @@ handler(load_player_data, {_Aid, Uid}, FromPid, PoolId) ->
     [#p_player{name = Name, delete_flag = DeleteFlag} = Player] =
         db:as_record(Res, p_player, record_info(fields, p_player)),
     Data = case DeleteFlag of
-               0 ->Player#p_player{name = binary_to_list(Name)};
+               0 -> Player#p_player{name = binary_to_list(Name)};
                _ -> undefined
            end,
     ps:send(FromPid, load_player_data_ack, Data),
@@ -80,7 +83,7 @@ handler(create_player, {AccId, Req}, FromPid, PoolId) ->
     Params = [AccId, Uid, Sid, Name, 1, Sex, Camp, Race, Career, Head,
         Mid, 0, X, Y, Mid, 0, X, Y, Data, Version],
     Res = db:query(PoolId, Sql, Params, ?DB_QUERY_TIMEOUT),
-    
+
     check_res(Res, Sql, Params),
     ps:send(
         FromPid,
@@ -96,13 +99,13 @@ handler(create_player, {AccId, Req}, FromPid, PoolId) ->
 handler(save_player, PlayerExt, _FromPid, PoolId) ->
     #p_player_save
     {
-        % 版本信息
+% 版本信息
         version = Version,
-        % 基础信息
+% 基础信息
         uid = Uid, race = Race, career = Career, level = Lv,
         map_id = Mid, line = Line, pos = Pos,
         old_map_id = OMid, old_line = OLine, old_pos = OPos,
-        % 完整数据
+% 完整数据
         data = Data
     } = PlayerExt,
     Sql = gs_db_sql:sql(save_player),
