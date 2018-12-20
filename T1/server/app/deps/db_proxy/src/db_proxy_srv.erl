@@ -88,7 +88,9 @@ start_db_pool(PoolRef, Conf) ->
         conn := Connections, max_conn := MaxConnections, worker := WorkerNo
     } = Conf,
     ?INFO("\t~p", [PoolRef]),
-    db_pool:add_pool(PoolRef, Host, Port, User, Password, Database, Connections, MaxConnections),
+    LoadMax = erlang:max(Connections, WorkerNo) + 1,
+    LowMaxConn = erlang:max(MaxConnections, LoadMax),
+    db_pool:add_pool(PoolRef, Host, Port, User, Password, Database, Connections, LowMaxConn),
 
     {ok, Pid} = db_mgr_sup:start_child([WorkerNo, PoolRef, Func]),
     ?INFO("\t~p", [misc:registered_name(Pid)]),

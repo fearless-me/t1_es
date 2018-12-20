@@ -62,8 +62,9 @@ info({serv_start_ack, RunNo}) ->
 %%    lists:foreach(
 %%        fun(Player) -> gs_cache_interface:add_player_pub(Player) end, List),
 %%    ok;
-info(load_all_role_info_ack_end) ->
+info({load_all_role_info_ack_end, Cnt}) ->
     data_loader:task_over(load_all_role_info),
+    ?WARN("load total ~p players pub",[Cnt]),
     ok;
 info(Info) ->
     ?ERROR("info ~w", [Info]).

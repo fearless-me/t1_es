@@ -26,7 +26,7 @@ add_pool(
             {user, User}, {password, Password}, {database, Database},
             {prepare, []}
         ],
-    PoolOptions = [{size, PoolSize}, {max_overflow, OverFlow}],
+    PoolOptions = [{size, PoolSize}, {max_overflow, OverFlow},{strategy, lifo}],
     {ok, _Pid} = mysql_poolboy:add_pool(PoolName, PoolOptions, MySqlOptions).
 
 start_db_pool_alone_emysql(

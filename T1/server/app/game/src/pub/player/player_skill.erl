@@ -42,18 +42,25 @@ get_skill_info_list() ->
                                             slot_index = 0
                                         } | AccL]};
                                 _ ->
-                                    case SlotIndex > 3 of
-                                        false ->
-                                            {SlotIndex + 1,
-                                                [#pk_SkillInfo{
-                                                    skill_id = SkillID,
-                                                    level = 1,
-                                                    cd_time = 0,
-                                                    slot_index = SlotIndex
-                                                } | AccL]};
-                                        _ ->
-                                            {SlotIndex, AccL}
-                                    end
+                                    {SlotIndex + 1,
+                                        [#pk_SkillInfo{
+                                            skill_id = SkillID,
+                                            level = 1,
+                                            cd_time = 0,
+                                            slot_index = SlotIndex
+                                        } | AccL]}
+%%                                    case SlotIndex > 3 of
+%%                                        false ->
+%%                                            {SlotIndex + 1,
+%%                                                [#pk_SkillInfo{
+%%                                                    skill_id = SkillID,
+%%                                                    level = 1,
+%%                                                    cd_time = 0,
+%%                                                    slot_index = SlotIndex
+%%                                                } | AccL]};
+%%                                        _ ->
+%%                                            {SlotIndex, AccL}
+%%                                    end
                             end;
                         _ ->
                             {SlotIndex, AccL}

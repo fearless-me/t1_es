@@ -35,7 +35,6 @@
 -export([socket/1, socket/0]).
 
 
-
 %%-------------------------------------------------------------------
 -define(SocketKey, socketRef___).
 -define(NET_IDLE_TIME, 30 * 1000).
@@ -70,7 +69,7 @@ on_init(Socket) ->
     player_priv:init(),
     set_latest_net_time(),
     check_idle_msg(),
-    ?WARN("client connected: ~p ~ts:~p, ~p", [Socket, Ip, Port,self()]),
+    ?WARN("client connected: ~p ~ts:~p, ~p", [Socket, Ip, Port, self()]),
     {ok, #r_player_state{}}.
 
 %%-------------------------------------------------------------------
@@ -86,7 +85,7 @@ on_close(Socket, Reason, S) ->
     S.
 
 %%-------------------------------------------------------------------
-on_info_msg(check_net, S) ->
+on_info_msg(check_idle_msg, S) ->
     check_idle(),
     S;
 on_info_msg({kick_role, Reason}, S) ->
@@ -159,7 +158,7 @@ route_msg(false, Cmd, Msg) ->
     filter_msg(Status, Cmd, Msg),
     ok;
 route_msg(_Any, Cmd, _Msg) ->
-    ?DEBUG("msg ~p forbid",[Cmd]),
+    ?DEBUG("msg ~p forbid", [Cmd]),
     ok.
 
 
@@ -191,21 +190,20 @@ log_error_msg(Reason, Cmd, Msg) ->
         [player_rw:get_uid(), Reason, player_rw:get_status(), Cmd, Msg]).
 
 %%-------------------------------------------------------------------
-socket(Socket) -> put(?SocketKey, Socket).
-socket() -> get(?SocketKey).
+socket(Socket) -> erlang:put(?SocketKey, Socket).
+socket() -> erlang:get(?SocketKey).
 
 %%-------------------------------------------------------------------
-set_latest_net_time() -> put('RECV_NETMSG_LATEST', misc_time:milli_seconds()).
-check_idle_msg() -> erlang:send_after(?NET_IDLE_TIME, self(), check_net).
+set_latest_net_time() -> erlang:put('RECV_NETMSG_LATEST', misc_time:milli_seconds()).
+check_idle_msg() -> erlang:send_after(?NET_IDLE_TIME, self(), check_idle_msg).
 check_idle() ->
     try
-        case misc_time:milli_seconds() - get('RECV_NETMSG_LATEST') > ?NET_IDLE_TIME of
-            true ->
-                net_heartbeat_stop();
-            false ->
-                check_idle_msg()
+        case (misc_time:milli_seconds() - erlang:get('RECV_NETMSG_LATEST')) > ?NET_IDLE_TIME of
+            true -> net_heartbeat_stop();
+            _Any -> check_idle_msg()
         end
-    catch _ : _ : _ ->
+    catch _ : Error : _ ->
+        ?ERROR("~p ~p", [self(), Error]),
         net_heartbeat_stop()
     end.
 
@@ -213,6 +211,8 @@ check_idle() ->
 net_heartbeat_stop() -> player_tcp_handler:stop(net_heartbeat_stop).
 -else.
 net_heartbeat_stop() ->
-    ?ERROR("net_heartbeat_stop, but debug, continue"),
+    ?ERROR("[~p]aid ~p uid ~p net_heartbeat_stop, now ~p latest ~p but debug, continue",
+        [self(), player_rw:get_aid(), player_rw:get_uid(),
+            misc_time:milli_seconds(), erlang:get('RECV_NETMSG_LATEST')]),
     check_idle_msg().
 -endif.

@@ -212,8 +212,12 @@ process_src_files(SrcFiles) ->
             Now = os:system_time(milli_seconds),
             Pid = erlang:spawn(
                 fun() ->
-                    PidList = process_src_file_incs_1([], SrcFiles),
-                    wait_src_parse_finish(PidList)
+                    try
+                        PidList = process_src_file_incs_1([], SrcFiles),
+                        wait_src_parse_finish(PidList)
+                    catch _ : Error : _  ->
+                        ?ERROR("process_src_files failed ~p",[Error])
+                    end
                 end),
             wait_pid_go_die(is_process_alive(Pid), Pid),
             Diff = os:system_time(milli_seconds) - Now,
@@ -230,7 +234,8 @@ process_inc_files(SrcFile) ->
             do_process_inc_files(SrcFile, Forms);
         Error ->
             ?ERROR("epp_dodger parse_file ~ts failed, ~p", [SrcFile, Error])
-    catch _:_:_ -> skip
+    catch _:Exception:_ ->
+        ?ERROR("epp_dodger parse_file ~ts failed, ~p", [SrcFile, Exception])
     end.
 
 process_source_code_conflict(SourceFile) ->

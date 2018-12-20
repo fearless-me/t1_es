@@ -46,9 +46,10 @@ init_priv(MgrEts, MapID, LineID) ->
     Ets1 = misc_ets:new(?MAP_EXCL_ETS, [protected, set, {keypos, #pub_kv.key}, ?ETS_RC]),
     #mapCfg{peopleLimit = Limit, lifetime = Lifetime} = getCfg:getCfgByArgs(cfg_map, MapID),
     RealLifeTime = ?if_else(Lifetime == 0, ?UINT32_MAX, Lifetime),
+    RealLimitCnt = ?if_else(Limit == 0, 150, Limit),
     Line = #m_map_line{
         map_id = MapID, line_id = LineID, pid = self(), status = ?MAP_RUNNING,
-        limits = Limit,  obj_ets = Ets0,
+        limits = RealLimitCnt,  obj_ets = Ets0,
         dead_line = misc_time:milli_seconds() + RealLifeTime
     },
     misc_ets:write(MgrEts, Line),

@@ -27,7 +27,8 @@
     interval_operation/5, parse_information_unit/1, format_memory_readable/1,
     get_dict_def/2, md5/1, int_to_hex/1,
     lists_rand_get/1, lists_shuffle/1, lists_rand_get_n/2, list_to_hex/1,
-    string_to_term/1, term_to_string/1
+    string_to_term/1, term_to_string/1,
+    split_number/3
 ]).
 
 -export([start_otp/3, start_otp/4, start_otp/5]).
@@ -440,7 +441,7 @@ halt(Msg) ->
     erlang:halt().
 
 
-sleep(Milliseconds)->
+sleep(Milliseconds) ->
     timer:sleep(Milliseconds).
 
 %%-------------------------------------------------------------------
@@ -567,7 +568,6 @@ do_fib(0, _, B) -> B;
 do_fib(N, A, B) -> do_fib(N - 1, B, A + B).
 
 
-
 %%
 apply_fun(F) when erlang:is_function(F) ->
     erlang:apply(F, []);
@@ -575,9 +575,9 @@ apply_fun({F}) when erlang:is_function(F) ->
     erlang:apply(F, []);
 apply_fun({F, Args}) when erlang:is_function(F), erlang:is_list(Args) ->
     erlang:apply(F, Args);
-apply_fun({M,F}) when erlang:is_atom(M), erlang:is_atom(F) ->
+apply_fun({M, F}) when erlang:is_atom(M), erlang:is_atom(F) ->
     erlang:apply(M, F, []);
-apply_fun({M,F,Args}) when erlang:is_atom(M), erlang:is_atom(F), erlang:is_list(Args) ->
+apply_fun({M, F, Args}) when erlang:is_atom(M), erlang:is_atom(F), erlang:is_list(Args) ->
     erlang:apply(M, F, Args);
 apply_fun(F) ->
     erlang:error(badarg, [F]).
@@ -586,25 +586,37 @@ apply_fun(F) ->
 
 set_bit(N, BitIndex)
     when is_number(N), N >= 0, BitIndex > 0, BitIndex =< 64
-->
+    ->
     N bor (1 bsl (BitIndex - 1)).
 
 unset_bit(N, BitIndex)
     when is_number(N), N >= 0, BitIndex > 0, BitIndex =< 64
-->
+    ->
     N band (((1 bsl 64) - 1) bxor (1 bsl (BitIndex - 1))).
 
 test_bit(N, BitIndex)
     when is_number(N), N >= 0, BitIndex > 0, BitIndex =< 64
-->
+    ->
     (N band (1 bsl (BitIndex - 1))) > 0.
 
 first_set_bit(0) ->
     -1;
 first_set_bit(N) when is_integer(N), N > 0 ->
     do_first_set_bit(N, 1).
-    
+
 do_first_set_bit(N, BitIndex) when (N band 1) > 0 ->
     BitIndex;
 do_first_set_bit(N, BitIndex) ->
     do_first_set_bit(N bsr 1, BitIndex + 1).
+
+split_number(Count, Load, Limit) when Load > 0, Limit > 0 ->
+    RealLimit = Count div Load,
+    BatchLoad = case RealLimit > Limit of
+                    true -> Count div Limit;
+                    _Any -> Load
+                end,
+    RealSeqNo = case Count rem BatchLoad of
+                0 when Count > BatchLoad -> Count div BatchLoad;
+                _ -> (Count div BatchLoad) + 1
+            end,
+    {RealSeqNo, BatchLoad}.

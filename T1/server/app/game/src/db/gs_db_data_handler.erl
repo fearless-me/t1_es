@@ -25,14 +25,9 @@ handler(load_all_role_info, Sid, FromPid, PoolId) ->
     Sql = gs_db_sql:sql(load_all_role_info_cnt),
     Res = db:query(PoolId, Sql, [Sid], ?DB_QUERY_TIMEOUT),
     check_res(Res, Sql, [Sid]),
-    Load = 1000,
     Count = db:scalar(Res),
-    SeqNo =
-        case Count rem Load of
-            0 when Count > Load -> Count div Load;
-            _ -> (Count div Load) + 1
-        end,
-
+    {SeqNo, Load} = misc:split_number(Count, 25000, 64),
+    
     LoadFunc =
         fun(Batch) ->
             Start = (Batch - 1) * Load,
@@ -43,12 +38,27 @@ handler(load_all_role_info, Sid, FromPid, PoolId) ->
             ResList0 = db:as_record(ResLoad, p_player, record_info(fields, p_player)),
             ResList1 = [Player#p_player{name = binary_to_list(Player#p_player.name)} || Player <- ResList0, Player#p_player.delete_flag == 0],
             lists:foreach(fun(Player) -> gs_cache_interface:add_player_pub(Player) end, ResList1),
+            catch ?INFO("load worker ~p|~p loaded ~p players",[Batch, self(), End - Start]),
             true
         end,
 
     PidList = [task:async({LoadFunc, [Batch]}) || Batch <- lists:seq(1, SeqNo)],
     lists:foreach(fun(PidRef) -> task:await(PidRef, infinity) == true end, PidList),
-    ps:send(FromPid, load_all_role_info_ack_end),
+    ps:send(FromPid, load_all_role_info_ack_end, Count),
+
+    %%
+%%    lists:foreach(
+%%        fun(Batch) ->
+%%            Start = (Batch - 1) * Load,
+%%            End = Batch * Load,
+%%            SqlLoad = gs_db_sql:sql(load_all_role_info),
+%%            ResLoad = db:query(PoolId, SqlLoad, [Sid, Start, End], ?DB_QUERY_TIMEOUT * 5),
+%%            check_res(ResLoad, SqlLoad, [Sid, Start, End]),
+%%            ResList0 = db:as_record(ResLoad, p_player, record_info(fields, p_player)),
+%%            ResList1 = [Player#p_player{name = binary_to_list(Player#p_player.name)} || Player <- ResList0, Player#p_player.delete_flag == 0],
+%%            lists:foreach(fun(Player) -> gs_cache_interface:add_player_pub(Player) end, ResList1),
+%%            true end, lists:seq(1, SeqNo)),
+    
     ok;
 handler(load_player_list, AccId, FromPid, PoolId) ->
     Sql = gs_db_sql:sql(load_player_list),
