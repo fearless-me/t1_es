@@ -26,11 +26,15 @@ start() ->
     {ok, Pid} = mysql:start_link(MySqlOptions),
 
 
-%%
-    
+    %%
     ?INFO("init public db pool ..."),
     db_pool_init(Pid, get_public_db_conf, [Sid], ?PUBLIC_DB_POOL_NAME, fun cs_db_handler:handler/4),
     ?INFO("init public db pool done"),
+    ?INFO("#"),
+
+    ?INFO("init log db pool ..."),
+    db_pool_init(Pid, get_log_db_conf, [Sid], ?LOG_DB_POOL_NAME, fun cs_db_log_handler:handler/4),
+    ?INFO("init log db pool done"),
     ?INFO("#"),
     
     erlang:exit(Pid, normal),
@@ -106,6 +110,7 @@ get_inst_opt() ->
             prepare,
             [
 %%                {get_account_db_conf, "select * from account_db_conf limit 1"},
+                {get_log_db_conf, "select * from log_db_conf where id=?"},
                 {get_public_db_conf, "select * from public_db_conf where id=?"}
             ]
         }

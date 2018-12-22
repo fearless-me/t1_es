@@ -76,7 +76,7 @@ use_skill_dispatcher(#skillCfg{it_type = ?SKILL_SUB_TYPE_IT_SPELL} = SkillCfg , 
     spell_skill(Aer, Tar, SkillCfg, Serial);
 %% 瞬时
 use_skill_dispatcher(#skillCfg{it_type = IT_Type} = SkillCfg, Aer, Tar, Serial)
-    when IT_Type =:= ?SKILL_SUB_TYPE_IT_INSTANT; IT_Type =:= ?SKILL_SUB_TYPE_IT_NORMAL ->
+    when IT_Type =:= ?SKILL_SUB_TYPE_IT_INSTANT ->
     instant_skill(Aer, Tar, SkillCfg, Serial).
 
 %% todo 吟唱技能 使用通用进度流程

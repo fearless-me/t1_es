@@ -1,6 +1,6 @@
 /*
-SQLyog Ultimate v12.5.0 (64 bit)
-MySQL - 5.6.31-log : Database - t1_conf
+SQLyog Ultimate v13.1.1 (64 bit)
+MySQL - 10.2.9-MariaDB : Database - t1_conf
 *********************************************************************
 */
 
@@ -19,18 +19,24 @@ USE `t1_conf`;
 /*Data for the table `account_db_conf` */
 
 insert  into `account_db_conf`(`id`,`host`,`port`,`user`,`password`,`database`,`conn`,`max_conn`,`worker`) values 
-(0,'127.0.0.1',3306,'root','1234','t1_account',5,10,10);
+(0,'127.0.0.1',3306,'root','1234','t1_account',5,5,5);
 
 /*Data for the table `data_db_conf` */
 
 insert  into `data_db_conf`(`id`,`host`,`port`,`user`,`password`,`database`,`conn`,`max_conn`,`worker`) values 
-(1,'127.0.0.1',3306,'root','1234','t1_data',5,10,10);
+(1,'127.0.0.1',3306,'root','1234','t1_data',5,5,5);
+
+/*Data for the table `log_db_conf` */
+
+insert  into `log_db_conf`(`id`,`host`,`port`,`user`,`password`,`database`,`conn`,`max_conn`,`worker`) values 
+(1,'127.0.0.1',3306,'root','1234','t1_log',5,5,5),
+(1010,'127.0.0.1',3306,'root','1234','t1_log',5,5,5);
 
 /*Data for the table `public_db_conf` */
 
 insert  into `public_db_conf`(`id`,`host`,`port`,`user`,`password`,`database`,`conn`,`max_conn`,`worker`) values 
 (0,'127.0.0.1',3306,'root','1234','t1_public',1,1,1),
-(1010,'127.0.0.1',3306,'root','1234','t1_public',30,40,20);
+(1010,'127.0.0.1',3306,'root','1234','t1_public',5,5,5);
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;

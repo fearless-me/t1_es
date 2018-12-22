@@ -26,14 +26,14 @@ get_skill_info_list() ->
     %% TODO 临时代码，上线初始化技能
     F =
         fun(ID, {SlotIndex, AccL}) ->
-            #skillCfg{id = SkillID, career = C, subType = SubType, it_type = ItType}
+            #skillCfg{id = SkillID, career = C, subType = SubType, it_type = ItType, it_normal = ItNormal}
                 = getCfg:getCfgByKey(cfg_skill, ID),
             case SubType of
                 ?SKILL_SUB_TYPE_IT ->
                     case C =:= Career of
                         true ->
-                            case ItType of
-                                ?SKILL_SUB_TYPE_IT_NORMAL ->
+                            case ItNormal of
+                                ?SKILL_NORMAL_TYPE ->
                                     {SlotIndex,
                                         [#pk_SkillInfo{
                                             skill_id = SkillID,

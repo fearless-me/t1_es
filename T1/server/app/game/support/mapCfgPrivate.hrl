@@ -206,10 +206,10 @@
     Name:32/bytes,                    %该触发数据的名字
     ID:?U32,                        %该触发数据的ID
     VolumeType:?S32,                %触发器区域形状，可能是box或者是sphere
-    InTriggerName:32/bytes,        %走入触发区域调用的触发器名称
-    InTriggerArgFormat:32/bytes,    %走入触发区域调用触发器的参数格式
-    OutTriggerName:32/bytes,        %走出触发区域调用的触发器名称
-    OutTriggerArgFormat:32/bytes,    %走出触发区域调用触发器的参数格式
+    %%InTriggerName:32/bytes,        %走入触发区域调用的触发器名称
+    %%InTriggerArgFormat:32/bytes,    %走入触发区域调用触发器的参数格式
+    %%OutTriggerName:32/bytes,        %走出触发区域调用的触发器名称
+    %%OutTriggerArgFormat:32/bytes,    %走出触发区域调用触发器的参数格式
     InDelayTime:?F32,                %走入触发区域调用触发器的延迟时间
     OutDelayTime:?F32,                %走出触发区域调用触发器的延迟时间
     TotalTriggerCount:?S32,        %总共可触发多少次

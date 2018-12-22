@@ -16,6 +16,8 @@
 
 	subType,
 
+	it_normal,
+
 	it_type,
 
 	pt_type,

@@ -45,6 +45,10 @@
 -define(SKILL_SUB_TYPE_IT_SPELL,     2). %% 吟唱
 -define(SKILL_SUB_TYPE_IT_NORMAL,    3). %% 普攻，普攻也是瞬发
 
+%% 普攻
+-define(SKILL_NORMAL_TYPE, 1).
+-define(SKILL_NO_NORMAL_TYPE, 2).
+
 %% 被动技能分类
 -define(SKILL_SUB_TYPE_PT_EFFECT,    1). %% 被动效果
 -define(SKILL_SUB_TYPE_PT_TRIGGER,   2). %% 被触发类

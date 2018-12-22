@@ -577,10 +577,10 @@ binaryReadTriggerData(Bin, TriggerList) when erlang:is_binary(Bin) ->
 		name = Name,                                 %该触发数据的名字
 		id = ID,                                     %该触发数据的ID
 		volumeType = VolumeType,                     %触发器区域形状，可能是box或者是sphere
-		inTriggerName = InTriggerName,               %走入触发区域调用的触发器名称
-		inTriggerArgFormat = InTriggerArgFormat,     %走入触发区域调用触发器的参数格式
-		outTriggerName = OutTriggerName,             %走出触发区域调用的触发器名称
-		outTriggerArgFormat = OutTriggerArgFormat,   %走出触发区域调用触发器的参数格式
+		%%inTriggerName = InTriggerName,               %走入触发区域调用的触发器名称
+		%%inTriggerArgFormat = InTriggerArgFormat,     %走入触发区域调用触发器的参数格式
+		%%outTriggerName = OutTriggerName,             %走出触发区域调用的触发器名称
+		%%outTriggerArgFormat = OutTriggerArgFormat,   %走出触发区域调用触发器的参数格式
 		inDelayTime = InDelayTime,                   %走入触发区域调用触发器的延迟时间
 		outDelayTime = OutDelayTime,                 %走出触发区域调用触发器的延迟时间
 		totalTriggerCount = TotalTriggerCount,       %总共可触发多少次

@@ -17,7 +17,7 @@
 -endif.
 
 -define(PORT_BASE, 30000).
--define(PORT_MOD, 16999).
+-define(PORT_MOD, 25000).
 -define(PORT_HASH_MIN, 47001).
 -define(PORT_HASH_MAX, 49000).
 
@@ -36,9 +36,25 @@ get_config(Node) ->
 
 %%-------------------------------------------------------------------
 do_node_port(Node) when is_atom(Node) ->
-    ?PORT_BASE + erlang:adler32(atom_to_list(Node)) rem ?PORT_MOD;
+    do_node_port(atom_to_list(Node));
 do_node_port(Node) when is_list(Node) ->
-    ?PORT_BASE + erlang:adler32(Node) rem ?PORT_MOD.
+    case string:tokens(Node, "@") of
+        [Name, Host] ->
+                case string:tokens(Name, "_") of
+                    List when is_list(List) ->
+                        case catch erlang:list_to_integer(lists:last(List)) of
+                            Integer when is_integer(Integer) ->
+                                (?PORT_BASE + crc32c:crc32c(Host) rem ?PORT_MOD) + Integer;
+                            _ ->
+                                node_port_default(Node)
+                        end;
+                    _ -> node_port_default(Node)
+                end;
+        _ -> node_port_default(Node)
+    end.
+
+node_port_default(Node) ->
+    (?PORT_BASE + crc32c:crc32c(Node) rem ?PORT_MOD).
 
 %%-------------------------------------------------------------------
 get_config_rehash({Node, _}, Port) ->
@@ -53,57 +69,58 @@ get_config_rehash(_Node, Port) ->
 
 
 -ifdef(DEBUG).
--define(RPC_PORT_ETS, gen_rpc_node_port).
+-define(RPC_PORT_ETS, rpc_port).
+-record(rec_port_node, {port = 0, nodes = []}).
 test() ->
+    catch misc_ets:delete(?RPC_PORT_ETS),
     catch ensure_ets(),
-    misc_ets:clear(?RPC_PORT_ETS),
+
     CS = "t1_center@10.1.1.253",
     GS1 = lists:map(
         fun(X) ->
-            lists:flatten(io_lib:format("t1_game_~p@10.1.1.~p", [X, X]))
-        end, lists:seq(1, 251)),
-    GS2 = lists:map(
-        fun(X) ->
-            lists:flatten(io_lib:format("t1_game_~p@10.1.2.~p", [X, X]))
-        end, lists:seq(1, 251)),
+            lists:flatten(io_lib:format("t1_game_~p@10.1.1.10", [X]))
+        end, lists:seq(1, 1500)),
     CGS = lists:map(
         fun(X) ->
-            lists:flatten(io_lib:format("t1_cross_~p@10.1.2.~p", [X, X]))
-        end, lists:seq(1, 251)),
+            lists:flatten(io_lib:format("t1_cross_~p@10.1.1.10", [X]))
+        end, lists:seq(1501, 2000)),
+
 
     port_print(CS),
     lists:foreach(fun(Node) -> port_print(Node) end, GS1),
-    lists:foreach(fun(Node) -> port_print(Node) end, GS2),
     lists:foreach(fun(Node) -> port_print(Node) end, CGS),
     check_conflict(),
     ok.
 
 port_print(Node) ->
     Port = get_config(Node),
-    misc_ets:write(?RPC_PORT_ETS, {Port, Node}).
+    case misc_ets:read(?RPC_PORT_ETS, Port) of
+        [] ->
+            misc_ets:write(?RPC_PORT_ETS, #rec_port_node{port = Port, nodes = [Node]});
+        [#rec_port_node{nodes = NodeList} = Rec] ->
+            misc_ets:write(?RPC_PORT_ETS, Rec#rec_port_node{nodes = [Node | NodeList]})
+    end.
 
 
 ensure_ets() ->
     case misc_ets:exists(?RPC_PORT_ETS) of
         false ->
-            misc_ets:new(?RPC_PORT_ETS, [named_table, {keypos, 1}, public]);
+            misc_ets:new(?RPC_PORT_ETS, [named_table, {keypos, #rec_port_node.port}, public]);
         _ ->
             ok
     end.
 
 check_conflict() ->
-    X =
-        misc_ets:foldl(
-            fun
-                (V, Conflict) when is_list(V) ->
-                    case length(V) > 1 of
-                        true -> Conflict + 1;
-                        _Any -> Conflict
-                    end;
-                (_V, Conflict) ->
-                    Conflict
-            end, 0, ?RPC_PORT_ETS),
-    io:format("conflict ~p ~n", [X]),
+    ?INFO("check port conflict ..."),
+    misc_ets:foldl(
+        fun(#rec_port_node{port = Port, nodes = NodeList}, _) ->
+            case NodeList of
+                [_] -> skip;
+                _ -> ?ERROR("~p ~p", [Port, NodeList])
+            end
+
+        end, 0, ?RPC_PORT_ETS),
+    ?INFO("check port conflict done#"),
     ok.
 
 -endif.

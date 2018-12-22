@@ -103,6 +103,27 @@ CREATE TABLE `data_db_conf` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Table structure for table `log_db_conf`
+--
+
+DROP TABLE IF EXISTS `log_db_conf`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `log_db_conf` (
+  `id` int(11) NOT NULL,
+  `host` varchar(64) DEFAULT NULL,
+  `port` int(11) DEFAULT NULL,
+  `user` varchar(64) DEFAULT NULL,
+  `password` varchar(128) DEFAULT NULL,
+  `database` varchar(128) DEFAULT NULL,
+  `conn` int(11) DEFAULT 30,
+  `max_conn` int(11) DEFAULT 40,
+  `worker` int(11) DEFAULT 20,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Table structure for table `public_db_conf`
 --
 
@@ -212,30 +233,83 @@ CREATE TABLE `serv_restart` (
 /*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
 CREATE DEFINER=`root`@`127.0.0.1` PROCEDURE `get_serv_start`( IN sid INT)
-BEGIN
-
-		DECLARE runs INT DEFAULT 0;
-
-		SELECT run_no INTO runs FROM `serv_restart` WHERE serv_id = sid;
-
-		IF runs <> 0 THEN 
-
-			UPDATE `serv_restart` SET `run_no` = runs + 1, latest = UNIX_TIMESTAMP() WHERE serv_id = sid;	
-
-		ELSE
-
-			INSERT serv_restart(`serv_id`,`run_no`,`latest`) VALUES(sid,  1, UNIX_TIMESTAMP());
-
-		END IF;
-
-		SELECT run_no FROM `serv_restart` WHERE serv_id = sid;
-
+BEGIN
+		DECLARE runs INT DEFAULT 0;
+		SELECT run_no INTO runs FROM `serv_restart` WHERE serv_id = sid;
+		IF runs <> 0 THEN 
+			UPDATE `serv_restart` SET `run_no` = runs + 1, latest = UNIX_TIMESTAMP() WHERE serv_id = sid;	
+		ELSE
+			INSERT serv_restart(`serv_id`,`run_no`,`latest`) VALUES(sid,  1, UNIX_TIMESTAMP());
+		END IF;
+		SELECT run_no FROM `serv_restart` WHERE serv_id = sid;
 	END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
+
+--
+-- Current Database: `t1_log`
+--
+
+CREATE DATABASE /*!32312 IF NOT EXISTS*/ `t1_log` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci */;
+
+USE `t1_log`;
+
+--
+-- Table structure for table `log_money`
+--
+
+DROP TABLE IF EXISTS `log_money`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `log_money` (
+  `auto_id__` bigint(20) NOT NULL AUTO_INCREMENT,
+  `aid` bigint(20) unsigned NOT NULL,
+  `uid` bigint(20) unsigned NOT NULL,
+  `sid` int(11) unsigned NOT NULL,
+  `name` varchar(192) CHARACTER SET utf8mb4 NOT NULL,
+  `level` int(11) unsigned DEFAULT 1,
+  `camp` int(11) unsigned DEFAULT 0,
+  `race` int(11) unsigned DEFAULT 1,
+  `career` int(11) unsigned DEFAULT 1,
+  `head` int(11) unsigned DEFAULT 1,
+  `map_id` int(11) unsigned DEFAULT 1,
+  `line` int(11) NOT NULL DEFAULT 0,
+  PRIMARY KEY (`auto_id__`),
+  KEY `aid_ref_uid` (`aid`)
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `log_player`
+--
+
+DROP TABLE IF EXISTS `log_player`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `log_player` (
+  `auto_id__` bigint(20) NOT NULL AUTO_INCREMENT,
+  `aid` bigint(20) unsigned NOT NULL,
+  `uid` bigint(20) unsigned NOT NULL,
+  `sid` int(11) unsigned NOT NULL,
+  `name` varchar(192) CHARACTER SET utf8mb4 NOT NULL,
+  `level` int(11) unsigned DEFAULT 1,
+  `camp` int(11) unsigned DEFAULT 0,
+  `race` int(11) unsigned DEFAULT 1,
+  `career` int(11) unsigned DEFAULT 1,
+  `head` int(11) unsigned DEFAULT 1,
+  `map_id` int(11) unsigned DEFAULT 1,
+  `line` int(11) NOT NULL DEFAULT 0,
+  PRIMARY KEY (`auto_id__`),
+  KEY `aid_ref_uid` (`aid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping routines for database 't1_log'
+--
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -246,4 +320,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-12-12 10:54:34
+-- Dump completed on 2018-12-21 15:52:10

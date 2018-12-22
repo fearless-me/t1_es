@@ -38,11 +38,7 @@ start() ->
             ?INFO("#"),
 
             ?INFO("init log db pool ..."),
-%%            Conf = #{
-%%                host => "127.0.0.1", port => 3306, user => "root", password => "1234", database => "t1_log",
-%%                conn => 64, max_conn => 128, worker => 64, func => fun gs_db_log_handler:handler/4
-%%            },
-%%            db_proxy:add_pool(?LOG_DB_POOL_NAME, Conf, ?INIT_DB_POOL_TIMEOUT),
+            db_pool_init(Pid, get_log_db_conf, [Sid], ?LOG_DB_POOL_NAME, fun gs_db_log_handler:handler/4),
             ?INFO("init log db pool done"),
             ?INFO("#"),
             ok;
@@ -127,6 +123,7 @@ get_inst_opt() ->
             prepare,
             [
                 {get_data_db_conf, "select * from data_db_conf where id=?"},
+                {get_log_db_conf, "select * from log_db_conf where id=?"},
                 {get_public_db_conf, "select * from public_db_conf where id=0"},
                 {get_account_db_conf, "select * from account_db_conf limit 1"}
             ]

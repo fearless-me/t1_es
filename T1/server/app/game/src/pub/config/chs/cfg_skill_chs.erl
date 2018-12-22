@@ -32,11 +32,15 @@
 	%% 1.主动
 	%% 2.被动
 
+	%% it_normal:
+	%% 是否普攻
+	%% 1.是
+	%% 2.不是
+
 	%% it_type:
 	%% 主动技能分类
 	%% 1.瞬发
 	%% 2.吟唱
-	%% 3.普攻
 
 	%% pt_type:
 	%% 被动分类
@@ -158,6 +162,7 @@ getRow(10110000) ->
 		name = "@@>1000010<",
 		type = 1,
 		subType = 1,
+		it_normal = 1,
 		it_type = 3,
 		pt_type = 1,
 		it_take_type = 1,
@@ -198,6 +203,7 @@ getRow(10110001) ->
 		name = "@@>1000011<",
 		type = 1,
 		subType = 1,
+		it_normal = 1,
 		it_type = 3,
 		pt_type = 1,
 		it_take_type = 1,
@@ -238,6 +244,7 @@ getRow(10100000) ->
 		name = "@@>1000012<",
 		type = 1,
 		subType = 1,
+		it_normal = 1,
 		it_type = 1,
 		pt_type = 1,
 		it_take_type = 1,
@@ -278,6 +285,7 @@ getRow(10100001) ->
 		name = "@@>1000013<",
 		type = 1,
 		subType = 1,
+		it_normal = 1,
 		it_type = 1,
 		pt_type = 1,
 		it_take_type = 1,
@@ -318,6 +326,7 @@ getRow(11100001) ->
 		name = "@@>1000017<",
 		type = 1,
 		subType = 1,
+		it_normal = 1,
 		it_type = 2,
 		pt_type = 1,
 		it_take_type = 1,
@@ -358,7 +367,8 @@ getRow(50110000) ->
 		name = "@@>1000028<",
 		type = 1,
 		subType = 1,
-		it_type = 1,
+		it_normal = 1,
+		it_type = 3,
 		pt_type = 1,
 		it_take_type = 1,
 		career = 501,
@@ -398,7 +408,8 @@ getRow(50110001) ->
 		name = "@@>1000029<",
 		type = 1,
 		subType = 1,
-		it_type = 1,
+		it_normal = 1,
+		it_type = 3,
 		pt_type = 1,
 		it_take_type = 1,
 		career = 501,
@@ -438,6 +449,7 @@ getRow(50100000) ->
 		name = "@@>1000030<",
 		type = 1,
 		subType = 1,
+		it_normal = 1,
 		it_type = 1,
 		pt_type = 1,
 		it_take_type = 1,
@@ -478,6 +490,7 @@ getRow(50100002) ->
 		name = "@@>1000031<",
 		type = 1,
 		subType = 1,
+		it_normal = 1,
 		it_type = 1,
 		pt_type = 1,
 		it_take_type = 1,
@@ -518,6 +531,7 @@ getRow(50100001) ->
 		name = "@@>1000038<",
 		type = 1,
 		subType = 1,
+		it_normal = 1,
 		it_type = 1,
 		pt_type = 1,
 		it_take_type = 1,
