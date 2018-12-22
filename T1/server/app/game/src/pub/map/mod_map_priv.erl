@@ -167,7 +167,7 @@ init_monster(#recGameMapCfg{
 }) ->
     lists:foreach(
         fun(MData) ->
-            init_one_monster(MData)
+            ?TRY_CATCH(init_one_monster(MData))
         end, MonsterList).
 
 init_one_monster(Mdata) ->
@@ -187,12 +187,12 @@ init_npc(#recGameMapCfg{
 }) ->
     lists:foreach(
         fun(MData) ->
-            init_one_npc(MData)
+            ?TRY_CATCH(init_one_npc(MData))
         end, NpcList).
 
 
 init_one_npc(Mdata) ->
-    
+
     Obj = object_priv:new_npc(Mdata),
     Uid = object_priv:get_uid(Obj),
     VisIndex = mod_view:pos_to_vis_index(object_rw:get_cur_pos(Uid)),

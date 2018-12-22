@@ -11,15 +11,13 @@
 -include("logger.hrl").
 
 %% API
--export([get_config/1, get_config_rehash/2, get_server_port/0]).
+-export([get_config/1, get_server_port/0]).
 -ifdef(DEBUG).
 -export([test/0]).
 -endif.
 
 -define(PORT_BASE, 30000).
 -define(PORT_MOD, 25000).
--define(PORT_HASH_MIN, 47001).
--define(PORT_HASH_MAX, 49000).
 
 %%-------------------------------------------------------------------
 get_server_port() -> get_config(node()).
@@ -43,7 +41,7 @@ do_node_port(Node) when is_list(Node) ->
                 case string:tokens(Name, "_") of
                     List when is_list(List) ->
                         case catch erlang:list_to_integer(lists:last(List)) of
-                            Integer when is_integer(Integer) ->
+                            Integer when is_integer(Integer), Integer < 3000 ->
                                 (?PORT_BASE + crc32c:crc32c(Host) rem ?PORT_MOD) + Integer;
                             _ ->
                                 node_port_default(Node)
@@ -57,16 +55,6 @@ node_port_default(Node) ->
     (?PORT_BASE + crc32c:crc32c(Node) rem ?PORT_MOD).
 
 %%-------------------------------------------------------------------
-get_config_rehash({Node, _}, Port) ->
-    get_config_rehash(Node, Port);
-get_config_rehash(_Node, Port) when Port < ?PORT_HASH_MIN ->
-    ?PORT_HASH_MIN;
-get_config_rehash(_Node, Port) when Port > ?PORT_HASH_MAX ->
-    port_rehash_failed;
-get_config_rehash(_Node, Port) ->
-    Port + 1.
-
-
 
 -ifdef(DEBUG).
 -define(RPC_PORT_ETS, rpc_port).
