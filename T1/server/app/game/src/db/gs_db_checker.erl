@@ -24,7 +24,7 @@ tables() ->
 check([])-> ok;
 check([Table | Tables])->
     ?WARN("\t check table ~p",[Table]),
-    gs_db_interface:action_log_check_(random:uniform(10000), Table),
+    gs_db_interface:action_log_check_(rand:uniform(10000), Table),
     check(Tables).
 
 info({dblog_month_check_ack,Table, true})->

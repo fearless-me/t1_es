@@ -489,6 +489,33 @@ getRow(1000038) ->
 		notice_type = 0,
 		content = "占位技能Q"
 	};
+getRow(1000041) ->
+	#string_packageCfg{
+		desc__ = "开国元老",
+		id = 1000041,
+		enum_string_id = "",
+		type = 4,
+		notice_type = 0,
+		content = "开国元老"
+	};
+getRow(1000040) ->
+	#string_packageCfg{
+		desc__ = "测试怪",
+		id = 1000040,
+		enum_string_id = "",
+		type = 4,
+		notice_type = 0,
+		content = "测试怪"
+	};
+getRow(1000039) ->
+	#string_packageCfg{
+		desc__ = "木桩",
+		id = 1000039,
+		enum_string_id = "",
+		type = 4,
+		notice_type = 0,
+		content = "木桩"
+	};
 getRow(_) -> {}.
 
 getKeyList() -> [
@@ -541,7 +568,10 @@ getKeyList() -> [
 	{16},
 	{15},
 	{14},
-	{1000038}
+	{1000038},
+	{1000041},
+	{1000040},
+	{1000039}
 ].
 
 get1KeyList() -> [
@@ -594,6 +624,9 @@ get1KeyList() -> [
 	16,
 	15,
 	14,
-	1000038
+	1000038,
+	1000041,
+	1000040,
+	1000039
 ].
 

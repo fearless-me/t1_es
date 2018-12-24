@@ -21,6 +21,8 @@
 -export([
     init/1, status/0, check_tick/1,
 
+    set_owner/2, get_owner/0, is_all_enterd/0,
+
     %%
     map_id/0, line_id/0, hook_mod/0,
     %%
@@ -56,6 +58,7 @@
 -define(MAP_HOOK, map_hook__).
 -define(MOVE_TIMER, map_move_timer__).
 -define(MAP_TICK_INFO, map_tick_info__).
+-define(MAP_OWNER, map_owner).
 -record(tick_info,{runs = 0, timeout = 0, all = 0, max = 0, min = 0}).
 
 %%-------------------------------------------------------------------
@@ -76,8 +79,21 @@ init_base(State) ->
     erlang:put(?ETS_MAP_OBJ, State#m_map_state.obj_ets),
     erlang:put(?ETS_MAP_EXCL, State#m_map_state.excl_ets),
     set_tick_info(#tick_info{}),
+    set_owner(none, []),
     ok.
+%%-------------------------------------------------------------------
+set_owner(Type, Owner) ->
+    erlang:put(?MAP_OWNER, #m_map_owner{type = Type, owners = Owner}).
 
+get_owner()->
+    erlang:get(?MAP_OWNER).
+
+is_all_enterd() ->
+    case map_rw:get_owner() of
+        undefined -> true;
+        #m_map_owner{owners = Owners, entered = Entered} ->
+            lists:subtract(Owners, Entered) == []
+    end.
 %%-------------------------------------------------------------------
 map_id() -> erlang:get(?MAP_ID).
 line_id() -> erlang:get(?LINE_ID).

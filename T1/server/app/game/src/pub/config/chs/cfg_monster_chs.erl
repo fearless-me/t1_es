@@ -228,13 +228,73 @@
 	%% 死亡事件
 %%---------------------------------------------------------------------------------
 
+getRow(1) ->
+	#monsterCfg{
+		desc__ = "",
+		id = 1,
+		name = "@@>1000039<",
+		title = "@@>1000040<",
+		describe = "@@>1000041<",
+		icon = "1",
+		level = 10,
+		type = 1,
+		sub_type = 1,
+		camp = 1,
+		buff_born = [],
+		ai = 0,
+		attack_type = 1,
+		move_type = 1,
+		alerting_area = 5,
+		guarding_area = 5,
+		guarding_speed = 1,
+		pursuing_area = 10,
+		pursuing_speed = 2,
+		recover_takeoff = 1,
+		dropId = 0,
+		model = "1",
+		animation_born = "1",
+		animation_death = "1",
+		sound_death = "1",
+		strength_id = 0,
+		coefficient_hp = 0.0,
+		coefficient_defense = 0.0,
+		coefficient_attack = 0.0,
+		coefficient_critical = 0.0,
+		coefficient_hit = 0.0,
+		coefficient_dodge = 0.0,
+		coefficient_quickness = 0.0,
+		skill_attack1 = 0,
+		skill_attack2 = 0,
+		skill_id1 = 0,
+		skill_condition1 = 0,
+		skill_condition_param1 = [],
+		skill_target_type1 = 1,
+		skill_id2 = 0,
+		skill_condition2 = 0,
+		skill_condition_param2 = [],
+		skill_target_type2 = 1,
+		skill_id3 = 0,
+		skill_condition3 = 0,
+		skill_condition_param3 = [],
+		skill_target_type3 = 1,
+		skill_id4 = 0,
+		skill_condition4 = 0,
+		skill_condition_param4 = [],
+		skill_target_type4 = 1,
+		skill_id5 = 0,
+		skill_condition5 = 0,
+		skill_condition_param5 = [],
+		skill_target_type5 = 1,
+		born_event = [],
+		death_event = []
+	};
 getRow(_) -> {}.
 
 getKeyList() -> [
-
+	{1}
 ].
 
 get1KeyList() -> [
-
+	1
 ].
 

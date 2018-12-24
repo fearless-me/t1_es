@@ -324,16 +324,8 @@ start_stop_now(S) ->
     ?INFO("~p|~p start stop now, kick all ~p player(s)",
         [self(), misc:registered_name(), map_rw:obj_size_with_type(?UID_TYPE_PLAYER)]),
     ?TRY_CATCH(hook_map:on_map_destroy(), Err1, Stk1),
-    ?TRY_CATCH(kick_all_player(S), Err2, Stk2),
+    ?TRY_CATCH(mod_map_pub:kick_all_player(), Err2, Stk2),
     S#m_map_state{status = ?MAP_READY_EXIT}.
-
-kick_all_player(_S) ->
-    maps:fold(
-        fun(_, Uid, _) ->
-            ?WARN("~p|~p kick player to born map ~p", [self(), misc:registered_name(), Uid]),
-            catch player_interface:kick_to_born_map_(Uid)
-        end, 0, map_rw:obj_maps_with_type(?UID_TYPE_PLAYER)),
-    ok.
 
 
 %%-------------------------------------------------------------------
@@ -360,24 +352,15 @@ send_goto_map_msg(Uid, Pos) ->
 %%-------------------------------------------------------------------
 -spec broadcast_msg(S :: #m_map_state{}, {MsgId :: term()} | {MsgId :: term(), Msg :: term()}) -> ok.
 broadcast_msg(_S, {MsgId}) ->
-    maps:fold(
-        fun(_, Uid, _) ->
-            catch gs_interface:send_msg(Uid, MsgId)
-        end, 0, map_rw:obj_maps_with_type(?UID_TYPE_PLAYER)),
+    mod_map_pub:broadcast_msg(MsgId),
     ok;
 broadcast_msg(_S, {MsgId, Msg}) ->
-    maps:fold(
-        fun(_, Uid, _) ->
-            catch gs_interface:send_msg(Uid, MsgId, Msg)
-        end, 0, map_rw:obj_maps_with_type(?UID_TYPE_PLAYER)),
+    mod_map_pub:broadcast_msg(MsgId, Msg),
     ok.
 
 -spec broadcast_net_msg(S :: #m_map_state{}, NetMsg :: tuple()) -> ok.
 broadcast_net_msg(_S, NetMsg) ->
-    maps:fold(
-        fun(_, Uid, _) ->
-            catch gs_interface:send_net_msg(Uid, NetMsg)
-        end, 0, map_rw:obj_maps_with_type(?UID_TYPE_PLAYER)),
+    mod_map_pub:broadcast_net_msg(NetMsg),
     ok.
 
 %%-------------------------------------------------------------------
