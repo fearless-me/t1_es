@@ -187,11 +187,11 @@ getRow(10110000) ->
 		hp_steal = 0,
 		special_options = 0,
 		hurt_times = 200,
-		beforecast = [],
+		beforecast = [[[],[],[]],[[],[],[],[]],[[],[],[],[]]],
 		castingtick = [],
 		beforehit = [],
 		ishit = [[[],[],[]],[[0,0,0,1004,5000,0,0],[],[],[]],[[],[],[],[]]],
-		action_before_cast = "",
+		action_before_cast = "[0,[[1,0,0,0,0,0,0]]]",
 		action_casting_tick = "",
 		action_ishit = "",
 		action_bullet = ""
@@ -232,7 +232,7 @@ getRow(10110001) ->
 		castingtick = [],
 		beforehit = [],
 		ishit = [[[],[],[]],[[0,0,0,1004,5000,0,0],[],[],[]],[[],[],[],[]]],
-		action_before_cast = "",
+		action_before_cast = "[0,[[1,0,43,0,0,0,0]]]",
 		action_casting_tick = "",
 		action_ishit = "",
 		action_bullet = ""
@@ -396,9 +396,9 @@ getRow(50110000) ->
 		castingtick = [],
 		beforehit = [],
 		ishit = [[[],[],[]],[[0,0,0,1004,2000,0,0,0],[],[],[]],[[],[],[],[]]],
-		action_before_cast = "",
+		action_before_cast = "[0,[[2,test_2_56,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[1,0,0,0,0,0,0]]]",
 		action_casting_tick = "",
-		action_ishit = "",
+		action_ishit = "[0,[[2,test_2_56,0,0,0,1,1,1,1,1,0,0,0,0,0,0]]]",
 		action_bullet = ""
 	};
 getRow(50110001) ->

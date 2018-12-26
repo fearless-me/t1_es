@@ -56,12 +56,12 @@ call_reply(FromPid, Ret) ->
 %%% Internal functions
 %%%===================================================================
 
-mod_init([MapID, MapLine, MgrEts]) ->
+mod_init(CreaterParamRec) ->
     erlang:process_flag(trap_exit, true),
     erlang:process_flag(priority, high),
     i_tick_clear_msg(),
     gen_serverw:continue_effective_monitor(self(), ?MAP_TICK),
-    {ok, mod_map_priv:init_priv(MgrEts, MapID, MapLine)}.
+    {ok, mod_map_priv:init_priv(CreaterParamRec)}.
 
 %%--------------------------------------------------------------------
 do_handle_call(status, _From, State) ->

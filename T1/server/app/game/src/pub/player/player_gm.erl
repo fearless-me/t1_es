@@ -13,6 +13,7 @@
 -include("logger.hrl").
 -include("netmsg.hrl").
 -include("gs_cache.hrl").
+-include("battle_prop.hrl").
 
 %% API
 -export([is_gm/1, on_gm/1]).
@@ -28,7 +29,8 @@
     {0, "add_bp",      fun add_bp/1, "添加战斗属性 &add_bp $bpId $bpUseType $bpValue"},
     {0, "query_bp",    fun query_bp/1, "查看战斗属性 &query_bp $bpId"},
     {0, "query",       fun query/1, "查看自身当前属性 &query"},
-    {0, "goto",        fun goto/1, "跳转到坐标 &goto x y"}
+    {0, "goto",        fun goto/1, "跳转到坐标 &goto x y"},
+    {0, "test_dead",   fun test_dead/1, "测试死亡复活 &test_dead"}
 ]).
 
 
@@ -168,6 +170,26 @@ query(_) ->
 
     ?WARN("query self uid:~p mapID:~p mapPid:~p Pos:~p hp:~p",
         [Uid, MapId, MapPid, Pos, Hp]),
+    ok.
+
+test_dead(_) ->
+    %% test end
+    Uid = player_rw:get_uid(),
+
+    %% 同步HP属性到快捷属性中
+    gs_cache_interface:update_online_player(Uid, {#m_cache_online_player.hp, 0}),
+
+    BattleProp = {
+        ?BP_2_HP_CUR,
+        ?BPUseType_ADD,
+        9999999999.0
+    },
+    player_combat:change_combat_prop([], [], [BattleProp], []),
+
+    HpMsg = #pk_GS2U_SyncHp{uid = Uid, hp_percent = 0},
+    Msg = #pk_GS2U_Dead{uid = Uid, killer_uid = Uid, killer_name = player_rw:get_name()},
+    player_pub:broadcast_map_view_net_msg_(HpMsg),
+    player_pub:broadcast_map_view_net_msg_(Msg),
     ok.
 
 goto([X, Y|_]) ->

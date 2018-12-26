@@ -22,7 +22,7 @@
 
 
 %% 初始化， tick， 开始终止进程
--export([init_priv/3]).
+-export([init_priv/1]).
 -export([init/1, tick/1, start_stop_now/1, change_group/1]).
 -export([player_start_move/1, player_stop_move/1]).
 -export([broadcast_msg/2, broadcast_net_msg/2, broadcast_msg_view/1, broadcast_net_msg_view/1, broadcast_net_msg_view/2]).
@@ -39,7 +39,10 @@
 %%--------------------------------
 -define(MAP_OBJ_DETAIL_ETS, map_obj_detail_ets__).
 -define(MAP_EXCL_ETS, map_excl_ets__).
-init_priv(MgrEts, MapID, LineID) ->
+init_priv(#r_map_create_params{
+    map_id = MapID, line_id = LineID, mgr_ets = MgrEts,
+    creator = Creator, owner_type = Type, owner_params = Param, wait_list = WaitList
+}) ->
     ProcessName = misc:create_atom(?MODULE, [MapID, LineID]),
     true = erlang:register(ProcessName, self()),
     Ets0 = misc_ets:new(?MAP_OBJ_DETAIL_ETS, [protected, set, {keypos, #m_object_rw.uid}, ?ETS_RC]),
@@ -49,12 +52,13 @@ init_priv(MgrEts, MapID, LineID) ->
     RealLimitCnt = ?if_else(Limit == 0, 150, Limit),
     Line = #m_map_line{
         map_id = MapID, line_id = LineID, pid = self(), status = ?MAP_RUNNING,
-        limits = RealLimitCnt,  obj_ets = Ets0,
+        limits = RealLimitCnt, obj_ets = Ets0,
         dead_line = misc_time:milli_seconds() + RealLifeTime
     },
     misc_ets:write(MgrEts, Line),
+    map_rw:set_owner(Creator, Type, Param, WaitList),
     ps:send(self(), init),
-    
+
     #m_map_state{map_id = MapID, line_id = LineID, obj_ets = Ets0, mgr_ets = MgrEts, excl_ets = Ets1}.
 
 %%-------------------------------------------------------------------
@@ -71,7 +75,7 @@ init(S) ->
     ok = init_monster(Conf),
     tick_msg(),
     ?TRY_CATCH(hook_map:on_map_create()),
-    catch ?INFO("~p|~p init ok",[self(), misc:registered_name()]),
+    catch ?INFO("~p|~p init ok", [self(), misc:registered_name()]),
     S.
 
 
@@ -80,7 +84,7 @@ init(S) ->
 %% call
 player_exit_call(S, From, #r_exit_map_req{uid = Uid}) ->
     Obj = object_priv:find_object_priv(?UID_TYPE_PLAYER, Uid),
-    Ack = #r_exit_map_ack{error = ?E_Exception, map_id = map_rw:map_id(), line_id = map_rw:line_id() },
+    Ack = #r_exit_map_ack{error = ?E_Exception, map_id = map_rw:map_id(), line_id = map_rw:line_id()},
     ?TRY_CATCH_RET(do_player_exit_call(S, From, Uid, Obj), {reply, Ack, S}).
 
 do_player_exit_call(S, From, Uid, #m_cache_map_object_priv{} = Obj) ->
@@ -90,17 +94,17 @@ do_player_exit_call(S, From, Uid, #m_cache_map_object_priv{} = Obj) ->
     ?TRY_CATCH_ERROR(mod_view:sync_player_exit_map(Obj), Err2),
     ?TRY_CATCH_ERROR(hook_map:on_player_exit(Uid), Err3),
     ?TRY_CATCH_ERROR(dec_line_number(S#m_map_state.mgr_ets, map_rw:line_id()), Err4),
-    Ack = #r_exit_map_ack{error = ?E_Success, map_id = map_rw:map_id(), line_id = map_rw:line_id() },
+    Ack = #r_exit_map_ack{error = ?E_Success, map_id = map_rw:map_id(), line_id = map_rw:line_id()},
     {reply, Ack, S};
 do_player_exit_call(S, From, Uid, Obj) ->
     ?WARN("~w req exit map ~w|~w from ~p, but obj is ~w",
-        [Uid, self(), misc:registered_name(),From, Obj]),
+        [Uid, self(), misc:registered_name(), From, Obj]),
 %%    Obj = #m_cache_map_object_priv{uid = Uid, type = ?OBJ_PLAYER},
 %%    ?TRY_CATCH_ERROR(map_rw:del_object(Obj), Err1),
 %%    ?TRY_CATCH_ERROR(mod_view:sync_player_exit_map(Obj), Err2),
 %%    ?TRY_CATCH_ERROR(hook_map:on_player_exit(Uid), Err3),
 %%    ?TRY_CATCH_ERROR(dec_line_number(S#m_map_state.mgr_ets, map_rw:line_id()), Err4),
-    Ack = #r_exit_map_ack{error = ?E_Success, map_id = map_rw:map_id(), line_id = map_rw:line_id() },
+    Ack = #r_exit_map_ack{error = ?E_Success, map_id = map_rw:map_id(), line_id = map_rw:line_id()},
     {reply, Ack, S}.
 
 
@@ -118,7 +122,7 @@ dec_line_number(Ets, LineId) ->
 %% call
 player_exit_exception_call(S, Uid) ->
     Obj = object_priv:find_object_priv(?UID_TYPE_PLAYER, Uid),
-    ?WARN("player_exit_exception_call(~p), ~w",[Uid, Obj]),
+    ?WARN("player_exit_exception_call(~p), ~w", [Uid, Obj]),
     ?TRY_CATCH(do_player_exit_call(S, undefined, Uid, Obj)),
     {reply, ?E_Success, S}.
 
@@ -162,16 +166,19 @@ force_teleport_call(S, From, #r_teleport_req{uid = Uid, tar = TarPos}) ->
 
 
 %%-------------------------------------------------------------------
-init_monster(#recGameMapCfg{
-    mapMonster = MonsterList
-}) ->
-    lists:foreach(
+init_monster(#recGameMapCfg{mapMonster = []}) ->
+    ok;
+init_monster(#recGameMapCfg{mapMonster = MonsterList}) ->
+    lists:foreach
+    (
         fun(MData) ->
             ?TRY_CATCH(init_one_monster(MData))
-        end, MonsterList).
+        end,
+        MonsterList
+    ).
 
-init_one_monster(Mdata) ->
-    Obj = object_priv:new_monster(Mdata),
+init_one_monster(MData) ->
+    Obj = object_priv:new_monster(MData),
     Uid = object_priv:get_uid(Obj),
     VisIndex = mod_view:pos_to_vis_index(object_rw:get_cur_pos(Uid)),
     map_rw:add_object(Obj),
@@ -182,13 +189,14 @@ init_one_monster(Mdata) ->
     ok.
 
 %%-------------------------------------------------------------------
-init_npc(#recGameMapCfg{
-    mapNpc = NpcList
-}) ->
-    lists:foreach(
+init_npc(#recGameMapCfg{mapNpc = NpcList}) ->
+    lists:foreach
+    (
         fun(MData) ->
             ?TRY_CATCH(init_one_npc(MData))
-        end, NpcList).
+        end,
+        NpcList
+    ).
 
 
 init_one_npc(Mdata) ->
@@ -305,10 +313,10 @@ real_stop_now(_Players) ->
     tick_msg(),
     ok.
 
-clear_all_obj()->
-    do_clear_all_obj(?UID_TYPE_MON,  ?ETS_CACHE_MAP_MONSTER_PRIV),
-    do_clear_all_obj(?UID_TYPE_NPC,  ?ETS_CACHE_MAP_NPC_PRIV),
-    do_clear_all_obj(?UID_TYPE_PET,  ?ETS_CACHE_MAP_PET_PRIV),
+clear_all_obj() ->
+    do_clear_all_obj(?UID_TYPE_MON, ?ETS_CACHE_MAP_MONSTER_PRIV),
+    do_clear_all_obj(?UID_TYPE_NPC, ?ETS_CACHE_MAP_NPC_PRIV),
+    do_clear_all_obj(?UID_TYPE_PET, ?ETS_CACHE_MAP_PET_PRIV),
     ok.
 
 do_clear_all_obj(Type, Ets) ->

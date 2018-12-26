@@ -110,6 +110,8 @@ send_msg(Uid, MsgId, Msg) when is_number(Uid) ->
     ps:send(Pid, MsgId, Msg).
 
 %%-------------------------------------------------------------------
+send_net_msg(_Pid, undefined) ->
+    skip;
 send_net_msg(Pid, NetMsg) when is_pid(Pid) ->
     ps:send(Pid, net_msg, NetMsg);
 send_net_msg(Uid, NetMsg) when is_number(Uid) ->

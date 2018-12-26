@@ -131,6 +131,7 @@ writeToFile(MapCfg) ->
 
 
 	MapObjRelivePt1 = MapCfg#recGameMapCfg.mapRelivePt,
+	MapObjStartPt1 = MapCfg#recGameMapCfg.mapStartPt,
 	MapObjTrigger1 = MapCfg#recGameMapCfg.mapTrigger,
 	MapObjMonster1 = MapCfg#recGameMapCfg.mapMonster,
 	MapObjNpc1 = MapCfg#recGameMapCfg.mapNpc,
@@ -153,6 +154,7 @@ writeToFile(MapCfg) ->
 		block = ~p,
 		dropInfo = ~p,
 		mapRelivePt = ~p,
+		mapStartPt = ~p,
 		mapTrigger = ~p,
 		mapMonster = ~p,
 		mapNpc = ~p,
@@ -160,7 +162,7 @@ writeToFile(MapCfg) ->
 		mapCollect = ~p,
 		mapUseItem = ~p
 		}.\n\n", [MapId, MapId, MaxPlayerNum, WorldPos, ColCellNum, RowCellNum, ColGridNum, RowGridNum, CellSize,
-		InitX, InitY, Block, DropInfo, MapObjRelivePt1, MapObjTrigger1, MapObjMonster1,
+		InitX, InitY, Block, DropInfo, MapObjRelivePt1, MapObjStartPt1,MapObjTrigger1, MapObjMonster1,
 		MapObjNpc1, MapObjWayPt1, MapObjCollect1, MapObjUseItem1]),
 	Str.
 
@@ -209,6 +211,7 @@ readMapInfo(MapID, FileName, ArCfg) when erlang:is_integer(MapID) andalso MapID 
 			InitX = MapWayPt#recMapWayPt.x,
 			InitY = MapWayPt#recMapWayPt.y,
 			RelivePt = array:get(?MapObjRelivePt, Info),
+			StartPt = array:get(?MapObjStartPt, Info),
 			Trigger = array:get(?MapObjTrigger, Info),
 			Monster = array:get(?MapObjMonster, Info),
 			Npc = array:get(?MapObjNpc, Info),
@@ -218,6 +221,7 @@ readMapInfo(MapID, FileName, ArCfg) when erlang:is_integer(MapID) andalso MapID 
 				initX = InitX,
 				initY = InitY,
 				mapRelivePt = RelivePt,
+				mapStartPt = StartPt,
 				mapTrigger = Trigger,
 				mapMonster = Monster,
 				mapNpc = Npc,
@@ -397,9 +401,10 @@ loadMapInfoFromBinary(Bin, FileName) ->
 	Offset2 = NpcOffset + NpcDataLen,
 	Offset3 = MonsterOffset + MonsterDataLen,
 	Offset4 = RelivePtOffset + RelivePtDataLen,
-	Offset5 = WayPtOffset + WayPtDataLen,
-	Offset6 = CollectDataOffset + CollectDataLength,
-	Offset7 = UseItemDataOffset + UseItemDataLength,
+	Offset5 = StartPtOffset + StartPtDataLen,
+	Offset6 = WayPtOffset + WayPtDataLen,
+	Offset7 = CollectDataOffset + CollectDataLength,
+	Offset8 = UseItemDataOffset + UseItemDataLength,
 	EOFFlag = binary:part(Bin, BinSize - 4, 4),
 
 	if
@@ -424,6 +429,9 @@ loadMapInfoFromBinary(Bin, FileName) ->
 		Offset7 > BinSize ->
 			?ERROR_OUT("error Overflow:~s, FileSize:~p, BinSize:~p ", [FileName, FileSize, BinSize]),
 			throw("Map File Internal Error,Overflow!");
+		Offset8 > BinSize ->
+			?ERROR_OUT("error Overflow:~s, FileSize:~p, BinSize:~p ", [FileName, FileSize, BinSize]),
+			throw("Map File Internal Error,Overflow!");
 		<<"EOF", 0>> /= EOFFlag ->
 			?ERROR_OUT("error EOF Flag:~s, FileSize:~p, BinSize:~p ", [FileName, FileSize, BinSize]),
 			throw("Map File Error, No EOF Flag");
@@ -436,7 +444,7 @@ loadMapInfoFromBinary(Bin, FileName) ->
 -spec loadMapInfoByVersion(1, Bin, FileHeader) -> array:array() when
 	Bin :: binary(), FileHeader :: binary().
 loadMapInfoByVersion(1, Bin, ?GameMapInfoBinFile) ->
-	Ar = array:new([{size, 7}, {fixed, true}]),
+	Ar = array:new([{size, 8}, {fixed, true}]),
 
 	%%触发器
 	AllTriggerData = binary:part(Bin, TriggerOffset, TriggerDataLen),
@@ -458,22 +466,27 @@ loadMapInfoByVersion(1, Bin, ?GameMapInfoBinFile) ->
 	RelivePtList = loadMapStubData(RelivePtData, RelivePtNum),
 	Ar4 = array:set(?MapObjRelivePt, RelivePtList, Ar3),
 
+	%%出生点
+	StartPtData = binary:part(Bin, StartPtOffset, StartPtDataLen),
+	StartPtList = loadMapStubData(StartPtData, StartPtNum),
+	Ar5 = array:set(?MapObjStartPt, StartPtList, Ar4),
+
 	%%路点
 	WayPtData = binary:part(Bin, WayPtOffset, WayPtDataLen),
 	WayPtList = loadMapWayPtData(WayPtData, [], WayPtNum),
-	Ar5 = array:set(?MapObjWayPt, WayPtList, Ar4),
+	Ar6 = array:set(?MapObjWayPt, WayPtList, Ar5),
 
 	%%地图中的采集数据
 	CollectData = binary:part(Bin, CollectDataOffset, CollectDataLength),
 	CollectList = loadMapStubData(CollectData, CollectNum),
-	Ar6 = array:set(?MapObjCollect, CollectList, Ar5),
+	Ar7 = array:set(?MapObjCollect, CollectList, Ar6),
 
 	%%地图中的采集数据
 	UseItemData = binary:part(Bin, UseItemDataOffset, UseItemDataLength),
 	UseItemList = loadMapStubData(UseItemData, UseItemNum),
-	Ar7 = array:set(?MapObjUseItem, UseItemList, Ar6),
+	Ar8 = array:set(?MapObjUseItem, UseItemList, Ar7),
 
-	Ar7.
+	Ar8.
 
 -spec loadMapWayPtData(Bin, List, Num) -> list() when
 	Bin :: binary(), List :: list(), Num :: uint().

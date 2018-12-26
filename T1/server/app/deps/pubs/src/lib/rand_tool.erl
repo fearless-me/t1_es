@@ -14,7 +14,7 @@
 %% API
 -export([
     new/0, new/1,
-    rand/0, rand/2,
+    rand/0, rand/1, rand/2,
     seed/0,
     prob/1
 ]).
@@ -37,7 +37,7 @@ new(Seed) ->
 
 prob(FProb) ->
     X = erlang:trunc(FProb * ?PERCENT),
-    X =<rand_tool:rand(1, ?PERCENT).
+    X =< rand_tool:rand(1, ?PERCENT).
 
 -spec rand() -> integer().
 rand() ->
@@ -45,17 +45,20 @@ rand() ->
     % gcc 线性同余随机数生成器
     Key2 = ((Key1 * 1103515245 + 12345)) band ?UINT32_MAX,
 %%    <<Key3:32/signed-little>> = <<Key2:32/unsigned-little>>,
-    
-    Key3 =
-        if
-            Key2 > ?INT32_MAX ->
-                0 - (((Key2 - 1) band ?INT32_MAX) bxor ?INT32_MAX);
-            true ->
-                (Key2 band ?UINT32_MAX)
-        end,
-    
+
+    Key3 = case Key2 > ?INT32_MAX of
+               true ->
+                   0 - (((Key2 - 1) band ?INT32_MAX) bxor ?INT32_MAX);
+               _Any ->
+                   (Key2 band ?UINT32_MAX)
+           end,
+
     put(?RAND_KEY, Key3),
     (Key3 bsr 1) band ?INT32_MAX.
+
+
+-spec rand(N :: integer() ) -> integer().
+rand(N) when N >= 1 -> rand(1, N).
 
 -spec rand(Min :: integer(), Max :: integer()) -> integer().
 rand(Min, Min) -> Min;

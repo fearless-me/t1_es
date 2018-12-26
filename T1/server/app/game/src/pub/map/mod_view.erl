@@ -40,12 +40,13 @@
 -define(VIS_H, map_vis_h__).
 -define(CELL_SIZE, map_cell_size__).
 -define(WORLD_POS, map_world_pos__).
+-define(VIS_DIST_KEY, view_dist).
 
 
 sync_player_join_group(Uid, Group) ->
     %1.
     Obj = object_priv:find_object_priv(?UID_TYPE_PLAYER, Uid),
-    Index = pos_to_vis_index(object_rw:get_cur_pos(Uid), visual_w(), ?VIS_DIST),
+    Index = pos_to_vis_index(object_rw:get_cur_pos(Uid), visual_w(), view_dist()),
     
     %2.
     ?TRY_CATCH(del_obj_from_vis_tile(Obj, Index)),
@@ -67,7 +68,7 @@ sync_player_join_map(Obj) ->
     %1.
     Uid = object_priv:get_uid(Obj),
     Pos = object_rw:get_cur_pos(Uid),
-    Index = pos_to_vis_index(Pos, visual_w(), ?VIS_DIST),
+    Index = pos_to_vis_index(Pos, visual_w(), view_dist()),
     Tiles = get_vis_tile_around(Index),
     
     %2.
@@ -79,7 +80,7 @@ sync_player_join_map(Obj) ->
 sync_player_exit_map(Obj) ->
     %1.
     Uid = object_priv:get_uid(Obj),
-    Index = pos_to_vis_index(object_rw:get_cur_pos(Uid), visual_w(), ?VIS_DIST),
+    Index = pos_to_vis_index(object_rw:get_cur_pos(Uid), visual_w(), view_dist()),
     
     %2.
     ?TRY_CATCH(del_obj_from_vis_tile(Obj, Index)),
@@ -100,8 +101,8 @@ init_vis_tile(#recGameMapCfg{
     cellSize = CellSize,
     worldPos = {X, Y, Z}
 }) ->
-    VisW = (erlang:trunc(Col * 1) div ?VIS_DIST) + 1,
-    VisH = (erlang:trunc(Row * 1) div ?VIS_DIST) + 1,
+    VisW = (erlang:trunc(Col * 1) div view_dist()) + 1,
+    VisH = (erlang:trunc(Row * 1) div view_dist()) + 1,
     VisT = VisW * VisH,
 
     ?assert(VisT > 1),
@@ -111,6 +112,7 @@ init_vis_tile(#recGameMapCfg{
     visual_h(VisH),
     map_cell_size(CellSize),
     init_vis_tile_1(VisT),
+    view_dist(CellSize),
     world_pos(vector3:new(X, Y, Z)),
 %%    erlang:put(?VIS_K, ViewMaps),
     ok.
@@ -187,7 +189,9 @@ send_net_msg_to_big_visual_with_group(VisTileList, Msg, Group) ->
                 lists:foreach(
                     fun(Uid) ->
                         case object_rw:get_group(Uid) =:= Group of
-                            true -> gs_interface:send_net_msg(Uid, Msg);
+                            true ->
+%%                                ?WARN("to ~p|~ts|~w",[Uid, object_rw:get_name(Uid), Msg]),
+                                gs_interface:send_net_msg(Uid, Msg);
                             _Any -> skip
                         end
                     end, UidList)
@@ -446,7 +450,7 @@ sync_me_to_big_vis_tile(Obj, VisTileList, add_me) ->
 
 %%-------------------------------------------------------------------
 pos_to_vis_index(Pos) ->
-    pos_to_vis_index(Pos, visual_w(), ?VIS_DIST).
+    pos_to_vis_index(Pos, visual_w(), view_dist()).
 
 %% vector3 
 pos_to_vis_index(Pos, VisTileWidth, ViewDist) ->
@@ -527,3 +531,13 @@ i_get_visual(Index) ->
 
 world_pos(Pos) -> erlang:put(?WORLD_POS, Pos).
 world_pos() -> erlang:get(?WORLD_POS).
+
+
+view_dist() ->
+    misc:get_dict_def(?VIS_DIST_KEY, ?VIS_DIST).
+
+view_dist(CellSize) when CellSize == 0 ->
+    erlang:put(?VIS_DIST_KEY, ?VIS_DIST);
+view_dist(CellSize) ->
+    Dist = erlang:trunc(?VIS_DIST / CellSize),
+    erlang:put(?VIS_DIST_KEY, Dist).

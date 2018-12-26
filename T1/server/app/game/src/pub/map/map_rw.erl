@@ -19,9 +19,10 @@
 
 %%
 -export([
+    map_cfg/0,
     init/1, status/0, check_tick/1,
 
-    set_owner/2, get_owner/0, is_all_enterd/0,
+    set_owner/4, get_owner/0, is_all_entered/0,
 
     %%
     map_id/0, line_id/0, hook_mod/0,
@@ -79,20 +80,18 @@ init_base(State) ->
     erlang:put(?ETS_MAP_OBJ, State#m_map_state.obj_ets),
     erlang:put(?ETS_MAP_EXCL, State#m_map_state.excl_ets),
     set_tick_info(#tick_info{}),
-    set_owner(none, []),
     ok.
 %%-------------------------------------------------------------------
-set_owner(Type, Owner) ->
-    erlang:put(?MAP_OWNER, #m_map_owner{type = Type, owners = Owner}).
+set_owner(Creator, Type, Param, WaitList) ->
+    erlang:put(?MAP_OWNER, #m_map_owner{type = Type, creator = Creator, owner_param = Param, wait_list = WaitList}).
 
-get_owner()->
-    erlang:get(?MAP_OWNER).
+get_owner()-> erlang:get(?MAP_OWNER).
 
-is_all_enterd() ->
+is_all_entered() ->
     case map_rw:get_owner() of
         undefined -> true;
-        #m_map_owner{owners = Owners, entered = Entered} ->
-            lists:subtract(Owners, Entered) == []
+        #m_map_owner{wait_list = WaitList, ready_list = ReadyList} ->
+            lists:subtract(WaitList, ReadyList) == []
     end.
 %%-------------------------------------------------------------------
 map_id() -> erlang:get(?MAP_ID).
@@ -273,3 +272,6 @@ format_tick()->
 
 
 
+map_cfg() ->
+    MapId = map_rw:map_id(),
+    getCfg:getCfgByArgs(cfg_map, MapId).

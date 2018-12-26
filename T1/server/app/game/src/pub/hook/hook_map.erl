@@ -17,6 +17,7 @@
 -include("combat_buff.hrl").
 -include("netmsg.hrl").
 -include("cfg_monster.hrl").
+-include("cfg_map.hrl").
 
 
 -export([
@@ -63,13 +64,25 @@ on_start_move(_Uid) ->
 
 %%-------------------------------------------------------------------
 %% 玩家
-on_player_join(_Uid) ->
+on_player_join(Uid) ->
+    ?TRY_CATCH_ONLY(do_on_player_join(map_rw:map_cfg(), Uid)),
     ok.
+
+do_on_player_join(#mapCfg{type = ?MAP_TYPE_COPY}, Uid) ->
+    mod_copy:on_player_join(Uid);
+do_on_player_join(_, _) ->
+    skip.
 
 on_player_exit(Uid) ->
     ?TRY_CATCH_ONLY(object_priv:del_player(Uid)),
     ?TRY_CATCH_ONLY(mod_buff:del_buff(Uid, ?BUFF_REMOVE_LEAVE_MAP)),
+    ?TRY_CATCH_ONLY(do_on_player_exit(map_rw:map_cfg(), Uid)),
     ok.
+
+do_on_player_exit(#mapCfg{type = ?MAP_TYPE_COPY}, Uid) ->
+    mod_copy:on_player_exit(Uid);
+do_on_player_exit(_, _) ->
+    skip.
 %%-------------------------------------------------------------------
 %% 怪物
 on_monster_create(Uid, DataId) ->

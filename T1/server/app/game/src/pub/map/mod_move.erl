@@ -335,14 +335,15 @@ cal_move_msg(Uid) ->
     do_cal_move_msg(object_rw:get_cur_move(Uid), Uid).
 
 do_cal_move_msg(?EMS_WALK, Uid) ->
-    Src = object_rw:get_start_pos(Uid),
+%%    Src = object_rw:get_start_pos(Uid),
     Dst = object_rw:get_dest_pos(Uid),
+    Cur = object_rw:get_cur_pos(Uid),
     Speed = get_move_speed_by_state(Uid, ?EMS_WALK),
-    StartTime = object_rw:get_move_start_time(Uid),
+%%    StartTime = object_rw:get_move_start_time(Uid),
     #pk_GS2U_SyncWalk{
         uid = Uid,
-        move_time = map_rw:get_move_timer_pass_time(StartTime),
-        src_x = vector3:x(Src), src_y = vector3:z(Src),
+        move_time = 0,%%map_rw:get_move_timer_pass_time(StartTime),
+        src_x = vector3:x(Cur), src_y = vector3:z(Cur),
         dst_x = vector3:x(Dst), dst_y = vector3:z(Dst),
         speed = Speed
     };
@@ -356,14 +357,15 @@ do_cal_move_msg(?EMS_STAND, Uid) ->
 do_cal_move_msg(
     S, Uid
 ) when S =:= ?EMS_MONSTER_PATROL;S =:= ?EMS_MONSTER_WALK;S =:= ?EMS_MONSTER_FLEE ->
-    Src = object_rw:get_start_pos(Uid),
+%%    Src = object_rw:get_start_pos(Uid),
     Dst = object_rw:get_dest_pos(Uid),
+    Cur = object_rw:get_cur_pos(Uid),
     Speed = get_move_speed_by_state(Uid, S),
-    StartTime = object_rw:get_move_start_time(Uid),
+%%    StartTime = object_rw:get_move_start_time(Uid),
     #pk_GS2U_SyncWalk{
         uid = Uid,
-        move_time = map_rw:get_move_timer_pass_time(StartTime),
-        src_x = vector3:x(Src), src_y = vector3:z(Src),
+        move_time = 0,
+        src_x = vector3:x(Cur), src_y = vector3:z(Cur),
         dst_x = vector3:x(Dst), dst_y = vector3:z(Dst),
         speed = Speed
     };
@@ -383,9 +385,7 @@ do_start_monster_walk(Uid, Dst, MoveState) ->
     Dir = vector3:subtract(Dst, Start),
     Now = map_rw:get_move_timer_now(),
     MaxSpeed = prop_interface:query_v_pf_bpu(?BP_2_SPEED, object_rw:get_battle_props((Uid))),
-    Speed = object_rw:get_move_speed(Uid),
-    RealSpeed = erlang:min(Speed, MaxSpeed),
-    PathList = make_path_list([], Start, Way, RealSpeed),
+    PathList = make_path_list([], Start, Way, MaxSpeed),
                     
     %%
 %%    TotalDist = lists:foldl(
@@ -395,7 +395,7 @@ do_start_monster_walk(Uid, Dst, MoveState) ->
 %%        [Uid, RealSpeed, Start, lists:last(Way), TotalDist, TotalTime]),
     
     %
-    start_walk_set(Uid, MoveState, ?EMS_STAND, Start, Dst, Dir, Dir, Now, PathList, RealSpeed),
+    start_walk_set(Uid, MoveState, ?EMS_STAND, Start, Dst, Dir, Dir, Now, PathList, MaxSpeed),
     mod_view:sync_movement_to_big_visual_tile(Uid),
     hook_map:on_start_move(Uid),
     true.
@@ -490,10 +490,8 @@ stop_move_force(Uid, NeedBroadcast) ->
     ok.
 
 get_move_speed_by_state(Uid, ?EMS_MONSTER_PATROL) ->
-    object_rw:get_move_speed(Uid) * 0.5;
+    object_rw:get_move_speed(Uid);
 get_move_speed_by_state(Uid, ?EMS_MONSTER_FLEE) ->
     object_rw:get_move_speed(Uid) * 1.1;
-get_move_speed_by_state(Uid, ?EMS_MONSTER_WALK) ->
-    object_rw:get_move_speed(Uid);
 get_move_speed_by_state(Uid, _) ->
     object_rw:get_move_speed(Uid).

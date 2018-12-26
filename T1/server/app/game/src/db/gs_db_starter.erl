@@ -46,7 +46,7 @@ start() ->
     end,
     
     ?INFO("init public db pool ..."),
-    db_pool_init(Pid, get_public_db_conf, [], ?PUBLIC_DB_POOL_NAME, fun gs_db_public_handler:handler/4),
+    db_pool_init(Pid, get_public_db_conf, [Sid], ?PUBLIC_DB_POOL_NAME, fun gs_db_public_handler:handler/4),
     ?INFO("init public db pool done"),
     ?INFO("#"),
     
@@ -124,7 +124,7 @@ get_inst_opt() ->
             [
                 {get_data_db_conf, "select * from data_db_conf where id=?"},
                 {get_log_db_conf, "select * from log_db_conf where id=?"},
-                {get_public_db_conf, "select * from public_db_conf where id=0"},
+                {get_public_db_conf, "select * from public_db_conf where id=?"},
                 {get_account_db_conf, "select * from account_db_conf limit 1"}
             ]
         }

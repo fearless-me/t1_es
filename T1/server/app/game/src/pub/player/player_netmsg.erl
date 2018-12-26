@@ -52,10 +52,12 @@ handle(#pk_U2GS_GetPlayerInitData{}) ->
 handle(#pk_U2GS_PlayerWalk{dst_x = DX, dst_y = DY, speed = Speed}) ->
     Tar = vector3:new(DX, 0, DY),
     player_base:start_walk(Tar, Speed),
+    %%    ?DEBUG("~p move to ~w",[player_rw:get_uid(), Tar]),
     ok;
 handle(#pk_U2GS_PlayerStopWalk{cur_x = X, cur_y = Y}) ->
     Pos = vector3:new(X, 0, Y),
     player_base:stop_move(Pos),
+    %%    ?DEBUG("~p client stop ~w",[player_rw:get_uid(), Pos]),
     ok;
 handle(#pk_U2GS_UseSkill{tar_uids = Tar, x = X, y = Y, skill_id = SkillId, serial = Serial}) ->
     Pos = vector3:new(X, 0, Y),

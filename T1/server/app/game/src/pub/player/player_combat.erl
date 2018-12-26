@@ -43,7 +43,7 @@ online() ->
 calc_combat_prop() ->
     %% test begin
     BattleProps = #m_battleProps{
-        career = 1, %% fixme prop_interface:?Career_1
+        career = ?CAREER_MAIN(player_rw:get_career()),
         listBP1 = ?LIST_BP1,
         listBP2 = ?LIST_BP2,
         listBP3 = ?LIST_BP3

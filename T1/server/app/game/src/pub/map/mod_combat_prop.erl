@@ -22,7 +22,6 @@
     change_combat_prop/5,
 
     hit_damage/8,
-    hit_damage/4,
 
     treat/8,    %% 带吸血标志
     treat/7,
@@ -36,27 +35,24 @@ change_combat_prop(Uid, AddList, MultiList) ->
     ok.
 
 change_combat_prop(Uid, AddList, MultiList, AddList_Del, MultiList_Del) ->
-    BattlePropsNew_ = #m_battleProps{listBPFinal = ListBPFinal} =
-        case object_rw:get_battle_props(Uid) of
-            #m_battleProps{} = BattleProps ->
-                BattlePropsNew = prop_interface:calc(
-                    BattleProps, AddList, MultiList, AddList_Del, MultiList_Del),
-                object_rw:set_battle_props(Uid, BattlePropsNew),
-                BattlePropsNew;
-            _ ->
-                %% 没有找到该元素，取默认值进行计算
-                ?ERROR("change_combat_prop not found Uid:~w, will use default value", [Uid]),
-                BattleProps = #m_battleProps{career = 1}, %% fixme prop_interface:?Career_1
-                BattlePropsNew = prop_interface:calc(
-                    BattleProps, AddList, MultiList, AddList_Del, MultiList_Del),
-                object_rw:set_battle_props(Uid, BattlePropsNew),
-                BattlePropsNew
-        end,
-    {_, _, Hp} = lists:keyfind(?BP_2_HP_CUR, 1, ListBPFinal),   %% 必定能找到
-    {_, _, HpMax} = lists:keyfind(?BP_2_HP_MAX, 1, ListBPFinal),   %% 必定能找到
-    object_rw:set_hp(Uid, erlang:trunc(Hp)),
-    object_rw:set_max_hp(Uid, erlang:trunc(HpMax)),
-    gs_interface:send_net_msg(Uid, prop_interface:battleProps2NetMsg(Uid, BattlePropsNew_)),
+    case object_rw:get_battle_props(Uid) of
+        #m_battleProps{} = BattleProps ->
+            BattlePropsNew = #m_battleProps{listBPFinal = ListBPFinal} = prop_interface:calc(
+                BattleProps, AddList, MultiList, AddList_Del, MultiList_Del),
+            object_rw:set_battle_props(Uid, BattlePropsNew),
+
+            {_, _, Hp} = lists:keyfind(?BP_2_HP_CUR, 1, ListBPFinal),   %% 必定能找到
+            {_, _, HpMax} = lists:keyfind(?BP_2_HP_MAX, 1, ListBPFinal),   %% 必定能找到
+
+            ?DEBUG("change_combat_prop [~p] result[~p,~p]", [Uid, Hp, HpMax]),
+            object_rw:set_hp(Uid, erlang:trunc(Hp)),
+            object_rw:set_max_hp(Uid, erlang:trunc(HpMax)),
+            gs_interface:send_net_msg(Uid, prop_interface:battleProps2NetMsg(Uid, BattlePropsNew)),
+            ok;
+        _ ->
+            %% 没有找到该元素，取默认值进行计算
+            ?ERROR("change_combat_prop not found Uid:~w", [Uid])
+    end,
     ok.
 
 %% 治疗
@@ -132,7 +128,7 @@ hit_damage(
     end.
 
 broadcast_hp_change(
-    #m_hit_damage_result{isHit = IsHit, isCri = IsCri, deltaHp = DeltaHp},
+    #m_hit_damage_result{isHit = IsHit, isCri = IsCri, deltaHp = DeltaHp, isDead = IsDead},
     #pk_GS2U_HPChange{uid = TargetUid, src_uid = Uid, misc1 = Misc1} = HpMsg) ->
     %% 血量变化
     Result =
@@ -150,6 +146,13 @@ broadcast_hp_change(
     },
     ?DEBUG("hp_change ~p -> ~p DeltaHp:~p Misc1:~p", [Uid, TargetUid, DeltaHp, Misc1]),
     mod_view:send_net_msg_to_visual(TargetUid, Msg),
+
+    %% 是否死亡
+    case IsDead of
+        true ->
+            mod_combat_revive:dead(Uid, TargetUid);
+        _ -> skip
+    end,
     ok.
 
 -spec hit_damage(#m_object_rw{}, #m_object_rw{}, DamageValue::float(),
@@ -161,18 +164,11 @@ hit_damage(
         true ->
             Ret = #m_hit_damage_result{
                 attackBps = AttackBpsRet,
-                defenseBps = DefenseBpsRet,
-                isDead = IsDead
+                defenseBps = DefenseBpsRet
             } = prop_interface:calcHitAndDamage(AttackBps, DefenseBps, DamageValue, SpecialOptions),
             Ahp = fresh_prop(Uid, AttackBpsRet),
             Dhp = fresh_prop(TargetUid, DefenseBpsRet),
 
-            case IsDead of
-                true ->
-                    mod_combat_revive:dead(Uid, TargetUid);
-                _ ->
-                    skip
-            end,
             ?DEBUG("hitAndDamage:~p(~p) -> ~p(~p)", [Uid, Ahp, TargetUid, Dhp]),
             Ret;
         _ ->

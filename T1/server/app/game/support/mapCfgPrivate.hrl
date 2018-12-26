@@ -7,18 +7,20 @@
 
 %地图中的复活点
 -define(MapObjRelivePt, 0).
+%地图中的出生点
+-define(MapObjStartPt, 1).
 %地图中的触发器
--define(MapObjTrigger, 1).
+-define(MapObjTrigger, 2).
 %地图中的怪物
--define(MapObjMonster, 2).
+-define(MapObjMonster, 3).
 %地图中的NPC
--define(MapObjNpc, 3).
+-define(MapObjNpc, 4).
 %路点
--define(MapObjWayPt, 4).
+-define(MapObjWayPt, 5).
 %地图中的采集对象
--define(MapObjCollect, 5).
+-define(MapObjCollect, 6).
 %地图中的使用物品
--define(MapObjUseItem, 6).
+-define(MapObjUseItem, 7).
 
 -ifdef(AREA_SYNC_TYPE).
 %% 客户端，按照设置的摄像机高度，可以看见30*30格子的范围
@@ -34,7 +36,7 @@
 -define(MaxGridCellColNum, 30).
 -endif.
 
--type map_obj_type() :: 0 .. 6.
+-type map_obj_type() :: 0 .. 7.
 %游戏地图配置，主要是从地图文件中读取后生成
 -record(recGameMapCfg,
 {
@@ -52,6 +54,7 @@
     height = <<>> :: binary(),                %高度信息，二进制块
     dropInfo = [] :: list(),                %掉落信息，recMapDrop列表
     mapRelivePt = [],                        %地图复活点信息
+    mapStartPt = [],                        %地图出生点信息
     mapTrigger = [],                        %地图触发器信息
     mapMonster = [],                        %地图怪物信息
     mapNpc = [],                            %地图Npc信息
@@ -174,6 +177,10 @@
     RelivePtNum:?U32,                        %复活点数量
     RelivePtOffset:?U32,                    %复活点在文件中的偏移
     RelivePtDataLen:?U32,                   %单个复活点数据长度
+
+    StartPtNum:?U32,                        %出生点数量
+    StartPtOffset:?U32,                    %出生点在文件中的偏移
+    StartPtDataLen:?U32,                   %单个出生点数据长度
     
     WayPtNum:?U32,                          %路点数量
     WayPtOffset:?U32,                       %路点在文件中的偏移

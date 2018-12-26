@@ -102,11 +102,6 @@ do_player_join_map_call_1(_Any, S, Req) ->
         tar_map_id = MapID, tar_line_id = TarLineId, force = Force
     } = Req,
 
-    case TarLineId > 0 of
-        true -> misc_ets:read(S#state.ets, TarLineId);
-        _ -> undefined
-    end,
-
     Recover = map_creator_interface:map_line_recover(MapID),
     Res = i_select_line(TarLineId, S, MapID, Force),
     i_player_join_map_call(Res, Recover, Req, S).
@@ -170,13 +165,13 @@ i_player_join_map_call(#m_map_line{pid = MapPid, map_id = MapID, line_id = LineI
 i_player_join_map_call(_Any, ?MAP_LINE_RECOVER_ERR, Req, _State) ->
     #r_join_map_ack{map_id = Req#r_join_map_req.tar_map_id, error = ?E_Exception};
 %%3.没有线就创建一条新线
-i_player_join_map_call(_Any, Recover, Req, State) ->
-    case catch create_new_line(State, State#state.map_id, next_line_id()) of
+i_player_join_map_call(_Any, Recover, #r_join_map_req{tar_map_id = TarMid, uid = CreatorUid} = Req, State) ->
+    case catch create_new_line(State, State#state.map_id, next_line_id(), CreatorUid) of
         #m_map_line{} = Line ->
             i_player_join_map_call(Line, Recover, Req, State);
         Error ->
             ?ERROR("create map ~p new line error ~p", [State#state.map_id, Error]),
-            #r_join_map_ack{map_id = Req#r_join_map_req.tar_map_id, error = ?E_MapCreateLineFailed}
+            #r_join_map_ack{map_id = TarMid, error = ?E_MapCreateLineFailed}
     end.
 
 %%--------------------------------------------------------------------
@@ -211,16 +206,21 @@ do_player_exit_map_call(S, Req) ->
 %%    ok.
 
 %%--------------------------------------------------------------------
-create_new_line(S, MapID, LineID) ->
+create_new_line(S, MapID, LineID, CreatorUid) ->
     %% @todo 此处要根据地图类型的不同来采取不同的策略
     %% 比如副本地图不用做任何优化
     %% 但是长时间存在的地图必须要调整内存相关属性，减少GC
-    {ok, Pid} = map_sup:start_child([MapID, LineID, S#state.ets]),
+    {OwnerType, OwnerParam, WaitList} = map_creator_interface:map_owners(MapID, CreatorUid),
+    CreateParamRec = #r_map_create_params{
+        map_id = MapID, line_id = LineID, mgr_ets = S#state.ets,
+        creator = CreatorUid, owner_type = OwnerType, owner_params = OwnerParam, wait_list = WaitList
+    },
+    {ok, Pid} = map_sup:start_child(CreateParamRec),
 
     [Line] = misc_ets:read(S#state.ets, LineID),
     %% fixme 此处是为了测试用的
-    erlang:send_after(?LINE_LIFETIME, self(), {deadline_stop, Line}),
-    ?WARN("map_~p_~p ~p start, mgr ets ~p", [MapID, LineID, Pid, S#state.ets]),
+    erlang:send_after(?LINE_LIFETIME * 10, self(), {deadline_stop, Line}),
+    ?WARN("map_~p_~p ~p start, mgr ets ~p, creator ~p", [MapID, LineID, Pid, S#state.ets, CreatorUid]),
     Line.
 
 

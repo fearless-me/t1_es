@@ -35,7 +35,7 @@ insert  into `log_db_conf`(`id`,`host`,`port`,`user`,`password`,`database`,`conn
 /*Data for the table `public_db_conf` */
 
 insert  into `public_db_conf`(`id`,`host`,`port`,`user`,`password`,`database`,`conn`,`max_conn`,`worker`) values 
-(0,'127.0.0.1',3306,'root','1234','t1_public',1,1,1),
+(1,'127.0.0.1',3306,'root','1234','t1_public',1,1,1),
 (1010,'127.0.0.1',3306,'root','1234','t1_public',5,5,5);
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;

@@ -58,7 +58,7 @@ send_net_msg(IoList) when is_list(IoList) ->
     tcp_handler:direct_send_net_msg(socket(), IoList);
 send_net_msg(Msg) ->
     {_Bytes1, IoList} = tcp_codec:encode(Msg),
-%%    ?DEBUG("~p send ~p bytes, msg ~w", [player_rw:get_uid(), Bytes1, Msg]),
+%%    ?DEBUG("~p send ~p bytes, msg ~w", [player_rw:get_uid(), _Bytes1, Msg]),
     tcp_handler:direct_send_net_msg(socket(), IoList),
     ok.
 

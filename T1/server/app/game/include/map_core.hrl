@@ -28,12 +28,17 @@
 -define(MAP_TYPE_GROUP,      3).
 -define(MAP_TYPE_ACTIVITY,   4).
 
+-define(MAP_OWNER_ANY, any).
+-define(MAP_OWNER_SINGLE, single).
+-define(MAP_OWNER_TEAM, team).
+-define(MAP_OWNER_GUILD, guild).
+
 %% 格子缩放比例
 -define(TILE_SCALE, 1).
 
 %% 视野范围
 %% @todo 这个应该让地图自己配置
--define(VIS_DIST, 64).
+-define(VIS_DIST, 32).
 
 %% 九宫格方向
 -define(ED_Center, 0). %% 中间
@@ -88,6 +93,8 @@
 -record(m_map_mgr, {map_id = 0, mgr, line_ets}).
 -define(MAP_MGR_ETS, map_mgr_ets__).
 
+%%
+-record(r_map_create_params, {map_id, line_id, mgr_ets, owner_type=?MAP_OWNER_ANY,owner_params=0, creator=0, wait_list=[]}).
 %% 视图
 -record(m_vis_tile, {index = 0, player = [], monster = [], npc = [], pet = []}).
 %% 地图进程状态
@@ -95,7 +102,7 @@
 %% 地图线路
 -record(m_map_line, {map_id = 0, line_id = 0, pid, obj_ets, limits = 150, in = 0, reserve = 10, dead_line = 0, status = ?MAP_RUNNING}).
 %% 线路归属
--record(m_map_owner,{type=team, owners = [], entered = []}).
+-record(m_map_owner,{type=?MAP_OWNER_ANY, creator = 0, owner_param = 0, wait_list =[], ready_list = []}).
 -endif. %% INC_MAP_HRL
 
 

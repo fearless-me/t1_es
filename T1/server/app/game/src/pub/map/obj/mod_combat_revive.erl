@@ -42,9 +42,8 @@ request_revive(Uid) ->
 	ok.
 
 dead(KillerUid, TargetUid) ->
-	?INFO("~p kill ~p", [KillerUid, TargetUid]),
-
 	KillerName = object_rw:get_name(KillerUid),
+	?INFO("~p,~p kill ~p", [KillerUid, KillerName, TargetUid]),
 	Msg = #pk_GS2U_Dead{
 		uid = TargetUid,
 		killer_uid = KillerUid,

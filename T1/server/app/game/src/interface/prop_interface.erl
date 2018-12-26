@@ -25,6 +25,13 @@
 %% 4必定暴击
 -define(PROP_CALC_SPECIAL_OPTION_CERTAINLY_CS, 4).
 
+-define(PROP_RANGE_LIMIT, [
+    {?BP_2_HP_CUR, 0, max},
+    {?BP_2_HP_MAX, 1, max},
+    {?BP_2_MP_MAX, 1, max},
+    {?BP_2_ATK, 0, max}
+]).
+
 %% API
 -export([calc/3, calc/5, battleProps2NetMsg/2]).
 
@@ -102,47 +109,26 @@ calc(BattleProps, AddList, MultiList, AddList_Del, MultiList_Del) ->
     Ret3 = calc_del(AddList_Del, Ret2),
     Ret4 = calc_del(MultiList_Del, Ret3),
     Ret5 = calc_convert(Ret4),
-    ListBPFinal1 = calc_limit(
-        [
-            {?BP_2_HP_MAX, 1, max},
-            {?BP_2_MP_MAX, 1, max},
-            {?BP_2_ATK, 0, max}
-        ],
-        Ret5#m_battleProps.listBPFinal
-    ),
+    ListBPFinal1 = calc_limit(?PROP_RANGE_LIMIT, Ret5#m_battleProps.listBPFinal),
     Ret5#m_battleProps{listBPFinal = calc_max2cur(BattleProps#m_battleProps.listBPFinal, ListBPFinal1)}.
 
 %%%-------------------------------------------------------------------
-%% internal:战斗属性的刷新 之 血量、法力最大值变化引起的当前值变化
+%% 再次校验当前蓝量与血量
 -spec calc_max2cur(ListOld::listBPU(), ListNew::listBPU()) -> ListReal::listBPU().
-calc_max2cur(ListOld, ListNew) ->
-    {_, _, HpOld} = queryValueFromListBPU(?BP_2_HP_CUR, ListOld),
-    {_, _, HpMaxOld} = queryValueFromListBPU(?BP_2_HP_MAX, ListOld),
-    {_, _, MpOld} = queryValueFromListBPU(?BP_2_MP_CUR, ListOld),
-    {_, _, MpMaxOld} = queryValueFromListBPU(?BP_2_MP_MAX, ListOld),
-    {_, _, HpNew} = queryValueFromListBPU(?BP_2_HP_CUR, ListNew),
-    {_, _, HpMaxNew} = queryValueFromListBPU(?BP_2_HP_MAX, ListNew),
+calc_max2cur(_ListOld, ListNew) ->
     {_, _, MpNew} = queryValueFromListBPU(?BP_2_MP_CUR, ListNew),
     {_, _, MpMaxNew} = queryValueFromListBPU(?BP_2_MP_MAX, ListNew),
-    ListReal =
-        case erlang:min(MpMaxNew, erlang:max(1.0, MpMaxNew - MpMaxOld + MpOld)) of
-            MpNew ->
-                ListNew;
-            MpNew_ ->
-                lists:keystore(?BP_2_MP_CUR, 1, ListNew,
-                    {?BP_2_MP_CUR, ?BPUseType_ADD, MpNew_})
+    ListNew2 =
+        case erlang:min(MpNew, MpMaxNew) of
+            MpNew -> ListNew;
+            _ -> lists:keystore(?BP_2_MP_CUR, 1, ListNew, {?BP_2_MP_CUR, ?BPUseType_ADD, MpMaxNew})
         end,
-    case HpOld < 1.0 of
-        true ->
-            ListReal;
-        _ ->
-            case erlang:min(HpMaxNew, erlang:max(1.0, HpMaxNew - HpMaxOld + HpOld)) of
-                HpNew ->
-                    ListReal;
-                HpNew_ ->
-                    lists:keystore(?BP_2_HP_CUR, 1, ListReal,
-                        {?BP_2_HP_CUR, ?BPUseType_ADD, HpNew_})
-            end
+
+    {_, _, HpNew} = queryValueFromListBPU(?BP_2_HP_CUR, ListNew),
+    {_, _, HpMaxNew} = queryValueFromListBPU(?BP_2_HP_MAX, ListNew),
+    case erlang:min(HpNew, HpMaxNew) of
+        HpNew -> ListNew2;
+        _ -> lists:keystore(?BP_2_HP_CUR, 1, ListNew2, {?BP_2_HP_CUR, ?BPUseType_ADD, HpMaxNew})
     end.
 
 %%%-------------------------------------------------------------------
@@ -318,11 +304,15 @@ calc_convert_finals([], Acc) ->
     ListBP2Final :: listBPU(), ListBP3Final :: listBPU().
 calc_convert_1([H | T], Career, ListBP1Final, ListBP2Acc, ListBP3Acc) ->
     BP1Final = {ID, _UseType, Add} = calc_convert_final(H),
+
     {_, List2, List3} = lists:keyfind(Career, 1, ?Career2List),
+
     {_, List1to2} = lists:keyfind(ID, 1, List2),
     ListBP2AccNew = calc_convert_1_(List1to2, Add, ListBP2Acc),
+
     {_, List1to3} = lists:keyfind(ID, 1, List3),
     ListBP3AccNew = calc_convert_1_(List1to3, Add, ListBP3Acc),
+
     calc_convert_1(T, Career, [BP1Final | ListBP1Final], ListBP2AccNew, ListBP3AccNew);
 calc_convert_1([], _Career, ListBP1Final, ListBP2Acc, ListBP3Acc) ->
     ListBP2Final = calc_convert_finals(ListBP2Acc, []),

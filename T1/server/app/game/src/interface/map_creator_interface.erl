@@ -23,12 +23,13 @@
     can_recycle_no_player/1,
     map_mgr_lr/2, map_mgr_l/1,
     born_map_id/0, map_init_pos/1,
-    map_line_recover/1
+    map_line_recover/1, map_owners/2
 ]).
 -export([is_block/2, is_block/3]).
 
 -export([status_/1, status/0, check/0]).
 
+%%-------------------------------------------------------------------
 check()->
     L0 = getCfg:get1KeyList(cfg_map),
     L1 = [MapId || MapId <- L0, gameMapCfg:getMapCfg(MapId) =:= undefined],
@@ -41,7 +42,7 @@ check()->
         _ ->
             lists:flatten(io_lib:format("maps ~p gameMapCfg:getMapCfg/1 return undefined",[L1]))
     end.
-
+%%-------------------------------------------------------------------
 broadcast(Msg) ->
     erlang:spawn
     (
@@ -58,7 +59,7 @@ broadcast(Msg) ->
         end
     ),
     ok.
-
+%%-------------------------------------------------------------------
 select_all_map_pid() ->
     QS1 = ets:fun2ms(fun(Info) -> Info#m_map_mgr.line_ets end),
     MGL = misc_ets:select(?MAP_MGR_ETS, QS1),
@@ -70,6 +71,7 @@ select_all_map_pid() ->
         end, [], MGL).
 
 
+%%-------------------------------------------------------------------
 %%
 %% 一般情况切地图是制定了一定要加入某个线路
 %% 但是某个线路由于生命周期终止或者出错等等导致
@@ -88,6 +90,22 @@ do_map_line_recover(#mapCfg{type = ?MAP_TYPE_GROUP}) ->
     ?MAP_LINE_RECOVER_ERR;
 do_map_line_recover(#mapCfg{type = ?MAP_TYPE_ACTIVITY}) ->
     ?MAP_LINE_RECOVER_ERR.
+
+%%-------------------------------------------------------------------
+-spec map_owners(MapID :: integer(), CreatorUid :: integer()) ->
+    {Type :: atom(), Param :: integer(), WaitList :: list()}.
+map_owners(MapID, CreatorUid) ->
+    Cfg = getCfg:getCfgByArgs(cfg_map, MapID),
+    do_map_owners(Cfg, CreatorUid).
+
+%%todo 要根据类型来返回不同的参数
+do_map_owners(#mapCfg{type = ?MAP_TYPE_COPY}, CreatorUid) ->
+    {?MAP_OWNER_SINGLE, CreatorUid, [CreatorUid]};
+do_map_owners(#mapCfg{type = ?MAP_TYPE_COPY}, CreatorUid) ->
+    {?MAP_OWNER_TEAM, CreatorUid, []};
+do_map_owners(_, _CreatorUid) ->
+    {?MAP_OWNER_ANY, 0, []}.
+
 
 %%-------------------------------------------------------------------
 map_mgr_l(MapID) ->

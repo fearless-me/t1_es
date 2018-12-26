@@ -7,6 +7,8 @@
 %%% Created : 17. 十二月 2018 14:35
 %%%-------------------------------------------------------------------
 -module(gs_db_checker).
+-behavior(db_checker).
+
 -author("Administrator").
 
 -include("logger.hrl").

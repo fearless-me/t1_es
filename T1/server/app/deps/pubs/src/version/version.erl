@@ -1,9 +1,9 @@
-%%NewVersion:114916
-%%OldVersion:114915
+%%NewVersion:114917
+%%OldVersion:114916
 %%this file auto generate !!!
 %%this file auto generate !!!
 %%this file auto generate !!!
-%%UpdateTime:2018-12-21 15:29:04
+%%UpdateTime:2018-12-26 11:02:57
 -module(version).
 -export([getVersion/0]).
-getVersion() -> 114916.
+getVersion() -> 114917.

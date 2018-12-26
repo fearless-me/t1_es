@@ -18,6 +18,11 @@
 -export([start_link/1]).
 -export([mod_init/1, on_terminate/2, do_handle_call/3, do_handle_info/2, do_handle_cast/2]).
 
+
+-callback tables() -> list().
+-callback check(Tables :: list) -> ok.
+-callback info(Info :: tuple()) -> ok.
+
 run() -> gen_server:cast(?MODULE, start_check).
 succeed(Table) -> gen_server:cast(?MODULE, {succeed, Table}).
 failed(Table, Error) -> gen_server:cast(?MODULE, {failed, Table, Error}).
