@@ -10,7 +10,7 @@
 -author("mawenhong").
 
 -include("logger.hrl").
--include("error_code.hrl").
+
 -include("pub_def.hrl").
 -include("pub_rec.hrl").
 -include("netmsg.hrl").

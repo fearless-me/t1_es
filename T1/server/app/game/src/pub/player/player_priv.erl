@@ -19,7 +19,7 @@
 -include("gs_cache.hrl").
 -include("player_ext_data.hrl").
 -include("object.hrl").
--include("error_code.hrl").
+
 
 
 %% 逻辑层不要调用这些接口
@@ -216,7 +216,7 @@ delete_player(Uid) ->
 
 delete_player_ack(#r_delete_player_ack{uid = Uid, res = true}) ->
     hook_player:on_delete(Uid),
-    player_pub:send_net_msg(#pk_GS2U_DeletePlayerResult{uid = Uid, errorCode = ?MAP_CHANGE_OK}),
+    player_pub:send_net_msg(#pk_GS2U_DeletePlayerResult{uid = Uid, errorCode = 0}),
     catch ?WARN("player ~p pid ~p sock ~p is deleted",
         [Uid, self(), player_pub:socket()]),
     ok;

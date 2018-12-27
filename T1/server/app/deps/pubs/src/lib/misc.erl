@@ -227,8 +227,9 @@ lists_shuffle(L) ->
 %%-------------------------------------------------------------------
 md5(S) ->
     Md5_bin = erlang:md5(S),
-    Md5_list = binary_to_list(Md5_bin),
-    lists:flatten(list_to_hex(Md5_list)).
+    lists:flatten(list_to_hex(erlang:binary_to_list(Md5_bin))).
+
+%%    lists:flatten([io_lib:format("~2.16.0B", [D]) || D <- binary_to_list(Md5_bin)]).
 
 %%-------------------------------------------------------------------
 list_to_hex(L) ->

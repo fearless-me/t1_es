@@ -20,7 +20,7 @@
 -module(player_map_priv).
 -author("mawenhong").
 -include("logger.hrl").
--include("error_code.hrl").
+
 -include("map_core.hrl").
 -include("pub_rec.hrl").
 -include("gs_cache.hrl").

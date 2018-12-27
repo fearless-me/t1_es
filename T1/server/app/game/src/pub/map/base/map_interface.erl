@@ -11,7 +11,7 @@
 -author("mawenhong").
 -include("logger.hrl").
 -include("map_core.hrl").
--include("error_code.hrl").
+
 %% API
 %%--------------------------------
 %% WARNING!!! WARNING!!! WARNING!!!
