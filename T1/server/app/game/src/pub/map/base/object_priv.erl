@@ -213,11 +213,11 @@ del_all_rw(Uid) ->
 
 
 %%-------------------------------------------------------------------
-get_uid(Obj) -> Obj#m_cache_map_object_priv.uid.
-get_pid(Obj) -> Obj#m_cache_map_object_priv.pid.
-get_data_id(Obj) -> Obj#m_cache_map_object_priv.data_id.
-get_owner(Obj) -> Obj#m_cache_map_object_priv.owner.
-get_type(Obj) -> Obj#m_cache_map_object_priv.type.
+get_uid(ObjPriv) -> ObjPriv#m_cache_map_object_priv.uid.
+get_pid(ObjPriv) -> ObjPriv#m_cache_map_object_priv.pid.
+get_data_id(ObjPriv) -> ObjPriv#m_cache_map_object_priv.data_id.
+get_owner(ObjPriv) -> ObjPriv#m_cache_map_object_priv.owner.
+get_type(ObjPriv) -> ObjPriv#m_cache_map_object_priv.type.
 %%-------------------------------------------------------------------
 
 
@@ -229,22 +229,22 @@ find_object_priv(Uid) ->
 
 find_object_priv(?UID_TYPE_PLAYER, Uid) ->
     case misc_ets:read(?ETS_CACHE_MAP_PLAYER_PRIV, Uid) of
-        [#m_cache_map_object_priv{} = Obj | _] -> Obj;
+        [#m_cache_map_object_priv{} = ObjPriv | _] -> ObjPriv;
         _ -> undefined
     end;
 find_object_priv(?UID_TYPE_MON, Uid) ->
     case misc_ets:read(?ETS_CACHE_MAP_MONSTER_PRIV, Uid) of
-        [#m_cache_map_object_priv{} = Obj | _] -> Obj;
+        [#m_cache_map_object_priv{} = ObjPriv | _] -> ObjPriv;
         _ -> undefined
     end;
 find_object_priv(?UID_TYPE_PET, Uid) ->
     case misc_ets:read(?ETS_CACHE_MAP_PET_PRIV, Uid) of
-        [#m_cache_map_object_priv{} = Obj | _] -> Obj;
+        [#m_cache_map_object_priv{} = ObjPriv | _] -> ObjPriv;
         _ -> undefined
     end;
 find_object_priv(?UID_TYPE_NPC, Uid) ->
     case misc_ets:read(?ETS_CACHE_MAP_NPC_PRIV, Uid) of
-        [#m_cache_map_object_priv{} = Obj | _] -> Obj;
+        [#m_cache_map_object_priv{} = ObjPriv | _] -> ObjPriv;
         _ -> undefined
     end;
 find_object_priv(_Type, _Uid) -> undefined.

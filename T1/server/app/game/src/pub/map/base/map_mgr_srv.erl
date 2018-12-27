@@ -43,7 +43,7 @@ mod_init([MapID]) ->
     erlang:process_flag(trap_exit, true),
     erlang:process_flag(priority, high),
     EtsAtom = misc:create_atom(?MAP_LINES, [MapID]),
-    Ets = misc_ets:new(EtsAtom, [named_table, public, {keypos, #m_map_line.line_id}, ?ETS_RC]),
+    Ets = misc_ets:new(EtsAtom, [named_table, public, {keypos, #m_map_line.line_id}, ?ETS_RC,?ETS_WC]),
     catch tick_recycle_line_msg(MapID),
     ?INFO("mapMgr ~p started, line ets:~p,mapID:~p", [ProcessName, Ets, MapID]),
     {ok, #state{ets = Ets, map_id = MapID}}.
@@ -95,7 +95,7 @@ do_player_join_map_call_1(true, _S, Req) ->
     #r_join_map_req{uid = Uid, tar_map_id = TarMapID, tar_line_id = TarLineId} = Req,
     ?ERROR("player ~p req join map ~p|~p, but player already in map ~w",
         [Uid, TarMapID, TarLineId, object_priv:find_object_priv(?UID_TYPE_PLAYER, Uid)]),
-    #r_join_map_ack{map_id = TarMapID, error = ?E_Exception};
+    #r_join_map_ack{map_id = TarMapID, error = ?MAP_CHANGE_EXCEPTION};
 do_player_join_map_call_1(_Any, S, Req) ->
     %1. 选线
     #r_join_map_req{
@@ -156,14 +156,14 @@ i_select_line(TarLine, S, MapID, Force) ->
 i_player_join_map_call(#m_map_line{pid = MapPid, map_id = MapID, line_id = LineID}, _, Req, State) ->
     %3. 加入
     case map_interface:player_join_call(MapPid, Req) of
-        ?E_Success ->
-            #r_join_map_ack{error = ?E_Success, map_id = MapID, line_id = LineID, map_pid = MapPid, pos = Req#r_join_map_req.tar_pos};
+        ?MAP_CHANGE_OK ->
+            #r_join_map_ack{error = ?MAP_CHANGE_OK, map_id = MapID, line_id = LineID, map_pid = MapPid, pos = Req#r_join_map_req.tar_pos};
         _ ->
-            #r_join_map_ack{map_id = MapID, line_id = LineID, map_pid = MapPid, error = ?E_Exception}
+            #r_join_map_ack{map_id = MapID, line_id = LineID, map_pid = MapPid, error = ?MAP_CHANGE_EXCEPTION}
     end;
 %%2.没有线就返回错误
 i_player_join_map_call(_Any, ?MAP_LINE_RECOVER_ERR, Req, _State) ->
-    #r_join_map_ack{map_id = Req#r_join_map_req.tar_map_id, error = ?E_Exception};
+    #r_join_map_ack{map_id = Req#r_join_map_req.tar_map_id, error = ?MAP_CHANGE_EXCEPTION};
 %%3.没有线就创建一条新线
 i_player_join_map_call(_Any, Recover, #r_join_map_req{tar_map_id = TarMid, uid = CreatorUid} = Req, State) ->
     case catch create_new_line(State, State#state.map_id, next_line_id(), CreatorUid) of
@@ -171,7 +171,7 @@ i_player_join_map_call(_Any, Recover, #r_join_map_req{tar_map_id = TarMid, uid =
             i_player_join_map_call(Line, Recover, Req, State);
         Error ->
             ?ERROR("create map ~p new line error ~p", [State#state.map_id, Error]),
-            #r_join_map_ack{map_id = TarMid, error = ?E_MapCreateLineFailed}
+            #r_join_map_ack{map_id = TarMid, error = ?MAP_CHANGE_CREATE_LINE_FAILED}
     end.
 
 %%--------------------------------------------------------------------
@@ -190,7 +190,7 @@ do_player_exit_map_call(S, Req) ->
         _ ->
             ?ERROR("player ~p exit map_~p_~p but line ~p not exists",
                 [Uid, S#state.map_id, LineID, LineID]),
-            #r_exit_map_ack{error = ?E_Exception, map_id = Mid}
+            #r_exit_map_ack{error = ?MAP_CHANGE_EXCEPTION, map_id = Mid}
     end.
 
 %%player_exit_map_exception_call(S, Uid, LineID) ->
@@ -209,12 +209,13 @@ do_player_exit_map_call(S, Req) ->
 create_new_line(S, MapID, LineID, CreatorUid) ->
     %% @todo 此处要根据地图类型的不同来采取不同的策略
     %% 比如副本地图不用做任何优化
-    %% 但是长时间存在的地图必须要调整内存相关属性，减少GC
+    %% 但是长时间存在的地图必须要调整内存相关属性，减少GC   1
     {OwnerType, OwnerParam, WaitList} = map_creator_interface:map_owners(MapID, CreatorUid),
     CreateParamRec = #r_map_create_params{
         map_id = MapID, line_id = LineID, mgr_ets = S#state.ets,
         creator = CreatorUid, owner_type = OwnerType, owner_params = OwnerParam, wait_list = WaitList
     },
+    
     {ok, Pid} = map_sup:start_child(CreateParamRec),
 
     [Line] = misc_ets:read(S#state.ets, LineID),

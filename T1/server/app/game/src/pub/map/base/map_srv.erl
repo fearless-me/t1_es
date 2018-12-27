@@ -66,8 +66,8 @@ mod_init(CreaterParamRec) ->
 %%--------------------------------------------------------------------
 do_handle_call(status, _From, State) ->
     {reply, i_status(), State};
-do_handle_call({player_join, Obj}, From, State) ->
-    mod_map_priv:player_join_call(State, From, Obj);
+do_handle_call({player_join, Req}, From, State) ->
+    mod_map_priv:player_join_call(State, From, Req);
 do_handle_call({player_exit, Req}, From, State) ->
     mod_map_priv:player_exit_call(State, From, Req);
 do_handle_call({player_exit_exception, Data}, _From, State) ->

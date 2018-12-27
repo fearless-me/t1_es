@@ -273,7 +273,7 @@ getRow(10100000) ->
 		castingtick = [],
 		beforehit = [],
 		ishit = [[[],[],[]],[[0,0,0,1004,6000,0,0],[0,0,0,1004,6000,0,0],[0,0,0,1004,6000,0,0],[]],[[],[],[],[]]],
-		action_before_cast = "",
+		action_before_cast = "[0,[]",
 		action_casting_tick = "",
 		action_ishit = "",
 		action_bullet = ""
@@ -531,7 +531,7 @@ getRow(50100001) ->
 		name = "@@>1000038<",
 		type = 1,
 		subType = 1,
-		it_normal = 1,
+		it_normal = 2,
 		it_type = 1,
 		pt_type = 1,
 		it_take_type = 1,

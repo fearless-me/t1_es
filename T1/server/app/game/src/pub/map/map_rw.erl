@@ -204,16 +204,16 @@ do_check_tick(_Any, Milliseconds) ->
 
 
 %%-------------------------------------------------------------------
-add_object(#m_cache_map_object_priv{type = ?UID_TYPE_MON, uid = Uid} = Obj) ->
-    misc_ets:write(?ETS_CACHE_MAP_MONSTER_PRIV, Obj),
+add_object(#m_cache_map_object_priv{type = ?UID_TYPE_MON, uid = Uid} = ObjPriv) ->
+    misc_ets:write(?ETS_CACHE_MAP_MONSTER_PRIV, ObjPriv),
     map_rw:add_uid_to_maps(?UID_TYPE_MON, Uid),
     ok;
-add_object(#m_cache_map_object_priv{type = ?UID_TYPE_PLAYER, uid = Uid} = Obj) ->
-    misc_ets:write(?ETS_CACHE_MAP_PLAYER_PRIV, Obj),
+add_object(#m_cache_map_object_priv{type = ?UID_TYPE_PLAYER, uid = Uid} = ObjPriv) ->
+    misc_ets:write(?ETS_CACHE_MAP_PLAYER_PRIV, ObjPriv),
     map_rw:add_uid_to_maps(?UID_TYPE_PLAYER, Uid),
     ok;
 add_object(#m_cache_map_object_priv{type = ?UID_TYPE_NPC, uid = Uid} = _Obj) ->
-%%    misc_ets:write(?ETS_CACHE_MAP_PLAYER_PRIV, Obj),
+%%    misc_ets:write(?ETS_CACHE_MAP_PLAYER_PRIV, ObjPriv),
     map_rw:add_uid_to_maps(?UID_TYPE_NPC, Uid),
     ok;
 add_object(_) ->

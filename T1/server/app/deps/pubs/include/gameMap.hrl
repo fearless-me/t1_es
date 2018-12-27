@@ -99,6 +99,7 @@
     height = <<>> :: binary(),                %高度信息，二进制块
     dropInfo = [] :: list(),                %掉落信息，recMapDrop列表
     mapRelivePt = [],                        %地图复活点信息
+    mapStartPt = [],                        %地图复活点信息
     mapTrigger = [],                        %地图触发器信息
     mapMonster = [],                        %地图怪物信息
     mapNpc = [],                            %地图Npc信息

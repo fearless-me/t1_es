@@ -168,7 +168,7 @@ do_log_2(?DISCARD_FORBID, Level, Sink, F, A) ->
     ),
     case get_env(?MASTER_NODE, undefined) of
         undefined ->
-            Sink ! {?MSG, Level, list_to_binary(String)};
+            Sink ! {?MSG, Level, erlang:list_to_binary(String)};
         MasterNode ->
             {Sink, MasterNode} ! {?MSG, Level, String}
     end,

@@ -84,11 +84,11 @@ do_online_call(MapID, Req) ->
 
 %%
 do_online_call_1(undefined, Req) ->
-    #r_join_map_ack{error = ?E_Exception, map_id = Req#r_join_map_req.tar_map_id};
+    #r_join_map_ack{error = ?MAP_CHANGE_EXCEPTION, map_id = Req#r_join_map_req.tar_map_id};
 do_online_call_1(Mgr, Req) ->
     case catch map_mgr_interface:player_join_map_call(Mgr, Req) of
         #r_join_map_ack{} = Ack -> Ack;
-        _ -> #r_join_map_ack{error = ?E_Exception, map_id = Req#r_join_map_req.tar_map_id}
+        _ -> #r_join_map_ack{error = ?MAP_CHANGE_EXCEPTION, map_id = Req#r_join_map_req.tar_map_id}
     end.
 
 %%-------------------------------------------------------------------
@@ -147,29 +147,29 @@ do_serve_change_map_call(ExitReq, JoinReq) ->
 %% 先退出
 %% 这种情况可能是在跨服(比如跨服中切跨服地图，但是跨服挂了)
 do_serve_change_map_call_exit(undefined, _TarMgr, #r_exit_map_req{map_id = Mid}) ->
-    #r_exit_map_ack{error = ?E_Exception, map_id = Mid};
+    #r_exit_map_ack{error = ?MAP_CHANGE_EXCEPTION, map_id = Mid};
 %%%% 这种情况可能是在跨服(跨服中去切普通服务器，但是跨服挂了)
 %%do_serve_change_map_call_exit(undefined, _TarMgr, #r_exit_map_req{map_id = Mid}) ->
 %%    #r_exit_map_ack{error = ?E_Success, map_id = Mid};
 %% 这种情况可能是在普通服切跨服，但是跨服不存在  | 也有可能是跨服切跨服
 do_serve_change_map_call_exit(_SrcMpid, undefined, #r_exit_map_req{map_id = Mid}) ->
-    #r_exit_map_ack{error = ?E_MapNotExists, map_id = Mid};
+    #r_exit_map_ack{error = ?MAP_CHANGE_NOT_EXIST, map_id = Mid};
 %% 这种是服务器安全的情况下
 do_serve_change_map_call_exit(SrcMpid, _TarMgr, #r_exit_map_req{map_id = Mid} = ExitReq) ->
     case catch map_interface:player_exit_call(SrcMpid, ExitReq) of
         #r_exit_map_ack{} = Ack -> Ack;
-        _Err -> #r_exit_map_ack{error = ?E_Exception, map_id = Mid}
+        _Err -> #r_exit_map_ack{error = ?MAP_CHANGE_EXCEPTION, map_id = Mid}
     end.
 
 %% 在进入
 %% 1.应该不会存在这种情况
-do_serve_change_map_call_join(#r_exit_map_ack{error = ?E_Success}, undefined, _JoinReq) ->
-    #r_join_map_ack{error = ?E_Exception, map_id = 0};
+do_serve_change_map_call_join(#r_exit_map_ack{error = ?MAP_CHANGE_OK}, undefined, _JoinReq) ->
+    #r_join_map_ack{error = ?MAP_CHANGE_EXCEPTION, map_id = 0};
 %% 2. 成功退出地图，加入新地图
-do_serve_change_map_call_join(#r_exit_map_ack{error = ?E_Success}, TarMgr, JoinReq)->
+do_serve_change_map_call_join(#r_exit_map_ack{error = ?MAP_CHANGE_OK}, TarMgr, JoinReq)->
     case catch map_mgr_interface:player_join_map_call(TarMgr, JoinReq) of
         #r_join_map_ack{} = Ack -> Ack;
-        _ -> #r_join_map_ack{error = ?E_Exception, map_id = JoinReq#r_join_map_req.tar_map_id}
+        _ -> #r_join_map_ack{error = ?MAP_CHANGE_EXCEPTION, map_id = JoinReq#r_join_map_req.tar_map_id}
     end;
 do_serve_change_map_call_join(#r_exit_map_ack{error = ErrorCode}, _TarMgr, JoinReq) ->
     #r_join_map_ack{error = ErrorCode, map_id = JoinReq#r_join_map_req.tar_map_id}.
@@ -177,7 +177,7 @@ do_serve_change_map_call_join(#r_exit_map_ack{error = ErrorCode}, _TarMgr, JoinR
 %%-------------------------------------------------------------------
 serve_change_map_call_ret(
     OldMid, OldLineId, OldPos,
-    #r_join_map_ack{error = ?E_Success, map_id = Mid, line_id = LineId, map_pid = MPid, pos = Pos},
+    #r_join_map_ack{error = ?MAP_CHANGE_OK, map_id = Mid, line_id = LineId, map_pid = MPid, pos = Pos},
     _Req, _Flag
 ) ->
     Uid = player_rw:get_uid(),
@@ -238,7 +238,7 @@ serve_change_map_call_fail(kick_born_map, _Req, #r_join_map_ack{error = Error, m
     Uid = player_rw:get_uid(),
     ?FATAL("fatal error ~p, player[~p]can not enter the born map ~p", [Error, Uid, Mid]),
     player_pub:stop("online can't join map");
-serve_change_map_call_fail(gaming, _Req, #r_join_map_ack{error = ?E_MapNotExists}) ->
+serve_change_map_call_fail(gaming, _Req, #r_join_map_ack{error = ?MAP_CHANGE_NOT_EXIST}) ->
     %% todo 告诉客户端切地图失败
     player_rw:set_status(?PS_GAME);
 serve_change_map_call_fail(gaming, Req, _Ack) ->

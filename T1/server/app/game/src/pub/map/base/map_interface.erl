@@ -30,8 +30,8 @@
 player_exit_call(MapPid, Req) ->
     gen_server:call(MapPid, {player_exit, Req}, ?MAP_CALL_TIMEOUT).
 %%--------------------------------
-player_join_call(MapPid, Obj) ->
-    gen_server:call(MapPid, {player_join, Obj}, ?MAP_CALL_TIMEOUT).
+player_join_call(MapPid, Req) ->
+    gen_server:call(MapPid, {player_join, Req}, ?MAP_CALL_TIMEOUT).
 %%--------------------------------
 player_teleport_call(MapPid, Req) ->
     gen_server:call(MapPid, {player_teleport, Req}, ?MAP_CALL_TIMEOUT).
@@ -43,7 +43,7 @@ player_exit_map_exception_call(MapPid, Uid) ->
 %%--------------------------------
 player_exit_map_exception_try(MapPid, Uid) when is_pid(MapPid) ->
     case player_exit_map_exception_call(MapPid, Uid) of
-        ?E_Success-> skip;
+        ?MAP_CHANGE_OK -> skip;
         _Any -> player_exit_map_exception_(MapPid, Uid)
     end;
 player_exit_map_exception_try(_,_)->

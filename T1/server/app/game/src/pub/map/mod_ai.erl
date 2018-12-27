@@ -585,8 +585,8 @@ on_ai_event(_Uid, _Event) ->
 is_in_attack_dist(_Uid, TarUid) when TarUid =< 0 ->
     false;
 is_in_attack_dist(Uid, TarUid) when is_number(TarUid) ->
-    Obj = object_priv:find_object_priv(TarUid),
-    is_in_attack_dist(Uid, Obj);
+    ObjPriv = object_priv:find_object_priv(TarUid),
+    is_in_attack_dist(Uid, ObjPriv);
 is_in_attack_dist(_Uid, undefined) ->
     false;
 is_in_attack_dist(Uid, #m_cache_map_object_priv{uid = TarUid}) ->

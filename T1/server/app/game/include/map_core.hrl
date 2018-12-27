@@ -88,19 +88,37 @@
 -define(MAP_LINE_RECOVER_NEW, 1).
 -define(MAP_LINE_RECOVER_ANY_NEW, 2).
 
+%% ====================================================================
+%% 系统级错误号范围：1 ~ 1000
+%% ====================================================================
+-define(MAP_CHANGE_OK, success).
+%% 异常
+-define(MAP_CHANGE_EXCEPTION, exception).
+%% 目标地图不存在
+-define(MAP_CHANGE_NOT_EXIST, notexist).
+%% 地图线路不存在
+-define(MAP_CHANGE_LINE_NOT_EXIST, linenotexist).
+%% 地图线路不可以加入
+-define(MAP_CHANGE_CANT_JOIN, cantjoin).
+%% 创建地图新线路失败
+-define(MAP_CHANGE_CREATE_LINE_FAILED, createlinefailed).
+
 
 %% 地图管理器
 -record(m_map_mgr, {map_id = 0, mgr, line_ets}).
 -define(MAP_MGR_ETS, map_mgr_ets__).
 
 %%
--record(r_map_create_params, {map_id, line_id, mgr_ets, owner_type=?MAP_OWNER_ANY,owner_params=0, creator=0, wait_list=[]}).
+-record(r_map_create_params, {map_id, line_id, mgr_ets,
+    owner_type=?MAP_OWNER_ANY,owner_params=0, creator=0, wait_list=[]}).
 %% 视图
 -record(m_vis_tile, {index = 0, player = [], monster = [], npc = [], pet = []}).
 %% 地图进程状态
--record(m_map_state, {map_id = 0, line_id = 0, obj_ets, mgr_ets, excl_ets, respawn = [], hook_mod, status = ?MAP_RUNNING, protect_tick = ?DEAD_LINE_PROTECT div ?MAP_TICK}).
+-record(m_map_state, {map_id = 0, line_id = 0, obj_ets, mgr_ets, excl_ets,
+    respawn = [], hook_mod, status = ?MAP_RUNNING, protect_tick = ?DEAD_LINE_PROTECT div ?MAP_TICK}).
 %% 地图线路
--record(m_map_line, {map_id = 0, line_id = 0, pid, obj_ets, limits = 150, in = 0, reserve = 10, dead_line = 0, status = ?MAP_RUNNING}).
+-record(m_map_line, {map_id = 0, line_id = 0, pid, obj_ets, limits = 150, in = 0, reserve = 10,
+    dead_line = 0, create_time = 0, status = ?MAP_RUNNING}).
 %% 线路归属
 -record(m_map_owner,{type=?MAP_OWNER_ANY, creator = 0, owner_param = 0, wait_list =[], ready_list = []}).
 -endif. %% INC_MAP_HRL

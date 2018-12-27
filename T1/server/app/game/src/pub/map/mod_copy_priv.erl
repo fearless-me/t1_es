@@ -28,7 +28,7 @@
 
 
 %% API
--export([init/1, tick/0]).
+-export([init/0, tick/0]).
 -export([set_finish_flag/0]).
 -export([get_start_time/0, get_state/0, get_state_time/0]).
 
@@ -51,7 +51,7 @@ do_tick(_) ->
     ok.
 
 %%-------------------------------------------------------------------
-init(_OwnerList) ->
+init() ->
     set_start_time(),
     set_state(?COPY_STATE_READY),
     ?DEBUG("copymap map_~p_~p|~p init",

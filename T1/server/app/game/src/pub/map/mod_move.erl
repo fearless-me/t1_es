@@ -121,7 +121,7 @@ start_player_walk_1(Uid, Start, End, Speed) ->
     PathList = make_path_list([], Start, Way, RealSpeed),
     Now = map_rw:get_move_timer_now(),
 
-    %% 调试日志
+    %% 移动_同步_调试日志
 %%    TotalDist = lists:foldl(
 %%        fun(#m_move_pos{dist = DistCur}, Acc) -> Acc + DistCur end, 0, PathList),
 %%    TotalTime = TotalDist / Speed * 1000,
@@ -182,18 +182,18 @@ make_move_r(Start, End, Speed) ->
     }.
 
 %%-------------------------------------------------------------------
-tick(Obj, _Now) -> tick_dispatcher(Obj).
+tick(ObjPriv, _Now) -> tick_dispatcher(ObjPriv).
 
 %%-------------------------------------------------------------------
-tick_dispatcher(#m_cache_map_object_priv{type = ?UID_TYPE_PLAYER, uid = Uid} = Obj) ->
-    tick_player_move(Obj,   object_rw:get_cur_move(Uid));
-tick_dispatcher(#m_cache_map_object_priv{type = ?UID_TYPE_MON, uid = Uid} = Obj) ->
-    tick_monster_move(Obj,  object_rw:get_cur_move(Uid));
+tick_dispatcher(#m_cache_map_object_priv{type = ?UID_TYPE_PLAYER, uid = Uid} = ObjPriv) ->
+    tick_player_move(ObjPriv,   object_rw:get_cur_move(Uid));
+tick_dispatcher(#m_cache_map_object_priv{type = ?UID_TYPE_MON, uid = Uid} = ObjPriv) ->
+    tick_monster_move(ObjPriv,  object_rw:get_cur_move(Uid));
 tick_dispatcher(_Obj) -> skip.
 
 %%-------------------------------------------------------------------
-tick_player_move(Obj, ?EMS_WALK) ->
-    #m_cache_map_object_priv{uid = Uid} = Obj,
+tick_player_move(ObjPriv, ?EMS_WALK) ->
+    #m_cache_map_object_priv{uid = Uid} = ObjPriv,
     
     CurPos = object_rw:get_cur_pos(Uid),
     PathList = object_rw:get_move_path_list(Uid),
@@ -205,12 +205,12 @@ tick_player_move(_Obj, _Move) ->    skip.
 %%    ?DEBUG("~w, ~p",[_Obj, _Move]).
 
 %%-------------------------------------------------------------------
-tick_monster_move(Obj, Move)
+tick_monster_move(ObjPriv, Move)
     when Move == ?EMS_MONSTER_FLEE;
     Move == ?EMS_MONSTER_PATROL;
     Move == ?EMS_MONSTER_WALK ->
     
-    #m_cache_map_object_priv{uid = Uid} = Obj,
+    #m_cache_map_object_priv{uid = Uid} = ObjPriv,
     
     CurPos = object_rw:get_cur_pos(Uid),
     PathList = object_rw:get_move_path_list(Uid),
@@ -238,6 +238,7 @@ tick_role_walk(Uid, _CurPos, PathList, MoveTime) ->
     Dst = object_rw:get_dest_pos(Uid),
     {NewPos, NewPathList, MoreTime} = linear_pos(PathList, MoveTime, keep),
 
+%% %% 移动_同步_调试日志
 %%    ?DEBUG("mapid ~p ~w from ~w to ~w move time ~p",
 %%        [self(), Uid, _CurPos, NewPos, MoveTime]),
     on_obj_pos_change(Uid, NewPos),
@@ -255,7 +256,6 @@ tick_role_walk(Uid, _CurPos, PathList, MoveTime) ->
             ),
             {?ENR_TOBECONTINUED, [], Dir, Dst, MoreTime};
         [#m_move_pos{end_pos = End, dir = TarDir} | _] ->
-%%            ?DEBUG("new dest ~w, dir ~w",[End, TarDir]),
             object_rw:set_fields(Uid,
                 [
                     {#m_object_rw.move_path_list, NewPathList},
@@ -310,15 +310,15 @@ linear_pos_2(Dst, PathList, MoveTime, changed) ->
 %%-------------------------------------------------------------------
 on_obj_pos_change(Uid, Tar) ->
     %
-    %% ?DEBUG("~w pos change ~w", [Uid, Tar]),
     Src = object_rw:get_cur_pos(Uid),
-    Obj = object_priv:find_object_priv(Uid),
+    ObjPriv = object_priv:find_object_priv(Uid),
     OldVisIndex = mod_view:pos_to_vis_index(Src),
     NewVisIndex = mod_view:pos_to_vis_index(Tar),
-%%    ?DEBUG("in map ~p obj ~p ~ts pos change from ~w, ~w",
-%%        [lib_map_rw:get_map_id(), Uid, Obj#m_map_obj.name, Src, Tar]),
+    %% 移动_同步_调试日志
+    %% ?DEBUG("in map ~p obj ~p ~ts pos change from ~w, ~w",
+    %%   [lib_map_rw:get_map_id(), Uid, ObjPriv#m_map_obj.name, Src, Tar]),
     ?assert(OldVisIndex > 0 andalso NewVisIndex > 0),
-    mod_view:sync_change_pos_visual_tile(Obj, OldVisIndex, NewVisIndex),
+    mod_view:sync_change_pos_visual_tile(ObjPriv, OldVisIndex, NewVisIndex),
     object_rw:set_cur_pos(Uid, Tar),
     on_obj_pos_changed(object_rw:get_type(Uid), Uid, Tar),
     ok.
@@ -386,8 +386,8 @@ do_start_monster_walk(Uid, Dst, MoveState) ->
     Now = map_rw:get_move_timer_now(),
     MaxSpeed = prop_interface:query_v_pf_bpu(?BP_2_SPEED, object_rw:get_battle_props((Uid))),
     PathList = make_path_list([], Start, Way, MaxSpeed),
-                    
-    %%
+
+    %% 移动_同步_调试日志
 %%    TotalDist = lists:foldl(
 %%        fun(#m_move_pos{dist = DistCur}, Acc) -> Acc + DistCur end, 0, PathList),
 %%    TotalTime = TotalDist / RealSpeed * 1000,
@@ -409,7 +409,8 @@ is_can_monster_walk(Uid, _Dst, _MoveState, _NeedCheck) ->
 
 %%-------------------------------------------------------------------
 tick_monster_walk(Uid, _CurPos, [], _MoveTime) ->
-%%    ?WARN("mapid ~p monster ~w arrived ~w", [self(), Uid, CurPos]),
+    %% 移动_同步_调试日志
+    %% ?WARN("mapid ~p monster ~w arrived ~w", [self(), Uid, CurPos]),
 
     object_rw:set_fields(
         Uid,
@@ -441,7 +442,6 @@ tick_monster_walk(Uid, _CurPos, PathList, MoveTime) ->
             ),
             {?ENR_TOBECONTINUED, [], Dir, Dst, MoreTime};
         [#m_move_pos{end_pos = End, dir = TarDir} | _] ->
-%%            ?DEBUG("new dest ~w, dir ~w",[End, TarDir]),
             object_rw:set_fields(Uid,
                 [
                     {#m_object_rw.move_path_list, NewPathList},

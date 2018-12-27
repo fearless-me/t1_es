@@ -216,7 +216,7 @@ delete_player(Uid) ->
 
 delete_player_ack(#r_delete_player_ack{uid = Uid, res = true}) ->
     hook_player:on_delete(Uid),
-    player_pub:send_net_msg(#pk_GS2U_DeletePlayerResult{uid = Uid, errorCode = ?E_Success}),
+    player_pub:send_net_msg(#pk_GS2U_DeletePlayerResult{uid = Uid, errorCode = ?MAP_CHANGE_OK}),
     catch ?WARN("player ~p pid ~p sock ~p is deleted",
         [Uid, self(), player_pub:socket()]),
     ok;

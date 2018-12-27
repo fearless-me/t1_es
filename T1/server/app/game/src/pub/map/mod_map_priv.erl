@@ -50,10 +50,11 @@ init_priv(#r_map_create_params{
     #mapCfg{peopleLimit = Limit, lifetime = Lifetime} = getCfg:getCfgByArgs(cfg_map, MapID),
     RealLifeTime = ?if_else(Lifetime == 0, ?UINT32_MAX, Lifetime),
     RealLimitCnt = ?if_else(Limit == 0, 150, Limit),
+    Now = misc_time:milli_seconds(),
     Line = #m_map_line{
         map_id = MapID, line_id = LineID, pid = self(), status = ?MAP_RUNNING,
         limits = RealLimitCnt, obj_ets = Ets0,
-        dead_line = misc_time:milli_seconds() + RealLifeTime
+        dead_line = Now + RealLifeTime, create_time = Now
     },
     misc_ets:write(MgrEts, Line),
     map_rw:set_owner(Creator, Type, Param, WaitList),
@@ -69,10 +70,11 @@ init(S) ->
     Conf = map_creator_interface:map_data(S#m_map_state.map_id),
     ok = map_rw:init(S),
     ok = mod_view:init_vis_tile(Conf),
-    mod_progress_core:init(),
-
+    ok = mod_copy_priv:init(),
     ok = init_npc(Conf),
     ok = init_monster(Conf),
+    
+    mod_progress_core:init(),
     tick_msg(),
     ?TRY_CATCH(hook_map:on_map_create()),
     catch ?INFO("~p|~p init ok", [self(), misc:registered_name()]),
@@ -83,28 +85,28 @@ init(S) ->
 %% WARNING!!! WARNING!!! WARNING!!!
 %% call
 player_exit_call(S, From, #r_exit_map_req{uid = Uid}) ->
-    Obj = object_priv:find_object_priv(?UID_TYPE_PLAYER, Uid),
-    Ack = #r_exit_map_ack{error = ?E_Exception, map_id = map_rw:map_id(), line_id = map_rw:line_id()},
-    ?TRY_CATCH_RET(do_player_exit_call(S, From, Uid, Obj), {reply, Ack, S}).
+    ObjPriv = object_priv:find_object_priv(?UID_TYPE_PLAYER, Uid),
+    Ack = #r_exit_map_ack{error = ?MAP_CHANGE_EXCEPTION, map_id = map_rw:map_id(), line_id = map_rw:line_id()},
+    ?TRY_CATCH_RET(do_player_exit_call(S, From, Uid, ObjPriv), {reply, Ack, S}).
 
-do_player_exit_call(S, From, Uid, #m_cache_map_object_priv{} = Obj) ->
+do_player_exit_call(S, From, Uid, #m_cache_map_object_priv{} = ObjPriv) ->
     ?INFO("player ~p exit ~p | ~p from ~w", [Uid, self(), misc:registered_name(), From]),
 
-    ?TRY_CATCH_ERROR(map_rw:del_object(Obj), Err1),
-    ?TRY_CATCH_ERROR(mod_view:sync_player_exit_map(Obj), Err2),
+    ?TRY_CATCH_ERROR(map_rw:del_object(ObjPriv), Err1),
+    ?TRY_CATCH_ERROR(mod_view:sync_player_exit_map(ObjPriv), Err2),
     ?TRY_CATCH_ERROR(hook_map:on_player_exit(Uid), Err3),
     ?TRY_CATCH_ERROR(dec_line_number(S#m_map_state.mgr_ets, map_rw:line_id()), Err4),
-    Ack = #r_exit_map_ack{error = ?E_Success, map_id = map_rw:map_id(), line_id = map_rw:line_id()},
+    Ack = #r_exit_map_ack{error = ?MAP_CHANGE_OK, map_id = map_rw:map_id(), line_id = map_rw:line_id()},
     {reply, Ack, S};
-do_player_exit_call(S, From, Uid, Obj) ->
+do_player_exit_call(S, From, Uid, ObjPriv) ->
     ?WARN("~w req exit map ~w|~w from ~p, but obj is ~w",
-        [Uid, self(), misc:registered_name(), From, Obj]),
-%%    Obj = #m_cache_map_object_priv{uid = Uid, type = ?OBJ_PLAYER},
-%%    ?TRY_CATCH_ERROR(map_rw:del_object(Obj), Err1),
-%%    ?TRY_CATCH_ERROR(mod_view:sync_player_exit_map(Obj), Err2),
+        [Uid, self(), misc:registered_name(), From, ObjPriv]),
+%%    ObjPriv = #m_cache_map_object_priv{uid = Uid, type = ?OBJ_PLAYER},
+%%    ?TRY_CATCH_ERROR(map_rw:del_object(ObjPriv), Err1),
+%%    ?TRY_CATCH_ERROR(mod_view:sync_player_exit_map(ObjPriv), Err2),
 %%    ?TRY_CATCH_ERROR(hook_map:on_player_exit(Uid), Err3),
 %%    ?TRY_CATCH_ERROR(dec_line_number(S#m_map_state.mgr_ets, map_rw:line_id()), Err4),
-    Ack = #r_exit_map_ack{error = ?E_Success, map_id = map_rw:map_id(), line_id = map_rw:line_id()},
+    Ack = #r_exit_map_ack{error = ?MAP_CHANGE_OK, map_id = map_rw:map_id(), line_id = map_rw:line_id()},
     {reply, Ack, S}.
 
 
@@ -121,10 +123,10 @@ dec_line_number(Ets, LineId) ->
 %% WARNING!!! WARNING!!! WARNING!!!
 %% call
 player_exit_exception_call(S, Uid) ->
-    Obj = object_priv:find_object_priv(?UID_TYPE_PLAYER, Uid),
-    ?WARN("player_exit_exception_call(~p), ~w", [Uid, Obj]),
-    ?TRY_CATCH(do_player_exit_call(S, undefined, Uid, Obj)),
-    {reply, ?E_Success, S}.
+    ObjPriv = object_priv:find_object_priv(?UID_TYPE_PLAYER, Uid),
+    ?TRY_CATCH(do_player_exit_call(S, undefined, Uid, ObjPriv)),
+    catch ?WARN("player_exit_exception_call(~p), ~w", [Uid, ObjPriv]),
+    {reply, ?MAP_CHANGE_OK, S}.
 
 %%-------------------------------------------------------------------
 %% WARNING!!! WARNING!!! WARNING!!!
@@ -132,25 +134,25 @@ player_exit_exception_call(S, Uid) ->
 player_join_call(S, From, #r_join_map_req{uid = Uid, pid = Pid, group = Group, tar_pos = Pos}) ->
     try
         ?DEBUG("map ~p player ~p to ~p", [misc:registered_name(), Uid, Pos]),
-        Obj = object_priv:new_player(Pid, Uid, Group, Pos, vector3:new(0.1, 0, 0.5)),
+        ObjPriv = object_priv:new_player(Pid, Uid, Group, Pos, vector3:new(0.1, 0, 0.5)),
         send_goto_map_msg(Uid, Pos),
-        map_rw:add_object(Obj),
+        map_rw:add_object(ObjPriv),
         X = misc_ets:update_counter(S#m_map_state.mgr_ets, map_rw:line_id(), {#m_map_line.in, 1}),
-        map_srv:call_reply(From, ?E_Success),
-        ?TRY_CATCH(mod_view:sync_player_join_map(Obj)),
+        map_srv:call_reply(From, ?MAP_CHANGE_OK),
+        ?TRY_CATCH(mod_view:sync_player_join_map(ObjPriv)),
         ?TRY_CATCH(hook_map:on_player_join(Uid), Err1, St1),
-        ?DEBUG("uid ~p, join map ~w, name ~p, map players ~p",
+        catch ?DEBUG("uid ~p, join map ~w, name ~p, map players ~p",
             [Uid, self(), misc:registered_name(), X]),
         {noreply, S}
     catch _ : Error : ST ->
         ?TRY_CATCH_ONLY(map_rw:del_object(#m_cache_map_object_priv{uid = Uid, type = ?UID_TYPE_PLAYER})),
-        ?ERROR("player join map ~w, name ~p, error ~p, ~p", [self(), misc:registered_name(), Error, ST]),
-        {reply, ?E_Exception, S}
+        catch ?ERROR("player join map ~w, name ~p, error ~p, ~p", [self(), misc:registered_name(), Error, ST]),
+        {reply, ?MAP_CHANGE_EXCEPTION, S}
     end;
 player_join_call(S, _From, Any) ->
-    ?ERROR("player join map ~w, name ~p, error obj data ~w",
+    catch ?ERROR("player join map ~w, name ~p, error obj data ~w",
         [self(), misc:registered_name(), Any]),
-    {reply, ?E_Exception, S}.
+    {reply, ?MAP_CHANGE_EXCEPTION, S}.
 
 
 %%-------------------------------------------------------------------
@@ -178,14 +180,14 @@ init_monster(#recGameMapCfg{mapMonster = MonsterList}) ->
     ).
 
 init_one_monster(MData) ->
-    Obj = object_priv:new_monster(MData),
-    Uid = object_priv:get_uid(Obj),
+    ObjPriv = object_priv:new_monster(MData),
+    Uid = object_priv:get_uid(ObjPriv),
     VisIndex = mod_view:pos_to_vis_index(object_rw:get_cur_pos(Uid)),
-    map_rw:add_object(Obj),
-    mod_view:add_obj_to_vis_tile(Obj, VisIndex),
-    hook_map:on_monster_create(Uid, object_priv:get_data_id(Obj)),
+    map_rw:add_object(ObjPriv),
+    mod_view:add_obj_to_vis_tile(ObjPriv, VisIndex),
+    hook_map:on_monster_create(Uid, object_priv:get_data_id(ObjPriv)),
     ?DEBUG("map_~p_~p create monster ~p, uid ~p, visIndex ~p",
-        [map_rw:map_id(), map_rw:line_id(), object_priv:get_data_id(Obj), Uid, VisIndex]),
+        [map_rw:map_id(), map_rw:line_id(), object_priv:get_data_id(ObjPriv), Uid, VisIndex]),
     ok.
 
 %%-------------------------------------------------------------------
@@ -201,13 +203,13 @@ init_npc(#recGameMapCfg{mapNpc = NpcList}) ->
 
 init_one_npc(Mdata) ->
 
-    Obj = object_priv:new_npc(Mdata),
-    Uid = object_priv:get_uid(Obj),
+    ObjPriv = object_priv:new_npc(Mdata),
+    Uid = object_priv:get_uid(ObjPriv),
     VisIndex = mod_view:pos_to_vis_index(object_rw:get_cur_pos(Uid)),
-    map_rw:add_object(Obj),
-    mod_view:add_obj_to_vis_tile(Obj, VisIndex),
+    map_rw:add_object(ObjPriv),
+    mod_view:add_obj_to_vis_tile(ObjPriv, VisIndex),
     ?DEBUG("map_~p_~p create npc ~p, uid ~p, visIndex ~p",
-        [map_rw:map_id(), map_rw:line_id(), object_priv:get_data_id(Obj), Uid, VisIndex]),
+        [map_rw:map_id(), map_rw:line_id(), object_priv:get_data_id(ObjPriv), Uid, VisIndex]),
     ok.
 
 %%-------------------------------------------------------------------
@@ -261,9 +263,9 @@ tick_player(_S, Now) ->
 tick_player_1(undefined, Uid, _Now) ->
     map_rw:del_uid_from_maps(?UID_TYPE_PLAYER, Uid),
     ?ERROR("tick player ~p may be leave map", [Uid]);
-tick_player_1(Obj, _, Now) ->
-    ?TRY_CATCH(mod_move:tick(Obj, Now), Err1, Stk1),
-    ?TRY_CATCH(mod_buff:tick(Obj, Now), Err3, Stk3),
+tick_player_1(ObjPriv, _, Now) ->
+    ?TRY_CATCH(mod_move:tick(ObjPriv, Now), Err1, Stk1),
+    ?TRY_CATCH(mod_buff:tick(ObjPriv, Now), Err3, Stk3),
     ok.
 
 %%-------------------------------------------------------------------
@@ -275,10 +277,10 @@ tick_monster(_S, Now) ->
 
 tick_monster_1(undefined, Uid, _Now) ->
     ?ERROR("tick monster ~p  ~p not exists", [Uid, object_rw:get_data_id(Uid)]);
-tick_monster_1(Obj, _, Now) ->
-    ?TRY_CATCH(mod_move:tick(Obj, Now), Err1, Stk1),
-    ?TRY_CATCH(mod_ai:update(Obj, Now), Err2, Stk2),
-    ?TRY_CATCH(mod_buff:tick(Obj, Now), Err4, Stk4),
+tick_monster_1(ObjPriv, _, Now) ->
+    ?TRY_CATCH(mod_move:tick(ObjPriv, Now), Err1, Stk1),
+    ?TRY_CATCH(mod_ai:update(ObjPriv, Now), Err2, Stk2),
+    ?TRY_CATCH(mod_buff:tick(ObjPriv, Now), Err4, Stk4),
     ok.
 
 %%-------------------------------------------------------------------
@@ -290,9 +292,9 @@ tick_pet(_S, Now) ->
 
 tick_pet_1(undefined, Uid, _Now) ->
     ?ERROR("tick pet ~p not exists", [Uid]);
-tick_pet_1(Obj, _, Now) ->
-    ?TRY_CATCH(mod_move:tick(Obj, Now), Err1, Stk1),
-    ?TRY_CATCH(mod_buff:tick(Obj, Now), Err3, Stk3),
+tick_pet_1(ObjPriv, _, Now) ->
+    ?TRY_CATCH(mod_move:tick(ObjPriv, Now), Err1, Stk1),
+    ?TRY_CATCH(mod_buff:tick(ObjPriv, Now), Err3, Stk3),
     ok.
 
 %%-------------------------------------------------------------------

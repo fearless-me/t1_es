@@ -143,11 +143,11 @@ test_trigger_event(_Uid, #ai_trigger_cfg{prob = Prob}) ->
 test_trigger_state(_Uid, _Trigger, 0) ->
     false;
 test_trigger_state(Uid, Trigger, TarUid) when is_integer(TarUid) ->
-    Obj = object_priv:find_object_priv(TarUid),
-    test_trigger_state(Uid, Trigger, Obj);
+    ObjPriv = object_priv:find_object_priv(TarUid),
+    test_trigger_state(Uid, Trigger, ObjPriv);
 test_trigger_state(_Uid, _Trigger, undefined) ->
     false;
-test_trigger_state(Uid, #m_ai_trigger{cfg_id = _Id}, #m_cache_map_object_priv{uid = TarUid} = Obj) ->
+test_trigger_state(Uid, #m_ai_trigger{cfg_id = _Id}, #m_cache_map_object_priv{uid = TarUid} = ObjPriv) ->
     case
         object_priv:is_dead(Uid) orelse
             object_priv:is_dead(TarUid)
@@ -157,7 +157,7 @@ test_trigger_state(Uid, #m_ai_trigger{cfg_id = _Id}, #m_cache_map_object_priv{ui
         _ ->
             %% todo 获取trigger 配置
             Cfg = #ai_trigger_cfg{},
-            test_trigger_state(Uid, Cfg, Obj)
+            test_trigger_state(Uid, Cfg, ObjPriv)
     end;
 %% todo 持续增加判断
 test_trigger_state(_Uid, #ai_trigger_cfg{state = ?ETST_HPLower}, _Obj) ->

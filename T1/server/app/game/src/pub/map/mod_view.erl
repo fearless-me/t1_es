@@ -45,49 +45,49 @@
 
 sync_player_join_group(Uid, Group) ->
     %1.
-    Obj = object_priv:find_object_priv(?UID_TYPE_PLAYER, Uid),
+    ObjPriv = object_priv:find_object_priv(?UID_TYPE_PLAYER, Uid),
     Index = pos_to_vis_index(object_rw:get_cur_pos(Uid), visual_w(), view_dist()),
     
     %2.
-    ?TRY_CATCH(del_obj_from_vis_tile(Obj, Index)),
+    ?TRY_CATCH(del_obj_from_vis_tile(ObjPriv, Index)),
     
     %3.
     Tiles = get_vis_tile_around(Index),
-    sync_del_obj(Obj, Tiles),
+    sync_del_obj(ObjPriv, Tiles),
     
     %% 4
     object_rw:set_group(Uid, Group),
     
     %% 5
-    sync_add_obj(Obj, Tiles),
-    add_obj_to_vis_tile(Obj, Index),
+    sync_add_obj(ObjPriv, Tiles),
+    add_obj_to_vis_tile(ObjPriv, Index),
     ok.
 
 %%-------------------------------------------------------------------
-sync_player_join_map(Obj) ->
+sync_player_join_map(ObjPriv) ->
     %1.
-    Uid = object_priv:get_uid(Obj),
+    Uid = object_priv:get_uid(ObjPriv),
     Pos = object_rw:get_cur_pos(Uid),
     Index = pos_to_vis_index(Pos, visual_w(), view_dist()),
     Tiles = get_vis_tile_around(Index),
     
     %2.
-    sync_add_obj(Obj, Tiles),
-    add_obj_to_vis_tile(Obj, Index),
+    sync_add_obj(ObjPriv, Tiles),
+    add_obj_to_vis_tile(ObjPriv, Index),
     ok.
 
 %%-------------------------------------------------------------------
-sync_player_exit_map(Obj) ->
+sync_player_exit_map(ObjPriv) ->
     %1.
-    Uid = object_priv:get_uid(Obj),
+    Uid = object_priv:get_uid(ObjPriv),
     Index = pos_to_vis_index(object_rw:get_cur_pos(Uid), visual_w(), view_dist()),
     
     %2.
-    ?TRY_CATCH(del_obj_from_vis_tile(Obj, Index)),
+    ?TRY_CATCH(del_obj_from_vis_tile(ObjPriv, Index)),
     
     %3.
     Tiles = get_vis_tile_around(Index),
-    sync_del_obj(Obj, Tiles),
+    sync_del_obj(ObjPriv, Tiles),
     ok.
 
 %%-------------------------------------------------------------------
@@ -190,7 +190,8 @@ send_net_msg_to_big_visual_with_group(VisTileList, Msg, Group) ->
                     fun(Uid) ->
                         case object_rw:get_group(Uid) =:= Group of
                             true ->
-%%                                ?WARN("to ~p|~ts|~w",[Uid, object_rw:get_name(Uid), Msg]),
+                                %% 移动_同步_调试日志
+                                %% ?WARN("to ~p|~ts|~w",[Uid, object_rw:get_name(Uid), Msg]),
                                 gs_interface:send_net_msg(Uid, Msg);
                             _Any -> skip
                         end
@@ -248,46 +249,47 @@ sync_change_pos_visual_tile(_Obj, OldVisTileIndex, OldVisTileIndex) ->
     ok;
 sync_change_pos_visual_tile(undefined, OldVisTileIndex, OldVisTileIndex) ->
     error;
-sync_change_pos_visual_tile(Obj, OldVisTileIndex, NewVisTileIndex) ->
+sync_change_pos_visual_tile(ObjPriv, OldVisTileIndex, NewVisTileIndex) ->
 %%    ?DEBUG("uid ~w vis_tile_index from ~w to ~w",
-%%        [Obj#m_map_obj.uid, OldVisTileIndex, NewVisTileIndex]),
+%%        [ObjPriv#m_map_obj.uid, OldVisTileIndex, NewVisTileIndex]),
     
-    del_obj_from_vis_tile(Obj, OldVisTileIndex),
+    del_obj_from_vis_tile(ObjPriv, OldVisTileIndex),
     {VisTileLeave, VisTileEnter} = vis_tile_intersection(OldVisTileIndex, NewVisTileIndex),
-    sync_del_obj(Obj, VisTileLeave),
-    sync_add_obj(Obj, VisTileEnter),
-    add_obj_to_vis_tile(Obj, NewVisTileIndex),
+    sync_del_obj(ObjPriv, VisTileLeave),
+    sync_add_obj(ObjPriv, VisTileEnter),
+    add_obj_to_vis_tile(ObjPriv, NewVisTileIndex),
     ok.
 
 %%-------------------------------------------------------------------
 %% 删除广播
-sync_del_obj(Obj, VisTiles) ->
-    sync_me_to_big_vis_tile(Obj, VisTiles, del_me),
-    sync_big_vis_tile_to_me(Obj, VisTiles, del_all),
+sync_del_obj(ObjPriv, VisTiles) ->
+    sync_me_to_big_vis_tile(ObjPriv, VisTiles, del_me),
+    sync_big_vis_tile_to_me(ObjPriv, VisTiles, del_all),
     ok.
 
 %%-------------------------------------------------------------------
 %% 添加广播                           
-sync_add_obj(Obj, VisTiles) ->
-    sync_me_to_big_vis_tile(Obj, VisTiles, add_me),
-    sync_big_vis_tile_to_me(Obj, VisTiles, add_all),
+sync_add_obj(ObjPriv, VisTiles) ->
+    sync_me_to_big_vis_tile(ObjPriv, VisTiles, add_me),
+    sync_big_vis_tile_to_me(ObjPriv, VisTiles, add_all),
     ok.
 
 %%-------------------------------------------------------------------
 %% 加入格子
-add_obj_to_vis_tile(Obj, VisTileIndex) ->
+add_obj_to_vis_tile(ObjPriv, VisTileIndex) ->
     ?assert(is_number(VisTileIndex) andalso VisTileIndex > 0),
 
-%%    ?DEBUG("add ~p to vis index ~p", [Obj#m_map_obj.uid, VisTileIndex]),
+    %% 移动_同步_调试日志
+    %% ?DEBUG("add ~p to vis index ~p", [object_priv:get_uid(ObjPriv), VisTileIndex]),
     
     VisTile = get_vis_tile(VisTileIndex),
     catch object_rw:set_vis_tile_idx(
-        object_priv:get_uid(Obj),
+        object_priv:get_uid(ObjPriv),
         VisTileIndex
     ),
     add_to_vis_tile_1(
-        object_priv:get_type(Obj),
-        object_priv:get_uid(Obj),
+        object_priv:get_type(ObjPriv),
+        object_priv:get_uid(ObjPriv),
         VisTileIndex, VisTile
     ),
     ok.
@@ -322,12 +324,12 @@ add_to_vis_tile_1(_Type, _Uid, _VisTileIndex, _VisTile) ->
 
 %%-------------------------------------------------------------------
 %% 移除格子
-del_obj_from_vis_tile(Obj, VisTileIndex) ->
+del_obj_from_vis_tile(ObjPriv, VisTileIndex) ->
     ?assert(is_number(VisTileIndex) andalso VisTileIndex > 0),
-
-%%    ?DEBUG("del ~p from vis index ~p", [Obj#m_map_obj.uid, VisTileIndex]),
+    %% 移动_同步_调试日志
+    %% ?DEBUG("del ~p from vis index ~p", [object_priv:get_uid(ObjPriv), VisTileIndex]),
     VisTile = get_vis_tile(VisTileIndex),
-    del_from_vis_tile_1(object_priv:get_type(Obj), object_priv:get_uid(Obj), VisTileIndex, VisTile),
+    del_from_vis_tile_1(object_priv:get_type(ObjPriv), object_priv:get_uid(ObjPriv), VisTileIndex, VisTile),
     ok.
 
 %%
@@ -361,9 +363,9 @@ del_from_vis_tile_1(_Type, _Uid, _VisTileIndex, _VisTile) ->
 %%-------------------------------------------------------------------
 %%-------------------------------------------------------------------
 %% 同步周围Obj给我
-sync_big_vis_tile_to_me(Obj, VisTileList, Msg) ->
-    Uid = object_priv:get_uid(Obj),
-    Type = object_priv:get_type(Obj),
+sync_big_vis_tile_to_me(ObjPriv, VisTileList, Msg) ->
+    Uid = object_priv:get_uid(ObjPriv),
+    Type = object_priv:get_type(ObjPriv),
     do_sync_big_vis_tile_to_me(Type, Uid, VisTileList, Msg),
     ok.
 
@@ -386,10 +388,7 @@ do_sync_big_vis_tile_to_me(?UID_TYPE_PLAYER, TarUid, VisTileList, add_all) ->
             case object_rw:get_group(Uid) =:= MeGroupId of
                 true ->
                     Msg = mod_move:cal_move_msg(Uid),
-                    if
-                        Msg =:= undefined -> skip;
-                        true -> gs_interface:send_net_msg(TarUid, Msg)
-                    end;
+                    gs_interface:send_net_msg(TarUid, Msg);
                 _ -> skip
             end
         end,
@@ -432,14 +431,14 @@ do_sync_big_vis_tile_to_me(_Type, _Uid, _VisTileList, _Msg) -> skip.
 
 %%-------------------------------------------------------------------
 %% 把Obj信息广播到九宫格中
-sync_me_to_big_vis_tile(Obj, VisTileList, del_me) ->
-    Uid = object_priv:get_uid(Obj),
+sync_me_to_big_vis_tile(ObjPriv, VisTileList, del_me) ->
+    Uid = object_priv:get_uid(ObjPriv),
     Msg = #pk_GS2U_RemoveRemote{uid_list = [Uid]},
     Group = object_rw:get_group(Uid),
     send_net_msg_to_big_visual_with_group(VisTileList, Msg, Group),
     ok;
-sync_me_to_big_vis_tile(Obj, VisTileList, add_me) ->
-    Uid = object_priv:get_uid(Obj),
+sync_me_to_big_vis_tile(ObjPriv, VisTileList, add_me) ->
+    Uid = object_priv:get_uid(ObjPriv),
     Msg = mod_move:cal_move_msg(Uid),
     Group = object_rw:get_group(Uid),
     send_net_msg_to_big_visual_with_group(VisTileList, Msg, Group),
