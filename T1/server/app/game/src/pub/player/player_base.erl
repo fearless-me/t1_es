@@ -36,8 +36,8 @@ online(Player) ->
             #p_player_full_data{} = Ext -> Ext;
             _ -> #p_player_full_data{}
         end,
-    RwRec = player_rw:to_record(),
-    player_rw:init_default(RwRec#m_player_rw{
+    RwRec = player_rw:get(),
+    player_rw:init(RwRec#m_player_rw{
         uid = Uid, sid = Sid, aid = Aid,
         name = Name, level = Level, sex = Sex,
         race = Race, career = Career, head = Head,

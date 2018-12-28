@@ -36,7 +36,7 @@ test(Uid, State) ->
 test_some(_Uid, []) ->
     false;
 test_some(Uid, SL) ->
-    do_test_some(object_rw:get_state(Uid, 0), SL).
+    do_test_some(object_rw:get_state_def(Uid, 0), SL).
 
 do_test_some(_StateAll, []) ->
     false;

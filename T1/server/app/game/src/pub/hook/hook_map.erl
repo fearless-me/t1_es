@@ -34,7 +34,7 @@
     on_monster_create/2, on_monster_dead/1,
 
     %%-------------------------------------------------------------------
-    on_rw_update/2
+    on_rw_update/3
 ]).
 
 %% 要注意在
@@ -104,7 +104,7 @@ on_monster_dead(Uid) ->
 %%-------------------------------------------------------------------
 -define(lock(X), lock_transaction(X)).
 -define(unlock(), unlock_transaction()).
-on_rw_update(Uid, {Pos, Value}) ->
+on_rw_update(Uid, Pos, Value) ->
     on_rw_update(object_rw:get_type(Uid), Uid, Pos, Value).
 
 

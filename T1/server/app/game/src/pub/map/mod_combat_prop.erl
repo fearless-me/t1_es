@@ -119,7 +119,7 @@ hit_damage(
             broadcast_hp_change(Result, HpMsg),
 
             %% 吸血根据实际伤害来计算最终数据
-            Attack2 = object_rw:get_uid(Uid),
+            Attack2 = object_rw:get(Uid),
             treat(Attack2, Attack2, erlang:abs(DeltaHp) * HpSteal,
                 Misc1, SkillSerial, HPChangeReason, 0, true),
             Result;
@@ -139,12 +139,13 @@ broadcast_hp_change(
         end,
 
     %% 通知客户端血量变化
+    Hp = mod_combat_prop:hp_percent(TargetUid),
     Msg = HpMsg#pk_GS2U_HPChange{
         hp_change = DeltaHp,
-        hp_percent = mod_combat_prop:hp_percent(TargetUid),
+        hp_percent = Hp,
         result = Result
     },
-    ?DEBUG("hp_change ~p -> ~p DeltaHp:~p Misc1:~p", [Uid, TargetUid, DeltaHp, Misc1]),
+    ?DEBUG("hp_change ~p -> ~p DeltaHp:~p Misc1:~p, Hp:~p", [Uid, TargetUid, DeltaHp, Misc1, Hp]),
     mod_view:send_net_msg_to_visual(TargetUid, Msg),
 
     %% 是否死亡

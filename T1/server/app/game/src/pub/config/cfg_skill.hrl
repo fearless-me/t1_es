@@ -66,6 +66,8 @@
 
 	hurt_times,
 
+	animcombine,
+
 	beforecast,
 
 	castingtick,

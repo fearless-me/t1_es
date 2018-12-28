@@ -130,6 +130,11 @@
 	%% hurt_times:
 	%% 技能伤害时间点
 
+	%% animcombine:
+	%% 是否是全身型动作
+	%% 1.是
+	%% 2.不是
+
 	%% beforecast:
 	%% 技能释放前事件，我们先不说条件
 
@@ -187,11 +192,12 @@ getRow(10110000) ->
 		hp_steal = 0,
 		special_options = 0,
 		hurt_times = 200,
+		animcombine = 2,
 		beforecast = [[[],[],[]],[[],[],[],[]],[[],[],[],[]]],
 		castingtick = [],
 		beforehit = [],
 		ishit = [[[],[],[]],[[0,0,0,1004,5000,0,0],[],[],[]],[[],[],[],[]]],
-		action_before_cast = "[0,[[1,0,0,0,0,0,0]]]",
+		action_before_cast = "[0,[]",
 		action_casting_tick = "",
 		action_ishit = "",
 		action_bullet = ""
@@ -228,6 +234,7 @@ getRow(10110001) ->
 		hp_steal = 0,
 		special_options = 2,
 		hurt_times = 200,
+		animcombine = 2,
 		beforecast = [],
 		castingtick = [],
 		beforehit = [],
@@ -269,6 +276,7 @@ getRow(10100000) ->
 		hp_steal = 0,
 		special_options = 0,
 		hurt_times = 200,
+		animcombine = 2,
 		beforecast = [],
 		castingtick = [],
 		beforehit = [],
@@ -310,6 +318,7 @@ getRow(10100001) ->
 		hp_steal = 0,
 		special_options = 0,
 		hurt_times = 200,
+		animcombine = 2,
 		beforecast = [],
 		castingtick = [],
 		beforehit = [],
@@ -351,6 +360,7 @@ getRow(11100001) ->
 		hp_steal = 0,
 		special_options = 0,
 		hurt_times = 200,
+		animcombine = 2,
 		beforecast = [],
 		castingtick = [],
 		beforehit = [],
@@ -392,13 +402,14 @@ getRow(50110000) ->
 		hp_steal = 0,
 		special_options = 0,
 		hurt_times = 100,
+		animcombine = 2,
 		beforecast = [],
 		castingtick = [],
 		beforehit = [],
-		ishit = [[[],[],[]],[[0,0,0,1004,2000,0,0,0],[],[],[]],[[],[],[],[]]],
-		action_before_cast = "[0,[[2,test_2_56,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[1,0,0,0,0,0,0]]]",
+		ishit = [[[],[],[]],[[0,0,0,1004,2000,0,0],[],[],[]],[[],[],[],[]]],
+		action_before_cast = "[0,[]",
 		action_casting_tick = "",
-		action_ishit = "[0,[[2,test_2_56,0,0,0,1,1,1,1,1,0,0,0,0,0,0]]]",
+		action_ishit = "[0,[[2,Test/vfx_2_56,0,0,0,1,1,1,1,1,0,0,0,0,0,0]]]",
 		action_bullet = ""
 	};
 getRow(50110001) ->
@@ -433,13 +444,14 @@ getRow(50110001) ->
 		hp_steal = 0,
 		special_options = 0,
 		hurt_times = 100,
+		animcombine = 2,
 		beforecast = [],
 		castingtick = [],
 		beforehit = [],
-		ishit = [[[],[],[]],[[0,0,0,1004,3000,0,0,0],[],[],[]],[[],[],[],[]]],
+		ishit = [[[],[],[]],[[0,0,0,1004,3000,0,0],[],[],[]],[[],[],[],[]]],
 		action_before_cast = "",
 		action_casting_tick = "",
-		action_ishit = "",
+		action_ishit = "[0,[[2,Test/vfx_2_75,0,0,0,1,1,1,1,1,0,0,0,0,0,0]]]",
 		action_bullet = ""
 	};
 getRow(50100000) ->
@@ -468,19 +480,20 @@ getRow(50100000) ->
 		cooldown = 5000,
 		flying = 100,
 		iconid = "501001",
-		castanim = 50121,
+		castanim = 50123,
 		skilleffect = "501_1_3",
 		hiteffect = "501_1_3",
 		hp_steal = 0,
 		special_options = 2,
 		hurt_times = 100,
+		animcombine = 1,
 		beforecast = [],
 		castingtick = [],
 		beforehit = [],
-		ishit = [[[],[],[]],[[0,0,0,1004,12000,0,0,0],[],[],[]],[[],[],[],[]]],
+		ishit = [[[],[],[]],[[0,0,0,1004,12000,0,0],[],[],[]],[[],[],[],[]]],
 		action_before_cast = "",
 		action_casting_tick = "",
-		action_ishit = "",
+		action_ishit = "[0,[[2,Test/vfx_2_76,0,0,0,1,1,1,1,1,0,0,0,0,0,0]]]",
 		action_bullet = ""
 	};
 getRow(50100002) ->
@@ -509,19 +522,20 @@ getRow(50100002) ->
 		cooldown = 5000,
 		flying = 300,
 		iconid = "501002",
-		castanim = 50123,
+		castanim = 50121,
 		skilleffect = "501_1_5",
 		hiteffect = "501_1_5",
 		hp_steal = 0,
 		special_options = 0,
 		hurt_times = 100,
+		animcombine = 2,
 		beforecast = [],
 		castingtick = [],
 		beforehit = [],
-		ishit = [[[],[],[]],[[0,0,0,1004,20000,0,0,0],[],[],[]],[[],[],[],[]]],
+		ishit = [[[],[],[]],[[0,0,0,1004,20000,0,0],[],[],[]],[[],[],[],[]]],
 		action_before_cast = "",
 		action_casting_tick = "",
-		action_ishit = "",
+		action_ishit = "[0,[[2,Test/vfx_2_200,0,0,0,1,1,1,1,1,0,0,0,0,0,0]]]",
 		action_bullet = ""
 	};
 getRow(50100001) ->
@@ -556,13 +570,14 @@ getRow(50100001) ->
 		hp_steal = 0,
 		special_options = 0,
 		hurt_times = 100,
+		animcombine = 2,
 		beforecast = [],
 		castingtick = [],
 		beforehit = [],
-		ishit = [[[],[],[]],[[0,0,0,1004,12000,0,0,0],[],[],[]],[[],[],[],[]]],
+		ishit = [[[],[],[]],[[0,0,0,1004,12000,0,0],[],[],[]],[[],[],[],[]]],
 		action_before_cast = "",
 		action_casting_tick = "",
-		action_ishit = "",
+		action_ishit = "[0,[[2,Test/vfx_2_206,0,0,0,1,1,1,1,1,0,0,0,0,0,0]]]",
 		action_bullet = ""
 	};
 getRow(_) -> {}.

@@ -72,12 +72,33 @@ struct GS2U_HPChange <-
 	uint32		cause;			//HP变化原因 1 技能 2 buff 等等
 	uint32      result;			//1闪避 2 暴击 3 格挡等等 
 	int32		hp_change;		//HP变化值
+	int32		hp_percent;	//当前百分比
 	uint64		src_uid;		//发起者ID
 	uint32		misc1;			//根据原因来定义
 	uint32		misc2;			//根据原因来定义
 	uint32		serial;			//根据原因来定义，如果是技能，由为技能消息序列号；其它原因填0
 };
 
+// 死亡
+struct GS2U_Dead <-
+{
+	uint64 uid;			//角色ID
+	uint64 killer_uid;
+	string killer_name;
+};
+
+// 请求复活
+struct U2GS_Revive ->
+{
+	
+};
+
+// 血量同步
+struct GS2U_SyncHp <-
+{
+	uint64  uid;	 //角色ID
+	int32	hp_percent;	//当前百分比
+};
 
 // buff 数据
 struct BuffInfo

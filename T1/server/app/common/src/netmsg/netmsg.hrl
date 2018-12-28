@@ -2,7 +2,7 @@
 -ifndef(netmsg).
 -define(netmsg,1).
 
--define(ProtoVersion,662).
+-define(ProtoVersion,663).
 
 -record(pk_BattleProp,{
 	%% UInt32 属性ID
@@ -130,6 +130,16 @@
 	misc = 0,
 	%% UInt32如果是技能，则为技能消息序列号
 	serial = 0
+}).
+
+%% 
+%% // 复活成功
+-define(GS2U_ReviveSuccess,61118).
+-record(pk_GS2U_ReviveSuccess,{
+	%% UInt64角色ID
+	uid = 0,
+	%% Int32当前百分比
+	hp_percent = 0
 }).
 
 %% 

@@ -29,7 +29,7 @@
 	get_last_hour_tick/0,get_last_hour_tick_def/1,set_last_hour_tick/1,set_last_hour_tick_direct/1, % #m_player_rw.last_hour_tick
 	get_status/0,get_status_def/1,set_status/1,set_status_direct/1, % #m_player_rw.status
 	% common function 
-	del/0,to_record/0,set/1,set_fields/1,init_default/0,init_default/1
+	del/0,get/0,set/1,set_fields/1,set_fields_direct/1,init/0,init/1
 ]).
 %%-------------------------------------------------------------------
 %%-------------------------------------------------------------------
@@ -303,100 +303,150 @@ set_status_direct(V)->
 del()-> erlang:erase(m_player_rw).
 
 %%-------------------------------------------------------------------
-to_record()-> erlang:get(m_player_rw).
+get()-> erlang:get(m_player_rw).
 
 %%-------------------------------------------------------------------
 set(#m_player_rw{}=V)->
 	erlang:put(m_player_rw, V).
 
 %%-------------------------------------------------------------------
-init_default()-> erlang:put(m_player_rw, #m_player_rw{}).
-init_default(#m_player_rw{}=V) -> erlang:put(m_player_rw, V).
+init()-> erlang:put(m_player_rw, #m_player_rw{}).
+init(#m_player_rw{}=V) -> erlang:put(m_player_rw, V).
+
+%%-------------------------------------------------------------------
+set_fields_direct([]) ->ok;
+set_fields_direct(FieldList) ->
+	R1 = erlang:get(m_player_rw),
+	R2 = i_set_fields(R1, FieldList, true),
+	erlang:put(m_player_rw, R2),
+	ok.
 
 %%-------------------------------------------------------------------
 set_fields([]) ->ok;
 set_fields(FieldList) ->
 	R1 = erlang:get(m_player_rw),
-	R2 = i_set_fields(FieldList,R1),
+	R2 = i_set_fields(R1, FieldList, false),
 	erlang:put(m_player_rw, R2),
 	ok.
 
 %%-------------------------------------------------------------------
-i_set_fields(R, []) ->
+i_set_fields(R, [], _) ->
 	R;
-i_set_fields(R, [H | FieldList]) ->
-	i_set_fields(i_set_field(R,H), FieldList).
+i_set_fields(R, [H | FieldList], IsDirect) ->
+	i_set_fields(i_set_field(H, R, IsDirect), FieldList, IsDirect).
 
 %%#m_player_rw.aid
-i_set_field({#m_player_rw.aid, Val}, R) ->
+i_set_field({#m_player_rw.aid, Val}, R, IsDirect) ->
 	R1 = R#m_player_rw{aid = Val},
-	?TRY_CATCH(hook_player:on_rw_update(aid,R)),
+	case IsDirect of 
+		true -> ?TRY_CATCH(hook_player:on_rw_update(#m_player_rw.aid,Val));
+		 _ -> skip 
+	end,
 	R1;
 %%#m_player_rw.uid
-i_set_field({#m_player_rw.uid, Val}, R) ->
+i_set_field({#m_player_rw.uid, Val}, R, IsDirect) ->
 	R1 = R#m_player_rw{uid = Val},
-	?TRY_CATCH(hook_player:on_rw_update(uid,R)),
+	case IsDirect of 
+		true -> ?TRY_CATCH(hook_player:on_rw_update(#m_player_rw.uid,Val));
+		 _ -> skip 
+	end,
 	R1;
 %%#m_player_rw.sid
-i_set_field({#m_player_rw.sid, Val}, R) ->
+i_set_field({#m_player_rw.sid, Val}, R, IsDirect) ->
 	R1 = R#m_player_rw{sid = Val},
-	?TRY_CATCH(hook_player:on_rw_update(sid,R)),
+	case IsDirect of 
+		true -> ?TRY_CATCH(hook_player:on_rw_update(#m_player_rw.sid,Val));
+		 _ -> skip 
+	end,
 	R1;
 %%#m_player_rw.name
-i_set_field({#m_player_rw.name, Val}, R) ->
+i_set_field({#m_player_rw.name, Val}, R, IsDirect) ->
 	R1 = R#m_player_rw{name = Val},
-	?TRY_CATCH(hook_player:on_rw_update(name,R)),
+	case IsDirect of 
+		true -> ?TRY_CATCH(hook_player:on_rw_update(#m_player_rw.name,Val));
+		 _ -> skip 
+	end,
 	R1;
 %%#m_player_rw.level
-i_set_field({#m_player_rw.level, Val}, R) ->
+i_set_field({#m_player_rw.level, Val}, R, IsDirect) ->
 	R1 = R#m_player_rw{level = Val},
-	?TRY_CATCH(hook_player:on_rw_update(level,R)),
+	case IsDirect of 
+		true -> ?TRY_CATCH(hook_player:on_rw_update(#m_player_rw.level,Val));
+		 _ -> skip 
+	end,
 	R1;
 %%#m_player_rw.sex
-i_set_field({#m_player_rw.sex, Val}, R) ->
+i_set_field({#m_player_rw.sex, Val}, R, IsDirect) ->
 	R1 = R#m_player_rw{sex = Val},
-	?TRY_CATCH(hook_player:on_rw_update(sex,R)),
+	case IsDirect of 
+		true -> ?TRY_CATCH(hook_player:on_rw_update(#m_player_rw.sex,Val));
+		 _ -> skip 
+	end,
 	R1;
 %%#m_player_rw.head
-i_set_field({#m_player_rw.head, Val}, R) ->
+i_set_field({#m_player_rw.head, Val}, R, IsDirect) ->
 	R1 = R#m_player_rw{head = Val},
-	?TRY_CATCH(hook_player:on_rw_update(head,R)),
+	case IsDirect of 
+		true -> ?TRY_CATCH(hook_player:on_rw_update(#m_player_rw.head,Val));
+		 _ -> skip 
+	end,
 	R1;
 %%#m_player_rw.race
-i_set_field({#m_player_rw.race, Val}, R) ->
+i_set_field({#m_player_rw.race, Val}, R, IsDirect) ->
 	R1 = R#m_player_rw{race = Val},
-	?TRY_CATCH(hook_player:on_rw_update(race,R)),
+	case IsDirect of 
+		true -> ?TRY_CATCH(hook_player:on_rw_update(#m_player_rw.race,Val));
+		 _ -> skip 
+	end,
 	R1;
 %%#m_player_rw.career
-i_set_field({#m_player_rw.career, Val}, R) ->
+i_set_field({#m_player_rw.career, Val}, R, IsDirect) ->
 	R1 = R#m_player_rw{career = Val},
-	?TRY_CATCH(hook_player:on_rw_update(career,R)),
+	case IsDirect of 
+		true -> ?TRY_CATCH(hook_player:on_rw_update(#m_player_rw.career,Val));
+		 _ -> skip 
+	end,
 	R1;
 %%#m_player_rw.map
-i_set_field({#m_player_rw.map, Val}, R) ->
+i_set_field({#m_player_rw.map, Val}, R, IsDirect) ->
 	R1 = R#m_player_rw{map = Val},
-	?TRY_CATCH(hook_player:on_rw_update(map,R)),
+	case IsDirect of 
+		true -> ?TRY_CATCH(hook_player:on_rw_update(#m_player_rw.map,Val));
+		 _ -> skip 
+	end,
 	R1;
 %%#m_player_rw.last_second_tick
-i_set_field({#m_player_rw.last_second_tick, Val}, R) ->
+i_set_field({#m_player_rw.last_second_tick, Val}, R, IsDirect) ->
 	R1 = R#m_player_rw{last_second_tick = Val},
-	?TRY_CATCH(hook_player:on_rw_update(last_second_tick,R)),
+	case IsDirect of 
+		true -> ?TRY_CATCH(hook_player:on_rw_update(#m_player_rw.last_second_tick,Val));
+		 _ -> skip 
+	end,
 	R1;
 %%#m_player_rw.last_minute_tick
-i_set_field({#m_player_rw.last_minute_tick, Val}, R) ->
+i_set_field({#m_player_rw.last_minute_tick, Val}, R, IsDirect) ->
 	R1 = R#m_player_rw{last_minute_tick = Val},
-	?TRY_CATCH(hook_player:on_rw_update(last_minute_tick,R)),
+	case IsDirect of 
+		true -> ?TRY_CATCH(hook_player:on_rw_update(#m_player_rw.last_minute_tick,Val));
+		 _ -> skip 
+	end,
 	R1;
 %%#m_player_rw.last_hour_tick
-i_set_field({#m_player_rw.last_hour_tick, Val}, R) ->
+i_set_field({#m_player_rw.last_hour_tick, Val}, R, IsDirect) ->
 	R1 = R#m_player_rw{last_hour_tick = Val},
-	?TRY_CATCH(hook_player:on_rw_update(last_hour_tick,R)),
+	case IsDirect of 
+		true -> ?TRY_CATCH(hook_player:on_rw_update(#m_player_rw.last_hour_tick,Val));
+		 _ -> skip 
+	end,
 	R1;
 %%#m_player_rw.status
-i_set_field({#m_player_rw.status, Val}, R) ->
+i_set_field({#m_player_rw.status, Val}, R, IsDirect) ->
 	R1 = R#m_player_rw{status = Val},
-	?TRY_CATCH(hook_player:on_rw_update(status,R)),
+	case IsDirect of 
+		true -> ?TRY_CATCH(hook_player:on_rw_update(#m_player_rw.status,Val));
+		 _ -> skip 
+	end,
 	R1;
-i_set_field(_Elem,R)-> R.
+i_set_field(_Elem,R, _)-> R.
 
 %%-------------------------------------------------------------------

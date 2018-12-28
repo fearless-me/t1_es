@@ -40,8 +40,8 @@
 ]).
 
 -define(LIST_BP2, [
-    #m_bp{id = ?BP_2_HP_MAX, add = 50.0},
-    #m_bp{id = ?BP_2_HP_CUR, add = 50.0},
+    #m_bp{id = ?BP_2_HP_MAX, add = 1000.0},
+    #m_bp{id = ?BP_2_HP_CUR, add = 1000.0},
     #m_bp{id = ?BP_2_MP_MAX, add = 40.0},
     #m_bp{id = ?BP_2_MP_CUR, add = 40.0},
     #m_bp{id = ?BP_2_ATK, add = 38.0},

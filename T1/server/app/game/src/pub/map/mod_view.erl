@@ -385,10 +385,14 @@ do_sync_big_vis_tile_to_me(?UID_TYPE_PLAYER, TarUid, VisTileList, add_all) ->
     MeGroupId = object_rw:get_group(TarUid),
     FC =
         fun(Uid) ->
-            case object_rw:get_group(Uid) =:= MeGroupId of
-                true ->
-                    Msg = mod_move:cal_move_msg(Uid),
-                    gs_interface:send_net_msg(TarUid, Msg);
+            case mod_combat_revive:is_dead(Uid) of
+                false ->
+                    case object_rw:get_group(Uid) =:= MeGroupId of
+                        true ->
+                            Msg = mod_move:cal_move_msg(Uid),
+                            gs_interface:send_net_msg(TarUid, Msg);
+                        _ -> skip
+                    end;
                 _ -> skip
             end
         end,

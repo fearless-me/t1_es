@@ -200,12 +200,12 @@ new(
 %%-------------------------------------------------------------------
 init_rw_default(Uid) ->
     object_rw:init(Uid),
-    ?WARN("init_rw_default(~p)", [Uid]),
+    ?WARN("object_rw:init(~p)", [Uid]),
     ok.
 
 del_all_rw(Uid) ->
     object_rw:del(Uid),
-    ?WARN("del_all_rw(~p)", [Uid]),
+    ?WARN("object_rw:del(~p)", [Uid]),
     ok.
 
 %%-------------------------------------------------------------------

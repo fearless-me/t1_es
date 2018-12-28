@@ -23,7 +23,7 @@ action(Event, OriginalParams, CEParams) ->
     do_action(Event, RealParams, CEParams).
 
 %%-------------------------------------------------------------------
-%% [伤害， 属性伤害， 属性来源， 属性ID， 万分比， 常数， 结果类型， 吸血比例， 特殊选项]
+%% [伤害， 属性伤害， 属性来源， 属性ID， 万分比， 常数， 结果类型]
 do_action([?EVENT_DAMAGE, ?EVENT_DAMAGE_SUB_PROP, ?TARGET_SELF, PropID, Percent, Const, ResultType],
     [Attack, Target], CEParams) ->
     event_action_logic:event_damage_sub_prop(CEParams, Attack, Target, Attack,
@@ -72,8 +72,8 @@ do_action([?EVENT_DEL_BUFF, Target, P2, P3], [#m_object_rw{uid = Uid1}, #m_objec
     ok;
 
 %%-------------------------------------------------------------------
-do_action(Event, Params, CEParams) ->
-    ?WARN("no realize action:~p, param:~p, CEParams:~p", [Event, Params, CEParams]),
+do_action(Event, _Params, _CEParams) ->
+    ?WARN("no realize action:~p", [Event]),
     skip.
 
 

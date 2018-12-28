@@ -138,6 +138,16 @@ decode(?GS2U_HitTarget,Bin0) ->
 		},
 	Bin5 };
 
+%GENERATED from file:combat.h => GS2U_ReviveSuccess
+decode(?GS2U_ReviveSuccess,Bin0) ->
+	{ V_uid, Bin1 } = read_uint64( Bin0 ),
+	{ V_hp_percent, Bin2 } = read_int32( Bin1 ),
+	{ #pk_GS2U_ReviveSuccess {
+		uid = V_uid,
+		hp_percent = V_hp_percent
+		},
+	Bin2 };
+
 %GENERATED from file:combat.h => GS2U_SkillInterrupt
 decode(?GS2U_SkillInterrupt,Bin0) ->
 	{ V_uid, Bin1 } = read_uint64( Bin0 ),
@@ -851,6 +861,16 @@ encode(#pk_GS2U_HitTarget{} = P) ->
 		Bin_serial
 	];
 
+%GENERATED from file:combat.h => GS2U_ReviveSuccess
+encode(#pk_GS2U_ReviveSuccess{} = P) ->
+	Bin_uid = write_uint64( P#pk_GS2U_ReviveSuccess.uid ),
+	Bin_hp_percent = write_int32( P#pk_GS2U_ReviveSuccess.hp_percent ),
+	[
+		<<?GS2U_ReviveSuccess:?U16>>,
+		Bin_uid,
+		Bin_hp_percent
+	];
+
 %GENERATED from file:combat.h => GS2U_SkillInterrupt
 encode(#pk_GS2U_SkillInterrupt{} = P) ->
 	Bin_uid = write_uint64( P#pk_GS2U_SkillInterrupt.uid ),
@@ -1457,6 +1477,7 @@ name(?GS2U_DeleteBuff) -> "GS2U_DeleteBuff";
 name(?GS2U_DeleteBuffList) -> "GS2U_DeleteBuffList";
 name(?GS2U_HPChange) -> "GS2U_HPChange";
 name(?GS2U_HitTarget) -> "GS2U_HitTarget";
+name(?GS2U_ReviveSuccess) -> "GS2U_ReviveSuccess";
 name(?GS2U_SkillInterrupt) -> "GS2U_SkillInterrupt";
 name(?GS2U_SpecialMove) -> "GS2U_SpecialMove";
 name(?GS2U_SyncHp) -> "GS2U_SyncHp";
@@ -1511,6 +1532,7 @@ cmd_list()->
 		,?GS2U_DeleteBuffList
 		,?GS2U_HPChange
 		,?GS2U_HitTarget
+		,?GS2U_ReviveSuccess
 		,?GS2U_SkillInterrupt
 		,?GS2U_SpecialMove
 		,?GS2U_SyncHp

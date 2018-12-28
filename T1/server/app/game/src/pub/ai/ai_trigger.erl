@@ -53,7 +53,7 @@ init_1(_Uid, _Cfg) ->
 
 %%-------------------------------------------------------------------
 update(Uid) ->
-    Triggers0 = object_rw:get_ai_triggers(Uid, []),
+    Triggers0 = object_rw:get_ai_triggers_def(Uid, []),
     Triggers1 = lists:map(fun(Trigger) -> do_update(Uid, Trigger) end, Triggers0),
     object_rw:set_ai_triggers(Uid, Triggers1),
     ok.
@@ -93,7 +93,7 @@ on_trigger(
 
 %%-------------------------------------------------------------------
 refresh(Uid) ->
-    Triggers0 = object_rw:get_ai_triggers(Uid, []),
+    Triggers0 = object_rw:get_ai_triggers_def(Uid, []),
     Triggers1 = lists:map(
         fun(Trigger) ->
             Trigger#m_ai_trigger{is_active = false, active_tick = 0, trigger_times = 0}
@@ -103,7 +103,7 @@ refresh(Uid) ->
 
 %%-------------------------------------------------------------------
 set_active(Uid, EventType) ->
-    Triggers0 = object_rw:get_ai_triggers(Uid, []),
+    Triggers0 = object_rw:get_ai_triggers_def(Uid, []),
     Triggers1 = lists:map(
         fun(#m_ai_trigger{cfg_id = Id} = Trigger) ->
             IsNeedActive = can_active(Id, EventType),
@@ -168,7 +168,7 @@ test_trigger_state(_Uid, _Any, _None) ->
 
 %%-------------------------------------------------------------------
 on_event(Uid, EventType) ->
-    Triggers0 = object_rw:get_ai_triggers(Uid, []),
+    Triggers0 = object_rw:get_ai_triggers_def(Uid, []),
     Triggers1 = lists:map(
         fun(Trigger) ->
             on_event_1(Uid, Trigger, EventType)

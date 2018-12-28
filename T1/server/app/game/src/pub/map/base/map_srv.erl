@@ -124,6 +124,9 @@ do_handle_info({change_group, Msg}, State) ->
 do_handle_info({request_revive, Msg}, State) ->
     mod_combat_revive:request_revive(Msg),
     {noreply, State};
+do_handle_info({refreshMonster, MonsterUid}, State) ->
+    mod_combat_revive:test_monster_revive(MonsterUid),
+    {noreply, State};
 do_handle_info(Info, State) ->
     mod_map:on_info_msg(Info),
     {noreply, State}.

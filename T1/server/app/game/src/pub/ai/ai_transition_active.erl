@@ -31,11 +31,11 @@ transition(_Uid, CurState) ->
     CurState.
 
 idle_transition(Uid) ->
-    Tar = object_rw:get_max_enmity_uid(Uid, 0),
+    Tar = object_rw:get_max_enmity_uid_def(Uid, 0),
     ?if_else(Tar > 0, ?AI_STATE_PURSUE, ?AI_STATE_IDLE).
 
 pursue_transition(Uid) ->
-    Tar = object_rw:get_max_enmity_uid(Uid, 0),
+    Tar = object_rw:get_max_enmity_uid_def(Uid, 0),
     case Tar > 0 of
         true ->
             IsInAttackDist = mod_ai:is_in_attack_dist(Uid, Tar),
@@ -45,7 +45,7 @@ pursue_transition(Uid) ->
 
 attack_transition(Uid) ->
     IsUsingSkill = mod_combat:is_using_skill(Uid),
-    Tar = object_rw:get_max_enmity_uid(Uid, 0),
+    Tar = object_rw:get_max_enmity_uid_def(Uid, 0),
     if
         IsUsingSkill -> ?AI_STATE_ATTACK;
         Tar == 0 -> ?AI_STATE_RETURN;
@@ -55,5 +55,5 @@ attack_transition(Uid) ->
     end.
 
 return_transition(Uid) ->
-    IsArrivedReturnPos = object_rw:get_ai_arrived_return_pos(Uid, true),
+    IsArrivedReturnPos = object_rw:get_ai_arrived_return_pos_def(Uid, true),
     ?if_else(IsArrivedReturnPos, ?AI_STATE_IDLE, ?AI_STATE_RETURN).

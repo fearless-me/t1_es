@@ -251,6 +251,7 @@ get_move_timer_delta() ->
 %%-------------------------------------------------------------------
 status()->
     [
+        {detail_ets, map_rw:detail_ets()},
         {t,   misc_ets:size(detail_ets())},
         {u,   obj_size_with_type(?UID_TYPE_PLAYER)},
         {p,   obj_size_with_type(?UID_TYPE_PET)},

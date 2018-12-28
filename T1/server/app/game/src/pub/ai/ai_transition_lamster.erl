@@ -33,11 +33,11 @@ transition(_Uid, CurState) ->
     CurState.
 
 idle_transition(Uid) ->
-    Tar = object_rw:get_max_enmity_uid(Uid, 0),
+    Tar = object_rw:get_max_enmity_uid_def(Uid, 0),
     ?if_else(Tar > 0, ?AI_STATE_PURSUE, ?AI_STATE_IDLE).
 
 pursue_transition(Uid) ->
-    Tar = object_rw:get_max_enmity_uid(Uid, 0),
+    Tar = object_rw:get_max_enmity_uid_def(Uid, 0),
     if
         Tar == 0 -> ?AI_STATE_RETURN;
         true ->
@@ -46,7 +46,7 @@ pursue_transition(Uid) ->
     end.
 
 attack_transition(Uid) ->
-    Tar = object_rw:get_max_enmity_uid(Uid, 0),
+    Tar = object_rw:get_max_enmity_uid_def(Uid, 0),
     IsUsingSkill = mod_combat:is_using_skill(Uid),
     if
         IsUsingSkill -> ?AI_STATE_ATTACK;
@@ -67,9 +67,9 @@ attack_transition(Uid) ->
     end.
 
 return_transition(Uid) ->
-    IsArrivedReturnPos = object_rw:get_ai_arrived_return_pos(Uid, true),
+    IsArrivedReturnPos = object_rw:get_ai_arrived_return_pos_def(Uid, true),
     ?if_else(IsArrivedReturnPos, ?AI_STATE_IDLE, ?AI_STATE_RETURN).
 
 flee_transition(Uid) ->
-    FleeTick = object_rw:get_ai_flee_tick(Uid, 0),
+    FleeTick = object_rw:get_ai_flee_tick_def(Uid, 0),
     ?if_else(FleeTick =< 0, ?AI_STATE_PURSUE, ?AI_STATE_FLEE).

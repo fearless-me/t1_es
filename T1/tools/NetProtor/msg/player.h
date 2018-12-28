@@ -48,53 +48,6 @@ struct GS2U_GetPlayerInitDataEnd <-
 };
 
 
-
-struct LookInfoMonster
-{
-	uint64	uid;
-	uint32	did;				// 怪物 ID	
-	float	x;					// 怪物坐标
-	float	y;
-	float	rotW;				//旋转坐标W
-	float	targetX;			// 怪物移动的目标点X
-	float	targetY;			// 怪物移动的目标点Y
-	float	move_speed;			// 怪物移动速度
-	uint32	hp_per;				// 当前血量百分比
-	int32	camp;			    // 阵营
-	uint64	owner;				// 归属
-	uint64	groupID;			// 怪物所属分组ID
-	uint64	guildID;			// 怪物所属军团ID
-	string  name;				// 名字
-	uint32	level;				//怪物等级
-};
-
-struct GS2U_MonsterList <-
-{
-	vector<LookInfoMonster> monster_list;	// 视野范围内怪物列表
-};
-
-struct LookInfoPlayer
-{
-	uint64	uid;				//角色ID
-	string  name;				//名字
-	float	x;					//坐标X
-	float	y;					//坐标Y
-	int32	race;				// 种族
-	uint32	career;				//职业
-	int32	sex;				// 性别
-	int32	camp;			    //阵营
-	int32	head;			    //头
-	float	move_speed;			//移动速度
-	int32	level;				//当前等级	
-	uint32   hp_per;				//当前血量百分比
-};
-
-// 玩家外观信息
-struct GS2U_LookInfoPlayer <-
-{
-	vector<LookInfoPlayer> player_list;
-};
-
 //
 struct GS2U_RemoveRemote <-
 {
@@ -150,6 +103,7 @@ struct GS2U_RemotePlayer <-
 	string  name;	 //名字
 	int32	career;	 //职业
 	int32	race;	 //种族
+	int32	hp_percent;	//当前百分比
 	float	cur_x;	 //坐标X
 	float	cur_y;	 //坐标Y
 };
@@ -159,6 +113,7 @@ struct GS2U_RemoteMonster <-
 	uint64  uid;	 //唯一ID
 	uint32	did;	 //配置表ID
 	int32   level;	 //等级	
+	int32	hp_percent;	//当前百分比
 	float	cur_x;	 //坐标X
 	float	cur_y;	 //坐标Y
 };
@@ -182,12 +137,12 @@ struct GS2U_RemoteNpc <-
 	float	cur_y;	 //坐标Y
 };
 
+// 移动到目标点，包含请求的移动速度
 struct U2GS_PlayerWalk ->
 {
-	float	src_x;	 //坐标X
-	float	src_y;	 //坐标Y
-	float	dst_x;	 //坐标X
-	float	dst_y;	 //坐标Y
+	float	dst_x; //坐标X
+	float	dst_y; //坐标Y
+	float	speed; //移动速度
 };
 
 struct U2GS_PlayerStopWalk ->

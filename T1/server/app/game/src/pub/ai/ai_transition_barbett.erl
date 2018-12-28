@@ -27,7 +27,7 @@ transition(_Uid, CurState) ->
     CurState.
 
 idle_transition(Uid) ->
-    Tar = object_rw:get_max_enmity_uid(Uid, 0),
+    Tar = object_rw:get_max_enmity_uid_def(Uid, 0),
     case Tar > 0 of
         true ->
             object_rw:set_ai_target_uid(Uid, Tar),
@@ -38,7 +38,7 @@ idle_transition(Uid) ->
 
 
 attack_transition(Uid) ->
-    Tar = object_rw:get_max_enmity_uid(Uid, 0),
+    Tar = object_rw:get_max_enmity_uid_def(Uid, 0),
     IsUsingSkill = mod_combat:is_using_skill(Uid),
     if
         IsUsingSkill ->

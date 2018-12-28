@@ -59,6 +59,18 @@ generate_code() ->
                 ]
             ]
         ),
+%%        multi_to_code
+%%        (
+%%            "..\\app\\game\\src\\pub\\map\\obj\\object_rw.erl",
+%%            object_rw,
+%%            [
+%%                ["logger.hrl", "pub_def.hrl", "rec_rw.hrl", "map_core.hrl"],
+%%                [
+%%                    {m_object_rw, record_info(fields, m_object_rw), [], ["Uid"], "hook_map:on_rw_update"}
+%%                ]
+%%            ]
+%%        ),
+%%
         object_rw
         (
             "..\\app\\game\\src\\pub\\map\\obj\\object_rw.erl",
@@ -103,12 +115,12 @@ multi_to_code(Fname, ModName, [IncFiles, Cfgs]) ->
                 Fname,
                 [
                     {del, ExParamN},
-                    {to_record, ExParamN},
+                    {get, ExParamN},
                     {set, ExParamN + 1},
                     {set_fields, ExParamN + 1},
-%%                    {set_fields_direct, ExParamN + 1},
-                    {init_default, ExParamN},
-                    {init_default, ExParamN + 1}
+                    {set_fields_direct, ExParamN + 1},
+                    {init, ExParamN},
+                    {init, ExParamN + 1}
                 ],
                 SuffixList
             ),
@@ -132,17 +144,18 @@ multi_to_code(Fname, ModName, [IncFiles, Cfgs]) ->
             del_fun(Fname, Record, SuffixList, del, ExParams),
             
             write_file(Fname, "~ts", [?SPLIT_LINE]),
-            to_record(Fname, Record, SuffixList, to_record, ExParams),
+            to_record(Fname, Record, SuffixList, get, ExParams),
             
             write_file(Fname, "~ts", [?SPLIT_LINE]),
             set_fun(Fname, Record, SuffixList, set, ExParams),
             
             write_file(Fname, "~ts", [?SPLIT_LINE]),
-            init_default_fun(Fname, Record, SuffixList, init_default, ExParams),
+            init_default_fun(Fname, Record, SuffixList, init, ExParams),
             
             %% Fd, Record,  Suffix, FuncAtom, FieldList,ExParam, HookUpdate
             write_file(Fname, "~ts", [?SPLIT_LINE]),
-            set_fields(Fname, Record, SuffixList, set_fields, FieldList, ExParams, HookUpdate),
+            set_fields(Fname, Record, SuffixList, set_fields_direct, FieldList, ExParams, [], true),
+            set_fields(Fname, Record, SuffixList, set_fields, FieldList, ExParams, HookUpdate, false),
             
             
             %%
@@ -297,7 +310,7 @@ to_list(X) ->
     lists:concat([X]).
 
 %%Fname, Record, SuffixList, set_fields, FieldList,  ExParams, HookUpdate
-set_fields(File, Record, SuffixList, FuncAtom, FieldList, ExParam, HookUpdate) ->
+set_fields(File, Record, SuffixList, FuncAtom, FieldList, ExParam, HookUpdate, IsDirect) ->
     DickKey = dict_key(Record, ExParam),
     SetFieldFunctionName = string:join([to_list(FuncAtom)] ++ SuffixList, "_"),
     %%string:join(["set"] ++ SuffixList ++ ["fields"], "_"),
@@ -306,26 +319,30 @@ set_fields(File, Record, SuffixList, FuncAtom, FieldList, ExParam, HookUpdate) -
     SetFieldFunctionPara_1 = string:join(UnUseParams ++ ["[]"], ","),
     SetFieldFunctionPara_2 = string:join(ExParam ++ ["FieldList"], ","),
     ISetFieldsFunctionName = i_set_fields_function_name(SuffixList),
-    ISetFieldsFunctionPara = string:join(ExParam ++ ["FieldList,R1"], ","),
+    ISetFieldsFunctionPara = string:join(ExParam ++ ["R1, FieldList"], ","),
     SetFieldsFunctionBody = io_lib:format
     (
         "~ts(~ts) ->ok;\n"
         "~ts(~ts) ->\n\t"
         "R1 = erlang:get(~ts),\n\t"
-        "R2 = ~s(~s),\n\t"
+        "R2 = ~s(~s, ~p),\n\t"
         "erlang:put(~s, R2),\n\t"
         "ok.\n\n",
         [
             SetFieldFunctionName, SetFieldFunctionPara_1,
             SetFieldFunctionName, SetFieldFunctionPara_2,
             DickKey,
-            ISetFieldsFunctionName, ISetFieldsFunctionPara,
+            ISetFieldsFunctionName, ISetFieldsFunctionPara,  IsDirect,
             DickKey
         ]
     ),
     write_file(File, SetFieldsFunctionBody),
     write_file(File, "~ts", [?SPLIT_LINE]),
-    i_set_fields(File, Record, SuffixList, FuncAtom, FieldList, ExParam, HookUpdate),
+    case IsDirect of
+        false -> i_set_fields(File, Record, SuffixList, FuncAtom, FieldList, ExParam, HookUpdate);
+        _Any -> skip
+    end,
+
     ok.
 
 i_set_fields(File, Record, SuffixList, _FuncAtom, FieldList, ExParam, HookUpdate) ->
@@ -333,15 +350,15 @@ i_set_fields(File, Record, SuffixList, _FuncAtom, FieldList, ExParam, HookUpdate
     UnUseParams = [lists:concat(["_", UnUsePara]) || UnUsePara <- ExParam],
     SetFieldsFunctionPara_1 = string:join(UnUseParams ++ ["R, []"], ","),
     SetFieldsFunctionPara_2 = string:join(ExParam ++ ["R, [H | FieldList]"], ","),
-    ISetFieldFunctionPara = string:join(ExParam ++ ["R,H"], ","),
+    ISetFieldFunctionPara = string:join(ExParam ++ ["H, R"], ","),
     ISetFieldFunctionName = i_set_field_function_name(SuffixList),
     UnUseExParamList = string:join([lists:concat(["_", Param, ","]) || Param <- ExParam], ""),
     ExParamList = string:join([lists:concat([Param, ","]) || Param <- ExParam], ""),
     
     SetFieldFunctionBody = io_lib:format
     (
-        "~ts(~ts) ->\n\tR;\n"
-        "~ts(~ts) ->\n\t~ts(~s~s(~s), FieldList).\n\n",
+        "~ts(~ts, _) ->\n\tR;\n"
+        "~ts(~ts, IsDirect) ->\n\t~ts(~s~s(~s, IsDirect), FieldList, IsDirect).\n\n",
         [
             SetFieldsFunctionName, SetFieldsFunctionPara_1,
             SetFieldsFunctionName, SetFieldsFunctionPara_2,
@@ -353,7 +370,7 @@ i_set_fields(File, Record, SuffixList, _FuncAtom, FieldList, ExParam, HookUpdate
         fun(Field) ->
             case HookUpdate of
                 [] -> i_set_field(File, Record, Field, SuffixList, UnUseParams, HookUpdate);
-                _ -> i_set_field(File, Record, Field, SuffixList, ExParam, HookUpdate)
+                _ ->  i_set_field(File, Record, Field, SuffixList, ExParam, HookUpdate)
             end
         end, FieldList),
     
@@ -361,7 +378,7 @@ i_set_fields(File, Record, SuffixList, _FuncAtom, FieldList, ExParam, HookUpdate
     write_file
     (
         File,
-        io_lib:format("~s(~s_Elem,R)-> R.\n\n", [i_set_field_function_name(SuffixList), UnUseExParamList])
+        io_lib:format("~s(~s_Elem,R, _)-> R.\n\n", [i_set_field_function_name(SuffixList), UnUseExParamList])
     ),
     ok.
 i_set_fields_function_name(SuffixList) ->
@@ -374,7 +391,7 @@ i_set_field(File, Record, Field, SuffixList, ExParam, HookUpdate) ->
     ISetFunctionName = i_set_field_function_name(SuffixList),
     RecordFieldIdx = lists:concat(["#", Record, ".", Field]),
 %%    RecordFieldVal = lists:concat(["R#", Record, ".", Field]),
-    HookUpdateCall = string:join(ExParam ++ [to_list(Field), "R"], ","),
+    HookUpdateCall = string:join(ExParam ++ ["#" ++ to_list(Record) ++ "." ++ to_list(Field), "Val"], ","),
     ExParamList = string:join([lists:concat([Param, ","]) || Param <- ExParam], ""),
     IFieldSetFunctionBody =
         case HookUpdate of
@@ -384,7 +401,7 @@ i_set_field(File, Record, Field, SuffixList, ExParam, HookUpdate) ->
 %%                    "~s(~s{~p, Val}, R) ->\n\tR#~p{~p = Val};\n"
 %%                    "~s(~s{~p, Val, add}, R) ->\n\tR#~p{~p = ~s + Val};\n"
 %%                    "~s(~s{~p, Val, sub}, R) ->\n\tR#~p{~p = ~s - Val};\n"
-                    "~s(~s{~s, Val}, R) ->\n\tR#~p{~p = Val};\n"
+                    "~s(~s{~s, Val}, R, IsDirect) ->\n\tR#~p{~p = Val};\n"
 %%                    "~s(~s{~s, Val, add}, R) ->\n\tR#~p{~p = ~s + Val};\n"
 %%                    "~s(~s{~s, Val, sub}, R) ->\n\tR#~p{~p = ~s - Val};\n"
                     ,
@@ -405,7 +422,7 @@ i_set_field(File, Record, Field, SuffixList, ExParam, HookUpdate) ->
 %%                    "~s(~s{~p, Val}, R) ->\n\tR1 = R#~p{~p = Val},\n\t?TRY_CATCH(~ts(~ts)),\n\tR1;\n"
 %%                    "~s(~s{~p, Val, add}, R) ->\n\tR1 = R#~p{~p = ~s + Val},\n\t?TRY_CATCH(~ts(~ts)),\n\tR1;\n"
 %%                    "~s(~s{~p, Val, sub}, R) ->\n\tR1 = R#~p{~p = ~s - Val},\n\t?TRY_CATCH(~ts(~ts)),\n\tR1;\n"
-                    "~s(~s{~s, Val}, R) ->\n\tR1 = R#~p{~p = Val},\n\t?TRY_CATCH(~ts(~ts)),\n\tR1;\n"
+                    "~s(~s{~s, Val}, R, IsDirect) ->\n\tR1 = R#~p{~p = Val},\n\tcase IsDirect of \n\t\ttrue -> ?TRY_CATCH(~ts(~ts));\n\t\t _ -> skip \n\tend,\n\tR1;\n"
 %%                    "~s(~s{~s, Val, add}, R) ->\n\tR1 = R#~p{~p = ~s + Val},\n\t?TRY_CATCH(~ts(~ts)),\n\tR1;\n"
 %%                    "~s(~s{~s, Val, sub}, R) ->\n\tR1 = R#~p{~p = ~s - Val},\n\t?TRY_CATCH(~ts(~ts)),\n\tR1;\n"
                     ,
@@ -521,7 +538,7 @@ object_rw(Fname, FieldList) ->
 export_field(Fname, []) ->
     write_file(Fname, "~ts", [?SPLIT_LINE]);
 export_field(Fname, [Field | FieldList]) ->
-    write_file(Fname, "\t set_~p/2, set_~p_direct/2, get_~p/1, get_~p/2, %#m_object_rw.~p ~n",
+    write_file(Fname, "\t set_~p/2, set_~p_direct/2, get_~p/1, get_~p_def/2, %#m_object_rw.~p ~n",
         [Field, Field,Field, Field, Field]),
     export_field(Fname, FieldList).
 
@@ -569,8 +586,8 @@ set_fields_direct(Uid,FieldList) ->
 
 i_set_fields(_Uid,[]) ->
     ok;
-i_set_fields(Uid,[FieldTuple | FieldList]) ->
-    ?TRY_CATCH(hook_map:on_rw_update(Uid, FieldTuple)),
+i_set_fields(Uid,[{Pos, Val} | FieldList]) ->
+    ?TRY_CATCH(hook_map:on_rw_update(Uid, Pos, Val)),
     i_set_fields(Uid, FieldList).
 "
         ]),
@@ -585,7 +602,7 @@ field_body(Fname, [Field | FieldList]) ->
 get_~p(Uid) ->
     misc_ets:read_element(i_ets(), Uid, #m_object_rw.~p).
 
-get_~p(Uid, Def) ->
+get_~p_def(Uid, Def) ->
     case misc_ets:read_element(i_ets(), Uid, #m_object_rw.~p, undefined) of
         undefined -> Def;
         Any -> Any
@@ -593,7 +610,7 @@ get_~p(Uid, Def) ->
     
 set_~p(Uid, Val)->
     misc_ets:update_element(i_ets(), Uid, {#m_object_rw.~p, Val}),
-    ?TRY_CATCH(hook_map:on_rw_update(Uid,{#m_object_rw.~p, Val})).
+    ?TRY_CATCH(hook_map:on_rw_update(Uid, #m_object_rw.~p, Val)).
 set_~p_direct(Uid, Val) ->
     misc_ets:update_element(i_ets(), Uid, {#m_object_rw.~p, Val}),
     ok.
