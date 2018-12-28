@@ -104,7 +104,8 @@ excl_ets() -> erlang:get(?ETS_MAP_EXCL).
 
 %%-------------------------------------------------------------------
 obj_exist(Uid) ->
-   misc_ets:member(map_rw:detail_ets(), Uid).
+    misc_ets:member(map_rw:detail_ets(), Uid).
+%%  object_rw:get(Uid) =/= undefined.
 
 %%-------------------------------------------------------------------
 obj_maps_with_uid(Uid) ->
