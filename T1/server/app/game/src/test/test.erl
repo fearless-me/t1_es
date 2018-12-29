@@ -17,6 +17,7 @@
 -export([tv3/0, a/0, rand/1]).
 -export([test_apply/1, test_apply/2, apply_fun/0, loop_call/1, loop_mfa_call/2, loop_apply_call/2]).
 -export([test_bin/2, test_bin/3]).
+-export([sp/1]).
 
 %% test:test_apply({test,apply_fun,[]}).
 test_apply(Mod) ->
@@ -128,6 +129,33 @@ tv3_1(Src, Dst) ->
     ok.
 
 
+sp(N) ->
+    Binary = erlang:list_to_binary("11111111111111111111111111111111"),
+    _ = erlang:spawn(
+        fun() ->
+            {_, P1} = erlang:process_info(self(), memory),
+            {T1, _} = timer:tc(fun() -> cc32(N, Binary, 1) end),
+            {_, P2} = erlang:process_info(self(), memory),
+            io:format("~p, ~s->~s~n", [T1, misc:format_memory_readable(P1), misc:format_memory_readable(P2)])
+        end),
+    _ = erlang:spawn(
+        fun() ->
+            {_, P1} = erlang:process_info(self(), memory),
+            {T1, _} = timer:tc(fun() -> cc32(N, Binary, 2) end),
+            {_, P2} = erlang:process_info(self(), memory),
+            io:format("~p, ~s->~s~n", [T1, misc:format_memory_readable(P1), misc:format_memory_readable(P2)])
+        end),
+    ok.
+
+cc32(0,_, _) ->
+    skip;
+cc32(N, Binary, 1) ->
+    _ = erlang:crc32(Binary),
+    cc32(N-1, Binary, 1);
+cc32(N,Binary, 2) ->
+    _ = misc:crc32(Binary),
+    cc32(N-1, Binary, 2).
+
 %%-------------------------------------------------------------------
 test_bin(Type, N) ->
     ensure_test_bin(Type),
@@ -238,7 +266,7 @@ do_perf_ets(Bin, MapID, X, Limit) when X < Limit ->
 ensure_test_bin(Type) ->
     case ets:info(block) of
         undefined ->
-            ets:new(block, [named_table, ?ETS_RC,?ETS_WC]),
+            ets:new(block, [named_table, ?ETS_RC, ?ETS_WC]),
             perf_bin(Type),
             ok;
         _ -> skip

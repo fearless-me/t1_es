@@ -27,12 +27,12 @@
 -spec new() -> integer().
 new() ->
     Key = os:system_time(seconds),
-    put(?RAND_KEY, Key),
+    erlang:put(?RAND_KEY, Key),
     Key.
 
 -spec new(Seed :: integer()) -> Seed :: integer().
 new(Seed) ->
-    put(?RAND_KEY, Seed),
+    erlang:put(?RAND_KEY, Seed),
     Seed.
 
 prob(FProb) ->
@@ -53,17 +53,17 @@ rand() ->
                    (Key2 band ?UINT32_MAX)
            end,
 
-    put(?RAND_KEY, Key3),
+    erlang:put(?RAND_KEY, Key3),
     (Key3 bsr 1) band ?INT32_MAX.
 
 
 -spec rand(N :: integer() ) -> integer().
-rand(N) when N >= 1 -> rand(1, N).
+rand(N) when N >= 1 -> rand_tool:rand(1, N).
 
 -spec rand(Min :: integer(), Max :: integer()) -> integer().
 rand(Min, Min) -> Min;
 rand(Min, Max) ->
-    Min + (rand() rem (Max - Min + 1)).
+    Min + (rand_tool:rand() rem (Max - Min + 1)).
 
 -spec seed() -> integer().
 seed() ->
@@ -71,8 +71,8 @@ seed() ->
 %%
 -spec ensure_new() -> integer().
 ensure_new() ->
-    case get(?RAND_KEY) of
-        undefined -> new();
+    case erlang:get(?RAND_KEY) of
+        undefined -> rand_tool:new();
         Key -> Key
     end.
 

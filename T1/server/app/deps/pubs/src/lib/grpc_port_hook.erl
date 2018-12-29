@@ -66,11 +66,11 @@ test() ->
     CS = "t1_center@10.1.1.253",
     GS1 = lists:map(
         fun(X) ->
-            lists:flatten(io_lib:format("t1_game_~p@10.1.1.10", [X]))
+            lists:flatten(io_lib:format("t1_game_~p_x@10.1.1.10", [X]))
         end, lists:seq(1, 1500)),
     CGS = lists:map(
         fun(X) ->
-            lists:flatten(io_lib:format("t1_cross_~p@10.1.1.10", [X]))
+            lists:flatten(io_lib:format("t1_cross_~p_x@10.1.1.10", [X]))
         end, lists:seq(1501, 2000)),
 
 
