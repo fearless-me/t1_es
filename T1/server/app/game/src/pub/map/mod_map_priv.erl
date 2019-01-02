@@ -40,7 +40,7 @@
 -define(MAP_OBJ_DETAIL_ETS, map_obj_detail_ets__).
 -define(MAP_EXCL_ETS, map_excl_ets__).
 init_priv(#r_map_create_params{
-    map_id = MapID, line_id = LineID, mgr_ets = MgrEts,
+    map_id = MapID, line_id = LineID, mgr_ets = MgrEts,  mgr_pid = MgrPid,
     creator = Creator, owner_type = Type, owner_params = Param, wait_list = WaitList
 }) ->
     ProcessName = misc:create_atom(?MODULE, [MapID, LineID]),
@@ -54,12 +54,14 @@ init_priv(#r_map_create_params{
     Line = #m_map_line{
         map_id = MapID, line_id = LineID, pid = self(), status = ?MAP_RUNNING,
         limits = RealLimitCnt, obj_ets = Ets0,
+        owner_type = Type, owner_id = Param,
         dead_line = Now + RealLifeTime, create_time = Now
     },
     misc_ets:write(MgrEts, Line),
     map_rw:set_owner(Creator, Type, Param, WaitList),
     ps:send(self(), init),
-
+    %% fixme 此处是为了测试用的
+    map_mgr_interface:deadline_stop_(MgrPid, RealLifeTime, Line),
     #m_map_state{map_id = MapID, line_id = LineID, obj_ets = Ets0, mgr_ets = MgrEts, excl_ets = Ets1}.
 
 %%-------------------------------------------------------------------

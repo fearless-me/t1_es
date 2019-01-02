@@ -239,7 +239,7 @@ getRow(10110001) ->
 		castingtick = [],
 		beforehit = [],
 		ishit = [[[],[],[]],[[0,0,0,1004,5000,0,0],[],[],[]],[[],[],[],[]]],
-		action_before_cast = "[0,[[1,0,43,0,0,0,0]]]",
+		action_before_cast = "[0,[]",
 		action_casting_tick = "",
 		action_ishit = "",
 		action_bullet = ""
@@ -485,7 +485,7 @@ getRow(50100000) ->
 		hiteffect = "501_1_3",
 		hp_steal = 0,
 		special_options = 2,
-		hurt_times = 100,
+		hurt_times = 1000,
 		animcombine = 1,
 		beforecast = [],
 		castingtick = [],

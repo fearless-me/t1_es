@@ -104,7 +104,7 @@ serve_change_map_call(TarMid, TarLineId, TarPos, Force) ->
     } = gs_cache_interface:get_online_player(Uid),
 
     case player_map:can_enter_map(SrcMid, TarMid) of
-        true ->
+        true when SrcMid =/= TarMid ; TarLineId =/= SrcLineId ->
             player_rw:set_status(?PS_CHANGE_MAP),
             ExitReq = #r_exit_map_req{uid = Uid, map_id = SrcMid, line_id = SrcLineId, map_pid = SrcMPid},
             JoinReq = #r_join_map_req{uid = Uid, pid = self(),
@@ -113,8 +113,8 @@ serve_change_map_call(TarMid, TarLineId, TarPos, Force) ->
             Ack = do_serve_change_map_call(ExitReq, JoinReq),
             serve_change_map_call_ret(SrcMid, SrcLineId, SrcPos, Ack, JoinReq, gaming),
             ok;
-        {fasle, _Reason} ->
-            ok
+        {fasle, _Reason} -> ok;
+        _ -> skip
     end,
     ok.
 

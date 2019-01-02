@@ -108,7 +108,7 @@
 -define(MAP_MGR_ETS, map_mgr_ets__).
 
 %%
--record(r_map_create_params, {map_id, line_id, mgr_ets,
+-record(r_map_create_params, {map_id, line_id, mgr_ets, mgr_pid,
     owner_type=?MAP_OWNER_ANY,owner_params=0, creator=0, wait_list=[]}).
 %% 视图
 -record(m_vis_tile, {index = 0, player = [], monster = [], npc = [], pet = []}).
@@ -116,7 +116,7 @@
 -record(m_map_state, {map_id = 0, line_id = 0, obj_ets, mgr_ets, excl_ets,
     respawn = [], hook_mod, status = ?MAP_RUNNING, protect_tick = ?DEAD_LINE_PROTECT div ?MAP_TICK}).
 %% 地图线路
--record(m_map_line, {map_id = 0, line_id = 0, pid, obj_ets, limits = 150, in = 0, reserve = 10,
+-record(m_map_line, {map_id = 0, line_id = 0, pid, obj_ets, limits = 150, in = 0, reserve = 10, owner_type, owner_id=0,
     dead_line = 0, create_time = 0, status = ?MAP_RUNNING}).
 %% 线路归属
 -record(m_map_owner,{type=?MAP_OWNER_ANY, creator = 0, owner_param = 0, wait_list =[], ready_list = []}).

@@ -18,6 +18,7 @@
 %% call
 -export([player_join_map_call/2]).
 -export([player_exit_map_call/2]).
+-export([deadline_stop_/3]).
 %%--------------------------------
 
 %%--------------------------------
@@ -29,5 +30,9 @@ player_exit_map_call(MgrPid, Req) ->
     gen_server:call(MgrPid, {exit_map, Req}, ?MAP_CALL_TIMEOUT).
 %%player_exit_map_exception_call(MgrPid, Data) ->
 %%    gen_server:call(MgrPid, {exit_map_excetipon, Data}, ?MAP_CALL_TIMEOUT).
+
+
+deadline_stop_(MgrPid, LiftTime, Line) ->
+    erlang:send_after(LiftTime, MgrPid, {deadline_stop, Line}).
 %%--------------------------------
 

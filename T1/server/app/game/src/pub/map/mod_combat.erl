@@ -93,11 +93,10 @@ active_skill_once(#m_object_rw{uid = Uid} = Aer, TarList, #skillCfg{id = SkillId
     HitMsg = #pk_GS2U_HitTarget{
         tar_uids = TargetUidList, src_uid = Uid, cause = ?HIT_REASON_SKILL, misc = SkillId, serial = Serial
     },
+    mod_view:send_net_msg_to_visual(Uid, HitMsg),
 
     F =
-        fun(#m_object_rw{uid = TargetUid} = Hit) ->
-            gs_interface:send_net_msg(TargetUid, HitMsg),
-
+        fun(#m_object_rw{} = Hit) ->
             calculate_dmg(Aer, Hit, SkillCfg, Serial)
         end,
     lists:foreach(F, TarList).

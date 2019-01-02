@@ -99,80 +99,33 @@ do_player_join_map_call_1(true, _S, Req) ->
 do_player_join_map_call_1(_Any, S, Req) ->
     %1. 选线
     #r_join_map_req{
+        uid = Uid,
         tar_map_id = MapID, tar_line_id = TarLineId, force = Force
     } = Req,
-
-    Recover = map_creator_interface:map_line_recover(MapID),
-    Res = i_select_line(TarLineId, S, MapID, Force),
-    i_player_join_map_call(Res, Recover, Req, S).
-
-
--define(MAP_COND(In, Now, DeadLine, Status),
-    In >= 0,
-    DeadLine > Now + ?DEAD_LINE_PROTECT,
-    Status =:= ?MAP_RUNNING
-).
-
-i_select_line(0, S, MapID, _Force) ->
-    Now = misc_time:milli_seconds(),
-    Recover = map_creator_interface:map_line_recover(MapID),
-    MS =
-        ets:fun2ms
-        (
-            fun
-                (
-                    #m_map_line
-                    {
-                        limits = Limit, in = In,
-                        dead_line = DeadLine, status = Status
-                    } = T
-                ) when ?MAP_COND(In, Now, DeadLine, Status),
-                    Recover =:= ?MAP_LINE_RECOVER_ANY_NEW,
-                    Limit > In -> T
-            end
-        ),
-    case misc_ets:select(S#state.ets, MS, 1) of
-        {[Line1 | _], _Continue} -> Line1;
-        EndOfTable -> EndOfTable
-    end;
-i_select_line(TarLine, S, MapID, Force) ->
-    Now = misc_time:milli_seconds(),
-    case misc_ets:read(S#state.ets, TarLine) of
-        [
-            #m_map_line
-            {
-                limits = Limit, in = In, reserve = Reserve,
-                dead_line = DeadLine, status = Status
-            } = T
-        ] when ?MAP_COND(In, Now, DeadLine, Status),
-            (Limit > In orelse (Force andalso Limit + Reserve > In))
-            -> T;
-        _ -> i_select_line(0, S, MapID, Force)
-    end.
-
+    
+    Res = map_mgr_priv:try_to_select_line(S#state.ets, MapID, TarLineId, Force, Uid),
+    i_player_join_map_call(Res, Req, S).
 
 %%--------------------------------------------------------------------
 %%1.可以进入一条线
-i_player_join_map_call(#m_map_line{pid = MapPid, map_id = MapID, line_id = LineID}, _, Req, State) ->
+i_player_join_map_call(#m_map_line{pid = MapPid, map_id = MapID, line_id = LineID}, Req, _State) ->
     %3. 加入
     case map_interface:player_join_call(MapPid, Req) of
         ?MAP_CHANGE_OK ->
-            #r_join_map_ack{error = ?MAP_CHANGE_OK, map_id = MapID, line_id = LineID, map_pid = MapPid, pos = Req#r_join_map_req.tar_pos};
+            #r_join_map_ack{
+                error = ?MAP_CHANGE_OK,
+                map_id = MapID, line_id = LineID, map_pid = MapPid,
+                pos = Req#r_join_map_req.tar_pos
+            };
         _ ->
-            #r_join_map_ack{map_id = MapID, line_id = LineID, map_pid = MapPid, error = ?MAP_CHANGE_EXCEPTION}
+            #r_join_map_ack{
+                error = ?MAP_CHANGE_EXCEPTION,
+                map_id = MapID, line_id = LineID, map_pid = MapPid
+            }
     end;
 %%2.没有线就返回错误
-i_player_join_map_call(_Any, ?MAP_LINE_RECOVER_ERR, Req, _State) ->
-    #r_join_map_ack{map_id = Req#r_join_map_req.tar_map_id, error = ?MAP_CHANGE_EXCEPTION};
-%%3.没有线就创建一条新线
-i_player_join_map_call(_Any, Recover, #r_join_map_req{tar_map_id = TarMid, uid = CreatorUid} = Req, State) ->
-    case catch create_new_line(State, State#state.map_id, next_line_id(), CreatorUid) of
-        #m_map_line{} = Line ->
-            i_player_join_map_call(Line, Recover, Req, State);
-        Error ->
-            ?ERROR("create map ~p new line error ~p", [State#state.map_id, Error]),
-            #r_join_map_ack{map_id = TarMid, error = ?MAP_CHANGE_CREATE_LINE_FAILED}
-    end.
+i_player_join_map_call(Res, _Req, _State) ->
+    Res.
 
 %%--------------------------------------------------------------------
 do_player_exit_map_call(S, Req) ->
@@ -206,34 +159,6 @@ do_player_exit_map_call(S, Req) ->
 %%    ok.
 
 %%--------------------------------------------------------------------
-create_new_line(S, MapID, LineID, CreatorUid) ->
-    %% @todo 此处要根据地图类型的不同来采取不同的策略
-    %% 比如副本地图不用做任何优化
-    %% 但是长时间存在的地图必须要调整内存相关属性，减少GC   1
-    {OwnerType, OwnerParam, WaitList} = map_creator_interface:map_owners(MapID, CreatorUid),
-    CreateParamRec = #r_map_create_params{
-        map_id = MapID, line_id = LineID, mgr_ets = S#state.ets,
-        creator = CreatorUid, owner_type = OwnerType, owner_params = OwnerParam, wait_list = WaitList
-    },
-    
-    {ok, Pid} = map_sup:start_child(CreateParamRec),
-
-    [Line] = misc_ets:read(S#state.ets, LineID),
-    %% fixme 此处是为了测试用的
-    erlang:send_after(?LINE_LIFETIME * 10, self(), {deadline_stop, Line}),
-    ?WARN("map_~p_~p ~p start, mgr ets ~p, creator ~p", [MapID, LineID, Pid, S#state.ets, CreatorUid]),
-    Line.
-
-
-next_line_id() ->
-    LineID =
-        case get('LINE_ID') of
-            undefined -> 1;
-            V -> V + 1
-        end,
-    put('LINE_ID', LineID),
-    LineID.
-
 stop_map_line(S, Line, Reason) ->
     #m_map_line{map_id = Mid, line_id = LineId, pid = Pid} = Line,
     ?WARN("~p|map_~p_~p will be stopped reason ~p", [Pid, Mid, LineId, Reason]),
