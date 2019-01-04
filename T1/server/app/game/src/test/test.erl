@@ -16,7 +16,7 @@
 %% API
 -export([tv3/0, a/0, rand/1]).
 -export([test_apply/1, test_apply/2, apply_fun/0, loop_call/1, loop_mfa_call/2, loop_apply_call/2]).
--export([test_bin/2, test_bin/3]).
+-export([test_bin/2, test_bin/3, test_binm/0]).
 -export([sp/1]).
 
 %% test:test_apply({test,apply_fun,[]}).
@@ -157,6 +157,31 @@ cc32(N,Binary, 2) ->
     cc32(N-1, Binary, 2).
 
 %%-------------------------------------------------------------------
+test_binm() ->
+
+    B1 = binary_lib:write_int64(1111111111),
+    B2 = binary_lib:write_int64(2222222222),
+    B3 = binary_lib:write_int64(3333333333),
+
+    B4 = <<B1/binary, B2/binary, B3/binary>>,
+    B5 = erlang:iolist_to_binary([B1, B2, B3]),
+
+    io:format(
+        "B1:~p,~p~n"
+        "B2:~p,~p~n"
+        "B3:~p,~p~n"
+        "B4:~p,~p~n"
+        "B5:~p,~p~n",
+        [
+            binary:referenced_byte_size(B1),  B1,
+            binary:referenced_byte_size(B2),  B2,
+            binary:referenced_byte_size(B3),  B3,
+            binary:referenced_byte_size(B4),  B4,
+            binary:referenced_byte_size(B5),  B5
+        ]
+    ),
+    ok.
+
 test_bin(Type, N) ->
     ensure_test_bin(Type),
     background_gc:run(),
