@@ -51,3 +51,4 @@ _gsdata_
 /T1/tools/_Gadgets/CheckInSvn_MapsForServer.py
 /T1/tools/_Gadgets/EXCLUDE_All_ExceptMapInfoBytes.txt
 /T1/tools/_Gadgets/EXCLUDE_ServerMapOnly.txt
+/T1/server/.vscode

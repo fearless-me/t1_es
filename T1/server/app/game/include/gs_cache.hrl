@@ -30,7 +30,7 @@
 -record(m_cache_online_player, {
     %-------------------------------------------------------------------
     %% 这些基础信息有玩家进程来更新
-    uid, aid, pid, pid_bg, socket, level=1, sid=0,
+    uid, aid, pid, pid_send, pid_bg, socket, level=1, sid=0,
     name="", sex=0, career=1, race=1, camp=0, head=0,
     map_id = -1, line = 0, map_pid, old_map_id = -1, old_line = 0, old_pos,
     

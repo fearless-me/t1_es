@@ -83,7 +83,7 @@ ensure() ->
     true = misc:start_all_app(ssl),
     true = misc:start_all_app(stdlib),
     true = misc:start_all_app(ranch),
-    true = loggerS:start("tcp_client"),
+    true = fastlog:start("tcp_client"),
     true = misc:start_all_app(fly),
     ok.
 

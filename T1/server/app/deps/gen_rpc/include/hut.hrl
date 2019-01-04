@@ -11,7 +11,7 @@
 -ifndef(HUT_HRL).
 -define(HUT_HRL, true).
 
--define(log(Level, Fmt), loggerS:log(Level, "[~w:~w] "++Fmt,[?MODULE, ?LINE])).
--define(log(Level, Fmt, Args), loggerS:log(Level, "[~w:~w] "++Fmt,[?MODULE, ?LINE]++Args)).
+-define(log(Level, Fmt), fastlog:log(Level, "[~w:~w] "++Fmt,[?MODULE, ?LINE])).
+-define(log(Level, Fmt, Args), fastlog:log(Level, "[~w:~w] "++Fmt,[?MODULE, ?LINE]++Args)).
 
 -endif.

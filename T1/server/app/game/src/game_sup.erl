@@ -35,7 +35,7 @@ start() ->
     try
         %% 基础设施
         misc:fn_wrapper("config init", ?Wrap(gs_econfig:start("game.ini")), stdio),
-        misc:fn_wrapper("logger", ?Wrap(loggerS:start( log_file_name())), stdio),
+        misc:fn_wrapper("logger", ?Wrap(fastlog:start( log_file_name())), stdio),
         misc:fn_wrapper("error Logger", ?Wrap(common_error_logger:start(game_sup, game))),
         misc:fn_wrapper("gen rpc app", ?Wrap(misc:start_all_app(gen_rpc))),
         misc:fn_wrapper("db share", ?Wrap(gs_share:start())),

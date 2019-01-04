@@ -14,13 +14,13 @@
 %% skip logger.hrl dependence
 %%-include("logger.hrl").
 -ifndef(WARN).
--define(WARN(Fmt), loggerS:warn("[~w:~w]" ++ Fmt, [?MODULE, ?LINE])).
--define(WARN(Fmt, Args), loggerS:warn("[~w:~w]" ++ Fmt, [?MODULE, ?LINE] ++ Args)).
+-define(WARN(Fmt), fastlog:warn("[~w:~w]" ++ Fmt, [?MODULE, ?LINE])).
+-define(WARN(Fmt, Args), fastlog:warn("[~w:~w]" ++ Fmt, [?MODULE, ?LINE] ++ Args)).
 -endif.
 
 -ifndef(ERROR).
--define(ERROR(Fmt), loggerS:error("[~w:~w]" ++ Fmt, [?MODULE, ?LINE])).
--define(ERROR(Fmt, Args), loggerS:error("[~w:~w]" ++ Fmt, [?MODULE, ?LINE] ++ Args)).
+-define(ERROR(Fmt), fastlog:error("[~w:~w]" ++ Fmt, [?MODULE, ?LINE])).
+-define(ERROR(Fmt, Args), fastlog:error("[~w:~w]" ++ Fmt, [?MODULE, ?LINE] ++ Args)).
 -endif.
 
 %% define

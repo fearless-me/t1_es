@@ -17,7 +17,7 @@
 ]).
 
 log_(Client, LogNum) ->
-    fastlog:start_link("dbs"),
+    fastlog_sink:start_link("dbs"),
 %%    misc:ensure_all_applications_started(poolboy),
     NowMs = os:system_time(milli_seconds),
 %%    poolboy:start( [{size, 10}, {max_overflow, 20}]),

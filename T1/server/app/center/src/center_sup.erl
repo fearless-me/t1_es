@@ -35,7 +35,7 @@ start() ->
     try
         %% 基础设施
         misc:fn_wrapper("config init", ?Wrap(cs_conf:start("center.ini")), stdio),
-        misc:fn_wrapper("logger", ?Wrap(loggerS:start("center")), stdio),
+        misc:fn_wrapper("logger", ?Wrap(fastlog:start("center")), stdio),
         misc:fn_wrapper("error Logger", ?Wrap(common_error_logger:start(center_sup, center))),
         misc:fn_wrapper("gen rpc app", ?Wrap(misc:start_all_app(gen_rpc))),
         misc:fn_wrapper("db share", ?Wrap(cs_share:start())),

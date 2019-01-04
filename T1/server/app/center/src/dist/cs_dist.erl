@@ -71,7 +71,7 @@ start_master(_SupPid) ->
 slave_start(SupPid, _Mode) ->
     [NodeName | _] = string:tokens(atom_to_list(node()), "@"),
     misc:fn_wrapper("config init", ?Wrap(cs_conf:start("center.ini")), stdio),
-    misc:fn_wrapper("logger", ?Wrap(loggerS:start(NodeName)), stdio),
+    misc:fn_wrapper("logger", ?Wrap(fastlog:start(NodeName)), stdio),
     misc:fn_wrapper("error Logger", ?Wrap(common_error_logger:start(dist_sup, center_dist))),
     misc:fn_wrapper("gen rpc app", ?Wrap(misc:start_all_app(gen_rpc))),
     misc:fn_wrapper("db window", ?Wrap(cs_db_starter:start())),

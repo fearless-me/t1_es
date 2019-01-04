@@ -9,8 +9,8 @@
 %% Application callbacks
 %% ===================================================================
 
-start(_StartType, [App| _]) ->
-    fastlog_sup:start_link(App).
+start(_StartType, _) ->
+    fastlog_sup:start().
 
 stop(_State) ->
     ok.

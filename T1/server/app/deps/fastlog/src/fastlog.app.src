@@ -10,9 +10,9 @@
   {mod, { fastlog_app, []}},
   {env, [
       {logdir, "log"},
+      {log_level, debug},
       {show_in_stdio,true},
-      {mkdir_restart, true},
-      {createfile_restart, true},
+      {new_dir_on_start, true},
       {overload_message_queue_len, 20000}
   ]}
  ]}.

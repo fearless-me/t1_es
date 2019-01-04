@@ -215,9 +215,8 @@ init([MemFraction, AlarmFuns]) ->
             {large_heap, ?LARGE_HEAP div WordSize}
         ]
     ),
-
-    {ok, _Logger} = fastlog:start_link(?VM_MONITOR_LOGGER, "monitor.sys.vm"),
-    true = fastlog:make_init_log(?VM_MONITOR_LOGGER, "monitor.sys.vm"),
+    
+    true = fastlog:start_sink(?VM_MONITOR_LOGGER, "monitor.sys.vm"),
     State = #state{timeout = ?DEFAULT_MEMORY_CHECK_INTERVAL,
         timer = TRef,
         alarmed = false,
