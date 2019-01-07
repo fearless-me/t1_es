@@ -21,4 +21,12 @@
 -define(DISCARD_STDIO_KEY, dicard_stdio_log).
 -define(MASTER_NODE, master_of_slave).
 
+%%
+-define(LOG_LEVEL_DEBUG, debug).
+-define(LOG_LEVEL_INFO, info).
+-define(LOG_LEVEL_NOTICE, notice).
+-define(LOG_LEVEL_WARNING, warning).
+-define(LOG_LEVEL_ERROR, error).
+-define(LOG_LEVEL_FATAL, fatal).
+
 -endif.

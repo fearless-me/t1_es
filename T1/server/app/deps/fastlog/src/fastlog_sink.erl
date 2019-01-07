@@ -89,39 +89,8 @@ start_link(Sink, FileName, CreateErr) ->
 %%%===================================================================
 %%% gen_server callbacks
 %%%===================================================================
-
-%%--------------------------------------------------------------------
-%% @private
-%% @doc
-%% Initializes the server
-%%
-%% @spec init(Args) -> {ok, State} |
-%%                     {ok, State, Timeout} |
-%%                     ignore |
-%%                     {stop, Reason}
-%% @end
-%%--------------------------------------------------------------------
--spec(init(Args :: term()) ->
-    {ok, State :: #state{}} | {ok, State :: #state{}, timeout() | hibernate} |
-    {stop, Reason :: term()} | ignore).
 init(Args) -> mod_init(Args).
-
 %%--------------------------------------------------------------------
-%% @private
-%% @doc
-%% Handling call messages
-%%
-%% @end
-%%--------------------------------------------------------------------
--spec(handle_call(Request :: term(), From :: {pid(), Tag :: term()},
-    State :: #state{}) ->
-    {reply, Reply :: term(), NewState :: #state{}} |
-    {reply, Reply :: term(), NewState :: #state{}, timeout() | hibernate} |
-    {noreply, NewState :: #state{}} |
-    {noreply, NewState :: #state{}, timeout() | hibernate} |
-    {stop, Reason :: term(), Reply :: term(), NewState :: #state{}} |
-    {stop, Reason :: term(), NewState :: #state{}}).
-
 handle_call(Request, From, State) ->
     try call(Request, From, State)
     catch T : E : _ST ->
@@ -130,33 +99,9 @@ handle_call(Request, From, State) ->
     end.
 
 %%--------------------------------------------------------------------
-%% @private
-%% @doc
-%% Handling cast messages
-%%
-%% @end
-%%--------------------------------------------------------------------
--spec(handle_cast(Request :: term(), State :: #state{}) ->
-    {noreply, NewState :: #state{}} |
-    {noreply, NewState :: #state{}, timeout() | hibernate} |
-    {stop, Reason :: term(), NewState :: #state{}}).
-handle_cast(_Request, State) ->
-    {noreply, State}.
+handle_cast(_Request, State) -> {noreply, State}.
 
 %%--------------------------------------------------------------------
-%% @private
-%% @doc
-%% Handling all non call/cast messages
-%%
-%% @spec handle_info(Info, State) -> {noreply, State} |
-%%                                   {noreply, State, Timeout} |
-%%                                   {stop, Reason, State}
-%% @end
-%%--------------------------------------------------------------------
--spec(handle_info(Info :: timeout() | term(), State :: #state{}) ->
-    {noreply, NewState :: #state{}} |
-    {noreply, NewState :: #state{}, timeout() | hibernate} |
-    {stop, Reason :: term(), NewState :: #state{}}).
 handle_info(Info, State) ->
     try do_handle_info(Info, State)
     catch T : E : _ST ->
@@ -165,33 +110,11 @@ handle_info(Info, State) ->
     end.
 
 %%--------------------------------------------------------------------
-%% @private
-%% @doc
-%% This function is called by a gen_server when it is about to
-%% terminate. It should be the opposite of Module:init/1 and do any
-%% necessary cleaning up. When it returns, the gen_server terminates
-%% with Reason. The return value is ignored.
-%%
-%% @spec terminate(Reason, State) -> void()
-%% @end
-%%--------------------------------------------------------------------
--spec(terminate(Reason :: (normal | shutdown | {shutdown, term()} | term()),
-    State :: #state{}) -> term()).
 terminate(_Reason, #state{fd = Fd}) ->
     catch file:close(Fd),
     ok.
 
 %%--------------------------------------------------------------------
-%% @private
-%% @doc
-%% Convert process state when code is changed
-%%
-%% @spec code_change(OldVsn, State, Extra) -> {ok, NewState}
-%% @end
-%%--------------------------------------------------------------------
--spec(code_change(OldVsn :: term() | {down, term()}, State :: #state{},
-    Extra :: term()) ->
-    {ok, NewState :: #state{}} | {error, Reason :: term()}).
 code_change(_OldVsn, State, _Extra) ->
     {ok, State}.
 
@@ -236,12 +159,7 @@ do_init(false, Ref, FileName, CreateErr) ->
     }.
 
 start_file_timer() ->
-    Self = self(),
-    spawn_link(fun() ->
-        %% time is in seconds
-        timer:sleep(next_hour_sec() * 1000),
-        Self ! rotate_timer
-               end),
+    erlang:send_after(next_hour_sec() * 1000, self(), rotate_timer),
     ok.
 %%--------------------------------------------------------------------
 do_handle_info({?MSG, Level, String}, #state{writes = Wr, msg_counter = MsgNumber} = State) ->
@@ -432,14 +350,38 @@ master_node() ->
     end.
 
 
-color_inout(fatal, Msg) -> io:format(user, "~ts", [color:red(Msg)]);
-color_inout(error, Msg) -> io:format(user, "~ts", [color:red(Msg)]);
-color_inout(warn, Msg) -> io:format(user, "~ts", [color:yellow(Msg)]);
-color_inout(debug, Msg) -> io:format(user, "~ts", [color:green(Msg)]);
+color_inout(?LOG_LEVEL_FATAL, Msg) -> io:format(user, "~ts", [red(Msg)]);
+color_inout(?LOG_LEVEL_ERROR, Msg) -> io:format(user, "~ts", [red(Msg)]);
+color_inout(?LOG_LEVEL_WARNING, Msg) -> io:format(user, "~ts", [yellow(Msg)]);
+color_inout(?LOG_LEVEL_NOTICE, Msg) -> io:format(user, "~ts", [blue(Msg)]);
+color_inout(?LOG_LEVEL_DEBUG, Msg) -> io:format(user, "~ts", [green(Msg)]);
 color_inout(_, Msg) -> io:format(user, "~ts", [Msg]).
 
 
-is_error_log(debug) -> false;
-is_error_log(info) -> false;
-is_error_log(warn) -> false;
+is_error_log(?LOG_LEVEL_DEBUG) -> false;
+is_error_log(?LOG_LEVEL_INFO) -> false;
+is_error_log(?LOG_LEVEL_NOTICE) -> false;
+is_error_log(?LOG_LEVEL_WARNING) -> false;
 is_error_log(_) -> true.
+
+-define(BLACK, <<"30">>).
+-define(RED, <<"31">>).
+-define(GREEN, <<"32">>).
+-define(YELLOW, <<"33">>).
+-define(BLUE, <<"34">>).
+-define(MAGENTA, <<"35">>).
+-define(CYAN, <<"36">>).
+-define(WHITE, <<"37">>).
+-define(DEFAULT, <<"39">>).
+
+-define(ESC, <<"\e[">>).
+-define(RST, <<"0">>).
+-define(END, <<"m">>).
+
+reset() -> <<?ESC/binary, ?RST/binary, ?END/binary>>.
+color(Color) -> <<?ESC/binary, Color/binary, ?END/binary>>.
+
+red(Text)        -> [color(?RED),        Text, reset()].
+yellow(Text)     -> [color(?YELLOW),     Text, reset()].
+blue(Text)       -> [color(?BLUE),       Text, reset()].
+green(Text)      -> [color(?GREEN),      Text, reset()].

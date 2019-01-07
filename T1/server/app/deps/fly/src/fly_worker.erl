@@ -14,8 +14,8 @@
 %% skip logger.hrl dependence
 %%-include("logger.hrl").
 -ifndef(WARN).
--define(WARN(Fmt), fastlog:warn("[~w:~w]" ++ Fmt, [?MODULE, ?LINE])).
--define(WARN(Fmt, Args), fastlog:warn("[~w:~w]" ++ Fmt, [?MODULE, ?LINE] ++ Args)).
+-define(WARN(Fmt), fastlog:warning("[~w:~w]" ++ Fmt, [?MODULE, ?LINE])).
+-define(WARN(Fmt, Args), fastlog:warning("[~w:~w]" ++ Fmt, [?MODULE, ?LINE] ++ Args)).
 -endif.
 
 -ifndef(ERROR).
