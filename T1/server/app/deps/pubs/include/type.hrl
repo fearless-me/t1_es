@@ -45,6 +45,10 @@
 -export_type([int8/0, uint8/0, int16/0, uint16/0, int32/0, uint32/0, int64/0, uint64/0]).
 
 -type mapId() :: uint16().
+-type etsTab() :: integer() | atom().
+-type skillId() :: uint16().
+-type itemId() :: uint16().
+-type monsterId() :: uint16().
 
 -define(INT8_MIN,  -127 - 1).
 -define(INT8_MAX,  127).

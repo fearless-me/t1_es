@@ -22,14 +22,14 @@ on_info_msg(tick_me) ->
     ok;
 on_info_msg(Info) ->
     ?ERROR("info:~p", [Info]),
-    ok.
+    playerOtp:handle_info(Info, none).
 
 %%-------------------------------------------------------------------
 on_call_msg(Request, From) ->
     ?DEBUG("call ~p from ~p", [Request, From]),
-    error.
+    playerOtp:handle_call(Request, From, none).
 
 %%-------------------------------------------------------------------
 on_cast_msg(Request) ->
     ?DEBUG("cast:~p", [Request]),
-    ok.
+    playerOtp:handle_cast(Request, none).

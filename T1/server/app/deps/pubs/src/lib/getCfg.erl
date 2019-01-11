@@ -53,7 +53,7 @@ getTranslateModule(Module) ->
 %%			erlang:is_atom(?Cur_Lang) ->
 %%				erlang:atom_to_list(Module) ++ "_" ++ erlang:atom_to_list(?Cur_Lang);
 %%			true ->							%% @doc 忽略该行警告
-%%				?ERROR_OUT("Error Type of CurLang:~p",[?Cur_Lang])
+%%				?ERROR("Error Type of CurLang:~p",[?Cur_Lang])
 %%		end,
 %%	erlang:list_to_atom(NewMod).
 
@@ -65,7 +65,7 @@ getCfgByKey(Module,Key1)->
 	case Mod:getRow(Key1) of
 		[] ->
 			% getCfgByKey 不需要打印，如有需要请替换为 getCfgPStack
-			%?ERROR_OUT("getCfgByKey error can not find data Mod=~p,key=~p",[Mod,Key1]),
+			%?ERROR("getCfgByKey error can not find data Mod=~p,key=~p",[Mod,Key1]),
 			{};
 		Value ->
 			Value

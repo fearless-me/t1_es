@@ -154,8 +154,9 @@ on_net_msg(Cmd, Msg) ->
 
 route_msg(false, Cmd, Msg) ->
     %%1. hook
-    Status = player_rw:get_status(),
-    filter_msg(Status, Cmd, Msg),
+    playerMsg:dealNetMsgMain(Cmd, Msg),
+%%    Status = player_rw:get_status(),
+%%    filter_msg(Status, Cmd, Msg),
     ok;
 route_msg(_Any, Cmd, _Msg) ->
     ?DEBUG("msg ~p forbid", [Cmd]),

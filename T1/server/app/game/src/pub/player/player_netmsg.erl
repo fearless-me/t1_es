@@ -88,4 +88,4 @@ handle(#pk_U2GS_Revive{}) ->
     ok;
 handle(_Msg) ->
 %%    ?DEBUG("~p", [Msg]),
-    ok.
+    playerMsg:dealNetMsgMain().

@@ -54,6 +54,11 @@
     catch _:Err:St -> ?ERROR("Error=~w,stack=~p", [Err, St])
     end).
 
+-define(TRY_CATCH(Fun, Err),
+    try Fun
+    catch _:Err:_ -> ?ERROR("Error=~w", [Err])
+    end).
+
 -define(TRY_CATCH(Fun), ?TRY_CATCH(Fun,Err,St)).
 
 %%-------------------------------------------------------------------------------

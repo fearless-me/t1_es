@@ -198,7 +198,7 @@ searchFile(ServerType, false, {Lang, _XH} = Param1, {_HrlFileList, ErlFileList, 
 		_ ->
 			F =
 				fun(File, {IsEnough, {Number, AccL}} = Data) ->
-					case Number >= 30 of
+					case Number >= 150 of
 						true ->
 							{true, {Number, AccL}};
 						_ ->

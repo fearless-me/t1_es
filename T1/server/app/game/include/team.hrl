@@ -1,0 +1,178 @@
+-ifndef(TEAM_HRL).
+-define(TEAM_HRL,1).
+
+%%%-------------------------------------------------------------------
+%%%-------------------------------------------------------------------
+
+-define(TeamRst_0, 0).
+-define(TeamRst_Kick,1).
+-define(TeamRst_Leave,2).
+-define(TeamRst_Dismiss,3).
+
+%% 队伍最大人数
+-define(MAX_TeamMemberNum, 4).
+
+%% 队员点击同意开始副本的时间
+-define(AckStartCopyMapTimeOut, 15).
+%% 系统自动匹配tick时间
+-define(TeamTickTimeMS, 1000).
+-define(InQueueTime, 30*1000).
+
+-define(Ets_TeamList, teamEts_).
+-define(Ets_RoleIDRefTeamID, roleIDRefTeamIDEts_).
+-define(Ets_RoleMatchTeam, roleMatchTeamEts_).
+
+-define(Ets_TeamListGS, teamGSEts_).
+-define(Ets_RoleIDRefTeamIDGS, roleIDRefTeamIDGSEts_).
+
+%% 每个tick处理自动匹配30个人
+-define(MatchTickControlMax, 100).
+
+-define(MatchState_NotIn, 0).
+-define(MatchState_TimeOut, 1).
+-define(MatchState_InQueue, 2).
+
+%%% 队伍操作
+%%% 1(创建, 副本ID);2(邀请加入,目标角色ID); 3(快速入队,队伍ID)
+%%% 4(T人，队员ID);5(转移队长,队员ID);6(队长改变副本ID,副本ID)
+%%% 7(开始副本,*);8(离队,*);9(队伍是否能被别人搜索到 0|1) 默认1表示能被别人搜索
+%%% 10(解散队伍,*); 11(查询系统是否在自动为我匹配队伍, *)
+%%% 12(响应队长开始副本, 0|1) 1表示同意
+%%% 13(取消系统自动为我匹配队伍, *)
+%%% 14(发送组队链接消息, 聊天频道)
+%%% 15(快速组队, 目标角色ID, 副本ID)
+%%% 16离队并进入副本
+%%% 17开启助战(operatedID:1开启助战，2取消助战，param1:副本ID)
+-define(TeamOP_Create, 1).
+-define(TeamOP_Invite, 2).
+-define(TeamOP_FastJoin, 3).
+-define(TeamOP_Kick, 4).
+-define(TeamOP_ChangeLeader, 5).
+-define(TeamOP_ChangeCopyMap, 6).
+-define(TeamOP_StartCopyMap, 7).
+-define(TeamOP_LeaveTeam, 8).
+-define(TeamOP_SetSearchFlag, 9).
+-define(TeamOP_Dismiss, 10).
+-define(TeamOP_QueryMatchState, 11).
+-define(TeamOP_MemberAckStartCopyMap, 12).
+-define(TeamOP_CancelMatchTeam, 13).
+-define(TeamOP_SendTeamQuickInfo, 14).
+-define(TeamOP_FastCreate, 15).
+-define(TeamOP_LeaveTeamAndEnterCopy, 16).
+-define(TeamOP_AssistCopyMap, 17).
+
+%% 附近的人
+-define(Search_Online, 1).
+-define(Search_Nearby, 2).
+-define(Search_Friend, 3).
+-define(Search_Guild, 4).
+
+-define(SearchList_Max, 20).
+-define(SearchRange_Max, 300).
+
+%%%-------------------------------------------------------------------
+%%%-------------------------------------------------------------------
+-record(recTeamMemberInfo, {
+	roleID = 0, 			%%角色ID
+	code = 0,				%%角色流水号
+	serverID = 0,			%%
+	name = "", 				%%角色名
+	guildID = 0,            %%帮会ID
+	guildName = "",         %%帮会名字
+	career = 0, 			%%职业
+    race = 0,               %%种族
+    sex = 0,                %%性别
+	head = 0,               %%头
+	frameID = 0,            %%头像框
+	level = 0, 				%%等级
+	pid = 0,				%%进程ID
+	netPid = 0,				%%其网络进程的ID
+	mapID = 0,				%%当前所在地图ID
+	mapLine = 0,
+	groupID = 0,            %%组ID
+	posX = 0,				%%X坐标
+	posY = 0,				%%Y坐标
+	mapPid = 0,				%%当头所在地图的PID
+	hpPc = 100,             %%当前血量百分比
+%%	petInfo = [],			%%宠物信息 [{petCode, petPid} | _]
+	customInfo = "",		%%扩展消息
+%%	isLeader = false,      %%是队长
+%%	teamID = 0,             %%队伍id
+	targetMapCount = 0,     %%目标副本次数
+	actionPoint = 0,        %%体力值
+	assistMapID = 0,			%%助战地图ID
+	fightingCapacity = 0,	%%战斗力
+	noticeLeaderRemainNumber = 1,	%% 提醒队长开启的剩余次数
+	targetMapStar = 0,%% 地图星级
+	serverName = "" %% 服务器名称
+}).
+
+-record(recTeamInfo,{
+	teamID = 0,
+	copyMapID = 0,
+	leaderID = 0,
+	leaderStartCopyTime = 0,
+	canBeSearch = 1, %% 默认可以被搜索
+	searchStartTime = 0,
+	ackStartCopyRoleList = [],
+	memberList = []
+}).
+
+-record(recTeamMemberInfoGS,{
+	roleID = 0,
+	code = 0,
+	pid = undefined,
+	netPid = undefined,
+	level = 0,
+	assistMapID = 0,
+	serverID = 0,
+	mapPid = 0
+}).
+
+-record(recTeamInfoGS,{
+	teamID = 0,
+	leaderID = 0,
+	copyMapID = 0,
+	canBeSearch = 0,
+	leaderStartCopyTime = 0,
+	memberList = []
+}).
+
+
+-record(recSyncMemberInfo,{
+	roleID = 0,
+	code = 0,
+	pid = undefined,
+	netPid = undefined,
+	level = 0,
+	guildID = 0,
+	guildName = "",
+	mapID = 0,
+	mapLine = 0,
+	groupID = 0,            %%组ID
+	mapPID = undefined,
+	posX = 0,				%%X坐标
+	posY = 0,				%%Y坐标
+	hpPc = 0,
+	force = 0,
+	actionPoint = 0,
+	targetMapCount = 0,
+	targetMapStar = 0
+}).
+
+-record(recRoleRefTeamID,{
+	roleID = 0,
+	teamID = 0,
+	serverID = 0
+}).
+
+-record(recRoleMatchTeam,{
+	roleID = 0,
+	pid = undefined,
+	startTime = 0,
+	queueTimeEndMs = 0,
+	mapList = []
+}).
+
+
+-endif.

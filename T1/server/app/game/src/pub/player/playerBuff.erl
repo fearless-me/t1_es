@@ -1,0 +1,2328 @@
+%%%
+%%%-------------------------------------------------------------------
+%%% @author 罗维
+%%% @copyright (C) 2014, <haowan123>
+%%% @doc
+%%% 技能buff
+%%% @end
+%%% Created : 23. 五月 2014 17:27
+%%%-------------------------------------------------------------------
+
+-module(playerBuff).
+-author(luowei).
+
+-include("gsInc.hrl").
+
+-define(AliveDebuffID, 2010).
+
+
+%% ====================================================================
+%% API functions
+%% ====================================================================
+-export([
+	addBuff/2,
+	addBuff/3,
+	addBuffWithRLvel/3,
+	addBuffWithCasterCode/3,
+	delBuffOnDead/0,
+	delBuff/1,
+	delBuff/2,
+	tickBuff/1,
+	addSpecBuff/2,
+	delSpecBuff/1,
+	delBuffByScene/0,
+	delBuffByState/1,
+	delNoRepeatBuff/1,
+	addNoRepeatBuff/2,
+	addBossBattleBuff/0,
+	getBuffInfoList/0,
+	reConnectBuffList/0,
+	triggerBuffOnDead/0,
+	getTransformationBuffs/0
+]).
+
+-export([
+	addProp/3,
+	addRingBuff/1,
+%%	clearRingBuffFromOther/0,
+	clearRingBuffFromOther/1
+]).
+
+-export([
+	buffCrossDel/0,		%% 进跨服前、回普通服前调用，删除原有BUFF
+	buffCrossAdd/1		%% 进跨服后、回普通服后调用，添加需要补充的buff
+]).
+
+-export([
+	buyBuff/1
+]).
+
+%%添加buff
+-spec addBuff(BuffID, Arg) -> ok when
+	BuffID :: uint(),
+	Arg :: uint() | #recBuffInfo{} | #recSkillEffect{}.
+addBuff(0, _) ->
+	ok;
+addBuff(BuffID, #recSkillEffect{attackerProp = BattleProp} = RecEffect) ->
+	case checkBuff(BuffID) of
+		true ->
+			case isAddBuff(BuffID, BattleProp) of
+				true ->
+					BuffData = buff:initBuffData(BuffID, RecEffect),
+					addBuff(BuffID, BuffData);
+				_ ->
+					skip
+			end;
+		_ ->
+			ok
+	end;
+addBuff(BuffID, #recBuffInfo{} = BuffData) ->
+	BuffList = playerState:getBuffList(),
+	case lists:keymember(BuffID, #recBuff.buffID, BuffList) of
+		true ->
+			NewBuffList = sameBuffRule(BuffData, BuffList);
+		false ->
+			NewBuffList = diffBuffRule(BuffData, BuffList)
+	end,
+	playerState:setBuffList(NewBuffList);
+addBuff(BuffID, Level) ->
+	case checkBuff(BuffID) of
+		true ->
+			BuffCfg = getCfg:getCfgPStack(cfg_buff, BuffID),
+			Factor = playerState:getBattlePropTotal(BuffCfg#buffCfg.durationFactor),
+			EndTime = buff:calcBuffEndTime(Level, Factor, BuffCfg),
+			BuffData = initBuffData(BuffID, 0, Level, trunc(EndTime)),
+			addBuff(BuffID, BuffData);
+		_ ->
+			ok
+	end.
+
+addBuff(BuffID, Level, EndTime) ->
+	case checkBuff(BuffID) of
+		true ->
+			BuffData = initBuffData(BuffID, 0, Level, EndTime),
+			addBuff(BuffID, BuffData);
+		_ ->
+			skip
+	end.
+
+addBuffWithRLvel(BuffID, Level, RuneAddLevel) ->
+	case checkBuff(BuffID) of
+		true ->
+			BuffCfg = getCfg:getCfgPStack(cfg_buff, BuffID),
+			Factor = playerState:getBattlePropTotal(BuffCfg#buffCfg.durationFactor),
+			EndTime = buff:calcBuffEndTimeWithRLevel(Level, RuneAddLevel, Factor, BuffCfg),
+			BuffData = initBuffDataWithRLevel(BuffID, 0, Level, RuneAddLevel, trunc(EndTime)),
+			addBuff(BuffID, BuffData);
+		_ ->
+			ok
+	end.
+
+addBuffWithCasterCode(BuffID, Level, {CasterCode, CasterPid, CasterName}) ->
+	case checkBuff(BuffID) andalso playerState:getCurHp() > 0 of
+		true ->
+			BuffCfg = getCfg:getCfgPStack(cfg_buff, BuffID),
+			Factor = playerState:getBattlePropTotal(BuffCfg#buffCfg.durationFactor),
+			EndTime = buff:calcBuffEndTime(Level, Factor, BuffCfg),
+			BuffData = initBuffData(BuffID, 0, Level, trunc(EndTime)),
+			NewBuffData = BuffData#recBuffInfo{
+				attackerCode = CasterCode,
+				attackerPid = CasterPid,
+				attackerName = CasterName
+			},
+			addBuff(BuffID, NewBuffData);
+		_ ->
+			ok
+	end.
+
+
+%%添加无重复buff
+-spec addNoRepeatBuff(BuffID, Level) -> ok when
+	BuffID :: uint(),
+	Level :: uint().
+addNoRepeatBuff(BuffID, Level) ->
+	case isExist(BuffID) of
+		true ->
+			ok;
+		_ ->
+			addBuff(BuffID, Level)
+	end.
+
+%%添加一些特殊buff
+-spec addSpecBuff(BuffID, Level) -> ok when
+	BuffID :: uint(),
+	Level :: uint().
+addSpecBuff(?KillBuff, Level) ->
+	addBuff(?KillBuff, Level);
+addSpecBuff(?RedNameBuff, _Level) ->
+	skip;
+%%	addBuff(?RedNameBuff, Level);
+addSpecBuff(?PkBuff, Level) ->
+	AttackType = playerState:getKillSelfType(),
+	case AttackType =:= ?AttackerTypePlayer orelse
+		AttackType =:= ?AttackerTypePet of
+		true ->
+			addBuff(?PkBuff, Level);
+		_ ->
+			ok
+	end;
+addSpecBuff(?EnergyBuff, Level) ->
+	Carrer = playerState:getCareer(),
+	case Carrer of
+		?CareerTrainee ->
+			addBuff(?EnergyBuff, Level);
+		_ ->
+			ok
+	end;
+addSpecBuff(BuffID, Level) ->
+	addBuff(BuffID, Level).
+
+%%更新BUFF
+-spec tickBuff(Now) -> ok when
+	Now :: uint().
+tickBuff(Now) ->
+	case playerState:getActionStatus() of
+		?CreatureActionStatusChangeMap ->
+			skip;
+		_ ->
+			lists:foreach(
+				fun(Buff) ->
+					tickOneBuff(Now, Buff)
+				end, playerState:getBuffList()),
+			tickCheckRingBuff(playerState:getRingBuffIDList()),
+			ok
+	end.
+
+%%删除一些特殊buff
+-spec delSpecBuff(BuffID) -> ok when
+	BuffID :: uint().
+delSpecBuff(?KillBuff) ->
+	delBuff(?KillBuff);
+delSpecBuff(?PkBuff) ->
+	delBuff(?PkBuff);
+delSpecBuff(?RedNameBuff) ->
+	skip;
+%%	delBuff(?RedNameBuff);
+delSpecBuff(?EnergyBuff) ->
+	Carrer = playerState:getCareer(),
+	case Carrer of
+		?CareerTrainee ->
+			delBuff(?EnergyBuff);
+		_ ->
+			ok
+	end;
+delSpecBuff(BuffID) ->
+	delBuff(BuffID).
+
+%%根据buff特定状态删除(并且为可移buff)
+-spec delBuffByState(State) -> ok when
+	State :: uint().
+delBuffByState(State) ->
+	BuffList = playerState:getBuffList(),
+	Fun = fun(#recBuff{effect = Effect, remove = IsMove} = Buff, List) ->
+		case State =:= Effect andalso IsMove =:= 1 of
+			true ->
+				deleteOneBuff(Buff, List);
+			_ ->
+				List
+		end
+	      end,
+	NewBuffList = lists:foldl(Fun, BuffList, BuffList),
+	playerState:setBuffList(NewBuffList),
+	ok.
+
+%%夸场景移除buff
+-spec delBuffByScene() -> ok.
+delBuffByScene() ->
+	BuffList = playerState:getBuffList(),
+	Fun =
+		fun(#recBuff{buffID = BuffID} = Buff, Acc) ->
+			#buffCfg{outSenceDel = OutSenceDel} = getCfg:getCfgPStack(cfg_buff, BuffID),
+			case OutSenceDel of
+				?BuffRemove_OutSence ->
+					deleteOneBuff(Buff, Acc);
+				_ ->
+					Acc
+			end
+		end,
+	NewBuffList = lists:foldl(Fun, BuffList, BuffList),
+	playerState:setBuffList(NewBuffList).
+
+%%死亡删除可移除buff
+-spec delBuffOnDead() -> ok.
+delBuffOnDead() ->
+	BuffList = playerState:getBuffList(),
+	Fun = fun(#recBuff{buffID = ID} = Buff, Acc) ->
+		#buffCfg{buffDeathdel = IsDeathDel} = getCfg:getCfgPStack(cfg_buff, ID),
+		case IsDeathDel of
+			?BuffRemove_Dead ->
+				deleteOneBuff(Buff, Acc);
+			_ ->
+				Acc
+		end
+	      end,
+	NewBuffList = lists:foldl(Fun, BuffList, BuffList),
+	playerState:setBuffList(NewBuffList),
+%%	clearRingBuffFromOther(),
+	clearRingBuffOfMe().
+
+%%根据buffID移除
+-spec delBuff(BuffID) -> ok when
+	BuffID :: uint().
+delBuff(0) ->
+	skip;
+delBuff(BuffID) ->
+	BuffList = playerState:getBuffList(),
+	Fun =
+		fun(#recBuff{buffID = ID} = Buff, List) ->
+			case ID =:= BuffID of
+				true ->
+					deleteOneBuff(Buff, List);
+				_ ->
+					List
+			end
+		end,
+	NewBuffList = lists:foldl(Fun, BuffList, BuffList),
+	playerState:setBuffList(NewBuffList),
+	ok.
+
+%%根据buff类型移除(并且为可移buff)
+-spec delBuff(Type, Num) -> ok when
+	Type :: uint(),
+	Num :: uint().
+delBuff(Type, Num) ->
+	BuffList = playerState:getBuffList(),
+	RemoveList = getBuffByType(Type, BuffList),
+	if
+		Num =:= 0 orelse Num >= length(RemoveList) ->
+			removeBuffList(RemoveList);
+		Num < length(RemoveList) ->
+			NewBuffList = lists:sublist(RemoveList, Num),
+			removeBuffList(NewBuffList);
+		true ->
+			skip
+	end.
+
+%%删除无重复buff
+-spec delNoRepeatBuff(BuffID) -> ok when
+	BuffID :: uint().
+delNoRepeatBuff(BuffID) ->
+	case isExist(BuffID) of
+		true ->
+			delBuff(BuffID);
+		_ ->
+			ok
+	end.
+
+%%获取buff信息
+-spec getBuffInfoList() -> list().
+getBuffInfoList() ->
+	BuffList = playerState:getBuffList(),
+	Fun = fun(#recBuff{
+		buffID = BuffID,
+		counter = BuffUID,
+		endTime = EndTime
+	}, Acc) ->
+		Now = time:getUTCNowMS(),
+		case EndTime - Now > 0 of
+			true ->
+				Time = EndTime - Now;
+			_ ->
+				Time = 0
+		end,
+		[#pk_BuffBaseInfo{
+			time = erlang:trunc(Time),
+			buffID = BuffID,
+			buffUID = BuffUID
+		} | Acc]
+	      end,
+	lists:foldl(Fun, [], BuffList).
+
+%%断线重连buffList重新发送给客服端
+-spec reConnectBuffList() -> ok.
+reConnectBuffList() ->
+	Buffs = playerState:getBuffList(),
+	Fun = fun(#recBuff{
+		buffID = ID,
+		level = Level,
+		casterSerial = Serial,
+		counter = Counter,
+		skillID = SkillID,
+		endTime = EndTime
+
+	}) ->
+		broadcastBuffEffect(ID,
+			SkillID,
+			Level,
+			Counter,
+			?OPERATEADD,
+			Serial,
+			EndTime
+
+		)
+	      end,
+	lists:foreach(Fun, Buffs).
+
+%%特殊处理牛头怪物战斗过程中
+%%处理在boss战斗过程中增加的变身buff和其他buff
+addBossBattleBuff() ->
+	Now = time:getUTCNowMS(),
+	case playerState:isPlayerBattleStatus() of
+		true ->
+			BossID = getBossID(),
+			AddTime = getTime(),
+			HateList = playerState:getHateList(),
+
+			%%是否与牛头怪物战斗
+			case isBossBattle(HateList, BossID) of
+				{true, Pid, Code} ->
+					%%判断战斗时间
+					case get(bossBattleTime) of
+						undefined ->
+							put(bossBattleTime, Now),
+							erlang:send_after(500, self(), addBossBattleBuff);
+						Time ->
+							case Now - Time >= AddTime of
+								true ->
+									%%增加玩家变身buff
+									Level = playerState:getLevel(),
+									addBuff(addPlayerBuff(), Level),
+
+									%%通知怪物移除buff
+									psMgr:sendMsg2PS(Pid, delBuff, {Code, delBossBuff()}),
+
+									%%通知客服端播放剧情对话
+									noticeDialogue();
+								_ ->
+									erlang:send_after(500, self(), addBossBattleBuff)
+							end
+					end;
+				_ ->
+					erlang:send_after(500, self(), addBossBattleBuff)
+			end;
+		_ ->
+			erlang:send_after(500, self(), addBossBattleBuff)
+	end.
+
+%%根据仇恨值判断玩家是否正在和牛头怪物战斗
+-spec isBossBattle(HateList, BossID) -> false | {true, pid(), uint()} when
+	HateList :: list(),
+	BossID :: uint().
+isBossBattle([], _BossID) ->
+	false;
+isBossBattle([#recHate{hateCode = Code, hatePid = Pid} | List], BossID) ->
+	case playerSkill:getObject(Code) of
+		#recMapObject{id = ID} when ID =:= BossID ->
+			{true, Pid, Code};
+		_ ->
+			isBossBattle(List, BossID)
+	end.
+
+%%牛头怪物ID
+getBossID() ->
+	663.
+
+%%释放buff时间
+getTime() ->
+	#globalsetupCfg{
+		setpara = [ParaA]
+	} = getCfg:getCfgPStack(cfg_globalsetup, fistplanes),
+	ParaA.
+
+%%移除bossID
+delBossBuff() ->
+	108.
+
+%%增加玩家变身buff
+addPlayerBuff() ->
+	107.
+
+%%通知客服端播放剧情对话
+noticeDialogue() ->
+	DiaLogue = 1504,
+	Msg = #pk_GS2U_PlotDialogue{id = DiaLogue},
+	playerMsg:sendNetMsg(Msg).
+
+%% ====================================================================
+%% Internal functions
+%% ====================================================================
+
+%%检查是否增加buff
+-spec checkBuff(BuffID) -> boolean() when
+	BuffID :: uint().
+checkBuff(BuffID) ->
+	Status = playerState:getStatus(),
+	case getCfg:getCfgByKey(cfg_buff, BuffID) of
+		#buffCfg{buffEffect = Eeffect} ->
+			case misc:testBit(Status, ?CreatureSpecStautsImmune) of
+				true ->
+					case lists:member(Eeffect, ?ImmumeList) of
+						true ->
+							false;
+						_ ->
+							true
+					end;
+				_ ->
+					true
+			end;
+		_ ->
+			false
+	end.
+
+-spec isAddBuff(BuffID :: uint(), BattleProp :: list()) -> boolean().
+isAddBuff(_BuffID, _BattleProp) ->
+	true.
+%% 	#buffCfg{
+%% 		buffEffect = Effect
+%% 	} = getCfg:getCfgPStack(cfg_buff, BuffID),
+%% 	case Effect of
+%% 		?SLEEP ->
+%% 			TargetNum = buff:getPropValue(?Prop_sleepprob, BattleProp),
+%% 			SourceNum = playerState:getBattlePropTotal(?Prop_sleepimmunity),
+%% 			buff:calcProb(TargetNum - SourceNum);
+%% 		?FREEZE ->
+%% 			TargetNum = buff:getPropValue(?Prop_freezerprob, BattleProp),
+%% 			SourceNum = playerState:getBattlePropTotal(?Prop_freezeimmunity),
+%% 			buff:calcProb(TargetNum - SourceNum);
+%% 		?SLOWDOWN ->
+%% 			TargetNum = buff:getPropValue(?Prop_slowdownprob, BattleProp),
+%% 			SourceNum = playerState:getBattlePropTotal(?Prop_slowdownimmunity),
+%% 			buff:calcProb(TargetNum - SourceNum);
+%% 		_ ->
+%% 			true
+%% 	end.
+
+%%玩家自身buff初始化
+-spec initBuffData(BuffID, SkillID, Level, EndTime) -> #recBuffInfo{} when
+	BuffID :: uint(),
+	SkillID :: uint(),
+	Level :: uint(),
+	EndTime :: uint().
+initBuffData(BuffID, SkillID, Level, EndTime) ->
+	InitBaseData = #recBuffInfo{
+		buffID = BuffID,
+		skillID = SkillID,
+		attackerLevel = Level,
+		attackerPid = self(),
+		endTime = EndTime,
+		level = Level,
+		casterSerial = 0,
+		attackerType = ?AttackerTypePlayer,
+		attackerName = playerState:getName(),
+		attackerCode = playerState:getPlayerCode(),
+		attackPropList = playerCalcProp:getBattleProp()
+	},
+	BattleProp = playerCalcProp:getBattleProp(),
+	Energy = playerBase:getSpecBattlePropPower(),
+	buff:setParam(InitBaseData, BattleProp, Level, Energy). %%初始化伤害系数参数
+
+%%玩家自身buff初始化
+-spec initBuffDataWithRLevel(BuffID, SkillID, Level, RuneAddLevel, EndTime) -> #recBuffInfo{} when
+	BuffID :: uint(),
+	SkillID :: uint(),
+	Level :: uint(),
+	RuneAddLevel :: uint(),
+	EndTime :: uint().
+initBuffDataWithRLevel(BuffID, SkillID, Level, RuneAddLevel, EndTime) ->
+	InitBaseData = #recBuffInfo{
+		buffID = BuffID,
+		skillID = SkillID,
+		attackerLevel = Level,
+		attackerPid = self(),
+		endTime = EndTime,
+		level = Level,
+		runeAddLevel = RuneAddLevel,
+		casterSerial = 0,
+		attackerType = ?AttackerTypePlayer,
+		attackerName = playerState:getName(),
+		attackerCode = playerState:getPlayerCode(),
+		attackPropList = playerCalcProp:getBattleProp()
+	},
+	BattleProp = playerCalcProp:getBattleProp(),
+	Energy = playerBase:getSpecBattlePropPower(),
+	buff:setParam(InitBaseData, BattleProp, Level, Energy). %%初始化伤害系数参数
+
+%%相同buff共存规则
+-spec sameBuffRule(BuffData, BuffList) -> list() when
+	BuffData :: #recBuffInfo{},
+	BuffList :: list().
+sameBuffRule(#recBuffInfo{buffID = BuffID, attackerCode = CasterCode} = BuffData, BuffList) ->
+	case getCfg:getCfgPStack(cfg_buff, BuffID) of
+		#buffCfg{oneBuffMultiCaster = MulCaster, oneBuffOneCaster = OneCaster, buffDuration = [Dura, AddLv], buffDurationAddLv = BuffDurationAddLv} = Conf ->
+			Delay = [Dura, AddLv, BuffDurationAddLv],
+			[SameList, DiffList, DiffBuffList] = sameBuffSplit(BuffID, CasterCode, BuffList),
+			RetBuffList =
+				if
+					SameList =:= [] andalso DiffList =:= [] ->
+						BuffList;
+				%%应该存在buff,所以忽略
+					SameList =:= [] ->
+						if
+							MulCaster =:= 0 ->  %%不同施法者可以共存，
+								addOneBuff(BuffData, BuffList);
+							MulCaster =:= 1 ->  %%不同施法者不可以共存，需要等级替换
+								%%有不同施法者buff,进行等级替换(替换规则是先删除后增加)
+								levelReplace(BuffData, DiffList) ++ DiffBuffList;
+							true ->
+								BuffList
+						end;
+					DiffList =:= [] ->
+						if
+							OneCaster =:= 0 ->
+								%%相同施法者可以共存
+								addOneBuff(BuffData, BuffList);
+							OneCaster =:= 1 ->
+								%%相同施法者列表等级刷新，Buff只有一层
+								NewSameList = levelUpdate(BuffData, Delay, SameList),
+								NewSameList ++ DiffBuffList;
+							OneCaster > 1 ->
+								%%相同施法者列表叠加刷新
+								NewSameList = layerUpdate(BuffData, Delay, OneCaster, SameList),
+								NewSameList ++ DiffBuffList;
+							true ->
+								BuffList
+						end;
+					true ->
+						if
+							MulCaster =:= 0 ->
+								%%有相同施法者buff，判断OneCaster
+								if
+									OneCaster =:= 0 ->
+										%%相同施法者可以共存
+										addOneBuff(BuffData, BuffList);
+									OneCaster =:= 1 ->
+										%%相同施法者列表等级刷新，Buff只有一层
+										NewSameList = levelUpdate(BuffData, Delay, SameList),
+										NewSameList ++ DiffList ++ DiffBuffList;
+									OneCaster > 1 ->
+										%%相同施法者列表叠加刷新
+										NewSameList = layerUpdate(BuffData, Delay, OneCaster, SameList),
+										NewSameList ++ DiffList ++ DiffBuffList;
+									true ->
+										BuffList
+								end;
+							MulCaster =:= 1 ->
+								%%有不同施法者buff,进行等级替换(替换规则是先删除后增加)
+								NewDiffList = levelReplace(BuffData, DiffList),
+								NewDiffList ++ SameList ++ DiffBuffList;
+							true ->
+								BuffList
+						end
+				end,
+			case BuffID of
+				400 ->
+					Buff400s = lists:filter(fun(#recBuff{buffID = BID}) -> BID =:= 400 end, RetBuffList),
+					case erlang:length(Buff400s) > 1 of
+						true ->
+							?ERROR("sameBuffRule,roleID:~p,code:~p,buffData:~p,OldBuffList:~p,NewBuffList:~p,Conf:~p,
+							SameList:~p, DiffList:~p, DiffBuffList:~p,stack:~p",
+								[
+									playerState:getRoleID(),
+									playerState:getPlayerCode(),
+									BuffData,
+									BuffList,
+									RetBuffList,
+									Conf,
+									SameList, DiffList, DiffBuffList, misc:getStackTrace()
+								]),
+							ok;
+						_ ->
+							skip
+					end;
+				_ ->
+					skip
+			end,
+			RetBuffList;
+		_ ->
+			BuffList
+	end.
+
+%%相同Buff分离
+-spec sameBuffSplit(BuffID, CasterCode, BuffList) -> list() when
+	BuffID :: uint(),
+	CasterCode :: uint(),
+	BuffList :: list().
+sameBuffSplit(BuffID, CasterCode, BuffList) ->
+	Fun = fun(#recBuff{buffID = ID, casterCode = Code} = Buff, Acc) ->
+		[SameCaster, DiffCaster, DiffBuff] = Acc,
+		if
+			ID =:= BuffID andalso Code =:= CasterCode ->
+				[[Buff | SameCaster], DiffCaster, DiffBuff];
+			ID =:= BuffID andalso Code =/= CasterCode ->
+				[SameCaster, [Buff | DiffCaster], DiffBuff];
+			true ->
+				[SameCaster, DiffCaster, [Buff | DiffBuff]]
+		end
+	      end,
+	lists:foldl(Fun, [[], [], []], BuffList).
+
+%%等级刷新
+-spec levelUpdate(BuffData, Delay, BuffList) -> list() when
+	BuffData :: #recBuffInfo{},
+	Delay :: list(),
+	BuffList :: list().
+levelUpdate(#recBuffInfo{level = Level, runeAddLevel = RuneAddLevel, buffID = BuffID} = BuffData, [Dura, AddLv, BuffDurationAddLv], BuffList) ->
+	Now = time:getUTCNowMS(),
+	NewDura = trunc(Dura + AddLv * (Level - 1) + RuneAddLevel * BuffDurationAddLv),
+	EndTime = case NewDura of
+		          0 ->
+			          0;
+		          _ -> Now + NewDura
+	          end,
+	BuffDamage = buffHurt(BuffData),
+	Fun = fun(Buff, List) ->
+		if
+			Level > Buff#recBuff.level orelse RuneAddLevel =/= Buff#recBuff.runeAddLevel ->
+				BuffProp = buff:calcProp(BuffID, Level, RuneAddLevel, Buff#recBuff.layer),
+				NewBuff = Buff#recBuff{
+					damage = BuffDamage,
+					propList = BuffProp,
+					level = Level,
+					runeAddLevel = RuneAddLevel,
+					endTime = EndTime
+				},
+				updateOneBuff(NewBuff, List, Buff#recBuff.propList);
+			Level =:= Buff#recBuff.level ->
+				NewBuff = Buff#recBuff{
+					damage = BuffDamage,
+					endTime = EndTime
+				},
+				updateOneBuff1(NewBuff, List);
+			true ->
+				List
+		end
+	      end,
+	lists:foldl(Fun, BuffList, BuffList).
+
+%%层数刷新
+-spec layerUpdate(BuffData, Delay, OneCaster, BuffList) -> list() when
+	BuffData :: #recBuffInfo{},
+	Delay :: list(),
+	OneCaster :: uint(),
+	BuffList :: list().
+layerUpdate(#recBuffInfo{level = Level, runeAddLevel = RuneAddLevel, buffID = BuffID} = BuffData, [Dura, AddLv, BuffDurationAddLv], OneCaster, BuffList) ->
+	NewDura = trunc(Dura + AddLv * (Level - 1) + RuneAddLevel * BuffDurationAddLv),
+	BuffDamage = buffHurt(BuffData),
+	Now = time:getUTCNowMS(),
+	Fun = fun(Buff, List) ->
+		if
+			(Level >= Buff#recBuff.level orelse RuneAddLevel =/= Buff#recBuff.runeAddLevel) andalso Buff#recBuff.layer < OneCaster ->
+				Layer = Buff#recBuff.layer + 1,
+				BuffProp = buff:calcProp(BuffID, Level, RuneAddLevel, Layer),
+				NewBuff = Buff#recBuff{
+					damage = BuffDamage,
+					propList = BuffProp,
+					layer = Layer,
+					runeAddLevel = RuneAddLevel,
+					endTime = Now + NewDura
+				},
+				updateOneBuff(NewBuff, List, Buff#recBuff.propList);
+			(Level >= Buff#recBuff.level orelse RuneAddLevel =/= Buff#recBuff.runeAddLevel) andalso Buff#recBuff.layer >= OneCaster ->
+				BuffProp = buff:calcProp(BuffID, Level, RuneAddLevel, Buff#recBuff.layer),
+				NewBuff = Buff#recBuff{
+					damage = BuffDamage,
+					propList = BuffProp,
+					runeAddLevel = RuneAddLevel,
+					endTime = Now + NewDura
+				},
+				updateOneBuff(NewBuff, List, Buff#recBuff.propList);
+			true ->
+				List
+		end
+	      end,
+	lists:foldl(Fun, BuffList, BuffList).
+
+%%等级替换
+-spec levelReplace(BuffData, BuffList) -> list() when
+	BuffData :: #recBuffInfo{},
+	BuffList :: list().
+levelReplace(#recBuffInfo{level = Level} = BuffData, BuffList) ->
+	Fun =
+		fun(Buff, {IsDelete, List}) ->
+			case Level > Buff#recBuff.level of
+				true ->
+					{true, deleteOneBuff(Buff, List)};
+				_ ->
+					{IsDelete, List}
+			end
+		end,
+	case lists:foldl(Fun, {false, BuffList}, BuffList) of
+		{false, _} -> BuffList;
+		{true, BuffList1} ->
+			addOneBuff(BuffData, BuffList1)
+	end.
+
+%%不同buff共存规则
+-spec diffBuffRule(BuffData, BuffList) -> list() when
+	BuffData :: #recBuffInfo{},
+	BuffList :: list().
+diffBuffRule(#recBuffInfo{buffID = BuffID, attackerCode = CasterCode} = BuffData, BuffList) ->
+	case getCfg:getCfgPStack(cfg_buff, BuffID) of
+		#buffCfg{multiBuffMultiCaster = MulCaster, multiBuffOneCaster = OneCaster} ->
+			[SameList, DiffList] = diffBuffSplit(BuffID, CasterCode, BuffList),
+			if
+				SameList =:= [] andalso DiffList =:= [] ->
+					addOneBuff(BuffData, BuffList);
+				SameList =:= [] ->
+					if
+						MulCaster =:= 0 ->
+							addOneBuff(BuffData, BuffList);
+						MulCaster > 0 ->
+							multiOrderReplace(BuffData, MulCaster, DiffList);
+						true ->
+							BuffList
+					end;
+				DiffList =:= [] ->
+					if
+						OneCaster =:= 0 ->
+							%%相同施法者可以共存
+							addOneBuff(BuffData, BuffList);
+						OneCaster > 0 ->
+							%%拥有相同值得先后替换
+							oneOrderReplace(BuffData, OneCaster, SameList);
+						true ->
+							BuffList
+					end;
+				true ->
+					if
+						MulCaster =:= 0 ->
+							%%有相同施法者buff，判断OneCaster
+							if
+								OneCaster =:= 0 ->
+									%%相同施法者可以共存
+									addOneBuff(BuffData, BuffList);
+								OneCaster > 0 ->
+									%%拥有相同值得先后替换
+									NewSameList = oneOrderReplace(BuffData, OneCaster, SameList),
+									NewSameList ++ DiffList;
+								true ->
+									BuffList
+							end;
+						MulCaster > 0 -> %%不同施法者不可以共存，需要先后替换
+							%%有不同施法者buff,进行等级替换(替换规则是先删除后增加)
+							NewDiffList = multiOrderReplace(BuffData, MulCaster, DiffList),
+							NewDiffList ++ SameList;
+						true ->
+							BuffList
+					end
+			end;
+		_ ->
+			BuffList
+	end.
+
+%%不同Buff分离
+-spec diffBuffSplit(BuffID, CasterCode, BuffList) -> list() when
+	BuffID :: uint(),
+	CasterCode :: uint(),
+	BuffList :: list().
+diffBuffSplit(BuffID, CasterCode, BuffList) ->
+	Fun = fun(#recBuff{buffID = ID, casterCode = Code} = Buff, Acc) ->
+		[SameCaster, DiffCaster] = Acc,
+		if
+			ID =/= BuffID andalso Code =:= CasterCode ->
+				[[Buff | SameCaster], DiffCaster];
+			ID =/= BuffID andalso Code =/= CasterCode ->
+				[SameCaster, [Buff | DiffCaster]];
+			true ->
+				Acc
+		end
+	      end,
+	lists:foldl(Fun, [[], []], BuffList).
+
+%%多施法者先后进行替换
+-spec multiOrderReplace(BuffData, MulCaster, BuffList) -> list() when
+	BuffData :: #recBuffInfo{},
+	MulCaster :: uint(),
+	BuffList :: list().
+multiOrderReplace(#recBuffInfo{level = Level} = BuffData, MulCaster, BuffList) ->
+	Fun = fun(Buff, List) ->
+		case MulCaster =:= Buff#recBuff.multiBuffMultiCaster andalso Level >= Buff#recBuff.level of
+			true ->
+				deleteOneBuff(Buff, List);
+			_ ->
+				List
+		end
+	      end,
+
+	addOneBuff(BuffData, lists:foldl(Fun, BuffList, BuffList)).
+
+%%相同施法者先后进行替换
+-spec oneOrderReplace(BuffData, OneCaster, BuffList) -> list() when
+	BuffData :: #recBuffInfo{},
+	OneCaster :: uint(),
+	BuffList :: list().
+oneOrderReplace(#recBuffInfo{level = Level} = BuffData, OneCaster, BuffList) ->
+	Fun = fun(Buff, List) ->
+		case OneCaster =:= Buff#recBuff.multiBuffOneCaster andalso Level >= Buff#recBuff.level of
+			true ->
+				deleteOneBuff(Buff, List);
+			_ ->
+				List
+		end
+	      end,
+	addOneBuff(BuffData, lists:foldl(Fun, BuffList, BuffList)).
+
+%%新增buff
+-spec addOneBuff(BuffData, BuffList) -> list() when
+	BuffData :: #recBuffInfo{},
+	BuffList :: list().
+addOneBuff(BuffData, BuffList) ->
+	Buff = initBuff(BuffData),
+	addProp(Buff#recBuff.buffID, Buff#recBuff.propList, true),
+	broadcastBuffEffect(Buff#recBuff.buffID, Buff#recBuff.skillID, Buff#recBuff.level, Buff#recBuff.counter, ?OPERATEADD, Buff#recBuff.casterSerial, Buff#recBuff.endTime),
+	[Buff | BuffList].
+
+%%更新Buff
+-spec updateOneBuff(Buff, BuffList, OldPropList) -> list() when
+	Buff :: #recBuff{},
+	BuffList :: list(),
+	OldPropList :: list().
+updateOneBuff(Buff, BuffList, OldPropList) ->
+	Cfg = getCfg:getCfgPStack(cfg_buff, Buff#recBuff.buffID),
+	updateProp(Buff#recBuff.buffID, Buff#recBuff.propList, OldPropList),
+	%%delEffect(Buff),
+	addEffect(Buff, Cfg),
+	broadcastBuffEffect(Buff#recBuff.buffID, Buff#recBuff.skillID, Buff#recBuff.level, Buff#recBuff.counter, ?OPERATEREPLACE, Buff#recBuff.casterSerial, Buff#recBuff.endTime),
+	NewBuffList = lists:keyreplace(Buff#recBuff.counter, #recBuff.counter, BuffList, Buff),
+	NewBuffList.
+
+updateOneBuff(Buff, BuffList) ->
+	%%Cfg = getCfg:getCfgPStack(cfg_buff, Buff#recBuff.id),
+	%%delEffect(Buff),
+	%%addEffect(Buff, Cfg),
+	NewBuffList = lists:keyreplace(Buff#recBuff.counter, #recBuff.counter, BuffList, Buff),
+	NewBuffList.
+
+updateOneBuff1(Buff, BuffList) ->
+	%%Cfg = getCfg:getCfgPStack(cfg_buff, Buff#recBuff.id),
+	%%delEffect(Buff),
+	%%addEffect(Buff, Cfg),
+	broadcastBuffEffect(Buff#recBuff.buffID, Buff#recBuff.skillID, Buff#recBuff.level, Buff#recBuff.counter, ?OPERATEREPLACE, Buff#recBuff.casterSerial, Buff#recBuff.endTime),
+	lists:keyreplace(Buff#recBuff.counter, #recBuff.counter, BuffList, Buff).
+
+%%删除Buff
+-spec deleteOneBuff(Buff, BuffList) -> list() when
+	Buff :: #recBuff{},
+	BuffList :: list().
+deleteOneBuff(Buff, BuffList) ->
+	deleteProp(Buff#recBuff.buffID, Buff#recBuff.propList, true),
+	delEffect(Buff, BuffList),
+	broadcastBuffEffect(Buff#recBuff.buffID, Buff#recBuff.skillID, Buff#recBuff.level, Buff#recBuff.counter, ?OPERATEREMOVE, Buff#recBuff.casterSerial, Buff#recBuff.endTime),
+	NewBuffList = lists:keydelete(Buff#recBuff.counter, #recBuff.counter, BuffList),
+	NewBuffList.
+
+%%初始化Buff
+-spec initBuff(BuffData) -> #recBuff{} when
+	BuffData :: #recBuffInfo{}.
+initBuff(#recBuffInfo{buffID = BuffID} = BuffData) ->
+	Now = time:getUTCNowMS(),
+	Cfg = getCfg:getCfgPStack(cfg_buff, BuffID),
+	BuffDamage = buffHurt(BuffData),
+	Counter = setCounter(),
+	BuffDelay = Cfg#buffCfg.buffDelay,
+	BuffStart = Cfg#buffCfg.buffStart,
+	if
+		BuffDelay =:= 0 ->
+			TriggerTime = 0;
+		BuffStart =:= 0 ->
+			TriggerTime = BuffDelay + Now - ?Buff_DELAY_TIME;
+		true ->
+			TriggerTime = Now
+	end,
+	Buff = buff:initBuffRec(Counter, BuffDamage, BuffData),
+%%	?DEBUG("&&&&&&&&&&&&&&&&&&&addbuff:id:~p, effect:~p:~p", [BuffID,  Cfg#buffCfg.buffEffect,Buff#recBuff.effect ]),
+	%%判断是否立即触发buff效果
+	case TriggerTime =:= 0 of
+		true ->
+			addEffect(Buff, Cfg),
+			Buff;
+		_ ->
+			Buff
+	end.
+
+%%设置buff计数器值
+-spec setCounter() -> uint().
+setCounter() ->
+	MaxCounter = getMaxCounter(),
+	if
+		MaxCounter >= ?Buff_MAX_COUNTER ->
+			1;
+		true ->
+			MaxCounter + 1
+	end.
+
+%%获取buff列表最大计数器值
+-spec getMaxCounter() -> uint().
+getMaxCounter() ->
+	BuffList = playerState:getBuffList(),
+	Fun = fun(Buff, Max) ->
+		case Buff#recBuff.counter > Max of
+			true ->
+				Buff#recBuff.counter;
+			_ ->
+				Max
+		end
+	      end,
+	lists:foldl(Fun, 0, BuffList).
+
+%%根据类型获取可移除buff
+-spec getBuffByType(Type, BuffList) -> list() when
+	Type :: uint(),
+	BuffList :: list().
+getBuffByType(?BuffTypeAll, BuffList) ->
+	Fun = fun(Buff, Acc) ->
+		case Buff#recBuff.remove =:= 1 of
+			true ->
+				[Buff | Acc];
+			_ ->
+				Acc
+		end
+	      end,
+	lists:foldl(Fun, [], BuffList);
+getBuffByType(Type, BuffList) ->
+	Fun = fun(#recBuff{buffID = BuffID} = Buff, Acc) ->
+		CfgBuff = getCfg:getCfgPStack(cfg_buff, BuffID),
+		case Buff#recBuff.remove =:= 1 andalso CfgBuff#buffCfg.buffType =:= Type of
+			true ->
+				[Buff | Acc];
+			_ ->
+				Acc
+		end
+	      end,
+	lists:foldl(Fun, [], BuffList).
+
+%%移除buff
+-spec removeBuff(Buff) -> boolean() when
+	Buff :: #recBuff{}.
+removeBuff(#recBuff{buffID = BuffID} = Buff) ->
+	BuffList = playerState:getBuffList(),
+	case lists:keymember(BuffID, #recBuff.buffID, BuffList) of
+		true ->
+			NewBuffList = deleteOneBuff(Buff, BuffList),
+			playerState:setBuffList(NewBuffList),
+			true;
+		false ->
+			false
+	end.
+
+%%移除buff列表
+-spec removeBuffList(BuffList) -> ok when
+	BuffList :: list().
+removeBuffList(BuffList) ->
+	AllList = playerState:getBuffList(),
+	Fun = fun(Buff, List) ->
+		deleteOneBuff(Buff, List)
+	      end,
+	NewList = lists:foldl(Fun, AllList, BuffList),
+	playerState:setBuffList(NewList),
+	ok.
+
+%%增加buff引起属性变化
+-spec addProp(BuffID :: uint(), PropList :: list(), IsNotify :: boolean()) -> ok.
+addProp(BuffID, PropList, IsNotify) ->
+	{PlusList, MultiList} = battleProp:calcPropGroup(PropList, ?EquipOn),
+	playerCalcProp:changeProp_CalcType(PropList, ?EquipOn, true),
+	playerCalcProp:saveBuffProp(BuffID, PlusList, MultiList, add),
+	case getCfg:getCfgByArgs(cfg_buff, BuffID) of
+		#buffCfg{battlepower = 1} ->
+			playerForce:calcPlayerForce(IsNotify);
+		_ -> skip
+	end.
+
+%%删除buff引起属性变化
+-spec deleteProp(BuffID :: uint(), PropList :: list(), IsNotify :: boolean()) -> ok.
+deleteProp(BuffID, PropList, IsNotify) ->
+	{PlusList, MultiList} = battleProp:calcPropGroup(PropList, ?EquipOff),
+	playerCalcProp:changeProp_CalcType(PropList, ?EquipOff, true),
+	playerCalcProp:saveBuffProp(BuffID, PlusList, MultiList, del),
+	case getCfg:getCfgByArgs(cfg_buff, BuffID) of
+		#buffCfg{battlepower = 1} ->
+			playerForce:calcPlayerForce(IsNotify);
+		_ -> skip
+	end.
+
+%%更新buff属性
+-spec updateProp(BuffID :: uint(), PropList :: list(), OldPropList :: list()) -> ok.
+updateProp(BuffID, PropList, OldPropList) ->
+	deleteProp(BuffID, OldPropList, false),
+	addProp(BuffID, PropList, true).
+
+%%更新指定BUFF
+-spec tickOneBuff(Now, #recBuff{}) -> ok when
+	Now :: uint().
+tickOneBuff(
+	Now
+	, #recBuff{
+		effect = Effect
+		, buffID = BuffID
+		, endTime = EndTime
+		, triggerTime = TriggerTime
+		, count = Count
+	} = Buff
+) ->
+	ID = addPlayerBuff(),
+	if
+		Now >= EndTime andalso EndTime =/= 0 andalso Count =< 0 ->
+			removeBuff(Buff);
+		(Effect =:= ?SHAPESHIFTE andalso Count =/= 0) orelse
+			(Effect =:= ?SHAPESHIFTE andalso EndTime =:= 0 andalso BuffID =/= ID) ->
+			?ERROR("roleID [~p] buff [~p] tick arg error:[~p], [~p]", [playerState:getRoleID(), BuffID, Count, EndTime]),
+			removeBuff(Buff);
+		Effect =:= ?MODIFYHPONCE andalso Count =< 0 ->
+			skip;
+		Effect =:= ?EXPLODE ->
+			skip; %% 爆炸跳过周期性触发，只有死亡时触发
+		TriggerTime =/= 0 andalso Now >= TriggerTime ->
+			triggerBuff(Buff),
+			Cfg = getCfg:getCfgPStack(cfg_buff, BuffID),
+			BuffDelay = Cfg#buffCfg.buffDelay,
+			if
+				BuffDelay > 0 ->
+					BuffList = playerState:getBuffList(),
+					NewBuff = Buff#recBuff{triggerTime = Now + BuffDelay, count = Count - 1},
+					NewBuffList = updateOneBuff(NewBuff, BuffList),
+					playerState:setBuffList(NewBuffList);
+				true ->
+					skip
+			end;
+		true ->
+			skip
+	end,
+	ok.
+
+%%广播buff效果变化
+-spec broadcastBuffEffect(BuffID, SkillID, Level, Counter, Type, Serial, EndTime) -> ok when
+	BuffID :: uint(),
+	SkillID :: uint(),
+	Level :: uint(),
+	Counter :: uint(),
+	Type :: uint(),
+	Serial :: uint(),
+	EndTime :: int32().
+broadcastBuffEffect(BuffID, SkillID, Level, Counter, Type, Serial, EndTime) ->
+	Code = playerState:getPlayerCode(),
+%%	List = lists:seq(132, 147) ++ [55, 63, 64, 65, 107],
+%%	case lists:member(BuffID, List) of
+%%		true ->
+%%			if
+%%				Type =:= 0 ->
+%%					?INFO("code ~p add buff ~p , counter is ~p", [Code, BuffID, Counter]);
+%%				Type =:= 1 ->
+%%					?INFO("code ~p remove buff ~p, counter is ~p", [Code, BuffID, Counter]);
+%%				true ->
+%%					?INFO("code ~p replace buff ~p, counter is ~p", [Code, BuffID, Counter]),
+%%					ok
+%%			end;
+%%		_ ->
+%%			skip
+%%	end,
+
+	NewEndTime =
+		case EndTime == 0 of
+			true ->
+				-1;
+			_ ->
+				case EndTime < time:getUTCNowMS() of
+					true -> 0;
+					_ ->
+						EndTime - time:getUTCNowMS()
+				end
+		end,
+	Msg =
+		#pk_GS2U_BuffInfo{
+			code = Code,
+			buffUID = Counter,
+			buffID = BuffID,
+			serial = Serial,
+			skillID = SkillID,
+			level = Level,
+			flag = Type,
+			endTime = NewEndTime
+		},
+%%	?DEBUG("broadcastBuffEffect,~p",[Msg]),
+
+	%% 其它角色可能没有正确进入场景，不可直接通过网络进程广播该消息
+	%% playerMsg:sendMsgToNearPlayer(Msg, true),
+	MapPid = playerState:getMapPid(),
+	PlayerEts = playerState:getMapPlayerEts(),
+	PlayerCode = playerState:getPlayerCode(),
+	mapView:sendMsg2NearPlayerPid(MapPid, PlayerEts, pk_GS2U_BuffInfo, Msg, PlayerCode, self()),
+	ok.
+
+%%广播客服端buff伤害
+-spec broadcastBuffDamage(Buff, Counter, BuffDamage, OldHp) -> ok when
+	Buff :: #recBuff{},
+	Counter :: uint(),
+	BuffDamage :: float(),
+	OldHp :: integer().
+broadcastBuffDamage(#recBuff{buffID = BuffID} = Buff, Counter, BuffDamage, OldHp) ->
+	TargetCode = playerState:getPlayerCode(),
+	CurHp = playerState:getCurHp(),
+	MaxHp = playerState:getMaxHp(),
+	HpPer = skill:getPercent(CurHp, MaxHp),
+	Msg = #pk_GS2U_BuffHurt{
+		code = TargetCode,
+		buffUID = Counter,
+		buffID = BuffID,
+		hp_per = HpPer,
+		damageHp = BuffDamage
+	},
+	%%?DEBUG("code ~p has ~p buff hurt is ~p,~p~n",[TargetCode, BuffID, BuffDamage,Msg]),
+	playerMsg:sendMsgToNearPlayer(Msg, true),
+	statHurt(-BuffDamage, Buff, OldHp, TargetCode).
+
+%%buff伤害计算
+buffHurt(
+	#recBuffInfo{damageMultiply = DamageMultiply, damagePlus = DamagePlus} = BuffData
+) ->
+	Status = playerState:getStatus(),
+	case buff:isCalcHurt(DamagePlus, DamageMultiply, Status) of
+		true ->
+			AbsorbValue = playerState:getAbsorbShield(),
+			IsIn = misc:testBit(Status, ?CreatureSpeStatusAdropblood),
+			{TargetTotalDamage, NewAbsorbValue} = buff:calcBuffDamageToMe(IsIn,
+				BuffData
+				, playerState:getPlayerCode()
+				, AbsorbValue
+				, playerState:getLevel()
+				, playerCalcProp:getBattleProp()
+			),
+			playerState:setAbsorbShield(NewAbsorbValue),
+			erlang:trunc(TargetTotalDamage);
+		_ ->
+			0
+	end;
+buffHurt(
+	#recBuff{} = Buff
+) ->
+	BuffData = buff:makeBuffInfoFromBuff(Buff),
+	buffHurt(BuffData).
+
+%%判断buff是否存在
+-spec isExist(BuffID) -> boolean() when
+	BuffID :: uint().
+isExist(BuffID) ->
+	BuffList = playerState:getBuffList(),
+	lists:keymember(BuffID, #recBuff.buffID, BuffList).
+
+%%判断死亡buff是否删除
+-spec isDeathDelete(Flag) -> boolean() when
+	Flag :: uint().
+isDeathDelete(Flag) ->
+	case Flag =:= 1 of
+		true ->
+			true;
+		_ ->
+			false
+	end.
+
+%%触发一个BUFF的效果 
+-spec triggerBuff(#recBuff{}) -> ok.
+triggerBuff(Buff) ->
+	Cfg = getCfg:getCfgPStack(cfg_buff, Buff#recBuff.buffID),
+	doTriggerBuff(
+		Buff, Cfg,
+		Cfg#buffCfg.damageType =/= ?SkillDamageTypeMedicine
+	),
+	ok.
+doTriggerBuff(_Buff, #buffCfg{buffEffect = ?Tips} = Cfg, _Any) ->
+	buff:broadcastNoticeView(
+		?TipsWhen_Tick,
+		playerState:getPos(),
+		playerState:getNetPid(),
+		playerState:getMapPid(),
+		playerState:getGroupID(),
+		playerState:getMapPlayerEts(),
+		Cfg
+	),
+	ok;
+doTriggerBuff(Buff, Cfg, false) ->
+	NewBuff = Buff#recBuff{
+		damage = buffHurt(Buff)
+	},
+	addEffect(NewBuff, Cfg);
+doTriggerBuff(Buff, Cfg, true) ->
+	Hp = playerState:getCurHp(),
+	case Hp > 0 of
+		true ->
+			BuffDamage = buffHurt(Buff),
+			case BuffDamage > 0 of
+				true ->
+					NewHp = Hp - BuffDamage,
+					?DEBUG("player[~p] trigger buff [~p],andalso hurt is ~p",
+						[Buff#recBuff.casterCode, Buff#recBuff.buffID, BuffDamage]),
+					case NewHp > 0 of
+						true ->
+							playerState:setCurHp(NewHp),
+							broadcastBuffDamage(
+								Buff,
+								Buff#recBuff.counter,
+								-(BuffDamage),
+								Hp
+							),
+							addEffect(Buff, Cfg);
+						_ ->
+							playerState:setCurHp(0),
+							broadcastBuffDamage(
+								Buff,
+								Buff#recBuff.counter,
+								-(BuffDamage),
+								Hp
+							),
+							addEffect(Buff, Cfg),
+							case isDeathDelete(Cfg#buffCfg.buffDeathdel) of
+								true ->
+									removeBuff(Buff);
+								_ ->
+									skip
+							end,
+							EtsMonster = playerState:getMapMonsterEts(),
+							MonsterID =
+								case ets:info(EtsMonster, size) of
+									undefined ->
+										0;
+									_ ->
+										case ets:lookup(EtsMonster, Buff#recBuff.casterCode) of
+											#recMapObject{id = MonsterID_} ->
+												MonsterID_;
+											_ ->
+												0
+										end
+								end,
+							playerBattle:onDead(
+								Buff#recBuff.casterCode,
+								Buff#recBuff.casterPid,
+								Buff#recBuff.casterType,
+								getBuffCasterName(Buff),
+								Buff#recBuff.skillID,
+								MonsterID,
+								0
+							)
+					end;
+				_ ->
+					addEffect(Buff, Cfg)
+			end;
+		_ ->
+			skip
+	end.
+
+%%buff效果
+-spec addEffect(#recBuff{}, #buffCfg{}) -> ok.
+
+%%默认效果
+addEffect(#recBuff{effect = ?DEFAULT}, #buffCfg{}) ->
+	ok;
+
+%%无敌效果
+addEffect(#recBuff{effect = ?INVINCIBLE}, #buffCfg{}) ->
+	%%delBuff(?BuffTypeSub, 0), 
+	playerState:addStatus(?CreatureSpeStautsInvincible);
+
+%%睡眠效果
+addEffect(#recBuff{effect = ?SLEEP}, #buffCfg{}) ->
+	playerMove:stopMove(true),
+	playerSkill:breakUseSkill(true),
+	playerState:addStatus(?CreatureSpeStatusComa);
+
+%%冰冻效果
+addEffect(#recBuff{effect = ?FREEZE}, #buffCfg{}) ->
+	playerMove:stopMove(true),
+	playerSkill:breakUseSkill(true),
+	playerState:addStatus(?CreatureSpeStautsFreeze);
+
+%%形变效果
+addEffect(#recBuff{effect = ?RESHAPE}, #buffCfg{}) ->
+	playerSkill:breakUseSkill(true),
+	playerState:addStatus(?CreatureSpeStautsDeformation);
+
+%%沉默效果
+addEffect(#recBuff{effect = ?SLIENCE}, #buffCfg{}) ->
+	case playerState:getCurUseSlowSkill() of
+		#recCurUseSkill{skillID = SkillID} ->
+			#skillCfg{skillSchool = School} = getCfg:getCfgPStack(cfg_skill, SkillID),
+			case School =:= ?SkillMagic of
+				true ->
+					playerSkill:breakUseSkill(true);
+				_ ->
+					skip
+			end;
+		_ ->
+			skip
+	end,
+	playerState:addStatus(?CreatureSpeStautsSilence);
+
+%%缴械效果
+addEffect(#recBuff{effect = ?DISARM}, #buffCfg{}) ->
+	case playerState:getCurUseSlowSkill() of
+		#recCurUseSkill{skillID = SkillID} ->
+			#skillCfg{weaponNeed = WeaponNeed} = getCfg:getCfgPStack(cfg_skill, SkillID),
+			if
+				WeaponNeed >= 1 andalso WeaponNeed =< 4 ->
+					playerSkill:breakUseSkill(true);
+				true ->
+					skip
+			end;
+		_ ->
+			skip
+	end,
+	playerState:addStatus(?CreatureSpeStautsDisarm);
+
+%%减速效果
+addEffect(#recBuff{effect = ?SLOWDOWN}, #buffCfg{}) ->
+	ok;
+%%PK保护效果
+addEffect(#recBuff{effect = ?PKPROTECT}, #buffCfg{}) ->
+	playerState:addStatus(?CreatureSpeStautsPkProtect);
+
+%%和平使者效果
+addEffect(#recBuff{effect = ?PeaceEnvoy}, #buffCfg{}) ->
+	playerState:addStatus(?CreatureSpecStautsPeaceEnvoy);
+
+%%获取触发技能效果
+addEffect(#recBuff{effect = ?GETTRISKILL, level = Level}, #buffCfg{} = Cfg) ->
+	B1 = Cfg#buffCfg.buffParam1,
+	B2 = Cfg#buffCfg.buffParam2,
+	B3 = Cfg#buffCfg.buffParam3,
+	B4 = Cfg#buffCfg.buffParam4,
+	[playerSkill:addTriggerSkill(SkillID, Level) || SkillID <- [B1, B2, B3, B4]],
+	ok;
+
+%%属性转换
+addEffect(#recBuff{counter = BuffUID, buffID = BuffID, effect = ?PROPCONVERT}, #buffCfg{} = Cfg) ->
+	B1 = Cfg#buffCfg.buffParam1,
+	B2 = Cfg#buffCfg.buffParam2,
+	B3 = Cfg#buffCfg.buffParam3,
+	B4 = Cfg#buffCfg.buffParam4,
+	delOldConvert(BuffUID, BuffID),
+	BattleProp = playerCalcProp:getBattleProp(),
+	PropValue = battleProp:getBattlePropTotalValue(BattleProp, B1),
+	ConvertValue = PropValue * B3,
+	put({oldConvert, BuffUID}, {B2, B4, ConvertValue}),
+	{AddProps, MultiProps} =
+		case B4 =:= 0 of
+			true ->
+				playerCalcProp:saveBuffProp(BuffID, [{B2, ConvertValue}], [], add),
+				{[{B2, ConvertValue}], []};
+			_ ->
+				playerCalcProp:saveBuffProp(BuffID, [], [{B2, ConvertValue}], add),
+				{[], [{B2, ConvertValue}]}
+		end,
+	playerCalcProp:changeProp_AddMulti(AddProps, MultiProps, ?EquipOn, true);
+
+%%红名buff
+addEffect(#recBuff{effect = ?RedName}, #buffCfg{}) ->
+	playerState:addStatus(?CreatureSpecStautsRedName);
+
+%%buff伤害转换效果
+addEffect(#recBuff{effect = ?CONVERT} = Buff, #buffCfg{buffParam1 = B1}) ->
+	Hp = playerState:getCurHp(),
+	Max = playerState:getMaxHp(),
+	HpConvert = (Buff#recBuff.damage * Buff#recBuff.layer * B1),
+	NewHp = erlang:trunc(misc:clamp(Hp + HpConvert, 0, Max)),
+	playerBattle:noticeBlood(NewHp, Hp),
+	broadcastBuffDamage(Buff, Buff#recBuff.counter, HpConvert, Hp),
+	playerState:setCurHp(NewHp);
+
+%%修改生命值效果
+addEffect(#recBuff{effect = ?MODIFYHPONCE} = Buff, #buffCfg{} = Cfg) ->
+	modifyHp(Buff, Cfg);
+
+addEffect(#recBuff{effect = ?MODIFYHP} = Buff, #buffCfg{} = Cfg) ->
+	modifyHp(Buff, Cfg);
+
+%%修改魔法值效果
+addEffect(#recBuff{effect = ?MODIFYMP}, #buffCfg{}) ->
+	ok;
+%%	Mp = playerState:getCurMp(),
+%%	MaxMp = playerState:getBattlePropTotal(?Prop_mana),
+%%	NewMp = Mp - B1 - MaxMp * B2,
+%%	playerState:setCurMp(NewMp);
+
+%%虚无效果
+addEffect(#recBuff{effect = ?BLUR}, #buffCfg{}) ->
+	playerState:addStatus(?CreatureSpeStautsBlur);
+
+%%伤害吸收效果
+addEffect(#recBuff{effect = ?HURTABSORB}, #buffCfg{} = Cfg) ->
+	B1 = Cfg#buffCfg.buffParam1,
+	B2 = Cfg#buffCfg.buffParam2,
+	B3 = Cfg#buffCfg.buffParam3,
+	AbsorbValue = (B1 + B2 * B3) * playerState:getBattlePropTotal(?Prop_AbsorbShield),
+	playerState:setAbsorbShield(AbsorbValue),
+	?DEBUG("buff = ~p, AbsorbValue = ~p", [Cfg#buffCfg.buffId, AbsorbValue]),
+	ok;
+
+%%变身效果
+addEffect(#recBuff{effect = ?SHAPESHIFTE}, #buffCfg{}) ->
+	ok;
+%%	playerState:addStatus(?CreatureSpeStautsShapeShifte);
+
+%%变身获得技能效果
+addEffect(#recBuff{effect = ?SHAPESKILL}, #buffCfg{}) ->
+	ok;
+%%修改能量值效果
+addEffect(#recBuff{effect = ?MODIFYENERGY}, #buffCfg{buffParam1 = B1, buffParam2 = B2}) ->
+	Carrer = playerState:getCareer(),
+	case Carrer =:= B1 of
+		true ->
+			PowerEnergy = playerBase:getSpecBattlePropPower(),
+			MaxEnergy = playerBase:getMaxSpecBattlePropPower(),
+			CurEnergy = misc:clamp(B2 + PowerEnergy, 0, MaxEnergy),
+			playerBase:setSpecBattlePropPower(CurEnergy),
+			playerBase:sendPropSp(trunc(CurEnergy), trunc(PowerEnergy));
+		_ ->
+			skip
+	end,
+	ok;
+%%免疫效果
+addEffect(#recBuff{effect = ?IMMUNE}, #buffCfg{} = _Cfg) ->
+	%%B1 = Cfg#buffCfg.buffParam1,
+	%%B2 = Cfg#buffCfg.buffParam2,
+	%%B3 = Cfg#buffCfg.buffParam3,
+	%%B4 = Cfg#buffCfg.buffParam4,
+	%%[delBuffByState(State) || State <- [B1, B2, B3, B4]],
+	playerState:addStatus(?CreatureSpecStautsImmune),
+	ok;
+
+%%免疫抓取,击退效果
+addEffect(#recBuff{effect = ?IMMUNEEFFECT}, #buffCfg{}) ->
+	playerState:addStatus(?CreatureSpecStautsImmuneShift);
+
+%%不受控制效果
+addEffect(#recBuff{effect = ?NOCONTROL}, #buffCfg{}) ->
+	playerState:addStatus(?CreatureSpeStautsNoControl);
+
+%%获取调用技能
+addEffect(#recBuff{effect = ?CALLSKILL, level = Level}, #buffCfg{buffParam1 = B1}) ->
+	playerSkill:addBuffCallSkill(B1, Level);
+
+%%定身
+addEffect(#recBuff{effect = ?FIXEDBODY}, #buffCfg{}) ->
+	playerState:addStatus(?CreatureSpeStautsFixed);
+
+%%嘲讽
+addEffect(#recBuff{effect = ?RIDICULE}, #buffCfg{}) ->
+	playerState:addStatus(?CreatureSpecStautsRidicule);
+
+%% 爆炸
+addEffect(#recBuff{effect = ?EXPLODE}, #buffCfg{buffParam1 = BuffIDSelf, buffParam2 = BuffIDOther, buffParam3 = TarNum}) ->
+%%	?DEBUG("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx EXPLODE -1 "),
+	case playerState:getMapPlayerEts() of
+		undefined ->
+			skip;
+		PlayerEts ->
+			%% 给RP玩家同步
+			MapPid = playerState:getMapPid(),
+			GroupID = playerState:getGroupID(),
+			GuildID = playerState:getGuildID(),
+			CasterCode = playerState:getPlayerCode(),
+			CasterName = playerState:getName(),
+			PlayerLevel = playerState:getLevel(),
+			{X, Y} = playerState:getPos(),
+			?DEBUG("EXPLODE getter:~ts, code=~p, playerid=~p, mapID=~p,guildid=~p",
+				[CasterName, CasterCode, playerState:getRoleID(), playerState:getMapID(), GuildID]),
+
+			case mapView:getNearViewObject(MapPid, PlayerEts, ?ObjTypePlayer, {X, Y}, GroupID) of
+				List when List =/= [] ->
+					TarList = lists:filter(
+						fun(#recMapObject{guild = Gid, code = ObjectCode}) ->
+							if
+								ObjectCode =:= CasterCode ->
+									false;
+								Gid =:= 0 ->
+									true;
+								true ->
+									GuildID /= Gid
+							end
+						end, List),
+					TarLen = length(TarList),
+					KillNum = misc:clamp(TarNum, 1, 5),
+					NewTarList = case TarLen =< KillNum of
+						             true ->
+							             TarList;
+						             _ ->
+							             misc:randUniqueFromList(KillNum, TarList)
+					             end,
+
+					?DEBUG("EXPLODE excute, tarNum=~p, len=~p, tarList=~p", [TarNum, TarLen, NewTarList]),
+					psMgr:sendMsg2PS(self(), addBuff, {PlayerLevel, BuffIDSelf}),
+					MakeNameF =
+						fun(#recMapObject{pid = PlayerPid, name = Name}, Acc) ->
+							psMgr:sendMsg2PS(PlayerPid, addBuffWithCode, {PlayerLevel, BuffIDOther, {CasterCode, self(), CasterName}}),
+							[Name | Acc]
+						end,
+					NameList = lists:foldl(MakeNameF, [], NewTarList),
+
+					case length(NameList) > 0 of
+						true ->
+							NewNameList = makeArg(KillNum - TarLen, [CasterName | NameList], ""),
+							NoticeMsg = stringCfg:getString(guildGrabboomkilltips, NewNameList),
+							core:sendBroadcastNotice(NoticeMsg);
+						_ ->
+							skip
+					end,
+					ok;
+				_ ->
+					skip
+			end,
+			ok
+	end;
+
+addEffect(#recBuff{effect = ?Polymorph}, #buffCfg{buffParam1 = TargetType, buffParam2 = TargetID}) ->
+	onPolymorph(true, TargetType, TargetID),
+	ok;
+addEffect(
+	#recBuff{effect = ?Ring},
+	#buffCfg{buffId = BuffID, buffParam1 = P1}
+) ->
+	MapPid = playerState:getMapPid(),
+	Level = playerState:getLevel(),
+	PlayerEts = playerState:getMapPlayerEts(),
+	MonsterEts = playerState:getMapMonsterEts(),
+	PlayerCode = playerState:getPlayerCode(),
+	KillList = playerState:getKillPlayerList(),
+	BuffTargetList =
+		case myEts:readRecord(PlayerEts, PlayerCode) of
+			#recMapObject{} = Target ->
+				buff:getRingBuffTarget(BuffID, Target, MapPid, PlayerEts, MonsterEts, KillList, P1);
+			_ ->
+				[]
+		end,
+	Msg = #recRingBuff{
+		srcCode = PlayerCode
+		, srcLevel = Level
+		, srcPid = self()
+		, srcMapPid = MapPid
+		, targetCode = 0
+		, ringBuffID = BuffID
+	},
+	[psMgr:sendMsg2PS(TargetPid, addRingBuff, Msg#recRingBuff{targetCode = TargetCode})
+		|| #recMapObject{pid = TargetPid, code = TargetCode} <- BuffTargetList
+		, TargetCode =/= PlayerCode
+	],
+	ok;
+addEffect(#recBuff{effect = ?AntiInjury}, #buffCfg{buffParam1 = Type, buffParam2 = Percent}) ->
+	case Type of
+		?SkillDamageTypePhys ->
+			playerState:setAntiInjury(Type, Percent);
+		?SkillDamageTypeMagic ->
+			playerState:setAntiInjury(Type, Percent);
+		_ ->
+			playerState:setAntiInjury(?SkillDamageTypePhys, Percent),
+			playerState:setAntiInjury(?SkillDamageTypeMagic, Percent),
+			skip
+	end,
+	ok;
+
+%%掉一滴血
+addEffect(#recBuff{effect = ?Adropblood}, #buffCfg{}) ->
+	playerState:addStatus(?CreatureSpeStatusAdropblood);
+
+addEffect(#recBuff{effect = ?Tips}, #buffCfg{} = Cfg) ->
+	buff:broadcastNoticeView(
+		?TipsWhen_Add,
+		playerState:getPos(),
+		playerState:getNetPid(),
+		playerState:getMapPid(),
+		playerState:getGroupID(),
+		playerState:getMapPlayerEts(),
+		Cfg
+	),
+	ok;
+
+addEffect(_, _) ->
+	ok.
+
+%% 别人给我加的
+addRingBuff(#recRingBuff{ringBuffID = RingBuffID} = Msg) ->
+	case canAddRingBuff(RingBuffID) of
+		true ->
+			doAddRingBuff(Msg);
+		_ ->
+			skip
+	end,
+	ok.
+
+doAddRingBuff(#recRingBuff{
+	srcCode = SrcCode
+	, srcLevel = SrcLevel
+	, srcPid = SrcPid
+	, srcMapPid = SrcMapPid
+	, targetCode = _TargetCode
+	, ringBuffID = RingBuffID
+} = Msg) ->
+	MapPid = playerState:getMapPid(),
+	SelfCode = playerState:getPlayerCode(),
+	PlayerEts = playerState:getMapPlayerEts(),
+	MonsterEts = playerState:getMapMonsterEts(),
+	#buffCfg{
+		buffEffect = ?Ring
+		, buffParam1 = P1
+		, buffParam2 = P2
+		, buffParam3 = P3
+		, buffParam4 = P4
+	} = getCfg:getCfgByArgs(cfg_buff, RingBuffID),
+	if
+		MapPid =/= SrcMapPid ->
+			skip;
+		true ->
+			case checkRingBuffDistance([PlayerEts, MonsterEts], SrcCode, SelfCode, P1) of
+				true ->
+					saveNewRingBuff(Msg),
+					[addBuffWithCasterCode(BuffID, SrcLevel, {SrcCode, SrcPid, ""})
+						|| BuffID <- [P2, P3, P4], BuffID > 0
+					];
+				_ ->
+					skip
+			end
+	end,
+	ok.
+
+canAddRingBuff(BuffID) ->
+	Status = playerState:getActionStatus(),
+	if
+		Status =:= ?CreatureActionStatusDead ->
+			false;
+		true ->
+			L = playerState:getRingBuffIDList(),
+			case lists:keyfind(BuffID, #recRingBuff.ringBuffID, L) of
+				false ->
+					true;
+				_ ->
+					false
+			end
+	end.
+
+%% 保存别人给我加的光环
+saveNewRingBuff(#recRingBuff{} = Msg) ->
+	L0 = playerState:getRingBuffIDList(),
+	L1 = lists:keystore(
+		Msg#recRingBuff.ringBuffID
+		, #recRingBuff.ringBuffID
+		, L0
+		, Msg
+	),
+	playerState:setRingBuffIDList(L1).
+
+%% 删除别人给我加的光环
+removeRingBuff(RingBuffID) ->
+	L0 = playerState:getRingBuffIDList(),
+	L1 = lists:keydelete(RingBuffID, #recRingBuff.ringBuffID, L0),
+	playerState:setRingBuffIDList(L1).
+
+%% 删除光环技能加的buff
+removeBuffFromRing(RingBuffID) ->
+	#buffCfg{
+		buffParam2 = P2
+		, buffParam3 = P3
+		, buffParam4 = P4
+	} = getCfg:getCfgByArgs(cfg_buff, RingBuffID),
+	[delBuff(BuffID) || BuffID <- [P2, P3, P4], BuffID > 0].
+
+
+checkRingBuffDistance(_EtsList, SrcCode1, SrcCode1, _MaxDist) ->
+	false;
+checkRingBuffDistance(EtsList, SrcCode, TargetCode, MaxDist) ->
+	case mapView:getObjectDist(EtsList, SrcCode, TargetCode) of
+		{ok, Dist, _SrcObj, _TargetObj} ->
+			MaxDist >= Dist;
+		_ ->
+			false
+	end.
+
+%% 周期检查别人给我加的buff
+tickCheckRingBuff([]) ->
+	skip;
+tickCheckRingBuff([Msg | L]) ->
+	tickCheckRingBuff1(Msg),
+	tickCheckRingBuff(L).
+
+
+tickCheckRingBuff1(#recRingBuff{
+	srcPid = SrcPid,
+	srcCode = SrcCode,
+	srcLevel = SrcLevel,
+	ringBuffID = RingBuffID
+}) ->
+	MeCode = playerState:getPlayerCode(),
+	#buffCfg{
+		buffEffect = ?Ring
+		, buffParam1 = MaxDist
+		, buffParam2 = P2
+		, buffParam3 = P3
+		, buffParam4 = P4
+		, buffDelay = BuffDelay
+	} = getCfg:getCfgByArgs(cfg_buff, RingBuffID),
+	IsSrcAlive = is_process_alive(SrcPid),
+	PlayerEts = playerState:getMapPlayerEts(),
+	MonsterEts = playerState:getMapMonsterEts(),
+	NeedRemove =
+		if
+			IsSrcAlive =:= false ->
+				true;
+			true ->
+				case
+					checkRingBuffDistance(
+						[PlayerEts, MonsterEts]
+						, SrcCode
+						, MeCode
+						, MaxDist
+					)
+				of
+					false ->
+						true;
+					_ ->
+						false
+				end
+		end,
+	case NeedRemove of
+		true ->
+			removeBuffFromRing(RingBuffID),
+			removeRingBuff(RingBuffID);
+		_ ->
+			case checkRingBuffDelay(RingBuffID, BuffDelay) of
+				true ->
+					[addBuffWithCasterCode(BuffID, SrcLevel, {SrcCode, SrcPid, ""})
+						|| BuffID <- [P2, P3, P4], BuffID > 0
+					];
+				_ ->
+					skip
+			end
+	end,
+	ok.
+
+%% 检查光环buff是否可以刷新
+%% 此处强制限制时间间隔大于3秒
+checkRingBuffDelay(RingBuffID, BuffDelay) ->
+	TrueBuffDelay = case BuffDelay > 3000 of
+		true ->
+			BuffDelay;
+		_ ->
+			3000
+	end,
+	Now = time:getSyncTimeMSFromDBS(),
+	case Now - playerState:ringBuffLastTime(RingBuffID) > TrueBuffDelay of
+		true ->
+			playerState:ringBuffLastTime(RingBuffID, Now),
+			true;
+		_ ->
+			false
+	end.
+
+%%% 删除所有别人给我加的buff(死亡时)
+%clearRingBuffFromOther() ->
+%	clearRingBuffFromOther({0, 0}).
+
+clearRingBuffFromOther({SrcCode, _Any}) ->
+	L0 = playerState:getRingBuffIDList(),
+	L1 =
+		lists:foldl(
+			fun(#recRingBuff{ringBuffID = RingBuffID, srcCode = CurCode} = Rec, Acc) ->
+				case SrcCode =:= 0 orelse SrcCode =:= CurCode of
+					true ->
+						removeBuffFromRing(RingBuffID),
+						Acc;
+					_ ->
+						[Rec | Acc]
+				end
+			end, [], L0),
+	playerState:setRingBuffIDList(L1),
+	ok.
+
+%% 通知别人删除我给TA加的buff
+clearRingBuffOfMe() ->
+	PlayerCode = playerState:getPlayerCode(),
+	PlayerEts = playerState:getMapPlayerEts(),
+	myEts:etsFor(PlayerEts,
+		fun(#recMapObject{pid = TargetPid, code = TargetCode}) ->
+			psMgr:sendMsg2PS(TargetPid, clearRingBuffOfMe, {PlayerCode, TargetCode})
+		end),
+	ok.
+
+%%
+makeArg(N, TL, _Default) when N =< 0 ->
+	TL;
+makeArg(N, TL, Default) ->
+	makeArg(N - 1, TL ++ [Default], Default).
+
+
+%%移除buff效果，属性
+-spec delEffect(Buff, BuffList) -> ok when
+	Buff :: #recBuff{}, BuffList :: list().
+delEffect(Buff, BuffList) ->
+	Cfg = getCfg:getCfgPStack(cfg_buff, Buff#recBuff.buffID),
+	delEffect(Buff, Cfg, BuffList).
+
+%%移除无敌
+delEffect(#recBuff{effect = ?INVINCIBLE}, #buffCfg{}, BuffList) ->
+	case isRemoveEff(?INVINCIBLE, BuffList) of
+		true ->
+			playerState:clearStatus(?CreatureSpeStautsInvincible);
+		_ ->
+			skip
+	end,
+	ok;
+
+%%移除睡眠
+delEffect(#recBuff{effect = ?SLEEP}, #buffCfg{}, BuffList) ->
+	case isRemoveEff(?SLEEP, BuffList) of
+		true ->
+			playerState:clearStatus(?CreatureSpeStatusComa);
+		_ ->
+			skip
+	end,
+	ok;
+
+%%移除冰冻
+delEffect(#recBuff{effect = ?FREEZE}, #buffCfg{}, BuffList) ->
+	case isRemoveEff(?FREEZE, BuffList) of
+		true ->
+			playerState:clearStatus(?CreatureSpeStautsFreeze);
+		_ ->
+			skip
+	end,
+	ok;
+
+%%移除形变
+delEffect(#recBuff{effect = ?RESHAPE}, #buffCfg{}, BuffList) ->
+	case isRemoveEff(?RESHAPE, BuffList) of
+		true ->
+			playerState:clearStatus(?CreatureSpeStautsDeformation);
+		_ ->
+			skip
+	end,
+	ok;
+
+%%移除沉默
+delEffect(#recBuff{effect = ?SLIENCE}, #buffCfg{}, BuffList) ->
+	case isRemoveEff(?SLIENCE, BuffList) of
+		true ->
+			playerState:clearStatus(?CreatureSpeStautsSilence);
+		_ ->
+			skip
+	end,
+	ok;
+
+%%移除缴械
+delEffect(#recBuff{effect = ?DISARM}, #buffCfg{}, BuffList) ->
+	case isRemoveEff(?DISARM, BuffList) of
+		true ->
+			playerState:clearStatus(?CreatureSpeStautsDisarm);
+		_ ->
+			skip
+	end,
+	ok;
+
+%%移除虚无
+delEffect(#recBuff{effect = ?BLUR}, #buffCfg{}, BuffList) ->
+	case isRemoveEff(?BLUR, BuffList) of
+		true ->
+			playerState:clearStatus(?CreatureSpeStautsBlur);
+		_ ->
+			skip
+	end,
+	ok;
+%%移除减速
+delEffect(#recBuff{effect = ?SLOWDOWN}, #buffCfg{}, _BuffList) ->
+	ok;
+
+%%移除PK保护
+delEffect(#recBuff{effect = ?PKPROTECT}, #buffCfg{}, BuffList) ->
+	case isRemoveEff(?PKPROTECT, BuffList) of
+		true ->
+			playerState:clearStatus(?CreatureSpeStautsPkProtect);
+		_ ->
+			skip
+	end,
+	ok;
+
+%%移除和平使者效果
+delEffect(#recBuff{effect = ?PeaceEnvoy}, #buffCfg{}, BuffList) ->
+	case isRemoveEff(?PeaceEnvoy, BuffList) of
+		true ->
+			playerState:clearStatus(?CreatureSpecStautsPeaceEnvoy);
+		_ ->
+			skip
+	end,
+	ok;
+
+%%移除红名buff
+delEffect(#recBuff{effect = ?RedName}, #buffCfg{}, BuffList) ->
+	case isRemoveEff(?RedName, BuffList) of
+		true ->
+			playerState:clearStatus(?CreatureSpecStautsRedName);
+		_ ->
+			skip
+	end,
+	ok;
+
+%%移除变身
+delEffect(#recBuff{effect = ?SHAPESHIFTE}, #buffCfg{}, BuffList) ->
+	case isRemoveEff(?SHAPESHIFTE, BuffList) of
+		true ->
+			playerState:clearStatus(?CreatureSpeStautsShapeShifte);
+		_ ->
+			skip
+	end,
+	ok;
+
+%%移除免疫
+delEffect(#recBuff{effect = ?IMMUNE}, #buffCfg{}, BuffList) ->
+	case isRemoveEff(?IMMUNE, BuffList) of
+		true ->
+			playerState:clearStatus(?CreatureSpecStautsImmune);
+		_ ->
+			skip
+	end,
+	ok;
+
+%%移除抓取等免疫
+delEffect(#recBuff{effect = ?IMMUNEEFFECT}, #buffCfg{}, BuffList) ->
+	case isRemoveEff(?IMMUNEEFFECT, BuffList) of
+		true ->
+			playerState:clearStatus(?CreatureSpecStautsImmuneShift);
+		_ ->
+			skip
+	end,
+	ok;
+
+%%移除不受控制
+delEffect(#recBuff{effect = ?NOCONTROL}, #buffCfg{}, BuffList) ->
+	case isRemoveEff(?NOCONTROL, BuffList) of
+		true ->
+			playerState:clearStatus(?CreatureSpeStautsNoControl);
+		_ ->
+			skip
+	end,
+	ok;
+
+%%移除定身
+delEffect(#recBuff{effect = ?FIXEDBODY}, #buffCfg{}, BuffList) ->
+	case isRemoveEff(?FIXEDBODY, BuffList) of
+		true ->
+			playerState:clearStatus(?CreatureSpeStautsFixed);
+		_ ->
+			skip
+	end,
+	ok;
+
+%%移除嘲讽
+delEffect(#recBuff{effect = ?RIDICULE}, #buffCfg{}, BuffList) ->
+	case isRemoveEff(?RIDICULE, BuffList) of
+		true ->
+			playerState:clearStatus(?CreatureSpecStautsRidicule);
+		_ ->
+			skip
+	end,
+	ok;
+
+%%移除buff获取的触发技能
+delEffect(#recBuff{effect = ?GETTRISKILL}, #buffCfg{} = Cfg, _BuffList) ->
+	B1 = Cfg#buffCfg.buffParam1,
+	B2 = Cfg#buffCfg.buffParam2,
+	B3 = Cfg#buffCfg.buffParam3,
+	B4 = Cfg#buffCfg.buffParam4,
+	[playerSkill:delTriggerSkill(SkillID) || SkillID <- [B1, B2, B3, B4]],
+	ok;
+
+%%移除buff转换属性
+delEffect(#recBuff{counter = BuffUID, buffID = BuffID, effect = ?PROPCONVERT}, #buffCfg{}, _BuffList) ->
+	delOldConvert(BuffUID, BuffID);
+
+%%移除buff调用技能
+delEffect(#recBuff{effect = ?CALLSKILL}, #buffCfg{buffParam1 = B1}, _BuffList) ->
+	playerSkill:delBuffCallSkill(B1);
+
+%%移除伤害吸收效果
+delEffect(#recBuff{effect = ?HURTABSORB}, #buffCfg{} = Cfg, _BuffList) ->
+	?DEBUG("buff = ~p, delAbsor", [Cfg#buffCfg.buffId]),
+	delOldAbsor();
+
+delEffect(#recBuff{effect = ?Polymorph}, #buffCfg{buffParam1 = TargetType, buffParam2 = TargetID}, _BuffList) ->
+	onPolymorph(false, TargetType, TargetID),
+	ok;
+
+delEffect(#recBuff{effect = ?Ring}, #buffCfg{}, _BuffList) ->
+	clearRingBuffOfMe(),
+	ok;
+delEffect(#recBuff{effect = ?AntiInjury}, #buffCfg{buffParam1 = Type}, _BuffList) ->
+	case Type of
+		?SkillDamageTypePhys ->
+			playerState:setAntiInjury(Type, 0);
+		?SkillDamageTypeMagic ->
+			playerState:setAntiInjury(Type, 0);
+		_ ->
+			playerState:setAntiInjury(?SkillDamageTypePhys,  0),
+			playerState:setAntiInjury(?SkillDamageTypeMagic, 0)
+	end,
+	ok;
+
+%%移除定身
+delEffect(#recBuff{effect = ?Adropblood}, #buffCfg{}, BuffList) ->
+	case isRemoveEff(?Adropblood, BuffList) of
+		true ->
+			playerState:clearStatus(?CreatureSpeStatusAdropblood);
+		_ ->
+			skip
+	end,
+	ok;
+delEffect(#recBuff{effect = ?Tips}, #buffCfg{} = Cfg, _BuffList) ->
+	buff:broadcastNoticeView(
+		?TipsWhen_Del,
+		playerState:getPos(),
+		playerState:getNetPid(),
+		playerState:getMapPid(),
+		playerState:getGroupID(),
+		playerState:getMapPlayerEts(),
+		Cfg
+	),
+	ok;
+delEffect(_, _, _) ->
+	ok.
+
+
+%% 1 monster,2 NPC
+onPolymorph(true, 1, TargetID) ->
+	playerState:addStatus(?CreatureSpeStatusPolymorph),
+	Level = playerState:getLevel(),
+	#monsterCfg{monsterSkill = Skills} = getCfg:getCfgByArgs(cfg_monster, TargetID),
+	[playerSkill:addPolymorphSkill(SkillID, Level) || SkillID <- Skills],
+	ok;
+onPolymorph(false, 1, TargetID) ->
+	playerState:clearStatus(?CreatureSpeStatusPolymorph),
+	#monsterCfg{monsterSkill = Skills} = getCfg:getCfgByArgs(cfg_monster, TargetID),
+	[playerSkill:delPolymorphSkill(SkillID) || SkillID <- Skills],
+	ok;
+onPolymorph(true, 2, _TargetID) ->
+	playerState:addStatus(?CreatureSpeStatusPolymorph),
+	playerState:addStatus(?CreatureSpeStautsDisarm),
+	ok;
+onPolymorph(false, 2, _TargetID) ->
+	playerState:clearStatus(?CreatureSpeStatusPolymorph),
+	playerState:clearStatus(?CreatureSpeStautsDisarm),
+	ok;
+onPolymorph(_Flag, _Type, _TargetID) ->
+	ok.
+
+%%是否移除当前效果
+-spec isRemoveEff(Eff, BuffList) -> boolean() when
+	Eff :: uint(),
+	BuffList :: list().
+isRemoveEff(Eff, BuffList) ->
+	BuffNum = getBuffNum(Eff, BuffList),
+	case BuffNum > 1 of
+		true ->
+			false;
+		_ ->
+			true
+	end.
+
+%%根据状态获取buff数量
+-spec getBuffNum(Effect, BuffList) -> uint() when
+	Effect :: uint(),
+	BuffList :: list().
+getBuffNum(Effect, BuffList) ->
+	Fun = fun(#recBuff{effect = Eff}, Num) ->
+		case Eff =:= Effect of
+			true ->
+				Num + 1;
+			_ ->
+				Num
+		end
+	      end,
+	lists:foldl(Fun, 0, BuffList).
+
+
+%%删除转换前效果改变的属性
+-spec delOldConvert(BuffUID :: uint(), BuffID :: uint()) -> ok.
+delOldConvert(BuffUID, BuffID) ->
+	case get({oldConvert, BuffUID}) of
+		undefined ->
+			skip;
+		{Prop, MultiOrPlus, OldValue} ->
+			put({oldConvert, BuffUID}, undefined),
+			{AddProps, MultiProps} =
+				case MultiOrPlus =:= 0 of
+					true ->
+						playerCalcProp:saveBuffProp(BuffID, [{Prop, -OldValue}], [], del),
+						{[{Prop, OldValue}], []};
+					_ ->
+						playerCalcProp:saveBuffProp(BuffID, [], [{Prop, OldValue}], del),
+						{[], [{Prop, OldValue}]}
+				end,
+			playerCalcProp:changeProp_AddMulti(AddProps, MultiProps, ?EquipOff, true)
+	end,
+	ok.
+
+%%删除上次吸收盾属性值
+-spec delOldAbsor() -> ok.
+delOldAbsor() ->
+	playerState:setAbsorbShield(0),
+%%	BattleProp = playerCalcProp:getBattleProp(),
+%%	case get(oldAbsor) of
+%%		undefined ->
+%%			skip;
+%%		OldValue ->
+%%			put(oldAbsor, undefined),
+%%			NewBattleProp = battleProp:addBattlePropAddValue(BattleProp, [{?Prop_absorbshield, -OldValue}]),
+%%			playerCalcProp:calcBattleProp(NewBattleProp, false, true),
+%%
+%%			CurAbsor = playerState:getAbsorbShield(),
+%%			MaxAbsor = playerState:getBattlePropTotal(?Prop_absorbshield),
+%%			case CurAbsor >= MaxAbsor of
+%%				true ->
+%%					playerState:setAbsorbShield(MaxAbsor);
+%%				_ ->
+%%					skip
+%%			end
+%%	end,
+	ok.
+
+%% 死亡触发
+triggerBuffOnDead() ->
+	BuffList = playerState:getBuffList(),
+	Fun =
+		fun(#recBuff{buffID = BuffID} = Buff) ->
+%%			?DEBUG("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx deadTriggerBuff buff - 1:~p:effect:~p ", [BuffID, Buff#recBuff.effect]),
+			Cfg = getCfg:getCfgPStack(cfg_buff, BuffID),
+			deadTriggerBuff(Buff, Cfg)
+		end,
+	lists:foreach(Fun, BuffList),
+	ok.
+
+deadTriggerBuff(#recBuff{buffID = BuffID, effect = ?EXPLODE} = Buff, Cfg) ->
+%%	?DEBUG("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx deadTriggerBuff buff - 2:~p ", [Buff]),
+	delBuff(BuffID),
+	addEffect(Buff, Cfg);
+deadTriggerBuff(_Buff, _Cfg) ->
+	skip.
+
+%% 获取变形BUFFs
+-spec getTransformationBuffs() -> [#recBuff{}, ...].
+getTransformationBuffs() ->
+	BuffList = playerState:getBuffList(),
+	F =
+		fun(#recBuff{buffID = BuffID} = Buff, Acc) ->
+			case buff:isTransformationBuff(BuffID) of
+				true ->
+					[Buff | Acc];
+				_ ->
+					Acc
+			end
+		end,
+	lists:foldl(F, [], BuffList).
+
+%% 个别BUFF处理攻击者名称改变
+-spec getBuffCasterName(Buff::#recBuff{}) -> string().
+getBuffCasterName(#recBuff{buffID = ?AliveDebuffID}) ->
+	stringCfg:getString(alive_killbybuff);
+getBuffCasterName(#recBuff{casterName = CasterName}) ->
+	CasterName.
+
+
+%% 进跨服前、回普通服前调用，删除原有BUFF
+buffCrossDel() ->
+	playerMarriage:delSkillWhenWillBackFromCross(),	%% 删除婚姻技能（用buff实现）避免属性带回
+	buffCrossDel(playerState:getBuffList(), []).
+buffCrossDel([], Acc) ->
+	Acc;
+buffCrossDel([#recBuff{buffID = BuffID, level = Level, endTime = EndTime} | T], Acc) ->
+	delBuff(BuffID),
+	case getCfg:getCfgByKey(cfg_buff, BuffID) of
+		#buffCfg{outSenceDel = 0} ->
+			buffCrossDel(T, [{BuffID, Level, EndTime} | Acc]);
+		_ ->
+			buffCrossDel(T, Acc)	%% 忽略其它
+	end.
+
+%% 进跨服后、回普通服后调用，添加需要补充的buff
+buffCrossAdd([]) ->
+	ok;
+buffCrossAdd([{BuffID, Level, EndTime} | T]) ->
+	playerBuff:addBuff(BuffID, Level, EndTime),
+	buffCrossAdd(T).
+
+modifyHp(#recBuff{casterCode = Code, casterPid = Pid, casterType = Type, skillID = SkillID} = Buff, #buffCfg{buffParam1 = B1, buffParam2 = B2}) ->
+	Hp = playerState:getCurHp(),
+	MaxHp = playerState:getMaxHp(),
+	GetHealthFactor = playerState:getBattlePropTotal(?Prop_GetHealthFactor),
+	ModifyValue = B1 + MaxHp * B2,
+	ModifyHp =
+		case ModifyValue > 0 of
+			true ->
+				erlang:trunc(ModifyValue * GetHealthFactor);
+			_ ->
+				erlang:trunc(ModifyValue)
+		end,
+
+	NewHp = erlang:trunc(misc:clamp(ModifyHp + Hp, 0, MaxHp)),
+	playerBattle:noticeBlood(NewHp, Hp),
+	playerState:setCurHp(NewHp),
+	broadcastBuffDamage(Buff, Buff#recBuff.counter, ModifyHp, Hp),
+	case NewHp > 0 of
+		true ->
+			skip;
+		_ when Hp /= NewHp ->
+			EtsMonster = playerState:getMapMonsterEts(),
+			MonsterID =
+				case ets:info(EtsMonster, size) of
+					undefined ->
+						0;
+					_ ->
+						case ets:lookup(EtsMonster, Code) of
+							#recMapObject{id = MonsterID_} ->
+								MonsterID_;
+							_ ->
+								0
+						end
+				end,
+			playerBattle:onDead(Code, Pid, Type, getBuffCasterName(Buff), SkillID, MonsterID, 0);
+		_ ->
+			skip
+	end,
+	ok.
+
+buyBuff(ID) ->
+	case getCfg:getCfgByKey(cfg_buff_buy, ID) of
+		#buff_buyCfg{price = [MoneyUse, Value], buffid = BuffID} when MoneyUse =:= ?CoinUseTypeDiamond; MoneyUse =:= ?CoinUseTypeDiamondJustNotBind ->
+			case playerMoney:canUseCoin(MoneyUse, Value) of
+				true ->
+					PLog = #recPLogTSMoney{reason = ?CoinUseReasonBuyBuff, param = ID, target = ?PLogTS_System, source = ?PLogTS_PlayerSelf},
+					playerMoney:useMoneyInCross(playerState:getRoleID(), MoneyUse, Value, PLog),
+					addBuff(BuffID, 1),
+					playerMsg:sendNetMsg(#pk_GS2U_BuyBuffSuccess{id = ID});
+				_ when MoneyUse =:= ?CoinUseTypeDiamond ->
+					playerMsg:sendErrorCodeMsg(?ErrorCode_MallBuy_BindDiamond_Not_Enough);
+				_ ->
+					playerMsg:sendErrorCodeMsg(?ErrorCode_MallBuy_Diamond_Not_Enough)
+			end;
+		_ ->
+			?ERROR("buy buff error:~p,~p", [playerState:getRoleID(), ID])
+	end.
+
+%%%-------------------------------------------------------------------
+%% internal:buff造成的伤害统计
+%% 主要是活动统计和副本统计两方面
+-spec statHurt(BuffDamage::integer(), Buff::#recBuff{}, TargetHp::integer(), TargetCode::uint64()) -> no_return().
+statHurt(BuffDamage, _Buff, _TargetHp, _TargetCode) when BuffDamage =< 0 ->
+	skip;	%% 没有造成有效伤害则不统计，包括回血
+statHurt(BuffDamage, #recBuff{casterCode = CasterCode}, TargetHp, _TargetCode) ->
+	MapID = playerState:getMapID(),
+	case playerBattle:isStatHurt(MapID) of
+		true ->
+			case playerBattle:getAttackInfoForStat(CasterCode) of
+				{0, _, _, _} ->
+					skip;	%% 已经无法追溯攻击者
+				{RealAttackerID, RealAttackerPid, AttackType, AttackID} ->
+					case uidMgr:checkUID(?UID_TYPE_Role, RealAttackerID) of
+						true ->
+							%% 仅对角色来源攻击进行统计
+							RealDamage = erlang:min(BuffDamage, TargetHp),
+							psMgr:sendMsg2PS(RealAttackerPid, statHurt, {MapID, -RealDamage, AttackType, AttackID});
+						_ ->
+							skip
+					end
+			end;
+		_ ->
+			skip	%% 除了副本和活动，不需要统计
+	end.

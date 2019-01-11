@@ -7,9 +7,6 @@
 -export([start/0, run_now/0, pause/0, continue/0]).
 -export([info/1]).
 
-%% Helper macro for declaring children of supervisor
--define(CHILD(I, Type), {I, {I, start_link, []}, permanent, 5000, Type, [I]}).
-
 %% Application callbacks
 -export([start/2, stop/1]).
 
@@ -64,5 +61,13 @@ stop(_State) ->
 %% Supervisor callbacks
 %% ===================================================================
 init([]) ->
-    {ok, { {one_for_one, 5, 10}, [?CHILD(fly_worker, worker)]} }.
+    {
+        ok,
+        {
+            {one_for_one, 5, 10},
+            [
+                {fly_worker, {fly_worker, start_link, []}, permanent, 5000, worker, [fly_worker]}
+            ]
+        }
+    }.
 
