@@ -612,10 +612,10 @@
 %%
 %%getNextResetTime(NowTime, 1) ->
 %%	%% 按天重置
-%%	time:getDayBeginSeconds(time2:convertSecToDateTime(NowTime)) + ?ResetTimeHour * 3600 + 24 * 3600;
+%%	misc_time:getDayBeginSeconds(time2:convertSecToDateTime(NowTime)) + ?ResetTimeHour * 3600 + 24 * 3600;
 %%getNextResetTime(NowTime, 2) ->
 %%	%% 按周重置
-%%	time:getWeekBeginSecondsByDay(time2:convertSecToDateTime(NowTime)) + ?ResetTimeHour * 3600 + 24 * 7 * 3600;
+%%	misc_time:getWeekBeginSecondsByDay(time2:convertSecToDateTime(NowTime)) + ?ResetTimeHour * 3600 + 24 * 7 * 3600;
 %%getNextResetTime(NowTime, 3) ->
 %%	%% 按月重置
 %%	{{Year,Month,_Day}, {_Hour,_Minute,_Second}} = time2:convertSecToDateTime(NowTime),

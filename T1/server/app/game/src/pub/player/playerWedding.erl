@@ -725,8 +725,8 @@
 %%									playerMsg:sendNetMsg(Msg);
 %%								_->
 %%
-%%									{{_, _, _}, {Hour, _, _}} = time:convertSec2DateTime(StartTime),
-%%									LastSeconds =   StartTime- time:getSyncTime1970FromDBS(),
+%%									{{_, _, _}, {Hour, _, _}} = misc_time:convertSec2DateTime(StartTime),
+%%									LastSeconds =   StartTime- misc_time:gregorian_seconds_from_1970( ),
 %%									LastDay = LastSeconds /?DayOfSeconds,
 %%									case LastSeconds >0 andalso LastDay =<?Week andalso Hour >9 of
 %%										true ->

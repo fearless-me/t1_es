@@ -254,7 +254,7 @@ onCreateRoleAck({RoleID, BaseRole, #pk_U2GS_RequestCreatePlayer{name = Name, car
 				sex = Sex,
 				head = Head,
 				level = 1,
-				lastUpdateTime = time:getSyncTime1970FromDBS()
+				lastUpdateTime = misc_time:gregorian_seconds_from_1970( )
 			},
 			ets:insert(ets_rolekeyinfo, RoleKeyRec),
 
@@ -268,8 +268,8 @@ onCreateRoleAck({RoleID, BaseRole, #pk_U2GS_RequestCreatePlayer{name = Name, car
 				accountID = playerState:getAccount(),
 				pid = self(),
 				netPid = playerState:getNetPid(),
-				loginTime = time:getUTCNowMS(),
-				playerSaveTime = time:getUTCNowMS()
+				loginTime = misc_time:milli_seconds(),
+				playerSaveTime = misc_time:milli_seconds()
 			},
 			ets:insert(ets_rec_OnlinePlayer, OnlineRec),
 			playerState2:loginNormal(true),
@@ -288,7 +288,7 @@ onCreateRoleAck({RoleID, BaseRole, #pk_U2GS_RequestCreatePlayer{name = Name, car
 
 			playerSkillLearn:initRoleSkill(Career),
 			%%playerSkillLearn:initRoleWakeSkill(),
-			playerState:setRoleCreateTime({datetime, time:getChinaNowDateTime1970()}),%%初始化创建时间
+			playerState:setRoleCreateTime({datetime, misc_time:getLocalDateTime()}),%%初始化创建时间
 %%			playerRecharge:isHavePreRecharge(),
 
 			%% log
@@ -601,7 +601,7 @@ onLoadRoleData(#pk_U2GS_SelPlayerEnterGame{roleID = RoleID}) when erlang:is_inte
 					playerScene:onRequestEnterMap(TMapID, InitX + OffsetX, InitY + OffsetY),
 
 					%% log online
-					NowTime = time:getUTCNowSec(),
+					NowTime = misc_time:utc_seconds(),
 					playerState:setOnlineTime(NowTime),
 					dbLog:sendSaveLogPlayerOffline(
 						playerBase:getrecLogPlayerOffline(1),
@@ -851,7 +851,7 @@ loadRoleData(#rec_base_role{
 
 	playerBase:setSpecBattlePropPower(0),
 
-	NowTime = time:getUTCNowSec(),
+	NowTime = misc_time:utc_seconds(),
 	playerState:setOnlineTime(NowTime),
 %% log online
 	dbLog:sendSaveLogPlayerOffline(
@@ -901,8 +901,8 @@ tryToOnlineEnterMap() ->
 				accountID = playerState:getAccount(),
 				pid = self(),
 				netPid = playerState:getNetPid(),
-				loginTime = time:getUTCNowMS(),
-				playerSaveTime = time:getUTCNowMS()
+				loginTime = misc_time:milli_seconds(),
+				playerSaveTime = misc_time:milli_seconds()
 			},
 			ets:insert(ets_rec_OnlinePlayer, OnlineRec),
 			playerState2:loginNormal(true);
@@ -1044,7 +1044,7 @@ canChangeName(RoleID) ->
 					_ ->
 						0
 				end,
-	misc:convertBoolFromInt(CanRename).
+	misc:i2b(CanRename).
 changeName(RoleID, Name) ->
 	case playerState:getRoleID() of
 		RoleID ->

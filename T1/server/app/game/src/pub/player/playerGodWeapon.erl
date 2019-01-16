@@ -309,7 +309,7 @@ levelupWeapon_levelup(
 			newLevel = NewLevel,
 			costItem = CostItemReal,
 			costCoin = CostCoinReal,
-			time = time:getLogTimeSec()
+			time = misc_time:utc_seconds()
 		},
 	dbLog:sendSaveLogWeaponInfo(LogGodWeapon).
 

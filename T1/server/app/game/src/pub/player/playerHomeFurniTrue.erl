@@ -280,13 +280,13 @@
 %%%%										source = ?PLogTS_PlayerSelf
 %%%%									},
 %%%%									playerMoney:decCoin(Type, NeedMoney, PLog),
-%%%%									FurnitureInfo =  #hasFurnitureInfo{uid = uidMgr:makeFurnitrueUID(),time =time:getSyncTimeFromDBS() ,itemID = ItemID},
+%%%%									FurnitureInfo =  #hasFurnitureInfo{uid = uidMgr:makeFurnitrueUID(),time =misc_time:localtime_seconds() ,itemID = ItemID},
 %%%%									NewFurniTrueList =misc:term_to_string( [FurnitureInfo|ListFurnitruePackDataOld]),
 %%%%									NewArea =   AreaOld#rec_home_furnitrue{roleID =  RoleID, furniTrueData = NewFurniTrueList},
 %%%%									ets:insert(?HomeFurnitrueEts, NewArea),
 %%%%									homeInterface:saveHome(NewArea),
 %%%%									Msg = #pk_GS2U_BuyFurnitureiResult_Sync{isSucc  = true,
-%%%%										data = #pk_FurnitruePackData{uid = uidMgr:makeFurnitrueUID(),time =time:getSyncTimeFromDBS() ,itemID = ItemID}},
+%%%%										data = #pk_FurnitruePackData{uid = uidMgr:makeFurnitrueUID(),time =misc_time:localtime_seconds() ,itemID = ItemID}},
 %%%%									playerMsg:sendNetMsg(Msg);
 %%%%								_->
 %%%%									playerMsg:sendErrorCodeMsg(?ErrorCode_CorsAttachBattle_NotCoin)
@@ -307,14 +307,14 @@
 %%%%										source = ?PLogTS_PlayerSelf
 %%%%									},
 %%%%									playerMoney:decCoin(Type, NeedMoney, PLog),
-%%%%									FurnitureInfo =  [#hasFurnitureInfo{uid = uidMgr:makeFurnitrueUID(),time =time:getSyncTimeFromDBS() ,itemID = ItemID}],
+%%%%									FurnitureInfo =  [#hasFurnitureInfo{uid = uidMgr:makeFurnitrueUID(),time =misc_time:localtime_seconds() ,itemID = ItemID}],
 %%%%									FurnitureInfoNew =  misc:term_to_string(FurnitureInfo),
 %%%%									A1 = #rec_home_furnitrue{roleID =  RoleID, furniTrueData = FurnitureInfoNew},
 %%%%									ets:insert(?HomeFurnitrueEts, A1),
 %%%%									homeInterface:saveHome({insert, A1}),
 %%%%
 %%%%									Msg = #pk_GS2U_BuyFurnitureiResult_Sync{isSucc  = true,
-%%%%										data = #pk_FurnitruePackData{uid = uidMgr:makeFurnitrueUID(),time =time:getSyncTimeFromDBS() ,itemID = ItemID}},
+%%%%										data = #pk_FurnitruePackData{uid = uidMgr:makeFurnitrueUID(),time =misc_time:localtime_seconds() ,itemID = ItemID}},
 %%%%									playerMsg:sendNetMsg(Msg);
 %%%%								_->
 %%%%									playerMsg:sendErrorCodeMsg(?ErrorCode_CorsAttachBattle_NotCoin)
@@ -949,7 +949,7 @@
 %%%%	%%					false ->
 %%%%	%%						skip;
 %%%%	%%					#recHomeFurniTrue{message = MessageOldList} = OldFurniTure ->
-%%%%	%%						MessageTime =  time:getSyncTimeFromDBS(),
+%%%%	%%						MessageTime =  misc_time:localtime_seconds(),
 %%%%	%%						New = #recHomeFurniMessage{roleID = {RoleID,MessageTime} ,name =Name,time = MessageTime ,content = base64:encode_to_string(Message)},
 %%%%	%%						NewMessageList = [New |MessageOldList ],
 %%%%	%%						AscSortHomeFurniList =lists:keysort(#recHomeFurniMessage.time, NewMessageList),
@@ -960,7 +960,7 @@
 %%%%	%%						ets:insert(?HomeAreaEts, AreaNew),
 %%%%	%%						homeInterface:saveHome(AreaNew),
 %%%%	%%						HomeFurniMessage =  #pk_HomeFurniMessage{roleID  = RoleID,name =Name,time =
-%%%%	%%						time:getSyncTimeFromDBS() ,content = Message},
+%%%%	%%						misc_time:localtime_seconds() ,content = Message},
 %%%%	%%						Msg = #pk_GS2U_SendmessageResult_Sync{message = HomeFurniMessage},
 %%%%	%%						sendMsgToMapPlayer(playerState:getMapPlayerEts(),Msg)
 %%%%	%%				end
@@ -1117,9 +1117,9 @@
 %%%%											[]
 %%%%									end,
 %%
-%%%%								CurTime =  time:getSyncTime1970FromDBS(),
-%%%%								DateTimeNow = time:convertSec2DateTime(CurTime),
-%%%%								TimeWeekStart_LocalFrom0 = time:getWeekBeginSecondsByDay(DateTimeNow),
+%%%%								CurTime =  misc_time:gregorian_seconds_from_1970( ),
+%%%%								DateTimeNow = misc_time:convertSec2DateTime(CurTime),
+%%%%								TimeWeekStart_LocalFrom0 = misc_time:getWeekBeginSecondsByDay(DateTimeNow),
 %%%%								NewGetAwardTime = TimeWeekStart_LocalFrom0 +7 *24 *3600,
 %%%%								playerPropSync:setProp(?SerProp_HomeFurniTrueReward,{1,NewGetAwardTime}),
 %%
@@ -1153,7 +1153,7 @@
 %%%%%%		{AwardsEachMondayNum,Time} = playerPropSync:getProp(?SerProp_HomeFurniTrueReward),
 %%%%%%		case AwardsEachMondayNum >0 of
 %%%%%%			true->
-%%%%%%				CurTime =  time:getSyncTime1970FromDBS(),
+%%%%%%				CurTime =  misc_time:gregorian_seconds_from_1970( ),
 %%%%%%				case CurTime > Time of
 %%%%%%					true->
 %%%%%%						Msg = #pk_GS2U_HomeFurniTrueReward_Sync{isCanGet = 0},

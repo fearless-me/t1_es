@@ -60,9 +60,9 @@ requestReport1([TarRoleID,_PlayerNetPid,ReportRoleInfo]) ->
     NewProp =
         case OldProp of
             [] ->
-                [time:getLocalNowSec1970(),?InitNum + 1];
+                [misc_time:localtime_seconds(),?InitNum + 1];
             [_OldTime,OldNum] ->
-                [time:getLocalNowSec1970(),OldNum + 1]
+                [misc_time:localtime_seconds(),OldNum + 1]
         end,
     [_NewTime,NewNum] = NewProp,
     playerPropSync:setAny(?SerProp_ReportPic,NewProp),
@@ -72,7 +72,7 @@ requestReport1([TarRoleID,_PlayerNetPid,ReportRoleInfo]) ->
             %%setNum(),%%举报次数清零
             playerIdentity:editIdentity(?IDIT_FACE, []),%%将玩家的自定义头像替换为系统头像
             TimeCfg = getCfgTime(),
-            TimeNext = time:getLocalNowSec1970() + TimeCfg,
+            TimeNext = misc_time:localtime_seconds() + TimeCfg,
             playerPropSync:setInt64(?PriProp_Report_Time, TimeNext),
             TimeHour = erlang:trunc(TimeCfg/3600),%%将秒转换为小时
             ?DEBUG("TimeCfg:~w,TimeNext:~w,TimeHour~w",[TimeCfg,TimeNext,TimeHour]),
@@ -100,7 +100,7 @@ getCfgTime() ->
     Time.
 %%将目标对象举报次数清零
 setNum() ->
-   playerPropSync:setAny(?SerProp_ReportPic,[time:getLocalNowSec1970(),?InitNum]).
+   playerPropSync:setAny(?SerProp_ReportPic,[misc_time:localtime_seconds(),?InitNum]).
 
 %%获取举报同一角色CD 单位小时
 getCfgSameRoleCD() ->
@@ -110,7 +110,7 @@ getCfgSameRoleCD() ->
 
 %%同一角色Z小时内不可重复举报同一角色
 canReportSameRole(TarRoleID) ->
-    NowTime = time:getLocalNowSec1970(),
+    NowTime = misc_time:localtime_seconds(),
     ReportList = playerPropSync:getProp(?SerProp_ReportList),
     case lists:keyfind(TarRoleID, 1, ReportList) of
         {_RoleID,Time} ->
@@ -127,7 +127,7 @@ canReportSameRole(TarRoleID) ->
 %%添加到举报列表
 addReportList(TarRoleID) ->
     ReportList = playerPropSync:getProp(?SerProp_ReportList),
-    NewReportList = lists:keystore(TarRoleID, 1, ReportList,{TarRoleID,time:getLocalNowSec1970()}),
+    NewReportList = lists:keystore(TarRoleID, 1, ReportList,{TarRoleID,misc_time:localtime_seconds()}),
     playerPropSync:setAny(?SerProp_ReportList,NewReportList).
 %%连续举报次数
 getCfgReportNum() ->
@@ -159,7 +159,7 @@ canReportOtherRole() ->
 getCurTimeVersion() ->
     #globalsetupCfg{setpara = [Time]} =
         getCfg:getCfgPStack(cfg_globalsetup, head_report_X),
-    NowTime = time:getLocalNowSec1970(),
+    NowTime = misc_time:localtime_seconds(),
     CurTimeVersion = NowTime div (Time * 3600),
     CurTimeVersion.
 
@@ -206,7 +206,7 @@ saveGMReportLog(IsModify,BeRoleID,Status) ->
     CurTime= time2:getTimestampSec(),
     EndTime = getEndTime(Status),%%平台使用时间
     TimeCfg = getCfgTime(),
-    BlockTime = time:getLocalNowSec1970() + TimeCfg,%%延用之前的时间
+    BlockTime = misc_time:localtime_seconds() + TimeCfg,%%延用之前的时间
         case Status of
             1 ->
                 %%封禁操作

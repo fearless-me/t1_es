@@ -79,7 +79,7 @@ initCarrierAI(Code) ->
 					skip; %%客户端还没有创建这个载体所以释放技能会有问题
 %%					useSkill(Code);
 				_ ->
-					Now = time:getUTCNowMS(),
+					Now = misc_time:milli_seconds(),
 					monsterAI:setAIEvent(Code, ?BSTCondVar_IsInAttackRange, 1),
 					monsterState:setStartUseSkillTime(Code, Now),
 					Time = monsterState:getFinalAttackIntervalTime(Code),
@@ -422,7 +422,7 @@ selSkill(Code, Arg) ->
 		?BST_SELSKILL_NORMAL_MONSTER ->
 			normalRandomSelSkill(Code, SkillList);
 		?BST_SELSKILL_BOSS ->
-			Now = time:getUTCNowMS(),
+			Now = misc_time:milli_seconds(),
 			SelTime = monsterState:getBossSelSkillTime(Code),
 			{MinTime, MaxTime} =
 				case SkillInterVal of
@@ -721,7 +721,7 @@ randomSelTarget0(Code, HateList, AttackTarget) ->
 	HateList :: list(),
 	AttackTarget :: uint() | undefined.
 timerSelTarget(Code, HateList, AttackTarget) ->
-	Now = time:getUTCNowMS(),
+	Now = misc_time:milli_seconds(),
 	MonsterID = monsterState:getId(Code),
 	#monsterCfg{changeInterval = Timer} = getCfg:getCfgPStack(cfg_monster, MonsterID),
 	SelTimer = monsterState:getTimerSelTargetTime(Code),

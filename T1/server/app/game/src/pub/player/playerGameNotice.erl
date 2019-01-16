@@ -62,7 +62,7 @@ sendPictureNotice([_H | T], Acc) ->
 
 createNoticeStruct(Md5,NoticeList) ->
 	put(onGameNoticeAck,[]),
-	Now = time:getUTCNowSec(),
+	Now = misc_time:utc_seconds(),
 	Pk_NoticeInfoFun = fun(One,AccIn) ->
 							   NoticeInfo = #pk_NoticeInfo{
 														   id = One#gameNotice.id, 

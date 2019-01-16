@@ -120,7 +120,7 @@ onUseSkill(SkillID, CodeList, SN, X, Y, false, #recCurUseSkill{
 	mainCode = MainCode,
 	triggerTime = TT
 }) when Serial =:= SN ->
-	NowTime = time:getUTCNowMS(),
+	NowTime = misc_time:milli_seconds(),
 	#skillCfg{targetSearch = SearchType, durationTimes = Dura} = getCfg:getCfgPStack(cfg_skill, SkillID),
 	case isCanAttack(SearchType, CodeList, SkillID) of
 		{Code, CodeList} when Code =:= MainCode ->
@@ -207,7 +207,7 @@ onUseDashSkill(X, Y) ->
 			setDashCD(),
 			costDashPhys(),
 			playerState:setPos(X, Y),
-			playerState:setPlayerDashStatus({true, time:getUTCNowMS()}),
+			playerState:setPlayerDashStatus({true, misc_time:milli_seconds()}),
 			PlayerCode = playerState:getPlayerCode(),
 			Msg = #pk_GS2U_DashTo{
 				code = PlayerCode,
@@ -1287,7 +1287,7 @@ setStop(_, _) ->
 -spec setSkillCD(SkillID) -> ok when
 	SkillID :: skillId().
 setSkillCD(SkillID) ->
-	Time = time:getUTCNowMSDiff2010(),
+	Time = misc_time:getUTCNowMSDiff2010(),
 	SkillCfg = getCfg:getCfgPStack(cfg_skill, SkillID),
 	GID = SkillCfg#skillCfg.skillCoolDownGroup,
 	GlobeCoolDown = SkillCfg#skillCfg.skill_GlobeCoolDown,
@@ -1344,7 +1344,7 @@ setComboSkill(SkillID) ->
 setComboSkill(_Carrer, 0, _SkillID) ->
 	ok;
 setComboSkill(?Career_30_Bravo, ComboID, SkillID) ->
-	Now = time:getUTCNowMSDiff2010(),
+	Now = misc_time:getUTCNowMSDiff2010(),
 	ComboSkillList = playerState:getComboSkill(),
 	case lists:keyfind(ComboID, #comboSkill.comboID, ComboSkillList) of
 		#comboSkill{} ->
@@ -1386,7 +1386,7 @@ updateComboSkill(Now, SkillID, ComboID) ->
 %%设置滑屏CD
 -spec setDashCD() -> ok.
 setDashCD() ->
-	Time = time:getUTCNowMSDiff2010(),
+	Time = misc_time:getUTCNowMSDiff2010(),
 	playerState:setDashCD(Time),
 	ok.
 
@@ -1595,7 +1595,7 @@ noticeUseTriggerSkill(SkillID, TargetCode) ->
 -spec getSkillRemainCD(SkillID) -> uint() when
 	SkillID :: uint().
 getSkillRemainCD(SkillID) ->
-	Time = time:getUTCNowMSDiff2010(),
+	Time = misc_time:getUTCNowMSDiff2010(),
 	SkillCDList = playerState:getSkillCD(),
 	case lists:keyfind(SkillID, 1, SkillCDList) of
 		{SkillID, CDTime} ->
@@ -1834,7 +1834,7 @@ checkUseSkillCount(#skillCfg{
 	countTime = CountTime,
 	maxCount = MaxCount
 } = Skill) ->
-	Now = time:getUTCNowMS(),
+	Now = misc_time:milli_seconds(),
 	SlotSkillList = playerState:getSlotSkill(),
 	case lists:keyfind(Skill#skillCfg.skillID, #recSlotSkill.skillID, SlotSkillList) of
 		#recSlotSkill{canUseCount = Count, time = Time} = SlotSkill ->
@@ -2008,7 +2008,7 @@ checkUseSkillCareer(_Career, _ComboID, _SkillID) ->
 %	SkillID :: uint().
 %checkComboSkill(#comboSkill{lasttime = Time, skillID = LastSkillID}, ComboID, SkillID) ->
 %	Combo = getCfg:getCfgPStack(cfg_comboSkill, ComboID),
-%	Now = time:getUTCNowMSDiff2010(),
+%	Now = misc_time:getUTCNowMSDiff2010(),
 %	#globalsetupCfg{setpara = [ComBolLast]} = getCfg:getCfgByKey(cfg_globalsetup, combol_last),
 %	if
 %		Now - Time >= ComBolLast + 100 ->
@@ -2041,7 +2041,7 @@ checkUseSkillCD(SkillID) ->
 	Skill = getCfg:getCfgPStack(cfg_skill, SkillID),
 	GID = Skill#skillCfg.skillCoolDownGroup,
 	GlobeCoolDown = playerState:getGlobalCD(),
-	NowTime = time:getUTCNowMSDiff2010(),
+	NowTime = misc_time:getUTCNowMSDiff2010(),
 	%%检查全局CD
 	case checkGlobalCD(GlobeCoolDown, NowTime) of
 		true ->
@@ -2177,7 +2177,7 @@ checkDashSkill() ->
 checkDashCD() ->
 	Carrer = playerState:getCareer(),
 	LastDashCD = playerState:getDashCD(),
-	NowTime = time:getUTCNowMSDiff2010(),
+	NowTime = misc_time:getUTCNowMSDiff2010(),
 	CD = skill:getDashCD(?Career2CareerBase(Carrer)),
 	NowTime >= LastDashCD + CD.
 
@@ -2374,7 +2374,7 @@ delTempSkill(SkillID) ->
 	Type :: uint().
 addTempSlotSkill(SkillID, Type) ->
 	SlotSkillList = playerState:getSlotSkill(),
-	Now = time:getUTCNowMSDiff2010(),
+	Now = misc_time:getUTCNowMSDiff2010(),
 	Skill = #recSlotSkill{
 		skillID = SkillID,
 		slot = ?HideSlot,
@@ -2471,7 +2471,7 @@ getSpecSkill([_ | SSL], List) ->
 delSpecSkill1(Time, BuffID, SkillLevel) ->
 	ActionStatus = playerState:getActionStatus(),
 	ActionTime = playerState:getActionTime(),
-	Time1 = time:getUTCNowMSDiff2010(),
+	Time1 = misc_time:getUTCNowMSDiff2010(),
 	if
 		ActionStatus =:= ?CreatureActionStatusStand andalso Time1 - ActionTime > Time ->
 %%			Level = playerState:getLevel(),

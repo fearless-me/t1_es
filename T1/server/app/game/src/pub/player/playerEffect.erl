@@ -557,7 +557,7 @@ beatBack(Dist, RecEffect) ->
 	ReduceTime :: uint(),
 	MinTime :: uint().
 reduceCD(SkillID, ReduceTime, MinTime) ->
-	Time = time:getUTCNowMSDiff2010(),
+	Time = misc_time:getUTCNowMSDiff2010(),
 	SkillCDList = playerState:getSkillCD(),
 	case lists:keyfind(SkillID, 1, SkillCDList) of
 		{SkillID, CD} ->

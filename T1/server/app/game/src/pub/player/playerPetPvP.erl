@@ -159,7 +159,7 @@ petPvpBattle(CityID, _ToRoleID) ->
 							manorHp = ManorHp,
 							manorMaxHp = ManorHp,
 							manorPos = Pos,
-							manorTime = time:getSyncTime1970FromDBS()
+							manorTime = misc_time:gregorian_seconds_from_1970( )
 						},
 						petbattle:writeMn(new_rec_manor_battle, M),
 						petPvpBr(RoleID, 0, CityID, ?BattleWin),
@@ -176,7 +176,7 @@ petPvpBattle(CityID, _ToRoleID) ->
 							manorHp = ManorHp,
 							manorMaxHp = ManorHp,
 							manorPos = Pos,
-							manorTime = time:getSyncTime1970FromDBS()
+							manorTime = misc_time:gregorian_seconds_from_1970( )
 						},
 						petbattle:updateMn(new_rec_manor_battle, update_rec_manor_battle, CityID, NewM),
 						petPvpBr(RoleID, 0, CityID, ?BattleWin),
@@ -215,7 +215,7 @@ petPvpBattle(CityID, _ToRoleID) ->
 													manorMaxHp = ManorHp,
 													manorPos = Pos,
 													manorForce = ManorForce,
-													manorTime = time:getSyncTime1970FromDBS()
+													manorTime = misc_time:gregorian_seconds_from_1970( )
 												},
 												NewMB = MB#rec_pet_manor_battle{pet_reel = Reel - 1, pet_pos = [0,0,0,0,0]};
 											true ->
@@ -247,7 +247,7 @@ petPvpBattle(CityID, _ToRoleID) ->
 						{true, #rec_pet_manor_battle{pet_reel = NewReel} = NMB} ->
 							case NewReel + 1 =:= globalCfg:getPetPvpReelMaxNum() of
 								true ->
-									playerState:setLastPetManorBattleTime(time:getUTCNowMS());
+									playerState:setLastPetManorBattleTime(misc_time:utc_seconds());
 								_ ->
 									skip
 							end,
@@ -304,7 +304,7 @@ petPvpPos([ID | PL], L) ->
 petPvpOff() -> 
 	case playerState:getLastPetManorBattleTime() of
 		undefined ->
-			Time = time:getUTCNowMS();
+			Time = misc_time:milli_seconds();
 		T ->
 			Time = T
 	end,
@@ -518,7 +518,7 @@ checkPetManorCityIsExist(CityID) ->
 %%检查城池是否保护状态
 -spec checkPetManorCityIsProc(#rec_manor_battle{}) -> boolean().
 checkPetManorCityIsProc(#rec_manor_battle{manorTime = ManorTime}) -> 
-	Now = time:getSyncTime1970FromDBS(),
+	Now = misc_time:gregorian_seconds_from_1970( ),
 	ProcTime = globalCfg:getPetPvpProc(),
 	case Now - ManorTime >= ProcTime of
 		true ->
@@ -636,10 +636,10 @@ getPurcReelCost() ->
 getOfflineReel(Reel, MaxReel, _OffLineTime) when Reel >= MaxReel ->
 	Reel;
 getOfflineReel(Reel, _, 0) ->
-	playerState:setLastPetManorBattleTime(time:getUTCNowMS()),
+	playerState:setLastPetManorBattleTime(misc_time:utc_seconds()),
 	Reel;
 getOfflineReel(Reel, MaxReel, OffLineTime) ->
-	OffLineNum = trunc((time:getUTCNowMS() - OffLineTime) / (globalCfg:getPetPvpReelRestoreCD() * 1000)),
+	OffLineNum = trunc((misc_time:milli_seconds() - OffLineTime) / (globalCfg:getPetPvpReelRestoreCD() * 1000)),
 	RemainTime = OffLineTime + OffLineNum * globalCfg:getPetPvpReelRestoreCD() * 1000,
 	playerState:setLastPetManorBattleTime(RemainTime),
 	case (Reel + OffLineNum) > MaxReel of

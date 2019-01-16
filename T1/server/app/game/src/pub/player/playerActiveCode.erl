@@ -38,10 +38,10 @@ getActiveCodeRequest(ActiveCode)->
 					IsTimeTooShort =
 						case playerState:getLastGetActiveCodeTime() of
 							undefined ->
-								playerState:setLastGetActiveCodeTime(time:getUTCNowSec()),
+								playerState:setLastGetActiveCodeTime(misc_time:utc_seconds()),
 								false;
 							LastGetActiveCodeTime->
-								case (time:getUTCNowSec() - LastGetActiveCodeTime) < ?RequestActiveCodeCD of
+								case (misc_time:utc_seconds() - LastGetActiveCodeTime) < ?RequestActiveCodeCD of
 									true->
 										true;
 									_->
@@ -94,7 +94,7 @@ getActiveCodeRequestAck(
 			IsTimeOut =
 				case (BeginTime =/= undefined) andalso (EndTime =/= undefined) of
 					true->
-						Now = time:getLocalNowDateTime1970(),
+						Now = misc_time:getLocalDateTime,
 						{_,BeginTime2} = BeginTime,
 						{_,EndTime2} = EndTime,
 						{BeginDay,_} = calendar:time_difference(BeginTime2, Now),

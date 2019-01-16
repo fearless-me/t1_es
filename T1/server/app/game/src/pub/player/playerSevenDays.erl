@@ -90,8 +90,8 @@
 %% API
 getCreateDays() ->
     CreateTime = playerPropSync:getProp(?PriProp_RoleCreateTime),
-    {{Y, M, D}, {_H, _Min, _S}} = time:getChinaNowDateTime1970(),
-    UtcSec = time:diffSecFrom1970({{Y, M, D}, {23, 59, 59}}),
+    {{Y, M, D}, {_H, _Min, _S}} = misc_time:getLocalDateTime(),
+    UtcSec = misc_time:diffSecFrom1970({{Y, M, D}, {23, 59, 59}}),
     DiffDays = (UtcSec - CreateTime) / ?One_Day_Second,
     misc:ceil(DiffDays).
 %%    Days = trunc(DiffDays),
@@ -103,9 +103,9 @@ getCreateDays() ->
 %% {isAfterResetHour, nextRefreshTime}
 countRefreshTime() ->
     %%计算下次刷新时间，如果玩家在线才好刷新
-    Time = time:getSyncTime1970FromDBS(),
-    {{Y, M, D}, {_H, _Min, _S}} = time:convertSec2DateTime(Time),
-    RefreshTime = time:convertDateTime1970ToSec({{Y, M, D}, {?ResetTimeHour, 0, 0}}),
+    Time = misc_time:gregorian_seconds_from_1970( ),
+    {{Y, M, D}, {_H, _Min, _S}} = misc_time:gregorian_seconds_to_datetime(Time),
+    RefreshTime = misc_time:convertDateTime1970ToSec({{Y, M, D}, {?ResetTimeHour, 0, 0}}),
     if
         RefreshTime < Time ->
             {true, RefreshTime + ?One_Day_Second - Time};
@@ -445,7 +445,7 @@ doMissionEvent(CurEvents, AddCount, CurParam) ->
 
 %%
 sendMission2Client(#sevenDayMission{} = R) ->
-    playerMsg:sendNetMsg(#pk_GS2U_SevenMissionDataUpdate{isFinish = misc:convertBoolFromInt(R#sevenDayMission.isfinish),
+    playerMsg:sendNetMsg(#pk_GS2U_SevenMissionDataUpdate{isFinish = misc:i2b(R#sevenDayMission.isfinish),
                                                          number = R#sevenDayMission.cur,
                                                          max = R#sevenDayMission.max,
                                                          missionid = R#sevenDayMission.missionID}).
@@ -458,7 +458,7 @@ sendMissionList2Client() ->
     %% 1.
     Mapf =
     fun(#sevenDayMission{missionID = MissionID, max=Max, cur=Cur, isfinish = IsFinish} = _R) ->
-        #pk_SevenDayMissionData{isFinish =  misc:convertBoolFromInt(IsFinish), number = Cur, max = Max, missionid = MissionID}
+        #pk_SevenDayMissionData{isFinish =  misc:i2b(IsFinish), number = Cur, max = Max, missionid = MissionID}
     end,
     MissionList = lists:map(Mapf, List),
 
@@ -643,7 +643,7 @@ sendMailToPlayer(ItemID, ItemNumber, IsBind, Source, Reason, Param ) ->
                 changReason = Reason ,
                 reasonParam = Param
             } ,
-            BoolIsBind = misc:convertBoolFromInt(IsBind) ,
+            BoolIsBind = misc:i2b(IsBind) ,
             playerPackage:addGoodsAndMail(ItemID , ItemNumber , BoolIsBind , 0 , Plog);
         _ ->
             ?ERROR("seven days error item config:~p,~p,~p" , [playerState:getRoleID() , ItemID,ItemNumber])

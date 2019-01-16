@@ -1056,7 +1056,7 @@
 %%											CancelID = requestJoinGuild_tryCancel(),
 %%
 %%											%% 请求加入工会
-%%											R = #rec_guild_apply{roleID = RoleID, guildID = GuildID, applyTime = time:getSyncTime1970FromDBS()},
+%%											R = #rec_guild_apply{roleID = RoleID, guildID = GuildID, applyTime = misc_time:gregorian_seconds_from_1970( )},
 %%											ets:insert(rec_guild_apply, R),
 %%
 %%											noticeGuildApplyNumber(GuildID),
@@ -1684,7 +1684,7 @@
 %%	ok;
 %%recordExitGuildTime(RoleID) ->
 %%%%	?DEBUG("recordExitGuildTime:~p", [misc:getStackTrace()]),
-%%	NowTime = time:getSyncTime1970FromDBS(),
+%%	NowTime = misc_time:gregorian_seconds_from_1970( ),
 %%	recordExitGuildTime(RoleID, NowTime).
 %%
 %%-spec recordExitGuildTime(RoleID :: uint64(), NowTime :: uint64()) -> ok.
@@ -1728,7 +1728,7 @@
 %%	ok;
 %%recordKickGuildTime(RoleID) ->
 %%%%	?DEBUG("recordExitGuildTime:~p", [misc:getStackTrace()]),
-%%	NowTime = time:getSyncTime1970FromDBS(),
+%%	NowTime = misc_time:gregorian_seconds_from_1970( ),
 %%	recordKickGuildTime(RoleID, NowTime).
 %%
 %%-spec recordKickGuildTime(RoleID :: uint64(), NowTime :: uint64()) -> ok.
@@ -1772,7 +1772,7 @@
 %%%% 自己定义了CD，用自己的CD
 %%-spec canJoinGuild(RoleID :: uint64()) -> uint().
 %%canJoinGuild(RoleID) ->
-%%	NowTime = time:getSyncTime1970FromDBS(),
+%%	NowTime = misc_time:gregorian_seconds_from_1970( ),
 %%	LastExitTime =
 %%		case edb:dirtyReadRecord(rec_player_data, RoleID) of
 %%			[#rec_player_data{exitGuildTime = T}] -> T;
@@ -1788,7 +1788,7 @@
 %%%% 没有定义CD，取配置CD
 %%-spec canJoinGuild(RoleID :: uint64()) -> uint().
 %%canJoinGuild(RoleID) ->
-%%	NowTime = time:getSyncTime1970FromDBS(),
+%%	NowTime = misc_time:gregorian_seconds_from_1970( ),
 %%	LastExitTime =
 %%		case edb:dirtyReadRecord(rec_player_data, RoleID) of
 %%			[#rec_player_data{exitGuildTime = T}] -> T;
@@ -1805,7 +1805,7 @@
 %%
 %%%%-spec canJoinGuild_Master(RoleID :: uint64()) -> boolean().
 %%%%canJoinGuild_Master(RoleID) ->
-%%%%	NowTime = time:getSyncTime1970FromDBS(),
+%%%%	NowTime = misc_time:gregorian_seconds_from_1970( ),
 %%%%	LastExitTime =
 %%%%		case edb:dirtyReadRecord(rec_player_data, RoleID) of
 %%%%			[#rec_player_data{exitGuildTime = T}] -> T;
@@ -1906,7 +1906,7 @@
 %%	OffLineSeconds =
 %%		case Code of
 %%			0 ->
-%%				NowTime = time:getSyncTime1970FromDBS(),
+%%				NowTime = misc_time:gregorian_seconds_from_1970( ),
 %%				OffLineTimeMod =
 %%					case OfflineTime > 0 of
 %%						true -> OfflineTime;
@@ -2097,7 +2097,7 @@
 %%			{?ErrorCode_GuildGodBlessCountMax, [CountMax]}; %% 已达最大限制
 %%		_ ->
 %%			TimeLast = playerPropSync:getProp(?PriProp_Guild_GodBless_LastTime),
-%%			TimeNow = time:getSyncTimeFromDBS(),
+%%			TimeNow = misc_time:localtime_seconds(),
 %%			%?DEBUG("[DebugForGuild] godBless_CountAndCD CD:~p TimeLast:~p TimeNow:~p", [CD, TimeLast, TimeNow]),
 %%			case TimeNow - TimeLast < CD of
 %%				true ->
@@ -2138,7 +2138,7 @@
 %%	%?DEBUG("[DebugForGuild] godBless_Bless Type:~p", [Type]),
 %%	%%% 标记次数与时间
 %%	CountOld = playerDaily:getDailyCounter(?DailyType_Guild_GodBless, 0),
-%%	TimeNow = time:getSyncTimeFromDBS(),
+%%	TimeNow = misc_time:localtime_seconds(),
 %%	playerDaily:incDailyCounter(?DailyType_Guild_GodBless, 0),
 %%	playerPropSync:setInt(?PriProp_Guild_GodBless_LastTime, TimeNow),
 %%	%%% 添加资源_个人经验（受倍率影响）
@@ -2279,7 +2279,7 @@
 %%		end,
 %%	case IsFind of
 %%		false ->
-%%			TimeNow = time:getSyncTimeFromDBS(),
+%%			TimeNow = misc_time:localtime_seconds(),
 %%			playerPropSync:setAny(?SerProp_Guild_GodBless_Schedule, {TimeNow, ListIDNew});
 %%		_ ->
 %%			skip
@@ -3124,7 +3124,7 @@
 %%		GuildID ->
 %%			case playerDaily:getDailyCounter(?DailyType_GuildSupplication, 0) of
 %%				0 ->
-%%					TimeNow = time:getSyncTimeFromDBS(),
+%%					TimeNow = misc_time:localtime_seconds(),
 %%					case suppCheck(TimeNow, ItemID) of
 %%						false ->
 %%							?ERROR_CODE(?ErrorCode_GuildSupp_InvalidItem);

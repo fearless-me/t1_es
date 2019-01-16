@@ -323,7 +323,7 @@ getBuffInfoList() ->
 		counter = BuffUID,
 		endTime = EndTime
 	}, Acc) ->
-		Now = time:getUTCNowMS(),
+		Now = misc_time:milli_seconds(),
 		case EndTime - Now > 0 of
 			true ->
 				Time = EndTime - Now;
@@ -366,7 +366,7 @@ reConnectBuffList() ->
 %%特殊处理牛头怪物战斗过程中
 %%处理在boss战斗过程中增加的变身buff和其他buff
 addBossBattleBuff() ->
-	Now = time:getUTCNowMS(),
+	Now = misc_time:milli_seconds(),
 	case playerState:isPlayerBattleStatus() of
 		true ->
 			BossID = getBossID(),
@@ -662,7 +662,7 @@ sameBuffSplit(BuffID, CasterCode, BuffList) ->
 	Delay :: list(),
 	BuffList :: list().
 levelUpdate(#recBuffInfo{level = Level, runeAddLevel = RuneAddLevel, buffID = BuffID} = BuffData, [Dura, AddLv, BuffDurationAddLv], BuffList) ->
-	Now = time:getUTCNowMS(),
+	Now = misc_time:milli_seconds(),
 	NewDura = trunc(Dura + AddLv * (Level - 1) + RuneAddLevel * BuffDurationAddLv),
 	EndTime = case NewDura of
 		          0 ->
@@ -703,7 +703,7 @@ levelUpdate(#recBuffInfo{level = Level, runeAddLevel = RuneAddLevel, buffID = Bu
 layerUpdate(#recBuffInfo{level = Level, runeAddLevel = RuneAddLevel, buffID = BuffID} = BuffData, [Dura, AddLv, BuffDurationAddLv], OneCaster, BuffList) ->
 	NewDura = trunc(Dura + AddLv * (Level - 1) + RuneAddLevel * BuffDurationAddLv),
 	BuffDamage = buffHurt(BuffData),
-	Now = time:getUTCNowMS(),
+	Now = misc_time:milli_seconds(),
 	Fun = fun(Buff, List) ->
 		if
 			(Level >= Buff#recBuff.level orelse RuneAddLevel =/= Buff#recBuff.runeAddLevel) andalso Buff#recBuff.layer < OneCaster ->
@@ -915,7 +915,7 @@ deleteOneBuff(Buff, BuffList) ->
 -spec initBuff(BuffData) -> #recBuff{} when
 	BuffData :: #recBuffInfo{}.
 initBuff(#recBuffInfo{buffID = BuffID} = BuffData) ->
-	Now = time:getUTCNowMS(),
+	Now = misc_time:milli_seconds(),
 	Cfg = getCfg:getCfgPStack(cfg_buff, BuffID),
 	BuffDamage = buffHurt(BuffData),
 	Counter = setCounter(),
@@ -1122,10 +1122,10 @@ broadcastBuffEffect(BuffID, SkillID, Level, Counter, Type, Serial, EndTime) ->
 			true ->
 				-1;
 			_ ->
-				case EndTime < time:getUTCNowMS() of
+				case EndTime < misc_time:milli_seconds() of
 					true -> 0;
 					_ ->
-						EndTime - time:getUTCNowMS()
+						EndTime - misc_time:milli_seconds()
 				end
 		end,
 	Msg =
@@ -1800,7 +1800,7 @@ checkRingBuffDelay(RingBuffID, BuffDelay) ->
 		_ ->
 			3000
 	end,
-	Now = time:getSyncTimeMSFromDBS(),
+	Now = misc_time:localtime_milliseconds(),
 	case Now - playerState:ringBuffLastTime(RingBuffID) > TrueBuffDelay of
 		true ->
 			playerState:ringBuffLastTime(RingBuffID, Now),

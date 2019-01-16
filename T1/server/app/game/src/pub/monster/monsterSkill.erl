@@ -345,7 +345,7 @@ onUsePetSkill(PetCode, SkillID, CodeList, SN, X, Y, false,
 		mainCode = MainCode,
 		triggerTime = TT
 	}) when Serial =:= SN ->
-	NowTime = time:getUTCNowMS(),
+	NowTime = misc_time:milli_seconds(),
 	#skillCfg{targetSearch = SearchType, durationTimes = Dura} = getCfg:getCfgPStack(cfg_skill, SkillID),
 	case isCanAttack(SearchType, CodeList, SkillID, PetCode) of
 		{Code, CodeList} when Code =:= MainCode ->
@@ -411,7 +411,7 @@ useSkill(Code, 0, _SN, _, _IsForce) ->
 useSkill(_Code, _SkillID, _SN, undefined, _IsForce) ->
 	ok;
 useSkill(Code, SkillID, SN, TargetCode, IsForce) ->
-	Now = time:getUTCNowMS(),
+	Now = misc_time:milli_seconds(),
 	LUST = monsterState:getStartUseSkillTime(Code),
 	AttackIntervalTime = monsterState:getFinalAttackIntervalTime(Code),
 	#skillCfg{
@@ -871,7 +871,7 @@ useSkillAttack1(PetCode, SkillID, CodeList, MainCode, SN, X, Y) ->
 %使用技能校验
 %------------------------------------------
 setSkillCD(Code, SkillID) ->
-	Time = time:getUTCNowMSDiff2010(),
+	Time = misc_time:getUTCNowMSDiff2010(),
 	#skillCfg{
 		skillCoolDown = SCD,
 		skill_GlobeCoolDown = GCD
@@ -903,7 +903,7 @@ setSkillCD(Code, SkillID) ->
 setSkillCD(Code, SkillID, Time) ->
 	#skillCfg{skill_GlobeCoolDown = GlobaeCoolDown} = getCfg:getCfgPStack(cfg_skill, SkillID),
 	GlobalCD = calcGlobalCD(GlobaeCoolDown, Code),
-	Now = time:getUTCNowMS(),
+	Now = misc_time:milli_seconds(),
 	monsterState:setGlobalCDEndTime(Code, GlobalCD + Now),
 
 	monsterAI:setAIEvent(Code, ?BSTCondVar_IsAttackCD, 1),
@@ -1502,7 +1502,7 @@ checkUseSkillActionState(Code) ->
 
 -spec checkUseSkillCD(Code :: uint(), SkillID :: uint()) -> globalCD | boolean().
 checkUseSkillCD(Code, SkillID) ->
-	NowTime = time:getUTCNowMSDiff2010(),
+	NowTime = misc_time:getUTCNowMSDiff2010(),
 	GlobeCoolDown = monsterState:getPetGlobalCD(Code),
 	%%检查全局CD
 	case checkGlobalCD(GlobeCoolDown, NowTime) of

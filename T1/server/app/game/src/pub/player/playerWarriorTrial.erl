@@ -121,7 +121,7 @@ missionInit(Pid) ->
 
 	%%给玩家加buff
 	giveBuffToPlayer(),
-	Time = time:getSyncTime1970FromDBS(),
+	Time = misc_time:gregorian_seconds_from_1970( ),
 
 	playerState:setWarriorTrialTime(Time),
 	%%通知客户端
@@ -149,7 +149,7 @@ completeSchedule() ->
 	playerDaily:incDailyCounter(?DailyType_WarriorTrial, ?WarriorTrialSchedule),
 	%%保存这次刷本的用时
 	BeginTime = playerState:getWarriorTrialTime(),
-	NowTime = time:getSyncTime1970FromDBS(),
+	NowTime = misc_time:gregorian_seconds_from_1970( ),
 	playerState:setWarriorTrialTime(0),
 	MissionID = playerDaily:getDailyCounter(?DailyType_WarriorTrial, ?WarriorTrialSchedule) ,%+1
 	PlayerForce = playerPropSync:getProp(?PriProp_PlayerForce),
@@ -281,7 +281,7 @@ tickMaxTime() ->
 	BeginTime = playerState:getWarriorTrialTime(),
 	case BeginTime > 0 of
 		true ->
-			NowTime = time:getSyncTime1970FromDBS(),
+			NowTime = misc_time:gregorian_seconds_from_1970( ),
 			CurMission = playerDaily:getDailyCounter(?DailyType_WarriorTrial, ?WarriorTrialSchedule) + 1,
 			#warriortrialCfg{maxTime = MaxTime, mapid = MapID} = getCfg:getCfgPStack(cfg_warriortrial, CurMission),
 			MapSubType = playerScene:getMapSubType(MapID),

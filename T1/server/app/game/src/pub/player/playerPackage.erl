@@ -473,8 +473,8 @@ sortRecycleGoods(#rec_item{deleteTime = {datetime, DT1}}, #recSaveEquip{deleteTi
 	compareTime(DT1, DT2).
 
 compareTime(DT1, DT2) ->
-	D1 = time:convertDateTime1970ToSec(DT1),
-	D2 = time:convertDateTime1970ToSec(DT2),
+	D1 = misc_time:convertDateTime1970ToSec(DT1),
+	D2 = misc_time:convertDateTime1970ToSec(DT2),
 	D1 >= D2.
 
 %%增加物品，包括普通道具和装备，成功返回普通道具或者装备的列表，失败返回一个空列表
@@ -1053,7 +1053,7 @@ getItemNumByID(GoodsID) ->
 
 -spec tickPackage() -> ok.
 tickPackage() ->
-	Now = time:getSyncUTCTimeFromDBS(),
+	Now = misc_time:utc_seconds(),
 	GoodsList = playerState:getHasExpiredTimeGoodsList(),
 	Fun = fun(#recExpiredTimeGoods{goodsUID = UID, bagType = BagType, expiredTime = ET} = Goods, AccIn) ->
 		case Now >= ET of
@@ -1538,14 +1538,14 @@ addEquip(EquipID, Num, IsBind, EquipQuality, #recPLogTSItem{} = TS) ->
 %%设置道具或者道具的过期时间
 setupGoodsExpireTime(#recSaveEquip{itemUID = ItemUID, itemID = ItemID, pos = Pos, expiredTime = 0} = Equip) ->
 	#equipmentCfg{usefulLife = Life} = getCfg:getCfgPStack(cfg_equipment, ItemID),
-	ET = calcExpiredTime(time:getSyncUTCTimeFromDBS(), Life),
+	ET = calcExpiredTime(misc_time:utc_seconds(), Life),
 	BagType = getBagType(Pos),
 	checkAndAddExpiredTimeGoodsList(ItemUID, BagType, ET),
 	Equip#recSaveEquip{expiredTime = ET};
 setupGoodsExpireTime(#rec_item{itemUID = ItemUID, itemID = ItemID, pos = Pos, expiredTime = 0} = Item) ->
 	#itemCfg{usefulLife = Life} = getCfg:getCfgPStack(cfg_item, ItemID),
 	BagType = getBagType(Pos),
-	ET = calcExpiredTime(time:getSyncUTCTimeFromDBS(), Life),
+	ET = calcExpiredTime(misc_time:utc_seconds(), Life),
 	checkAndAddExpiredTimeGoodsList(ItemUID, BagType, ET),
 	Item#rec_item{
 		expiredTime = ET
@@ -1776,7 +1776,7 @@ makeItemNetMessage(#rec_item{
 	%%由于过期时间存储的是UTC时间，所以发给客户端时需要加上时区
 	ExpiredTime = case ET > 0 of
 					  true ->
-						  ET + time:getLocalTimeAdjustHour() * 3600;
+						  ET + misc_time:tz_seconds * 3600;
 					  _ ->
 						  0
 				  end,
@@ -2319,7 +2319,7 @@ equipOn(#recSaveEquip{itemUID = EquipUID} = Equip,
 			%%漂浮只石成就
 			updateFloatingAchive(),
 
-			playerState:setLastExchangeEquip(time:getUTCNowMS()),
+			playerState:setLastExchangeEquip(misc_time:utc_seconds()),
 			ok;
 		_ ->
 			skip
@@ -2382,7 +2382,7 @@ getOldEquipByType(EquipType) ->
 -spec checkExchangeEquipCD() -> boolean().
 checkExchangeEquipCD() ->
 	Time = playerState:getLastExchangeEquip(),
-	Now = time:getUTCNowMS(),
+	Now = misc_time:milli_seconds(),
 	case playerState:isPlayerBattleStatus() of
 		true ->
 			Now - Time < 1500;
@@ -2667,7 +2667,7 @@ createAnItemInstance(GoodsID, GoodsNum, IsBind, OwnerID, BagType, IsSetupExpired
 		isLocked = false,                            %%玩家是否自己锁定 tinyint(1) unsigned
 		quality = 0,                                %%品质 tinyint(4) unsigned
 		deleteTime = 0,                                %%删除时间 datetime
-		createTime = time:getSyncUTCTimeFromDBS(),    %%创建时间 int(10) unsigned
+		createTime = misc_time:utc_seconds(),    %%创建时间 int(10) unsigned
 		expiredTime = 0                                %%过期时间，0为无过期时间 int(10) unsigned
 	},
 

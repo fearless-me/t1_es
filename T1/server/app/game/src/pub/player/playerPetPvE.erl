@@ -123,7 +123,7 @@ petPveOffline() ->
 	case playerState:getPetDunInfo() of
 		#rec_pet_dungeon_info{} = DunInfo ->
 			NewDunInfo = DunInfo#rec_pet_dungeon_info{
-				time = time:getUTCNowMS()
+				time = misc_time:milli_seconds()
 			},
 			savePetDunInfoToDb(NewDunInfo),
 			savePetDunInfoToMem(NewDunInfo);
@@ -135,7 +135,7 @@ petPveOffline() ->
 petPveOfflinePhys(Phys, _Time) when Phys >= ?MaxPhy ->
 	Phys;
 petPveOfflinePhys(Phys, Time) ->
-	Num = trunc((time:getUTCNowMS() - Time) / globalCfg:getPetWarTickTime()),
+	Num = trunc((misc_time:milli_seconds() - Time) / globalCfg:getPetWarTickTime()),
 	case (Phys + Num * ?RestorePhy) > ?MaxPhy of
 		true ->
 			?MaxPhy;

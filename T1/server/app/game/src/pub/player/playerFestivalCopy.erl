@@ -21,9 +21,9 @@
 	]).
 
 isInTheFestivalTime([YearStart, MonthStart, DayStart, HourStart], [YearEnd, MonthEnd, DayEnd, HourEnd]) ->
-	NowTime = time:getSyncTime1970FromDBS(),
-	StartTime = time:convertDateTime1970ToSec({{YearStart, MonthStart, DayStart}, {HourStart, 0 ,0}}),
-	EndTime = time:convertDateTime1970ToSec({{YearEnd, MonthEnd, DayEnd}, {HourEnd, 0 ,0}}),
+	NowTime = misc_time:gregorian_seconds_from_1970( ),
+	StartTime = misc_time:convertDateTime1970ToSec({{YearStart, MonthStart, DayStart}, {HourStart, 0 ,0}}),
+	EndTime = misc_time:convertDateTime1970ToSec({{YearEnd, MonthEnd, DayEnd}, {HourEnd, 0 ,0}}),
 	case NowTime >= StartTime andalso NowTime < EndTime of
 		true ->
 			true;
@@ -293,7 +293,7 @@ getCurValidFestivalID() ->
 		_ ->
 			case variant:getGlobalBitVariant(?Setting_GlobalBitVarReadOnly_FestivalCopy) of
 				true ->
-					NowTime = time:getSyncTime1970FromDBS(),
+					NowTime = misc_time:gregorian_seconds_from_1970( ),
 					{LastFSValidID, LastFreshTime} = playerState2:getCurFsValidID(),
 					case erlang:abs(NowTime - LastFreshTime) >= 60 of
 						true ->
@@ -354,8 +354,8 @@ sendTimeInfoToClient() ->
 	Fun = fun(FestivalID, AccList) ->
 		case getCfg:getCfgByKey(cfg_festivalactivity_config, FestivalID) of
 			#festivalactivity_configCfg{timestart = [YearStart, MonthStart, DayStart, HourStart], timeend = [YearEnd, MonthEnd, DayEnd, HourEnd]} ->
-				StartTime = time:convertDateTime1970ToSec({{YearStart, MonthStart, DayStart}, {HourStart, 0 ,0}}) - ?SECS_FROM_0_TO_1970,
-				EndTime = time:convertDateTime1970ToSec({{YearEnd, MonthEnd, DayEnd}, {HourEnd, 0 ,0}}) - ?SECS_FROM_0_TO_1970,
+				StartTime = misc_time:convertDateTime1970ToSec({{YearStart, MonthStart, DayStart}, {HourStart, 0 ,0}}) - ?SECS_FROM_0_TO_1970,
+				EndTime = misc_time:convertDateTime1970ToSec({{YearEnd, MonthEnd, DayEnd}, {HourEnd, 0 ,0}}) - ?SECS_FROM_0_TO_1970,
 				[#pk_OneFestivalTimeInfo{festivalID = FestivalID, startTime = StartTime, endTime = EndTime} | AccList];
 			_ ->
 				AccList

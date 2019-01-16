@@ -462,7 +462,7 @@
 %%getVigor() ->
 %%	%?DEBUG("[DebugForPetTerritory] getVigor RoleID:~p", [playerState:getRoleID()]),
 %%	[TimeLast, Value] = playerPropSync:getProp(?SerProp_PetTerritoryVigor),
-%%	TimeNow = time:getSyncTimeFromDBS(),
+%%	TimeNow = misc_time:localtime_seconds(),
 %%	#globalsetupCfg{setpara = [ValueRecover, TimeRecover]} =
 %%		getCfg:getCfgPStack(cfg_globalsetup, petTerritory_vigorRecover),
 %%	#globalsetupCfg{setpara = [ValueMax]} =
@@ -791,7 +791,7 @@
 %%	%?DEBUG("[DebugForPetTerritory] exploit_Occupy RoleID:~p TerritoryID:~p CfgTime:~p CfgLevel:~p ListPetID:~p CfgReward:~p CfgForce:~p TimeExploit:~p",
 %%	%	[RoleID, TerritoryID, CfgTime, CfgLevel, ListPetID, CfgReward, CfgForce, TimeExploit]),
 %%	%% 生成领地数据
-%%	TimeNow = time:getSyncTimeFromDBS(),
+%%	TimeNow = misc_time:localtime_seconds(),
 %%	Territory =
 %%		#rec_player_territory{
 %%			roleID = RoleID,

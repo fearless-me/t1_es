@@ -2006,8 +2006,8 @@ getRuneOnList(TargetID, UIDs) ->
 	end.
 
 getNowTime() ->
-	Now = time:getUTCNowSec(),
-	Now + time:getLocalTimeAdjustHour() * 3600.
+	Now = misc_time:utc_seconds(),
+	Now + misc_time:tz_seconds * 3600.
 
 setRuneCastProp(Data) ->
 	?INFO("setRuneCastProp:~p,~p", [playerState:getRoleID(), Data]),

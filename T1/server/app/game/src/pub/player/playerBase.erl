@@ -113,7 +113,7 @@ init(RoleID, Career, Race, Sex, Head) ->
 	playerPackage:initPackage(),
 	playerLogin:printTestLog(RoleID, "playerbase initpackage:~p", [RoleID]),
 
-	Now = time:getUTCNowMS(),
+	Now = misc_time:milli_seconds(),
 	initBattlePropByCareer(Career),
 	playerLogin:printTestLog(RoleID, "playerbase initbattleprop:~p", [RoleID]),
 	playerState:setPets([]),
@@ -214,7 +214,7 @@ firstEnterWorld(_) ->
 tickPlayer() ->
 	case playerState:isFirstEnterMap() andalso playerState:getActionStatus() =/= ?CreatureActionStatusChangeMap of
 		false ->
-			Now = time:getUTCNowMS(),
+			Now = misc_time:milli_seconds(),
 			LastTickTime = playerState:getLastTickTime(),
 			DiffTime = Now - LastTickTime,
 			playerSkill:tickSkill(Now),
@@ -1606,11 +1606,11 @@ createNoticeInfo() ->
 sendGoblinOpenState() ->
 	NoticeInfo = createNoticeInfo(),
 	?DEBUG("NoticeInfo = ~p", [NoticeInfo]),
-	Time = time:getSyncTime1970FromDBS(),
-	{{Y, M, D}, {H, _Min, _S}} = time:convertSec2DateTime(Time),
+	Time = misc_time:gregorian_seconds_from_1970( ),
+	{{Y, M, D}, {H, _Min, _S}} = misc_time:gregorian_seconds_to_datetime(Time),
 	case lists:keyfind(H, 1, NoticeInfo) of
 		{_H, MapList} ->
-			EndTime = time:convertDateTime1970ToSec({{Y, M, D}, {H, 0, 0}}) + ?GoblinTotalTime,
+			EndTime = misc_time:convertDateTime1970ToSec({{Y, M, D}, {H, 0, 0}}) + ?GoblinTotalTime,
 			case Time < EndTime of
 				true ->
 					[MapID | _] = MapList,
@@ -1652,7 +1652,7 @@ getrecLogPlayerOffline(OnlineOrOffineLine) ->
 		purpleEssence = playerState:getCoin(?CoinTypePurpleEssence),        %%紫色精华
 		goldenEssence = playerState:getCoin(?CoinTypeGoldenEssence),        %%金色精华
 		onlineOrOffline = OnlineOrOffineLine,    %%上线还是下线，（=0表示上线，=1表示下线）
-		time = time:getLogTimeSec()            %%时间
+		time = misc_time:utc_seconds()            %%时间
 	}.
 
 -spec addHDBattleHonor(Now :: integer()) -> ok.

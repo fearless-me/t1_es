@@ -90,7 +90,7 @@ saveChatCd() ->
 %% 显示头顶表情符号
 -spec showHeadEmoticonIcon(IconIndex::uint()) -> ok.
 showHeadEmoticonIcon(IconIndex) ->
-	Time = time:getUTCNowSec(),
+	Time = misc_time:utc_seconds(),
 	case Time - playerPropSync:getProp(?SerProp_HeadEmoticonIconTime) > 5 of
 		true ->
 			playerPropSync:setInt(?SerProp_HeadEmoticonIconTime, Time),
@@ -109,7 +109,7 @@ showHeadEmoticonIcon(IconIndex) ->
 freshHeadEmoticonIcon() ->
 	case playerPropSync:getProp(?PubProp_HeadEmoticonIcon) /= 0 of
 		true ->
-			case time:getUTCNowSec() - playerPropSync:getProp(?SerProp_HeadEmoticonIconTime) >= 5 of
+			case misc_time:utc_seconds() - playerPropSync:getProp(?SerProp_HeadEmoticonIconTime) >= 5 of
 				true ->
 					playerPropSync:setInt(?PubProp_HeadEmoticonIcon, 0),
 					%% 气泡成就
@@ -351,7 +351,7 @@ getTalkMaxLength()->
 %%玩家进程调用是否能够发言
 -spec isPlayerCanChat(Channel ::chatChannelEnum() ,ReceiverID :: uint(), Content :: string()) -> boolean().
 isPlayerCanChat(Channel,ReceiverID, Content) ->
-	Now = time:getUTCNowSec(),
+	Now = misc_time:utc_seconds(),
 	LastChatTime = playerState:getLastChatTime(Channel),
 	DenyChatTime = playerState:getDenyChatTime(),
 	CDTime =  getChannelCD(Channel),
@@ -839,7 +839,7 @@ sendLogChatInfo(#pk_U2GS_ChatInfo{receiverID=Receiveplayerid, content=ChatString
 %%语音只检测时间
 -spec isPlayerCanChat() -> boolean().
 isPlayerCanChat()->
-	Now = time:getUTCNowSec(),
+	Now = misc_time:utc_seconds(),
 	LastChatTime = playerState:getLastChatTime(?CHAT_CHANNEL_PRIVATE),
 	DenyChatTime = playerState:getDenyChatTime(),
 	Result = checkChatTime(DenyChatTime, Now),
@@ -874,7 +874,7 @@ startStoreVoice(#pk_U2GS_ChatVoice{count = Count, index = Index,playerID= Player
 		{} ->
 			case Count =:= 1 of
 				true ->
-					VoiceData1 = #recVoiceInfo{key = Key, count = Count, time = time:getUTCNowSec(), voiceList = [#recVoice{index = Index, value = Data}]},
+					VoiceData1 = #recVoiceInfo{key = Key, count = Count, time = misc_time:utc_seconds(), voiceList = [#recVoice{index = Index, value = Data}]},
 					ets:insert(?TABLE_PlayerVoice, VoiceData1),
 					%%      ?ERROR("storeVoice key:~p ", [Key]),
 					onStoreVoice(Channel, VoiceData1),
@@ -886,7 +886,7 @@ startStoreVoice(#pk_U2GS_ChatVoice{count = Count, index = Index,playerID= Player
 			NewTempVoiceList = [#recVoice{index = Index, value = Data} | OldTempVoiceList],
 			case length(NewTempVoiceList) =:= Count of
 				true ->
-					VoiceData2 = #recVoiceInfo{key = Key, count = Count, time = time:getUTCNowSec(), voiceList = NewTempVoiceList},
+					VoiceData2 = #recVoiceInfo{key = Key, count = Count, time = misc_time:utc_seconds(), voiceList = NewTempVoiceList},
 					ets:insert(?TABLE_PlayerVoice, VoiceData2),
 					%%    ?ERROR("storeVoice key:~p ", [Key]),
 					onStoreVoice(Channel, VoiceData2),
@@ -896,7 +896,7 @@ startStoreVoice(#pk_U2GS_ChatVoice{count = Count, index = Index,playerID= Player
 		_ ->  %%异常，理论上不可能走这个分支
 			case Count =:= 1 of
 				true ->
-					VoiceData3 = #recVoiceInfo{key = Key, count = Count, time = time:getUTCNowSec(), voiceList = [#recVoice{index = Index, value = Data}]},
+					VoiceData3 = #recVoiceInfo{key = Key, count = Count, time = misc_time:utc_seconds(), voiceList = [#recVoice{index = Index, value = Data}]},
 					ets:insert(?TABLE_PlayerVoice, VoiceData3),
 					%%   ?ERROR("storeVoice key:~p ", [Key]),
 					onStoreVoice(Channel, VoiceData3),
@@ -938,7 +938,7 @@ getVoice({PlayerID, Key1} = Key) ->
 %%清理语音垃圾
 -spec clearOldVoice() -> ok.
 clearOldVoice() ->
-	NowTime = time:getUTCNowSec(),
+	NowTime = misc_time:utc_seconds(),
 	VoiceCount = ets:info(?TABLE_PlayerVoice, size),
 	case VoiceCount > ?Voice_MaxStoreNum * 2 of
 		true ->

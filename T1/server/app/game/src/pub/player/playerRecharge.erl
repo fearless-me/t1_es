@@ -265,7 +265,7 @@
 %%%%	%%每日累充
 %%%%	case variant:getGlobalBitVariant(?Setting_GlobalBitVarReadOnly_Hide_Daily_AccCharge) of
 %%%%		true ->
-%%%%			Sec = time:getSyncTime1970FromDBS(),
+%%%%			Sec = misc_time:gregorian_seconds_from_1970( ),
 %%%%			{{Year, Month, Day}, _} = calendar:gregorian_seconds_to_datetime(Sec - 4 * 3600),
 %%%%
 %%%%			Week = calendar:day_of_the_week(Year, Month, Day),
@@ -446,9 +446,9 @@
 %%%%	ItemList4Gift :: [Item],
 %%%%	NewFirstCharge :: uint16(), NewAccLevel :: uint16().
 %%%%getConfItemByGade(Type, Grade, Coin, FirstCharge, _AccLevel) when Type =:= 1 ->
-%%%%	Now = time:getSyncTime1970FromDBS(),
+%%%%	Now = misc_time:gregorian_seconds_from_1970( ),
 %%%%	{datetime, {{Y, M, D}, {H, I, S}}} = playerState:getRoleCreateTime(),
-%%%%	RoleCreateTime = time:convertDateTime1970ToSec({{Y, M, D}, {H, I, S}}),
+%%%%	RoleCreateTime = misc_time:convertDateTime1970ToSec({{Y, M, D}, {H, I, S}}),
 %%%%	?DEBUG("~p", [{Now - RoleCreateTime, Now, RoleCreateTime, 3600 * 24 * 7}]),
 %%%%	case Now - RoleCreateTime of
 %%%%		SevenDay when SevenDay =< 3600 * 24 * 7 ->
@@ -731,7 +731,7 @@
 %%		playerLevel = playerState:getLevel(),
 %%		playerCareer = playerState:getCareer(),
 %%		playerGuildID = playerState:getGuildID(),
-%%		time = time:getLogTimeSec(),
+%%		time = misc_time:utc_seconds(),
 %%		awakeStage = AwakeStage,
 %%		floatingStone = FloatingStone
 %%	},

@@ -41,7 +41,7 @@ gatherTick() ->
 	ok.
 
 gatherFresh(#gatherWaitReliveRec{code = Code, id = GatherID, deadTime = DeadTime,x = X,y = Y, percent = Percent} = WG) ->
-	NowTime = time:getUTCNowMS(),
+	NowTime = misc_time:milli_seconds(),
 	IsDel = case getCfg:getCfgPStack(cfg_object, GatherID) of
 				#objectCfg{freshCD = 0} ->
 					%% 不刷新
@@ -114,7 +114,7 @@ requestGatherItem({Code, GatherID, _Pos}) ->
 								y = Obj#recMapObject.y,
 								rotw = Obj#recMapObject.rotW,
 								groupid = Obj#recMapObject.groupID,
-								deadTime = time:getUTCNowMS(),
+								deadTime = misc_time:milli_seconds(),
 								percent = Percent
 							},
 							mapState:addGatherWaitReliveList(R)

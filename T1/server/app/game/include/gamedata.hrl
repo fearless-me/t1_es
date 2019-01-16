@@ -968,7 +968,7 @@
 	roleID = 0,				%%角色id bigint(20) unsigned
 	targetRoleID = 0,				%%目标角色id bigint(20) unsigned
 	closeness = 0,				%%亲密度 int(11) unsigned
-	timeRelation = 0,				%%达成关系的时间（结婚，time:getSyncTimeFromDBS/0） int(11) unsigned
+	timeRelation = 0,				%%达成关系的时间（结婚，misc_time:localtime_seconds/0） int(11) unsigned
 	ringTop = 0,				%%婚戒突破次数 int(11) unsigned
 	ringExp = 0				%%婚戒经验值 int(11) unsigned
 

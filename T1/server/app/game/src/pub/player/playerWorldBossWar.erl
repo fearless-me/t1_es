@@ -34,11 +34,11 @@
 %%					[playerBuff:addBuff(?WoldBossInspire, playerState:getLevel()) || _ <- L]
 %%			end,
 %%			% 进入地图时设置 boss奖励剩余领取次数信息{bossID, 个人领取剩余次数，公会剩余领取次数， 时间版本}
-%%			NowTime = time:getSyncTime1970FromDBS(),
-%%			{{Year, Month, Day}, _SecTuple} = time:convertSec2DateTime(NowTime),
+%%			NowTime = misc_time:gregorian_seconds_from_1970( ),
+%%			{{Year, Month, Day}, _SecTuple} = misc_time:convertSec2DateTime(NowTime),
 %%			% DayVersion 用于标识当前年月日得出来的唯一值 可以有下面几种求法 考虑效率简便 用最后一种
 %%			% DayVersion = {Year, Month, Day},
-%%			% DayVersion = time:convertDateTime1970ToSec({{Year, Month, Day}, {0, 0, 0}}),
+%%			% DayVersion = misc_time:convertDateTime1970ToSec({{Year, Month, Day}, {0, 0, 0}}),
 %%			DayVersion = Year * 10000 + Month * 100 + Day,
 %%			CurGuildID = playerState:getGuildID(),
 %%			playerState2:setWorldBossMapInfo({0, 0, 0, DayVersion, CurGuildID}),

@@ -768,11 +768,11 @@ canEnterMap(TargetMapID, Data) ->
                                     [0, _] -> true;
                                     [_, 0] -> true;
                                     [ST, ET] when ST < ET ->
-                                        {{_Year, _Month, _Day}, {Hour, Minute, _Second}} = time2:getLocalDateTime(),
+                                        {{_Year, _Month, _Day}, {Hour, Minute, _Second}} = misc_time:getLocalDateTime(),
                                         Time = Hour * 100 + Minute,
                                         Time >= ST andalso Time =< ET;
                                     [ST, ET] when ST > ET ->
-                                        {{_Year, _Month, _Day}, {Hour, Minute, _Second}} = time2:getLocalDateTime(),
+                                        {{_Year, _Month, _Day}, {Hour, Minute, _Second}} = misc_time:getLocalDateTime(),
                                         Time = Hour * 100 + Minute,
                                         Time >= ST orelse Time =< ET;
                                     _ -> true
@@ -829,7 +829,7 @@ canTransferMapAndSetNewTransferInfo() ->
                  MinCD
          end,
 
-    NowTime = time:getUTCNowSec(),  % 当前时间
+    NowTime = misc_time:utc_seconds(),  % 当前时间
     LastTransferTime = playerState:getTransferMapTime(),    % 上次传送的时间
 
     case NowTime - LastTransferTime >= CD of

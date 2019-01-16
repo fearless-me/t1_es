@@ -584,7 +584,7 @@ sendPlayerOnLineMsgToMainPro() ->
             %Account = playerState:getAccount(),
 
             myEts:updateEts(ets_rec_OnlinePlayer, PlayerID, [{#rec_OnlinePlayer.pid, self()},
-                {#rec_OnlinePlayer.playerSaveTime, time:getUTCNowMS()},
+                {#rec_OnlinePlayer.playerSaveTime, misc_time:milli_seconds()},
                 {#rec_OnlinePlayer.code, PlayerCode}]),
 
             %% 通知db玩家上线
@@ -1286,7 +1286,7 @@ syncPlayerNetPidToEts(NetPid) ->
 -spec resetPosToRevivePt() -> ok.
 resetPosToRevivePt() ->
     Time = playerState:getLastResetPosToRevivePtTime(),
-    Now = time:getUTCNowSec(),
+    Now = misc_time:utc_seconds(),
     CD = globalCfg:getGlobalCfg(resetPosToRevivePtCDTime),
     case Now - Time >= CD of
         true ->
@@ -2002,7 +2002,7 @@ makeBattlePropInfo() ->
 
 -spec sendSaveBuff() -> ok.
 sendSaveBuff() ->
-    Now = time:getUTCNowMS(),
+    Now = misc_time:milli_seconds(),
     BuffList = playerState:getSaveBuffList(),
     Fun =
         fun(#rec_buff{buffID = BuffID, endtime = EndTime, level = Level}) ->
@@ -2400,7 +2400,7 @@ initLoginRole(_) ->
 -spec sendItemUsedCD() -> ok.
 sendItemUsedCD() ->
     List = playerState:getItemUsedTimeList(),
-    Now = time:getUTCNowMSDiff2010(),
+    Now = misc_time:getUTCNowMSDiff2010(),
     Fun = fun(X, AccIn) ->
         GID = X#rec_item_used_cd.itemGroupID,
         case erlang:is_integer(GID) andalso GID > 0 of
@@ -2520,7 +2520,7 @@ log2LogDBAccountLogin(AccountID)->
                 'IDFA' = Imei,				%%用户广告标识（IOS7才有） varchar(128)
                 'IMEI' = Idfa,				%%用户IMEI串号（Android才有） varchar(128)
                 globalClientSetupKey = GlobalClientSetupKey,				%%客户端安装唯一标识 char(32)
-                time = time:getUTCNowSec(),				%%登录时间，UNIX_TIME int(4)
+                time = misc_time:utc_seconds(),				%%登录时间，UNIX_TIME int(4)
                 versionPackageHash = VersionPackageHash,				%%客户端包版本HashCode int(11)
                 fgi = Fgi
             },

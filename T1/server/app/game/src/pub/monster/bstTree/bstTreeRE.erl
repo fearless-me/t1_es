@@ -344,7 +344,7 @@ checkAction(?BSTActionMove,#bstActor{code = Code} = Actor) ->
 		true ->
 			true;
 		_ ->
-			Now = time:getUTCNowMS(),
+			Now = misc_time:milli_seconds(),
 			Time = get({move,Code}),
 			CDTime = get({moveCD,Code}),
 			CD =

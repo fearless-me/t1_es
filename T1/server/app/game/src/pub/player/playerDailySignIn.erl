@@ -30,8 +30,8 @@
 
 -spec init() -> ok.
 init() ->
-	NowTime = time:getSyncTime1970FromDBS(),
-	{{_, CurMouth, Day},{_, _, _}} = time:convertSec2DateTime(NowTime),
+	NowTime = misc_time:gregorian_seconds_from_1970( ),
+	{{_, CurMouth, Day},{_, _, _}} = misc_time:gregorian_seconds_to_datetime(NowTime),
 	SignIn = playerPropSync:getProp(?PriProp_PlayerDailySignIn),
 	{SignMouth, SignDay, FristDay, SignNum, Stat} = getSignInfo(SignIn),
 	case FristDay of
@@ -83,8 +83,8 @@ sign() ->
 			{SignMouth, SignDay, FristDay, SignNum, Stat} = getSignInfo(SignIn),
 			?DEBUG("[DebugForSignIn] sign SignIn(~p) SignMouth(~p) SignDay(~p) FristDay(~p) SignNum(~p) Stat(~p)", [SignIn, SignMouth, SignDay, FristDay, SignNum, Stat]),
 			%%日期
-			NowTime = time:getSyncTime1970FromDBS(),
-			{{_, Month, Day},{_, _, _}} = time:convertSec2DateTime(NowTime),
+			NowTime = misc_time:gregorian_seconds_from_1970( ),
+			{{_, Month, Day},{_, _, _}} = misc_time:gregorian_seconds_to_datetime(NowTime),
 			%% 修复数据
 			%% 如果周期内签到首日大于当前日期，则除非是系统时间被往前改了，就是重置的时候除了逻辑问题
 			NewFirstDay =
@@ -129,8 +129,8 @@ signGM(OffsetDay) ->
 	{SignMouth, SignDay, FristDay, SignNum, Stat} = getSignInfo(SignIn),
 	?DEBUG("[DebugForSignIn] signGM SignIn(~p) SignMouth(~p) SignDay(~p) FristDay(~p) SignNum(~p) Stat(~p)", [SignIn, SignMouth, SignDay, FristDay, SignNum, Stat]),
 	%%日期
-	NowTime = time:getSyncTime1970FromDBS() + OffsetDay * 24 * 3600,
-	{{_, Month, Day},{_, _, _}} = time:convertSec2DateTime(NowTime),
+	NowTime = misc_time:gregorian_seconds_from_1970( ) + OffsetDay * 24 * 3600,
+	{{_, Month, Day},{_, _, _}} = misc_time:gregorian_seconds_to_datetime(NowTime),
 	%% 修复数据
 	%% 如果周期内签到首日大于当前日期，则除非是系统时间被往前改了，就是重置的时候除了逻辑问题
 	NewFirstDay =
@@ -187,8 +187,8 @@ accuReward(_ID, Error) ->
 
 -spec checkAccu(ID::uint()) -> #monthly_signinawardCfg{} | uint().
 checkAccu(ID) ->
-	NowTime = time:getSyncTime1970FromDBS(),
-	{{_, Month, _},{_, _, _}} = time:convertSec2DateTime(NowTime),
+	NowTime = misc_time:gregorian_seconds_from_1970( ),
+	{{_, Month, _},{_, _, _}} = misc_time:gregorian_seconds_to_datetime(NowTime),
 	case getCfg:getCfgByArgs(cfg_monthly_signinaward, Month, ID) of
 		#monthly_signinawardCfg{} = Cfg ->
 			SignIn = playerPropSync:getProp(?PriProp_PlayerDailySignIn),
@@ -234,7 +234,7 @@ checkSign(_1, _2, _3, _4) ->
 
 reset() ->
 	%%?INFO("Daily SignIn Reset Start"),
-	{{_,_,D},{_, _, _}} = time:convertSec2DateTime(time:getSyncTime1970FromDBS()),
+	{{_,_,D},{_, _, _}} = misc_time:gregorian_seconds_to_datetime(misc_time:gregorian_seconds_from_1970()),
 	?INFO("Daily SignIn Reset Start Cur Day ~p",[D]),
 	reset(D).
 reset(1) ->

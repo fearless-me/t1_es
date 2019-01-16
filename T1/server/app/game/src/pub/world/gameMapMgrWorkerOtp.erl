@@ -233,7 +233,7 @@ handle_info({leaderCreateGuildCopyMap, PidFrom, {MapID, RoleID, GuildID}}, State
 	case MapType =:= ?MapTypeCopyMap andalso MapSubType =:= ?MapSubTypeGuild of
 		true ->
 
-			NowTime = time:getSyncTime1970FromDBS(),
+			NowTime = misc_time:gregorian_seconds_from_1970( ),
 			#mapsettingCfg{all_time = AllTime} = getCfg:getCfgPStack(cfg_mapsetting, MapID),
 			MaxOverTime = NowTime + AllTime,
 
@@ -269,7 +269,7 @@ handle_info({leaderCreateGuildCopyMap, PidFrom, {MapID, RoleID, GuildID}}, State
 	{noreply, State};
 
 handle_info({guildCopyMapOver, PidFrom, {MapID,GuildID}}, State) ->
-	NowTime = time:getSyncTime1970FromDBS(),
+	NowTime = misc_time:gregorian_seconds_from_1970( ),
 	case myEts:lookUpEts(recGuildMemory, GuildID) of
 		[#recGuildMemory{ownerID = OwnerID}] ->
 			myEts:updateEts(recGuildMemory, GuildID,
@@ -564,7 +564,7 @@ canEnterNormalMapLine(MapID, TargetLineID) ->
 %%							isReachMaxNum = IsReachMaxNum,
 %%							createTime = CreateTime
 						} ->
-%%							Now = time:getUTCNowSec(),
+%%							Now = misc_time:utc_seconds(),
 							IsWaitDestroy =:= false
 %%								andalso IsReachMaxNum =:= false
 								andalso (Num + erlang:length(WERList)) < MaxPlayerNum;
@@ -812,7 +812,7 @@ checkMapLine(MapID, RoleID, #recMapInfo{
 		true ->
 			CanIn =
 				case TargetLine of
-					0 -> time:getUTCNowSec() - CreateTime < ?ForbidEnterTime;
+					0 -> misc_time:utc_seconds() - CreateTime < ?ForbidEnterTime;
 					_ -> true
 				end,
 			case CanIn of
@@ -874,7 +874,7 @@ allocMapLine(MapID, RoleID, IsCheckRecycle, TargetLineID) ->
 					createMapLine(MapID, RoleID, TargetLineID);
 				MapInfoList ->
 					%分配到人数最多的线
-					Now = time:getUTCNowSec(),
+					Now = misc_time:utc_seconds(),
 					Func =
 						fun(#recMapInfo{pid = Pid,
 							isWaitDestroy = IsWaitDestroy,
@@ -1016,7 +1016,7 @@ createMapLine(MapID, RoleID, LineID) when erlang:is_integer(MapID) ->
 				line = Line,
 				totalPlayerNum = 0,
 				isReachMaxNum = false,
-				createTime = time:getUTCNowSec()
+				createTime = misc_time:utc_seconds()
 			},
 			mapMgrState:setMapMaxLine(MapID,erlang:max(Line, MaxLine)),
 			mapMgrState:setMapInfo(Pid0, MapInfo),

@@ -825,8 +825,8 @@ updateChallengeTimes() ->
 	ok.
 
 getRewardInfo(Rank) ->
-	NowTime = time:getSyncTime1970FromDBS(),
-	{{_Year, _Month, _Day}, {_Hour, Minute, Second}} = time:convertSec2DateTime(NowTime),
+	NowTime = misc_time:gregorian_seconds_from_1970( ),
+	{{_Year, _Month, _Day}, {_Hour, Minute, Second}} = misc_time:gregorian_seconds_to_datetime(NowTime),
 	Time = 3600 - Minute * 60 - Second,
 	KeyList = getCfg:getKeyList(cfg_ladder_1v1_reward),
 	case [Key || {Start, End} = Key <- KeyList, Rank >= Start andalso Rank =< End] of
@@ -918,7 +918,7 @@ queryTargetName(RoleID,TargetName) ->
 checkLadderMatchState(Rank) ->
 	case ets:lookup(ets_recLadderMatchState, Rank) of
 		[#recLadderMatchState{time = StartTime} = State] ->
-			NowTime = time:getSyncTime1970FromDBS(),
+			NowTime = misc_time:gregorian_seconds_from_1970( ),
 			case NowTime - StartTime >= ?LadderMatchStateProtcetTime of
 				true ->
 					?ERROR("checkLadderMatchState:~p", [State]),

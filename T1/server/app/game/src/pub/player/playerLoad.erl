@@ -318,7 +318,7 @@ initSkillSlot(SkillID, Slot) ->
 	initSkillSlot(SkillID, Slot, Cfg).
 
 initSkillSlot(SkillID, Slot, #skillCfg{skillType = Type}) ->
-	Now = time:getUTCNowMSDiff2010(),
+	Now = misc_time:getUTCNowMSDiff2010(),
 	SlotSkill = playerState:getSlotSkill(),
 	RecSoltSkill = #recSlotSkill{skillID = SkillID,
 		slot = Slot,

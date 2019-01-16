@@ -453,7 +453,7 @@ cd_only_query_call()->
 
 
 %%%-------------------------------------------------------------------
-myNow____() -> time:getUTCNowMS().
+myNow____() -> misc_time:milli_seconds().
 
 getRobLimitFromCfg()->
 	case getCfg:getCfgPStack(cfg_globalsetup, redEnvelope_WorldReceiveAmount) of

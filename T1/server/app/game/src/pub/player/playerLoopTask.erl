@@ -709,9 +709,9 @@
 %%	case playerPropSync:getProp(?SerProp_LoopTaskState) of
 %%		{_, _, CountEx} when CountEx > 0 ->
 %%			%% 昨天或者更久远，有保留下来的家族任务可以继续做，免除此时进位轮计数的机会
-%%			playerPropSync:setAny(?SerProp_LoopTaskState, {time:getSyncTimeFromDBS(), 0, CountEx - 1});
+%%			playerPropSync:setAny(?SerProp_LoopTaskState, {misc_time:localtime_seconds(), 0, CountEx - 1});
 %%		_ ->
-%%			playerPropSync:setAny(?SerProp_LoopTaskState, {time:getSyncTimeFromDBS(), 0, 0}),
+%%			playerPropSync:setAny(?SerProp_LoopTaskState, {misc_time:localtime_seconds(), 0, 0}),
 %%			playerDaily:incDailyCounter(?DailyType_LoopTaskNum, ?DailyType_LoopTaskNum_Loop)
 %%	end,
 %%	playerPropSync:setAny(?SerProp_LoopTaskProcess, []).
@@ -1262,7 +1262,7 @@
 %%						true ->
 %%							playerDaily:incDailyCounter(?DailyType_LoopTaskNum, ?DailyType_LoopTaskNum_RefreshAllFive),
 %%							{_, _, CountEx} = playerPropSync:getProp(?SerProp_LoopTaskState),
-%%							playerPropSync:setAny(?SerProp_LoopTaskState, {time:getSyncTimeFromDBS(), 1, CountEx}),  %% 标记当前轮是一键五星状态
+%%							playerPropSync:setAny(?SerProp_LoopTaskState, {misc_time:localtime_seconds(), 1, CountEx}),  %% 标记当前轮是一键五星状态
 %%							?ERROR_CODE(?ErrorCode_TaskSuccess_LoopTaskAccept_AllFiveStar),
 %%							Mark;
 %%						_ ->
@@ -1365,9 +1365,9 @@
 %%		(IsForceReset =:= true) orelse (IsOnDay =:= false) ->
 %%			case findCurrentTaskID() of
 %%				0 ->
-%%					playerPropSync:setAny(?SerProp_LoopTaskState, {time:getSyncTimeFromDBS(), B01_AllFive, 0});
+%%					playerPropSync:setAny(?SerProp_LoopTaskState, {misc_time:localtime_seconds(), B01_AllFive, 0});
 %%				_ ->
-%%					playerPropSync:setAny(?SerProp_LoopTaskState, {time:getSyncTimeFromDBS(), B01_AllFive, 1}),  %% 保留的任务引发了一次额外的轮奖励机会
+%%					playerPropSync:setAny(?SerProp_LoopTaskState, {misc_time:localtime_seconds(), B01_AllFive, 1}),  %% 保留的任务引发了一次额外的轮奖励机会
 %%					playerDaily:addDailyCounter(?DailyType_LoopTaskNum, ?DailyType_LoopTaskNum_Process, queryCompleteTaskCount())  %% 保留已完成任务计数
 %%			end,
 %%			true;
@@ -1642,7 +1642,7 @@
 %%				ets:insert(rec_guild_member, MemberNew),
 %%				guildLogic:saveToMySql(MemberNew),
 %%				History = #pk_GuildLoopTaskGiveHistory{
-%%					time = time:getSyncTimeFromDBS(),
+%%					time = misc_time:localtime_seconds(),
 %%					roleID = RoleID,
 %%					tarRoleID = TargetRoleID,
 %%					taskID = TaskID,

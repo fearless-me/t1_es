@@ -48,7 +48,7 @@ tick() ->
 			_ ->
 				%%当有人时才更新，后面策划可能会有需求，定时在某张地图刷新一个BOSS怪出来，这时是不管这张地图有没人的
 				%%此需求，后面可能需要做相应处理，目前暂时如此
-				gameMapLogic:tickMap(time:getUTCNowMS())
+				gameMapLogic:tickMap(misc_time:utc_seconds())
 		end
 	catch
 		_:_Why ->

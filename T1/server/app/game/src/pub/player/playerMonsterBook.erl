@@ -467,9 +467,9 @@ db2msg(#rec_player_monster_book{
 	#pk_MonsterBook{
 		id = ID,
 		kill = Kill,
-		isSnap = misc:convertBoolFromInt(IsSnap),
-		isUnlock = misc:convertBoolFromInt(IsUnlock),
-		isReward = misc:convertBoolFromInt(IsReward)
+		isSnap = misc:i2b(IsSnap),
+		isUnlock = misc:i2b(IsUnlock),
+		isReward = misc:i2b(IsReward)
 	};
 db2msg([]) ->
 	[];

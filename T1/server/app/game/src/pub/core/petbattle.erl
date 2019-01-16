@@ -76,7 +76,7 @@ getInte(RoleID) ->
 	PB = mnesia:dirty_read(rec_pet_manor_battle, RoleID),
 	getInte(RoleID, PB).
 getInte(_RoleID, [#rec_pet_manor_battle{save_time = LastSaveTime, pet_integral = Integral}]) ->
-	SaveTime = time:getWeekBeginSecondsByDay(time:getLocalNowDateTime1970()) + ?RefreshTime,
+	SaveTime = misc_time:getWeekBeginSecondsByDay(misc_time:getLocalDateTime()) + ?RefreshTime,
 	case LastSaveTime =:= SaveTime of
 		true ->
 			Integral;

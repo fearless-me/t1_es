@@ -91,7 +91,7 @@ getDataFromDB(SQL, {TableRecord,RecInfo}) ->
     lists:foldl(Fun, [], RecordList).
 
 modifyRecord(#rec_item{isBind = IsBind,isLocked = IsLocked} = Rec) ->
-	NewRec = Rec#rec_item{isBind = misc:convertBoolFromInt(IsBind),isLocked = misc:convertBoolFromInt(IsLocked)},
+	NewRec = Rec#rec_item{isBind = misc:i2b(IsBind),isLocked = misc:i2b(IsLocked)},
 	itemUtils:makeItemRecFromDB(NewRec);
 modifyRecord(#rec_package_info{roleID = RoleID,bagType = SK} = Rec) ->
 	Rec#rec_package_info{roleID = {RoleID,SK}};

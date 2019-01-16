@@ -27,7 +27,7 @@ addLogParticipatorInfo(Type) ->
 															  type = Type,
 															  guildID = playerState:getGuildID(),
 															  param1 = 0,
-															  time = time:getLogTimeSec()
+															  time = misc_time:utc_seconds()
 															 }),
 	ok.
 
@@ -43,7 +43,7 @@ addLogParticipatorInfo(Type,AwardID) ->
 		type = Type,
 		guildID = playerState:getGuildID(),
 		param1 = AwardID,
-		time = time:getLogTimeSec()
+		time = misc_time:utc_seconds()
 	}),
 	ok.
 
@@ -57,6 +57,6 @@ addLogParticipatorInfo2(Type,RoleID) ->
 		type = Type,
 		guildID = 0,
 		param1 = 0,
-		time = time:getLogTimeSec()
+		time = misc_time:utc_seconds()
 	}),
 	ok.

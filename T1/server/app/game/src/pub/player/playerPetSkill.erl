@@ -191,7 +191,7 @@ syncPetSkillList(PetID, SkillID, PetSkills) ->
 			skill_type = Type,
 			skill_is_unlock = Unlock
 		} ->
-			Time = time:getUTCNowMSDiff2010(),
+			Time = misc_time:getUTCNowMSDiff2010(),
 			case Time >= CD of
 				true ->
 					NewCD = 0;

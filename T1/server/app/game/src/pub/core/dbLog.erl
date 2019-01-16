@@ -77,7 +77,7 @@
 ]).
 
 sendSaveLogChangeRoleOwner(LogType, #rec_log_change_role_owner{} = Rec) ->
-	sendMsg2LogDBServer(LogType, Rec#rec_log_change_role_owner{time = time:getLogTimeSec()}),
+	sendMsg2LogDBServer(LogType, Rec#rec_log_change_role_owner{time = misc_time:utc_seconds()}),
 	ok.
 
 %%聊天记录日志
@@ -88,7 +88,7 @@ sendSaveLogChat(SendPlayerID, Receiveplayerid, ChatString, ChatChannel) ->
 			receiveplayerid = Receiveplayerid,			%%接收者玩家ID
 			chatString = ChatString,					%%聊天内容
 			chatChannel = ChatChannel,					%%聊天频道（1.世界，2.私聊，3.队伍，4.帮会，5.系统）
-			time = time:getLogTimeSec()						%%发送时间
+			time = misc_time:utc_seconds()						%%发送时间
 		}).
 
 %%发送创建物品消息到日志服务
@@ -106,7 +106,7 @@ sendSaveLogCreateGoods(Playerid, GoodsUID, GoodsID, PileNum, IsBind, BagType, Cu
 			quality = Quality, 					%%装备品质
 			createReson = CreateReson, 			%%创建物品原因码
 			createFromParam = CreateFromParam, 	%%创建来源参数
-			time = time:getLogTimeSec()				%%时间
+			time = misc_time:utc_seconds()				%%时间
 		}),
 	NRec = #recLogGoodsChange{
 		itemUID = GoodsUID,
@@ -130,7 +130,7 @@ sendSaveLogCreateTitle(RoleID,TitleID,Source) ->
 			playerID = RoleID,						%%角色ID
 			titleID = TitleID,						%%称号ID
 			source = Source,						%%来源
-			time = time:getLogTimeSec()					%%时间
+			time = misc_time:utc_seconds()					%%时间
 		}).
 
 %%发送领取离线经验日志
@@ -143,7 +143,7 @@ sendSaveLogRoleExt(RoleID, TotalTime, RewardNum, RewaredType) ->
 					totalOfflineTime = TotalTime,
 					rewardNum = RewardNum,
 					rewardType = RewaredType,
-					time = time:getLogTimeSec()
+					time = misc_time:utc_seconds()
 				});
 		_ ->
 			ok
@@ -151,7 +151,7 @@ sendSaveLogRoleExt(RoleID, TotalTime, RewardNum, RewaredType) ->
 
 %%货币变化日志
 sendSaveLogCoinChange(_CoinType, #recLogCoin{} = Rec) ->
-	sendMsg2LogDBServer(?LogType_Coin, Rec#recLogCoin{time = time:getLogTimeSec()}).
+	sendMsg2LogDBServer(?LogType_Coin, Rec#recLogCoin{time = misc_time:utc_seconds()}).
 
 %%宠物创建
 sendSaveLogCreatePet(Playerid, PetInfo ) ->
@@ -159,7 +159,7 @@ sendSaveLogCreatePet(Playerid, PetInfo ) ->
 		#recLogCreatePet{
 			playerID = Playerid,								%%角色ID
 			petID = PetInfo#recPetInfo.pet_id,					%% 宠物ID
-			time = time:getLogTimeSec()							%%时间
+			time = misc_time:utc_seconds()							%%时间
 		}).
 
 %%宠物升星
@@ -170,7 +170,7 @@ sendSaveLogPetUpStar(Playerid, PetId, OldStar, NewStar) ->
 			petID = PetId,
 			newStar = NewStar,
 			oldStar = OldStar,
-			time = time:getLogTimeSec()
+			time = misc_time:utc_seconds()
 		}).
 
 %%宠物升星
@@ -181,7 +181,7 @@ sendSaveLogPetRaw(Playerid, PetId, OldRaw, NewRaw) ->
 			petID = PetId,
 			newRaw = NewRaw,
 			oldRaw = OldRaw,
-			time = time:getLogTimeSec()
+			time = misc_time:utc_seconds()
 		}).
 
 %%宠物洗练
@@ -194,7 +194,7 @@ sendSaveLogPetCast(Playerid, PetId, OldSkillID, NewSkillID, OldSkillLevel, NewSk
 			oldSkillLevel = OldSkillLevel,
 			newSkillID = NewSkillID,
 			newSkillLevel = NewSkillLevel,
-			time = time:getLogTimeSec()
+			time = misc_time:utc_seconds()
 		}).
 
 
@@ -207,7 +207,7 @@ sendSaveLogPetEquipStr(Playerid, OldEquipID, NewEquipID, OldLevel, NewLevel) ->
 			newLevel = NewLevel,
 			oldLevel = OldLevel,
 			newEquipID = NewEquipID,
-			time = time:getLogTimeSec()
+			time = misc_time:utc_seconds()
 		}).
 
 %%角色创建日志
@@ -221,7 +221,7 @@ sendSaveLogCreatePlayer(Playerid, Name, AccountID, Sex, Camp, Race, Career,_Func
 			camp = Camp,							%%阵营
 			race = Race,							%%种族
 			career = Career,						%%职业
-			time = time:getLogTimeSec()				%%时间
+			time = misc_time:utc_seconds()				%%时间
 		}).
 
 %%经验修改日志
@@ -234,13 +234,13 @@ sendSaveLogChangeExp(Playerid, OldLevel, NewLevel, ChangeType, ChangeValue, CurE
 			changType = ChangeType,					%%经验改变类型
 			changValue = ChangeValue,				%%经验改变值
 			changePrama = ChnagePrama,				%%经验改变来源参数
-			time = time:getLogTimeSec(),			%%时间
+			time = misc_time:utc_seconds(),			%%时间
 			curExp = CurExp
 		}).
 
 %%金币消费日志
 sendSaveLogGold(#recLogGold{} = Rec) ->
-	sendMsg2LogDBServer(?LogType_Gold, Rec#recLogGold{time = time:getLogTimeSec()}),
+	sendMsg2LogDBServer(?LogType_Gold, Rec#recLogGold{time = misc_time:utc_seconds()}),
 	ok.
 
 %%物品修改日志
@@ -302,7 +302,7 @@ sendSaveLogChangeGoods(#recLogGoodsChange{playerID = PlayerID, accountID = Accou
 							Rec
 					end,
 			{_Fgi,_FedID,PlatformName} = playerState:getFuncellInfo(),
-			NRec2 = NRec1#recLogGoodsChange{platformName = PlatformName, dbID = gsMainLogic:getDBID4GS(), time = time:getLogTimeSec()},
+			NRec2 = NRec1#recLogGoodsChange{platformName = PlatformName, dbID = gsMainLogic:getDBID4GS(), time = misc_time:utc_seconds()},
 			sendMsg2LogDBServer(?LogType_GoodsChange, NRec2);
 		_ ->
 			skip
@@ -316,7 +316,7 @@ sendSaveLogMailChange(Playerid, MailUID, ChangeType) ->
 			playerID = Playerid,					%%角色ID
 			mailUID = MailUID,						%%邮件UID
 			changeType = ChangeType,				%%变化原因
-			time = time:getLogTimeSec()					%%时间
+			time = misc_time:utc_seconds()					%%时间
 		}).
 
 %%商城购买日志
@@ -328,7 +328,7 @@ sendSaveLogMallBuy(Playerid, ItemDataID, BuyCount, PayMoneyType, PayMoney) ->
 			buyCount = BuyCount,						%%购买物品数量
 			payMoneyType = PayMoneyType,				%%购买金币类型
 			payMoney = PayMoney,						%%购买金币数量
-			time = time:getLogTimeSec()						%%时间
+			time = misc_time:utc_seconds()						%%时间
 		}).
 
 %%在线玩家
@@ -336,7 +336,7 @@ sendSaveLogOnlinePlayer(Count) ->
 	sendMsg2LogDBServer(?LogType_OnlinePlayers,
 		#recLogOnlinePlayers{
 			count = Count,						%%在线人数
-			time = time:getLogTimeSec()				%%时间
+			time = misc_time:utc_seconds()				%%时间
 		}).
 
 %%发、抢红包日志
@@ -353,7 +353,7 @@ sendSaveLogPet(Playerid, PetID, ChangeField, ChangeValue, NewValue) ->
 			changeField = ChangeField,						%%宠物属性变化字段索引
 			changeValue = ChangeValue,						%%宠物属性变化值
 			newValue = NewValue,							%%变化后的新值
-			time = time:getLogTimeSec()							%%时间
+			time = misc_time:utc_seconds()							%%时间
 		}).
 
 %%角色删除
@@ -370,7 +370,7 @@ sendSaveLogDelPlayer(Playerid, Level, Gold, BindGold, Diamond, Ticket, Prestige,
 			honor = Honor,						%%荣誉
 			purpleEssence = PurpleEssence,		%%紫色精华
 			goldenEssence = GoldenEssence,		%%金色精华
-			time = time:getLogTimeSec()			%%时间
+			time = misc_time:utc_seconds()			%%时间
 		}).
 
 %%好友
@@ -404,7 +404,7 @@ sendSaveLogPlayerLevel(PlayerID, OldLevel, CurLevel,_FuncellInfo) ->
 			PlayerID,							%%角色ID
 			OldLevel,							%%变化前的等级
 			CurLevel,					    	%%变化后的等级
-			time:getLogTimeSec()				%%时间
+			misc_time:utc_seconds()				%%时间
 		}).
 
 %%技能
@@ -414,7 +414,7 @@ sendSaveLogSkill(PlayerID, SkillID, Level) ->
 			playerID = PlayerID,						%%角色ID
 			skillID = SkillID,							%%技能ID
 			level = Level,								%%角色等级
-			time = time:getLogTimeSec()					%%时间
+			time = misc_time:utc_seconds()					%%时间
 		}).
 
 %%任务
@@ -425,7 +425,7 @@ sendSaveLogTask(PlayerID, TaskDataID, Level, Type) ->
 			taskDataID = TaskDataID,					%%任务DataID
 			level = Level,								%%角色等级
 			type = Type,								%%任务事件，（1.接取，2.归还）
-			time = time:getLogTimeSec()					%%时间
+			time = misc_time:utc_seconds()					%%时间
 		}).
 
 %%充值奖励
@@ -441,7 +441,7 @@ sendSaveLogPresentRecharge(Orderid, PlatformAccount, PlatformID, AccountID, Play
 			getedGold = GetedGold,					%%充值获得元宝值
 			presentGold = PresentGold,				%%赠送元宝值
 			reason = Reason,						%%赠送原因
-			time = time:getLogTimeSec()			    %%时间
+			time = misc_time:utc_seconds()			    %%时间
 		}).
 
 %%充值
@@ -465,7 +465,7 @@ sendSaveLogRecharge(#recRecharge{} = RechrageInfo,State,ErrorCode,UMSHttpInfo) -
 		game_recharge_state=State,
 		recharge_item_relation_number=RechrageInfo#recRecharge.item_amount,
 		recharge_item_relation_id = RechrageInfo#recRecharge.item_id,
-		time = time:getLogTimeSec(),
+		time = misc_time:utc_seconds(),
 		error_code = ErrorCode,
 		ums_http_json_info =UmsHttpInfoJson
 	},
@@ -474,24 +474,24 @@ sendSaveLogRecharge(#recRecharge{} = RechrageInfo,State,ErrorCode,UMSHttpInfo) -
 
 %%交易行交易
 sendSaveLogTrade(#rec_log_trade{} = Trade) ->
-	sendMsg2LogDBServer(?LogType_Trade, Trade#rec_log_trade{time = time:getLogTimeSec()}).
+	sendMsg2LogDBServer(?LogType_Trade, Trade#rec_log_trade{time = misc_time:utc_seconds()}).
 
 %% 交易行操作
 sendSaveLogTradeOp(#rec_log_trade_op{} = Trade) ->
-	sendMsg2LogDBServer(?LogType_Trade_OP, Trade#rec_log_trade_op{time = time:getLogTimeSec()}).
+	sendMsg2LogDBServer(?LogType_Trade_OP, Trade#rec_log_trade_op{time = misc_time:utc_seconds()}).
 
 %% 商业化内容日志
 sendSaveBusiness(#rec_log_business{} = Business) ->
-	sendMsg2LogDBServer(?LogType_Business, Business#rec_log_business{time = time:getLogTimeSec()}).
+	sendMsg2LogDBServer(?LogType_Business, Business#rec_log_business{time = misc_time:utc_seconds()}).
 sendSaveDialBox(#rec_log_dial_box{} = Dial) ->
-	sendMsg2LogDBServer(?LogType_Dial, Dial#rec_log_dial_box{time = time:getLogTimeSec()}).
+	sendMsg2LogDBServer(?LogType_Dial, Dial#rec_log_dial_box{time = misc_time:utc_seconds()}).
 
 %% 韩国naver论坛活动奖励领取日志
 sendSaveKoreaNaver(#rec_log_koreanaver_reward_get{} = KLog) ->
-	sendMsg2LogDBServer(?LogType_KoreaNaverRewardGet, KLog#rec_log_koreanaver_reward_get{time = time:getLogTimeSec()}).
+	sendMsg2LogDBServer(?LogType_KoreaNaverRewardGet, KLog#rec_log_koreanaver_reward_get{time = misc_time:utc_seconds()}).
 
 sendSaveLog(#rec_log_cross_switch{} = Cross) ->
-	sendMsg2LogDBServer(?LogType_CrossSwitch, Cross#rec_log_cross_switch{time = time:getLogTimeSec()}).
+	sendMsg2LogDBServer(?LogType_CrossSwitch, Cross#rec_log_cross_switch{time = misc_time:utc_seconds()}).
 
 %%记录封号
 sendSaveLogForbidden(PlayerID,AccountID,Reason,ForbiddenTime) ->
@@ -501,7 +501,7 @@ sendSaveLogForbidden(PlayerID,AccountID,Reason,ForbiddenTime) ->
 			accountID = AccountID,
 			reason = Reason,
 			forbiddenTime = ForbiddenTime,
-			time = time:getLogTimeSec()
+			time = misc_time:utc_seconds()
 		}
 	).
 
@@ -514,7 +514,7 @@ sendSaveLogAchieveNum(PlayerID, AchieveID, OldAchieveNum, ModAchieveNum, NewAchi
 			oldAchieveNum = OldAchieveNum,			%%成就点变化前的的值
 			modAchieveNum = ModAchieveNum,			%%成就点变化值
 			newAchieveNum = NewAchieveNum, 			%%成就点变化后的值
-			time = time:getLogTimeSec()				%%时间
+			time = misc_time:utc_seconds()				%%时间
 		}).
 
 %%代client存日志（主要是充值相关）
@@ -524,7 +524,7 @@ sendSaveLogEventID(RoleID,AccountID,EventID, EventTime,EventArgs) ->
 		#recLogTypeEventLog{
 			roleID = RoleID,
 			accountID = AccountID,
-			recTime = time:getUTCNowSec(),
+			recTime = misc_time:utc_seconds(),
 			eventID = EventID,
 			eventTime = EventTime,
 			eventArgs = EventArgs
@@ -537,7 +537,7 @@ sendSaveLogGMCmd(SendPlayerID, ChatString) ->
 		#recLogGMCmd{
 			sendPlayerID = SendPlayerID,               	%%发送者玩家ID，=0表示系统发送
 			chatString = ChatString,					%%聊天内容
-			time = time:getLogTimeSec()					%%发送时间
+			time = misc_time:utc_seconds()					%%发送时间
 		}).
 
 %%混沌战场活动给boss伤害日志
@@ -602,7 +602,7 @@ sendSaveLogCareerChange(Info) ->
 	sendMsg2LogDBServer(?LogType_CareerChange, Info).
 
 sendSaveLogRune(#rec_log_rune{} = Info) ->
-	sendMsg2LogDBServer(?LogType_Rune, Info#rec_log_rune{time = time:getLogTimeSec()}).
+	sendMsg2LogDBServer(?LogType_Rune, Info#rec_log_rune{time = misc_time:utc_seconds()}).
 
 sendSaveLogRank(#recSaveRank{} = Rank) ->
 	sendMsg2LogDBServer(?LogType_Rank, Rank).

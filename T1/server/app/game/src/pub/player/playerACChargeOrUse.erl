@@ -123,7 +123,7 @@ creatMsgData(_Type,{Conf,ACData4ID}) ->
 		end,
 	RuleInfoList = lists:foldl(F, [], Conf#rec_operate_activity.arg1),
 	
-	LoaclSecond = time:getLocalTimeAdjustHour()*3600, 
+	LoaclSecond = misc_time:tz_seconds*3600,
 	#pk_GS2U_RequestChargeOrUseListAck
 	{
 	 type = Conf#rec_operate_activity.type, 

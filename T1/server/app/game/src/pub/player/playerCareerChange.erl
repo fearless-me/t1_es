@@ -107,7 +107,7 @@ addCareerChangeLog(OldCareer, NewCareer)->
 		race = playerState:getRace(),
 		careerFrom = OldCareer,
 		careerTo = NewCareer,
-		time = time:getLogTimeSec()
+		time = misc_time:utc_seconds()
 	},
 	dbLog:sendSaveLogCareerChange(Log),
 	ok.
@@ -140,7 +140,7 @@ changeCareerProperty(_OldCareer, NewCareer) ->
 	ok.
 
 onChangeCareerSuccess(OldCareer, NewCareer) ->
-	Now = time:getUTCNowMS(),
+	Now = misc_time:milli_seconds(),
 	playerSave:savePlayer(Now),
 
 	%% 变更技能前通知转职成功，以便客户端合理匹配职业ID

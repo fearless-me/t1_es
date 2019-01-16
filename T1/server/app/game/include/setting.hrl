@@ -92,7 +92,7 @@
 -define(Setting_PlayerVarReadOnly_SnowmanGiftLastTime, 25020).
 %% (@)玩家累计登录天数（通用，无等级限制） ($0)
 -define(Setting_PlayerVarReadOnly_AccLoginDayAll, 25021).
-%% (@)跨服活动-大逃杀 返还进入次数暂存 时间点 time:getSyncTimeFromDBS/0
+%% (@)跨服活动-大逃杀 返还进入次数暂存 时间点 misc_time:localtime_seconds/0
 -define(Setting_PlayerVarReadOnly_CrossActivityAlive_Time, 25022).
 %% (@)跨服活动-大逃杀 返还进入次数暂存 次数 uint32()
 -define(Setting_PlayerVarReadOnly_CrossActivityAlive_Count, 25023).

@@ -110,7 +110,7 @@
 %%
 %%msg(#pk_U2GS_AtuoSubmitTask{}) ->
 %%    % 条件判断
-%%    NowTime = time:getSyncTime1970FromDBS(),
+%%    NowTime = misc_time:gregorian_seconds_from_1970( ),
 %%    LastGetTime = playerPropSync:getProp(?SerProp_ArunaAutoTaskTime),
 %%    case core:timeIsOnDay(LastGetTime, NowTime) of
 %%        false ->

@@ -571,7 +571,7 @@ getRectAoeTarget(#recMapObject{code = SelfCode}, {SX, SY}, {DirX, DirY}, PlayerE
 	AttackSpeed :: number(),
 	CastFactor :: number().
 getTriggerTime(SkillID, AttackTime, AttackSpeed, CastFactor) ->
-	Now = time:getUTCNowMS(),
+	Now = misc_time:milli_seconds(),
 	NeedTime = getSkillParam(SkillID, AttackTime, AttackSpeed, CastFactor),
 	Now + NeedTime.
 

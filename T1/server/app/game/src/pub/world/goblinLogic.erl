@@ -37,9 +37,9 @@ countBeginTime(MapID) ->
 	case getCfg:getCfgPStack(cfg_goblin, MapID) of
 		#goblinCfg{refreshtime = TimeList} ->
 			Fun = fun(BeginTime) ->
-				Time = time:getSyncTime1970FromDBS(),
-				{{Y, M, D}, {_H, _Min, _S}} = time:convertSec2DateTime(Time),
-				RefreshTime = time:convertDateTime1970ToSec({{Y, M, D}, {BeginTime, 0, 0}}),
+				Time = misc_time:gregorian_seconds_from_1970( ),
+				{{Y, M, D}, {_H, _Min, _S}} = misc_time:gregorian_seconds_to_datetime(Time),
+				RefreshTime = misc_time:convertDateTime1970ToSec({{Y, M, D}, {BeginTime, 0, 0}}),
 				case RefreshTime < Time of
 					true ->
 						case Time - RefreshTime =< ?GoblinTotalTime of

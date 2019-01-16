@@ -1152,7 +1152,7 @@ getRoleAppearance(RoleIDList, IsCheckLoad) when erlang:is_list(RoleIDList) ->
 					FashionIDList =
 						case getSyncPropIntValue(?PubProp_FashionVisibleFlag, PropList) of
 							0 ->
-								FNow = time:getUTCNowSec(),
+								FNow = misc_time:utc_seconds(),
 								FFashion =
 									fun(#recFashionOnLoad{value = FValue, endTime = FEndTime}, AccL) ->
 										case FEndTime =:= 0 orelse
@@ -1340,13 +1340,13 @@ runeTimeStringToInt64(DateTime) ->
 				{datetime, {{1970, 1, 1}, {0, 0, 0}}} ->
 					0;
 				{datetime, DT} ->
-					time:convertDateTime1970ToSec(DT) - ?SECS_FROM_0_TO_1970
+					misc_time:convertDateTime1970ToSec(DT) - ?SECS_FROM_0_TO_1970
 			end
 	end.
 
 loadRuneData(RuneBaseEts, Start, OneCount, TableName, TableInfo) ->
-	Now = time:getUTCNowSec(),
-	NowStr = time:convertTimeStamp2DateTimeStr(Now),
+	Now = misc_time:utc_seconds(),
+	NowStr = misc_time:convertTimeStamp2DateTimeStr(Now),
 	N = Start * OneCount,
 	SQL =
 		case TableName of

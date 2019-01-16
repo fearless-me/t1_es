@@ -909,7 +909,7 @@ onHomeBitMapAward(GroupID,IsKill)->
 -spec calCopyMapReward(GroupID::uint()) -> ok.
 calCopyMapReward(GroupID) ->
 	%% 计算副本评分 以及 随机生成给玩家的宝箱
-	EndTime = time:getUTCNowMS(),				%% 完成时间
+	EndTime = misc_time:milli_seconds(),				%% 完成时间
 	StartTime = mapState:getMapStartTime(GroupID),		%% 开始时间
 
 	%% 时间差

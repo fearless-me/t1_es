@@ -396,7 +396,7 @@ handle_info({getMyPreRechargeAck,_Pid,AckData},State) ->
 %%															funcellOrderID=FeOrderID
 %%															}=Data },State) ->
 %%	?INFO("rechargeSend2LS[~w] sendData[~p]",[playerState:getRoleID(),Data]),
-%%	dbLog:sendSaveLogEventID(playerState:getRoleID(),playerState:getAccountID(),?RechargeEventOnSend2LS, time:getUTCNowSec(), FeOrderID),
+%%	dbLog:sendSaveLogEventID(playerState:getRoleID(),playerState:getAccountID(),?RechargeEventOnSend2LS, misc_time:utc_seconds(), FeOrderID),
 %%	gsLSOtp:send2ls(rechargeCheck, {self(), AccToken, FuncellCilentID, FeOrderID}),%%等待ack
 %%%% 	erlang:send_after(1000, self(), {test,AccToken, FuncellCilentID, FeOrderID}),
 %%	{noreply,State};
@@ -405,7 +405,7 @@ handle_info({getMyPreRechargeAck,_Pid,AckData},State) ->
 %%handle_info({rechargeCheckAck,_Pid,AckData},State) ->
 %%	?INFO("rechargeCheckAck[~w] AckData[~p]",[playerState:getRoleID(),AckData]),
 %%	AckDataStr = misc:term_to_string(AckData),
-%%	dbLog:sendSaveLogEventID(playerState:getRoleID(),playerState:getAccountID(),?RechargeEventOnLSAck, time:getUTCNowSec(), AckDataStr),
+%%	dbLog:sendSaveLogEventID(playerState:getRoleID(),playerState:getAccountID(),?RechargeEventOnLSAck, misc_time:utc_seconds(), AckDataStr),
 %%	playerRecharge:dealRechargeCheckAck(AckData, State);
 %%
 %%%%玩家充值，以前已经上来过，直接加钱，在cs上有副本(CS发过来)
@@ -1106,7 +1106,7 @@ handle_info({getTransferPosAck, _Pid, {MapID, MapPid, PosX, PosY}}, State) ->
 					case playerState:getMapPid() of
 						MapPid ->
 							%% 同地图时沿用原逻辑（客户端执行寻路前往）
-							playerState:setVipLastTransmit(time:getSyncUTCTimeFromDBS()),
+							playerState:setVipLastTransmit(misc_time:utc_seconds()),
 							Msg = #pk_GS2U_returnFriendPos{
 								mapID   = MapID,
 								x       = PosX,
@@ -2777,8 +2777,8 @@ handle_info({gatherHurtAck, _, {PcHurt}}, State) ->
 %			rebate = 10,coinType = ?CoinTypeDiamond,limited = 1}],
 %	Msg = #pk_GS2U_PushInfo{
 %		items = Items,
-%		startTime = time:getLocalNowSec1970(),
-%		endTime = time:getLocalNowSec1970()+86399
+%		startTime = misc_time:localtime_seconds(),
+%		endTime = misc_time:localtime_seconds()+86399
 %		},
 %	playerMsg:sendNetMsg(Msg),
 %	{noreply, State};
@@ -3644,7 +3644,7 @@ kickClient(NetPid,Type) ->
 
 %%只有RELEASE版本才检测外挂
 checkExtPlugin() ->
-	Now = time:getUTCNowMS(),
+	Now = misc_time:milli_seconds(),
 	StartTime = playerState:getUseExtPluginStartTime(),
 	Count = case Now - StartTime =< 600000 of
 				true ->

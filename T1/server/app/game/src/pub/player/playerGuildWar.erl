@@ -196,7 +196,7 @@
 %%						[#recGuildWarPlayer{startTime = 0, reviveCD = CD}] ->
 %%							{true, CD};
 %%						[#recGuildWarPlayer{startTime = STime, reviveCD = CD}] ->
-%%							NowTime = time:getSyncTime1970FromDBS(),
+%%							NowTime = misc_time:gregorian_seconds_from_1970( ),
 %%							#globalsetupCfg{setpara = [CXTime]} = getCfg:getCfgPStack(cfg_globalsetup, resurrection_tozero),
 %%							case NowTime - STime >= CXTime of
 %%								true ->

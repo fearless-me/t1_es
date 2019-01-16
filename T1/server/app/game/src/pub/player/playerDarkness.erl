@@ -488,7 +488,7 @@ requestEnterDarkness(Entrance) ->
 %%			#globalsetupCfg{setpara = [NeedLevel]} = getCfg:getCfgPStack(cfg_globalsetup, dark_level),
 %%			case playerState:getLevel() >= NeedLevel of
 %%				true ->
-%%					NowTime = time:getSyncTime1970FromDBS(),
+%%					NowTime = misc_time:gregorian_seconds_from_1970( ),
 %%					LastTime = playerPropSync:getProp(?SerProp_PRequestDarkness),
 %%					case NowTime - LastTime >= ?RequestEnterDarknessCD of
 %%						true ->
@@ -543,7 +543,7 @@ requestEnterDarknessMap(TargetMapID) ->
 					#mapsettingCfg{playerEnter_MinLevel = MinLvl} = getCfg:getCfgByKey(cfg_mapsetting, TargetMapID),
 					case PlayerLevel >= MinLvl of
 						true ->
-							NowTime = time:getSyncTime1970FromDBS(),
+							NowTime = misc_time:gregorian_seconds_from_1970( ),
 							LastTime = playerPropSync:getProp(?SerProp_PRequestDarkness),
 							case NowTime - LastTime >= ?RequestEnterDarknessCD of
 								true ->

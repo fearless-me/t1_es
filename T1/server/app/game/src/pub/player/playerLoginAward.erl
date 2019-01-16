@@ -32,14 +32,14 @@ checkAndGiveLoginAward(RoleID,TakenAwardKeyList,CurLevel) when erlang:is_list(Ta
 			sex = Sex,
 			career = Career
 		}, OkKeyAcc) ->
-			Now = time:getUTCNowSec(),
+			Now = misc_time:utc_seconds(),
 			BIsBefore =
-				case misc:convertBoolFromInt(IsBefore) of
+				case misc:i2b(IsBefore) of
 					false ->
 						true;
 					true ->
 						{datetime, {{Y, M, D}, {H, I, S}}} = playerState:getRoleCreateTime(),
-						RoleCreateTime = time:convertDateTime1970ToSec({{Y, M, D}, {H, I, S}})- ?SECS_FROM_0_TO_1970 - time2:getTimezoneSec(),
+						RoleCreateTime = misc_time:convertDateTime1970ToSec({{Y, M, D}, {H, I, S}})- ?SECS_FROM_0_TO_1970 - time2:getTimezoneSec(),
 						case RoleCreateTime < Begin of
 							true ->
 								true;

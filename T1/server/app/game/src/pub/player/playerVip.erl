@@ -137,7 +137,7 @@ buy(ID) ->
 										OldValue + Day * 24 * 3600;
 									_ ->
 										%% 新购
-										time:getDayBeginSeconds(time2:convertSecToDateTime(NowTime)) + (Day + 1) * 24 * 3600
+										misc_time:getDayBeginSeconds(time2:convertSecToDateTime(NowTime)) + (Day + 1) * 24 * 3600
 								end,
 							playerPropSync:setInt64(PropID, EndTime),
 							?INFO("buy vip roleID:~p, ID:~p, time[~p,~p,~p -> ~p]",

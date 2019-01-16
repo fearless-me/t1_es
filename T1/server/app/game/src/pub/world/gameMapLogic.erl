@@ -111,7 +111,7 @@ getMapList()->
 -spec initCopyMapSchedule(GroupID::uint()) -> ok.
 initCopyMapSchedule(GroupID) ->
 	%%?INFO("initCopyMapSchedule:~p", [GroupID]),
-	mapState:setMapStartTime(GroupID, time:getUTCNowMS()),			%% 地图开始时间，用于副本结算
+	mapState:setMapStartTime(GroupID, misc_time:utc_seconds()),			%% 地图开始时间，用于副本结算
 	mapState:setAllPlayersDeadTimes(GroupID, 0),
 
 	copyMapScheduleState:setOpenBlockList(GroupID, []),
@@ -132,7 +132,7 @@ initHomeBitMapData(GroupID)->
 			  case getCfg:getCfgPStack(cfg_mapsetting, MapID) of
 				  #mapsettingCfg{all_time = All_time} ->
 					  copyMapScheduleState:setGroupID(GroupID),
-					  DestroyTime = time:getUTCNowMS() +All_time * 1000,
+					  DestroyTime = misc_time:milli_seconds() +All_time * 1000,
 					  copyMapScheduleState:setGruopDestoryTime(GroupID,DestroyTime);
 				  _->
 					  skip
@@ -239,7 +239,7 @@ tickMap(NowTime) ->
 	mapState:printPrintTickLog("gameMapConvoy:tick"),
 	gameMapConvoy:tick(NowTime),
 
-	mapState:printPrintTickLog("tick map end[~p]!!!", [time:getUTCNowMS() - NowTime]),
+	mapState:printPrintTickLog("tick map end[~p]!!!", [misc_time:milli_seconds() - NowTime]),
 	ok.
 
 %%检查玩家Ets中保存的进程是否存在，如果不存在了，则从Ets中删除，以防止地图进程不能销毁
@@ -440,7 +440,7 @@ tickCopyMap(NowTime) ->
 		%% 不立即销毁，通知客户端，但是不允许再进入
 %%			#mapsettingCfg{finish_time = FT} = getCfg:getCfgPStack(cfg_mapsetting, MapID),
 %%			prepareDestroy(FT * 1000, true),
-%%			mapState:setCopyMapExistTime(MapID, time:getUTCNowMS() + (FT + 10) * 1000),
+%%			mapState:setCopyMapExistTime(MapID, misc_time:milli_seconds() + (FT + 10) * 1000),
 %%			?DEBUG("~p,~p", [MapID, FT]),
 %%			ok
 	end,
@@ -466,7 +466,7 @@ laterTime_DestoryCopyMap() ->
 	%% 不立即销毁，通知客户端，但是不允许再进入
 	#mapsettingCfg{finish_time = FT} = getCfg:getCfgPStack(cfg_mapsetting, MapID),
 	prepareDestroy(FT * 1000, true),
-	mapState:setCopyMapExistTime(MapID, time:getUTCNowMS() + (FT + 10) * 1000),
+	mapState:setCopyMapExistTime(MapID, misc_time:milli_seconds() + (FT + 10) * 1000),
 	?DEBUG("~p,~p", [MapID, FT]),
 	ok.
 
@@ -506,8 +506,8 @@ laterTime_DestoryCopyMap() ->
 %%					mapState:clearMapAliveMonsterNum(),
 %%					mapState:setCnf2dic(Cnf#copyMapDemonBattleCnf{
 %%						fableCurrentSchedule = CurrScheduleNum+1,
-%%						fablePreparetimeEnd = time:getUTCNowSec()+PrepareTimeNum,
-%%						fableChallengetimeEnd = time:getUTCNowSec()+PrepareTimeNum+ChallengetimeNum
+%%						fablePreparetimeEnd = misc_time:utc_seconds()+PrepareTimeNum,
+%%						fableChallengetimeEnd = misc_time:utc_seconds()+PrepareTimeNum+ChallengetimeNum
 %%					}),
 %%					copyMapDemonBattle:noticeGift(),%%通知玩家发本关宝箱
 %%					copyMapDemonBattle:noticeScheduleStatus(0),%%挑战成功
@@ -537,7 +537,7 @@ prepareDestroy(DestroyAfterTime, IsForceDestroy) ->
 	?INFO("prepareDestory Map[~p],PID[~p],DestoryAfterTime[~p],IsForceDestory[~p]",
 		[mapState:getMapId(),self(), DestroyAfterTime, IsForceDestroy]),
 
-	mapState:setDestoryTime(DestroyAfterTime + time:getUTCNowMS()),
+	mapState:setDestoryTime(DestroyAfterTime + misc_time:utc_seconds()),
 	mapState:setForceDestory(IsForceDestroy),
 
 	case mapMgrState:getCopyMap(self()) of
@@ -587,7 +587,7 @@ sendDestroyToSelf(Reason) ->
 			case Type =:= ?MapTypeCopyMap andalso SubType =:= ?MapSubTypeGuild of
 				true ->
 					GuildID = mapState:getGuildID(),
-					NowTime = time:getSyncTime1970FromDBS(),
+					NowTime = misc_time:gregorian_seconds_from_1970( ),
 					core:sendMsgToMapMgr(MapID, guildCopyMapOver, {MapID,GuildID}),
 					psMgr:sendMsg2PS(?PsNameGuild, updateLastGuildCopyOverTime, {GuildID, NowTime, 0});
 				_ ->
@@ -981,7 +981,7 @@ needSendLeftTime(_MapType, _MapSubType)->
 
 sendLeftTimeToPlayer(NetPid)->
 	MapID = mapState:getMapId(),
-	NowTime = time:getUTCNowMS(),
+	NowTime = misc_time:milli_seconds(),
 	ExistTime = mapState:getCopyMapExistTime(),
 	case is_pid(NetPid) of
 		true ->

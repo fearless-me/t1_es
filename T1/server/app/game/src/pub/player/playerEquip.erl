@@ -110,7 +110,7 @@ makeEquip(EquipID, _, BagType, IsBind, PLog) ->
 		pos = BagType,
 		isBind = IsBind,
 		quality = RealQuality,
-		createTime = time:getUTCNowSec(),
+		createTime = misc_time:utc_seconds(),
 		expiredTime = 0,
 		baseProp = BaseProp,
 		extProp = ExtProp,
@@ -516,7 +516,7 @@ doEquipRefine(Type, Materials, RefineList, IsCalcForce,GoodluckCharmId) ->
 					type = Type,
 					oldLevel = Lv,
 					curLevel = Lv + 1,
-					time = time:getLogTimeSec()
+					time = misc_time:utc_seconds()
 				},
 				dbLog:sendSaveLogEquipRefine(EquipRefine),
 				playerDeadlineGift:updateCondition(?DeadlineGift_Update_WhenRefine, Lv + 1),
@@ -891,7 +891,7 @@ equipStar(
 							type = Pos,
 							oldLevel = Star,
 							curLevel = Star + 1,
-							time = time:getLogTimeSec()
+							time = misc_time:utc_seconds()
 						},
 						playerDeadlineGift:updateCondition(?DeadlineGift_Update_WhenEquipUpStar, Star + 1),
 						dbLog:sendSaveLogEquipStar(EquipStarLevel),
@@ -950,7 +950,7 @@ equipStar(
 				type = Pos,
 				oldLevel = Star,
 				curLevel = Star + 1,
-				time = time:getLogTimeSec()
+				time = misc_time:utc_seconds()
 			},
 			playerDeadlineGift:updateCondition(?DeadlineGift_Update_WhenEquipUpStar, Star + 1),
 			dbLog:sendSaveLogEquipStar(EquipStarLevel),
@@ -1963,7 +1963,7 @@ sendEquipUpStarRes(#recEquipStar{
 -spec equipmentCombine(IsCombine::boolean(), SourceID::uint(), CountAdd::uint()) -> CountValidOld::uint().
 equipmentCombine(true, SourceID, CountAdd) ->
 	#itemTinkerCfg{exweight_cd = [CountMax, CountDay]} = getCfg:getCfgPStack(cfg_itemTinker, SourceID),
-	TimeNow = time:getSyncTimeFromDBS(),
+	TimeNow = misc_time:localtime_seconds(),
 	List0 = playerPropSync:getProp(?SerProp_EqupmentCombin),
 	{List1, CountValidOld} =
 		case lists:keyfind(SourceID, 1, List0) of
@@ -1994,7 +1994,7 @@ equipmentCombine(_IsCombine, _SourceID, _CountAdd) ->
 equipmentCombineClean() ->
 	List = equipmentCombineClean(
 		playerPropSync:getProp(?SerProp_EqupmentCombin),
-		time:getSyncTimeFromDBS(),
+		misc_time:localtime_seconds(),
 		[]
 	),
 	playerPropSync:setAny(?SerProp_EqupmentCombin, List).

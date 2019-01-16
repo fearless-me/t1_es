@@ -45,7 +45,7 @@ initRoleAwake() ->
 			case core:isCross() of
 				false ->
 					LastUpdateTime = getAwakeBuffOfTime(),
-					NowTime = time:getSyncTime1970FromDBS(),
+					NowTime = misc_time:gregorian_seconds_from_1970( ),
 					case core:timeIsOnDay(LastUpdateTime, NowTime) of
 						true ->
 							skip;
@@ -272,7 +272,7 @@ useTheAwakeBuff() ->
 					LeftTime = getAwakeBuffOfValue(),
 					case LeftTime > 0 of
 						true ->
-							NowTime = time:getUTCNowMS(),
+							NowTime = misc_time:milli_seconds(),
 							playerBuff:addBuff(BuffID, 1, LeftTime + NowTime),
 							setAwakeBuffTime(0),
 							playerMsg:sendNetMsg(#pk_GS2S_UseTheAwakeBuffRet{}),
@@ -297,7 +297,7 @@ stopTheAwakeBuff() ->
 			case isHasUseTheAwakeBuff() of
 				{UseBuffID, EndTime} when UseBuffID > 0 ->
 					%手动停止时 需要判断buff的剩余时间
-					NowTime = time:getUTCNowMS(),
+					NowTime = misc_time:milli_seconds(),
 					LeftTime = EndTime - NowTime,
 					SLeftTime = if
 						LeftTime > 0 ->
@@ -322,7 +322,7 @@ recoverBuffTimeWhenDead() ->
 	case isHasUseTheAwakeBuff() of
 		{UseBuffID, EndTime} when UseBuffID > 0 ->
 			%手动停止时 需要判断buff的剩余时间
-			NowTime = time:getUTCNowMS(),
+			NowTime = misc_time:milli_seconds(),
 			LeftTime = EndTime - NowTime,
 			if
 				LeftTime > 0 ->
@@ -344,7 +344,7 @@ resetBuffEveryDay() ->
 		#awakeCfg{buffid = BuffID, bufftime = BuffTime} when BuffID > 0 ->
 			case isHasUseTheAwakeBuff() of
 				{UseBuffID, _EndTime} when UseBuffID > 0 ->
-					NowTime = time:getUTCNowMS(),
+					NowTime = misc_time:milli_seconds(),
 					BuffEndTime = NowTime + BuffTime,
 					setAwakeBuffTime(time,0),
 					playerBuff:delBuff(UseBuffID),
@@ -413,7 +413,7 @@ updateAwakeBuff(time,AddTime) ->
 					BuffEndTime = EndTime + AddTime,
 					playerBuff:delBuff(UseBuffID),
 					playerBuff:addBuff(BuffID, 1, BuffEndTime),
-					NowTime = time:getUTCNowMS(),
+					NowTime = misc_time:milli_seconds(),
 					playerMsg:sendNetMsg(#pk_GS2U_TheAwakeBuffInfo{buffID = UseBuffID, curstatus = 1, lefttime = BuffEndTime - NowTime});
 				_ ->
 					if
@@ -439,7 +439,7 @@ updateAwakeBuff(level,TimeDiff) ->
 					BuffEndTime = EndTime + TimeDiff,
 					playerBuff:delBuff(UseBuffID),
 					playerBuff:addBuff(BuffID, 1, BuffEndTime),
-					NowTime = time:getUTCNowMS(),
+					NowTime = misc_time:milli_seconds(),
 					playerMsg:sendNetMsg(#pk_GS2U_TheAwakeBuffInfo{buffID = UseBuffID, curstatus = 1, lefttime = BuffEndTime - NowTime});
 				_ ->
 					if
@@ -468,7 +468,7 @@ sendAwakeBuffInfo() ->
 		#awakeCfg{buffid = BuffID} when BuffID > 0 ->
 			case isHasUseTheAwakeBuff() of
 				{UseBuffID, EndTime} when UseBuffID > 0 ->
-					NowTime = time:getUTCNowMS(),
+					NowTime = misc_time:milli_seconds(),
 					{UseBuffID, 1, EndTime - NowTime};
 				_ ->
 					LeftTime = getAwakeBuffOfValue(),
@@ -486,7 +486,7 @@ getAwakeBuffInfo() ->
 		#awakeCfg{buffid = BuffID} when BuffID > 0 ->
 			case isHasUseTheAwakeBuff() of
 				{UseBuffID, EndTime} when UseBuffID > 0 ->
-					NowTime = time:getUTCNowMS(),
+					NowTime = misc_time:milli_seconds(),
 					{UseBuffID, 1, EndTime - NowTime};
 				_ ->
 	             LeftTime = getAwakeBuffOfValue(),
@@ -678,7 +678,7 @@ setAwakeBuffTime(SetValue) ->
 	playerPropSync:setAny(?SerProp_AwakeBuffTimeInfo, {LastUpdateTime,SetValue}).
 
 setAwakeBuffTime(time,SetValue) ->
-	NowTime = time:getSyncTime1970FromDBS(),
+	NowTime = misc_time:gregorian_seconds_from_1970( ),
 	playerPropSync:setAny(?SerProp_AwakeBuffTimeInfo, {NowTime,SetValue}).
 
 getAwakeBuffOfValue() ->
@@ -694,7 +694,7 @@ tickDealBuffTimeOnCross() ->
 		true ->
 			case isHasUseTheAwakeBuff() of
 				{UseBuffID, EndTime} when UseBuffID > 0 ->
-					NowTime = time:getUTCNowMS(),
+					NowTime = misc_time:milli_seconds(),
 					LeftTime = EndTime - NowTime,
 					RoleID = playerState:getRoleID(),
 					ServerID = core:getRealDBIDByUID(RoleID),

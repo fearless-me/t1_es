@@ -74,7 +74,7 @@ addTitle(TitleID,TitleSource) ->
 			?ERROR("player [~p] addtitle titleid [~p] exist",[playerState:getRoleID(),TitleID]),
 			false;
 		_ ->
-			Time = time:getSyncTimeFromDBS(),
+			Time = misc_time:localtime_seconds(),
 			EndTime = case getCfg:getCfgByArgs(cfg_titlesystem, TitleID) of
 						  {}->
 							  -1;
@@ -360,7 +360,7 @@ checkTitleExpired(TitleList)->
 							#titlesystemCfg{time = 0} ->
 								false;
 							#titlesystemCfg{} ->
-								CurrTime = time:getSyncTimeFromDBS(),
+								CurrTime = misc_time:localtime_seconds(),
 								case CurrTime > Title#recTitle.timestamp of
 									true->true;
 									false->false

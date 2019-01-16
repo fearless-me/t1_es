@@ -1059,7 +1059,7 @@
 %%							#globalsetupCfg{setpara = [1, 15]},
 %%							friend2_Transmit
 %%						),
-%%					TimeNow = time:getSyncUTCTimeFromDBS(),
+%%					TimeNow = misc_time:utc_seconds(),
 %%					LeftTime = TransmitCD - (TimeNow - playerState:getVipLastTransmit()),
 %%					case LeftTime =< 0 of
 %%						true ->
@@ -1887,7 +1887,7 @@
 %%		case core:queryRoleKeyInfoByRoleID(TargetRoleID) of
 %%			#?RoleKeyRec{roleName = NameK, level = LevelK, career = CareerK, race = RaceK,
 %%				sex = SexK, head = HeadK, vipLv = VipLvK, playerForce = PlayerForceK,
-%%				petForce = PetForceK, offlineTime = TimeLastOnlineK, face = FaceK,	%% TimeLastOnlineK :: time:getSyncTime1970FromDBS()
+%%				petForce = PetForceK, offlineTime = TimeLastOnlineK, face = FaceK,	%% TimeLastOnlineK :: misc_time:gregorian_seconds_from_1970( )
 %%				like = LikeK, charm = CharmK, frameID = FrameIDK} ->
 %%				%% PlayerForceK和PetForceK可能因数据同步导致不为数字，导致后续计算错误
 %%				PlayerForceK_ =

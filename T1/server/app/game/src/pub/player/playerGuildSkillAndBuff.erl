@@ -363,7 +363,7 @@ requestGuildBuff() ->
 buyGuildBuff(#guildbuffCfg{id = ConfID, buff = BuffID, cost = CostL, showname = ShowName}) ->
 	GuildID = playerState:getGuildID(),
 	RoleID = playerState:getRoleID(),
-	NowTime = time:getSyncTime1970FromDBS(),
+	NowTime = misc_time:gregorian_seconds_from_1970( ),
 	F =
 		fun() ->
 			SqlBin = qlc:q([R || #rec_guild_buff{guildID = G} = R <- mnesia:table(rec_guild_buff), G =:= GuildID]),

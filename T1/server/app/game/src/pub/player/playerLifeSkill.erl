@@ -125,7 +125,7 @@ sendInitInfo() ->
 			%% 但无法从字符串转换回来
 			%% 之前的逻辑因此会取到undefined
 			%% 此处修复处理为初始化数据
-			playerPropSync:setAny(?SerProp_LifeSkillFishTime, {0, time:getSyncTimeFromDBS(), 0})
+			playerPropSync:setAny(?SerProp_LifeSkillFishTime, {0, misc_time:localtime_seconds(), 0})
 	end,
 	ok.
 
@@ -151,7 +151,7 @@ initLifeSkillLevel(Type) ->
 		type = Type,
 		oldLevel = 1,
 		curLevel = 1,
-		time = time:getLogTimeSec()
+		time = misc_time:utc_seconds()
 	},
 	dbLog:sendSaveLogLifeSkill(LifeSkill).
 %%%-------------------------------------------------------------------
@@ -199,10 +199,10 @@ doStart1(?LSType_Fish, Level, _Param, _Times) ->
 						Count + 1
 				end,
 			playerState2:lifeSkill_fish_count(CountNew),
-			playerPropSync:setAny(?SerProp_LifeSkillFishTime, {CountNew, time:getSyncTimeFromDBS(), TimeAll});
+			playerPropSync:setAny(?SerProp_LifeSkillFishTime, {CountNew, misc_time:localtime_seconds(), TimeAll});
 		_ ->
 			playerState2:lifeSkill_fish_count(1),
-			playerPropSync:setAny(?SerProp_LifeSkillFishTime, {1, time:getSyncTimeFromDBS(), 0})
+			playerPropSync:setAny(?SerProp_LifeSkillFishTime, {1, misc_time:localtime_seconds(), 0})
 	end,
 	ok;
 doStart1(?LSType_Mine, Level, _Param, _Times) ->
@@ -504,7 +504,7 @@ finish(?LSType_Fish) ->
 	playerBuff:delBuffByState(?LifeSkill),
 	%% 统计钓鱼时长
 	Count = playerState2:lifeSkill_fish_count(),
-	TimeNow = time:getSyncTimeFromDBS(),
+	TimeNow = misc_time:localtime_seconds(),
 	case playerPropSync:getProp(?SerProp_LifeSkillFishTime) of
 		{Count, TimeLast, TimeAll} when TimeNow > TimeAll ->
 			playerPropSync:setAny(?SerProp_LifeSkillFishTime, {Count, TimeNow, TimeNow - TimeLast + TimeAll}),
@@ -576,7 +576,7 @@ addLifeSkillAchieve(_Type,_OldLevel,_NewLevel)->
 		type = _Type,
 		oldLevel = _OldLevel,
 		curLevel = _NewLevel,
-		time = time:getLogTimeSec()
+		time = misc_time:utc_seconds()
 	},
 	dbLog:sendSaveLogLifeSkill(LifeSkill),
 	ok.
@@ -1047,7 +1047,7 @@ myNow() ->
 %%					F =
 %%						fun({ID, Num},Arr)->
 %%							L = lists:seq(1, Num),
-%%							_ = [[#hasFurnitureInfo{uid = uidMgr:makeFurnitrueUID(),time =time:getSyncTimeFromDBS() ,itemID = ID}|Arr] || _ <- L],
+%%							_ = [[#hasFurnitureInfo{uid = uidMgr:makeFurnitrueUID(),time =misc_time:localtime_seconds() ,itemID = ID}|Arr] || _ <- L],
 %%							Arr
 %%						end,
 %%					NewFurnitrueList =  lists:foldl(F,ListFurnitruePackDataOld, ItemList),
@@ -1058,7 +1058,7 @@ myNow() ->
 %%					F =
 %%						fun({ID, Num},Arr)->
 %%							L = lists:seq(1, Num),
-%%							_ = [[#hasFurnitureInfo{uid = uidMgr:makeFurnitrueUID(),time =time:getSyncTimeFromDBS() ,itemID = ID}|Arr] || _ <- L],
+%%							_ = [[#hasFurnitureInfo{uid = uidMgr:makeFurnitrueUID(),time =misc_time:localtime_seconds() ,itemID = ID}|Arr] || _ <- L],
 %%							Arr
 %%						end,
 %%					NewFurnitrueList =  lists:foldl(F,[], ItemList),

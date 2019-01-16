@@ -462,7 +462,7 @@
 %%score(_, ScoreAdd) ->
 %%	ScoreOld = playerPropSync:getProp(?SerProp_GroupBuyScore),
 %%	playerPropSync:setInt64(?SerProp_GroupBuyScore, ScoreOld + ScoreAdd),
-%%	playerPropSync:setInt(?SerProp_GroupBuyScoreLastTime, time:getSyncTimeFromDBS()).
+%%	playerPropSync:setInt(?SerProp_GroupBuyScoreLastTime, misc_time:localtime_seconds()).
 %%
 %%%%%-------------------------------------------------------------------
 %%%% internal:增加购买量

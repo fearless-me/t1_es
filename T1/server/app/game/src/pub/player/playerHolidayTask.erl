@@ -27,7 +27,7 @@ initHolidayTask(Task) when is_record(Task,rec_holiday_task)->
     %检查节日任务是否有效
     case isHolidayTime() of
         true-> %getLocalNowSec1970
-            NowTime = time:getSyncTime1970FromDBS(), % ?SECS_FROM_0_TO_1970
+            NowTime = misc_time:gregorian_seconds_from_1970( ), % ?SECS_FROM_0_TO_1970
             case core:timeIsOnDay(Task#rec_holiday_task.acceptedTime , NowTime) of
                 true->
                     ?WARN("initHolidayTask not reset,[~p,~p]",[Task#rec_holiday_task.acceptedTime,NowTime]),
@@ -68,7 +68,7 @@ resetPlayerHolidayTask()->
             Task = playerState:getPlayerHolidayTask(),
             playerDaily:zeroDailyCount(?DailyType_HolidayTask,?NewYearHolidayID),
             ?DEBUG("resetPlayerHolidayTask,accept taskid [~p]",[Task#rec_holiday_task.acceptedTaskId]),
-            setHolidayTask(Task#rec_holiday_task{acceptedTime = time:getSyncTime1970FromDBS() });
+            setHolidayTask(Task#rec_holiday_task{acceptedTime = misc_time:gregorian_seconds_from_1970( ) });
         _ -> skip
     end,
     ok.
@@ -86,7 +86,7 @@ acceptHolidayTask()->
                     case playerTask:acceptTask(AcceptID, 0) of
                         true->
                             setHolidayTask(HolidayTask#rec_holiday_task{ acceptedTaskId = AcceptID,
-                                acceptedTime = time:getSyncTime1970FromDBS() }),
+                                acceptedTime = misc_time:gregorian_seconds_from_1970( ) }),
                             playerMsg:sendNetMsg(#pk_GS2U_AcceptHolidayTaskSucc{ result = 0 } ),
                             ?WARN("holidaytask new task [~p]",[AcceptID]),
                             ok;
@@ -170,9 +170,9 @@ checkAccpetTask(TaskID)->
 isHolidayTime()->
     case getCfg:getCfgByKey(cfg_globalsetup,newyeargametime) of
         #globalsetupCfg{ setpara = [StartTime,EndTime]}->
-            Start = time:convertDateTime1970ToSec(StartTime),
-            End = time:convertDateTime1970ToSec(EndTime),
-            NowTime = time:getSyncTime1970FromDBS(),% time:getUTCNowSec() + ?SECS_FROM_0_TO_1970,
+            Start = misc_time:convertDateTime1970ToSec(StartTime),
+            End = misc_time:convertDateTime1970ToSec(EndTime),
+            NowTime = misc_time:gregorian_seconds_from_1970( ),% misc_time:utc_seconds() + ?SECS_FROM_0_TO_1970,
             ?DEBUG("isHolidayTime s,n,E ~p,~p,~p",[Start,NowTime,End]),
             Start =< NowTime andalso NowTime =< End;
         _ -> false
@@ -209,7 +209,7 @@ acceptAfterTask(TaskID)->
                     playerTask:acceptTask(AfterTaskID, 0),
                     ?WARN("holidaytask new task [~p]",[AfterTaskID]),
                     Task = HolidayTask#rec_holiday_task{ acceptedTaskId = AfterTaskID,
-                        acceptedTime = time:getSyncTime1970FromDBS() },
+                        acceptedTime = misc_time:gregorian_seconds_from_1970( ) },
                     setHolidayTask(Task)
             end;
         _ -> skip

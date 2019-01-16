@@ -300,7 +300,7 @@ cache_pk_GS2U_LookRPInfo_Marriage(RoleID) ->
 
 %% 角色时装
 cache_pk_GS2U_LookRPInfo_Fashion(RoleID) ->
-	Now = time:getUTCNowSec(),
+	Now = misc_time:utc_seconds(),
 	PlayerFashionList = playerState:getFashionList(),
 	L1 = lists:foldl(
 		fun(#recFashion{fashionID = FashionID, endTime = EndTime}, Acc) ->

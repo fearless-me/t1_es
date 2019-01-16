@@ -60,7 +60,7 @@ requestRankAward(RankType) when erlang:is_integer(RankType) andalso
 	RankType >= ?PlayerRankType_Start andalso RankType =< ?PlayerRankType_End ->
 	case getCfg:getCfgPStack(cfg_rank, RankType) of
 		#rankCfg{rank_reward = Reward, rewardType = ?RankRewardType_Draw} when erlang:is_list(Reward) ->
-			NowTime = time:getUTCNowMS(),
+			NowTime = misc_time:milli_seconds(),
 			LastTime = playerPropSync:getProp(?SerProp_GetRankRewardCDTime),
 			case NowTime - LastTime >= ?GetRankRewardCDTime of
 				true ->
@@ -397,10 +397,10 @@ updatePlayerKeyInfo() ->
                         {#?RoleKeyRec.kpNum, playerPropSync:getProp(?PriProp_PlayerKpNum)},
                         {#?RoleKeyRec.wtPhase, WTPhase},
                         {#?RoleKeyRec.wtPhaseTime, WTPhaseTime},
-                        {#?RoleKeyRec.lastUpdateTime, time:getSyncTime1970FromDBS()},
+                        {#?RoleKeyRec.lastUpdateTime, misc_time:gregorian_seconds_from_1970( )},
                         {#?RoleKeyRec.vipLv, 0},
 	                    {#?RoleKeyRec.actionPoint, ActionPoint},
-                        {#?RoleKeyRec.offlineTime, time:getSyncTime1970FromDBS()}
+                        {#?RoleKeyRec.offlineTime, misc_time:gregorian_seconds_from_1970( )}
                     ]
                 }),
 			ok;

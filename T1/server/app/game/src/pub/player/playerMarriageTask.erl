@@ -43,7 +43,7 @@
 %%			 playerTask:acceptTask(TaskID, 0),
 %%			case playerPropSync:getProp(?SerProp_MarriageTaskInfo) of
 %%				{0, _} ->
-%%					playerPropSync:setAny(?SerProp_MarriageTaskInfo, {TaskID, time:getSyncTime1970FromDBS()});
+%%					playerPropSync:setAny(?SerProp_MarriageTaskInfo, {TaskID, misc_time:gregorian_seconds_from_1970( )});
 %%				_ ->
 %%					ok
 %%			end;
@@ -357,7 +357,7 @@
 %%-spec mc_askLeader({PartnerRoleID::uint64(), PartnerRoleName::string()}) -> no_return().
 %%mc_askLeader({PartnerRoleID, PartnerRoleName}) ->
 %%	?DEBUG("[DebugForMarraigeTask] self:~w mc_askLeader", [self()]),
-%%	playerState2:marriageTask_together_timeout(time:getSyncTimeFromDBS()),
+%%	playerState2:marriageTask_together_timeout(misc_time:localtime_seconds()),
 %%	playerMsg:sendNetMsg(#pk_GS2U_MarriageTask_Together_Ask1{roleID = PartnerRoleID, roleName = PartnerRoleName}).
 %%
 %%%%%-------------------------------------------------------------------
@@ -402,7 +402,7 @@
 %%			?DEBUG("[DebugForMarraigeTask] self:~w mc_partnerBeCalled2", [self()]),
 %%			psMgr:sendMsg2PS(LeaderPid, mc_partnerBeCalled2, true),	%% 反馈队长进程记录发动召唤的时间点
 %%			playerState2:marriageTask_together_target(Data),
-%%			playerState2:marriageTask_together_timeout(time:getSyncTimeFromDBS()),
+%%			playerState2:marriageTask_together_timeout(misc_time:localtime_seconds()),
 %%			playerMsg:sendNetMsg(#pk_GS2U_MarriageTask_Together_Ask2{roleID = LeaderRoleID, roleName = LeaderRoleName});
 %%		_ ->
 %%			?DEBUG("[DebugForMarraigeTask] self:~w mc_partnerBeCalled2", [self()]),
@@ -455,7 +455,7 @@
 %%							case playerState:getMapPid() of
 %%								MapPid ->
 %%									%% 同地图时沿用原逻辑（客户端执行寻路前往）
-%%									playerState:setVipLastTransmit(time:getSyncUTCTimeFromDBS()),
+%%									playerState:setVipLastTransmit(misc_time:utc_seconds()),
 %%									Msg = #pk_GS2U_returnFriendPos{
 %%										mapID   = MapID,
 %%										x       = PosX,

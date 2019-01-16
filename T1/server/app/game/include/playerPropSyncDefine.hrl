@@ -397,7 +397,7 @@
 -define(SerProp_PurpleRosesGetCount,  20114).% uint32() 台湾需求，需要统计紫玫瑰（item.id=29007）的累积购买量，目前购买来源暂定为商城购买
 -define(SerProp_CollectionWordsVer,  20115).% uint32() 集字活动版本号控制，用于判断是否要主动重置角色缓存数据并同步配置给客户端
 -define(SerProp_IsAutoHidePet,  20116).% uint32() 是否因玩法收回了骑宠？回到普通地图（或特定玩法例如广场舞结束）时需要重置该值并放出骑宠
--define(SerProp_GroupBuyScoreLastTime,  20117).% uint32() 最后一次获得团购积分的时间 time:getSyncTimeFromDBS/0
+-define(SerProp_GroupBuyScoreLastTime,  20117).% uint32() 最后一次获得团购积分的时间 misc_time:localtime_seconds/0
 -define(SerProp_CurRoleAwakeInfo,   20118).% {curstage,curstone}角色觉醒当前进度
 -define(SerProp_RoleAwakeList,      20119).% [{{stage,stone},param},...] 角色觉醒列表
 -define(SerProp_AwakeBuffTimeInfo,  20120).% {lastUpdateTime,LeftTime} 角色觉醒buff剩余时间

@@ -34,8 +34,8 @@ onRequestPushInfo()->
     end,
     Msg = #pk_GS2U_PushInfo{
         items = PushItems,
-        startTime = time:getUTCNowSec(),
-        endTime = time:getUTCNowSec()+86399
+        startTime = misc_time:utc_seconds(),
+        endTime = misc_time:utc_seconds()+86399
     },
     playerMsg:sendNetMsg(Msg),
     ok.
@@ -139,8 +139,8 @@ getOperateActiveCfg(Sku)->
 %%            rebate = 10,coinType = ?CoinTypeDiamond,limited = 1}],
 %%    Msg = #pk_GS2U_PushInfo{
 %%        items = Items,
-%%        startTime = time:getLocalNowSec1970(),
-%%        endTime = time:getLocalNowSec1970()+86399
+%%        startTime = misc_time:localtime_seconds(),
+%%        endTime = misc_time:localtime_seconds()+86399
 %%    },
 %%    playerMsg:sendNetMsg(Msg),
 %%    {noreply, State};

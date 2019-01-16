@@ -320,7 +320,7 @@ revertHp() ->
 	%case myEts:lookUpEts(Ets, SelfCode) of
 	%	[#recMapObject{hp = HP, maxHp = MaxHP}] ->
 	%		LastTime = playerPropSync:getProp(?SerProp_RobRoleUseItemTime),
-	%		NowTime = time:getUTCNowSec1970(),
+	%		NowTime = misc_time:utc_seconds(),
 	%		case NowTime - LastTime >= ?RobUseItemCDTime andalso HP < MaxHP of
 	%			true ->
 	%				Lvl = playerState:getLevel(),
@@ -415,7 +415,7 @@ useSkill([_SkillID | _SkillIDList], SkillID, _Data) ->
 useSkill(SkillID, true, {#recMapObject{}, #recMapObject{}}) when erlang:is_integer(SkillID) ->
 	true;
 useSkill(SkillID, false, {#recMapObject{} = Target, #recMapObject{code = SelfCode, x = SX, y = SY} = Self}) when erlang:is_integer(SkillID) ->
-	Now = time:getUTCNowMS(),
+	Now = misc_time:milli_seconds(),
 	case codeMgr:isCodeType(?CodeTypePlayer, SelfCode) of
 		true ->
 			case playerState:getCurUseSlowSkill() of

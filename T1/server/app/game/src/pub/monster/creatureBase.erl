@@ -81,7 +81,7 @@ initCreature(Code, Type, #recSpawnMonster{id = ID, params = Params} = MonsterArg
 -spec delCreature(Code) -> ok when
 	Code :: uint().
 delCreature(Code) when is_number(Code) ->
-	Now = time:getUTCNowMS(),
+	Now = misc_time:milli_seconds(),
 	catch doDelCreature(Code, Now),
 
 	Type = monsterState:getCodeType(Code),
@@ -317,7 +317,7 @@ initFaceDir(Code) ->
 initAliveTime(_Code, [0 | _]) ->         %%永久存活
 	ok;
 initAliveTime(Code, [CallTime | _]) ->
-	Now = time:getUTCNowMS(),
+	Now = misc_time:milli_seconds(),
 	monsterState:setMonsterAliveTime(Code, Now + CallTime).
 
 %%初始化宿主信息
@@ -975,7 +975,7 @@ tickDead(Now) ->
 monsterDead(Code, CodeType) when erlang:is_integer(Code) andalso Code > 0 ->
 	monsterState:setActionStatus(Code, ?CreatureActionStatusDead),
 	monsterAI:stopAI(Code),
-	Now = time:getUTCNowMS(),
+	Now = misc_time:milli_seconds(),
 	MonsterList = monsterState:getMonsterList(),
 	L1 = lists:keydelete(Code, 1, MonsterList),
 	monsterState:setMonsterList(L1),
@@ -991,7 +991,7 @@ monsterDead(Code, CodeType) when erlang:is_integer(Code) andalso Code > 0 ->
 	Code :: uint(),
 	CodeType :: ?SpawnCarrier | ?SpawnCallMonster | ?SpawnMonster | ?SpawnPet | ?SpawnCallPet.
 addMonsterToDeadList(Code, ?SpawnMonster) ->
-	DeadTime = time:getUTCNowMS(),
+	DeadTime = misc_time:milli_seconds(),
 	SpawnInfo = monsterState:getSpawnInfo(Code),
 	DeadList = monsterState:getDeadMonsterList(),
 	case lists:keyfind(Code, #recSpawnMonster.code, DeadList) of

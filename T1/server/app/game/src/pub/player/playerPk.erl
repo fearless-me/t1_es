@@ -145,7 +145,7 @@ tickHateList() ->
 %%%%tick杀戮玩家
 %%-spec tickKillPlayer() -> ok.
 %%tickKillPlayer() ->
-%%	Now = time:getUTCNowMSDiff2010(),
+%%	Now = misc_time:getUTCNowMSDiff2010(),
 %%	PL = playerState:getKillPlayerList(),
 %%	Fun = fun({Code, Times}) ->
 %%				  case Now - Times >= ?DelKillPlayerTime of
@@ -195,7 +195,7 @@ tickHateList() ->
 %%		  TKPL :: list(),
 %%		  TCode :: uint().
 %%addKillPlayer(TKPL, TCode) ->
-%%	Now = time:getUTCNowMSDiff2010(),
+%%	Now = misc_time:getUTCNowMSDiff2010(),
 %%	KPL = playerState:getKillPlayerList(),
 %%	case isAddKillPlayer(TKPL, TCode, KPL) of
 %%		true ->
@@ -405,7 +405,7 @@ isKillMap(MapID) ->
 %%判断时间是否开启杀戮模式
 %% -spec isKillTime() -> boolean().
 %% isKillTime() ->
-%% 	Now = time:getSyncTime1970FromDBS(),
+%% 	Now = misc_time:gregorian_seconds_from_1970( ),
 %% 	StartTime = case getCfg:getCfgPStack(cfg_globalsetup, pk_forbidden_start) of
 %% 		#globalsetupCfg{setpara = [Start]} -> Start;
 %% 		_ -> 0
@@ -414,7 +414,7 @@ isKillMap(MapID) ->
 %% 		#globalsetupCfg{setpara = [End]} -> End;
 %% 			_ -> 0
 %% 	end,
-%% 	CurTime = Now - time:getDayBeginSeconds(time:convertSec2DateTime(Now)),
+%% 	CurTime = Now - misc_time:getDayBeginSeconds(misc_time:convertSec2DateTime(Now)),
 %% 	if
 %% 		CurTime >= StartTime -> false;
 %% 		CurTime =< EndTime -> false;

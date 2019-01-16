@@ -155,7 +155,7 @@ judgeActiveCopy(MapID) ->
 	#mapsettingCfg{type = MapType, subtype = SubType} = getCfg:getCfgPStack(cfg_mapsetting, MapID),
 	IsOpen = playerState:getGuildCopyOpenState(),
 	GuildLevel = playerGuild:getGuildSelfLevel(),
-	NowTime = time:getSyncTime1970FromDBS(),
+	NowTime = misc_time:gregorian_seconds_from_1970( ),
 	Time = case playerState:getSelfGuildInfo() of
 			   #rec_guild{lastGuildCopyOverTime = LTime} ->
 				   LTime;

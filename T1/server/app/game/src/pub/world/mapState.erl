@@ -194,7 +194,7 @@ setCopyMapExistTime(MapID) ->
 					  %% 其它地图保留时间为一年
 					  12*30*24*3600*1000
 			  end,
-	NowTime = time:getUTCNowMS(),
+	NowTime = misc_time:milli_seconds(),
 	put(copyMapExistTime, NowTime + AddTime),
 	?INFO("setCopyMapExistTime:[mapID=~p,pid=~p], nowtime:~p,addtime:~p", [MapID, self(), NowTime, AddTime]),
 	ok.
@@ -312,7 +312,7 @@ getMapOwnerID(GroupID) ->
 %% 设置NPC本次改变坐标的时间
 -spec setNpcChangePosTime(NpcCode::uint()) -> uint() | undefined.
 setNpcChangePosTime(NpcCode) ->
-	put({'NpcChangePosTime', NpcCode}, time:getUTCNowSec()).
+	put({'NpcChangePosTime', NpcCode}, misc_time:utc_seconds()).
 
 %% 获取NPC上次改变坐标的时间
 -spec getNpcChangePosTime(NpcCode::uint()) -> uint() | undefined.

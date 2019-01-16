@@ -1037,7 +1037,7 @@ sendMailMsgToClient(MailID) ->
 				mailID = MailID,
 				sendRoleID = Mail#recMail.senderRoleID,
 				isLocked = Mail#recMail.isLocked,
-				remainDay = round((Mail#recMail.deleteTime - time:getSyncTime1970FromDBS()) / (24 * 3600)), % 删除时间减去当前时间，四舍五入
+				remainDay = round((Mail#recMail.deleteTime - misc_time:gregorian_seconds_from_1970()) / (24 * 3600)), % 删除时间减去当前时间，四舍五入
 				sendPlayerName = SenderRoleName,
 				mailTitle = Mail#recMail.mailTitle,
 				mailContent = Mail#recMail.mailContent,

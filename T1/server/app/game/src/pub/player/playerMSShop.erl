@@ -77,7 +77,7 @@ freshMSShop() ->
 %%	buyMysteriousShopItem(Lvl, OnlyID, ID, Count).
 %% 临时做延时处理,后来人改下
 buyMysteriousShopItem(#pk_U2GS_BuyMysteriousShopItem{lvlPhase = Lvl, only_id = OnlyID, itemid = ID, buynumber = Count}) ->
-	NowTime = time:getSyncTimeMSFromDBS(),
+	NowTime = misc_time:localtime_milliseconds(),
 	LastTime = playerState:getPlayerMysteriousBuyTime(),
 	case (NowTime - 1000) =< LastTime of
 		true ->
@@ -218,7 +218,7 @@ requestMysteriousShop() ->
 			L = lists:map(Fun, List),
 
 			NextFreshTime = getNextFreshTime(),
-			NowTime = time:getSyncTime1970FromDBS(),
+			NowTime = misc_time:gregorian_seconds_from_1970( ),
 
 			#globalsetupCfg{setpara = LLL} = getCfg:getCfgPStack(cfg_globalsetup, randomshop_Diamonds),
 			Count = playerDaily:getDailyCounter(?DailyType_Everyday, ?PlayerEveryDay_FreshMS),
@@ -258,7 +258,7 @@ freshMysteriousShop() ->
 	case getLvlPhase() > 0 of
 		true ->
 			NextTime = getNextFreshTime(),
-			NowTime = time:getSyncTime1970FromDBS(),
+			NowTime = misc_time:gregorian_seconds_from_1970( ),
 			case NowTime >= NextTime of
 				true ->
 					%% 自然时间到，可以刷新
@@ -306,7 +306,7 @@ freshMysteriousShopReal(RoleID) ->
 	getSelectItemListAndInsert(PlayerPhase),
 
 	%% 设置下一次刷新时间
-	NowTime = time:getSyncTime1970FromDBS(),
+	NowTime = misc_time:gregorian_seconds_from_1970( ),
 	setNextFreshTime(NowTime),
 	ok.
 %% 这个方法提供给手动刷新用，不重置下次刷新时间
@@ -327,7 +327,7 @@ setNextFreshTime(NowTime) ->
 	case getCfg:getCfgPStack(cfg_globalsetup, shop_time) of
 		#globalsetupCfg{setpara = TimeList} when erlang:is_list(TimeList) andalso erlang:length(TimeList) > 0 ->
 			NTimeList = lists:usort(TimeList),
-			{{Year, Month, Day}, {Hour, _Minute, _Second}} = time:convertSec2DateTime(NowTime),
+			{{Year, Month, Day}, {Hour, _Minute, _Second}} = misc_time:gregorian_seconds_to_datetime(NowTime),
 			NextResetHour =
 				case lists:filter(fun(T) -> T > Hour end, NTimeList) of
 					[T1|_] ->
@@ -340,9 +340,9 @@ setNextFreshTime(NowTime) ->
 			NextFreshTime =
 				case NextResetHour > Hour of
 					true ->
-						time:convertDateTime1970ToSec({{Year, Month, Day},{NextResetHour, 0, 0}});
+						misc_time:convertDateTime1970ToSec({{Year, Month, Day},{NextResetHour, 0, 0}});
 					_ ->
-						E = time:convertDateTime1970ToSec({{Year, Month, Day},{23, 59, 59}}) + 1,
+						E = misc_time:convertDateTime1970ToSec({{Year, Month, Day},{23, 59, 59}}) + 1,
 						[StartHour|_] = NTimeList,
 						E + StartHour * 3600
 				end,

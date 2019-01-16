@@ -90,8 +90,8 @@
 init() ->
 	bstTree:initNodeId(),
 	libBstAI:setAIList([]),
-	monsterState:setLastTickTime(time:getUTCNowMS()),
-	monsterState:setLastAIMoveTickTime(time:getUTCNowMS()),
+	monsterState:setLastTickTime(misc_time:utc_seconds()),
+	monsterState:setLastAIMoveTickTime(misc_time:utc_seconds()),
 	monsterState:setMonsterList([]),
 	monsterState:setDeadMonsterList([]),
 	ok.

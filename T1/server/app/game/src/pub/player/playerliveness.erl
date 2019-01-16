@@ -44,7 +44,7 @@ onPlayerCreateInit()->
         livenessValue = 0,
         livenessList = [],
         livenessGiftDrew = [],
-        lastUpdateTime = time:getSyncTime1970FromDBS() },
+        lastUpdateTime = misc_time:gregorian_seconds_from_1970( ) },
     playerState:setLiveness(Live),
     ok.
 
@@ -55,9 +55,9 @@ onPlayerOnlineInit(List)->
                 livenessValue = 0,
                 livenessList = [],
                 livenessGiftDrew = [],
-                lastUpdateTime = time:getSyncTime1970FromDBS() };
+                lastUpdateTime = misc_time:gregorian_seconds_from_1970( ) };
         [H|_]->
-            NowTime = time:getSyncTime1970FromDBS(),
+            NowTime = misc_time:gregorian_seconds_from_1970( ),
             case core:timeIsOnDay(H#rec_player_liveness.lastUpdateTime, NowTime) of
                 true ->
                     %% 不需要重置
@@ -345,7 +345,7 @@ cleanPlayerLivenessInfo() ->
                 livenessValue = 0,
                 livenessList = [],
                 livenessGiftDrew = [],
-                lastUpdateTime = time:getSyncTime1970FromDBS()},
+                lastUpdateTime = misc_time:gregorian_seconds_from_1970( )},
             playerState:setLiveness(LivenessInfo),
             updateToMemCache(rec_player_liveness, playerState:getRoleID(),
                 playerState:getLiveness(), new_rec_player_liveness, update_rec_player_liveness),

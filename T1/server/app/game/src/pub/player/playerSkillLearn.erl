@@ -990,7 +990,7 @@ updateSkillWithRLevel(SkillID) ->
 	SkillID :: uint(),
 	Index :: int().
 addSlotSkill(SkillID, Index) ->
-	Now = time:getUTCNowMSDiff2010(),
+	Now = misc_time:getUTCNowMSDiff2010(),
 	SkillList = playerState:getSlotSkill(),
 	#skillCfg{skillType = Type} = getCfg:getCfgPStack(cfg_skill, SkillID),
 	SlotSkill = #recSlotSkill{
@@ -1008,7 +1008,7 @@ addSlotSkill(SkillID, Index) ->
 	Skill :: #recSlotSkill{},
 	Index :: int().
 updateSlotSkill(#recSlotSkill{skillID = SkillID} = Skill, Index) ->
-	Now = time:getUTCNowMSDiff2010(),
+	Now = misc_time:getUTCNowMSDiff2010(),
 	SkillList = playerState:getSlotSkill(),
 	NewSkill = Skill#recSlotSkill{time = Now, slot = Index, isModified = true},
 	SSL = lists:keyreplace(SkillID, #recSkill.skillID, SkillList, NewSkill),
@@ -1207,7 +1207,7 @@ isCanEmbed(ConflictID, SkillID, [_ | SSL]) ->
 -spec isCanUninstall(SkillID) -> boolean() when
 	SkillID :: uint().
 isCanUninstall(SkillID) ->
-	Now = time:getUTCNowMSDiff2010(),
+	Now = misc_time:getUTCNowMSDiff2010(),
 	case playerState:isPlayerBattleStatus() of
 		true ->
 			false;

@@ -75,7 +75,7 @@ requestEnterRift(GroupID, BMapID) ->
 	%% 首先判断进入时间
 	RoleID = playerState:getRoleID(),
 	LastEnterTime = gsMainLogic:getEnterRiftTime(RoleID),
-	NowTime = time:getUTCNowSec(),
+	NowTime = misc_time:utc_seconds(),
 	DiffTime = NowTime - LastEnterTime,
 	case DiffTime >= ?Rift_Enter_IntervalTime of
 		true ->

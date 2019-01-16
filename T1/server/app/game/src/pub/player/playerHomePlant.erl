@@ -146,7 +146,7 @@
 %%			skip
 %%	end,
 %%
-%%	TimeNow = time:getSyncTimeFromDBS(),
+%%	TimeNow = misc_time:localtime_seconds(),
 %%	%%TimeRefresh = sendHomePlantInfo_nexTime(ListPlant, TimeNow + 3600, TimeNow),	%% 最迟1小时刷新
 %%	playerState2:setHomePlantRefreshTime(TimeNow+?Time_Refresh);
 %%sendHomePlantInfo(_HomeID, _Flag, _WillSendMsg) ->
@@ -299,7 +299,7 @@
 %%						homeID = HomeID,
 %%						visitID = RoleID,	%% 访客ID
 %%						opType = ?HomeOpType_Harvest,
-%%						time = time:getLogTimeSec()
+%%						time = misc_time:utc_seconds()
 %%					},
 %%					dbLog:sendSaveLogHomeVisit(LogHomeVisit),
 %%					HelpRoleName = playerNameUID:getPlayerNameByUID(RoleID),
@@ -319,7 +319,7 @@
 %%						homeID = HomeID,
 %%						visitID = RoleID,	%% 访客ID
 %%						opType = ?HomeOpType_Harvest,
-%%						time = time:getLogTimeSec()
+%%						time = misc_time:utc_seconds()
 %%					},
 %%					dbLog:sendSaveLogHomeVisit(LogHomeVisit),
 %%					HelpRoleName = playerNameUID:getPlayerNameByUID(RoleID),
@@ -478,7 +478,7 @@
 %%	case core:isCross() of
 %%		  false ->
 %%
-%%			  TimeNow  = time:getSyncTimeFromDBS(),
+%%			  TimeNow  = misc_time:localtime_seconds(),
 %%			  case playerState2:getHomePlantRefreshTime() of
 %%				  0 ->
 %%					  playerState2:setHomePlantRefreshTime(TimeNow);
@@ -579,16 +579,16 @@
 %%
 %%
 %%gmUpdatePlant_State(1, _Cfg) ->
-%%	time:getSyncTimeFromDBS();
+%%	misc_time:localtime_seconds();
 %%gmUpdatePlant_State(2, #home_plantsCfg{growtime = [T1, _T2, _T3]}) ->
-%%	time:getSyncTimeFromDBS() - T1 * 60;
+%%	misc_time:localtime_seconds() - T1 * 60;
 %%gmUpdatePlant_State(3, #home_plantsCfg{growtime = [T1, T2, _T3]}) ->
-%%	time:getSyncTimeFromDBS() - (T1 + T2) * 60;
+%%	misc_time:localtime_seconds() - (T1 + T2) * 60;
 %%gmUpdatePlant_State(4, #home_plantsCfg{growtime = [T1, T2, T3]}) when T3 =/= -1 ->
-%%	time:getSyncTimeFromDBS() - (T1 + T2 + T3) * 60.
+%%	misc_time:localtime_seconds() - (T1 + T2 + T3) * 60.
 %%
 %%gmUpdatePlant_IsPestis(1, {false, Count, _}) ->
-%%	{true, Count + 1, time:getSyncTimeFromDBS()};
+%%	{true, Count + 1, misc_time:localtime_seconds()};
 %%gmUpdatePlant_IsPestis(1, {true, _, _} = Pestis) ->
 %%	Pestis;
 %%gmUpdatePlant_IsPestis(0, {false, _, _} = Pestis) ->

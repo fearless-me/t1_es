@@ -235,9 +235,9 @@ init() ->
 	case playerPropSync:getProp(?SerProp_ThirtyDayTimeBegin) of
 		0 ->
 			%% 取当天凌晨4点时间
-			TimeNowUTC = time:getSyncTime1970FromDBS(),
-			Date = time:convertSec2DateTime(TimeNowUTC),
-			TimeBeginOfDay = time:getDayBeginSeconds(Date) + ?ResetTimeHour * 3600 - ?SECS_FROM_0_TO_1970,
+			TimeNowUTC = misc_time:gregorian_seconds_from_1970( ),
+			Date = misc_time:gregorian_seconds_to_datetime(TimeNowUTC),
+			TimeBeginOfDay = misc_time:getDayBeginSeconds(Date) + ?ResetTimeHour * 3600 - ?SECS_FROM_0_TO_1970,
 			playerPropSync:setInt(?SerProp_ThirtyDayTimeBegin, TimeBeginOfDay);
 		_ ->
 			skip
@@ -265,7 +265,7 @@ getTimeBegin() ->
 checkTime() ->
 	true.	%% LUN-8142
 %%checkTime() ->
-%%	TimeNow = time:getSyncTimeFromDBS(),
+%%	TimeNow = misc_time:localtime_seconds(),
 %%	case playerPropSync:getProp(?SerProp_ThirtyDayTimeBegin) + ?ThirtyDayTime =< TimeNow of
 %%		true ->
 %%			false;

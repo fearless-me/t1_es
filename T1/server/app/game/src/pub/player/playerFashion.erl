@@ -110,7 +110,7 @@ doRoomLevelUp(
                 playerID = playerState:getRoleID(),
                 oldLevel = Level,
                 newLevel = NextLevel,
-                time = time:getLogTimeSec()
+                time = misc_time:utc_seconds()
             },
             dbLog:sendSaveLogFashionLevel(FashionLevel),
             ok;
@@ -157,7 +157,7 @@ initFashionSlot([#recFashionOnLoad{} | _] = List) ->
 -spec sendFashionList2Client() -> ok.
 sendFashionList2Client() ->
     setInitLevel(),
-    Now = time:getUTCNowSec(),
+    Now = misc_time:utc_seconds(),
     PlayerFashionList = playerState:getFashionList(),
     L1 = lists:foldl(
         fun(#recFashion{fashionID = FashionID, endTime = EndTime}, Acc) ->
@@ -458,7 +458,7 @@ useFashionItem(ItemUID, UseItemID, FashionID, ExpiresSecond) ->
     ?DEBUG("fashion use item ~w",
 		[{ItemUID, UseItemID, FashionID, ExpiresSecond}]),
 
-    Now = time:getUTCNowSec(),
+    Now = misc_time:utc_seconds(),
     L = playerState:getFashionList(),
     case lists:keyfind(FashionID, #recFashion.fashionID, L) of
         #recFashion{endTime = 0} ->
@@ -482,7 +482,7 @@ useFashionItem(ItemUID, UseItemID, FashionID, ExpiresSecond) ->
 %%点亮或延长时装时长
 -spec addFashionTime(FashionID :: integer(), ExpiresSecond :: integer()) -> boolean().
 addFashionTime(FashionID, ExpiresSecond) ->
-    Now = time:getUTCNowSec(),
+    Now = misc_time:utc_seconds(),
     PlayerID = playerState:getRoleID(),
     FashionList = playerState:getFashionList(),
 
@@ -599,7 +599,7 @@ checkFashionValid(FashionID) ->
                     EndTime =:= 0 ->
                         true;
                     true ->
-                        EndTime > time:getUTCNowSec()
+                        EndTime > misc_time:utc_seconds()
                 end;
             _ ->
                 false
@@ -684,7 +684,7 @@ operateFashionPosition(FashionID, _Flag) ->
 %% ====================================================================
 %% 时装过期检查
 checkTimeout(IsNotify) ->
-    Now = time:getUTCNowSec(),
+    Now = misc_time:utc_seconds(),
     L1 = playerState:getFashionList(),
     {L2, Flag, SuitFlag} = lists:foldl(
         fun(#recFashion{endTime = EndTime} = Rec, {Acc, Calc, SuitChanges}) ->
@@ -926,7 +926,7 @@ getConfigInfoList() ->Fun =
             resources_bg = Resources_bg,
             fashion_show = Fashion_show
         },AccIn) ->
-            NowTime = time:getSyncTimeFromDBS(),
+            NowTime = misc_time:localtime_seconds(),
             TimeOpen = TimeOpen1 + time2:getTimezoneSec(),
             EndTime = TimeOpen + Time * 3600,
             %case NowTime >= TimeOpen andalso NowTime =< EndTime of

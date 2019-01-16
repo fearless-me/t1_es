@@ -160,7 +160,7 @@
 %%	case IDIT =:= ?IDIT_FACE of
 %%		true ->
 %%			OldTime = playerPropSync:getProp(?PriProp_Report_Time),
-%%			NowTime = time:getLocalNowSec1970(),
+%%			NowTime = misc_time:localtime_seconds(),
 %%			case OldTime < NowTime of
 %%				true ->
 %%					RoleID = playerState:getRoleID(),
@@ -297,7 +297,7 @@
 %%												#upOrDownLoadTask{
 %%													timeR = TimeR,
 %%													isOpen = false,
-%%													timeBegin = time:getSyncUTCTimeFromDBS(),
+%%													timeBegin = misc_time:utc_seconds(),
 %%													md5 = MD5,
 %%													sizeMax = Size,
 %%													upOrDown = true,
@@ -458,7 +458,7 @@
 %%								#upOrDownLoadTask{
 %%									timeR = TimeR,
 %%									isOpen = false,
-%%									timeBegin = time:getSyncUTCTimeFromDBS(),
+%%									timeBegin = misc_time:utc_seconds(),
 %%									md5 = MD5,
 %%									sizeMax = SizeMax,
 %%									index = 0,
@@ -609,7 +609,7 @@
 %%				_ ->
 %%					error_code({?ErrorCode_IdentityPicDown_OutTime, []})
 %%			end,
-%%			time:getSyncUTCTimeFromDBS(),
+%%			misc_time:utc_seconds(),
 %%			playerState2:setIdentityUporDownLoadTaskInfo(undefined);
 %%		_ ->
 %%			?INFO("[DebugForIdentity] picOutTime RoleID(~p) skip", [playerState:getRoleID()]),

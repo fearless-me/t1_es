@@ -160,7 +160,7 @@ onDailyChange(DailyType, DailyID, IsReset, Count, TimeNow) ->
 getLastLevel() ->
     [{_LastTimeOld, LastLevelOld} = DataOld, {LastTimeNew, LastLevelNew} = DataNew] =
         playerPropSync:getProp(?SerProp_playerFindResLastLevel),
-    DataNow = {time:getSyncTimeFromDBS(), erlang:max(playerState:getLevel(), 1)},
+    DataNow = {misc_time:localtime_seconds(), erlang:max(playerState:getLevel(), 1)},
     %% 新数据是今日时间，则刷新今日数据，保留旧数据，返回旧数据
     case core:timeIsOnDay(LastTimeNew + ?SECS_FROM_0_TO_1970) of
         true ->
@@ -217,7 +217,7 @@ refindResOne(ID, Type) ->
             freshFindRes(),
             case getCfg:getCfgByKey(cfg_find_res, ID) of
                 #find_resCfg{ac_id = ACID} ->
-                    refindRes(ACID, misc:convertBoolFromInt(Type), 1);
+                    refindRes(ACID, misc:i2b(Type), 1);
                 _ ->
                     skip
             end,
@@ -241,7 +241,7 @@ refindResAll(Type) ->
             ListRes = playerPropSync:getProp(?SerProp_playerFindRes),
             GuildID = playerState:getGuildID(),
             ListResForMsg = requestFindRes(ListRes, [], ListCfg, LevelLast, GuildID),
-            TypeReal = misc:convertBoolFromInt(Type),
+            TypeReal = misc:i2b(Type),
             [refindRes(ID, TypeReal, Count) || #pk_RefindResInfo{id = ID, number = Count} <- ListResForMsg],
             requestFindRes();    %% 向客户端刷新数据
         _ ->
@@ -257,7 +257,7 @@ refindResAll(Type) ->
 -spec freshFindRes() -> no_return().
 freshFindRes() ->
     List = playerPropSync:getProp(?SerProp_playerFindRes),
-    TimeNow = time:getSyncTime1970FromDBS(),
+    TimeNow = misc_time:gregorian_seconds_from_1970( ),
     freshFindRes(?ListDailyCounter, List, TimeNow).
 freshFindRes([], _List, _TimeNow) ->
     ok;
@@ -551,7 +551,7 @@ refindRes_useCoin(Diamond, DecDiamond, _CanUseMoney, ACID) ->
 %% 扣除次数
 -spec refindRes_costP2(#rec_player_find_res{}, uint()) -> no_return().
 refindRes_costP2(#rec_player_find_res{param2 = P2} = Res, Number) ->
-    NowTime = time:getSyncTime1970FromDBS(),
+    NowTime = misc_time:gregorian_seconds_from_1970( ),
     NewRes = Res#rec_player_find_res{param2 = P2 - Number, freshtime = NowTime},
     case Res /= NewRes of
         true ->

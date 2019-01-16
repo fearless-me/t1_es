@@ -920,12 +920,12 @@ lottery(Params) when erlang:length(Params) >= 1 ->
 			playerLottery:gmRstDailyCount();
 
 %%		Main =:= 0 orelse Main =:= 1 ->
-%%			IsMain = misc:convertBoolFromInt(Main),
+%%			IsMain = misc:i2b(Main),
 %%			playerLottery:requestLottery(IsMain);
 %%		Main =:= 88888 ->
 %%			playerDaily:zeroDailyCount(?DailyType_Lottery, 1),
 %%			playerDaily:zeroDailyCount(?DailyType_Lottery, 2),
-%%%%			playerLottery:resetDestinyStar(time:getSyncTime1970FromDBS()),
+%%%%			playerLottery:resetDestinyStar(misc_time:gregorian_seconds_from_1970()),
 %%			"reset success";
 %%		Main =:= 99999 ->
 %%			%% 指定奖品ID
@@ -1546,7 +1546,7 @@ addrune(Params) when erlang:length(Params) >= 3 ->
 	[BindStr | _Other3] = Other2,
 	RuneID = string_to_integer(RuneStr),
 	Num = string_to_integer(NumStr),
-	IsBind = misc:convertBoolFromInt(string_to_integer(BindStr)),
+	IsBind = misc:i2b(string_to_integer(BindStr)),
 	playerRune:dropRune(RuneID, Num, IsBind),
 	ok.
 
@@ -1957,7 +1957,7 @@ canceltask(_) ->
 	[playerTask:gmCancelTask(TaskID) || #rec_task{taskID = TaskID} <- playerState:getAcceptedTask()],
 	playerLoopTask:gmReset(),
 	playerPropSync:setAny(?SerProp_LoopTaskProcess, []),
-	playerPropSync:setAny(?SerProp_LoopTaskState, {time:getSyncTimeFromDBS(), 0, 0}),
+	playerPropSync:setAny(?SerProp_LoopTaskState, {misc_time:localtime_seconds(), 0, 0}),
 	playerDaily:zeroDailyCount(?DailyType_ExpTask),
 	ok.
 
@@ -3757,7 +3757,7 @@ clearguildcd(Params) when erlang:length(Params) =:= 1 ->
 	RoleID = playerState:getRoleID(),
 	case Type of
 		1 -> playerGuild:recordExitGuildTime(RoleID, 0);
-		2 -> playerGuild:recordExitGuildTime(RoleID, time:getSyncTime1970FromDBS())
+		2 -> playerGuild:recordExitGuildTime(RoleID, misc_time:gregorian_seconds_from_1970())
 	end,
 	ok;
 clearguildcd(Params) when erlang:length(Params) >= 2 ->
@@ -3767,7 +3767,7 @@ clearguildcd(Params) when erlang:length(Params) >= 2 ->
 	Type = string_to_integer(SValue2),
 	case Type of
 		1 -> playerGuild:recordExitGuildTime(TargetRoleID, 0);
-		2 -> playerGuild:recordExitGuildTime(TargetRoleID, time:getSyncTime1970FromDBS())
+		2 -> playerGuild:recordExitGuildTime(TargetRoleID, misc_time:gregorian_seconds_from_1970())
 	end,
 	ok.
 
@@ -4703,7 +4703,7 @@ mallsetlimitbuy(Params) when erlang:length(Params) >= 5 ->
 	Type2 = string_to_integer(SValue3),
 	LimitBuy = string_to_integer(SValue4),
 	LimitType = string_to_integer(SValue5),
-	BeginTime = time:getUTCNowSec() + 1,
+	BeginTime = misc_time:utc_seconds() + 1,
 	EndTime = BeginTime + 60,
 
 	Db_ID = erlang:list_to_integer(erlang:integer_to_list(ItemID) ++
@@ -4726,7 +4726,7 @@ mallsetbuysend(Params) when erlang:length(Params) >= 5 ->
 	SendID = string_to_integer(SValue4),
 	SendNum = string_to_integer(SValue5),
 
-	BeginTime = time:getUTCNowSec(),
+	BeginTime = misc_time:utc_seconds(),
 	EndTime = BeginTime + 60,
 	Db_ID = erlang:list_to_integer(erlang:integer_to_list(ItemID) ++
 		erlang:integer_to_list(Type1) ++
@@ -4758,7 +4758,7 @@ mallsetbuytime(Params) when erlang:length(Params) >= 8 ->
 	UseInterget = string_to_integer(SValue6),
 	GetInterget = string_to_integer(SValue7),
 	Sort = string_to_integer(SValue8),
-	BeginTime = time:getUTCNowSec() + 1,
+	BeginTime = misc_time:utc_seconds() + 1,
 	EndTime = BeginTime + 60,
 	Db_ID = erlang:list_to_integer(erlang:integer_to_list(ItemID) ++
 		erlang:integer_to_list(Type1) ++
@@ -4788,7 +4788,7 @@ mallsetrebate(Params) when erlang:length(Params) >= 4 ->
 	Type1 = string_to_integer(SValue2),
 	Type2 = string_to_integer(SValue3),
 	Rebate = string_to_integer(SValue4),
-	BeginTime = time:getUTCNowSec(),
+	BeginTime = misc_time:utc_seconds(),
 	EndTime = BeginTime + 60,
 	Db_ID = erlang:list_to_integer(erlang:integer_to_list(ItemID) ++
 		erlang:integer_to_list(Type1) ++
@@ -4942,7 +4942,7 @@ wildboss(Params) when erlang:length(Params) >= 1 ->
 			[SValue2 | _Other2] -> string_to_integer(SValue2);
 			_ -> 10
 		end,
-	NowTime = time:getSyncTime1970FromDBS(),
+	NowTime = misc_time:gregorian_seconds_from_1970( ),
 	FreshTime = NowTime + AddTime,
 	case TargetMapID of
 		0 ->
@@ -5076,9 +5076,9 @@ openslot(Params) when erlang:length(Params) >= 0 ->
 	ok.
 
 querytime(_Params) ->
-	Sec = time:getSyncTime1970FromDBS(),
-	Str = time:convertSec2DateTimeStr(Sec),
-	io_lib:format("SyncTime:~ts~nConfZone:~p~nLocalTime:~ts", [Str, time:getLocalTimeAdjustHour(), time2:getLocalDateTimeStr()]).
+	Sec = misc_time:gregorian_seconds_from_1970( ),
+	Str = misc_time:convertSecToTimeStr(Sec),
+	io_lib:format("SyncTime:~ts~nConfZone:~p~nLocalTime:~ts", [Str, misc_time:tz_seconds, misc_time:getLocalDateTimeStr()]).
 
 clearmail(_Params) ->
 	playerMail:gm_deleteAllMail(),
@@ -5149,8 +5149,8 @@ addac(Params) when erlang:length(Params) >= 0 ->
 %% 		type = 1,
 %% 		name = "123",
 %% 		phase = 0,
-%% 		starttime = time:getSyncTime1970FromDBS() + 60,
-%% 		endtime = time:getSyncTime1970FromDBS() + 3600,
+%% 		starttime = misc_time:gregorian_seconds_from_1970( ) + 60,
+%% 		endtime = misc_time:gregorian_seconds_from_1970( ) + 3600,
 %% 		minlevel = 10,
 %% 		maxlevel = 40,
 %% 		arg1 = [#recAcKilledMonster{
@@ -5172,8 +5172,8 @@ addac(Params) when erlang:length(Params) >= 0 ->
 		type = 1,
 		name = "123",
 		phase = 0,
-		starttime = time:getSyncTime1970FromDBS() + 60,
-		endtime = time:getSyncTime1970FromDBS() + 3600,
+		starttime = misc_time:gregorian_seconds_from_1970( ) + 60,
+		endtime = misc_time:gregorian_seconds_from_1970( ) + 3600,
 		minlevel = 10,
 		maxlevel = 40,
 		arg1 = [#recAcKilledMonster{
@@ -5271,8 +5271,8 @@ operateItemPush(Params) ->
 		num = string_to_integer(Num),
 		price = string_to_integer(Price),
 		rebate = string_to_integer(Rebate),
-		startTime = time:getUTCNowSec(),
-		endTime = time:getUTCNowSec() + 86360,
+		startTime = misc_time:utc_seconds(),
+		endTime = misc_time:utc_seconds() + 86360,
 		coinType = 3,
 		limitSales = 1
 	}],
@@ -5343,7 +5343,7 @@ onkeyrefine(Params) ->
 	ok.
 
 tz(_Params) ->
-	Hour = time:getLocalTimeAdjustHour(),
+	Hour = misc_time:tz_seconds,
 	case Hour > 0 of
 		true ->
 			io_lib:format("time zone +~p~n", [Hour]);
@@ -5473,9 +5473,9 @@ sevendayaim(Params) ->
 	ok.
 
 sevendayaim2([]) ->
-	TimeNowUTC = time:getSyncTime1970FromDBS(),
-	Date = time:convertSec2DateTime(TimeNowUTC),
-	TimeBeginOfDay = time:getDayBeginSeconds(Date) + ?ResetTimeHour * 3600 - ?SECS_FROM_0_TO_1970,
+	TimeNowUTC = misc_time:gregorian_seconds_from_1970( ),
+	Date = misc_time:gregorian_seconds_to_datetime(TimeNowUTC),
+	TimeBeginOfDay = misc_time:getDayBeginSeconds(Date) + ?ResetTimeHour * 3600 - ?SECS_FROM_0_TO_1970,
 	TimeBeginWill = TimeBeginOfDay - 3600 * 24 * 6,
 	playerPropSync:setInt(?SerProp_SevenDayAimTimeBegin, TimeBeginWill);
 
@@ -5485,9 +5485,9 @@ sevendayaim2(Params) ->
 	playerSevenDayAim:queryForGM(ID).
 
 thirtyday(_) ->
-	TimeNowUTC = time:getSyncTime1970FromDBS(),
-	Date = time:convertSec2DateTime(TimeNowUTC),
-	TimeBeginOfDay = time:getDayBeginSeconds(Date) + ?ResetTimeHour * 3600 - ?SECS_FROM_0_TO_1970,
+	TimeNowUTC = misc_time:gregorian_seconds_from_1970( ),
+	Date = misc_time:gregorian_seconds_to_datetime(TimeNowUTC),
+	TimeBeginOfDay = misc_time:getDayBeginSeconds(Date) + ?ResetTimeHour * 3600 - ?SECS_FROM_0_TO_1970,
 	TimeBeginWill = TimeBeginOfDay - 3600 * 24 * 29,
 	playerPropSync:setInt(?SerProp_ThirtyDayTimeBegin, TimeBeginWill),
 	DayCount = variant:getPlayerVariant(playerState:getRoleID(), ?Setting_PlayerVarReadOnly_AccLoginDayAll),
@@ -5667,7 +5667,7 @@ addvigor(Params) when Params >= 1 ->
 			ValueNew_ ->
 				ValueNew_
 		end,
-	playerPropSync:setAny(?SerProp_PetTerritoryVigor, [time:getSyncTimeFromDBS(), ValueNew]).
+	playerPropSync:setAny(?SerProp_PetTerritoryVigor, [misc_time:localtime_seconds(), ValueNew]).
 
 gopen(_) ->
 	ListBit = lists:seq(?Setting_GlobalBitVar_StartBit, ?Setting_GlobalBitVarReadOnly_EndBit),
@@ -6102,7 +6102,7 @@ homeplantquery(Params) when erlang:length(Params) >= 1 ->
 %% 巅峰对决 gm开关竞价状态 0关；1开；2由时间控制
 %% 竞价状态优先级低于活动状态，因此活动开启时必然竞价结束
 gw_bidding([P | _]) ->
-	NowTime = time:getSyncTime1970FromDBS(),
+	NowTime = misc_time:gregorian_seconds_from_1970( ),
 	case ets:info(etsGuildWarBidding, size) of
 		undefined ->
 			"need debug";
@@ -6114,7 +6114,7 @@ gw_bidding([P | _]) ->
 			ets:insert(etsGuildWarBidding, #recKV{v = {2, NowTime}})
 	end;
 gw_bidding(_) ->
-	NowTime = time:getSyncTime1970FromDBS(),
+	NowTime = misc_time:gregorian_seconds_from_1970( ),
 	case ets:info(etsGuildWarBidding, size) of
 		undefined ->
 			"need debug";
@@ -6458,7 +6458,7 @@ cf_chat(_Params) ->
 			Msg = #pk_U2GS_Friend2FormalChat_Request{
 				receiverID = ID,
 				content = erlang:binary_to_list(unicode:characters_to_binary("跨服好友测试聊天内容")),
-				time = time:getSyncUTCTimeFromDBS()
+				time = misc_time:utc_seconds()
 			},
 			playerFriend:chat(Msg),
 			ok
@@ -6927,7 +6927,7 @@ fashionSuit(A) ->
 	[ID | T1] = A,
 	[Op | _] = T1,
 	playerFashion:activeFashionSuit(list_to_integer(ID),
-		misc:convertBoolFromInt( list_to_integer(Op) )).
+		misc:i2b( list_to_integer(Op) )).
 
 resetSkill(_) ->
 	playerSkillLearn:resetSkill().
@@ -7041,7 +7041,7 @@ recast(A) ->
 
 skipSkill(A)->
 	[Flag | _] = A,
-	playerState:setSkipSkillCheck(misc:convertBoolFromInt(list_to_integer(Flag))).
+	playerState:setSkipSkillCheck(misc:i2b(list_to_integer(Flag))).
 
 addLifeSkillExp(A)->
 	[Type, Exp | _] = A,

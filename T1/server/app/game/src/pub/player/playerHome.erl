@@ -182,7 +182,7 @@ msg(#pk_U2GS_RequestVisitRecord{roleID = RoleID}) ->
 msg(#pk_U2GS_UpgradeHome{upgredeDataList = UpgredeDataList}) ->
 	case homeInterface:queryHome(playerState:getRoleID()) of
 		#rec_home{upgradeHomeCD =UpgradeHomeCD} = Home ->
-			TimeNow  = time:getSyncTimeFromDBS(),
+			TimeNow  = misc_time:localtime_seconds(),
 			case TimeNow >= UpgradeHomeCD of
 				true ->
 					upgradeHomeNew(Home,UpgredeDataList);
@@ -221,7 +221,7 @@ gm_createLetter()->
 			#globalsetupCfg{setpara = [Min,Max]} =
 				getCfg:getCfgPStack(cfg_globalsetup, thief_triggertimer),
 			Value = misc:rand(Min,Max),
-			NextSendTime =time:getSyncTime1970FromDBS() +  Value*60,
+			NextSendTime =misc_time:gregorian_seconds_from_1970( ) +  Value*60,
 			createLetter(),
 			playerPropSync:setInt64(?PriProp_PlayerHomeOnlineTime, NextSendTime);
 		_->
@@ -234,7 +234,7 @@ gm_homeLetterOverDue(Time)->
 	case erlang:length(BossLetterList) >=1 of
 		true->
 			[#recLetter{itemUID = ItemUid} = Old|_]=BossLetterList,
-			NowTime = time:getSyncTime1970FromDBS(),
+			NowTime = misc_time:gregorian_seconds_from_1970( ),
 			New = Old#recLetter{overTime =NowTime +Time},
 			playerPropSync:setAny(?SerProp_HomeBossLetter,[New]),
 			Msg =  #pk_GS2U_SendHomeLetter{letter = #pk_HomeLetter{itemUID = ItemUid,overTime =NowTime +Time }},
@@ -280,7 +280,7 @@ init()->
 
 createLetter()->
 	RoleID = playerState:getRoleID(),
-	NowTime = time:getSyncTime1970FromDBS(),
+	NowTime = misc_time:gregorian_seconds_from_1970( ),
 	#globalsetupCfg{setpara = [Time]} = getCfg:getCfgPStack(cfg_globalsetup, thief_ddltimer),
 	Thief_ddltimer = Time*60,
 	#globalsetupCfg{setpara = [Thief_letterid]} = getCfg:getCfgPStack(cfg_globalsetup, thief_letterid),
@@ -329,7 +329,7 @@ tick()->
 ok.
 tickLetter(BossLetterList) when erlang:length(BossLetterList) >=1 ->
 	%%这里处理逾期预告函
-	NowTime = time:getSyncTime1970FromDBS(),
+	NowTime = misc_time:gregorian_seconds_from_1970( ),
 	[#recLetter{itemUID = ItemUid, overTime = OverTime}|_]=BossLetterList,
 	case NowTime > OverTime of
 		true ->
@@ -347,7 +347,7 @@ tickLetter([])->
 	#globalsetupCfg{setpara = [Openhomelv]} = getCfg:getCfgPStack(cfg_globalsetup, thief_openhomelv),
 	case  homeInterface:queryHome(playerState:getRoleID())  of
 		#rec_home{homeLvl = HomeLevel} when HomeLevel>=Openhomelv ->
-			NowTime = time:getSyncTime1970FromDBS(),
+			NowTime = misc_time:gregorian_seconds_from_1970( ),
 			CurValue = playerPropSync:getProp(?PriProp_PlayerHomeOnlineTime),
 			case NowTime > CurValue of
 				  true->
@@ -547,7 +547,7 @@ upgradeHomeNew(#rec_home{homeLvl = Lvl, homeID = HomeID},UpgredeDataList) ->
 
 									playerAchieve:achieveEvent(?Achieve_UpdateHome,[Lvl+1,1]),
 									%%设置下次升级的时间
-									TimeNow  = time:getSyncTimeFromDBS(),
+									TimeNow  = misc_time:localtime_seconds(),
 									UpgredeTime =  TimeNow + Build_CD*60,
 
 									%% 告诉公告进程开始升级
@@ -784,7 +784,7 @@ enterHomeMap(MapID) ->
 								homeID = HomeID,
 								visitID = playerState:getRoleID(),	%% 访客ID
 								opType = ?HomeOpType_Visit,
-								time = time:getLogTimeSec()
+								time = misc_time:utc_seconds()
 							},
 							dbLog:sendSaveLogHomeVisit(LogHomeVisit)
 					end,

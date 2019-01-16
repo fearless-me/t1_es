@@ -102,7 +102,7 @@ getLowCopyMapReward1(MapID) ->
                 orelse SubType =:= ?MapSubTypeHeroCopy
                 orelse SubType =:= ?MapSubTypeSlime
                 orelse SubType =:= ?MapSubTypeChallengeCopy ->
-				EndTime = time:getLogTimeSec(),
+				EndTime = misc_time:utc_seconds(),
 				FunH = fun(#pk_CoinData{coinType = CoinType, value = Value}, AccList) ->
 					if Value > 0 ->
 						[{CoinType, Value} | AccList];

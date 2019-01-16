@@ -588,7 +588,7 @@ kickCopyMapPlayer() ->
 							orelse MapSubType =:= ?MapSubTypeHeroCopy
 							orelse MapSubType =:= ?MapSubTypeSlime
 							orelse MapSubType =:= ?MapSubTypeChallengeCopy ->
-							EndTime = time:getLogTimeSec(),
+							EndTime = misc_time:utc_seconds(),
 							LogCopy = #rec_log_copy{
 								accountID = playerState:getAccountID(),
 								roleID = playerState:getRoleID(),
@@ -976,7 +976,7 @@ completeNormalCopyMap_Not_Reward({ListHurt, {Score, DiffTime, CopyMapID, MapPID,
 						true ->
 							playerState:setReturnCallBack({completeNormalCopyMap_Not_Reward_Cros, CopyMapID, Score, DiffTime});
 						_ ->
-							EndTime = time:getLogTimeSec(),
+							EndTime = misc_time:utc_seconds(),
 							LogCopy = #rec_log_copy{
 								accountID = playerState:getAccountID(),
 								roleID = playerState:getRoleID(),
@@ -1424,7 +1424,7 @@ tryDoEvent_C2({?CopyMapSpecEventCondition_EnterCount}) ->
 	playerCopyMapReward:getCopyMapMaxScore(MapID) =:= 0;
 tryDoEvent_C2({?CopyMapSpecEventCondition_HpLess, IsPercent, Value}) ->
 	HpCur = playerState:getCurHp(),
-	case misc:convertBoolFromInt(IsPercent) of
+	case misc:i2b(IsPercent) of
 		true ->
 			%% 百分比
 			HpMax = playerState:getMaxHp(),

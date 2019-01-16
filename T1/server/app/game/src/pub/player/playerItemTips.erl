@@ -88,10 +88,10 @@ queryItemFromDBMemCache(ItemUID,IsDirtyRead) ->
 						itemID = ItemID,
 						pos = Rec#rec_item.pos,
 						recastCount = Rec#rec_item.recastCount,
-						isBind = misc:convertBoolFromInt(Rec#rec_item.isBind),
-						isLocked = misc:convertBoolFromInt(Rec#rec_item.isLocked),
+						isBind = misc:i2b(Rec#rec_item.isBind),
+						isLocked = misc:i2b(Rec#rec_item.isLocked),
 						quality = Rec#rec_item.quality,
-						createTime = time:getSyncUTCTimeFromDBS()
+						createTime = misc_time:utc_seconds()
 					};
 				_ ->
 					Rec#rec_item{
@@ -101,10 +101,10 @@ queryItemFromDBMemCache(ItemUID,IsDirtyRead) ->
 						pos = Rec#rec_item.pos,
 						pileNum = Rec#rec_item.pileNum,
 						recastCount = Rec#rec_item.recastCount,
-						isBind = misc:convertBoolFromInt(Rec#rec_item.isBind),
-						isLocked = misc:convertBoolFromInt(Rec#rec_item.isLocked),
+						isBind = misc:i2b(Rec#rec_item.isBind),
+						isLocked = misc:i2b(Rec#rec_item.isLocked),
 						quality = Rec#rec_item.quality,
-						createTime = time:getSyncUTCTimeFromDBS()
+						createTime = misc_time:utc_seconds()
 					}
 			end;
 		_ ->

@@ -110,7 +110,7 @@ tickKv() ->
 %%tick反击列表
 -spec tickKp() -> ok.
 tickKp() ->
-	Now = time:getUTCNowMSDiff2010(),
+	Now = misc_time:getUTCNowMSDiff2010(),
 	Kp = playerState:getKillPlayerList(),
 	Fun = fun({C, T}) ->
 		case Now - T >= ?TickKpTime of
@@ -477,7 +477,7 @@ addKp1(true, Code) ->
 addKp2(false) ->
 	ok;
 addKp2({Code, TargetKp}) ->
-	Now = time:getUTCNowMSDiff2010(),
+	Now = misc_time:getUTCNowMSDiff2010(),
 	Kp = playerState:getKillPlayerList(),
 	case isSetKp(TargetKp, Kp, Code)of
 		true ->

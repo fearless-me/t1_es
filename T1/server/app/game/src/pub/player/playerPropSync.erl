@@ -66,7 +66,7 @@ init() ->
 	ok.
 
 init2() ->
-	NowTime = time:getSyncTime1970FromDBS(),
+	NowTime = misc_time:gregorian_seconds_from_1970( ),
 
 	setFloat(?SerProp_RepMountSpeed, 0.0),
 
@@ -288,7 +288,7 @@ init2() ->
 
 	setAny(?SerProp_LoopTaskProcess, []),
 	setAny(?SerProp_LoopTaskGive, []),
-	setAny(?SerProp_LoopTaskState, {time:getSyncTimeFromDBS(), 0, 0}),
+	setAny(?SerProp_LoopTaskState, {misc_time:localtime_seconds(), 0, 0}),
 
 	setInt(?SerProp_CrossAliveKill, 0),
 	setInt(?SerProp_CrossAliveAchieve, 0),
@@ -298,7 +298,7 @@ init2() ->
 
 	setInt(?SerProp_WarriorTrial_RewardID, 0),
 	setAny(?SerProp_LifeSkillNotFreeCount, []),
-	setAny(?SerProp_LifeSkillFishTime, {0, time:getSyncTimeFromDBS(), 0}),
+	setAny(?SerProp_LifeSkillFishTime, {0, misc_time:localtime_seconds(), 0}),
 
 	setInt(?SerProp_PurpleRosesGetCount, 0),
 	setInt(?SerProp_CollectionWordsVer, 0),

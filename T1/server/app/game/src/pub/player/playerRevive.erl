@@ -114,7 +114,7 @@ revive(Type) ->
 requestRevive_Normal() ->
 	playerState2:autoRevive(false),
 	?DEBUG("requestRevive_Normal:~p,~ts",[playerState:getRoleID(), playerState:getName()]),
-	NowTime = time:getSyncTime1970FromDBS(),
+	NowTime = misc_time:gregorian_seconds_from_1970( ),
 	LastTime = playerPropSync:getProp(?SerProp_PlayerDTime),
 	ReviveTime = playerPropSync:getProp(?SerProp_PlayerRTime),
 	case NowTime - LastTime >= ReviveTime of
@@ -132,7 +132,7 @@ requestRevive_Normal() ->
 requestRevive_Normal_New() ->
 	playerState2:autoRevive(false),
 	?DEBUG("requestRevive_Normal:~p,~ts",[playerState:getRoleID(), playerState:getName()]),
-	NowTime = time:getSyncTime1970FromDBS(),
+	NowTime = misc_time:gregorian_seconds_from_1970( ),
 	LastTime = playerPropSync:getProp(?SerProp_PlayerDTime),
 	ReviveTime = playerPropSync:getProp(?SerProp_PlayerRTime),
 	case NowTime - LastTime >= ReviveTime of
@@ -266,7 +266,7 @@ checkPlayerIsRevive() ->
 		false ->
 			case playerState2:autoRevive() of
 				true ->
-					NowTime = time:getSyncTime1970FromDBS(),
+					NowTime = misc_time:gregorian_seconds_from_1970( ),
 					LastTime = playerPropSync:getProp(?SerProp_PlayerDTime),
 					ReviveTime = playerPropSync:getProp(?SerProp_PlayerRTime),
 					case NowTime - LastTime >= ReviveTime + ?ReviveProtectTime of
@@ -578,7 +578,7 @@ noticeOtherObject(MapID, RX, RY, PC, #pk_GS2U_PlayerRevive{} = PlayerRevive) ->
 -spec onDead(AttackerCode::uint64(), AttackRoleID::uint64(), AttackName::string(), IsBattleLearn::boolean()) -> ok.
 onDead(AttackerCode, AttackRoleID, AttackName, IsBattleLearn) ->
 	Code = playerState:getPlayerCode(),
-	NowTime = time:getSyncTime1970FromDBS(),
+	NowTime = misc_time:gregorian_seconds_from_1970( ),
 	%% 上次死亡时间
 %%	LastTime = playerPropSync:getProp(?SerProp_PlayerDTime),
 	%% 设置本次死亡时间
@@ -683,7 +683,7 @@ onDead_New(AttackerCode, AttackRoleID, AttackName, IsBattleLearn) ->
 -spec playerDeadNotice({Num::integer(), AttackerCode::uint64(), AttackRoleID::uint64(), AttackName::string(), IsBattleLearn::boolean()}) -> ok.
 playerDeadNotice({Num, AttackerCode, AttackRoleID, AttackName, IsBattleLearn}) ->
 	Code = playerState:getPlayerCode(),
-	NowTime = time:getSyncTime1970FromDBS(),
+	NowTime = misc_time:gregorian_seconds_from_1970( ),
 	%% 上次死亡时间
 %%	LastTime = playerPropSync:getProp(?SerProp_PlayerDTime),d
 	%% 设置本次死亡时间

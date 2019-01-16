@@ -137,7 +137,7 @@ calcOnePetForce(#recPetInfo{pet_id = PetID, pet_status = Status} = Pet, IsNotify
 			?ERROR("pet fight force is 0,PetID=~p", [PetID]),
 			Pet;
 		_ ->
-			case misc:convertBoolFromInt(AddPetForce) andalso Status >= ?PetState_Battle_Show of
+			case misc:i2b(AddPetForce) andalso Status >= ?PetState_Battle_Show of
 				true ->
 					ForcePet = playerPropSync:getProp(?PriProp_PetForce),
 					?DEBUG("petForce[~p]=~p->~p, diff = ~p",[PetID, ForcePet, Force, Force - ForcePet]),

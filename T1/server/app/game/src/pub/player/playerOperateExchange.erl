@@ -68,7 +68,7 @@ checkCount(_,_) ->
 	?ErrorCode_ActExchange_OutOfCount.
 
 checkIsInActivityTime(ok,ST,ET) ->
-	NowTime = time:getSyncUTCTime1970FromDBS() - ?SECS_FROM_0_TO_1970,
+	NowTime = misc_time:utc_seconds() - ?SECS_FROM_0_TO_1970,
 	case NowTime >= ST andalso NowTime < ET of
 		true ->
 			ok;

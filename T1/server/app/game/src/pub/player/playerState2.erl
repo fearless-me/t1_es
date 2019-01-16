@@ -86,7 +86,7 @@ getIdentityUporDownLoadTaskInfo() ->
 
 %% 添加好友间隔时间
 setFriend2CD(Key) ->
-	put({'Friend2CD', Key}, time:getSyncTimeFromDBS()).
+	put({'Friend2CD', Key}, misc_time:localtime_seconds()).
 getFriend2CD(Key) ->
 	case get({'Friend2CD', Key}) of
 		undefined ->
@@ -94,7 +94,7 @@ getFriend2CD(Key) ->
 		Time ->
 			#globalsetupCfg{setpara = [CD]} =
 				getCfg:getCfgPStack(cfg_globalsetup, friend2_add_cd),
-			case Time + CD - time:getSyncTimeFromDBS() of
+			case Time + CD - misc_time:localtime_seconds() of
 				Sec when Sec > 0 ->
 					case (Sec + 1) rem 60 > 0 of
 						true ->
@@ -109,7 +109,7 @@ getFriend2CD(Key) ->
 
 %% 添加跨服好友间隔时间
 setFriend2CDCross(Key) ->
-	put({'Friend2CDCross', Key}, time:getSyncTimeFromDBS()).
+	put({'Friend2CDCross', Key}, misc_time:localtime_seconds()).
 getFriend2CDCross(Key) ->
 	case get({'Friend2CDCross', Key}) of
 		undefined ->
@@ -117,7 +117,7 @@ getFriend2CDCross(Key) ->
 		Time ->
 			#globalsetupCfg{setpara = [CD]} =
 				getCfg:getCfgPStack(cfg_globalsetup, friends_crossapplycd),
-			case Time + CD - time:getSyncTimeFromDBS() of
+			case Time + CD - misc_time:localtime_seconds() of
 				Sec when Sec > 0 ->
 					case (Sec + 1) rem 60 > 0 of
 						true ->
@@ -279,13 +279,13 @@ getHomeUpgradeRefreshTime() ->
 %%%-------------------------------------------------------------------
 % 环任务刷新相关按钮CD
 setLoopTaskRefreshTime() ->
-	put(refreshTime, time:getSyncTimeFromDBS()).
+	put(refreshTime, misc_time:localtime_seconds()).
 getLoopTaskRefreshCoolDown() ->
 	case get(refreshTime) of
 		undefined ->
 			true;
 		TimeLast ->
-			TimeNow = time:getSyncTimeFromDBS(),
+			TimeNow = misc_time:localtime_seconds(),
 			TimeNow - TimeLast >= 2	%% 固定2s
 	end.
 
@@ -327,12 +327,12 @@ listLoopTaskID() ->
 canBackFromCross(RoleID) ->
 	case get({canBackFromCross, RoleID}) of
 		undefined ->
-			put({canBackFromCross, RoleID}, time:getSyncTimeFromDBS()),
+			put({canBackFromCross, RoleID}, misc_time:localtime_seconds()),
 			true;
 		TimeLast ->
-			case time:getSyncTimeFromDBS() - TimeLast >= 3 of
+			case misc_time:localtime_seconds() - TimeLast >= 3 of
 				true ->
-					put({canBackFromCross, RoleID}, time:getSyncTimeFromDBS()),
+					put({canBackFromCross, RoleID}, misc_time:localtime_seconds()),
 					true;
 				_ ->
 					false
@@ -474,11 +474,11 @@ isOpenCollectionWords2(B) ->
 %% 是否可以保存永不停歇到数据库
 %% 主要以下线保存的数据为主，设置10分钟间隔是为了防止意外情况数据丢失过多
 canSaveYBTX2DB() ->
-	TimeNow = time:getSyncTimeFromDBS(),
+	TimeNow = misc_time:localtime_seconds(),
 	TimeOld =
 		case put(canSaveYBTX2DB, TimeNow) of
 			undefined ->
-				time:getSyncTimeFromDBS();
+				misc_time:localtime_seconds();
 			TO ->
 				TO
 		end,
@@ -509,12 +509,12 @@ marriageTask_together_getCD() ->
 			undefined ->
 				Sec;
 			V ->
-				time:getSyncTimeFromDBS() - V
+				misc_time:localtime_seconds() - V
 		end,
 	erlang:max(Sec - Diff, 0).
 -spec marriageTask_together_setCD() -> no_return().
 marriageTask_together_setCD() ->
-	put(marriage_task_beckon_cd, time:getSyncTimeFromDBS()).
+	put(marriage_task_beckon_cd, misc_time:localtime_seconds()).
 
 %%%-------------------------------------------------------------------
 %% 情缘任务中召唤功能操作时效，召唤者和被召唤者通用
@@ -526,7 +526,7 @@ marriageTask_together_timeout() ->
 		Last ->
 			#globalsetupCfg{setpara = [Sec]} =
 				getCfg:getCfgPStack(cfg_globalsetup, marriage_tas_cancel_time),
-			time:getSyncTimeFromDBS() - Last >= Sec
+			misc_time:localtime_seconds() - Last >= Sec
 	end.
 -spec marriageTask_together_timeout(uint32()) -> no_return().
 marriageTask_together_timeout(Time) ->

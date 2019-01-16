@@ -72,8 +72,8 @@ ok.
 
 %%%%%%取出当前天的秒数
 %%getCurrentDay() ->
-%%	DataTime = time:getLocalNowDateTime1970(),
-%%	Curtime  =time:getSyncTime1970FromDBS()- time:getDayBeginSeconds(DataTime),
+%%	DataTime = misc_time:getLocalDateTime,
+%%	Curtime  =misc_time:gregorian_seconds_from_1970( )- misc_time:getDayBeginSeconds(DataTime),
 %%	Curtime.
 %%
 %%

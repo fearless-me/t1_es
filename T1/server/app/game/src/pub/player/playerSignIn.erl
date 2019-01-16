@@ -287,7 +287,7 @@ sendSignInfo() ->
 		[SignInfo | AccItemList]
 	end,
 
-	Time = time:getSyncTime1970FromDBS(),
+	Time = misc_time:gregorian_seconds_from_1970( ),
 	IsAllSigned = isAllSigned(),
 	TypeList = case IsAllSigned of
 				   true ->
@@ -470,9 +470,9 @@ addDayCount(RoleId) ->
 
 countRefreshTime() ->
 	%%计算下次刷新时间，如果玩家在线才好刷新
-	Time = time:getSyncTime1970FromDBS(),
-	{{Y, M, D}, {_H, _Min, _S}} = time:convertSec2DateTime(Time),
-	RefreshTime = time:convertDateTime1970ToSec({{Y, M, D}, {?ResetTimeHour, 0, 0}}),
+	Time = misc_time:gregorian_seconds_from_1970( ),
+	{{Y, M, D}, {_H, _Min, _S}} = misc_time:gregorian_seconds_to_datetime(Time),
+	RefreshTime = misc_time:convertDateTime1970ToSec({{Y, M, D}, {?ResetTimeHour, 0, 0}}),
 	if
 		RefreshTime < Time ->
 			?WARN("sign countRefreshTime [~p]",[RefreshTime + ?One_Day_Second - Time]),

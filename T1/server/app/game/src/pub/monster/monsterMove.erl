@@ -48,7 +48,7 @@ tickMove(Code, Diff) ->
 %%									true ->
 %%										false;
 %%									_ ->
-								Now =  time:getUTCNowMS(),
+								Now =  misc_time:milli_seconds(),
 								GlobalCD = monsterState:getGlobalCDEndTime(Code),
 								LSTime = monsterState:getStartUseSkillTime(Code),
 								ATime = monsterState:getFinalAttackIntervalTime(Code),
@@ -91,7 +91,7 @@ aiTickMove(_Code) ->
 %%						true ->
 %%							skip
 %%					end,
-%%					Now = time:getUTCNowMS(),
+%%					Now = misc_time:milli_seconds(),
 %%					Diff = Now - monsterState:getLastAIMoveTickTime(),
 %%					updateMove(Code, Diff),
 %%					monsterState:setLastAIMoveTickTime(Now);

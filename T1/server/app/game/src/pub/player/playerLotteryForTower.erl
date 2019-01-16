@@ -72,7 +72,7 @@
 %%%%flush_lottery_tower_info(#pk_U2GS_LotteryForTowerInfo{  }) ->
 %%%%    case psMgr:call(?PsNameLotteryForTower, <<"get_lottery_for_tower_info">>, [], 5000) of
 %%%%        {ok, NoticeList,_, EndTime} ->
-%%%%            NowSec = time:getUTCNowSec(),
+%%%%            NowSec = misc_time:utc_seconds(),
 %%%%            if
 %%%%                (EndTime-NowSec)>0 ->
 %%%%                    LastSec=EndTime-NowSec;

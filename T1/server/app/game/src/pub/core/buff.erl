@@ -79,7 +79,7 @@ broadcastNoticeView(
 
 %% ====================================================================
 calcBuffEndTime(Level, Factor, #buffCfg{buffDuration = Duration}) ->
-	Now = time:getUTCNowMS(),
+	Now = misc_time:milli_seconds(),
 	case Duration of
 		[0, _] ->
 			0;
@@ -89,7 +89,7 @@ calcBuffEndTime(Level, Factor, #buffCfg{buffDuration = Duration}) ->
 	end.
 
 calcBuffEndTimeWithRLevel(Level, RuneAddLevel, Factor, #buffCfg{buffDuration = Duration, buffDurationAddLv = BuffDurationAddLv}) ->
-	Now = time:getUTCNowMS(),
+	Now = misc_time:milli_seconds(),
 	case Duration of
 		[0, _] ->
 			0;
@@ -252,7 +252,7 @@ isCalcHurt(DamagePlus, DamageMultiply, Status) ->
 	BuffID :: uint(),
 	SkillEffect :: #recSkillEffect{}.
 initBuffData(BuffID, #recSkillEffect{} = SkillEffect) ->
-	%%Now = time:getUTCNowMS(),
+	%%Now = misc_time:milli_seconds(),
 	Level = SkillEffect#recSkillEffect.level,
 	RuneAddLevel = SkillEffect#recSkillEffect.runeAddLevel,
 	Energy = SkillEffect#recSkillEffect.attackerEnergy,
@@ -339,7 +339,7 @@ initBuffRec(
 	BuffDamage,
 	#recBuffInfo{buffID = BuffID, level = Level, runeAddLevel = RuneAddLevel} = BuffData
 ) ->
-	Now = time:getUTCNowMS(),
+	Now = misc_time:milli_seconds(),
 	Cfg = getCfg:getCfgPStack(cfg_buff, BuffID),
 	BuffProp = buff:calcProp(BuffID, Level, RuneAddLevel, 1),
 	BuffDelay = Cfg#buffCfg.buffDelay,

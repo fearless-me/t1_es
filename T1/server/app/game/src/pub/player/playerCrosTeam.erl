@@ -726,9 +726,9 @@ offlineDelTeamMember(TeamID, RoleID) ->
 %%玩家上线重置积分
 -spec onlineUpdateInte() -> ok.
 onlineUpdateInte() ->
-	Now = time:getLocalNowSec1970(),
+	Now = misc_time:localtime_seconds(),
 	%%本周第一秒
-	FirstSec = time:getWeekBeginSecondsByDay(time:getLocalNowDateTime1970()),
+	FirstSec = misc_time:getWeekBeginSecondsByDay(misc_time:getLocalDateTime()),
 	
 	%%本周一更新时间
 	LocalWeek = FirstSec + 4 * ?OneHourSec,

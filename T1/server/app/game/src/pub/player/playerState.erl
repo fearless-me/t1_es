@@ -175,7 +175,7 @@ setActionStatus(ActionStatus) when ActionStatus > 0, ActionStatus =< ?CreatureAc
 			case State =/= ActionStatus of
 				true ->
 					%%只有状态不同，需要改变才记录时间
-					Time = time:getUTCNowMSDiff2010(),
+					Time = misc_time:getUTCNowMSDiff2010(),
 					setActionTime(Time),
 					put(actionStatus,ActionStatus);
 				_ ->
@@ -189,7 +189,7 @@ setActionStatus(ActionStatus) when ActionStatus > 0, ActionStatus =< ?CreatureAc
 setStandActionStatusFromDeadStatus() ->
 	case getActionStatus() of
 		?CreatureActionStatusDead ->
-			Time = time:getUTCNowMSDiff2010(),
+			Time = misc_time:getUTCNowMSDiff2010(),
 			setActionTime(Time),
 			put(actionStatus,?CreatureActionStatusStand);
 		Status ->
@@ -357,7 +357,7 @@ getIsPlayer() ->
 -spec setRoleCreateTime(Time::{datetime,{year,month,day,h,i,s}}) ->term().
 setRoleCreateTime(Time) ->
 	{datetime,CreateTime} = Time,
-	UtcSec = time:diffSecFrom1970(CreateTime),
+	UtcSec = misc_time:time:diffSecFrom1970(CreateTime),
 	playerPropSync:setInt(?PriProp_RoleCreateTime, UtcSec),
 	put(roleCreateTime,Time).
 %%获取角色创建时间
@@ -813,7 +813,7 @@ setRebornHp(Hp) when erlang:is_integer(Hp), Hp > 0 ->
 			CurHp = misc:clamp(Hp, 0, MaxHp),
 			put(playerCurHp, CurHp),
 
-			Time = time:getUTCNowMSDiff2010(),
+			Time = misc_time:getUTCNowMSDiff2010(),
 			setActionTime(Time),
 			put(actionStatus, ?CreatureActionStatusStand),
 
@@ -2847,7 +2847,7 @@ getLastLogoutTime() ->
 -spec setLastLogoutTime(Time :: uint()) -> ok.
 setLastLogoutTime(Time) ->
 	{datetime,LogoutTime} = Time,
-	UtcSec = time:convertDateTime1970ToSec(LogoutTime),
+	UtcSec = misc_time:convertDateTime1970ToSec(LogoutTime),
 	put(lastLogoutTime, UtcSec),
 	ok.
 

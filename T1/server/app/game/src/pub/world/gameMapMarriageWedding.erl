@@ -32,7 +32,7 @@
 %%
 %%weddingPhase(#rec_weddingMapInfo{roleID =RoleID,
 %%	phase =?WeddingMapphase_1,phaseTime_1 = PhaseTime_1} = Wedding)->
-%%	Now =  time:getSyncTimeFromDBS(),
+%%	Now =  misc_time:localtime_seconds(),
 %%	case Now >=PhaseTime_1   of
 %%		 true ->
 %%			 New= Wedding#rec_weddingMapInfo{phase = ?WeddingMapphase_2,redbage_tickrate = 0},
@@ -47,7 +47,7 @@
 %%	ok;
 %%weddingPhase(#rec_weddingMapInfo{roleID = RoleID,phase =?WeddingMapphase_2,phaseTime_2 = PhaseTime_2} = Wedding)->
 %%
-%%	Now =  time:getSyncTimeFromDBS(),
+%%	Now =  misc_time:localtime_seconds(),
 %%	case Now >=PhaseTime_2   of
 %%		true ->
 %%			Redbage_tickrate = marriageState:ceremony_redbage_tickrate(),
@@ -63,7 +63,7 @@
 %%
 %%weddingPhase(#rec_weddingMapInfo{ roleID = RoleID, phase =?WeddingMapphase_3,phaseTime_3 = PhaseTime_3} = Wedding)->
 %%
-%%	Now =  time:getSyncTimeFromDBS(),
+%%	Now =  misc_time:localtime_seconds(),
 %%	case Now >=PhaseTime_3 - ?ResetMapCountDown   of
 %%		true ->
 %%			New= Wedding#rec_weddingMapInfo{phase = ?WeddingMapphase_4},
@@ -78,7 +78,7 @@
 %%	ok;
 %%
 %%weddingPhase(#rec_weddingMapInfo{roleID = RoleID, phase =?WeddingMapphase_4,phaseTime_3 = PhaseTime_3} = Wedding)->
-%%	Now =  time:getSyncTimeFromDBS(),
+%%	Now =  misc_time:localtime_seconds(),
 %%	case Now >=PhaseTime_3   of
 %%		true ->
 %%			New= Wedding#rec_weddingMapInfo{phase = ?WeddingMapphase_5},
@@ -95,7 +95,7 @@
 %%
 %%weddingRed_tick(#rec_weddingMapInfo{roleID = RoleID,phase =?WeddingMapphase_1,
 %%	redbage_tickrate = Rate,phaseTime_1 = PhaseTime_1} = Wedding) ->
-%%	Now =  time:getSyncTimeFromDBS(),
+%%	Now =  misc_time:localtime_seconds(),
 %%	case Now >=Rate andalso  PhaseTime_1 -Now  > ?RedPhase2LastTime of
 %%		true ->
 %%			Redbage_tickrate = marriageState:ceremony_redbage_tickrate(),
@@ -109,7 +109,7 @@
 %%	ok;
 %%
 %%weddingRed_tick(#rec_weddingMapInfo{roleID = RoleID, phase =?WeddingMapphase_3,redbage_tickrate = Rate} = Wedding)->
-%%	Now =  time:getSyncTimeFromDBS(),
+%%	Now =  misc_time:localtime_seconds(),
 %%	case Now >=Rate   of
 %%		true ->
 %%			Redbage_tickrate = marriageState:ceremony_redbage_tickrate(),

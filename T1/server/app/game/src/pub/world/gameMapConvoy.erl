@@ -60,7 +60,7 @@ initMapConvoy({#recConvoyInfo{roleID = RoleID, roleCode = RoleCode, extData = Ex
 			},
 			creatureBase:initConvoyCreature(?InitMonster, Arg, Info#recConvoyInfo.monsterCode),
 
-			mapState:addConvoyInfoList(Info#recConvoyInfo{timeOut = time:getUTCNowMS() + ?ConvoyTimeOut}),
+			mapState:addConvoyInfoList(Info#recConvoyInfo{timeOut = misc_time:milli_seconds() + ?ConvoyTimeOut}),
 			monsterAI:setAIEvent(Info#recConvoyInfo.monsterCode, ?BSTCondVar_IsSelfAlive, 1),
 			ok;
 		_ ->
@@ -85,7 +85,7 @@ tick(NowTimeMS) ->
 	ok.
 
 tickConvoy(#recConvoyInfo{timeOut = TimeOut, errorTimes = ErrorTimes} = Info) ->
-	case time:getUTCNowMS() >= TimeOut of
+	case misc_time:milli_seconds() >= TimeOut of
 		false ->
 			case checkDis(Info) of
 				true ->

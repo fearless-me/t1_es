@@ -113,7 +113,7 @@ sendSimpleMail(_SendRoleID, _ToRoleID, _MailTitle, _MailContent, _MailSubjoinMsg
 %%sendEmail(MailID, SenderRoleID, ToRoleID, MailTitle, MailContent, Attachment, MailSubjoinMsg) ->
 %%    Mail = #recMail{
 %%        mailID          = MailID,
-%%        mailSendTime    = time:getSyncTime1970FromDBS(),
+%%        mailSendTime    = misc_time:gregorian_seconds_from_1970( ),
 %%        senderRoleID    = SenderRoleID,
 %%        toRoleID        = ToRoleID,
 %%        mailTitle       = MailTitle,
@@ -144,7 +144,7 @@ sendSimpleMail(_SendRoleID, _ToRoleID, _MailTitle, _MailContent, _MailSubjoinMsg
 sendEmail2(MailID, SenderRoleID, ToRoleID, MailTitle, MailContent, Attachment, MailSubjoinMsg) ->
     Mail = #recMail{
         mailID          = MailID,
-        mailSendTime    = time:getSyncTime1970FromDBS(),
+        mailSendTime    = misc_time:gregorian_seconds_from_1970( ),
         senderRoleID    = SenderRoleID,
         toRoleID        = ToRoleID,
         mailTitle       = MailTitle,

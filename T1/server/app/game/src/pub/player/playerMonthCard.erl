@@ -192,8 +192,8 @@ getMonthCardTime() ->
 %%取出当前天的秒数
 -spec getCurrentDay() ->DaySec::uint32().
 getCurrentDay() ->
-	GetDay = time:getLocalNowDateTime1970(),
-	time:getDayBeginSeconds(GetDay)-?SECONDS_PER_DAY*?DAYS_FROM_0_TO_1970.
+	GetDay = misc_time:getLocalDateTime,
+	misc_time:getDayBeginSeconds(GetDay)-?SECONDS_PER_DAY*?DAYS_FROM_0_TO_1970.
 
 %%月卡到期醒（7，5，3，1天首次登录提醒）
 -spec sendEndTips() ->ok.

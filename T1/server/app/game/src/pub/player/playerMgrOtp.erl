@@ -161,7 +161,7 @@ castMsgToAllPlayerOtp(Msg, MsgData) ->
 %%获取在线人数
 -spec getAllPlayerNumAndModifyData()-> uint().
 getAllPlayerNumAndModifyData()->
-	Now = time:getUTCNowMS(),
+	Now = misc_time:milli_seconds(),
 	Fun =
 		fun(#rec_OnlinePlayer{
 			accountID = AccountID,
@@ -237,8 +237,8 @@ handle_cast(_Msg, State) ->
 
 %% 重置dailycounter
 handle_info(dailyCounterTick, State) ->
-	NowTime = time:getSyncTime1970FromDBS(),
-	{{Year, Month, Day}, {Hour, Minute, Second}} = time:convertSec2DateTime(NowTime),
+	NowTime = misc_time:gregorian_seconds_from_1970( ),
+	{{Year, Month, Day}, {Hour, Minute, Second}} = misc_time:gregorian_seconds_to_datetime(NowTime),
 	if
 		Hour =:= ?ResetTimeHour andalso Minute >= 0 andalso Minute < 3 ->
 			?INFO("newDayTick: [~p-~p-~p ~p:~p:~p] [~p,~p]", [Year,Month,Day,Hour,Minute,Second,?MODULE,self()]),
@@ -395,9 +395,9 @@ handle_info({goblin, SubType, BeginTime},State) ->
 					erlang:send_after(?GoblinTotalTime * 1000, self(), {goblin, goblinEnd, BeginTime});
 				goblinInProcess ->
 					%%如果当前时间离结束已经不到三分钟不再提示玩家活动在进行
-					NowTime = time:getSyncTime1970FromDBS(),
-					{{Y, M, D}, {_H, _Min, _S}} = time:convertSec2DateTime(NowTime),
-					EndTime = time:convertDateTime1970ToSec({{Y, M, D}, {BeginTime, 0, 0}}) + ?GoblinTotalTime,
+					NowTime = misc_time:gregorian_seconds_from_1970( ),
+					{{Y, M, D}, {_H, _Min, _S}} = misc_time:gregorian_seconds_to_datetime(NowTime),
+					EndTime = misc_time:convertDateTime1970ToSec({{Y, M, D}, {BeginTime, 0, 0}}) + ?GoblinTotalTime,
 
 					?INFO("EndTime = ~p, NowTime = ~p", [EndTime, NowTime]),
 
@@ -690,7 +690,7 @@ deal_info(Info) ->
 alreadyConnectDBServer() ->
 	%% 屏蔽废弃的玩法入口
 	%%%%哥布林玩法初始化，要通过PlayerMgr发公告给所有玩家
-	%%case time:getSyncTime1970FromDBS() > 0 of
+	%%case misc_time:gregorian_seconds_from_1970( ) > 0 of
 	%%	true ->
 	%%		countBeginTime();
 	%%	_ ->
@@ -804,9 +804,9 @@ systemChatAllPlayerByECode(ErrorCode, Params) ->
 %%	RetList = createNoticeInfo(),
 %%	playerState:setGoblinNoticeInfo(RetList),
 %%	Fun1 = fun({BeginTime, _MapList}) ->
-%%		Time = time:getSyncTime1970FromDBS(),
-%%		{{Y, M, D}, {_H, _Min, _S}} = time:convertSec2DateTime(Time),
-%%		RefreshTime = time:convertDateTime1970ToSec({{Y, M, D}, {BeginTime, 0, 0}}) - ?GoblinAheadTime,
+%%		Time = misc_time:gregorian_seconds_from_1970( ),
+%%		{{Y, M, D}, {_H, _Min, _S}} = misc_time:convertSec2DateTime(Time),
+%%		RefreshTime = misc_time:convertDateTime1970ToSec({{Y, M, D}, {BeginTime, 0, 0}}) - ?GoblinAheadTime,
 %%
 %%		case RefreshTime < Time of
 %%			true ->

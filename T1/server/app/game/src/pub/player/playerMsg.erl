@@ -318,7 +318,7 @@ onMsg(?CMD_U2GS_RequestRecharge, #pk_U2GS_RequestRecharge{
 	RID = playerState:getRoleID(),
 	?INFO("xxxxxxxxxxxxxxxxxxxxxxx废弃xxxxxxxCMD_U2GS_RequestRecharge accountid[~w]role[~w],funcellOrderID[~ts]", [AID, RID, FeOrderID]),
 %%
-%%	dbLog:sendSaveLogEventID(RID,AID,?RechargeEventOnGettingCilent, time:getUTCNowSec(), FeOrderID),
+%%	dbLog:sendSaveLogEventID(RID,AID,?RechargeEventOnGettingCilent, misc_time:utc_seconds(), FeOrderID),
 %%	psMgr:sendMsg2PS(?PsNamePreRecharge, checkCSHas,{self(),Msg} ),
 	ok;
 

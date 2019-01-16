@@ -89,7 +89,7 @@ zeroDailyCount(Type, ID) ->
 					NewDaily = #rec_daily_counter0{
 						roleID = {playerState:getRoleID(),DailyType},
 						dailyType = DailyType,
-						lastUpdateTime = time:getSyncTime1970FromDBS(),
+						lastUpdateTime = misc_time:gregorian_seconds_from_1970( ),
 						counter = 0
 					},
 					NList = lists:keystore(DailyType, #rec_daily_counter0.dailyType, List, NewDaily),
@@ -171,7 +171,7 @@ initDailyCounterForFindRes(Type, ID) ->
 		#rec_daily_counter0{} ->
 			resetDailyCount(Type, ID);
 		_ ->
-			TimeNow = time:getSyncTime1970FromDBS(),
+			TimeNow = misc_time:gregorian_seconds_from_1970( ),
 			R = #rec_daily_counter0{
 				roleID = {playerState:getRoleID(), DailyType},
 				dailyType = DailyType,
@@ -209,7 +209,7 @@ resetDailyCount(Type, ID) ->
 	List = playerState:getDailyCounterList(),
 	case lists:keyfind(DailyType, #rec_daily_counter0.dailyType, List) of
 		#rec_daily_counter0{lastUpdateTime = LastUpdateTime, counter = C} = Daily ->
-			NowTime = time:getSyncTime1970FromDBS(),
+			NowTime = misc_time:gregorian_seconds_from_1970( ),
 			{NewDaily, IsReset} =
 				case core:timeIsOnDay(LastUpdateTime, NowTime) of
 					true ->
@@ -227,8 +227,8 @@ resetDailyCount(Type, ID) ->
 
 			%% 这个坑爹功能要处理，资源找回
 			% 资源找回功能改为：能找回前一天的未参与获取的活动资源（凌晨4点开始算）
-			Date = time:convertSec2DateTime(NowTime),
-			TimeBeginOfDay = time:getDayBeginSeconds(Date) + ?ResetTimeHour * 3600,
+			Date = misc_time:gregorian_seconds_to_datetime(NowTime),
+			TimeBeginOfDay = misc_time:getDayBeginSeconds(Date) + ?ResetTimeHour * 3600,
 			NewC = case LastUpdateTime < TimeBeginOfDay - 86400 of
 				true ->
 					0;
@@ -264,7 +264,7 @@ reduceDailyCounter2(Type, ID, Count) when Count > 0 ->
 reduceCounter(Type, ID, CountVal) ->
 	resetDailyCount(Type, ID),
     DailyType = getDailyType(Type, ID),
-    NowTime = time:getSyncTime1970FromDBS(),
+    NowTime = misc_time:gregorian_seconds_from_1970( ),
     NL = case playerState:getDailyCounterList() of
              [] ->
                  [#rec_daily_counter0{roleID = {playerState:getRoleID(),DailyType}, dailyType = DailyType, lastUpdateTime = NowTime, counter = 0}];
@@ -293,7 +293,7 @@ incCounter(Type,ID,CountVal) ->
 incCounter2(Type,ID,CountVal) ->
 	resetDailyCount(Type, ID),
 	DailyType = getDailyType(Type, ID),
-	NowTime = time:getSyncTime1970FromDBS(),
+	NowTime = misc_time:gregorian_seconds_from_1970( ),
 	NL = case playerState:getDailyCounterList() of
 			 [] ->
 				 [#rec_daily_counter0{roleID = {playerState:getRoleID(),DailyType}, dailyType = DailyType, lastUpdateTime = NowTime, counter = 1}];

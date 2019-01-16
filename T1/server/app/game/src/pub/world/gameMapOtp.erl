@@ -154,7 +154,7 @@ handle_info_msg(starttj, State) ->
 	{noreply, State};
 
 handle_info_msg({starttick, Int}, State) ->
-	mapState:setPrintTickLog(misc:convertBoolFromInt(Int)),
+	mapState:setPrintTickLog(misc:i2b(Int)),
 	{noreply, State};
 
 handle_info_msg(printtj, State) ->
@@ -415,7 +415,7 @@ handle_info_msg({gm_leaveMap, _PidFrom, {Code, PetCodeList}}, State) ->
 
 handle_info_msg({gm_setmapday, _PidFrom, DayID}, State) ->
 	?INFO("gm_setmapday mapID:~p, DayID:~p", [mapState:getMapId(), DayID]),
-	NowTime = time:getUTCNowMS(),
+	NowTime = misc_time:milli_seconds(),
 	Day = gameMapDayNight:getMapDay(),
 	case DayID of
 		0 ->
@@ -701,7 +701,7 @@ handle_info_msg({requestRiftNpcInfo, PidFrom, NpcCode}, State) ->
 				 Time ->
 					 Time
 			 end,
-	NowTime = time:getUTCNowSec(),
+	NowTime = misc_time:utc_seconds(),
 	psMgr:sendMsg2PS(PidFrom, requestRiftNpcInfoAck, {NpcCode, erlang:max(0, CDTime - (NowTime - CHTime))}),
 	{noreply, State};
 

@@ -209,7 +209,7 @@ getBuffInfoList(MonsterCode) ->
 		counter = BuffUID,
 		endTime = EndTime
 	}, Acc) ->
-		Now = time:getUTCNowMS(),
+		Now = misc_time:milli_seconds(),
 		case EndTime - Now > 0 of
 			true ->
 				Time = EndTime - Now;
@@ -440,7 +440,7 @@ sameBuffSplit(BuffID, CasterCode, BuffList) ->
 	BuffList :: list().
 levelUpdate(MonsterCode, #recBuffInfo{level = Level, runeAddLevel = RuneAddLevel, buffID = BuffID} = BuffData, [Dura, AddLv, BuffDurationAddLv], BuffList) ->
 	NewDuration = trunc(Dura + AddLv * (Level - 1) + RuneAddLevel * BuffDurationAddLv),
-	Now = time:getUTCNowMS(),
+	Now = misc_time:milli_seconds(),
 	EndTime =
 		case NewDuration of
 			0 ->
@@ -483,7 +483,7 @@ levelUpdate(MonsterCode, #recBuffInfo{level = Level, runeAddLevel = RuneAddLevel
 layerUpdate(MonsterCode, #recBuffInfo{level = Level, runeAddLevel = RuneAddLevel, buffID = BuffID} = BuffData, [Dura, AddLv, BuffDurationAddLv], OneCaster, BuffList) ->
 	NewDura = trunc(Dura + AddLv * (Level - 1) + RuneAddLevel * BuffDurationAddLv),
 	BuffDamage = buffHurt(MonsterCode, BuffData),
-	Now = time:getUTCNowMS(),
+	Now = misc_time:milli_seconds(),
 	Fun = fun(Buff, List) ->
 		if
 			(Level >= Buff#recBuff.level orelse RuneAddLevel =/= Buff#recBuff.runeAddLevel) andalso Buff#recBuff.layer < OneCaster ->
@@ -696,7 +696,7 @@ deleteOneBuff(MonsterCode, Buff, BuffList) ->
 	MonsterCode :: uint(),
 	BuffData :: #recBuffInfo{}.
 initBuff(MonsterCode, #recBuffInfo{buffID = BuffID} = BuffData) ->
-	Now = time:getUTCNowMS(),
+	Now = misc_time:milli_seconds(),
 	Cfg = getCfg:getCfgPStack(cfg_buff, BuffID),
 	BuffDamage = buffHurt(MonsterCode, BuffData),
 	Counter = setCounter(MonsterCode),
@@ -918,10 +918,10 @@ broadcastBuffEffect(MonsterCode, BuffID, SkillID, Level, Counter, Type, Serial,E
 			true ->
 				-1;
 			_ ->
-				case EndTime < time:getUTCNowMS() of
+				case EndTime < misc_time:milli_seconds() of
 					true -> 0;
 					_ ->
-						EndTime - time:getUTCNowMS()
+						EndTime - misc_time:milli_seconds()
 				end
 		end,
 	Msg = #pk_GS2U_BuffInfo{

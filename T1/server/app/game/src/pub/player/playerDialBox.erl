@@ -307,7 +307,7 @@ saveSelfDialBoxInfo(#recDialBox{boxType = BoxType} = Info) ->
 
 getResetTime(NowTime) ->
 	DateNow = time2:convertSecToDateTime(NowTime + ?SECS_FROM_0_TO_1970),	%% NowTime是从1970年开始的本地时间
-	time:getWeekBeginSecondsByDay(DateNow) - ?SECS_FROM_0_TO_1970 + ?ResetTimeHour * 3600 + 24 * 7 * 3600.
+	misc_time:getWeekBeginSecondsByDay(DateNow) - ?SECS_FROM_0_TO_1970 + ?ResetTimeHour * 3600 + 24 * 7 * 3600.
 
 sendDialInfoToClient() ->
 	case core:isCross() of

@@ -77,7 +77,7 @@ makeEquipNetMessage(#recSaveEquip{
 	%%由于过期时间存储的是UTC时间，所以发给客户端时需要加上时区
 	ExpiredTime = case ET > 0 of
 		              true ->
-			              ET + time:getLocalTimeAdjustHour() * 3600;
+			              ET + misc_time:tz_seconds * 3600;
 		              _ ->
 			              0
 	              end,

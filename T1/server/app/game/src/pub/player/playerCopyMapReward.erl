@@ -221,7 +221,7 @@ onPassCopyMap_Normal(Score, DiffTime, CopyMapID) ->
 								orelse Subtype =:= ?MapSubTypeHeroCopy
 								orelse Subtype =:= ?MapSubTypeSlime
 								orelse Subtype =:= ?MapSubTypeChallengeCopy ->
-								EndTime = time:getLogTimeSec(),
+								EndTime = misc_time:utc_seconds(),
 								FunH = fun(X, AccList) ->
 									case X of
 										#pk_CopyMapDropItem{itemID = ItemID, number = Number} ->

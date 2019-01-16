@@ -93,7 +93,7 @@ initLastOfflineExp() ->
 %%			case erlang:is_integer(LastLogout) andalso LastLogout > 0 of
 %%				true ->
 %%					Level = playerState:getLevel(),
-%%					NowTime = time:getSyncTime1970FromDBS(),
+%%					NowTime = misc_time:gregorian_seconds_from_1970( ),
 %%					Diff = NowTime - LastLogout,
 %%					case Diff >= ?MeditationCD of
 %%						true ->

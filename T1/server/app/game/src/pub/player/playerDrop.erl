@@ -127,8 +127,8 @@ itemDrop(DropID, OddParam, ParamValue, DropReason, NeedMailWhenNoSpace) when erl
 resetDrop() ->
 	L = playerState:getDropList(),
 	Fun = fun(#recDrop{id = ID} = Info, Acc) ->
-		NowTime = time:getSyncTime1970FromDBS(),
-		{{Year, Month, Day},{_, _, _}} = time:convertSec2DateTime(NowTime),
+		NowTime = misc_time:gregorian_seconds_from_1970( ),
+		{{Year, Month, Day},{_, _, _}} = misc_time:gregorian_seconds_to_datetime(NowTime),
 		#drop_controlCfg{trigger_cycle = Cycle} = getCfg:getCfgPStack(cfg_drop_control, ID),
 		NewInfo = Info#recDrop{num = 0, time = NowTime},
 		case Cycle of
@@ -163,7 +163,7 @@ resetDrop() ->
 initDrop() ->
 	L = playerState:getDropList(),
 	Fun = fun(#recDrop{id = ID, time = Time} = Info, Acc) ->
-		NowTime = time:getSyncTime1970FromDBS(),
+		NowTime = misc_time:gregorian_seconds_from_1970( ),
 		#drop_controlCfg{trigger_cycle = Cycle} = getCfg:getCfgPStack(cfg_drop_control, ID),
 		NewInfo = Info#recDrop{num = 0, time = NowTime},
 		case Cycle of
@@ -241,7 +241,7 @@ checkServerDropCD(_LastUpTime, 0, _CDTime) ->
 checkServerDropCD(_LastUpTime, _CurNum, 0) ->
 	true;
 checkServerDropCD(LastUpTime,_CurNum, CDTime) ->
-	NowTime = time:getSyncTime1970FromDBS(),
+	NowTime = misc_time:gregorian_seconds_from_1970( ),
 	LastUpTime + CDTime =< NowTime.
 
 checkPlayerDrop(_DropID, 0) ->
@@ -284,7 +284,7 @@ updatePlayerDrop(DropID) ->
 			NewDrop = Drop#recDrop{num = Num + 1},
 			NewL = lists:keyreplace(DropID, #recDrop.id, L, NewDrop);
 		_ ->
-			NowTime = time:getSyncTime1970FromDBS(),
+			NowTime = misc_time:gregorian_seconds_from_1970( ),
 			NewDrop = #recDrop{num = 1, id = DropID, time = NowTime},
 			NewL = [NewDrop | L]
 	end,
@@ -294,7 +294,7 @@ updatePlayerDrop(DropID) ->
 -spec updateServerDrop(DropID::uint()) -> ok.
 updateServerDrop(_DropID) ->
 	ok.
-%%	NowTime = time:getSyncTime1970FromDBS(),
+%%	NowTime = misc_time:gregorian_seconds_from_1970( ),
 %%	case ets:lookup(?TABLE_DROP, DropID) of
 %%		[#rec_server_drop{num = Num} = Drop] ->
 %%			NewDrop = Drop#rec_server_drop{num = Num + 1, time = NowTime};
@@ -1120,7 +1120,7 @@ equipDropProcessNew(EquipDropID, EquipQuality, ParamValue, IsBind, DropReason) -
 				changReason = DropReason,
 				reasonParam = ParamValue
 			},
-			playerPackage:addGoods(EquipDropID, 1, misc:convertBoolFromInt(IsBind), EquipQuality, PLog)
+			playerPackage:addGoods(EquipDropID, 1, misc:i2b(IsBind), EquipQuality, PLog)
 	end.
 
 %%获取装备掉落配置列表
@@ -1151,11 +1151,11 @@ isOpen2() ->
 isOpen() ->
 	case playerState2:isOpenCollectionWords() of
 		true ->
-			NowTimeSeconds = time:getLocalNowSec1970(),
+			NowTimeSeconds = misc_time:localtime_seconds(),
 			#collect_word_desCfg{open_y_m_d = [Year,Month,Day],limit_time = LimitTime} =
 				collectionWordsLogic:getCfgInfoFromCfgAndEts(),
 			%%活动在凌晨四点的时候开启
-			OpenTimeSeconds = time:convertDateTime1970ToSec({{Year,Month,Day},{?ResetTimeHour,0,0}}),
+			OpenTimeSeconds = misc_time:convertDateTime1970ToSec({{Year,Month,Day},{?ResetTimeHour,0,0}}),
 			TotalTimeSeconds = OpenTimeSeconds + LimitTime * 3600,
 			?DEBUG("OpenTimeSenconds:~w,NowTimeSenconds:~w,TotalTimeSenconds:~w",[OpenTimeSeconds,NowTimeSeconds,TotalTimeSeconds]),
 			case NowTimeSeconds >= OpenTimeSeconds andalso NowTimeSeconds =< TotalTimeSeconds of

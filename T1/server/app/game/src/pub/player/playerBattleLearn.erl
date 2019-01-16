@@ -72,7 +72,7 @@ requestBattleLearn(Code) ->
 
 			playerAchieve:achieveEvent(?Achieve_requestBattleLearn,[1]),
 			%%设置本次切磋进入时间
-			playerState:setBattleLearnRequestTime(time:getUTCNowSec()),
+			playerState:setBattleLearnRequestTime(misc_time:utc_seconds()),
 			SelfName = playerState:getName(),
 			SelfID = playerState:getRoleID(),
 			SelfNetPid = playerState:getNetPid(),
@@ -283,7 +283,7 @@ canBattleLearn(Code) ->
 			SelfLv = playerState:getLevel(),
 			case checkBattleLearnLv(SelfLv, Lv) of
 				true ->
-					Now = time:getUTCNowSec(),
+					Now = misc_time:utc_seconds(),
 					LastBlTime = playerState:getBattleLearnRequestTime(),
 					case checkBattleLearnTime(Now, LastBlTime) of
 						true ->

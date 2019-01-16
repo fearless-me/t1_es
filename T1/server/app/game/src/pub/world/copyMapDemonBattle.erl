@@ -315,8 +315,8 @@ initFirstSchedule4demonBattle(PlayerPid) ->
 					mapState:setCnf2dic(Cnf#copyMapDemonBattleCnf{
 						fableCurrentSchedule = 1,
 						fableMapLevelCoefficient = mapState:getMapLevel(0),
-						fablePreparetimeEnd = time:getUTCNowSec()+PrepareTimeNum,
-						fableChallengetimeEnd = time:getUTCNowSec()+PrepareTimeNum+ChallengetimeNum
+						fablePreparetimeEnd = misc_time:utc_seconds()+PrepareTimeNum,
+						fableChallengetimeEnd = misc_time:utc_seconds()+PrepareTimeNum+ChallengetimeNum
 					}),
 					initSchedule();
 				_ ->
@@ -345,7 +345,7 @@ send2PlayerSchduleInfo(PlayerPid) ->
 	case AliveMonster of
 		undefined ->
 			%%准备战斗中
-			Second= Cnf#copyMapDemonBattleCnf.fablePreparetimeEnd - time:getUTCNowSec(),
+			Second= Cnf#copyMapDemonBattleCnf.fablePreparetimeEnd - misc_time:utc_seconds(),
 			Msg = #pk_GS2U_CopyMapProcessCurrentScheduleSurplusSecond{
 				curSchedule = CurrentSchedule,
 				type = 1,%%1为准备；2为战斗
@@ -355,7 +355,7 @@ send2PlayerSchduleInfo(PlayerPid) ->
 			ok;
 		_ ->
 			%%战斗中
-			Second = Cnf#copyMapDemonBattleCnf.fableChallengetimeEnd - time:getUTCNowSec(),
+			Second = Cnf#copyMapDemonBattleCnf.fableChallengetimeEnd - misc_time:utc_seconds(),
 			Msg = #pk_GS2U_CopyMapProcessCurrentScheduleSurplusSecond{
 				curSchedule = CurrentSchedule,
 				type = 2,%%1为准备；2为战斗

@@ -384,8 +384,8 @@ saveRoleBase(IsOffline) ->
 					case IsOffline of
 						true ->
 							Sec = time2:getLocalDateTimeSec(),
-							DateTime = time:convertSec2DateTime(Sec),
-							LastLoginTime = time:dateTimeToInt64(BaseRole#rec_base_role.lastLoginTime),
+							DateTime = misc_time:gregorian_seconds_to_datetime(Sec),
+							LastLoginTime = misc_time:mysqlDateTimeToSec(BaseRole#rec_base_role.lastLoginTime),
 							CurOnlineTime = Sec - LastLoginTime,
 							TotalOnlineTime = BaseRole#rec_base_role.totalOnlineTime + CurOnlineTime,
 							NewBaseRole = BaseRole#rec_base_role{
@@ -981,7 +981,7 @@ saveInSertTitle(RoleID, TitleID) ->
 				  Cfg ->
 					  case Cfg#titlesystemCfg.time =:= 0 of
 						  true -> 0;
-						  _ -> Cfg#titlesystemCfg.time + time:getSyncTimeFromDBS()
+						  _ -> Cfg#titlesystemCfg.time + misc_time:localtime_seconds()
 					  end
 			  end,
 	Title = #rec_title{roleID = Key, titleID = TitleID, endTime = EndTime},
@@ -1230,7 +1230,7 @@ saveBuffList() ->
 	case playerState:getIsPlayer() of
 		true ->
 			RoleID = playerState:getRoleID(),
-			Now = time:getUTCNowMS(),
+			Now = misc_time:milli_seconds(),
 			BuffList = playerState:getBuffList(),
 			Fun = fun(#recBuff{endTime = Time, buffID = ID, effect = Effect, level = Level}) ->
 				Key = {RoleID, ID},
@@ -1647,7 +1647,7 @@ getOldMapPos() ->
 
 getEMysqlNowDateTime() ->
 	Sec = time2:getLocalDateTimeSec(),
-	DateTime = time:convertSec2DateTime(Sec),
+	DateTime = misc_time:gregorian_seconds_to_datetime(Sec),
 	{datetime, DateTime}.
 
 

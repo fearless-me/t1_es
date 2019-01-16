@@ -134,7 +134,7 @@ openLotteryForm() ->
     ok.
 
 openLotteryForm2() ->
-    NowTime = time:getSyncTime1970FromDBS() ,
+    NowTime = misc_time:gregorian_seconds_from_1970( ) ,
     %%  重置
     case memDBCache:getSundriesValue(?Sundries_ID_Lottery , ?SundriesLotteryKey_DestinyStar) of
         #lotteryEveDay{nextResetTime = NextResetTime} when NowTime >= NextResetTime ->
@@ -152,8 +152,8 @@ openLotteryForm2() ->
 resetDestinyStar(NowTime) ->
     ?DEBUG("resetDestinyStar:~p,~p" , [playerState:getRoleID() , NowTime]) ,
     %% 获取下次刷新时间
-    {{Year , Month , Day} , {_Hour , _Minute , _Second}} = time:convertSec2DateTime(NowTime) ,
-    Mid = time:convertDateTime1970ToSec({{Year , Month , Day} , {?ResetTimeHour , 0 , 0}}) ,
+    {{Year , Month , Day} , {_Hour , _Minute , _Second}} = misc_time:gregorian_seconds_to_datetime(NowTime) ,
+    Mid = misc_time:convertDateTime1970ToSec({{Year , Month , Day} , {?ResetTimeHour , 0 , 0}}) ,
     ResetTime = case NowTime < Mid of
                     true -> Mid;
                     _ -> Mid + 86400
@@ -387,7 +387,7 @@ getNeedMoneyCfg(IsGold) ->
 
 %% 获取免费抽奖重置时间
 getRstTimeDiff(IsGold) ->
-    NowTime = time:getUTCNowSec() ,
+    NowTime = misc_time:utc_seconds() ,
     RstTimeEnd = getRstTime(IsGold) ,
     case RstTimeEnd > NowTime of
         true ->
@@ -479,7 +479,7 @@ addLotteryDaily(true , false , _N) ->
 
 addLotteryDaily(true , true , N) ->
     %% 算出时间差
-    NowTime = time:getUTCNowSec() ,
+    NowTime = misc_time:utc_seconds() ,
     #globalsetupCfg{setpara = [GoldCD]} = getCfg:getCfgPStack(cfg_globalsetup , divine_goldcd) ,
     %% 设置时间
     NewRstTime = NowTime + GoldCD ,
@@ -495,7 +495,7 @@ addLotteryDaily(false , false , N) ->
 
 addLotteryDaily(false , true , N) ->
     %% 算出时间差
-    NowTime = time:getUTCNowSec() ,
+    NowTime = misc_time:utc_seconds() ,
     #globalsetupCfg{setpara = [DiamondCD]} = getCfg:getCfgPStack(cfg_globalsetup , divine_diamondcd) ,
     %% 设置时间
     NewRstTime = NowTime + DiamondCD ,
@@ -777,7 +777,7 @@ lotterySuccess(RoleID , RoleName , #divineCfg{id = OnlyID , item_id = ItemID , i
                 changReason = ?ItemSourceLottery ,
                 reasonParam = OnlyID
             } ,
-            BoolIsBind = misc:convertBoolFromInt(IsBind) ,
+            BoolIsBind = misc:i2b(IsBind) ,
             playerPackage:addGoodsAndMail(ItemID , ItemNumber , BoolIsBind , 0 , Plog) ,
             playerLogAdd:addLogParticipatorInfo(?LogParticipator_PlayerUseLotteryEveDay) ,
             addToLotteryNotes(RoleID , RoleName , Item);
@@ -789,7 +789,7 @@ lotterySuccess(RoleID , RoleName , #divineCfg{id = OnlyID , item_id = ItemID , i
 
 addToLotteryNotes(RoleID , RoleName , #divineCfg{item_id = ItemID , is_binded = IsBind , is_record = ServerNote , item_number = ItemNumber , need_brodcast = Brodcast} = Item) ->
     %% note
-    NowTime = time:getSyncTime1970FromDBS() ,
+    NowTime = misc_time:gregorian_seconds_from_1970( ) ,
     Rec = #rec_lottery_result{
         roleID       = RoleID ,
         itemID       = ItemID ,

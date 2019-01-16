@@ -54,7 +54,7 @@ makeInitBossList(MapID) ->
                 #monsterBossCfg{pos = [PosX, PosY], cycle_time = CT} ->
                     [#recBossInfo{
                         bossID = BossID,
-                        refreshTime = time:getUTCNowMS() + CT * 60 * 1000,
+                        refreshTime = misc_time:milli_seconds() + CT * 60 * 1000,
                         cycleTime = CT * 60 * 1000,
                         posX = float(PosX),
                         posY = float(PosY)
@@ -89,7 +89,7 @@ onMapDestroy(MapID, MapPid, _MapLine) ->
 %%%-------------------------------------------------------------------
 heartbeat()->
     tickMsg(),
-    NowTime = time:getUTCNowMS(),
+    NowTime = misc_time:milli_seconds(),
     L = getCfg:get1KeyList(cfg_monsterBoss),
     for_do_all_map(NowTime, L),
     ok.
@@ -119,7 +119,7 @@ for_do(NowTime, MapID, [BossInfo | BossList], ML, Acc) ->
         case BossInfo of
             #recBossInfo{bossID = BossID, refreshTime = RT, cycleTime = CT, posX = X, posY = Y} when NowTime >= RT ->
                 catch createBossNow(MapID, BossID, X, Y, ML),
-                BossInfo#recBossInfo{refreshTime =  CT + time:getUTCNowMS()};
+                BossInfo#recBossInfo{refreshTime =  CT + misc_time:milli_seconds()};
             _ ->
                 BossInfo
         end,

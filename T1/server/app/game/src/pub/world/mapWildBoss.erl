@@ -70,7 +70,7 @@ initWildBoss_([BossID | BT], NowTime) ->
 %%初始化野外boss
 initWildBoss() ->
     BossIDList = getCfg:get1KeyList(cfg_wildboss),
-    NowTime = time:getSyncTime1970FromDBS(),
+    NowTime = misc_time:gregorian_seconds_from_1970( ),
     initWildBoss_(BossIDList, NowTime),
     ok.
 
@@ -213,7 +213,7 @@ wildBossBeKilled(BossID, BossCode) ->
                         end,
 
                     %% 设置BOSS死亡，以及下一次刷新时间
-                    NowTime = time:getSyncTime1970FromDBS(),
+                    NowTime = misc_time:gregorian_seconds_from_1970( ),
                     myEts:updateEts(?TABLE_WildBoss, BossID,
                         [
                             {#recWildBossInfo.mapID, mapState:getMapId()},

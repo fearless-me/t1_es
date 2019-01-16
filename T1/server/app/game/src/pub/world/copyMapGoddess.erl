@@ -38,7 +38,7 @@ setCnf2dic() ->
 	#globalsetupCfg{settype = 'fable_preparetime',setpara = [Preparetime|_]} = getCfg:getCfgPStack(cfg_globalsetup, 'fable_preparetime'),
 	#globalsetupCfg{settype = 'fable_challengetime',setpara = [Challengetime|_]} = getCfg:getCfgPStack(cfg_globalsetup, 'fable_challengetime'),
 	#globalsetupCfg{settype = 'fable_challengetime',setpara = [Challengetime|_]} = getCfg:getCfgPStack(cfg_globalsetup, 'fable_challengetime'),
-	NowUTC = time:getUTCNowSec(),
+	NowUTC = misc_time:utc_seconds(),
 	AllSchedule = erlang:length( getCfg:get1KeyList(cfg_goddess) ),
 	Cnf = #copyMapDemonBattleCnf{
 								 fableAllSchedule = AllSchedule,
@@ -76,8 +76,8 @@ initFirstSchedule4demonBattle(PlayerPid) ->
 					mapState:setCnf2dic(Cnf#copyMapDemonBattleCnf{
 														 fableCurrentSchedule = 1,
 														 fableMapLevelCoefficient = mapState:getMapLevel(0),
-														 fablePreparetimeEnd = time:getUTCNowSec()+PrepareTimeNum,
-														 fableChallengetimeEnd = time:getUTCNowSec()+PrepareTimeNum+ChallengetimeNum
+														 fablePreparetimeEnd = misc_time:utc_seconds()+PrepareTimeNum,
+														 fableChallengetimeEnd = misc_time:utc_seconds()+PrepareTimeNum+ChallengetimeNum
 														}),
 					
 %% 					initGoddess( mapState:getMapLevel(0) ),
@@ -154,7 +154,7 @@ goddessBeKilled(MonsterID,AttackerCode) ->
 %%广播所有玩家结算界面
 -spec goddessSettlement() ->ok.
 goddessSettlement() ->
-	EndTime = time:getUTCNowMS(),				%% 完成时间
+	EndTime = misc_time:milli_seconds(),				%% 完成时间
 	StartTime = mapState:getMapStartTime(0),		%% 开始时间
 	DiffTime = erlang:trunc( (EndTime - StartTime) / 1000 ),
 	

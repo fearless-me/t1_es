@@ -1224,7 +1224,7 @@ callPet(
 	#recPetInfo{pet_id = ID, pet_star = _Star, pet_raw = _Raw, pet_name = PetName, pet_level = Level} = Pet
 ) ->
 	{X, Y} = playerState:getPos(),
-	Time = time:getUTCNowMSDiff2010(),
+	Time = misc_time:getUTCNowMSDiff2010(),
 	BPL = playerPetProp:makePetProp(Pet#recPetInfo{pet_status = ?PetState_Battle_Show}),
 	Skills = getPetUnLockActiveSkill(ID),
 	PetArg = #recSpawnPet{
@@ -2823,7 +2823,7 @@ checkPetIsSleep(Code) ->
 -spec checkPetCD() -> boolean().
 checkPetCD() ->
 	PetCD = playerState:getPetCD(),
-	NowTime = time:getUTCNowMSDiff2010(),
+	NowTime = misc_time:getUTCNowMSDiff2010(),
 	case PetCD + ?PetBattleCDTime > NowTime of
 		true ->
 			false;
@@ -3720,7 +3720,7 @@ makePetBaseInfo(#recPetInfo{
 		skill_type = Type,
 		skill_is_unlock = Unlock
 	}) ->
-		Time = time:getUTCNowMSDiff2010(),
+		Time = misc_time:getUTCNowMSDiff2010(),
 		case Time >= CD of
 			true ->
 				NewCD = 0;

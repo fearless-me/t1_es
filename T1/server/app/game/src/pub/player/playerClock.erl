@@ -28,7 +28,7 @@ startClock(ClockType, ClockSubType, OffTime, LengthTime)
 		 andalso (OffTime =:= ?ClockOffTime orelse OffTime =:= ?ClockNotOffTime)
 		 andalso erlang:is_integer(LengthTime) andalso LengthTime > 0 ->
 	RoleID = playerState:getRoleID(),
-	NowTime = time:getSyncTime1970FromDBS(),
+	NowTime = misc_time:gregorian_seconds_from_1970( ),
 	Key = getClockKey(ClockType, ClockSubType),
 	Rec = #rec_player_clock{
 		roleID = {RoleID, Key},
@@ -121,16 +121,16 @@ loadClock(#rec_player_clock{startTime = STime, lastTime = LTime} = Clock) ->
 					true ->
 						%% 是从缓存中加载的
 						Sec1 = getDateTimeByStr(STime),
-						time:convertDateTime1970ToSec(Sec1);
+						misc_time:convertDateTime1970ToSec(Sec1);
 					_ ->
-						time:dateTimeToInt64(STime)
+						misc_time:mysqlDateTimeToSec(STime)
 				end,
 	LastTime = case erlang:is_list(LTime) of
 				   true ->
 					   Sec2 = getDateTimeByStr(LTime),
-					   time:convertDateTime1970ToSec(Sec2);
+					   misc_time:convertDateTime1970ToSec(Sec2);
 				   _ ->
-					   time:dateTimeToInt64(LTime)
+					   misc_time:mysqlDateTimeToSec(LTime)
 			   end,
 
 	NClock = Clock#rec_player_clock{startTime = StartTime, lastTime = LastTime},
@@ -160,7 +160,7 @@ saveClock() ->
 %% 立即计算一下时钟(注意是中途计算还是角色上线加载)
 -spec calcClock(#rec_player_clock{}, IsPlayerLoad::boolean(), IsSaveDB::boolean()) -> #rec_player_clock{} | boolean().
 calcClock(#rec_player_clock{clockType = Type, offTime = OffTime, lastTime = LastTime, passTime = PassTime} = Clock, IsPlayerLoad, IsSaveDB) ->
-	NowTime = time:getSyncTime1970FromDBS(),
+	NowTime = misc_time:gregorian_seconds_from_1970( ),
 	NClock = case OffTime of
 				 ?ClockOffTime ->
 					 %% 下线同样计时，计算已经过去的时间
@@ -208,7 +208,7 @@ saveClock(#rec_player_clock{startTime = STime, lastTime = LTime} = Clock) ->
 	ok.
 
 convertClockTime(TimeSec) when erlang:is_integer(TimeSec) andalso TimeSec > 0 ->
-	{datetime,time:convertSec2DateTime(TimeSec)};
+	{datetime,misc_time:gregorian_seconds_to_datetime(TimeSec)};
 convertClockTime(_) ->
 	{datetime,{{1970,1,1},{0,0,0}}}.
 

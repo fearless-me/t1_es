@@ -581,15 +581,15 @@ deletePlayerData(RoleID) ->
 -spec timeIsOnHour(Time::uint64()) -> boolean().
 timeIsOnHour(0) -> false;
 timeIsOnHour(Time) ->
-	timeIsOnHour(Time, time:getSyncTime1970FromDBS()).
+	timeIsOnHour(Time, misc_time:gregorian_seconds_from_1970()).
 
 %% 指定时间是否在同一小时
 %% Time 为本地绝对时间秒
 -spec timeIsOnHour(Time::uint64(), NowTime::uint64()) -> boolean().
 timeIsOnHour(0, _NowTime) -> false;
 timeIsOnHour(Time, NowTime) ->
-	{{_, _, _}, {Hour, _, _}} = time:convertSec2DateTime(Time),
-	{{_, _, _}, {NowTimeHour, _, _}} = time:convertSec2DateTime(NowTime),
+	{{_, _, _}, {Hour, _, _}} = misc_time:gregorian_seconds_to_datetime(Time),
+	{{_, _, _}, {NowTimeHour, _, _}} = misc_time:gregorian_seconds_to_datetime(NowTime),
 
 	DiffSecond = abs(NowTime - Time),
 	DiffSecond < ?One_Hour_Second andalso Hour =:= NowTimeHour.
@@ -600,15 +600,15 @@ timeIsOnHour(Time, NowTime) ->
 -spec timeIsOnDay(Time::uint64()) -> boolean().
 timeIsOnDay(0) -> false;
 timeIsOnDay(Time) ->
-	timeIsOnDay(Time, time:getSyncTime1970FromDBS()).
+	timeIsOnDay(Time, misc_time:gregorian_seconds_from_1970()).
 
 %% 指定时间是否在当天范围
 %% Time 为本地绝对时间秒
 -spec timeIsOnDay(Time::uint64(), NowTime::uint64()) -> boolean().
 timeIsOnDay(0, _NowTime) -> false;
 timeIsOnDay(Time, NowTime) ->
-	{{Year, Month, Day}, {Hour, _Minute, _Second}} = time:convertSec2DateTime(Time),
-	Mid = time:convertDateTime1970ToSec({{Year, Month, Day}, {?ResetTimeHour, 0, 0}}),
+	{{Year, Month, Day}, {Hour, _Minute, _Second}} = misc_time:gregorian_seconds_to_datetime(Time),
+	Mid = misc_time:convertDateTime1970ToSec({{Year, Month, Day}, {?ResetTimeHour, 0, 0}}),
 	{Start, End} = case Hour >= ?ResetTimeHour of
 					   true ->
 						   {Mid, Mid + 24 * 3600};
@@ -620,11 +620,11 @@ timeIsOnDay(Time, NowTime) ->
 
 timeIsOnWeek(0) -> false;
 timeIsOnWeek(Time) ->
-	timeIsOnWeek(Time, time:getSyncTime1970FromDBS()).
+	timeIsOnWeek(Time, misc_time:gregorian_seconds_from_1970()).
 
 timeIsOnWeek(0, _) -> false;
 timeIsOnWeek(Time, NowTime) ->
-	WeekSec = time:getWeekBeginSecondsByDay(time:convertSec2DateTime(Time)),
+	WeekSec = misc_time:getWeekBeginSecondsByDay(misc_time:gregorian_seconds_to_datetime(Time)),
 	{Start, End} = case Time >= WeekSec + ?ResetTimeHour * 3600  of
 					   true ->
 						   {WeekSec + ?ResetTimeHour * 3600, WeekSec + ?ResetTimeHour * 3600 + 7 * 24 * 3600};
@@ -635,11 +635,11 @@ timeIsOnWeek(Time, NowTime) ->
 
 timeIsOnMonth(0) -> false;
 timeIsOnMonth(Time) ->
-	timeIsOnMonth(Time, time:getSyncTime1970FromDBS()).
+	timeIsOnMonth(Time, misc_time:gregorian_seconds_from_1970()).
 
 timeIsOnMonth(0, _) -> false;
 timeIsOnMonth(Time, NowTime) ->
-	{{Year, Month, _Day}, {_Hour, _Minute, _Second}} = time:convertSec2DateTime(Time),
+	{{Year, Month, _Day}, {_Hour, _Minute, _Second}} = misc_time:gregorian_seconds_to_datetime(Time),
 	CurMounthDays = calendar:last_day_of_the_month(Year, Month),
 	LastMounthDay = case Month of
 						1 ->
@@ -647,7 +647,7 @@ timeIsOnMonth(Time, NowTime) ->
 						_ ->
 							calendar:last_day_of_the_month(Year, Month - 1)
 					end,
-	Mid = time:convertDateTime1970ToSec({{Year, Month, 1}, {?ResetTimeHour, 0, 0}}),
+	Mid = misc_time:convertDateTime1970ToSec({{Year, Month, 1}, {?ResetTimeHour, 0, 0}}),
 	{Start, End} = case Time >= Mid of
 					   true ->
 						   {Mid, Mid + CurMounthDays * 24 * 3600};
@@ -660,7 +660,7 @@ timeIsOnMonth(Time, NowTime) ->
 -spec utcTimeIsDayReset(Time::uint64()) -> boolean().
 utcTimeIsDayReset(0) -> false;
 utcTimeIsDayReset(TempUTCSec) ->
-	NowTime = time:getUTCNowSec1970(),
+	NowTime = misc_time:utc_seconds(),
 	NowUTC_YMD = calendar:gregorian_seconds_to_datetime(NowTime),
 	{{_LocalYear, _LocalMonth, _LocalDay}, {Hour1, _, _}} = _R1 =calendar:universal_time_to_local_time(NowUTC_YMD),
 	TempUTCYMD = calendar:gregorian_seconds_to_datetime(TempUTCSec),
@@ -677,7 +677,7 @@ utcTimeIsDayReset(TempUTCSec) ->
 %% 是不是白天，不是即夜晚
 -spec isDay() -> boolean().
 isDay() ->
-	{{_Year, _Month, _Day}, {Hour, _Minute, _Second}} = time2:getLocalDateTime(),
+	{{_Year, _Month, _Day}, {Hour, _Minute, _Second}} = misc_time:getLocalDateTime(),
 	if
 		Hour >= 0 andalso Hour < 4 -> true;
 		Hour >= 8 andalso Hour < 12 -> true;

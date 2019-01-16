@@ -26,7 +26,7 @@ useBagItem(ItemUID, UseNum, UseReason, ParamValue) ->
 	Item = playerPackage:getGoodsByUID(ItemUID,?Item_Location_Bag),
 	case Item of
 		#rec_item{itemID = ItemID, pileNum = PileNum} ->
-			Now = time:getUTCNowMSDiff2010(),
+			Now = misc_time:getUTCNowMSDiff2010(),
 			case canUseItem(ItemID,Now, UseNum) of
 				{_, _CDGroupID, _DailyCountGroupID, 0} ->
 					failed;

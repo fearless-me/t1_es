@@ -98,7 +98,7 @@ dealInfo(tick, #state{loginQueue = Que, maxNum = MaxNum} = State) ->
 				[psMgr:sendMsg2PS(PlayerPid, noGSList) || {PlayerPid, _AccountID} <- L],
 				State#state{loginQueue = queue:new()};
 			_ ->
-				Now = time:getUTCNowMS(),
+				Now = misc_time:milli_seconds(),
 				%% 移除登录超时的人
 %%				CurNum2 = erlang:max(CurNum - tickDelTimeLoginIng(Now), 0),
 				tickDelTimeLoginIng(Now),
@@ -169,7 +169,7 @@ broadcastQueNum([{PlayerPid,_Account} | QueList],Num,NewList) ->
 -spec noticePlayerPidToLogin(PlayerPid::pid(),AccountID::integer()) ->boolean().
 noticePlayerPidToLogin(PlayerPid,AccountID) ->
 	%% 缓存正在登录的人
-	EndTime = time:getUTCNowSec() + ?LSKeyExpiresSeco,
+	EndTime = misc_time:utc_seconds() + ?LSKeyExpiresSeco,
 	ets:insert_new(?QueCanLoginUserEts, #recQueCanLoginUserEts{endTime=EndTime,accountID=AccountID}),
 
 	%% 去登录

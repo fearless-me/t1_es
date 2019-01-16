@@ -73,7 +73,7 @@
 %%											case ets:lookup(?HomeAreaEts, {HomeID, ?Home_BreedArea}) of
 %%												[#rec_home_area{areaData = FarmingDataOld} = AreaOld] ->
 %%													ListFarmingDataOld = misc:string_to_term(FarmingDataOld),
-%%													TimeNow = time:getSyncTime1970FromDBS(),
+%%													TimeNow = misc_time:gregorian_seconds_from_1970( ),
 %%													case lists:keyfind(ItemUID, 1, ListFarmingDataOld) of
 %%														{_,_D,_Time} ->
 %%															?ERROR_CODE(?ErrorCode_PetTaskAcceptmax),
@@ -277,7 +277,7 @@
 %%	case ets:lookup(?HomeAreaEts, {HomeID, ?Home_BreedArea}) of
 %%		[#rec_home_area{areaData = FarmingDataOld} = AreaOld] ->
 %%			ListFarmingDataOld = misc:string_to_term(FarmingDataOld),
-%%			TimeNow = time:getSyncTime1970FromDBS(),
+%%			TimeNow = misc_time:gregorian_seconds_from_1970( ),
 %%			case lists:keyfind(ItemUid, 1, ListFarmingDataOld) of
 %%				{_,PetID, Time} ->
 %%					%%这里判断过不过夜
@@ -345,8 +345,8 @@
 %%
 %%getStarAndEndTime(Time)->
 %%
-%%	{{Year, Month, Day}, {Hour, _Minute, _Second}} = time:convertSec2DateTime(Time),
-%%	Mid = time:convertDateTime1970ToSec({{Year, Month, Day}, {?ResetTimeHour, 0, 0}}),
+%%	{{Year, Month, Day}, {Hour, _Minute, _Second}} = misc_time:convertSec2DateTime(Time),
+%%	Mid = misc_time:convertDateTime1970ToSec({{Year, Month, Day}, {?ResetTimeHour, 0, 0}}),
 %%	 case Hour >= ?ResetTimeHour of
 %%				   true ->
 %%					   {Mid, Mid + 24 * 3600};
@@ -362,7 +362,7 @@
 %%
 %%	case ets:lookup(?HomeAreaEts, {HomeID, ?Home_BreedArea}) of
 %%		[#rec_home_area{areaLvl = _AreaLvl,areaData = StrDataOld}] ->
-%%			TimeNow = time:getSyncTime1970FromDBS(),
+%%			TimeNow = misc_time:gregorian_seconds_from_1970( ),
 %%			ListDataOld = misc:string_to_term(StrDataOld),
 %%			F =
 %%			  fun({ItemUid, PetID,Time},Vecter) ->
@@ -411,7 +411,7 @@
 %%	%% 通知地图上所有角色
 %%	AddTime  =  playerDaily:getDailyCounter(?DailyType_Homefarming_addTime, PetID),
 %%	DeltaMinutesTime  =  playerDaily:getDailyCounter(?DailyType_Home_PutPetFarmingTime, PetID),
-%%	TimeNow = time:getSyncTime1970FromDBS(),
+%%	TimeNow = misc_time:gregorian_seconds_from_1970( ),
 %%	Msg = #pk_GS2U_PutPetInFarmingResults_Sync{
 %%		result = Result,
 %%		petFarming = #pk_FarmingPet{itemUid = ItemUid, petID = PetID,time = TimeNow,deltaTime = DeltaMinutesTime,lastdeltaTime = 0,addTime =AddTime }

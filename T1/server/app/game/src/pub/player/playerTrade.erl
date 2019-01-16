@@ -1484,7 +1484,7 @@ sendResultToClient() ->
 		sortIndex = playerState:getTradeSortCol(),
 		sortType = playerState:getTradeSortType(),
 		pageNumber = Page,
-		nowTime = time:getSyncTime1970FromDBS(),
+		nowTime = misc_time:gregorian_seconds_from_1970( ),
 		queryTradeList = Data
 	},
 

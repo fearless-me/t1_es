@@ -80,9 +80,9 @@
 %%					% 以凌晨4点为界，不是今天则重置情缘任务
 %%					case playerPropSync:getProp(?SerProp_MarriageTaskInfo) of
 %%						{_, TimeLast} when TimeLast > 0 ->
-%%							TimeNow = time:getSyncTime1970FromDBS(),
-%%							{{YearN, MonthN, DayN}, _} = time:convertSec2DateTime(TimeNow - ?ResetTimeHour * 3600),
-%%							case time:convertSec2DateTime(TimeLast - ?ResetTimeHour * 3600) of
+%%							TimeNow = misc_time:gregorian_seconds_from_1970( ),
+%%							{{YearN, MonthN, DayN}, _} = misc_time:convertSec2DateTime(TimeNow - ?ResetTimeHour * 3600),
+%%							case misc_time:convertSec2DateTime(TimeLast - ?ResetTimeHour * 3600) of
 %%								{{YearN, MonthN, DayN}, _} ->
 %%									skip;
 %%								_ ->

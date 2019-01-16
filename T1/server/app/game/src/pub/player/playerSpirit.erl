@@ -199,5 +199,5 @@ getBuyCost() ->
 			{103, 5000}
 	end.
 
-nowTime() -> time:getSyncTimeFromDBS().
+nowTime() -> misc_time:localtime_seconds().
 %%%-------------------------------------------------------------------
