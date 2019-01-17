@@ -16,7 +16,7 @@
 -include("netmsg.hrl").
 -include("gs_cache.hrl").
 -include("gs_common_rec.hrl").
--include("cfg_mapsetting.hrl").
+-include("cfg_map.hrl").
 -include("map_core.hrl").
 -include("rec_rw.hrl").
 
@@ -47,7 +47,7 @@ init_priv(#r_map_create_params{
     true = erlang:register(ProcessName, self()),
     Ets0 = misc_ets:new(?MAP_OBJ_DETAIL_ETS, [protected, set, {keypos, #m_object_rw.uid}, ?ETS_RC]),
     Ets1 = misc_ets:new(?MAP_EXCL_ETS, [protected, set, {keypos, #pub_kv.key}, ?ETS_RC]),
-    #mapsettingCfg{maxnum = Limit, all_time = Lifetime} = getCfg:getCfgByArgs(cfg_map, MapID),
+    #mapCfg{peopleLimit = Limit, lifetime = Lifetime} = getCfg:getCfgByArgs(cfg_map, MapID),
     RealLifeTime = ?if_else(Lifetime == 0, ?UINT32_MAX, Lifetime),
     RealLimitCnt = ?if_else(Limit == 0, 150, Limit),
     Now = misc_time:milli_seconds(),
@@ -75,8 +75,7 @@ init(S) ->
     ok = mod_copy_priv:init(),
     ok = init_npc(Conf),
     ok = init_monster(Conf),
-    
-    mod_progress_core:init(),
+
     tick_msg(),
     ?TRY_CATCH(hook_map:on_map_create()),
     catch ?INFO("~p|~p init ok", [self(), misc:registered_name()]),
@@ -245,7 +244,6 @@ tick_obj(S, Now) ->
 
     % 更新各个对象
     %------------------
-    ?TRY_CATCH(mod_progress_core:tick(Now), Err1_1, Stk1_1),
     ?TRY_CATCH(tick_player(S, Now), Err2, Stk2),
     ?TRY_CATCH(tick_monster(S, Now), Err3, Stk3),
     ?TRY_CATCH(tick_pet(S, Now), Err4, Stk4),

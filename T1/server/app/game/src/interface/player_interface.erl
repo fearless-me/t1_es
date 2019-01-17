@@ -99,15 +99,15 @@ send_map_msg_(UidPid, MsgId, Msg) ->
 
 %%-------------------------------------------------------------------
 i_has_buff([], _Type, _Param) ->
-    false.
-%%i_has_buff(BuffList, ?CONDITION_BUFF_HAS_ID, Param) ->
-%%    lists:keyfind(Param, #m_buff.buff_id, BuffList) =/= false;
-%%i_has_buff(BuffList, ?CONDITION_BUFF_HAS_PM, Param) ->
-%%    i_has_buff_1(BuffList, #buffCfg.purpose, Param);
-%%i_has_buff(BuffList, ?CONDITION_BUFF_HAS_EFFECT, Param) ->
-%%    i_has_buff_1(BuffList, #buffCfg.effectType, Param);
-%%i_has_buff(BuffList, ?CONDITION_BUFF_HAS_GROUP, Param) ->
-%%    i_has_buff_1(BuffList, #buffCfg.groupId, Param).
+    ok;
+i_has_buff(BuffList, ?CONDITION_BUFF_HAS_ID, Param) ->
+    lists:keyfind(Param, #m_buff.buff_id, BuffList) =/= false;
+i_has_buff(BuffList, ?CONDITION_BUFF_HAS_PM, Param) ->
+    i_has_buff_1(BuffList, #buffCfg.purpose, Param);
+i_has_buff(BuffList, ?CONDITION_BUFF_HAS_EFFECT, Param) ->
+    i_has_buff_1(BuffList, #buffCfg.effectType, Param);
+i_has_buff(BuffList, ?CONDITION_BUFF_HAS_GROUP, Param) ->
+    i_has_buff_1(BuffList, #buffCfg.groupId, Param).
 
 i_has_buff_1([], _Key, _Pos) ->
     false;

@@ -32,9 +32,6 @@
 
 -type uint() :: non_neg_integer().
 -type int() :: integer().
--type id() :: non_neg_integer().
--type etsTab() :: integer() | atom().
--type bool01() :: 0 | 1.
 
 -type uint8() :: 0 .. 255.
 -type uint16() :: 0 .. 65535.
@@ -45,10 +42,9 @@
 -type int16() :: -32768 .. 32767.
 -type int32() :: -2147483648 .. 2147483647.
 -type int64() :: -9223372036854775808 .. 9223372036854775807.
-
 -export_type([int8/0, uint8/0, int16/0, uint16/0, int32/0, uint32/0, int64/0, uint64/0]).
 
-
+-type mapId() :: uint16().
 
 -define(INT8_MIN,  -127 - 1).
 -define(INT8_MAX,  127).

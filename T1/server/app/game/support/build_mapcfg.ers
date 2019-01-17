@@ -73,7 +73,7 @@ writeInfoToFile(ArCfg, Maps) ->
 					NewList = writeToFile(MapCfgs),
 					fileAddHead(NewList, Mapid);
 				_ ->
-					?ERROR("Mapid=~p", [Mapid]),
+					?ERROR_OUT("Mapid=~p", [Mapid]),
 					skip
 			end
 		end,
@@ -177,7 +177,7 @@ loadAllMaps([{MapId, Res1, Res2} | T]) ->
 		RetArCfg = readMapInfo(MapId, Res2, NewArCfg),
 		put(mapsettingArCfg, RetArCfg),
 		loadAllMaps(T)
-	catch _:Error:ST -> ?ERROR("~p,~p",[Error, ST])
+	catch _:Error:ST -> ?ERROR_OUT("~p,~p",[Error, ST])
 	end.
 
 -spec readMap(MapID, FileName, ArCfg) -> array:array() when
@@ -188,7 +188,7 @@ readMap(MapID, FileName, ArCfg) when erlang:is_integer(MapID) andalso MapID > 0 
 		{ok, #recGameMapCfg{} = Cfg} ->
 			array:set(MapID, Cfg, ArCfg);
 		Other ->
-			?ERROR("throw~p~n", [Other]),
+			?ERROR_OUT("throw~p~n", [Other]),
 			throw(Other)
 	end.
 
@@ -202,7 +202,7 @@ readMapInfo(MapID, FileName, ArCfg) when erlang:is_integer(MapID) andalso MapID 
 			WayPtList = array:get(?MapObjWayPt, Info),
 			case erlang:length(WayPtList) =< 0 of
 				true ->
-					?ERROR("地图[~p]没有路点信息，无法设置地图初始点 fileName:~s", [MapID, FileName]),
+					?ERROR_OUT("地图[~p]没有路点信息，无法设置地图初始点 fileName:~s", [MapID, FileName]),
 					throw("Map No Way Point, Can't Set Map Init Pos");
 				_ ->
 					skip
@@ -232,7 +232,7 @@ readMapInfo(MapID, FileName, ArCfg) when erlang:is_integer(MapID) andalso MapID 
 
 			array:set(MapID, NewMapCfg, ArCfg);
 		OtherInfo ->
-			?ERROR("Read MapID[~p] File[~s] Error~p",[MapID,FileName, OtherInfo]),
+			?ERROR_OUT("Read MapID[~p] File[~s] Error~p",[MapID,FileName, OtherInfo]),
 			throw(OtherInfo)
 	end.
 
@@ -249,7 +249,7 @@ loadMapFromFile(MapID, Filename) when erlang:is_list(Filename) ->
 			Cfg = loadMapFromBinary(MapID, Bin),
 			{ok, Cfg};
 		Error ->
-			?ERROR("Load Map[ID:~p] File[~ts] Failed ", [MapID, Filename]),
+			?ERROR_OUT("Load Map[ID:~p] File[~ts] Failed ", [MapID, Filename]),
 			Error
 	end.
 
@@ -280,7 +280,7 @@ loadMapFromBinary(MapID, Bin) when erlang:is_integer(MapID) andalso MapID > 0 an
 			skip;
 		_ ->
 			%%文件不是PathGrid文件，策划配置填错了
-			?ERROR("Error Cfg of Map[~p] PathFile", [MapID]),
+			?ERROR_OUT("Error Cfg of Map[~p] PathFile", [MapID]),
 			throw("Error Cfg of Map Path File")
 	end,
 	%检查文件大小
@@ -289,7 +289,7 @@ loadMapFromBinary(MapID, Bin) when erlang:is_integer(MapID) andalso MapID > 0 an
 		true ->
 			ok;
 		false ->
-		    ?ERROR("FileSize =:= BinSize, ~p = ~p~n",[FileSize, BinSize]),
+		    ?ERROR_OUT("FileSize =:= BinSize, ~p = ~p~n",[FileSize, BinSize]),
 			throw("Error Map Data")
 	end,
 
@@ -299,7 +299,7 @@ loadMapFromBinary(MapID, Bin) when erlang:is_integer(MapID) andalso MapID > 0 an
 		true ->
 			ok;
 		false ->
-		    ?ERROR("(FileSize - RemainDataSize) =:= HeaderSize, ~p - ~p= ~p~n",[FileSize, RemainDataSize, HeaderSize]),
+		    ?ERROR_OUT("(FileSize - RemainDataSize) =:= HeaderSize, ~p - ~p= ~p~n",[FileSize, RemainDataSize, HeaderSize]),
 			throw("Error Map Data")
 	end,
 
@@ -312,19 +312,19 @@ loadMapFromBinary(MapID, Bin) when erlang:is_integer(MapID) andalso MapID > 0 an
 
 	if
 		Offset1 > BinSize ->
-		    ?ERROR("Offset1 > BinSize, ~p = ~p~n",[Offset1, BinSize]),
+		    ?ERROR_OUT("Offset1 > BinSize, ~p = ~p~n",[Offset1, BinSize]),
 			throw("Map File Internal Error,Overflow!");
 		Offset2 > BinSize ->
-		    ?ERROR("Offset2 > BinSize, ~p = ~p~n",[Offset2, BinSize]),
+		    ?ERROR_OUT("Offset2 > BinSize, ~p = ~p~n",[Offset2, BinSize]),
 			throw("Map File Internal Error,Overflow!");
 		Offset3 > BinSize ->
-		    ?ERROR("Offset3 > BinSize, ~p = ~p~n",[Offset3, BinSize]),
+		    ?ERROR_OUT("Offset3 > BinSize, ~p = ~p~n",[Offset3, BinSize]),
 			throw("Map File Internal Error,Overflow!");
 		Offset4 > BinSize ->
-		    ?ERROR("Offset4 > BinSize, ~p = ~p~n",[Offset4, BinSize]),
+		    ?ERROR_OUT("Offset4 > BinSize, ~p = ~p~n",[Offset4, BinSize]),
 			throw("Map File Internal Error,Overflow!");
 		Offset5 > BinSize ->
-		    ?ERROR("Offset5 > BinSize, ~p = ~p~n",[Offset5, BinSize]),
+		    ?ERROR_OUT("Offset5 > BinSize, ~p = ~p~n",[Offset5, BinSize]),
 			throw("Map File Internal Error,Overflow!");
 		true ->
 			ok
@@ -332,10 +332,10 @@ loadMapFromBinary(MapID, Bin) when erlang:is_integer(MapID) andalso MapID > 0 an
 	TotalCellNum = TotalColCellNum * TotalRowCellNum,
 	if
 		BlockInfoLen /= TotalCellNum ->
-		    ?ERROR("BlockInfoLen /= (TotalColCellNum * TotalRowCellNum), ~p = ~p*~p~n",[BlockInfoLen, TotalColCellNum, TotalRowCellNum]),
+		    ?ERROR_OUT("BlockInfoLen /= (TotalColCellNum * TotalRowCellNum), ~p = ~p*~p~n",[BlockInfoLen, TotalColCellNum, TotalRowCellNum]),
 			throw("Map File Internal Logic Error");
 %%		(HeightInfoLen / 4) /= TotalCellNum ->
-%%		    ?ERROR("(HeightInfoLen / 4) /= TotalCellNum, ~p = ~p~n",[HeightInfoLen, TotalCellNum]),
+%%		    ?ERROR_OUT("(HeightInfoLen / 4) /= TotalCellNum, ~p = ~p~n",[HeightInfoLen, TotalCellNum]),
 %%			throw("Map File Internal Logic Error");
 		true ->
 			ok
@@ -373,7 +373,7 @@ loadMapInfoFromBinary(Bin, FileName) ->
 			skip;
 		_ ->
 			%%不是MapInfo文件，策划配置填错了
-			?ERROR("Error Cfg of Map MapInfo File ~ts", [FileName]),
+			?ERROR_OUT("Error Cfg of Map MapInfo File ~ts", [FileName]),
 			throw("Error Cfg of Map MapInfo File")
 	end,
 	%检查文件大小
@@ -382,7 +382,7 @@ loadMapInfoFromBinary(Bin, FileName) ->
 		true ->
 			ok;
 		false ->
-			?ERROR("error Filesize:~s, FileSize:~p, BinSize:~p ", [FileName, FileSize, BinSize]),
+			?ERROR_OUT("error Filesize:~s, FileSize:~p, BinSize:~p ", [FileName, FileSize, BinSize]),
 			throw("Error Map Info Data FileSize")
 	end,
 
@@ -392,7 +392,7 @@ loadMapInfoFromBinary(Bin, FileName) ->
 		true ->
 			ok;
 		false ->
-			?ERROR("error HeaderSize:~s, HeaderSize:~p, RemainDataSize:~p ", [FileName, HeaderSize, RemainDataSize]),
+			?ERROR_OUT("error HeaderSize:~s, HeaderSize:~p, RemainDataSize:~p ", [FileName, HeaderSize, RemainDataSize]),
 			throw("Error Map Info Data HeaderSize")
 	end,
 
@@ -409,31 +409,31 @@ loadMapInfoFromBinary(Bin, FileName) ->
 
 	if
 		Offset1 > BinSize ->
-			?ERROR("error Overflow:~s, FileSize:~p, BinSize:~p ", [FileName, FileSize, BinSize]),
+			?ERROR_OUT("error Overflow:~s, FileSize:~p, BinSize:~p ", [FileName, FileSize, BinSize]),
 			throw("Map File Internal Error,Overflow!");
 		Offset2 > BinSize ->
-			?ERROR("error Overflow:~s, FileSize:~p, BinSize:~p ", [FileName, FileSize, BinSize]),
+			?ERROR_OUT("error Overflow:~s, FileSize:~p, BinSize:~p ", [FileName, FileSize, BinSize]),
 			throw("Map File Internal Error,Overflow!");
 		Offset3 > BinSize ->
-			?ERROR("error Overflow:~s, FileSize:~p, BinSize:~p ", [FileName, FileSize, BinSize]),
+			?ERROR_OUT("error Overflow:~s, FileSize:~p, BinSize:~p ", [FileName, FileSize, BinSize]),
 			throw("Map File Internal Error,Overflow!");
 		Offset4 > BinSize ->
-			?ERROR("error Overflow:~s, FileSize:~p, BinSize:~p ", [FileName, FileSize, BinSize]),
+			?ERROR_OUT("error Overflow:~s, FileSize:~p, BinSize:~p ", [FileName, FileSize, BinSize]),
 			throw("Map File Internal Error,Overflow!");
 		Offset5 > BinSize ->
-			?ERROR("error Overflow:~s, FileSize:~p, BinSize:~p ", [FileName, FileSize, BinSize]),
+			?ERROR_OUT("error Overflow:~s, FileSize:~p, BinSize:~p ", [FileName, FileSize, BinSize]),
 			throw("Map File Internal Error,Overflow!");
 		Offset6 > BinSize ->
-			?ERROR("error Overflow:~s, FileSize:~p, BinSize:~p ", [FileName, FileSize, BinSize]),
+			?ERROR_OUT("error Overflow:~s, FileSize:~p, BinSize:~p ", [FileName, FileSize, BinSize]),
 			throw("Map File Internal Error,Overflow!");
 		Offset7 > BinSize ->
-			?ERROR("error Overflow:~s, FileSize:~p, BinSize:~p ", [FileName, FileSize, BinSize]),
+			?ERROR_OUT("error Overflow:~s, FileSize:~p, BinSize:~p ", [FileName, FileSize, BinSize]),
 			throw("Map File Internal Error,Overflow!");
 		Offset8 > BinSize ->
-			?ERROR("error Overflow:~s, FileSize:~p, BinSize:~p ", [FileName, FileSize, BinSize]),
+			?ERROR_OUT("error Overflow:~s, FileSize:~p, BinSize:~p ", [FileName, FileSize, BinSize]),
 			throw("Map File Internal Error,Overflow!");
 		<<"EOF", 0>> /= EOFFlag ->
-			?ERROR("error EOF Flag:~s, FileSize:~p, BinSize:~p ", [FileName, FileSize, BinSize]),
+			?ERROR_OUT("error EOF Flag:~s, FileSize:~p, BinSize:~p ", [FileName, FileSize, BinSize]),
 			throw("Map File Error, No EOF Flag");
 		true ->
 			ok
@@ -618,7 +618,7 @@ readFile(FileName) ->
 		{ok, Binary} ->
 			Binary;
 		Ret ->
-			?ERROR("Read File:~p failed By:~p!~n", [FileName, Ret]),
+			?ERROR_OUT("Read File:~p failed By:~p!~n", [FileName, Ret]),
 			[]
 	end.
 
@@ -636,7 +636,7 @@ checkFileContent(FileName, Content) ->
 				ok ->
 					?LOG_OUT("Write File:~s OK~n", [FileName]);
 				{error, Reason} ->
-					?ERROR("Write File:~s Failed by:~p~n", [FileName, Reason])
+					?ERROR_OUT("Write File:~s Failed by:~p~n", [FileName, Reason])
 			end
 	end,
 	ok.

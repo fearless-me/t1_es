@@ -39,7 +39,7 @@ on_create(#r_create_player_ack{
         career = Career, race = Race, camp = Camp, head = Head
     },
     gs_cache_interface:add_player_pub(Pub),
-    player_pub:send_net_msg(#pk_GS2U_CreatePlayerResult{roleID = Uid}),
+    player_pub:send_net_msg(#pk_GS2U_CreatePlayerResult{uid = Uid}),
     ?DEBUG("[hook]Aid ~p create new player ~w", [player_rw:get_aid(), Uid]),
     ok.
 

@@ -14,7 +14,7 @@
 -include("pub_def.hrl").
 -include("gs_ps_def.hrl").
 -include("map_core.hrl").
--include("cfg_mapsetting.hrl").
+-include("cfg_map.hrl").
 
 %%
 -export([start_link/0]).
@@ -63,15 +63,15 @@ start_all_map_mgr() ->
     check_mgr(misc_ets:size(?MAP_MGR_ETS)),
     ok.
 
-load_one_map(true, #mapsettingCfg{is_cross = ?MAP_EXIST_TYPE_NORMAL, id = MapID}) ->
+load_one_map(true, #mapCfg{is_cross = ?MAP_EXIST_TYPE_NORMAL, id = MapID}) ->
     ?WARN("~p This is a cross-server won't create normal map mgr ~p ", [node(), MapID]),
     ok;
-load_one_map(false, #mapsettingCfg{is_cross = ?MAP_EXIST_TYPE_CROSS, id = MapID}) ->
+load_one_map(false, #mapCfg{is_cross = ?MAP_EXIST_TYPE_CROSS, id = MapID}) ->
     ?WARN("~p This is a normal-server won't create cross-server map mgr ~p ", [node(), MapID]),
     ok;
 load_one_map(_Any, MapCfg) -> do_load_one_map(MapCfg).
 
-do_load_one_map(#mapsettingCfg{id = MapID}) ->
+do_load_one_map(#mapCfg{id = MapID}) ->
     {ok, Pid} = map_mgr_sup:start_child(MapID),
     Ets = gen_server:call(Pid, get_line_ets, infinity),
     misc_ets:write(?MAP_MGR_ETS, #m_map_mgr{map_id = MapID, mgr = Pid, line_ets = Ets}),

@@ -169,21 +169,21 @@ filter_msg(?PS_OFFLINE, Cmd, Msg) ->
 filter_msg(_status, Cmd, Msg) ->
     dispatcher_msg(Cmd, Msg).
 
-%%dispatcher_msg(Cmd = ?U2GS_Login_Normal, Msg) ->
-%%    dispatcher_msg_s(?PS_INIT, Cmd, Msg);
-%%dispatcher_msg(Cmd = ?U2GS_RequestCreatePlayer, Msg) ->
-%%    dispatcher_msg_s(?PS_WAIT_SELECT_CREATE, Cmd, Msg);
-%%dispatcher_msg(Cmd = ?U2GS_SelPlayerEnterGame, Msg) ->
-%%    dispatcher_msg_s(?PS_WAIT_SELECT_CREATE, Cmd, Msg);
-dispatcher_msg(Cmd, Msg) ->
-    player_netmsg:handle(Cmd, Msg).
+dispatcher_msg(Cmd = ?U2GS_Login_Normal, Msg) ->
+    dispatcher_msg_s(?PS_INIT, Cmd, Msg);
+dispatcher_msg(Cmd = ?U2GS_RequestCreatePlayer, Msg) ->
+    dispatcher_msg_s(?PS_WAIT_SELECT_CREATE, Cmd, Msg);
+dispatcher_msg(Cmd = ?U2GS_SelPlayerEnterGame, Msg) ->
+    dispatcher_msg_s(?PS_WAIT_SELECT_CREATE, Cmd, Msg);
+dispatcher_msg(_, Msg) ->
+    player_netmsg:handle(Msg).
 
 
-%%dispatcher_msg_s(NeedStatus, Cmd, Msg) ->
-%%    case player_rw:get_status() of
-%%        NeedStatus -> player_netmsg:handle(Msg);
-%%        _ -> log_error_msg(status_error, Cmd, Msg)
-%%    end.
+dispatcher_msg_s(NeedStatus, Cmd, Msg) ->
+    case player_rw:get_status() of
+        NeedStatus -> player_netmsg:handle(Msg);
+        _ -> log_error_msg(status_error, Cmd, Msg)
+    end.
 
 log_error_msg(Reason, Cmd, Msg) ->
     ?ERROR("~p ~p status ~p, Cmd ~p, msg ~w",

@@ -21,6 +21,12 @@ add_born_buff({Uid, DataId}) ->
 
 %%-------------------------------------------------------------------
 do_add_born_buff(true, Uid, DataId) ->
+    #monsterCfg{buff_born = BuffList} = getCfg:getCfgByArgs(cfg_monster, DataId),
+    lists:foreach(
+        fun(BuffId)->
+            Req = #r_player_add_buff_req{uid = Uid, buff_id = BuffId},
+            mod_buff:add_buff(Req)
+        end, BuffList),
     ok;
 do_add_born_buff(_, _, _) -> skip.
 

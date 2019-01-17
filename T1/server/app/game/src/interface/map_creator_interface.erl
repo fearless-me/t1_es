@@ -12,7 +12,7 @@
 -include("pub_def.hrl").
 -include("map_core.hrl").
 -include("pub_rec.hrl").
--include("cfg_mapsetting.hrl").
+-include("cfg_map.hrl").
 
 
 
@@ -82,7 +82,7 @@ map_mgr_lr(Uid, MapID) ->
 
 
 %% 在跨服上找非跨服地图
-do_map_mgr_lr(true, Uid, #mapsettingCfg{is_cross = ?MAP_EXIST_TYPE_NORMAL, id = MapID}) ->
+do_map_mgr_lr(true, Uid, #mapCfg{is_cross = ?MAP_EXIST_TYPE_NORMAL, id = MapID}) ->
     Node = cross_interface:get_player_src_node(Uid),
     case cross_interface:get_remote_server_map_mgr(Node, MapID) of
         MgrPid when erlang:is_pid(MgrPid) -> MgrPid;
@@ -91,7 +91,7 @@ do_map_mgr_lr(true, Uid, #mapsettingCfg{is_cross = ?MAP_EXIST_TYPE_NORMAL, id = 
             undefined
     end;
 %% 在普通服务器招跨服地图
-do_map_mgr_lr(false, Uid, #mapsettingCfg{is_cross = ?MAP_EXIST_TYPE_CROSS, id = MapID}) ->
+do_map_mgr_lr(false, Uid, #mapCfg{is_cross = ?MAP_EXIST_TYPE_CROSS, id = MapID}) ->
     IsCenterReady = gs_cs_interface:is_center_ready(),
     case IsCenterReady of
         true ->
@@ -105,7 +105,7 @@ do_map_mgr_lr(false, Uid, #mapsettingCfg{is_cross = ?MAP_EXIST_TYPE_CROSS, id = 
         _Any -> undefined
     end;
 %% 在跨服上找跨服地图/在普通副找非跨服地图
-do_map_mgr_lr(_Any, _Uid, #mapsettingCfg{id = MapID}) ->
+do_map_mgr_lr(_Any, _Uid, #mapCfg{id = MapID}) ->
     case misc_ets:read(?MAP_MGR_ETS, MapID) of
         [#m_map_mgr{mgr = Mgr} | _] -> Mgr;
         _ -> undefined
@@ -115,7 +115,7 @@ do_map_mgr_lr(_Any, _Uid, _) -> undefined.
 
 map_type(MapID) ->
     case getCfg:getCfgByArgs(cfg_map, MapID) of
-        #mapsettingCfg{type = Type} -> Type;
+        #mapCfg{type = Type} -> Type;
         _Any -> ?MAP_TYPE_INVALID
     end.
 
@@ -173,13 +173,13 @@ born_map_id() -> 2.
 %%-------------------------------------------------------------------
 is_cross_map(MapId) ->
     case getCfg:getCfgByArgs(cfg_map, MapId) of
-        #mapsettingCfg{is_cross = ?MAP_EXIST_TYPE_CROSS} -> true;
+        #mapCfg{is_cross = ?MAP_EXIST_TYPE_CROSS} -> true;
         _ -> false
     end.
 
 can_recycle_no_player(MapId) ->
     case getCfg:getCfgByArgs(cfg_map, MapId) of
-        #mapsettingCfg{type = ?MAP_TYPE_NORMAL} -> true;
+        #mapCfg{type = ?MAP_TYPE_NORMAL} -> true;
         _ -> false
     end.
 
