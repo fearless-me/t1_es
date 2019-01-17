@@ -81,29 +81,29 @@ map_mgr_lr(Uid, MapID) ->
     do_map_mgr_lr(gs_interface:is_cross(), Uid, getCfg:getCfgByArgs(cfg_map, MapID)).
 
 
-%%%% 在跨服上找非跨服地图
-%%do_map_mgr_lr(true, Uid, #mapsettingCfg{is_cross = ?MAP_EXIST_TYPE_NORMAL, id = MapID}) ->
-%%    Node = cross_interface:get_player_src_node(Uid),
-%%    case cross_interface:get_remote_server_map_mgr(Node, MapID) of
-%%        MgrPid when erlang:is_pid(MgrPid) -> MgrPid;
-%%        Error ->
-%%            ?ERROR("~p get map mgr ~p from ~p, error ~p", [erlang:node(), MapID, Node, Error]),
-%%            undefined
-%%    end;
-%%%% 在普通服务器招跨服地图
-%%do_map_mgr_lr(false, Uid, #mapsettingCfg{is_cross = ?MAP_EXIST_TYPE_CROSS, id = MapID}) ->
-%%    IsCenterReady = gs_cs_interface:is_center_ready(),
-%%    case IsCenterReady of
-%%        true ->
-%%            Node = cross_interface:get_player_cross_node(Uid),
-%%            case cross_interface:get_remote_server_map_mgr(Node, MapID) of
-%%                MgrPid when erlang:is_pid(MgrPid) -> MgrPid;
-%%                Error ->
-%%                    ?ERROR("~p get map mgr ~p from ~p, error ~p", [erlang:node(), MapID, Node, Error]),
-%%                    undefined
-%%            end;
-%%        _Any -> undefined
-%%    end;
+%% 在跨服上找非跨服地图
+do_map_mgr_lr(true, Uid, #mapsettingCfg{is_cross = ?MAP_EXIST_TYPE_NORMAL, id = MapID}) ->
+    Node = cross_interface:get_player_src_node(Uid),
+    case cross_interface:get_remote_server_map_mgr(Node, MapID) of
+        MgrPid when erlang:is_pid(MgrPid) -> MgrPid;
+        Error ->
+            ?ERROR("~p get map mgr ~p from ~p, error ~p", [erlang:node(), MapID, Node, Error]),
+            undefined
+    end;
+%% 在普通服务器招跨服地图
+do_map_mgr_lr(false, Uid, #mapsettingCfg{is_cross = ?MAP_EXIST_TYPE_CROSS, id = MapID}) ->
+    IsCenterReady = gs_cs_interface:is_center_ready(),
+    case IsCenterReady of
+        true ->
+            Node = cross_interface:get_player_cross_node(Uid),
+            case cross_interface:get_remote_server_map_mgr(Node, MapID) of
+                MgrPid when erlang:is_pid(MgrPid) -> MgrPid;
+                Error ->
+                    ?ERROR("~p get map mgr ~p from ~p, error ~p", [erlang:node(), MapID, Node, Error]),
+                    undefined
+            end;
+        _Any -> undefined
+    end;
 %% 在跨服上找跨服地图/在普通副找非跨服地图
 do_map_mgr_lr(_Any, _Uid, #mapsettingCfg{id = MapID}) ->
     case misc_ets:read(?MAP_MGR_ETS, MapID) of
@@ -173,7 +173,7 @@ born_map_id() -> 2.
 %%-------------------------------------------------------------------
 is_cross_map(MapId) ->
     case getCfg:getCfgByArgs(cfg_map, MapId) of
-%%        #mapsettingCfg{is_cross = ?MAP_EXIST_TYPE_CROSS} -> true;
+        #mapsettingCfg{is_cross = ?MAP_EXIST_TYPE_CROSS} -> true;
         _ -> false
     end.
 

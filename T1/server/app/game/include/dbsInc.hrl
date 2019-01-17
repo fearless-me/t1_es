@@ -4,19 +4,19 @@
 -ifndef(DBSInc_hrl).
 -define(DBSInc_hrl,1).
 
--include("setup.hrl").
--include("type.hrl").
--include("logger.hrl").
--include("commonDef.hrl").
+-include("common/setup.hrl").
+-include("common/type.hrl").
+-include("common/logger.hrl").
+-include("common/commonDef.hrl").
 -include("netmsgRecords.hrl").
 -include("userDefine.hrl").
--include("mysql.hrl").
--include("db.hrl").
--include("logger.hrl").
--include("logRecord.hrl").
--include("variant.hrl").
--include("mall.hrl").
--include("gamedata.hrl").
+-include("common/mysql.hrl").
+-include("common/db.hrl").
+-include("common/logger.hrl").
+-include("common/logRecord.hrl").
+-include("common/variant.hrl").
+-include("common/mall.hrl").
+-include("common/gamedata.hrl").
 -include("dataDefine.hrl").
 -include("globalSetup.hrl").
 

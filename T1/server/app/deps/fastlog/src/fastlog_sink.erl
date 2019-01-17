@@ -352,7 +352,7 @@ master_node() ->
 
 color_inout(?LOG_LEVEL_FATAL, Msg) -> io:format(user, "~ts", [red(Msg)]);
 color_inout(?LOG_LEVEL_ERROR, Msg) -> io:format(user, "~ts", [red(Msg)]);
-color_inout(?LOG_LEVEL_WARNING, Msg) -> io:format(user, "~ts", [yellow(Msg)]); 
+color_inout(?LOG_LEVEL_WARNING, Msg) -> io:format(user, "~ts", [yellow(Msg)]);
 color_inout(?LOG_LEVEL_NOTICE, Msg) -> io:format(user, "~ts", [blue(Msg)]);
 color_inout(?LOG_LEVEL_DEBUG, Msg) -> io:format(user, "~ts", [green(Msg)]);
 color_inout(_, Msg) -> io:format(user, "~ts", [Msg]).

@@ -134,7 +134,7 @@
 -record(recHomePlant, {
 	key			= {0, 0, 0} 	:: {uint64(), uint8(), uint64()},	%% {家园ID, 区域ID, 种植在对应家具上的UID}
 	id			= 0				:: uint16(),						%% 作物ID，对应plant.id
-	time		= 0				:: uint32(),						%% 种植时间，misc_time:localtime_seconds/0
+	time		= 0				:: uint32(),						%% 种植时间，time:getSyncTimeFromDBS/0
 	health		= 0				:: uint8(),							%% 健康值【访问数据时需要刷新】
 	watering	= []			:: [uint32(), ...],					%% 浇水时间点记录
 	compost		= []			:: [uint32(), ...],					%% 施肥时间点记录
@@ -223,7 +223,7 @@
 %%饲养区数据
 -record(recHomeFrarming, {
 	key         ={0,0}          ::{uint64(), uint16()},      %%  {家园ID,petid}
-	time		=0				:: uint32()						%% 放入养殖区时间，misc_time:localtime_seconds/0
+	time		=0				:: uint32()						%% 放入养殖区时间，time:getSyncTimeFromDBS/0
 }).
 
 %%家园BOSS数据

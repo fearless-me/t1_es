@@ -99,9 +99,9 @@ send_map_msg_(UidPid, MsgId, Msg) ->
 
 %%-------------------------------------------------------------------
 i_has_buff([], _Type, _Param) ->
-    fasle;
-i_has_buff(BuffList, ?CONDITION_BUFF_HAS_ID, Param) ->
-    lists:keyfind(Param, #m_buff.buff_id, BuffList) =/= false.
+    false.
+%%i_has_buff(BuffList, ?CONDITION_BUFF_HAS_ID, Param) ->
+%%    lists:keyfind(Param, #m_buff.buff_id, BuffList) =/= false;
 %%i_has_buff(BuffList, ?CONDITION_BUFF_HAS_PM, Param) ->
 %%    i_has_buff_1(BuffList, #buffCfg.purpose, Param);
 %%i_has_buff(BuffList, ?CONDITION_BUFF_HAS_EFFECT, Param) ->
@@ -109,13 +109,13 @@ i_has_buff(BuffList, ?CONDITION_BUFF_HAS_ID, Param) ->
 %%i_has_buff(BuffList, ?CONDITION_BUFF_HAS_GROUP, Param) ->
 %%    i_has_buff_1(BuffList, #buffCfg.groupId, Param).
 
-%%i_has_buff_1([], _Key, _Pos) ->
-%%    false;
-%%i_has_buff_1([#m_buff{buff_id = _BuffId} | BuffList], Key, Pos) ->
-%%    BuffCfg = #buffCfg{},
-%%    case element(Pos, BuffCfg) == Key of
-%%        true -> true;
-%%        _Any -> i_has_buff_1(BuffList, Key, Pos)
-%%    end.
+i_has_buff_1([], _Key, _Pos) ->
+    false;
+i_has_buff_1([#m_buff{buff_id = _BuffId} | BuffList], Key, Pos) ->
+    BuffCfg = #buffCfg{},
+    case element(Pos, BuffCfg) == Key of
+        true -> true;
+        _Any -> i_has_buff_1(BuffList, Key, Pos)
+    end.
 %%-------------------------------------------------------------------
 

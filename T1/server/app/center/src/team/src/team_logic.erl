@@ -77,7 +77,7 @@ doCreateNewTeam(CopyMapID, TargetRoleID, #m_team_member{
         teamID = NewTeamID,
         copyMapID = CopyMapID,
         leaderID = RoleID,
-        searchStartTime = misc_time:localtime_seconds(),
+        searchStartTime = time:getSyncTimeFromDBS(),
         memberList = [MemberInfo]
     },
     misc_mnesia:dirty_delete(?ShareUidTeamMatchName, RoleID),

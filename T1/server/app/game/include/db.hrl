@@ -26,7 +26,6 @@
 -define(UID_TYPE_Red, 10).      %% 红包
 -define(UID_TYPE_Furnitrue, 11).      %% 家具小屋
 -define(UID_TYPE_End, 15).      %% 结束值
--type uid_type() :: ?UID_TYPE_Start .. ?UID_TYPE_End.
 
 %%运营活动兑换道具类型
 -define(OperateActExchangeType_Start,0).

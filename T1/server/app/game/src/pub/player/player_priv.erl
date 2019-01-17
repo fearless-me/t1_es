@@ -21,10 +21,9 @@
 -include("object.hrl").
 
 
-
 %% 逻辑层不要调用这些接口
 -export([init/0]).
--export([login/3, login_ack/1]).
+-export([login/1, login_ack/1]).
 -export([loaded_player_list/1]).
 -export([create_player/6, create_player_ack/1]).
 -export([select_player/1]).
@@ -39,8 +38,12 @@ init() ->
     ok.
 
 %%-------------------------------------------------------------------
-login(PlatName, PlatAccount, Token)->
-    ?DEBUG("s~p|~ts login",[self(), PlatAccount]),
+login(#pk_U2LS_Login_Normal{
+    platformName = PlatName,
+    platformAccount = PlatAccount,
+    sign = Token
+}) ->
+    ?DEBUG("s~p|~ts login", [self(), PlatAccount]),
     player_rw:set_status(?PS_VERIFY),
     login_interface:login_(#r_login_req{
         plat_name = PlatName, plat_account_name = PlatAccount,
@@ -59,10 +62,10 @@ login_ack(#r_login_ack{error = 0, account_info = AccountIfo}) ->
     login_ack_success(Ret, AccountIfo),
     ok;
 login_ack(#r_login_ack{error = Error}) ->
-    player_pub:send_net_msg(#pk_GS2U_LoginResult{
-        result = Error,
-        msg = io_lib:format("ErrorCode:~p", [Error])
-    }),
+%%    player_pub:send_net_msg(#pk_GS2U_LoginResult{
+%%        result = Error,
+%%        msg = io_lib:format("ErrorCode:~p", [Error])
+%%    }),
     ok.
 
 
@@ -77,12 +80,12 @@ loop_check(_, _Pid, _N) ->
 %%-------------------------------------------------------------------
 login_ack_success(success, AccountIfo) ->
     Aid = AccountIfo#p_account.aid,
-    player_pub:send_net_msg(#pk_GS2U_LoginResult{
-        aid = Aid,
-        identity = "",
-        result = 0,
-        msg = io_lib:format("ErrorCode:~p", [0])
-    }),
+%%    player_pub:send_net_msg(#pk_GS2U_LoginResult{
+%%        aid = Aid,
+%%        identity = "",
+%%        result = 0,
+%%        msg = io_lib:format("ErrorCode:~p", [0])
+%%    }),
     player_rw:set_aid(Aid),
     player_rw:set_status(?PS_WAIT_LIST),
     hook_player:on_account_login(Aid, self(), player_pub:socket()),
@@ -91,10 +94,10 @@ login_ack_success(Reason, AccountIfo) ->
     #p_account{aid = Aid} = AccountIfo,
     ?ERROR("acc ~w register process ~p faild with ~w",
         [Aid, self(), Reason]),
-    player_pub:send_net_msg(#pk_GS2U_LoginResult{
-        result = -1,
-        msg = io_lib:format("ErrorCode:~p", [Reason])
-    }),
+%%    player_pub:send_net_msg(#pk_GS2U_LoginResult{
+%%        result = -1,
+%%        msg = io_lib:format("ErrorCode:~p", [Reason])
+%%    }),
     player_rw:set_status(?PS_ERROR),
     player_pub:shutdown(read),
     gs_interface:kick_account(Aid, Reason),
@@ -122,7 +125,7 @@ loaded_player_list(RoleList) ->
             old_map_id = OldMapId
         }) ->
             #pk_UserPlayerData{
-                uid = Uid, name = Name,
+                roleID = Uid, name = Name,
                 level = Lv, wingLevel = Wlv,
                 camp = Camp, career = Career,
                 race = Race, sex = Sex, head = Head,
@@ -135,7 +138,7 @@ loaded_player_list(RoleList) ->
 %%-------------------------------------------------------------------
 create_player(Name, Career, Race, Sex, Head, Camp) ->
     player_rw:set_status(?PS_CREATING),
-    
+
     Aid = player_rw:get_aid(),
     Mid = map_creator_interface:born_map_id(),
     Pos = map_creator_interface:map_init_pos(Mid),
@@ -164,7 +167,7 @@ select_player(Uid) ->
     player_rw:set_status(?PS_WAIT_LOAD),
     player_rw:set_uid(Uid),
     gs_db_interface:action_data_(Aid, load_player_data, {Aid, Uid}),
-    
+
     ok.
 
 %%-------------------------------------------------------------------
@@ -200,7 +203,7 @@ offline_1(Status, Reason) ->
     gs_cache_interface:offline(Aid, Uid),
     ?INFO("player ~p pid ~p sock ~p offline status ~p reason ~p",
         [Uid, self(), player_pub:socket(), Status, Reason]),
-    
+
     ok.
 
 

@@ -81,7 +81,7 @@ writeInfoToFile(ArCfg, Maps) ->
 
 writeToCfgModule(Maps) ->
     {ok, Cwd} = file:get_cwd(),
-    ?INFO("~ts~n",[Cwd]),
+    ?LOG_OUT("~ts~n",[Cwd]),
 	FileName = io_lib:format("./src/pub/mapcfgs/gameMapCfg.erl",[]),
 	file:write_file(FileName, ""),
 	Mod = io_lib:format("-module(gameMapCfg).\n",[]),
@@ -242,7 +242,7 @@ readMapInfo(MapID, FileName, ArCfg) when erlang:is_integer(MapID) andalso MapID 
 	Filename :: string(),
 	Why :: term().
 loadMapFromFile(MapID, Filename) when erlang:is_list(Filename) ->
-	?INFO("Load Map[ID:~p] File ~p", [MapID, Filename]),
+	?LOG_OUT("Load Map[ID:~p] File ~p", [MapID, Filename]),
 	Ret = file:read_file(Filename),
 	case Ret of
 		{ok, Bin} ->
@@ -626,7 +626,7 @@ checkFileContent(FileName, Content) ->
 	Bin = erlang:list_to_binary(Content),
 	case file:read_file(FileName) of
 		{ok, Bin} ->
-			?INFO("...~s no change~n", [FileName]);
+			?LOG_OUT("...~s no change~n", [FileName]);
 		_Other ->
 			%% 加入编译方式
 			%% "%% coding: latin-1\r\n"
@@ -634,7 +634,7 @@ checkFileContent(FileName, Content) ->
 			Bin2 = <<Title/binary, Bin/binary>>,
 			case file:write_file(FileName, Bin2) of
 				ok ->
-					?INFO("Write File:~s OK~n", [FileName]);
+					?LOG_OUT("Write File:~s OK~n", [FileName]);
 				{error, Reason} ->
 					?ERROR("Write File:~s Failed by:~p~n", [FileName, Reason])
 			end

@@ -54,6 +54,8 @@
         %%: ！！：0，6，9这三个类型的地图表示只做最后的结算奖励，中途怪物的奖励掉落不会掉落
         subtype,
 
+        is_cross,
+
         %%: 副本界面读取的图片名称
         %%: 路径：Client\Assets\Resources\Textures\Image_instance\Image_instance_XX,X为配置去掉map后的数字
         name,

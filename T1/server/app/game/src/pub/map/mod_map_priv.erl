@@ -16,7 +16,7 @@
 -include("netmsg.hrl").
 -include("gs_cache.hrl").
 -include("gs_common_rec.hrl").
--include("cfg_map.hrl").
+-include("cfg_mapsetting.hrl").
 -include("map_core.hrl").
 -include("rec_rw.hrl").
 
@@ -47,7 +47,7 @@ init_priv(#r_map_create_params{
     true = erlang:register(ProcessName, self()),
     Ets0 = misc_ets:new(?MAP_OBJ_DETAIL_ETS, [protected, set, {keypos, #m_object_rw.uid}, ?ETS_RC]),
     Ets1 = misc_ets:new(?MAP_EXCL_ETS, [protected, set, {keypos, #pub_kv.key}, ?ETS_RC]),
-    #mapCfg{peopleLimit = Limit, lifetime = Lifetime} = getCfg:getCfgByArgs(cfg_map, MapID),
+    #mapsettingCfg{maxnum = Limit, all_time = Lifetime} = getCfg:getCfgByArgs(cfg_map, MapID),
     RealLifeTime = ?if_else(Lifetime == 0, ?UINT32_MAX, Lifetime),
     RealLimitCnt = ?if_else(Limit == 0, 150, Limit),
     Now = misc_time:milli_seconds(),

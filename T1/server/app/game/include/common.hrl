@@ -30,18 +30,7 @@
 -include("logic_target.hrl").
 -include("notice.hrl").
 -include("json_lib.hrl").
--include("pub_def.hrl").
 
-
--ifndef(RELEASE).
--define(ERROR_CODE(C),			_={?DEBUG("[DebugForErrorCode] ~p []", [C]), playerMsg:sendErrorCodeMsg(C)}).
--define(ERROR_CODE(C, P),		_={?DEBUG("[DebugForErrorCode] ~p ~p", [C, P]), playerMsg:sendErrorCodeMsg(C, P)}).
--define(ERROR_CODE(N, C, P),	_={?DEBUG("[DebugForErrorCode] ~p ~p", [C, P]), playerMsg:sendErrorCodeMsg(N, C, P)}).
--else.
--define(ERROR_CODE(C),			playerMsg:sendErrorCodeMsg(C)).
--define(ERROR_CODE(C, P),		playerMsg:sendErrorCodeMsg(C, P)).
--define(ERROR_CODE(N, C, P),	playerMsg:sendErrorCodeMsg(N, C, P)).
--endif.	%% RELEASE
 
 
 -endif.

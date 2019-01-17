@@ -9,6 +9,37 @@ namespace Network.Messages
     public enum MessageType
     {
          MSG_Undefined = 0,
+         //Date begin
+         MSG_U2GS_DateLink_Select_Request = 941,
+         MSG_U2GS_DateShooting_Over = 2028,
+         MSG_GS2U_DateLink_BuffAddScore_Sync = 2235,
+         MSG_GS2U_DatePushBox_Succeed_Sync = 3160,
+         MSG_GS2U_DateLink_Welcome_Sync = 4915,
+         MSG_GS2U_DateLink_BuffPower_Sync = 8307,
+         MSG_GS2U_Date_FindTreasure_Sync = 11997,
+         MSG_U2GS_DateLink_ResetGem_Request = 12817,
+         MSG_GS2U_DateLink_Link_Sync = 13021,
+         MSG_GS2U_MonsterMoveSync = 15746,
+         MSG_GS2U_DatePushBox_Welcome_Sync = 17240,
+         MSG_GS2U_DatePoolShooting_Welcome_Sync = 17426,
+         MSG_GS2U_Date_ResetBox_Sync = 20161,
+         MSG_U2GS_DateLink_Giveup_Requset = 21873,
+         MSG_GS2U_DateLink_Select_Ack = 25929,
+         MSG_GS2U_DateLink_GameEnd_Sync = 26792,
+         MSG_GS2U_DateLink_ResetGem_Sync = 38607,
+         MSG_GS2U_DateLink_MainTime_Sync = 39789,
+         MSG_GS2U_DateLink_BuffAddTime_Sync = 43534,
+         MSG_GS2U_DateLink_BuffBuff_Sync = 43889,
+         MSG_GS2U_DatePushBox_GreateNPC_Sync = 45541,
+         MSG_U2GS_DatePushBox_Request = 46621,
+         MSG_GS2U_Date_PlayerAnimation_Sync = 52140,
+         MSG_GS2U_Date_ResetFindTreasure_Sync = 52220,
+         MSG_GS2U_Date_RefreshSocre_Sync = 54446,
+         MSG_GS2U_DateLink_DeduffBuff_Sync = 54474,
+         MSG_GS2U_Date_ResetPoolShooting_Sync = 54665,
+         MSG_U2GS_DateEnter_Request = 59172,
+         MSG_GS2U_DateFindTreasure_Welcome_Sync = 63205,
+         //Date end
          //LS2User begin
          MSG_Web2LS_Normal = 889,
          MSG_LS2Web_NormalAck = 1056,
@@ -21,16 +52,2326 @@ namespace Network.Messages
          MSG_U2LS_RequestGSLine = 39508,
          MSG_U2LS_Login_Normal = 41532,
          //LS2User end
+         //achieve begin
+         MSG_GS2U_AchieveScheduleList = 4174,
+         MSG_GS2U_UpdateDailyActiveInfo = 6880,
+         MSG_GS2U_AddTitle = 22187,
+         MSG_GS2U_OwnTitleList = 27692,
+         MSG_GS2U_AchieveSchedule = 33796,
+         MSG_U2GS_ChangeCustomTitleText = 41498,
+         MSG_GS2U_BadgeInfoList = 42763,
+         MSG_GS2U_ReceiveDailyActiveAwardResult = 46506,
+         MSG_U2GS_ReceiveAchieveValue = 53673,
+         MSG_GS2U_BadgeInfo = 55665,
+         MSG_GS2U_InitDailyActiveInfo = 60581,
+         MSG_U2GS_ReceiveDailyActiveAward = 60891,
+         MSG_U2GS_ChangeTitleState = 61023,
+         MSG_U2GS_ChangeLimiteTitleState = 64069,
+         MSG_GS2U_DelTitle = 64357,
+         //achieve end
+         //activity begin
+         MSG_U2GS_AddArenaTeamMemberAck = 254,
+         MSG_U2GS_CancelApply = 474,
+         MSG_GS2U_ArenaRoleList = 2003,
+         MSG_U2GS_ReadyArena = 2366,
+         MSG_U2GS_RequestGBList = 3106,
+         MSG_GS2U_Goblin_Open_State = 3340,
+         MSG_U2GS_PlayerAnswerQuestion = 3611,
+         MSG_GS2U_KillMonsterReward = 3675,
+         MSG_GS2U_MapBossInfo = 4111,
+         MSG_U2GS_GBLeaveRange = 4451,
+         MSG_GS2U_GetChargeOrUseGiftAck = 5311,
+         MSG_U2GS_QueryActivityState = 5840,
+         MSG_U2GS_AddArenaTeamMember = 6431,
+         MSG_U2GS_DeadLineGiftBuy = 6984,
+         MSG_U2GS_KingBattleBuyMirrorBuffOneKey = 7440,
+         MSG_GS2U_PlayerAnswer = 8335,
+         MSG_U2GS_ApplyDance = 8651,
+         MSG_GS2U_AngelInvestmentList = 8750,
+         MSG_U2GS_OperateExchange = 9105,
+         MSG_GS2U_KillRank = 9310,
+         MSG_GS2U_LotteryResetTime = 9419,
+         MSG_ArenaTeamMemberPrepare = 9837,
+         MSG_GS2U_MarrorInfoAck = 10464,
+         MSG_U2GS_RequestInActivity = 10617,
+         MSG_U2GS_KingBattleBuyAttackerBuffOneKey = 10874,
+         MSG_GS2U_AnswerFirstAndLuckyPlayer = 11460,
+         MSG_GS2U_CrosBattleExploits = 11911,
+         MSG_GS2U_WorldLevel = 11926,
+         MSG_U2GS_RequestCollectionWordsAward = 13303,
+         MSG_GS2U_UneedleaveOutMap = 13350,
+         MSG_U2GS_KingBattleGetBuffInfo = 13534,
+         MSG_U2GS_AngelInvestmentGet = 13560,
+         MSG_U2GS_RequestDarknessInfo = 13748,
+         MSG_GS2U_OperateExchangeAck = 15234,
+         MSG_U2GS_KingBattleBuyAttackerBuff = 15321,
+         MSG_U2GS_KillRank = 16112,
+         MSG_GS2U_ChangeGuardianDeclaration = 17201,
+         MSG_GS2U_AttackerDefenderQuotaNumberAck = 17236,
+         MSG_U2GS_SelfDarkness = 17399,
+         MSG_U2GS_DeadLineGiftOpen = 17692,
+         MSG_GS2U_TriggerEvent = 17922,
+         MSG_GS2U_HDBattlePhase = 18287,
+         MSG_GS2U_SelectDanceID = 18854,
+         MSG_GS2U_PlayerAnswerResult = 19380,
+         MSG_U2GS_RequestEscortList = 22011,
+         MSG_GS2U_KillPlayerNumber = 22196,
+         MSG_U2GS_RequestHDBattle = 22289,
+         MSG_GS2U_ReturnEscortList = 22622,
+         MSG_U2GS_KingBattleBuyDeffenderBuff = 22897,
+         MSG_GS2U_OperateAct_Exchange = 23160,
+         MSG_U2GS_GiveMarrorFlower = 24589,
+         MSG_GS2U_AnswerQuestion = 24716,
+         MSG_U2GS_RequestMarrorInfo = 25482,
+         MSG_U2GS_DanceArea = 26150,
+         MSG_GS2U_SwitchDance = 26463,
+         MSG_GS2U_DarknessRank = 26625,
+         MSG_U2GS_RequestJoinHDBattle = 27415,
+         MSG_U2GS_KingBattleBuyMirrorBuff = 27423,
+         MSG_U2GS_OperateExchangeRefresh = 27754,
+         MSG_GS2U_UpdateArenaTeamMember = 28161,
+         MSG_GS2U_HDGatherSuccess = 28188,
+         MSG_U2GS_KingBattleBuyDeffenderBuffOneKey = 29010,
+         MSG_U2GS_RequestHDBattleExploits = 29169,
+         MSG_GS2U_SelectCamp = 29521,
+         MSG_GS2U_InitWildBossInfo = 29701,
+         MSG_U2GS_PlayerAnswer = 30017,
+         MSG_U2GS_QueryMapBossInfo = 30797,
+         MSG_GS2U_SevenMissionDataUpdate = 31054,
+         MSG_U2GS_BuyTime = 31541,
+         MSG_U2GS_AttackDefenderQuotaNumber = 32440,
+         MSG_GS2U_BreakDance = 32524,
+         MSG_GS2U_SyncGBInfo = 32568,
+         MSG_U2GS_SevenMissionCompletion = 32637,
+         MSG_U2GS_SelectDanceID = 32796,
+         MSG_U2GS_RequestLottery = 33432,
+         MSG_GS2U_ApplyAnswerResult = 34469,
+         MSG_U2GS_GetAnswerScore = 34500,
+         MSG_GS2U_LotteryMoney = 34899,
+         MSG_GS2U_HDBattleOpenSurplusTime = 35345,
+         MSG_U2GS_RequestEscortSolo = 35456,
+         MSG_U2GS_RequestCrosArenaRanks = 35544,
+         MSG_GS2U_KingBattleRepairMirror = 36559,
+         MSG_U2GS_OpenLotteryForm = 36633,
+         MSG_U2GS_RequestEntrance = 36679,
+         MSG_GS2U_CollectionWords_Sync = 36931,
+         MSG_GS2U_IconLight = 37401,
+         MSG_GS2U_AnswerRank = 37510,
+         MSG_U2GS_RequestQueueNumber = 37889,
+         MSG_GS2U_AddArenaTeamMemberRequest = 38390,
+         MSG_GS2U_CurEscortType = 38930,
+         MSG_GS2U_KingBattleResult = 39124,
+         MSG_U2GS_RequestOPActivityConfList = 39583,
+         MSG_U2GS_AngelInvestment = 39626,
+         MSG_GS2U_ArenaBattleList = 39837,
+         MSG_GS2U_CrosArenaBattleRanks = 39892,
+         MSG_GS2U_ActivityStateInfo = 39932,
+         MSG_U2GS_StartArena = 40411,
+         MSG_U2GS_GetChargeOrUseGift = 40452,
+         MSG_U2GS_QuerySevenMissionData = 40751,
+         MSG_GS2U_RequestPictureNoticeAck = 40770,
+         MSG_U2GS_RequestCrosRanks = 40839,
+         MSG_GS2U_ArenaRoleDead = 41305,
+         MSG_GS2U_DarknessInfo = 42279,
+         MSG_GS2U_GBList = 43821,
+         MSG_GS2U_RobitAutoAnswer = 44169,
+         MSG_GS2U_NoticeWildBossDead = 44223,
+         MSG_GS2U_DeadLineGiftList = 44602,
+         MSG_GS2U_PlayerAnswerInfo = 44793,
+         MSG_U2GS_GBLockGather = 44967,
+         MSG_GS2U_RequestCollectionWordsAwardAck = 45124,
+         MSG_U2GS_GuardianDeclaration = 45851,
+         MSG_U2GS_RequestEnterDarkness = 46152,
+         MSG_GS2U_RequestChargeOrUseListAck = 46710,
+         MSG_U2GS_RequestLotteryResetTime = 47272,
+         MSG_U2GS_RequestEnterNvasionMap = 47605,
+         MSG_CrosArenaMatch = 47633,
+         MSG_U2GS_DarknessRank = 48307,
+         MSG_GS2U_HDBattleCD = 48653,
+         MSG_U2GS_OpenSelectCamp = 48829,
+         MSG_GS2U_ACCityMonsterSurplusTime = 49114,
+         MSG_U2GS_KingBattleRepairMirror = 49553,
+         MSG_GS2U_NoticeWildBossTarget = 49672,
+         MSG_U2GS_RequestEscortRob = 49816,
+         MSG_GS2U_SendAnswerData = 50072,
+         MSG_GS2U_LotteryResult = 50206,
+         MSG_GS2U_CrosArenaBattleHighRanks = 51053,
+         MSG_GS2U_DarknessKillOrBeKill = 51195,
+         MSG_U2GS_ApplyAnswer = 52878,
+         MSG_GS2U_ActivityEnd = 53764,
+         MSG_GS2U_ActionList = 55352,
+         MSG_GS2U_JoinHDBattle = 55946,
+         MSG_GS2U_DestinyStar = 56056,
+         MSG_GS2U_SevenMissionDataList = 56079,
+         MSG_GS2U_MyAnswerRank = 56278,
+         MSG_GS2U_LotteryNote = 56467,
+         MSG_GS2U_EscortResult = 56809,
+         MSG_GS2U_HDBattleExploits = 56852,
+         MSG_GS2U_DarknessQuenenState = 57194,
+         MSG_U2GS_RequestEscortTeam = 57606,
+         MSG_GS2U_DarknessCamp = 59018,
+         MSG_GS2U_DarknessState = 59020,
+         MSG_U2GS_QueryAngelInvestment = 60162,
+         MSG_GS2U_ActivityStateInit = 60994,
+         MSG_GS2U_SelfDarkness = 61253,
+         MSG_DeleteArenaTeamMember = 61899,
+         MSG_U2GS_SelectCamp = 62131,
+         MSG_GS2U_ActivityState = 62178,
+         MSG_U2GS_GBRequestEnterMapLine = 62774,
+         MSG_GS2U_EnterDarkness = 63153,
+         MSG_GS2U_TriggerEventResult = 63567,
+         MSG_GS2U_AllAnswerQuestion = 63577,
+         MSG_GS2U_KingBattleBuffInfo = 64360,
+         MSG_U2GS_RequestHDBattleCD = 64722,
+         MSG_GS2U_QueueNumber = 64834,
+         MSG_U2GS_BreakDance = 65134,
+         //activity end
+         //arena begin
+         MSG_U2GS_AtuoSubmitTask = 9064,
+         MSG_GS2U_ReturnKingList = 9433,
+         MSG_U2GS_WorshipTarget = 15929,
+         MSG_GS2U_BattleStartSec = 20351,
+         MSG_U2GS_RequestKingList = 23086,
+         MSG_GS2U_BattleNotes = 26077,
+         MSG_U2GS_RequestPlayerInfo = 28940,
+         MSG_GS2U_Ladder1v1BattleEnd = 34585,
+         MSG_U2GS_GiveUpChallenge = 39273,
+         MSG_U2GS_ChallengeTargetByRank = 42789,
+         MSG_U2GS_FreshLadderTargetList = 45193,
+         MSG_GS2U_LadderTargetList = 45601,
+         MSG_U2GS_ChallengeTargetByRoleID = 47690,
+         MSG_GS2U_PrepareSec = 50114,
+         MSG_U2GS_OpenLadder1v1 = 51570,
+         MSG_U2GS_RequestBattleNotes = 64668,
+         //arena end
+         //aruna begin
+         MSG_GS2U_WWSyncMapInfoTwo = 9437,
+         MSG_GS2U_WWSyncMapInfo = 10735,
+         MSG_GS2U_WWFormData = 11034,
+         MSG_GS2U_WWList = 12254,
+         MSG_GS2U_WWPlayerInfo = 19107,
+         MSG_U2GS_RequestWWLineList = 29239,
+         MSG_U2GS_GetLastReward = 37977,
+         MSG_U2GS_SubmitSamplePoint = 43112,
+         MSG_U2GS_RequestWWForm = 46085,
+         MSG_U2GS_GetPhaseReward = 49362,
+         MSG_GS2U_WWEscortResult = 51365,
+         MSG_GS2U_FreshWWFormData = 51676,
+         MSG_GS2U_WWSyncMapInfoOne = 52195,
+         MSG_U2GS_RequestWWPlayerInfo = 56112,
+         MSG_U2GS_WWRequestEnterMapLine = 57345,
+         MSG_GS2U_WWSyncMapInfoThree = 61143,
+         //aruna end
+         //bag begin
+         MSG_MoveGoods = 645,
+         MSG_U2GS_SellAllEquip = 727,
+         MSG_GS2U_PlayerExtenInfo = 807,
+         MSG_GS2U_AddTagResult = 1210,
+         MSG_U2GS_EquipRefineOneKey = 1328,
+         MSG_GS2U_GemEmbedAdd = 1331,
+         MSG_GS2U_RequestForeverLimitIDAck = 2011,
+         MSG_U2GS_GetPortraitFrameList = 2024,
+         MSG_GS2U_AddPraise = 3297,
+         MSG_GS2U_EquipRefineLevel = 3311,
+         MSG_GS2U_UpLoadingPhotoResult = 3498,
+         MSG_GS2U_LookRPInfo_Result = 3869,
+         MSG_GS2U_DeleteGoods = 3911,
+         MSG_U2GS_EquipRefine = 5183,
+         MSG_GS2U_EquipRecastInfo = 6004,
+         MSG_GS2U_GemEmbedMakeResult = 6557,
+         MSG_GS2U_Report = 7316,
+         MSG_U2GS_GemEmbedOff = 8935,
+         MSG_U2GS_GemEmbedMakeOnce = 9407,
+         MSG_U2GS_EquipEnhanced = 9940,
+         MSG_GS2U_EquipGemInfos = 10850,
+         MSG_U2GS_LookRPInfo_Request = 11113,
+         MSG_GS2U_UpdateNormalItem = 11295,
+         MSG_GS2U_UseItemFireWorksNotice = 11434,
+         MSG_GS2U_LookRPInfo_Pet = 11943,
+         MSG_GS2U_WashEquip = 13489,
+         MSG_GS2U_LookRPInfo_Marriage = 14014,
+         MSG_GS2U_UpdateFurnitureStorageSlot = 14780,
+         MSG_GS2U_EquipRefineResult = 15630,
+         MSG_U2GS_GemEmbedOn = 18955,
+         MSG_U2GS_LockGoods = 19361,
+         MSG_U2GS_Report = 20182,
+         MSG_GS2U_InitRecycle = 20967,
+         MSG_GS2U_AddImpressionResult = 21079,
+         MSG_GS2U_InitSlot = 21902,
+         MSG_OpenNewBagSlot = 22696,
+         MSG_GS2U_AddEquipItemToBag = 22995,
+         MSG_GS2U_UpdateEquipItem = 24074,
+         MSG_GS2U_AddNormalItemToBag = 26330,
+         MSG_GS2U_ExchangeResult = 26628,
+         MSG_GS2U_Forbidden_Load_Photo = 26639,
+         MSG_U2GS_GemOperate = 26795,
+         MSG_GS2U_GainPraise = 26975,
+         MSG_GS2U_RequestExchangeResourceForeverLimitIDAck = 27150,
+         MSG_GS2U_GemEmbedDelete = 29137,
+         MSG_U2GS_EquipRecast = 29280,
+         MSG_GS2U_LookRPInfo_Fashion = 29456,
+         MSG_GS2U_EquipEnhancedProp = 29649,
+         MSG_U2GS_EquipUpStar = 32827,
+         MSG_GS2U_InitItem = 33727,
+         MSG_UpLoadingPhoto = 34013,
+         MSG_U2GS_AddImpression = 34496,
+         MSG_GS2U_GetEssenceNum = 34792,
+         MSG_U2GS_RequesBuyID = 35814,
+         MSG_U2GS_RequesForeverLimitID = 36018,
+         MSG_U2GS_GemEmbedMake = 36466,
+         MSG_U2GS_RequestExchangeResourceForeverLimitID = 37637,
+         MSG_GS2U_QueryEquipResult = 38681,
+         MSG_GS2U_EquipGemInfoUpdate = 38946,
+         MSG_GS2U_LockGoods = 39307,
+         MSG_GS2U_EquipUpStarInfoList = 39417,
+         MSG_U2GS_ResourceExchange = 39883,
+         MSG_GS2U_Report_Max = 41093,
+         MSG_U2GS_EquipRecastAdvance = 41850,
+         MSG_GS2U_ResourceExchangeList = 42259,
+         MSG_DelTag = 42903,
+         MSG_GS2U_GemEmbedInit = 43498,
+         MSG_U2GS_HonorLevel = 45460,
+         MSG_U2GS_PlayerExtenInfo = 46605,
+         MSG_U2GS_AddTag = 48135,
+         MSG_GS2U_EqupmentCombinAck = 48238,
+         MSG_U2GS_AddPraise = 48887,
+         MSG_U2GS_UseItem = 48980,
+         MSG_U2GS_OperatePortraitFrame = 49172,
+         MSG_U2GS_QueryEquipByUID = 49287,
+         MSG_U2GS_EquipResolve = 50942,
+         MSG_U2GS_EquipUpStarOneKey = 51276,
+         MSG_U2GS_UseMarriageTitleItem = 51884,
+         MSG_DelImpression = 51952,
+         MSG_U2GS_SortItem = 52715,
+         MSG_GS2u_OwnPortraitFrame = 54772,
+         MSG_GS2U_InitEquip = 56720,
+         MSG_GS2U_EquipUpStarRes = 57099,
+         MSG_U2GS_WashEquip = 59079,
+         MSG_GS2U_EquipRefineResultOneKey = 59719,
+         MSG_GS2U_EquipRecastInfoInit = 60660,
+         MSG_GS2U_RequesBuyIDAck = 60777,
+         MSG_U2GS_SharedEquip = 63085,
+         MSG_GS2U_QueryItemResult = 63112,
+         MSG_U2GS_RequestExchangeResource = 65142,
+         //bag end
+         //battle begin
+         MSG_GS2U_CarrierUseSkillToObject = 8568,
+         MSG_GS2U_AttackOffsetEffect = 10740,
+         MSG_GS2U_DeadToTeam = 14332,
+         MSG_GS2U_AttackResult = 17141,
+         MSG_GS2U_BattleLearnRequest = 17503,
+         MSG_U2GS_BattleLearnAck = 18083,
+         MSG_GS2U_AttackSpeed = 18191,
+         MSG_GS2U_TrunBattleInitList = 20153,
+         MSG_GS2U_CallSkill = 20695,
+         MSG_GS2U_Dead = 24104,
+         MSG_GS2U_BattleLearnResult = 26661,
+         MSG_GS2U_TrunBattleResultList = 28414,
+         MSG_GS2U_UseSkillToPos = 29375,
+         MSG_U2GS_RequestBattleEnd = 30974,
+         MSG_GS2U_ResponseChangePKMode = 31391,
+         MSG_GS2U_TriggerSkill = 34737,
+         MSG_C2S_PlayerUseShiftSkill = 36467,
+         MSG_GS2U_IsTriggerCountDown = 36963,
+         MSG_GS2U_MonsterSpeed = 37689,
+         MSG_C2S_PlayerUseSkill = 38338,
+         MSG_GS2U_ResponseBattleAck = 47484,
+         MSG_U2GS_BattleLearn = 48142,
+         MSG_GS2U_UseSkillToObject = 48800,
+         MSG_GS2U_BreakSkill = 51286,
+         MSG_GS2U_ForceDeadNow = 52551,
+         MSG_U2GS_RequestChangePKMode = 55523,
+         MSG_U2GS_RequestBattleAck = 64584,
+         //battle end
+         //buff begin
+         MSG_GS2U_BuyBuffSuccess = 5950,
+         MSG_U2GS_BuyBuff = 15759,
+         MSG_GS2U_BuffInfo = 43249,
+         MSG_U2GS_DelBuff = 58064,
+         MSG_GS2U_BuffHurt = 62410,
+         //buff end
+         //business begin
+         MSG_GS2U_SelfDialInfo = 774,
+         MSG_GS2U_DialCostList = 6463,
+         MSG_U2GS_RequestGetGift = 10549,
+         MSG_GS2U_RechargeSuccess = 13608,
+         MSG_U2GS_RequestBusinessInfo = 19255,
+         MSG_GS2U_DialItemList = 31813,
+         MSG_U2GS_RequestSelfDialInfo = 37779,
+         MSG_GS2U_BusinessPlayerInfo = 42399,
+         MSG_GS2U_BusinessInfo = 47786,
+         MSG_GS2U_BusinessCAInfo = 48860,
+         MSG_U2GS_RequestJqueryrotate = 49006,
+         MSG_GS2U_JqueryrotateResult = 49142,
+         MSG_U2GS_RequestGetBox = 54102,
+         MSG_GS2U_DialRewardList = 55533,
+         //business end
+         //companion begin
+         MSG_U2GS_KickCompanion = 1636,
+         MSG_U2GS_RequestCompanion = 1747,
+         MSG_U2GS_CreateCompanion = 3702,
+         MSG_U2GS_InviteFriend = 8261,
+         MSG_U2GS_InviteToMe = 9254,
+         MSG_GS2U_RequestCompanion = 17921,
+         MSG_GS2U_RecvInviteFriend = 21357,
+         MSG_U2GS_AgreeInvite = 27243,
+         MSG_GS2U_ToTargetFriendAck = 28279,
+         MSG_U2GS_ToTargetFriendResult = 29321,
+         MSG_GS2U_InviteFriendToMe = 31926,
+         MSG_U2GS_ChangePoseID = 43114,
+         MSG_U2GS_ToTargetFriend = 43532,
+         MSG_U2GS_ExitCompanion = 65476,
+         //companion end
+         //copy begin
+         MSG_U2GS_BuyFestivalPacket = 28,
+         MSG_U2GS_CopyMapSchedulePlayCharacterOver = 445,
+         MSG_GS2U_SendGuildCopyOpenTime = 1091,
+         MSG_U2GS_RequestMaterialInfo = 1890,
+         MSG_GS2U_IsGuildCopyOpen = 2956,
+         MSG_GS2U_SpiritArea_Tick_Sync = 4640,
+         MSG_GS2U_TowerInfo = 5047,
+         MSG_U2GS_startNextChapter = 5738,
+         MSG_UpdataGuildHurtToBoss = 9953,
+         MSG_GS2U_BossBattleRankResult = 11166,
+         MSG_U2GS2U_CopyMapScheduleShow2 = 12790,
+         MSG_U2GS_CopyMapSchedulePlayAnimationOver = 13404,
+         MSG_GS2U_ChapterInfo = 14311,
+         MSG_U2GS_EnterBossBattle = 17919,
+         MSG_GS2U_CopyMapLeftTime = 19024,
+         MSG_GS2U_CopyMapSchedulePlayCharacter = 21999,
+         MSG_U2GS_QueryDevilCopyMapRankList = 25584,
+         MSG_GS2U_CopyMapSchedulePlayAnimation = 29214,
+         MSG_U2GS_EnterGuildCopy = 29950,
+         MSG_GS2U_MaterialInfo = 30421,
+         MSG_U2GS_MoneyDungeonGiveup = 30988,
+         MSG_U2GS_QueryDevilCopyMapStarList = 33021,
+         MSG_U2GS_UpTower = 33676,
+         MSG_GS2U_UpdateDevilCopyMapStar = 34634,
+         MSG_GS2U_BossBattleState = 34660,
+         MSG_ActiveGuildCopy = 35198,
+         MSG_U2GS_EnterFestivalCopy = 35907,
+         MSG_U2GS_RequestAutoDeal = 37044,
+         MSG_U2GS_GoonCopyMap = 38214,
+         MSG_GS2U_DevilCopyMapRankList = 40789,
+         MSG_U2GS_MoneyDungeonNext = 41847,
+         MSG_GS2U_MoneyDungeonInfo = 44024,
+         MSG_GS2U_SpiritArea_Wake_Sync = 46157,
+         MSG_GS2U_DevilCopyMapStarList = 48227,
+         MSG_UpdataHurtToBoss = 51188,
+         MSG_GS2U_FestivalTimeInfo = 55483,
+         MSG_U2GS2U_BuyCopyReward = 56771,
+         MSG_GS2U_CopySpecialSchedule = 62371,
+         //copy end
+         //fashion begin
+         MSG_U2GS_ActiveFashionSuit = 1581,
+         MSG_U2GS_FashionBuyRequest = 9628,
+         MSG_U2GS_IsDisplayFashion = 13094,
+         MSG_U2GS_OperateFashion = 26846,
+         MSG_GS2U_FashionList = 27234,
+         MSG_GS2U_ActiveFashionSuitList = 27729,
+         MSG_U2GS_BuyFashion = 46000,
+         MSG_U2GS_FashionRoomLevelUp = 53770,
+         MSG_GS2U_FashionResult = 58357,
+         MSG_GS2U_FashionGiftAck = 61261,
+         MSG_U2GS_FashionThanksMail = 61470,
+         MSG_GS2U_FashionRoomLevelUp = 62056,
+         //fashion end
+         //floating begin
+         MSG_U2GS_RequestFloatingAward = 31970,
+         MSG_GS2U_ReceiveFloatingAward = 33120,
+         MSG_GS2U_FloatingSchedule = 37961,
+         MSG_GS2U_FloatingAward = 48971,
+         //floating end
+         //friend begin
+         MSG_GS2U_Friend2Search_Ack = 487,
+         MSG_GS2U_Friend2SimpleList_Ack = 758,
+         MSG_U2GS_Friend2CrossAdd2_Request = 2927,
+         MSG_U2GS_Friend2ApplicantUseOneKey_Request = 2984,
+         MSG_GS2U_Friend2FormalChatVoice_AckR = 3301,
+         MSG_GS2U_Friend2BanFromFormal_Ask = 3598,
+         MSG_U2GS_Friend2Recommend_Request = 3794,
+         MSG_GS2U_Friend2AddFromBlack_Ask = 4034,
+         MSG_GS2U_Friend2FormalChatVoice_AckS = 5138,
+         MSG_U2GS_Friend2CrossAdd_Request = 5495,
+         MSG_GS2U_Friend2ApplicantReset_Sync = 5669,
+         MSG_U2GS_Friend2Temp_Request = 7582,
+         MSG_GS2U_Friend2BanWithUnbanAndDel_Ask = 9003,
+         MSG_U2GS_Friend2GetBack_Ignore = 9362,
+         MSG_U2GS_Friend2GetBack_Add = 9401,
+         MSG_U2GS_Friend2Ban_Request = 11969,
+         MSG_GS2U_Friend2CrossAdd_Sync = 12497,
+         MSG_U2GS_Friend2BanWithUnban_Reply = 14850,
+         MSG_GS2U_Friend2TempReset_Sync = 15095,
+         MSG_GS2U_Friend2CrossAll_Sync = 15409,
+         MSG_U2GS_Friend2ForLook_Request = 15730,
+         MSG_GS2U_Friend2FormalForMarriage_Sync = 16418,
+         MSG_U2GS_Friend2Search_Request = 16938,
+         MSG_GS2U_Friend2GetBack_SyncInfo = 17555,
+         MSG_U2GS_Friend2WantChat_Request = 18482,
+         MSG_GS2U_Friend2FormalChat_Ack = 20057,
+         MSG_U2GS_Friend2GetBack_OneKeyToAdd = 20121,
+         MSG_GS2U_Friend2WantChat_Ack = 20478,
+         MSG_GS2U_Friend2BlackReset_Sync = 23862,
+         MSG_U2GS_Friend2FormalChat_Request = 25005,
+         MSG_GS2U_Friend2CrossDel_Ack = 25297,
+         MSG_U2GS_Friend2Black_Request = 25457,
+         MSG_GS2U_Friend2ClosenessChange_Sync = 26867,
+         MSG_U2GS_Friend2Applicant_Request = 28136,
+         MSG_U2GS_Friend2BanWithDel_Reply = 29035,
+         MSG_U2GS_Friend2LimitSearch_Request = 32837,
+         MSG_GS2U_Friend2BanWithUnban_Ask = 34263,
+         MSG_GS2U_Friend2MakeFormal_Sync = 34421,
+         MSG_GS2U_Friend2FormalReset_Sync = 35374,
+         MSG_GS2U_Friend2CrossAdd2Failed_Ack = 35704,
+         MSG_U2GS_Friend2Del_Request = 38445,
+         MSG_U2GS_Friend2FormalChatVoice_Request = 38617,
+         MSG_GS2U_Friend2GetBack_IgnoreRet = 39877,
+         MSG_U2GS_Friend2AddFromBlack_Reply = 40357,
+         MSG_GS2U_Friend2ForLook_Ack = 40418,
+         MSG_U2GS_Friend2Formal_Request = 41453,
+         MSG_U2GS_Friend2ApplicantUse_Request = 42263,
+         MSG_U2GS_Friend2SimpleList_Requets = 43748,
+         MSG_U2GS_Friend2CrossAll_Request = 44695,
+         MSG_U2GS_Friend2FormalOP_Request = 45726,
+         MSG_GS2U_Friend2CrossAdd2_Ack = 46911,
+         MSG_GS2U_Friend2CrossInit_Sync = 46970,
+         MSG_GS2u_Friend2Like_Ack = 48537,
+         MSG_U2GS_Friend2CrossDel_Request = 48565,
+         MSG_GS2U_Friend2GetBack_AddRet = 54190,
+         MSG_U2GS_Friend2FormalForMarriage_Request = 55870,
+         MSG_GS2U_Friend2Recommend_Ack = 59890,
+         MSG_U2GS_Friend2BanWithUnbanAndDel_Reply = 60742,
+         MSG_U2GS_Friend2Add_Request = 60911,
+         MSG_U2GS_Friend2Unban_Request = 64260,
+         //friend end
+         //godweapon begin
+         MSG_GS2U_LevelUpGodWeaponSkillResult = 14589,
+         MSG_GS2U_LevelUpGodWeaponResult = 21218,
+         MSG_U2GS_LevelUpGodWeaponSkill = 21847,
+         MSG_U2GS_LevelUpGodWeapon = 27135,
+         MSG_GS2U_InitGodWeapon = 59144,
+         //godweapon end
+         //guild begin
+         MSG_U2GS_Guild_GodBless_Schedule_Reward_Request = 169,
+         MSG_U2GS_Guild_Exchange_Request = 461,
+         MSG_U2GS_RequestJoinGuildList = 486,
+         MSG_U2GS_ShopUpgrade = 620,
+         MSG_GS2U_ExpeditionGlobalMapInfoList = 788,
+         MSG_U2GS_RequestGuildTask = 1519,
+         MSG_U2GS_QueryExpeditionGlobalMapInfo = 2120,
+         MSG_GS2U_Guild_ExchangeAll_Sync = 2440,
+         MSG_GS2U_Guild_FastJoin_Get_Ack = 2591,
+         MSG_U2GS_ChangeNotice = 2658,
+         MSG_U2GS_GuildReward = 2800,
+         MSG_U2GS_Guild_FastJoin_Set_Request = 2843,
+         MSG_U2GS_OneKeyRecruit_Request = 3207,
+         MSG_U2GS_QueryExpeditionMapInfo = 3559,
+         MSG_U2GS_SummonHX = 3691,
+         MSG_GS2U_JoinGuild_Sync = 3861,
+         MSG_U2GS_Guild_GodBless_Schedule_Request = 4029,
+         MSG_GS2U_QueryGuildInfoByRoleID_Ack = 4287,
+         MSG_GS2U_ExpeditionBroadcastPos = 4888,
+         MSG_U2GS_ChangeLeader = 5315,
+         MSG_U2GS_RequestDonateTimes = 5654,
+         MSG_U2GS_RequestGuildBattleResult = 5879,
+         MSG_U2GS_OpenGuildForm = 6179,
+         MSG_GS2U_Guild_SupplicateGive_Ack = 6325,
+         MSG_GS2U_RequestJoinGuild_Ack = 7364,
+         MSG_GS2U_Guild_Exchange_Ack = 7693,
+         MSG_GS2U_GuildLoopTask_MyGet_Sync = 8415,
+         MSG_U2GS_ResearchGuildSkill = 8607,
+         MSG_GS2U_ShopUpgrade = 8934,
+         MSG_U2GS_CreateGuild = 8957,
+         MSG_GS2U_ISInApplyInfo = 9849,
+         MSG_GS2U_ExpeditionMapBattleInfoList = 10027,
+         MSG_U2GS_GuildLoopTask_OpenUI_Request = 10087,
+         MSG_GS2U_Guild_GodBless_Schedule_Sync = 10595,
+         MSG_GS2U_GuildBuffRole = 10832,
+         MSG_GS2U_RequestGuildBossInfo_Sync = 11371,
+         MSG_U2GS_Guild_SnowmanReward_Request = 11396,
+         MSG_GS2U_GuildWarCannonHit = 11517,
+         MSG_GS2U_GuildBattleApply = 11671,
+         MSG_GS2U_Guild_FastJoin_Set_Ack = 11867,
+         MSG_U2GS_GivePower = 12786,
+         MSG_U2GS_SummonMonster = 13103,
+         MSG_GS2U_GuildSkill = 13522,
+         MSG_GS2U_Guild_SnowmanCompleteCount_Sync = 14295,
+         MSG_GS2U_Recruit = 14390,
+         MSG_GS2U_Guild_FastJoin_Ack = 14772,
+         MSG_U2GS_GetGuildHomeReward = 14913,
+         MSG_U2GS_EnterGuildHome = 15968,
+         MSG_U2GS_Bidding = 16097,
+         MSG_GS2U_Guild_SnowmanExtraRes_Sync = 16743,
+         MSG_U2GS_ExpeditionBroadcastPos = 17882,
+         MSG_GS2U_GuildIDList = 17944,
+         MSG_U2GS_getGuildBuff = 18066,
+         MSG_GS2U_DonateSuccess = 18308,
+         MSG_U2GS_GuildLoopTask_WantGet_Request = 18837,
+         MSG_U2GS_RequestGuildBuff = 18969,
+         MSG_U2GS_Recruit = 19036,
+         MSG_U2GS_MyGuildKllBossRank = 19139,
+         MSG_U2GS_RequestGuildWar = 19922,
+         MSG_GS2U_MyGuildBossRank = 20300,
+         MSG_U2GS_RequestGuildBossInfo = 20889,
+         MSG_GS2U_GuildBossRank = 22236,
+         MSG_GS2U_ChangeDenoter = 22996,
+         MSG_U2GS_KickGuild = 23307,
+         MSG_U2GS_Guild_GodBless_Request = 24009,
+         MSG_U2GS_Guild_Supplicate_Request = 24068,
+         MSG_GS2U_Guild_SupplicateGiveF_Ack = 24617,
+         MSG_U2GS_Upgrade = 25266,
+         MSG_U2GS_GuildBossBuyBuff = 25611,
+         MSG_GS2U_GuildLoopTask_WantGive_Ack = 25714,
+         MSG_GS2U_Guild_SnowmanSettle_Sync = 26620,
+         MSG_GS2U_OccupyOwnerChange = 27260,
+         MSG_U2GS_AgreeRecruit = 27924,
+         MSG_U2GS_SupportImpeachCreater = 28458,
+         MSG_GS2U_ExpeditionFinalInfo = 29191,
+         MSG_GS2U_GuildTask = 29256,
+         MSG_U2GS_Guild_FairgroundRide_Request = 29537,
+         MSG_U2GS_RequestGuildSkill = 29591,
+         MSG_U2GS_Guild_SnowmanCheck_Request = 31731,
+         MSG_GS2U_RequestLookMemberList = 32102,
+         MSG_GS2U_GivePower = 32732,
+         MSG_GS2U_Guild_SupplicateGive_Sync = 32759,
+         MSG_U2GS_ImpeachCreater = 33039,
+         MSG_U2GS_GuildLoopTask_WantGive_Request = 33090,
+         MSG_U2GS_RequestGuildRank = 33406,
+         MSG_GS2U_RequestJoinGuildList = 33524,
+         MSG_GS2U_Guild_SnowmanSnowman_Sync = 33606,
+         MSG_GS2U_Guild_OpenSupplication_Ack = 33889,
+         MSG_U2GS_GuildLoopTask_History_Request = 35175,
+         MSG_U2GS_StudyGuildSkill = 36701,
+         MSG_U2GS_ChangeDenoter = 36937,
+         MSG_U2GS_Guild_FastJoin_Get_Request = 38175,
+         MSG_U2GS_GuildList = 38435,
+         MSG_GS2U_Guild_Supplicate_Ack = 38660,
+         MSG_U2GS_AcceptGuildTask = 39014,
+         MSG_GS2U_Guild_FairgroundEnter_Ack = 39163,
+         MSG_U2GS_DeleteGuild = 39422,
+         MSG_GS2U_RefreshGuildProp = 40691,
+         MSG_GS2U_QueryImpeachInfo = 41091,
+         MSG_GS2U_OneKeyRecruit_Ack = 41203,
+         MSG_GS2U_Upgrade_Ack = 41766,
+         MSG_GS2U_GuildWarRankForHud = 41883,
+         MSG_U2GS_ChangeGuildName = 42104,
+         MSG_U2GS_Guild_SnowmanDonate_Request = 42200,
+         MSG_GS2U_Guild_FairgroundRide_Sync = 42475,
+         MSG_GS2U_ReturnDonateTimes = 42575,
+         MSG_GS2U_GuildWarData = 43631,
+         MSG_U2GS_GetGuildPrize = 44491,
+         MSG_U2GS_QueryExpeditionFinalInfo = 44549,
+         MSG_GS2U_GuildOpResult = 45041,
+         MSG_GS2U_ChangeNotice = 46512,
+         MSG_GS2U_Guild_SnowmanAll_Sync = 46692,
+         MSG_GS2U_GuildBuff = 46706,
+         MSG_U2GS_Guild_ShopBuy_Request = 50110,
+         MSG_U2GS_Guild_FastJoin_Request = 51044,
+         MSG_U2GS_RequestJoinGuild = 51228,
+         MSG_GS2U_Guild_GodBless_Ack = 51273,
+         MSG_GS2U_GuildWarEnd = 51846,
+         MSG_GS2U_Guild_SnowmanBegin_Sync = 52004,
+         MSG_U2GS_Guild_FairgroundEnter_Request = 52175,
+         MSG_U2GS_QueryGuildInfoByRoleID_Request = 52447,
+         MSG_U2GS_DonateMoney = 52751,
+         MSG_U2GS_RequestEnterGuildBoss = 53337,
+         MSG_GS2U_BiddingGuildMsg = 53493,
+         MSG_U2GS_EnterGuildBattle = 53913,
+         MSG_U2GS_Guild_OpenSupplication_Request = 54177,
+         MSG_GS2U_Guild_GodBless_Schedule_Reward_Ack = 54441,
+         MSG_GS2U_GuildBossResoult = 54542,
+         MSG_U2GS_OpenGuildShop = 54933,
+         MSG_U2GS_GuildLoopTask_Give_Request = 55038,
+         MSG_U2GS_DealRequestJoin = 55171,
+         MSG_U2GS_RequestGuildInfo_Request = 55372,
+         MSG_GS2U_GuildBattleResult = 55408,
+         MSG_U2GS_Guild_SupplicateGive_Request = 55653,
+         MSG_U2GS_QueryExpeditionMapBattleInfo = 55919,
+         MSG_U2GS_GiveUpGuildTask = 56130,
+         MSG_U2GS_BuyGuildBuff = 56586,
+         MSG_GS2U_ExpeditionQuenenState = 57282,
+         MSG_GS2U_GuildLoopTask_Give_Ack = 57742,
+         MSG_GS2U_OpenGuildForm = 57773,
+         MSG_U2GS_UseCannon = 58222,
+         MSG_GS2U_GuildList = 58381,
+         MSG_GS2U_Guild_ShopBuy_Ack = 58426,
+         MSG_GS2U_MyGuildKillBossRank = 59022,
+         MSG_GS2U_ExpeditionMapInfoList = 59443,
+         MSG_GS2U_GuildLoopTask_History_Ack = 59667,
+         MSG_U2GS_GuildBattleApply = 61033,
+         MSG_U2GS_ExitGuild = 61035,
+         MSG_GS2U_ChangeGuildName = 61842,
+         MSG_GS2U_Guild_SnowmanPlayer_Sync = 62266,
+         MSG_GS2U_GuildWar = 62357,
+         MSG_GS2U_ImpeachInfo = 63767,
+         MSG_U2GS_GiveMeExpeditionRewardEverDay = 64755,
+         MSG_U2GS_RequestLookMemberList = 65180,
+         MSG_GS2U_GuildLoopTask_OpenUI_Ack = 65431,
+         //guild end
+         //home begin
+         MSG_U2GS_EnterHome = 2529,
+         MSG_GS2U_FreshHomeAreaInfo = 2716,
+         MSG_U2GS_RequestVisitRecord = 2847,
+         MSG_GS2U_Invitefriendstobed = 4566,
+         MSG_GS2U_HomeFarming_Sync = 8353,
+         MSG_U2GS_GetPetFood = 8929,
+         MSG_GS2U_UseFurnitrueResult = 9902,
+         MSG_GS2U_SendAllFurniInfo_Sync = 12587,
+         MSG_U2GS_GivingFurniTrueForPartner = 14027,
+         MSG_GS2U_PutOutPetFarmingResults_Sync = 15080,
+         MSG_U2GS_UseFurnitrue = 16395,
+         MSG_U2GS_SaveFurniTrueScheme = 17498,
+         MSG_GS2U_SetGreetingsResult_Sync = 17845,
+         MSG_U2GS_SetGreetings = 18410,
+         MSG_U2GS_ChangedecorateModel = 20878,
+         MSG_GS2U_EnterHome = 22475,
+         MSG_GS2U_ChangedecorateModelResult = 23269,
+         MSG_GS2U_GetPetFoodResults_Sync = 24863,
+         MSG_GS2U_PutPetInFarmingResults_Sync = 25191,
+         MSG_U2GS_HomeVisit = 29314,
+         MSG_GS2U_VisitRecord = 29792,
+         MSG_U2GS_PutPetInFarming = 32301,
+         MSG_U2GS_ChangeHomeName = 33104,
+         MSG_GS2U_HomeInfo = 33825,
+         MSG_GS2U_HomeBitResult = 34087,
+         MSG_GS2U_ExtendAreaResult_Sync = 34234,
+         MSG_GS2U_SendHomeLetter = 34509,
+         MSG_GS2U_FreshHomeInfo = 36627,
+         MSG_U2GS_DelSenceTheFurniTrue = 40780,
+         MSG_U2GS_EnterBitHome = 40930,
+         MSG_U2GS_UpgradeHomeArea = 43370,
+         MSG_GS2U_HomePlantOperate_Ack = 44514,
+         MSG_U2GS_CreateHome = 45029,
+         MSG_GS2U_GivingFurniTrueForPartnerResult = 47787,
+         MSG_U2GS_UpgradeHome = 47985,
+         MSG_U2GS_LoadFurniTrueScheme = 49113,
+         MSG_U2GS_PutOutPetFarming = 50410,
+         MSG_GS2U_DelSenceTheFurniTrueResult = 50663,
+         MSG_U2GS_HomePlantOperate_Request = 51650,
+         MSG_U2GS_RequestHomeInfo = 56926,
+         MSG_GS2U_HomeVisitList = 59190,
+         MSG_GS2U_SaveFurniTrueResult_Sync = 60462,
+         MSG_U2GS_Invitefriendstobed = 61816,
+         MSG_GS2U_HomePlant_Sync = 61986,
+         MSG_GS2U_LoadFurniTrueResult_Sync = 63051,
+         MSG_U2GS_ExtendArea = 63689,
+         //home end
+         //identity begin
+         MSG_GS2U_IdentityPicDownloadData_Sync = 1988,
+         MSG_GS2U_IdentityPicUpload_Ack = 3071,
+         MSG_U2GS_IdentityPicUploadData_Request = 9005,
+         MSG_GS2U_GiftHistory_Sync = 14570,
+         MSG_GS2U_Identity_Ack = 14736,
+         MSG_GS2U_IdentityPicDownloadData_Ack = 15156,
+         MSG_U2GS2U_IdentityEditBloodType = 16013,
+         MSG_GS2U_Report_Ack = 21422,
+         MSG_U2GS_IdentityEditTagDel_Request = 23367,
+         MSG_GS2U_IdentityCharm_Sync = 24221,
+         MSG_U2GS2U_IdentityEditZodiac = 25735,
+         MSG_U2GS2U_IdentityEditHometown = 27036,
+         MSG_U2GS2U_RequestRoleHeadPic = 30552,
+         MSG_U2GS_Gift_Request = 34470,
+         MSG_U2GS2U_IdentityEditSign = 36224,
+         MSG_GS2U_IdentityLike_Sync = 38117,
+         MSG_U2GS_IdentityPicUploadBegin_Request = 38438,
+         MSG_U2GS_IdentityPicDownloadContinue_Request = 38621,
+         MSG_GS2U_IdentityPicDownloadError_Ack = 38726,
+         MSG_U2GS2U_IdentityEditFace = 42405,
+         MSG_U2GS2U_IdentityEditAge = 44844,
+         MSG_U2GS_Identity_Request = 45328,
+         MSG_U2GS_IdentityEditTagAdd_Request = 45833,
+         MSG_U2GS2U_IdentityEditBirth = 47244,
+         MSG_GS2U_IdentityEditPic_Ack = 50360,
+         MSG_U2GS_Report_Request = 57790,
+         MSG_U2GS2U_IdentityEditLocation = 58024,
+         MSG_GS2U_Gift_Ack = 58086,
+         MSG_U2GS_IdentityPicDownloadBegin_Request = 59335,
+         MSG_GS2U_IdentityEditTag_Ack = 61320,
+         //identity end
+         //item begin
+         MSG_GS2U_UseItemResult = 2331,
+         MSG_U2GS_RequestMysteriousShop = 4005,
+         MSG_GS2U_LookInfoItemListAtNpcStore = 4201,
+         MSG_U2GS_RefindResOne = 10864,
+         MSG_U2GS_RefindResAll = 11479,
+         MSG_U2GS_ConvenientBuyItem = 14404,
+         MSG_U2GS_FreshMSShop = 15024,
+         MSG_U2GS_BuyItemAtShopIDRequest = 18512,
+         MSG_GS2U_LookInfoItemListAtMall = 18589,
+         MSG_U2GS_BuyItemAtMallRequest = 18590,
+         MSG_U2GS_UseStarMoonBox = 23711,
+         MSG_U2GS_BuyItemAtNpcStoreRequest = 26641,
+         MSG_GS2U_UseItemGainGoodsTips = 28109,
+         MSG_U2GS_LookInfoItemListAtMall = 31583,
+         MSG_GS2U_UseItemExpInDanResult = 32766,
+         MSG_GS2U_ShowGainGoodsOrCoinsInfo = 43635,
+         MSG_GS2U_UseItem = 44334,
+         MSG_U2GS_LookInfoItemListAtNpcStore = 55371,
+         MSG_GS2U_BuyItemQuotaNumber = 56276,
+         MSG_RefindResList = 56898,
+         MSG_GS2U_MysteriousShop = 60944,
+         MSG_U2GS_BuyItemAtGuildShopRequest = 61972,
+         MSG_GS2U_SingleUseItem = 63098,
+         MSG_U2GS_LookInfoItemListAtShopID = 63472,
+         MSG_U2GS_BuyMysteriousShopItem = 65471,
+         //item end
+         //luckycoin begin
+         MSG_U2GS_LuckyDrawEnd = 5241,
+         MSG_U2GS_GiveLuckyCoin = 21846,
+         MSG_GS2U_GiveLuckyCoinResult = 23997,
+         MSG_U2GS_OneKeyGiveLucky = 25556,
+         MSG_GS2U_InitGainLuckyCoinInfo = 36672,
+         MSG_GS2U_LuckyDrawResult = 38517,
+         MSG_GS2U_GainLuckyCoin = 48806,
+         MSG_U2GS_LuckyDraw = 61294,
+         //luckycoin end
+         //mail begin
+         MSG_GS2U_Mail = 507,
+         MSG_GS2U_MailInfo = 3365,
+         MSG_GS2U_LockMail = 8814,
+         MSG_GS2U_SendMailAck = 10374,
+         MSG_GS2U_DeleteMail = 14274,
+         MSG_U2GS_UnlockMail = 14953,
+         MSG_U2GS_LockMail = 15616,
+         MSG_GS2U_GetMailItemAll = 19689,
+         MSG_U2GS_DeleteAllReadMail = 23877,
+         MSG_U2GS_ReadMail = 24463,
+         MSG_U2GS_GetDeleteMails = 28701,
+         MSG_GS2U_DelMailItem = 42981,
+         MSG_U2GS_DeleteMail = 46884,
+         MSG_GS2U_UnlockMail = 47879,
+         MSG_GS2U_DelMailCoin = 50315,
+         MSG_U2GS_GetMailItem = 56146,
+         MSG_U2GS_GetMailCoin = 63480,
+         MSG_U2GS_SendMail = 64073,
+         MSG_U2GS_GetMailItemAll = 64363,
+         //mail end
+         //mall begin
+         MSG_GS2U_MallBuyResult = 2111,
+         MSG_U2GS_MallInfo2 = 9678,
+         MSG_GS2U_MallPriceList2 = 17483,
+         MSG_GS2U_MallPriceList = 23547,
+         MSG_U2GS_MallInfo = 33516,
+         MSG_U2GS_KoreaNaverRewardGetRequest = 38164,
+         MSG_U2GS_GroupBuyGoodsBuyRequest = 40106,
+         MSG_GS2U_FashionConfigInfo = 42580,
+         MSG_U2GS_GroupBuyWhenOpen = 46221,
+         MSG_GS2U_KoreaNaverConfigInfo = 46562,
+         MSG_GS2U_GroupBuyGoodsBuyAck = 47350,
+         MSG_GS2U_MallInfoList = 48388,
+         MSG_U2GS_ItemBuyRequest2 = 50460,
+         MSG_GS2U_GroupBuyRewardBuyAck = 53069,
+         MSG_GS2U_MallBuyResult2 = 54231,
+         MSG_U2GS_ItemBuyRequest = 57190,
+         MSG_U2GS_GroupBuyRewardBuyRequest = 58205,
+         MSG_GS2U_MallInfoList2 = 60566,
+         MSG_GS2U_KoreaNaverRewardGetAck = 61764,
+         MSG_GS2U_GroupBuyWhenOpen = 62395,
+         //mall end
+         //marriage begin
+         MSG_GS2U_GivegifsResult = 1005,
+         MSG_GS2U_AppointmentWeddingResult = 1590,
+         MSG_U2GS_BuyLuckyBag = 2340,
+         MSG_U2GS_MarriagePropose_Reply = 4641,
+         MSG_GS2U_LoginInitWeddingKetubba = 5603,
+         MSG_U2GS_MarriageRingUp_Request = 7339,
+         MSG_U2GS_WeddingLottery = 10651,
+         MSG_U2GS_appointmentWedding = 11683,
+         MSG_GS2U_MarriageBaseInfo_Sync = 14801,
+         MSG_GS2U_PlayerDeletRoleInWedding = 15068,
+         MSG_U2GS_MarriageSubmitTask_Request = 19197,
+         MSG_GS2U_WeddingMapPhase = 20515,
+         MSG_U2GS_Givegifs = 20770,
+         MSG_GS2U_MarriagePropose_Ask = 23358,
+         MSG_GS2U_WeddingRedState = 24192,
+         MSG_GS2U_MarriageRingUp_Sync = 24857,
+         MSG_U2GS_OpenInvitePanel = 25499,
+         MSG_GS2U_MarriagePropose_Ack = 25550,
+         MSG_GS2U_WeddingStartInviteAll = 27662,
+         MSG_GS2U_OpenketubbaResult = 27681,
+         MSG_GS2U_PlayerEnterMapSucc = 28019,
+         MSG_GS2U_UseNpcInteractiveReuslt = 28969,
+         MSG_U2GS_MarriageTask_Together_Reply1 = 29326,
+         MSG_U2GS_MarriageAcceptTask_Request = 29341,
+         MSG_U2GS_MarriageTask_Together_Reply2 = 31163,
+         MSG_U2GS_MarriageSkillUp_Request = 35764,
+         MSG_GS2U_OpenInvitePanelResult = 36906,
+         MSG_GS2U_MarriageSkillUp_Ack = 37984,
+         MSG_GS2U_RobWeddingRedResult = 38571,
+         MSG_GS2U_MarriageBreak_Ack = 40356,
+         MSG_U2GS_RobWeddingRed = 40372,
+         MSG_GS2U_InvitedPersonResult = 40441,
+         MSG_GS2U_BuyLuckyBagResult = 40459,
+         MSG_U2GS_InvitedPerson = 42866,
+         MSG_GS2U_MarriageRingUpPartner_Sync = 42904,
+         MSG_GS2U_WeddingLotteryResult = 43118,
+         MSG_GS2U_MarriageProposeRefresh_Ack = 44645,
+         MSG_GS2U_receivedInvitationCard = 45850,
+         MSG_GS2U_MarriageSkill_Sync = 46119,
+         MSG_U2GS_MarriagePropose_Request = 49410,
+         MSG_U2GS_UseNpcInteractive = 52526,
+         MSG_U2GS_EnterWeddingMap = 55658,
+         MSG_GS2U_MarriageTask_Together_Ask1 = 57013,
+         MSG_GS2U_MarriageTask_Together_Ask2 = 58850,
+         MSG_U2GS_MarriageBreak_Request = 60471,
+         MSG_U2GS_Openketubba = 61418,
+         //marriage end
+         //mount begin
+         MSG_GS2U_NewMountShape = 476,
+         MSG_MountShapeShift = 10618,
+         MSG_U2GS_OffMount = 23484,
+         MSG_GS2U_LookMountInfo = 39712,
+         MSG_U2GS_FeedMount = 44309,
+         MSG_GS2U_MountAck = 46932,
+         MSG_GS2U_MountShapeList = 57298,
+         MSG_U2GS_OnMount = 60500,
+         //mount end
+         //npc begin
+         MSG_U2GS_RequestRiftNpcInfo = 18129,
+         MSG_GS2U_NpcTitleChange = 25583,
+         MSG_GS2U_RequestRiftNpcInfo = 26415,
+         MSG_GS2U_NpcMomentMove = 46886,
+         MSG_U2GS_RequestEnterRift = 61996,
+         //npc end
+         //pet begin
+         MSG_U2GS_DoublePetMountInviteAck = 495,
+         MSG_GS2U_PetSleep = 1492,
+         MSG_U2GS_PetPveSweep = 6146,
+         MSG_U2GS_PetLevelUp = 7694,
+         MSG_GS2U_FindTerritoryFailed_Ack = 10728,
+         MSG_U2GS_PetDisapear = 12890,
+         MSG_GS2U_PvpBattleReportTip = 13533,
+         MSG_U2GS_PetAddAtta = 15608,
+         MSG_GS2U_AddTempPet = 17046,
+         MSG_GS2U_PetFairyInfo = 17380,
+         MSG_GS2U_PetPveSweepAck = 17437,
+         MSG_GS2U_RawPetResult = 17816,
+         MSG_GS2U_UpdateReel = 19087,
+         MSG_U2GS_ResetPet = 19867,
+         MSG_U2GS_StandSort = 21014,
+         MSG_GS2U_TerritoryExploitEnd_Sync = 21088,
+         MSG_GS2U_PetReName = 21657,
+         MSG_GS2U_PetAssistUpdateSlot = 21727,
+         MSG_PetSwitch = 22375,
+         MSG_GS2U_DeletePet = 22924,
+         MSG_GS2U_UpdatePower = 23580,
+         MSG_GS2U_ResetPetAck = 24481,
+         MSG_GS2U_TerritoryPlunder_Ack = 24508,
+         MSG_GS2U_AckStandSort = 24891,
+         MSG_U2GS_DoublePetMountInvite = 26098,
+         MSG_U2GS_UsePetSkillBook = 26300,
+         MSG_U2GS_PetStr = 27916,
+         MSG_GS2U_TerritoryVigor_Ack = 28079,
+         MSG_GS2U_PetEquipInfoList = 28857,
+         MSG_U2GS_TerritoryExploit_Request = 30247,
+         MSG_GS2U_PetSkillCastResult = 30326,
+         MSG_U2GS_RequestPvpBattle = 30441,
+         MSG_U2GS_PvpBattleInfo = 30930,
+         MSG_U2GS_PetSkillOperate = 31172,
+         MSG_GS2U_PvpBattleResult = 31631,
+         MSG_PetReName = 31697,
+         MSG_GS2U_AckRewardLevel = 34380,
+         MSG_U2GS_FindTerritory_Request = 34435,
+         MSG_GS2U_PetAssistInit = 34712,
+         MSG_GS2U_OffMountPetAck = 34800,
+         MSG_GS2U_UpdateCatalogList = 34854,
+         MSG_GS2U_FindTerritory_Ack = 35119,
+         MSG_GS2U_PVEBattleResult = 35792,
+         MSG_U2GS_RawPet = 35797,
+         MSG_GS2U_PvpPosSaveAck = 36170,
+         MSG_GS2U_UpStartPetResult = 37149,
+         MSG_GS2U_QueryTerritoryInfo_Ack = 37326,
+         MSG_U2GS_PetAttaSave = 38254,
+         MSG_GS2U_PetLevelUp = 40620,
+         MSG_U2GS_QueryTerritoryHistory_Request = 41716,
+         MSG_U2GS_TerritoryVigor_Request = 42127,
+         MSG_U2GS_QueryTerritoryInfo_Request = 43838,
+         MSG_GS2U_PetStrAck = 44599,
+         MSG_U2GS_RequestBattle = 44797,
+         MSG_GS2U_UsePetSkillBook = 46038,
+         MSG_U2GS_PvpPosSave = 46437,
+         MSG_U2GS_BuyPower = 46993,
+         MSG_GS2U_PetAttaSaveRes = 47132,
+         MSG_U2GS_QueryPetFairyInfo = 47422,
+         MSG_GS2U_PetAddAttaRes = 47446,
+         MSG_GS2U_TerritoryBattle_Tick_Sync = 48052,
+         MSG_GS2U_QueryTerritoryHistory_Ack = 48208,
+         MSG_GS2U_PetInfoList = 48755,
+         MSG_U2GS_HideMountPet = 49046,
+         MSG_U2GS_OffMountPet = 49531,
+         MSG_U2GS_PetAssistBattle = 51118,
+         MSG_GS2U_PvpBattleInfoRes = 51608,
+         MSG_GS2U_UpdatePetSkill = 51975,
+         MSG_GS2U_PetBaseInfo = 53506,
+         MSG_U2GS_OnMountPet = 55043,
+         MSG_U2GS_ShowMountPet = 57389,
+         MSG_GS2U_OnMountPetAck = 57812,
+         MSG_GS2U_DoublePetMountInvite = 59136,
+         MSG_GS2U_BuyPowerInfo = 60009,
+         MSG_U2GS_UpStartPet = 60578,
+         MSG_U2GS_PetSkillCast = 60947,
+         MSG_U2GS_TerritoryPlunder_Request = 60988,
+         MSG_U2GS_RequstReward = 62009,
+         MSG_GS2U_TerritoryExploit_Ack = 62071,
+         MSG_GS2U_UpdatePetStatus = 62688,
+         MSG_PetSkillReplace = 62742,
+         MSG_U2GS_BuyReel = 63174,
+         MSG_GS2U_PvpBattleUpdateReport = 64919,
+         //pet end
+         //player begin
+         MSG_GS2U_GetRewardUpdateResource = 196,
+         MSG_GS2U_NpcList = 639,
+         MSG_U2GS_RaceApply_Request = 1335,
+         MSG_GS2U_SyncServerTime = 1399,
+         MSG_U2GS_HisoryForce_Request = 1549,
+         MSG_U2GS_MoveTo = 1578,
+         MSG_Any_PlayerLogout = 1702,
+         MSG_U2GS_ReconnectLoginRequest = 1827,
+         MSG_GS2U_RequestRechargeHasGiftIDListAck = 2244,
+         MSG_GS2U_AliveRolePos_Sync = 2261,
+         MSG_U2GS_ChangeLineLoginRequest = 2496,
+         MSG_GS2U_RespChatVoice = 2670,
+         MSG_GS2U_RespChatVoiceError = 2854,
+         MSG_U2GS_CommonditiesPush = 2855,
+         MSG_U2GS_WingRise = 2862,
+         MSG_GS2U_LBS_BesideRole_Ack = 3100,
+         MSG_U2GS_GetQuestionnaireSurveyAward = 3688,
+         MSG_GS2U_PlayerCour = 3746,
+         MSG_U2GS_MonsterBookReward_Request = 3772,
+         MSG_U2GS_RequestCreatePlayer = 4022,
+         MSG_GS2U_ObjBrief = 4191,
+         MSG_U2GS_MonsterBook_Request = 4373,
+         MSG_U2GS_GetMapLevel = 4452,
+         MSG_GS2U_BlockStatusChange = 4623,
+         MSG_GS2U_AliveCancel_Ack = 5029,
+         MSG_GS2U_AliveEnterSafeArea_Ack = 5239,
+         MSG_GS2U_CopyMapStatHurtList = 5304,
+         MSG_GS2U_TipsString = 5369,
+         MSG_GS2U_SevenDayAimState_Sync = 5899,
+         MSG_GS2U_RaceInit = 5905,
+         MSG_U2GS_ChangeLineRequestAck = 6120,
+         MSG_U2GS_SessionKeyAck = 6238,
+         MSG_GS2U_InvateEnterCopyMap = 6284,
+         MSG_U2GS_RaceCancel_Request = 6869,
+         MSG_U2GS_buy_action_point = 7254,
+         MSG_GS2U_TaskUseItemList = 7311,
+         MSG_GS2U_KillValueResponse = 8228,
+         MSG_GS2U_PlayerInitEnd = 8238,
+         MSG_U2GS_ChangeWingLevel = 8423,
+         MSG_GS2U_BroadcastTeamRevive = 8439,
+         MSG_GS2U_RaceApply_Ack = 8451,
+         MSG_U2GS_RoleAwakeing = 8581,
+         MSG_GS2U_SevenDayAimReward_Ack = 8783,
+         MSG_GS2U_RoleAwakeInof = 8784,
+         MSG_U2GS_ResetPosToRevivePt = 8871,
+         MSG_GS2U_ResetCopyMap = 9512,
+         MSG_GS2U_lsbattlefield_award_list = 9612,
+         MSG_GS2U_NoticeDel = 9751,
+         MSG_GS2U_CopymapFailed = 10232,
+         MSG_U2GS_MoneyTree = 10672,
+         MSG_GS2U_RaceSeletPet = 10751,
+         MSG_GS2U_PlayerPhys = 11003,
+         MSG_GS2U_HisoryForce_Ack = 11017,
+         MSG_U2GS_RaceCancel = 11021,
+         MSG_GS2U_MapLevel = 11428,
+         MSG_U2GS_KillValueRequest = 11554,
+         MSG_GS2U_copy_map_destory_time = 11581,
+         MSG_GS2U_HateInfo = 11948,
+         MSG_GetPlayerOnlineReward = 12473,
+         MSG_U2GS_ReceivePlayerLevelReward = 12809,
+         MSG_U2GS_CopyChat = 13095,
+         MSG_U2GS_TransferMap = 13167,
+         MSG_GS2U_BroadcastDisapearFast = 13182,
+         MSG_GS2U_DashTo = 13797,
+         MSG_U2GS_AliveCancel_Request = 13929,
+         MSG_U2GS_Transfer2NewPos = 15277,
+         MSG_GS2U_RaceCancel_Ack = 15285,
+         MSG_GS2U_HaveIconAndActionList = 15362,
+         MSG_GS2U_PlayerChangedWealth = 15512,
+         MSG_U2GS_LotteryForTowerInfo = 15649,
+         MSG_U2GS_LeaveCopyMap = 15694,
+         MSG_U2GS_ChatVoice = 15792,
+         MSG_GS2U_RoleAwakeingRet = 15938,
+         MSG_GS2U_CopyMapProcessCurrentScheduleStatus = 16294,
+         MSG_GS2U_PlayerSp = 16330,
+         MSG_U2GS_ThirtyDayLoginGift_Request = 16721,
+         MSG_U2GS_ChangeLineRequest = 16861,
+         MSG_U2GS_EnterActiveMap = 17012,
+         MSG_GS2U_lsbattlefield_rank_list = 17121,
+         MSG_GS2U_BroadcastPlayerRevive = 17135,
+         MSG_GS2U_RaceInviteList = 17164,
+         MSG_U2GS_GetLeavedExp = 17228,
+         MSG_GS2U_CopyMapResult = 17828,
+         MSG_U2GS_Join_lsbattlefield = 17864,
+         MSG_GS2U_PetList = 18025,
+         MSG_GS2U_ShowAction = 18095,
+         MSG_GS2U_LookInfoPlayer = 18166,
+         MSG_GS2U_PlotDialogue = 18245,
+         MSG_GS2U_PetRawLvlChange = 18249,
+         MSG_U2GS_SevenDayAimReward_Request = 18435,
+         MSG_GS2U_UserPlayerList = 18582,
+         MSG_GS2U_MsgBoxTips = 18862,
+         MSG_GS2U_MonsterBookSnap_Ack = 19083,
+         MSG_U2GS_Telesport = 19472,
+         MSG_GS2U_MoneyTreeAck = 19751,
+         MSG_U2GS_RequestRecharge = 20100,
+         MSG_GS2U_CrossNewPlayerCode = 20154,
+         MSG_GS2U_returnFriendPos = 20446,
+         MSG_GS2U_LotteryForTowerInfo = 20699,
+         MSG_U2GS_get_action_point_info = 20727,
+         MSG_GS2U_ChangeCamp = 20809,
+         MSG_U2GS_ChatInfo = 21140,
+         MSG_GS2U_ChatErrorResult = 21361,
+         MSG_GS2U_lottery_award_items = 21812,
+         MSG_GS2U_LoginResult = 22162,
+         MSG_GS2U_RaceMapItem_Sync = 22340,
+         MSG_GS2U_TransferNewPos = 22727,
+         MSG_U2GS_MonsterBookUnlock_Request = 22905,
+         MSG_GS2U_NoticeAdd = 22937,
+         MSG_U2GS_EqupmentCombin = 23025,
+         MSG_U2GS_RequestDeletePlayer = 23657,
+         MSG_U2GS_MonthCardGettingEvent = 23872,
+         MSG_U2GS_ActiveCodeRequest = 24642,
+         MSG_U2GS_EnterCopyMap = 24973,
+         MSG_GS2U_PlayerBaseInfo = 25296,
+         MSG_U2GS_BuyLimitSales = 25489,
+         MSG_U2GS_PlotDialogueEnd = 25596,
+         MSG_U2GS_lottery_start = 26618,
+         MSG_U2GS_DashTo = 26663,
+         MSG_GS2U_action_point_info = 27166,
+         MSG_U2GS_RaceInvite_B2S = 27284,
+         MSG_GS2U_SendPlayerDailyCountList = 27517,
+         MSG_GS2U_MonsterBookNeed_Sync = 27745,
+         MSG_GS2U_BattlePropList = 28245,
+         MSG_U2GS_UseTheAwakeBuff = 28828,
+         MSG_U2GS_AliveApply_Request = 29011,
+         MSG_U2GS_RaceMapItem_Request = 29928,
+         MSG_GS2U_BusinessSupperGift_Ack = 30113,
+         MSG_GS2U_RequestGoddessCodeAck = 30210,
+         MSG_U2GS_EnteredMap = 30475,
+         MSG_GS2U_SpecificEvent_Sync = 30574,
+         MSG_GS2U_EveryDayGetPower_Sync = 30914,
+         MSG_GS2U_PropSync = 30926,
+         MSG_GS2U_HeartBeatAck = 30981,
+         MSG_GS2U_ChangeCarrer = 31075,
+         MSG_U2GS_ResetCopyMap = 31194,
+         MSG_GS2U_BeReportNum = 31499,
+         MSG_U2GS_RaceSelectPet = 32164,
+         MSG_PlayerLevelReward = 32586,
+         MSG_GS2U_MonsterBookUnlock_Ack = 32613,
+         MSG_GS2U_MonsterList = 32656,
+         MSG_U2GS_EveryDayGetPower = 32758,
+         MSG_U2GS_LotteryForTowerRandonAward = 32778,
+         MSG_U2GS_BusinessSupperGift_Request = 33217,
+         MSG_GS2U_MoneyDungeonCopyMapResult = 33334,
+         MSG_U2GS_HeartBeatReal = 33460,
+         MSG_GS2U_ShiftTo = 33489,
+         MSG_GS2U_Error = 33508,
+         MSG_U2GS_Buy4System = 33723,
+         MSG_GS2U_PlayerDead = 33757,
+         MSG_GS2U_AliveCarrier_Sync = 33903,
+         MSG_U2GS_QueryTargetObject = 34006,
+         MSG_GS2U_ReceivePlayerLevelRewardResult = 34012,
+         MSG_GS2U_SevenDayAimUpdate_Sync = 34075,
+         MSG_U2GS_getFriendPos = 34086,
+         MSG_GS2S_UseTheAwakeBuffRet = 34885,
+         MSG_GS2U_CopyMapProcessCurrentScheduleSurplusSecond = 35062,
+         MSG_GS2U_StopMove = 35067,
+         MSG_GS2U_AcceptHolidayTaskSucc = 35611,
+         MSG_GS2U_EnterMapFailed = 36237,
+         MSG_U2GS_GoToExpMap = 36536,
+         MSG_U2GS_XmlNoticeRequest = 36570,
+         MSG_U2GS_RequestMapLineList = 37085,
+         MSG_GS2U_lottery_sys_info = 37194,
+         MSG_U2GS_LBS_Request = 37335,
+         MSG_U2GS_get_lottery_sys_info = 37517,
+         MSG_U2GS_LBS_BesideRole_Request = 37964,
+         MSG_GS2U_PlayerHp = 38317,
+         MSG_GS2U_LotteryForTowerBeginTimeEndTime = 38347,
+         MSG_GS2U_NpcStatusChange = 38415,
+         MSG_GS2U_PushInfo = 38424,
+         MSG_GS2U_SendServerType = 38589,
+         MSG_GS2U_PlayerAwakenInfo = 38672,
+         MSG_GS2U_KickOutTip = 38711,
+         MSG_GS2U_ThirtyDayLoginGiftState_Sync = 38996,
+         MSG_U2GS_HeartBeat = 39242,
+         MSG_GS2U_GiveGiftEfects = 39251,
+         MSG_GS2U_DeletePlayerResult = 39385,
+         MSG_GS2U_Chatinfo = 39394,
+         MSG_U2GS_save_current_guide_id = 39509,
+         MSG_GS2U_CopyMapProcess = 39720,
+         MSG_GS2U_RequestRechargeAck = 39891,
+         MSG_GS2U_MaterialCopyMapResult = 40093,
+         MSG_U2GS_RequestRechargeHasGiftIDList = 40355,
+         MSG_GS2U_SessionKey = 40925,
+         MSG_U2GS_RecClientEvent = 40949,
+         MSG_U2GS_ReqChatVoice = 41242,
+         MSG_GS2U_KillPlayerResponse = 41656,
+         MSG_GS2U_RequestTargetCopyMapScore = 41707,
+         MSG_U2GS_PlayerCoupleBack = 41830,
+         MSG_U2GS_StopMove = 41869,
+         MSG_GS2U_BroadcastVisibleEquipOn = 42110,
+         MSG_GS2U_SelPlayerResult = 42464,
+         MSG_GS2U_RaceMapMilestone_Sync = 42481,
+         MSG_GS2U_PlayerRevive = 42726,
+         MSG_GS2U_AliveRole_Sync = 42867,
+         MSG_U2GS_ShowHeadEmoticonIcon = 42898,
+         MSG_U2GS_StopTheAwakeBuff = 43011,
+         MSG_GS2U_RaceMapState_Sync = 43248,
+         MSG_U2GS_RequestTargetCopyMapScore = 43649,
+         MSG_U2GS_ChangeName = 43873,
+         MSG_GS2U_BuyLimitedResult = 44641,
+         MSG_GS2U_CreatePlayerResult = 45054,
+         MSG_U2GS_buy_action_count = 45177,
+         MSG_U2GS_NoticeRequest = 45265,
+         MSG_C2S_ChangeMap = 45297,
+         MSG_GS2U_BroadcastDisapear = 45334,
+         MSG_GS2U_MonsterBookReward_Ack = 46584,
+         MSG_GS2U_BroadcastVisibleEquipOff = 46672,
+         MSG_GS2U_ClearFightObject = 46702,
+         MSG_GS2U_TheAwakeBuffInfo = 46737,
+         MSG_GS2U_AllBattleProp = 46744,
+         MSG_GS2U_ChangeNameResult = 47012,
+         MSG_GS2U_LotteryForTowerRandonAward = 47144,
+         MSG_GS2U_PlayerAddExp = 47341,
+         MSG_GS2U_StopTheAwakeBuffRet = 47884,
+         MSG_GS2U_PetLvlChange = 47891,
+         MSG_GS2U_TipsError = 48180,
+         MSG_GS2U_WorldBossBuyBuff = 49866,
+         MSG_GS2U_ThirtyDayLoginGift_Ack = 50225,
+         MSG_U2GS_ShowAction = 50705,
+         MSG_U2GS_BusinessCashDailyGift_Request = 51064,
+         MSG_GS2U_ReconnectLoginRequestFail = 51511,
+         MSG_Any_ChangeMap = 51801,
+         MSG_GS2U_BusinessCashDailyGift_Ack = 51860,
+         MSG_GS2U_PlayerBlood = 52109,
+         MSG_U2GS_GetVipReward = 52508,
+         MSG_U2GS_ChangeCarrer = 52757,
+         MSG_GS2U_synch_lsbattlefield_state = 52959,
+         MSG_U2GS_AliveEnterSafeArea_Request = 53495,
+         MSG_U2GS_RequestObjInfo = 53644,
+         MSG_GS2U_MoneyChanges = 53651,
+         MSG_GS2U_RequestAutoDealAck = 53731,
+         MSG_U2GS_get_copy_map_destory_time = 53798,
+         MSG_U2GS_ResetRoleAwake = 53918,
+         MSG_GS2U_SetUpAnchor = 54142,
+         MSG_GS2U_BroadcastPlayerHpPC = 54157,
+         MSG_U2GS2U_RaceAutoMatch = 54278,
+         MSG_U2GS_GetUpdateReward = 54528,
+         MSG_GS2U_RaceInvite_S2B = 54938,
+         MSG_U2GS_WingRiseOneTouch = 55027,
+         MSG_U2GS_ExpToVigour = 55190,
+         MSG_U2GS_RenewChangeCarrer = 55602,
+         MSG_U2GS_StartMeditation = 55614,
+         MSG_GS2U_SendGiftNotice = 55980,
+         MSG_U2GS_RequestLogin = 56084,
+         MSG_GS2U_RaceMapGiveUp_Sync = 56427,
+         MSG_U2GS_SelPlayerEnterGame = 56497,
+         MSG_U2GS_RaceApply = 56623,
+         MSG_U2GS_LoadedMap = 57553,
+         MSG_U2GS_RechargeGettingEvent = 57955,
+         MSG_GS2U_MoveInfo = 58171,
+         MSG_GS2U_MoneyTreeBox = 58681,
+         MSG_GS2U_RaceApplyState = 58816,
+         MSG_U2GS_MonsterBookSnap_Request = 58895,
+         MSG_GS2U_AliveMapState_Sync = 58944,
+         MSG_U2GS_AcceptHolidayTask = 58975,
+         MSG_GS2U_MissionObjectList = 59133,
+         MSG_U2GS_RaceInvite_A2S = 59743,
+         MSG_GS2U_MonsterBook_Ack = 59793,
+         MSG_U2GS_RequestRevive = 60126,
+         MSG_GS2U_monsterChange = 60138,
+         MSG_U2GS_RequestEnterMapLine = 60477,
+         MSG_U2GS_DigTransferMap = 61093,
+         MSG_GS2U_NoticeResponse = 61141,
+         MSG_GS2U_RaceApplyInfo_Sync = 61535,
+         MSG_GS2U_WingRise = 61596,
+         MSG_GS2U_MonthCardEndTips = 61679,
+         MSG_GS2U_RequestOneKeyDealAck = 61681,
+         MSG_GS2U_AliveApply_Ack = 61779,
+         MSG_U2GS_RaceInviteList = 61838,
+         MSG_GS2U_CrossStep = 64024,
+         MSG_GS2U_MapLineList = 64030,
+         MSG_U2GS_PlayerAwakenUseItem = 64414,
+         MSG_GS2U_RaceType_Sync = 64455,
+         MSG_GS2U_XmlNoticeResponse = 64460,
+         MSG_GS2U_MonsterBookEnterNewMap_Sync = 65173,
+         MSG_GS2U_PlayerLevelUp = 65190,
+         MSG_U2GS_SelectTarget = 65351,
+         MSG_U2GS_RequestGoddessCode = 65485,
+         //player end
+         //rank begin
+         MSG_U2GS_RequestRankAward = 1992,
+         MSG_U2GS_RequestRank = 28761,
+         MSG_GS2U_RefreshRank = 31147,
+         MSG_GS2U_MyRankingAndDamage = 36976,
+         MSG_GS2U_ActivityMapRankData = 40315,
+         MSG_GS2U_SendRank = 44328,
+         MSG_GS2U_SendRankModelData = 50703,
+         MSG_U2GS_RequestPropList = 51618,
+         MSG_U2GS_RequestActivityMapRank = 59920,
+         MSG_GS2U_MyKillNumber = 62615,
+         MSG_GS2U_SendPropList = 63201,
+         MSG_GS2U_SendCharmRankFirstData = 64931,
+         //rank end
+         //redenvelope begin
+         MSG_GS2U_RedEnvelopeInfoAck = 3550,
+         MSG_U2GS_GiveUpRedEnvelope = 5631,
+         MSG_U2GS_SendRedEnvelope = 8879,
+         MSG_U2GS_RedEnvelopeHistory = 22545,
+         MSG_GS2U_RobRedEnvelopeAck = 33445,
+         MSG_GS2U_RedEnvelopeHistoryAck = 43886,
+         MSG_U2GS_RedEnvelopeQuery = 44837,
+         MSG_U2GS_RedEnvelopeInfo = 45733,
+         MSG_GS2U_RedEnvelopeQuery = 61011,
+         MSG_U2GS_RobRedEnvelope = 62102,
+         //redenvelope end
+         //ride begin
+         MSG_RequestRecycle = 11548,
+         MSG_RequestUpRide = 13114,
+         MSG_RequestUse = 13948,
+         MSG_RequestDownRide = 14381,
+         MSG_SyncRideItem = 42114,
+         MSG_SyncRideInfo = 47893,
+         MSG_DeleteRide = 48463,
+         MSG_SyncPlayerInfo = 58427,
+         //ride end
+         //rune begin
+         MSG_DeleteRunes = 314,
+         MSG_GS2U_RuneSuitPropList = 920,
+         MSG_GS2U_RuneCompoundAck = 2048,
+         MSG_GS2U_RuneCastAck = 6856,
+         MSG_U2GS_RuneFuse = 8893,
+         MSG_U2GS_RuneCast = 9487,
+         MSG_GS2U_RuneEmbedOnAck = 12783,
+         MSG_GS2U_RuneCastProp = 15200,
+         MSG_U2GS_RuneReserve = 16704,
+         MSG_U2GS_RuneCastAffirm = 18474,
+         MSG_U2GS_RuneCompound = 22231,
+         MSG_GS2U_RuneTurnPosAck = 25452,
+         MSG_U2GS_RuneEmbedOff = 27422,
+         MSG_GS2U_RuneFuseAck = 28162,
+         MSG_GS2U_RuneOpenBorad = 30388,
+         MSG_U2GS_RequestSuitProp = 31041,
+         MSG_GS2U_QueryRuneTipsAck = 32828,
+         MSG_GS2U_RuneEmbedOffAck = 33645,
+         MSG_U2GS_QueryRuneTips = 36684,
+         MSG_GS2U_RPRuneInfoList = 39668,
+         MSG_U2GS_SellRune = 39914,
+         MSG_U2GS_RuneTurnPos = 44015,
+         MSG_GS2U_RuneInfoList = 49510,
+         MSG_RuneEmbedOn = 50666,
+         MSG_U2GS_RuneMelt = 52280,
+         MSG_GS2U_RuneMeltAck = 54059,
+         MSG_U2GS_OpenRuneGrid = 63316,
+         MSG_GS2U_RuneGrid = 64968,
+         //rune end
+         //serverTest begin
+         MSG_GS2U_GridPlayerRotw = 323,
+         //serverTest end
+         //setting begin
+         MSG_U2GS_AllTeamInvitationSetting = 835,
+         MSG_GS2U_VariantInfo = 33971,
+         MSG_Any_UpdateVariant = 58193,
+         MSG_Any_UpdateBitVariant = 61248,
+         //setting end
+         //signin begin
+         MSG_GS2U_BindPhoneResult = 7478,
+         MSG_U2GS_BindPhone = 10295,
+         MSG_GS2U_SignIn = 13078,
+         MSG_EveryDaySignIn = 17267,
+         MSG_U2GS_SignIn = 25944,
+         MSG_U2GS_AccuReward = 39405,
+         MSG_BindPhoneAwardGet = 44962,
+         MSG_SevenDaySignIn = 65465,
+         //signin end
+         //skill begin
+         MSG_U2GS_GiveReward = 738,
+         MSG_U2GS_UpSkill = 800,
+         MSG_GS2U_TriggerPassiveSkill = 3194,
+         MSG_U2GS_UseLifeSkill = 3828,
+         MSG_GS2U_ReduceCD = 6635,
+         MSG_GS2U_LifeSkillCanUseCount = 7095,
+         MSG_GS2U_UpdateLifeSkill = 8296,
+         MSG_GS2U_ChangeSkillSlotResult = 13768,
+         MSG_GS2U_SkillInfoList = 15045,
+         MSG_U2GS_FinishLifeSkill = 15740,
+         MSG_GS2U_OpenSlotList = 17042,
+         MSG_GS2U_TransformSkillSlotInfoList = 19023,
+         MSG_U2GS_ResetSkill = 21348,
+         MSG_U2GS_PassiveUpSkill = 31693,
+         MSG_GS2U_UpgradeSkill_Result = 31943,
+         MSG_GS2U_GiveRewardAck = 40905,
+         MSG_GS2U_OpenSlot = 41992,
+         MSG_GS2U_SkillInfo = 42635,
+         MSG_GS2U_PassiveSkillInfoList = 47822,
+         MSG_U2GS_UpgradeSkill_Request = 48791,
+         MSG_GS2U_PassiveSkillInfo = 50820,
+         MSG_GS2U_BreakLifeSkill = 51002,
+         MSG_U2GS_BuySpirit = 52009,
+         MSG_GS2U_OpenSkill = 53903,
+         MSG_GS2U_InitiativeSkillSlotInfoList = 57483,
+         MSG_U2GS_ChangeSkillSlotRequest = 58650,
+         MSG_GS2U_InitLifeSkillList = 59951,
+         MSG_U2GS_LifeSkillBuyCount = 59960,
+         MSG_GS2U_PassiveSkillSlotInfoList = 64100,
+         //skill end
+         //talent begin
+         MSG_GS2U_TalentInitAck = 17717,
+         MSG_GS2U_TalentLevelUpSuccess = 33052,
+         MSG_U2GS_TalentInit = 43814,
+         MSG_U2GS_TalentLevelUp = 55001,
+         //talent end
+         //task begin
+         MSG_GS2U_AcceptTask = 3141,
+         MSG_GS2U_TaskList = 7479,
+         MSG_U2GS_TalkToNpc = 7564,
+         MSG_U2GS_SumbitTask = 8517,
+         MSG_GS2U_UpdateAcceptTask = 14926,
+         MSG_GS2U_DeleteAcceptTask = 17300,
+         MSG_U2GS_RequestAcceptTask = 19210,
+         MSG_GS2U_UpdateTask = 19758,
+         MSG_GS2U_AddNewCompleteTask = 20405,
+         MSG_U2GS_DropTask = 24126,
+         MSG_U2GS_TriggerTaskBuff = 25874,
+         MSG_U2GS_ResetTask = 28782,
+         MSG_U2GS_RequestOneKeyLoopTask = 29107,
+         MSG_GS2U_TalkToNpcResult = 30499,
+         MSG_U2GS_AcceptTask = 35751,
+         MSG_GS2U_SyncStateLoopTask = 38547,
+         MSG_GS2U_AddNewAcceptTask = 39928,
+         MSG_U2GS_RequestOperateLoopTask = 42512,
+         MSG_U2GS_CollectObj = 43491,
+         MSG_GS2U_AcceptTaskList = 49439,
+         MSG_U2GS_UseItemObj = 53415,
+         MSG_U2GS_RequestHandIn = 54029,
+         MSG_GS2U_CollectObj_Failed = 56775,
+         MSG_GS2U_CompleteTaskList = 57012,
+         MSG_U2GS_RequestAcceptLoopTask = 64530,
+         //task end
+         //team begin
+         MSG_GS2U_QuickTeamMatchAck = 546,
+         MSG_GS2U_QueryTeamListThisLineAck = 1340,
+         MSG_GS2U_TeammateStartCopymapAck = 6678,
+         MSG_U2GS_AckInviteJoinTeam = 7027,
+         MSG_U2GS_OperateTeam = 8639,
+         MSG_U2GS_RequestNearByTeamInfo = 9627,
+         MSG_GS2U_TeamReset = 10754,
+         MSG_GS2U_NewMemberJoin = 10808,
+         MSG_GS2U_TeamDisbanded = 12825,
+         MSG_GS2U_NearTeamInfo = 13971,
+         MSG_U2GS_NoticeLeader = 17491,
+         MSG_GS2U_TeamMemberOnline = 17622,
+         MSG_U2GS_QueryTeamListThisLine = 21263,
+         MSG_GS2U_TeamMemberExtInfo = 23416,
+         MSG_U2GS_RequestFightingCapacity = 23749,
+         MSG_GS2U_DelTeammateInfo = 24383,
+         MSG_GS2U_UpdateTeamInfo = 25304,
+         MSG_GS2U_BeenInviteTeam = 28790,
+         MSG_GS2U_RequestFightingCapacity = 28959,
+         MSG_U2GS_QueryTeamList = 29633,
+         MSG_GS2U_FastTeamSucc = 30215,
+         MSG_U2GS_QuickJoinTeam = 32962,
+         MSG_GS2U_UpdateMemberExInfo = 34340,
+         MSG_GS2U_TeammateLocation = 34795,
+         MSG_U2GS_NearbyPlayer_Request = 36078,
+         MSG_GS2U_MyTeamInfo = 36807,
+         MSG_GS2U_TeammateLeave = 39901,
+         MSG_GS2U_AddTeamMemberInfo = 40018,
+         MSG_U2GS_QueryRoleList = 40314,
+         MSG_U2GS_AckInviteTeam = 42781,
+         MSG_GS2U_InviteUJoinTeam = 44111,
+         MSG_GS2U_TeamMemberOnlineState = 45527,
+         MSG_U2GS_QuickTeamMatch = 45837,
+         MSG_GS2U_ReceiveNotice = 47371,
+         MSG_U2GS_TeamOp = 47456,
+         MSG_GS2U_TeamLeaderStartCopymap = 47759,
+         MSG_GS2U_TeammateLeaveAwayTeam = 51520,
+         MSG_GS2U_FastTeamAck = 53040,
+         MSG_GS2U_TeamInfo = 55031,
+         MSG_GS2U_QueryRoleListAck = 55541,
+         MSG_GS2U_TeamChangeLeader = 55574,
+         MSG_GS2U_KickOutByLeader = 57308,
+         MSG_U2GS_IsOpenMapPanel = 57366,
+         MSG_GS2U_NearbyPlayer_Ack = 57966,
+         MSG_GS2U_QueryTeamListAck = 60002,
+         MSG_U2GS_CancelFastTeam = 63209,
+         MSG_U2GS_QuickTeamStart = 63294,
+         MSG_GS2U_TeamMemberOffline = 63632,
+         MSG_U2GS_LeaveAwayTeam = 63768,
+         //team end
+         //toplist begin
+         //toplist end
+         //trade begin
+         MSG_GS2U_ReferenceItem = 2856,
+         MSG_U2GS_RequestDealRecord = 3454,
+         MSG_GS2U_QueryTrade = 7448,
+         MSG_U2GS_TradeBuy = 8360,
+         MSG_U2GS_ReferenceItem = 16796,
+         MSG_U2GS_DownTrade = 17148,
+         MSG_GS2U_QueryTradeInfo = 23698,
+         MSG_U2GS_ResultSort = 30881,
+         MSG_U2GS_QueryTrade = 40058,
+         MSG_U2GS_QueryNewestTrade = 42964,
+         MSG_U2GS_QuerySelfTrade = 45970,
+         MSG_U2GS_TradeRefuse = 49450,
+         MSG_GS2U_BuyTradeSuccess = 52241,
+         MSG_GS2U_DealRecord = 52921,
+         MSG_U2GS_PutTrade = 54355,
+         MSG_U2GS_NextResult = 58438,
+         MSG_GS2U_OpTradeResult = 58764,
+         MSG_GS2U_BuyTradeFaild = 63128,
+         //trade end
+         //wake begin
+         MSG_GS2U_WakeInfo = 1406,
+         MSG_U2GS_UnlockState = 10823,
+         MSG_GS2U_WakeInfoList = 20072,
+         MSG_GS2U_GoddessActiveSkill = 31922,
+         MSG_U2GS_UnlockCard = 32154,
+         MSG_U2GS_ChangeState = 37535,
+         MSG_U2GS_UpWakeInfo = 43827,
+         MSG_U2GS_UpGradeWakeInfo = 44728,
+         MSG_U2GS_CallGoddess = 56485,
+         MSG_U2GS_OnKeyUpWakeInfo = 59979,
+         //wake end
+         //warriortrial begin
+         MSG_U2GS_WarriorFirstKillReward_Request = 1249,
+         MSG_U2GS_WarriorTrialInit = 6210,
+         MSG_GS2U_WarriorTrialSuccess = 6523,
+         MSG_U2GS_CompleteWarriorTrail = 9471,
+         MSG_GS2U_WarriorFirstKillReward_Ack = 16801,
+         MSG_GS2U_InitWarriorTrialMissionInfo = 19866,
+         MSG_U2GS_SweepWarriorTrial = 38274,
+         MSG_GS2U_InitWarriorTrialAck = 47257,
+         MSG_U2GS_SweepWarriorTrial_OneKey_Request = 47522,
+         MSG_GS2U_SweepWarriorTrialSuccess = 59279,
+         MSG_U2GS_BeginWarriorTrial = 59331,
+         //warriortrial end
     }
     public partial class MessageFactory
     {
         static public void Initialize() {
+            RegisterMessageId( MessageType.MSG_GS2U_GetRewardUpdateResource, GS2U_GetRewardUpdateResource.Create );
+            RegisterMessageId( MessageType.MSG_DeleteRunes, DeleteRunes.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_GridPlayerRotw, GS2U_GridPlayerRotw.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_NewMountShape, GS2U_NewMountShape.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_Friend2Search_Ack, GS2U_Friend2Search_Ack.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_Mail, GS2U_Mail.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_QuickTeamMatchAck, GS2U_QuickTeamMatchAck.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_NpcList, GS2U_NpcList.Create );
+            RegisterMessageId( MessageType.MSG_MoveGoods, MoveGoods.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_Friend2SimpleList_Ack, GS2U_Friend2SimpleList_Ack.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_SelfDialInfo, GS2U_SelfDialInfo.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_ExpeditionGlobalMapInfoList, GS2U_ExpeditionGlobalMapInfoList.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_PlayerExtenInfo, GS2U_PlayerExtenInfo.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_RuneSuitPropList, GS2U_RuneSuitPropList.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_GivegifsResult, GS2U_GivegifsResult.Create );
             RegisterMessageId( MessageType.MSG_LS2Web_NormalAck, LS2Web_NormalAck.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_SendGuildCopyOpenTime, GS2U_SendGuildCopyOpenTime.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_AddTagResult, GS2U_AddTagResult.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_GemEmbedAdd, GS2U_GemEmbedAdd.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_QueryTeamListThisLineAck, GS2U_QueryTeamListThisLineAck.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_SyncServerTime, GS2U_SyncServerTime.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_WakeInfo, GS2U_WakeInfo.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_PetSleep, GS2U_PetSleep.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_AppointmentWeddingResult, GS2U_AppointmentWeddingResult.Create );
             RegisterMessageId( MessageType.MSG_LS2Web_CryptoAck, LS2Web_CryptoAck.Create );
+            RegisterMessageId( MessageType.MSG_Any_PlayerLogout, Any_PlayerLogout.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_IdentityPicDownloadData_Sync, GS2U_IdentityPicDownloadData_Sync.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_ArenaRoleList, GS2U_ArenaRoleList.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_RequestForeverLimitIDAck, GS2U_RequestForeverLimitIDAck.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_RuneCompoundAck, GS2U_RuneCompoundAck.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_MallBuyResult, GS2U_MallBuyResult.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_DateLink_BuffAddScore_Sync, GS2U_DateLink_BuffAddScore_Sync.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_RequestRechargeHasGiftIDListAck, GS2U_RequestRechargeHasGiftIDListAck.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_AliveRolePos_Sync, GS2U_AliveRolePos_Sync.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_UseItemResult, GS2U_UseItemResult.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_Guild_ExchangeAll_Sync, GS2U_Guild_ExchangeAll_Sync.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_Guild_FastJoin_Get_Ack, GS2U_Guild_FastJoin_Get_Ack.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_RespChatVoice, GS2U_RespChatVoice.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_FreshHomeAreaInfo, GS2U_FreshHomeAreaInfo.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_RespChatVoiceError, GS2U_RespChatVoiceError.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_ReferenceItem, GS2U_ReferenceItem.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_IsGuildCopyOpen, GS2U_IsGuildCopyOpen.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_IdentityPicUpload_Ack, GS2U_IdentityPicUpload_Ack.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_LBS_BesideRole_Ack, GS2U_LBS_BesideRole_Ack.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_AcceptTask, GS2U_AcceptTask.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_DatePushBox_Succeed_Sync, GS2U_DatePushBox_Succeed_Sync.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_TriggerPassiveSkill, GS2U_TriggerPassiveSkill.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_AddPraise, GS2U_AddPraise.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_Friend2FormalChatVoice_AckR, GS2U_Friend2FormalChatVoice_AckR.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_EquipRefineLevel, GS2U_EquipRefineLevel.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_Goblin_Open_State, GS2U_Goblin_Open_State.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_MailInfo, GS2U_MailInfo.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_UpLoadingPhotoResult, GS2U_UpLoadingPhotoResult.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_RedEnvelopeInfoAck, GS2U_RedEnvelopeInfoAck.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_Friend2BanFromFormal_Ask, GS2U_Friend2BanFromFormal_Ask.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_KillMonsterReward, GS2U_KillMonsterReward.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_PlayerCour, GS2U_PlayerCour.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_JoinGuild_Sync, GS2U_JoinGuild_Sync.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_LookRPInfo_Result, GS2U_LookRPInfo_Result.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_DeleteGoods, GS2U_DeleteGoods.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_Friend2AddFromBlack_Ask, GS2U_Friend2AddFromBlack_Ask.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_MapBossInfo, GS2U_MapBossInfo.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_AchieveScheduleList, GS2U_AchieveScheduleList.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_ObjBrief, GS2U_ObjBrief.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_LookInfoItemListAtNpcStore, GS2U_LookInfoItemListAtNpcStore.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_QueryGuildInfoByRoleID_Ack, GS2U_QueryGuildInfoByRoleID_Ack.Create );
             RegisterMessageId( MessageType.MSG_LS2U_LoginResult, LS2U_LoginResult.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_Invitefriendstobed, GS2U_Invitefriendstobed.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_BlockStatusChange, GS2U_BlockStatusChange.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_SpiritArea_Tick_Sync, GS2U_SpiritArea_Tick_Sync.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_ExpeditionBroadcastPos, GS2U_ExpeditionBroadcastPos.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_DateLink_Welcome_Sync, GS2U_DateLink_Welcome_Sync.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_AliveCancel_Ack, GS2U_AliveCancel_Ack.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_TowerInfo, GS2U_TowerInfo.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_Friend2FormalChatVoice_AckS, GS2U_Friend2FormalChatVoice_AckS.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_AliveEnterSafeArea_Ack, GS2U_AliveEnterSafeArea_Ack.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_CopyMapStatHurtList, GS2U_CopyMapStatHurtList.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_GetChargeOrUseGiftAck, GS2U_GetChargeOrUseGiftAck.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_TipsString, GS2U_TipsString.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_LoginInitWeddingKetubba, GS2U_LoginInitWeddingKetubba.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_Friend2ApplicantReset_Sync, GS2U_Friend2ApplicantReset_Sync.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_SevenDayAimState_Sync, GS2U_SevenDayAimState_Sync.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_RaceInit, GS2U_RaceInit.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_BuyBuffSuccess, GS2U_BuyBuffSuccess.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_EquipRecastInfo, GS2U_EquipRecastInfo.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_InvateEnterCopyMap, GS2U_InvateEnterCopyMap.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_Guild_SupplicateGive_Ack, GS2U_Guild_SupplicateGive_Ack.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_DialCostList, GS2U_DialCostList.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_WarriorTrialSuccess, GS2U_WarriorTrialSuccess.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_GemEmbedMakeResult, GS2U_GemEmbedMakeResult.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_ReduceCD, GS2U_ReduceCD.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_TeammateStartCopymapAck, GS2U_TeammateStartCopymapAck.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_RuneCastAck, GS2U_RuneCastAck.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_UpdateDailyActiveInfo, GS2U_UpdateDailyActiveInfo.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_LifeSkillCanUseCount, GS2U_LifeSkillCanUseCount.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_TaskUseItemList, GS2U_TaskUseItemList.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_Report, GS2U_Report.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_RequestJoinGuild_Ack, GS2U_RequestJoinGuild_Ack.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_QueryTrade, GS2U_QueryTrade.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_BindPhoneResult, GS2U_BindPhoneResult.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_TaskList, GS2U_TaskList.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_Guild_Exchange_Ack, GS2U_Guild_Exchange_Ack.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_KillValueResponse, GS2U_KillValueResponse.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_PlayerInitEnd, GS2U_PlayerInitEnd.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_UpdateLifeSkill, GS2U_UpdateLifeSkill.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_DateLink_BuffPower_Sync, GS2U_DateLink_BuffPower_Sync.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_PlayerAnswer, GS2U_PlayerAnswer.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_HomeFarming_Sync, GS2U_HomeFarming_Sync.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_GuildLoopTask_MyGet_Sync, GS2U_GuildLoopTask_MyGet_Sync.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_BroadcastTeamRevive, GS2U_BroadcastTeamRevive.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_RaceApply_Ack, GS2U_RaceApply_Ack.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_CarrierUseSkillToObject, GS2U_CarrierUseSkillToObject.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_AngelInvestmentList, GS2U_AngelInvestmentList.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_SevenDayAimReward_Ack, GS2U_SevenDayAimReward_Ack.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_RoleAwakeInof, GS2U_RoleAwakeInof.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_LockMail, GS2U_LockMail.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_ShopUpgrade, GS2U_ShopUpgrade.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_Friend2BanWithUnbanAndDel_Ask, GS2U_Friend2BanWithUnbanAndDel_Ask.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_KillRank, GS2U_KillRank.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_LotteryResetTime, GS2U_LotteryResetTime.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_ReturnKingList, GS2U_ReturnKingList.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_WWSyncMapInfoTwo, GS2U_WWSyncMapInfoTwo.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_ResetCopyMap, GS2U_ResetCopyMap.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_lsbattlefield_award_list, GS2U_lsbattlefield_award_list.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_NoticeDel, GS2U_NoticeDel.Create );
+            RegisterMessageId( MessageType.MSG_ArenaTeamMemberPrepare, ArenaTeamMemberPrepare.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_ISInApplyInfo, GS2U_ISInApplyInfo.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_UseFurnitrueResult, GS2U_UseFurnitrueResult.Create );
+            RegisterMessageId( MessageType.MSG_UpdataGuildHurtToBoss, UpdataGuildHurtToBoss.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_ExpeditionMapBattleInfoList, GS2U_ExpeditionMapBattleInfoList.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_CopymapFailed, GS2U_CopymapFailed.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_SendMailAck, GS2U_SendMailAck.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_MarrorInfoAck, GS2U_MarrorInfoAck.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_Guild_GodBless_Schedule_Sync, GS2U_Guild_GodBless_Schedule_Sync.Create );
+            RegisterMessageId( MessageType.MSG_MountShapeShift, MountShapeShift.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_FindTerritoryFailed_Ack, GS2U_FindTerritoryFailed_Ack.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_WWSyncMapInfo, GS2U_WWSyncMapInfo.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_AttackOffsetEffect, GS2U_AttackOffsetEffect.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_RaceSeletPet, GS2U_RaceSeletPet.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_TeamReset, GS2U_TeamReset.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_NewMemberJoin, GS2U_NewMemberJoin.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_GuildBuffRole, GS2U_GuildBuffRole.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_EquipGemInfos, GS2U_EquipGemInfos.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_PlayerPhys, GS2U_PlayerPhys.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_HisoryForce_Ack, GS2U_HisoryForce_Ack.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_WWFormData, GS2U_WWFormData.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_BossBattleRankResult, GS2U_BossBattleRankResult.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_UpdateNormalItem, GS2U_UpdateNormalItem.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_RequestGuildBossInfo_Sync, GS2U_RequestGuildBossInfo_Sync.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_MapLevel, GS2U_MapLevel.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_UseItemFireWorksNotice, GS2U_UseItemFireWorksNotice.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_AnswerFirstAndLuckyPlayer, GS2U_AnswerFirstAndLuckyPlayer.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_GuildWarCannonHit, GS2U_GuildWarCannonHit.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_copy_map_destory_time, GS2U_copy_map_destory_time.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_GuildBattleApply, GS2U_GuildBattleApply.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_Guild_FastJoin_Set_Ack, GS2U_Guild_FastJoin_Set_Ack.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_CrosBattleExploits, GS2U_CrosBattleExploits.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_WorldLevel, GS2U_WorldLevel.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_LookRPInfo_Pet, GS2U_LookRPInfo_Pet.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_HateInfo, GS2U_HateInfo.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_Date_FindTreasure_Sync, GS2U_Date_FindTreasure_Sync.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_WWList, GS2U_WWList.Create );
+            RegisterMessageId( MessageType.MSG_GetPlayerOnlineReward, GetPlayerOnlineReward.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_Friend2CrossAdd_Sync, GS2U_Friend2CrossAdd_Sync.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_SendAllFurniInfo_Sync, GS2U_SendAllFurniInfo_Sync.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_RuneEmbedOnAck, GS2U_RuneEmbedOnAck.Create );
+            RegisterMessageId( MessageType.MSG_U2GS2U_CopyMapScheduleShow2, U2GS2U_CopyMapScheduleShow2.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_TeamDisbanded, GS2U_TeamDisbanded.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_DateLink_Link_Sync, GS2U_DateLink_Link_Sync.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_SignIn, GS2U_SignIn.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_BroadcastDisapearFast, GS2U_BroadcastDisapearFast.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_UneedleaveOutMap, GS2U_UneedleaveOutMap.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_WashEquip, GS2U_WashEquip.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_GuildSkill, GS2U_GuildSkill.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_PvpBattleReportTip, GS2U_PvpBattleReportTip.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_RechargeSuccess, GS2U_RechargeSuccess.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_ChangeSkillSlotResult, GS2U_ChangeSkillSlotResult.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_DashTo, GS2U_DashTo.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_NearTeamInfo, GS2U_NearTeamInfo.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_LookRPInfo_Marriage, GS2U_LookRPInfo_Marriage.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_DeleteMail, GS2U_DeleteMail.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_Guild_SnowmanCompleteCount_Sync, GS2U_Guild_SnowmanCompleteCount_Sync.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_ChapterInfo, GS2U_ChapterInfo.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_DeadToTeam, GS2U_DeadToTeam.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_Recruit, GS2U_Recruit.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_GiftHistory_Sync, GS2U_GiftHistory_Sync.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_LevelUpGodWeaponSkillResult, GS2U_LevelUpGodWeaponSkillResult.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_Identity_Ack, GS2U_Identity_Ack.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_Guild_FastJoin_Ack, GS2U_Guild_FastJoin_Ack.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_UpdateFurnitureStorageSlot, GS2U_UpdateFurnitureStorageSlot.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_MarriageBaseInfo_Sync, GS2U_MarriageBaseInfo_Sync.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_UpdateAcceptTask, GS2U_UpdateAcceptTask.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_SkillInfoList, GS2U_SkillInfoList.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_PlayerDeletRoleInWedding, GS2U_PlayerDeletRoleInWedding.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_PutOutPetFarmingResults_Sync, GS2U_PutOutPetFarmingResults_Sync.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_Friend2TempReset_Sync, GS2U_Friend2TempReset_Sync.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_IdentityPicDownloadData_Ack, GS2U_IdentityPicDownloadData_Ack.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_RuneCastProp, GS2U_RuneCastProp.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_OperateExchangeAck, GS2U_OperateExchangeAck.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_RaceCancel_Ack, GS2U_RaceCancel_Ack.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_HaveIconAndActionList, GS2U_HaveIconAndActionList.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_Friend2CrossAll_Sync, GS2U_Friend2CrossAll_Sync.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_PlayerChangedWealth, GS2U_PlayerChangedWealth.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_EquipRefineResult, GS2U_EquipRefineResult.Create );
             RegisterMessageId( MessageType.MSG_GS2U_ChangeLineResponse, GS2U_ChangeLineResponse.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_MonsterMoveSync, GS2U_MonsterMoveSync.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_RoleAwakeingRet, GS2U_RoleAwakeingRet.Create );
+            RegisterMessageId( MessageType.MSG_U2GS2U_IdentityEditBloodType, U2GS2U_IdentityEditBloodType.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_CopyMapProcessCurrentScheduleStatus, GS2U_CopyMapProcessCurrentScheduleStatus.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_PlayerSp, GS2U_PlayerSp.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_Friend2FormalForMarriage_Sync, GS2U_Friend2FormalForMarriage_Sync.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_Guild_SnowmanExtraRes_Sync, GS2U_Guild_SnowmanExtraRes_Sync.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_WarriorFirstKillReward_Ack, GS2U_WarriorFirstKillReward_Ack.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_OpenSlotList, GS2U_OpenSlotList.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_AddTempPet, GS2U_AddTempPet.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_lsbattlefield_rank_list, GS2U_lsbattlefield_rank_list.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_BroadcastPlayerRevive, GS2U_BroadcastPlayerRevive.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_AttackResult, GS2U_AttackResult.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_RaceInviteList, GS2U_RaceInviteList.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_ChangeGuardianDeclaration, GS2U_ChangeGuardianDeclaration.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_AttackerDefenderQuotaNumberAck, GS2U_AttackerDefenderQuotaNumberAck.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_DatePushBox_Welcome_Sync, GS2U_DatePushBox_Welcome_Sync.Create );
+            RegisterMessageId( MessageType.MSG_EveryDaySignIn, EveryDaySignIn.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_DeleteAcceptTask, GS2U_DeleteAcceptTask.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_PetFairyInfo, GS2U_PetFairyInfo.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_DatePoolShooting_Welcome_Sync, GS2U_DatePoolShooting_Welcome_Sync.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_PetPveSweepAck, GS2U_PetPveSweepAck.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_MallPriceList2, GS2U_MallPriceList2.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_BattleLearnRequest, GS2U_BattleLearnRequest.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_Friend2GetBack_SyncInfo, GS2U_Friend2GetBack_SyncInfo.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_TeamMemberOnline, GS2U_TeamMemberOnline.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_TalentInitAck, GS2U_TalentInitAck.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_RawPetResult, GS2U_RawPetResult.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_CopyMapResult, GS2U_CopyMapResult.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_SetGreetingsResult_Sync, GS2U_SetGreetingsResult_Sync.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_RequestCompanion, GS2U_RequestCompanion.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_TriggerEvent, GS2U_TriggerEvent.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_GuildIDList, GS2U_GuildIDList.Create );
             RegisterMessageId( MessageType.MSG_LS2U_GameLineServerList, LS2U_GameLineServerList.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_PetList, GS2U_PetList.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_ShowAction, GS2U_ShowAction.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_LookInfoPlayer, GS2U_LookInfoPlayer.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_AttackSpeed, GS2U_AttackSpeed.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_PlotDialogue, GS2U_PlotDialogue.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_PetRawLvlChange, GS2U_PetRawLvlChange.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_HDBattlePhase, GS2U_HDBattlePhase.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_DonateSuccess, GS2U_DonateSuccess.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_UserPlayerList, GS2U_UserPlayerList.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_LookInfoItemListAtMall, GS2U_LookInfoItemListAtMall.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_SelectDanceID, GS2U_SelectDanceID.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_MsgBoxTips, GS2U_MsgBoxTips.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_TransformSkillSlotInfoList, GS2U_TransformSkillSlotInfoList.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_CopyMapLeftTime, GS2U_CopyMapLeftTime.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_MonsterBookSnap_Ack, GS2U_MonsterBookSnap_Ack.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_UpdateReel, GS2U_UpdateReel.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_WWPlayerInfo, GS2U_WWPlayerInfo.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_PlayerAnswerResult, GS2U_PlayerAnswerResult.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_GetMailItemAll, GS2U_GetMailItemAll.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_MoneyTreeAck, GS2U_MoneyTreeAck.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_UpdateTask, GS2U_UpdateTask.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_InitWarriorTrialMissionInfo, GS2U_InitWarriorTrialMissionInfo.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_Friend2FormalChat_Ack, GS2U_Friend2FormalChat_Ack.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_WakeInfoList, GS2U_WakeInfoList.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_TrunBattleInitList, GS2U_TrunBattleInitList.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_CrossNewPlayerCode, GS2U_CrossNewPlayerCode.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_Date_ResetBox_Sync, GS2U_Date_ResetBox_Sync.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_MyGuildBossRank, GS2U_MyGuildBossRank.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_BattleStartSec, GS2U_BattleStartSec.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_AddNewCompleteTask, GS2U_AddNewCompleteTask.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_returnFriendPos, GS2U_returnFriendPos.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_Friend2WantChat_Ack, GS2U_Friend2WantChat_Ack.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_WeddingMapPhase, GS2U_WeddingMapPhase.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_CallSkill, GS2U_CallSkill.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_LotteryForTowerInfo, GS2U_LotteryForTowerInfo.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_ChangeCamp, GS2U_ChangeCamp.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_InitRecycle, GS2U_InitRecycle.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_AddImpressionResult, GS2U_AddImpressionResult.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_TerritoryExploitEnd_Sync, GS2U_TerritoryExploitEnd_Sync.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_LevelUpGodWeaponResult, GS2U_LevelUpGodWeaponResult.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_RecvInviteFriend, GS2U_RecvInviteFriend.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_ChatErrorResult, GS2U_ChatErrorResult.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_Report_Ack, GS2U_Report_Ack.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_PetReName, GS2U_PetReName.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_PetAssistUpdateSlot, GS2U_PetAssistUpdateSlot.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_lottery_award_items, GS2U_lottery_award_items.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_InitSlot, GS2U_InitSlot.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_CopyMapSchedulePlayCharacter, GS2U_CopyMapSchedulePlayCharacter.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_LoginResult, GS2U_LoginResult.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_AddTitle, GS2U_AddTitle.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_KillPlayerNumber, GS2U_KillPlayerNumber.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_GuildBossRank, GS2U_GuildBossRank.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_RaceMapItem_Sync, GS2U_RaceMapItem_Sync.Create );
+            RegisterMessageId( MessageType.MSG_PetSwitch, PetSwitch.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_EnterHome, GS2U_EnterHome.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_ReturnEscortList, GS2U_ReturnEscortList.Create );
+            RegisterMessageId( MessageType.MSG_OpenNewBagSlot, OpenNewBagSlot.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_TransferNewPos, GS2U_TransferNewPos.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_DeletePet, GS2U_DeletePet.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_NoticeAdd, GS2U_NoticeAdd.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_AddEquipItemToBag, GS2U_AddEquipItemToBag.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_ChangeDenoter, GS2U_ChangeDenoter.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_OperateAct_Exchange, GS2U_OperateAct_Exchange.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_ChangedecorateModelResult, GS2U_ChangedecorateModelResult.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_MarriagePropose_Ask, GS2U_MarriagePropose_Ask.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_TeamMemberExtInfo, GS2U_TeamMemberExtInfo.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_MallPriceList, GS2U_MallPriceList.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_UpdatePower, GS2U_UpdatePower.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_QueryTradeInfo, GS2U_QueryTradeInfo.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_Friend2BlackReset_Sync, GS2U_Friend2BlackReset_Sync.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_GiveLuckyCoinResult, GS2U_GiveLuckyCoinResult.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_UpdateEquipItem, GS2U_UpdateEquipItem.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_Dead, GS2U_Dead.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_WeddingRedState, GS2U_WeddingRedState.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_IdentityCharm_Sync, GS2U_IdentityCharm_Sync.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_DelTeammateInfo, GS2U_DelTeammateInfo.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_ResetPetAck, GS2U_ResetPetAck.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_TerritoryPlunder_Ack, GS2U_TerritoryPlunder_Ack.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_Guild_SupplicateGiveF_Ack, GS2U_Guild_SupplicateGiveF_Ack.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_AnswerQuestion, GS2U_AnswerQuestion.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_MarriageRingUp_Sync, GS2U_MarriageRingUp_Sync.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_GetPetFoodResults_Sync, GS2U_GetPetFoodResults_Sync.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_AckStandSort, GS2U_AckStandSort.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_PutPetInFarmingResults_Sync, GS2U_PutPetInFarmingResults_Sync.Create );
             RegisterMessageId( MessageType.MSG_LS2U_LoginQue, LS2U_LoginQue.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_PlayerBaseInfo, GS2U_PlayerBaseInfo.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_Friend2CrossDel_Ack, GS2U_Friend2CrossDel_Ack.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_UpdateTeamInfo, GS2U_UpdateTeamInfo.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_RuneTurnPosAck, GS2U_RuneTurnPosAck.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_MarriagePropose_Ack, GS2U_MarriagePropose_Ack.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_NpcTitleChange, GS2U_NpcTitleChange.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_GuildLoopTask_WantGive_Ack, GS2U_GuildLoopTask_WantGive_Ack.Create );
+            RegisterMessageId( MessageType.MSG_U2GS2U_IdentityEditZodiac, U2GS2U_IdentityEditZodiac.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_DateLink_Select_Ack, GS2U_DateLink_Select_Ack.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_BattleNotes, GS2U_BattleNotes.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_AddNormalItemToBag, GS2U_AddNormalItemToBag.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_RequestRiftNpcInfo, GS2U_RequestRiftNpcInfo.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_SwitchDance, GS2U_SwitchDance.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_Guild_SnowmanSettle_Sync, GS2U_Guild_SnowmanSettle_Sync.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_DarknessRank, GS2U_DarknessRank.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_ExchangeResult, GS2U_ExchangeResult.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_Forbidden_Load_Photo, GS2U_Forbidden_Load_Photo.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_BattleLearnResult, GS2U_BattleLearnResult.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_DateLink_GameEnd_Sync, GS2U_DateLink_GameEnd_Sync.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_Friend2ClosenessChange_Sync, GS2U_Friend2ClosenessChange_Sync.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_GainPraise, GS2U_GainPraise.Create );
+            RegisterMessageId( MessageType.MSG_U2GS2U_IdentityEditHometown, U2GS2U_IdentityEditHometown.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_RequestExchangeResourceForeverLimitIDAck, GS2U_RequestExchangeResourceForeverLimitIDAck.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_action_point_info, GS2U_action_point_info.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_FashionList, GS2U_FashionList.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_OccupyOwnerChange, GS2U_OccupyOwnerChange.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_SendPlayerDailyCountList, GS2U_SendPlayerDailyCountList.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_WeddingStartInviteAll, GS2U_WeddingStartInviteAll.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_OpenketubbaResult, GS2U_OpenketubbaResult.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_OwnTitleList, GS2U_OwnTitleList.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_ActiveFashionSuitList, GS2U_ActiveFashionSuitList.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_MonsterBookNeed_Sync, GS2U_MonsterBookNeed_Sync.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_PlayerEnterMapSucc, GS2U_PlayerEnterMapSucc.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_TerritoryVigor_Ack, GS2U_TerritoryVigor_Ack.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_UseItemGainGoodsTips, GS2U_UseItemGainGoodsTips.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_UpdateArenaTeamMember, GS2U_UpdateArenaTeamMember.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_RuneFuseAck, GS2U_RuneFuseAck.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_HDGatherSuccess, GS2U_HDGatherSuccess.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_BattlePropList, GS2U_BattlePropList.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_ToTargetFriendAck, GS2U_ToTargetFriendAck.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_TrunBattleResultList, GS2U_TrunBattleResultList.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_BeenInviteTeam, GS2U_BeenInviteTeam.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_PetEquipInfoList, GS2U_PetEquipInfoList.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_RequestFightingCapacity, GS2U_RequestFightingCapacity.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_UseNpcInteractiveReuslt, GS2U_UseNpcInteractiveReuslt.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_GemEmbedDelete, GS2U_GemEmbedDelete.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_ExpeditionFinalInfo, GS2U_ExpeditionFinalInfo.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_CopyMapSchedulePlayAnimation, GS2U_CopyMapSchedulePlayAnimation.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_GuildTask, GS2U_GuildTask.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_UseSkillToPos, GS2U_UseSkillToPos.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_LookRPInfo_Fashion, GS2U_LookRPInfo_Fashion.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_SelectCamp, GS2U_SelectCamp.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_EquipEnhancedProp, GS2U_EquipEnhancedProp.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_InitWildBossInfo, GS2U_InitWildBossInfo.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_VisitRecord, GS2U_VisitRecord.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_BusinessSupperGift_Ack, GS2U_BusinessSupperGift_Ack.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_RequestGoddessCodeAck, GS2U_RequestGoddessCodeAck.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_FastTeamSucc, GS2U_FastTeamSucc.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_PetSkillCastResult, GS2U_PetSkillCastResult.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_RuneOpenBorad, GS2U_RuneOpenBorad.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_MaterialInfo, GS2U_MaterialInfo.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_TalkToNpcResult, GS2U_TalkToNpcResult.Create );
+            RegisterMessageId( MessageType.MSG_U2GS2U_RequestRoleHeadPic, U2GS2U_RequestRoleHeadPic.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_SpecificEvent_Sync, GS2U_SpecificEvent_Sync.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_EveryDayGetPower_Sync, GS2U_EveryDayGetPower_Sync.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_PropSync, GS2U_PropSync.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_HeartBeatAck, GS2U_HeartBeatAck.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_SevenMissionDataUpdate, GS2U_SevenMissionDataUpdate.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_ChangeCarrer, GS2U_ChangeCarrer.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_RefreshRank, GS2U_RefreshRank.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_ResponseChangePKMode, GS2U_ResponseChangePKMode.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_BeReportNum, GS2U_BeReportNum.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_PvpBattleResult, GS2U_PvpBattleResult.Create );
+            RegisterMessageId( MessageType.MSG_PetReName, PetReName.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_DialItemList, GS2U_DialItemList.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_GoddessActiveSkill, GS2U_GoddessActiveSkill.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_InviteFriendToMe, GS2U_InviteFriendToMe.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_UpgradeSkill_Result, GS2U_UpgradeSkill_Result.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_RequestLookMemberList, GS2U_RequestLookMemberList.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_BreakDance, GS2U_BreakDance.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_SyncGBInfo, GS2U_SyncGBInfo.Create );
+            RegisterMessageId( MessageType.MSG_PlayerLevelReward, PlayerLevelReward.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_MonsterBookUnlock_Ack, GS2U_MonsterBookUnlock_Ack.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_MonsterList, GS2U_MonsterList.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_GivePower, GS2U_GivePower.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_Guild_SupplicateGive_Sync, GS2U_Guild_SupplicateGive_Sync.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_UseItemExpInDanResult, GS2U_UseItemExpInDanResult.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_QueryRuneTipsAck, GS2U_QueryRuneTipsAck.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_TalentLevelUpSuccess, GS2U_TalentLevelUpSuccess.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_ReceiveFloatingAward, GS2U_ReceiveFloatingAward.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_MoneyDungeonCopyMapResult, GS2U_MoneyDungeonCopyMapResult.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_RobRedEnvelopeAck, GS2U_RobRedEnvelopeAck.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_ShiftTo, GS2U_ShiftTo.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_Error, GS2U_Error.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_RequestJoinGuildList, GS2U_RequestJoinGuildList.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_Guild_SnowmanSnowman_Sync, GS2U_Guild_SnowmanSnowman_Sync.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_RuneEmbedOffAck, GS2U_RuneEmbedOffAck.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_InitItem, GS2U_InitItem.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_PlayerDead, GS2U_PlayerDead.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_AchieveSchedule, GS2U_AchieveSchedule.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_HomeInfo, GS2U_HomeInfo.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_Guild_OpenSupplication_Ack, GS2U_Guild_OpenSupplication_Ack.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_AliveCarrier_Sync, GS2U_AliveCarrier_Sync.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_VariantInfo, GS2U_VariantInfo.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_ReceivePlayerLevelRewardResult, GS2U_ReceivePlayerLevelRewardResult.Create );
+            RegisterMessageId( MessageType.MSG_UpLoadingPhoto, UpLoadingPhoto.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_SevenDayAimUpdate_Sync, GS2U_SevenDayAimUpdate_Sync.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_HomeBitResult, GS2U_HomeBitResult.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_ExtendAreaResult_Sync, GS2U_ExtendAreaResult_Sync.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_Friend2BanWithUnban_Ask, GS2U_Friend2BanWithUnban_Ask.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_UpdateMemberExInfo, GS2U_UpdateMemberExInfo.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_AckRewardLevel, GS2U_AckRewardLevel.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_Friend2MakeFormal_Sync, GS2U_Friend2MakeFormal_Sync.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_ApplyAnswerResult, GS2U_ApplyAnswerResult.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_SendHomeLetter, GS2U_SendHomeLetter.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_Ladder1v1BattleEnd, GS2U_Ladder1v1BattleEnd.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_UpdateDevilCopyMapStar, GS2U_UpdateDevilCopyMapStar.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_BossBattleState, GS2U_BossBattleState.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_PetAssistInit, GS2U_PetAssistInit.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_TriggerSkill, GS2U_TriggerSkill.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_GetEssenceNum, GS2U_GetEssenceNum.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_TeammateLocation, GS2U_TeammateLocation.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_OffMountPetAck, GS2U_OffMountPetAck.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_UpdateCatalogList, GS2U_UpdateCatalogList.Create );
+            RegisterMessageId( MessageType.MSG_GS2S_UseTheAwakeBuffRet, GS2S_UseTheAwakeBuffRet.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_LotteryMoney, GS2U_LotteryMoney.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_CopyMapProcessCurrentScheduleSurplusSecond, GS2U_CopyMapProcessCurrentScheduleSurplusSecond.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_StopMove, GS2U_StopMove.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_FindTerritory_Ack, GS2U_FindTerritory_Ack.Create );
+            RegisterMessageId( MessageType.MSG_ActiveGuildCopy, ActiveGuildCopy.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_HDBattleOpenSurplusTime, GS2U_HDBattleOpenSurplusTime.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_Friend2FormalReset_Sync, GS2U_Friend2FormalReset_Sync.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_AcceptHolidayTaskSucc, GS2U_AcceptHolidayTaskSucc.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_Friend2CrossAdd2Failed_Ack, GS2U_Friend2CrossAdd2Failed_Ack.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_PVEBattleResult, GS2U_PVEBattleResult.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_PvpPosSaveAck, GS2U_PvpPosSaveAck.Create );
+            RegisterMessageId( MessageType.MSG_U2GS2U_IdentityEditSign, U2GS2U_IdentityEditSign.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_EnterMapFailed, GS2U_EnterMapFailed.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_KingBattleRepairMirror, GS2U_KingBattleRepairMirror.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_FreshHomeInfo, GS2U_FreshHomeInfo.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_InitGainLuckyCoinInfo, GS2U_InitGainLuckyCoinInfo.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_MyTeamInfo, GS2U_MyTeamInfo.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_OpenInvitePanelResult, GS2U_OpenInvitePanelResult.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_CollectionWords_Sync, GS2U_CollectionWords_Sync.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_IsTriggerCountDown, GS2U_IsTriggerCountDown.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_MyRankingAndDamage, GS2U_MyRankingAndDamage.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_UpStartPetResult, GS2U_UpStartPetResult.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_lottery_sys_info, GS2U_lottery_sys_info.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_QueryTerritoryInfo_Ack, GS2U_QueryTerritoryInfo_Ack.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_IconLight, GS2U_IconLight.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_AnswerRank, GS2U_AnswerRank.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_MonsterSpeed, GS2U_MonsterSpeed.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_FloatingSchedule, GS2U_FloatingSchedule.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_MarriageSkillUp_Ack, GS2U_MarriageSkillUp_Ack.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_IdentityLike_Sync, GS2U_IdentityLike_Sync.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_PlayerHp, GS2U_PlayerHp.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_LotteryForTowerBeginTimeEndTime, GS2U_LotteryForTowerBeginTimeEndTime.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_AddArenaTeamMemberRequest, GS2U_AddArenaTeamMemberRequest.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_NpcStatusChange, GS2U_NpcStatusChange.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_PushInfo, GS2U_PushInfo.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_LuckyDrawResult, GS2U_LuckyDrawResult.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_SyncStateLoopTask, GS2U_SyncStateLoopTask.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_RobWeddingRedResult, GS2U_RobWeddingRedResult.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_SendServerType, GS2U_SendServerType.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_DateLink_ResetGem_Sync, GS2U_DateLink_ResetGem_Sync.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_Guild_Supplicate_Ack, GS2U_Guild_Supplicate_Ack.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_PlayerAwakenInfo, GS2U_PlayerAwakenInfo.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_QueryEquipResult, GS2U_QueryEquipResult.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_KickOutTip, GS2U_KickOutTip.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_IdentityPicDownloadError_Ack, GS2U_IdentityPicDownloadError_Ack.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_CurEscortType, GS2U_CurEscortType.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_EquipGemInfoUpdate, GS2U_EquipGemInfoUpdate.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_ThirtyDayLoginGiftState_Sync, GS2U_ThirtyDayLoginGiftState_Sync.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_KingBattleResult, GS2U_KingBattleResult.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_Guild_FairgroundEnter_Ack, GS2U_Guild_FairgroundEnter_Ack.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_GiveGiftEfects, GS2U_GiveGiftEfects.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_LockGoods, GS2U_LockGoods.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_DeletePlayerResult, GS2U_DeletePlayerResult.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_Chatinfo, GS2U_Chatinfo.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_EquipUpStarInfoList, GS2U_EquipUpStarInfoList.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_RPRuneInfoList, GS2U_RPRuneInfoList.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_LookMountInfo, GS2U_LookMountInfo.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_CopyMapProcess, GS2U_CopyMapProcess.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_DateLink_MainTime_Sync, GS2U_DateLink_MainTime_Sync.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_ArenaBattleList, GS2U_ArenaBattleList.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_Friend2GetBack_IgnoreRet, GS2U_Friend2GetBack_IgnoreRet.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_RequestRechargeAck, GS2U_RequestRechargeAck.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_CrosArenaBattleRanks, GS2U_CrosArenaBattleRanks.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_TeammateLeave, GS2U_TeammateLeave.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_AddNewAcceptTask, GS2U_AddNewAcceptTask.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_ActivityStateInfo, GS2U_ActivityStateInfo.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_AddTeamMemberInfo, GS2U_AddTeamMemberInfo.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_MaterialCopyMapResult, GS2U_MaterialCopyMapResult.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_ActivityMapRankData, GS2U_ActivityMapRankData.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_MarriageBreak_Ack, GS2U_MarriageBreak_Ack.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_Friend2ForLook_Ack, GS2U_Friend2ForLook_Ack.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_InvitedPersonResult, GS2U_InvitedPersonResult.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_BuyLuckyBagResult, GS2U_BuyLuckyBagResult.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_PetLevelUp, GS2U_PetLevelUp.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_RefreshGuildProp, GS2U_RefreshGuildProp.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_RequestPictureNoticeAck, GS2U_RequestPictureNoticeAck.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_DevilCopyMapRankList, GS2U_DevilCopyMapRankList.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_GiveRewardAck, GS2U_GiveRewardAck.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_SessionKey, GS2U_SessionKey.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_Report_Max, GS2U_Report_Max.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_OneKeyRecruit_Ack, GS2U_OneKeyRecruit_Ack.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_ArenaRoleDead, GS2U_ArenaRoleDead.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_KillPlayerResponse, GS2U_KillPlayerResponse.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_RequestTargetCopyMapScore, GS2U_RequestTargetCopyMapScore.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_Upgrade_Ack, GS2U_Upgrade_Ack.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_GuildWarRankForHud, GS2U_GuildWarRankForHud.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_OpenSlot, GS2U_OpenSlot.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_BroadcastVisibleEquipOn, GS2U_BroadcastVisibleEquipOn.Create );
+            RegisterMessageId( MessageType.MSG_SyncRideItem, SyncRideItem.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_ResourceExchangeList, GS2U_ResourceExchangeList.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_DarknessInfo, GS2U_DarknessInfo.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_BusinessPlayerInfo, GS2U_BusinessPlayerInfo.Create );
+            RegisterMessageId( MessageType.MSG_U2GS2U_IdentityEditFace, U2GS2U_IdentityEditFace.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_SelPlayerResult, GS2U_SelPlayerResult.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_Guild_FairgroundRide_Sync, GS2U_Guild_FairgroundRide_Sync.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_RaceMapMilestone_Sync, GS2U_RaceMapMilestone_Sync.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_ReturnDonateTimes, GS2U_ReturnDonateTimes.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_FashionConfigInfo, GS2U_FashionConfigInfo.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_SkillInfo, GS2U_SkillInfo.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_PlayerRevive, GS2U_PlayerRevive.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_BadgeInfoList, GS2U_BadgeInfoList.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_AliveRole_Sync, GS2U_AliveRole_Sync.Create );
+            RegisterMessageId( MessageType.MSG_DelTag, DelTag.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_MarriageRingUpPartner_Sync, GS2U_MarriageRingUpPartner_Sync.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_DelMailItem, GS2U_DelMailItem.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_WeddingLotteryResult, GS2U_WeddingLotteryResult.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_RaceMapState_Sync, GS2U_RaceMapState_Sync.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_BuffInfo, GS2U_BuffInfo.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_GemEmbedInit, GS2U_GemEmbedInit.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_DateLink_BuffAddTime_Sync, GS2U_DateLink_BuffAddTime_Sync.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_GuildWarData, GS2U_GuildWarData.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_ShowGainGoodsOrCoinsInfo, GS2U_ShowGainGoodsOrCoinsInfo.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_GBList, GS2U_GBList.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_RedEnvelopeHistoryAck, GS2U_RedEnvelopeHistoryAck.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_DateLink_BuffBuff_Sync, GS2U_DateLink_BuffBuff_Sync.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_MoneyDungeonInfo, GS2U_MoneyDungeonInfo.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_InviteUJoinTeam, GS2U_InviteUJoinTeam.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_RobitAutoAnswer, GS2U_RobitAutoAnswer.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_NoticeWildBossDead, GS2U_NoticeWildBossDead.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_SendRank, GS2U_SendRank.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_UseItem, GS2U_UseItem.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_HomePlantOperate_Ack, GS2U_HomePlantOperate_Ack.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_PetStrAck, GS2U_PetStrAck.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_DeadLineGiftList, GS2U_DeadLineGiftList.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_BuyLimitedResult, GS2U_BuyLimitedResult.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_MarriageProposeRefresh_Ack, GS2U_MarriageProposeRefresh_Ack.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_PlayerAnswerInfo, GS2U_PlayerAnswerInfo.Create );
+            RegisterMessageId( MessageType.MSG_U2GS2U_IdentityEditAge, U2GS2U_IdentityEditAge.Create );
+            RegisterMessageId( MessageType.MSG_BindPhoneAwardGet, BindPhoneAwardGet.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_GuildOpResult, GS2U_GuildOpResult.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_CreatePlayerResult, GS2U_CreatePlayerResult.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_RequestCollectionWordsAwardAck, GS2U_RequestCollectionWordsAwardAck.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_BroadcastDisapear, GS2U_BroadcastDisapear.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_TeamMemberOnlineState, GS2U_TeamMemberOnlineState.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_DatePushBox_GreateNPC_Sync, GS2U_DatePushBox_GreateNPC_Sync.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_LadderTargetList, GS2U_LadderTargetList.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_receivedInvitationCard, GS2U_receivedInvitationCard.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_UsePetSkillBook, GS2U_UsePetSkillBook.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_MarriageSkill_Sync, GS2U_MarriageSkill_Sync.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_SpiritArea_Wake_Sync, GS2U_SpiritArea_Wake_Sync.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_ReceiveDailyActiveAwardResult, GS2U_ReceiveDailyActiveAwardResult.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_ChangeNotice, GS2U_ChangeNotice.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_KoreaNaverConfigInfo, GS2U_KoreaNaverConfigInfo.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_MonsterBookReward_Ack, GS2U_MonsterBookReward_Ack.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_BroadcastVisibleEquipOff, GS2U_BroadcastVisibleEquipOff.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_Guild_SnowmanAll_Sync, GS2U_Guild_SnowmanAll_Sync.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_ClearFightObject, GS2U_ClearFightObject.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_GuildBuff, GS2U_GuildBuff.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_RequestChargeOrUseListAck, GS2U_RequestChargeOrUseListAck.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_TheAwakeBuffInfo, GS2U_TheAwakeBuffInfo.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_AllBattleProp, GS2U_AllBattleProp.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_NpcMomentMove, GS2U_NpcMomentMove.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_Friend2CrossAdd2_Ack, GS2U_Friend2CrossAdd2_Ack.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_MountAck, GS2U_MountAck.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_Friend2CrossInit_Sync, GS2U_Friend2CrossInit_Sync.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_ChangeNameResult, GS2U_ChangeNameResult.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_PetAttaSaveRes, GS2U_PetAttaSaveRes.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_LotteryForTowerRandonAward, GS2U_LotteryForTowerRandonAward.Create );
+            RegisterMessageId( MessageType.MSG_U2GS2U_IdentityEditBirth, U2GS2U_IdentityEditBirth.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_InitWarriorTrialAck, GS2U_InitWarriorTrialAck.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_PlayerAddExp, GS2U_PlayerAddExp.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_GroupBuyGoodsBuyAck, GS2U_GroupBuyGoodsBuyAck.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_ReceiveNotice, GS2U_ReceiveNotice.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_PetAddAttaRes, GS2U_PetAddAttaRes.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_ResponseBattleAck, GS2U_ResponseBattleAck.Create );
+            RegisterMessageId( MessageType.MSG_CrosArenaMatch, CrosArenaMatch.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_TeamLeaderStartCopymap, GS2U_TeamLeaderStartCopymap.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_BusinessInfo, GS2U_BusinessInfo.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_GivingFurniTrueForPartnerResult, GS2U_GivingFurniTrueForPartnerResult.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_PassiveSkillInfoList, GS2U_PassiveSkillInfoList.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_UnlockMail, GS2U_UnlockMail.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_StopTheAwakeBuffRet, GS2U_StopTheAwakeBuffRet.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_PetLvlChange, GS2U_PetLvlChange.Create );
+            RegisterMessageId( MessageType.MSG_SyncRideInfo, SyncRideInfo.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_TerritoryBattle_Tick_Sync, GS2U_TerritoryBattle_Tick_Sync.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_TipsError, GS2U_TipsError.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_QueryTerritoryHistory_Ack, GS2U_QueryTerritoryHistory_Ack.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_DevilCopyMapStarList, GS2U_DevilCopyMapStarList.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_EqupmentCombinAck, GS2U_EqupmentCombinAck.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_MallInfoList, GS2U_MallInfoList.Create );
+            RegisterMessageId( MessageType.MSG_DeleteRide, DeleteRide.Create );
+            RegisterMessageId( MessageType.MSG_GS2u_Friend2Like_Ack, GS2u_Friend2Like_Ack.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_HDBattleCD, GS2U_HDBattleCD.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_PetInfoList, GS2U_PetInfoList.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_UseSkillToObject, GS2U_UseSkillToObject.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_GainLuckyCoin, GS2U_GainLuckyCoin.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_BusinessCAInfo, GS2U_BusinessCAInfo.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_FloatingAward, GS2U_FloatingAward.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_ACCityMonsterSurplusTime, GS2U_ACCityMonsterSurplusTime.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_JqueryrotateResult, GS2U_JqueryrotateResult.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_AcceptTaskList, GS2U_AcceptTaskList.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_RuneInfoList, GS2U_RuneInfoList.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_NoticeWildBossTarget, GS2U_NoticeWildBossTarget.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_SendAnswerData, GS2U_SendAnswerData.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_PrepareSec, GS2U_PrepareSec.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_LotteryResult, GS2U_LotteryResult.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_ThirtyDayLoginGift_Ack, GS2U_ThirtyDayLoginGift_Ack.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_DelMailCoin, GS2U_DelMailCoin.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_IdentityEditPic_Ack, GS2U_IdentityEditPic_Ack.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_DelSenceTheFurniTrueResult, GS2U_DelSenceTheFurniTrueResult.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_SendRankModelData, GS2U_SendRankModelData.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_PassiveSkillInfo, GS2U_PassiveSkillInfo.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_BreakLifeSkill, GS2U_BreakLifeSkill.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_CrosArenaBattleHighRanks, GS2U_CrosArenaBattleHighRanks.Create );
+            RegisterMessageId( MessageType.MSG_UpdataHurtToBoss, UpdataHurtToBoss.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_DarknessKillOrBeKill, GS2U_DarknessKillOrBeKill.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_Guild_GodBless_Ack, GS2U_Guild_GodBless_Ack.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_BreakSkill, GS2U_BreakSkill.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_WWEscortResult, GS2U_WWEscortResult.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_ReconnectLoginRequestFail, GS2U_ReconnectLoginRequestFail.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_TeammateLeaveAwayTeam, GS2U_TeammateLeaveAwayTeam.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_PvpBattleInfoRes, GS2U_PvpBattleInfoRes.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_FreshWWFormData, GS2U_FreshWWFormData.Create );
+            RegisterMessageId( MessageType.MSG_Any_ChangeMap, Any_ChangeMap.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_GuildWarEnd, GS2U_GuildWarEnd.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_BusinessCashDailyGift_Ack, GS2U_BusinessCashDailyGift_Ack.Create );
+            RegisterMessageId( MessageType.MSG_DelImpression, DelImpression.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_UpdatePetSkill, GS2U_UpdatePetSkill.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_Guild_SnowmanBegin_Sync, GS2U_Guild_SnowmanBegin_Sync.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_PlayerBlood, GS2U_PlayerBlood.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_Date_PlayerAnimation_Sync, GS2U_Date_PlayerAnimation_Sync.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_WWSyncMapInfoOne, GS2U_WWSyncMapInfoOne.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_Date_ResetFindTreasure_Sync, GS2U_Date_ResetFindTreasure_Sync.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_BuyTradeSuccess, GS2U_BuyTradeSuccess.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_ForceDeadNow, GS2U_ForceDeadNow.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_DealRecord, GS2U_DealRecord.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_synch_lsbattlefield_state, GS2U_synch_lsbattlefield_state.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_FastTeamAck, GS2U_FastTeamAck.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_GroupBuyRewardBuyAck, GS2U_GroupBuyRewardBuyAck.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_BiddingGuildMsg, GS2U_BiddingGuildMsg.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_PetBaseInfo, GS2U_PetBaseInfo.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_MoneyChanges, GS2U_MoneyChanges.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_RequestAutoDealAck, GS2U_RequestAutoDealAck.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_ActivityEnd, GS2U_ActivityEnd.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_OpenSkill, GS2U_OpenSkill.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_RuneMeltAck, GS2U_RuneMeltAck.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_SetUpAnchor, GS2U_SetUpAnchor.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_BroadcastPlayerHpPC, GS2U_BroadcastPlayerHpPC.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_Friend2GetBack_AddRet, GS2U_Friend2GetBack_AddRet.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_MallBuyResult2, GS2U_MallBuyResult2.Create );
+            RegisterMessageId( MessageType.MSG_U2GS2U_RaceAutoMatch, U2GS2U_RaceAutoMatch.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_Guild_GodBless_Schedule_Reward_Ack, GS2U_Guild_GodBless_Schedule_Reward_Ack.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_Date_RefreshSocre_Sync, GS2U_Date_RefreshSocre_Sync.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_DateLink_DeduffBuff_Sync, GS2U_DateLink_DeduffBuff_Sync.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_GuildBossResoult, GS2U_GuildBossResoult.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_Date_ResetPoolShooting_Sync, GS2U_Date_ResetPoolShooting_Sync.Create );
+            RegisterMessageId( MessageType.MSG_GS2u_OwnPortraitFrame, GS2u_OwnPortraitFrame.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_RaceInvite_S2B, GS2U_RaceInvite_S2B.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_TeamInfo, GS2U_TeamInfo.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_ActionList, GS2U_ActionList.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_GuildBattleResult, GS2U_GuildBattleResult.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_FestivalTimeInfo, GS2U_FestivalTimeInfo.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_DialRewardList, GS2U_DialRewardList.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_QueryRoleListAck, GS2U_QueryRoleListAck.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_TeamChangeLeader, GS2U_TeamChangeLeader.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_BadgeInfo, GS2U_BadgeInfo.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_JoinHDBattle, GS2U_JoinHDBattle.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_SendGiftNotice, GS2U_SendGiftNotice.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_DestinyStar, GS2U_DestinyStar.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_SevenMissionDataList, GS2U_SevenMissionDataList.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_BuyItemQuotaNumber, GS2U_BuyItemQuotaNumber.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_MyAnswerRank, GS2U_MyAnswerRank.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_RaceMapGiveUp_Sync, GS2U_RaceMapGiveUp_Sync.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_LotteryNote, GS2U_LotteryNote.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_InitEquip, GS2U_InitEquip.Create );
+            RegisterMessageId( MessageType.MSG_U2GS2U_BuyCopyReward, U2GS2U_BuyCopyReward.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_CollectObj_Failed, GS2U_CollectObj_Failed.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_EscortResult, GS2U_EscortResult.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_HDBattleExploits, GS2U_HDBattleExploits.Create );
+            RegisterMessageId( MessageType.MSG_RefindResList, RefindResList.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_CompleteTaskList, GS2U_CompleteTaskList.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_MarriageTask_Together_Ask1, GS2U_MarriageTask_Together_Ask1.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_EquipUpStarRes, GS2U_EquipUpStarRes.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_DarknessQuenenState, GS2U_DarknessQuenenState.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_ExpeditionQuenenState, GS2U_ExpeditionQuenenState.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_MountShapeList, GS2U_MountShapeList.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_KickOutByLeader, GS2U_KickOutByLeader.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_InitiativeSkillSlotInfoList, GS2U_InitiativeSkillSlotInfoList.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_GuildLoopTask_Give_Ack, GS2U_GuildLoopTask_Give_Ack.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_OpenGuildForm, GS2U_OpenGuildForm.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_OnMountPetAck, GS2U_OnMountPetAck.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_NearbyPlayer_Ack, GS2U_NearbyPlayer_Ack.Create );
+            RegisterMessageId( MessageType.MSG_U2GS2U_IdentityEditLocation, U2GS2U_IdentityEditLocation.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_Gift_Ack, GS2U_Gift_Ack.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_MoveInfo, GS2U_MoveInfo.Create );
+            RegisterMessageId( MessageType.MSG_Any_UpdateVariant, Any_UpdateVariant.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_FashionResult, GS2U_FashionResult.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_GuildList, GS2U_GuildList.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_Guild_ShopBuy_Ack, GS2U_Guild_ShopBuy_Ack.Create );
+            RegisterMessageId( MessageType.MSG_SyncPlayerInfo, SyncPlayerInfo.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_MoneyTreeBox, GS2U_MoneyTreeBox.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_OpTradeResult, GS2U_OpTradeResult.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_RaceApplyState, GS2U_RaceApplyState.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_MarriageTask_Together_Ask2, GS2U_MarriageTask_Together_Ask2.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_AliveMapState_Sync, GS2U_AliveMapState_Sync.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_DarknessCamp, GS2U_DarknessCamp.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_DarknessState, GS2U_DarknessState.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_MyGuildKillBossRank, GS2U_MyGuildKillBossRank.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_MissionObjectList, GS2U_MissionObjectList.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_DoublePetMountInvite, GS2U_DoublePetMountInvite.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_InitGodWeapon, GS2U_InitGodWeapon.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_HomeVisitList, GS2U_HomeVisitList.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_SweepWarriorTrialSuccess, GS2U_SweepWarriorTrialSuccess.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_ExpeditionMapInfoList, GS2U_ExpeditionMapInfoList.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_GuildLoopTask_History_Ack, GS2U_GuildLoopTask_History_Ack.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_EquipRefineResultOneKey, GS2U_EquipRefineResultOneKey.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_MonsterBook_Ack, GS2U_MonsterBook_Ack.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_Friend2Recommend_Ack, GS2U_Friend2Recommend_Ack.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_InitLifeSkillList, GS2U_InitLifeSkillList.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_QueryTeamListAck, GS2U_QueryTeamListAck.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_BuyPowerInfo, GS2U_BuyPowerInfo.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_monsterChange, GS2U_monsterChange.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_SaveFurniTrueResult_Sync, GS2U_SaveFurniTrueResult_Sync.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_MallInfoList2, GS2U_MallInfoList2.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_InitDailyActiveInfo, GS2U_InitDailyActiveInfo.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_EquipRecastInfoInit, GS2U_EquipRecastInfoInit.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_RequesBuyIDAck, GS2U_RequesBuyIDAck.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_MysteriousShop, GS2U_MysteriousShop.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_ActivityStateInit, GS2U_ActivityStateInit.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_RedEnvelopeQuery, GS2U_RedEnvelopeQuery.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_NoticeResponse, GS2U_NoticeResponse.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_WWSyncMapInfoThree, GS2U_WWSyncMapInfoThree.Create );
+            RegisterMessageId( MessageType.MSG_Any_UpdateBitVariant, Any_UpdateBitVariant.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_SelfDarkness, GS2U_SelfDarkness.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_FashionGiftAck, GS2U_FashionGiftAck.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_IdentityEditTag_Ack, GS2U_IdentityEditTag_Ack.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_RaceApplyInfo_Sync, GS2U_RaceApplyInfo_Sync.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_WingRise, GS2U_WingRise.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_MonthCardEndTips, GS2U_MonthCardEndTips.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_RequestOneKeyDealAck, GS2U_RequestOneKeyDealAck.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_KoreaNaverRewardGetAck, GS2U_KoreaNaverRewardGetAck.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_AliveApply_Ack, GS2U_AliveApply_Ack.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_ChangeGuildName, GS2U_ChangeGuildName.Create );
+            RegisterMessageId( MessageType.MSG_DeleteArenaTeamMember, DeleteArenaTeamMember.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_HomePlant_Sync, GS2U_HomePlant_Sync.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_FashionRoomLevelUp, GS2U_FashionRoomLevelUp.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_TerritoryExploit_Ack, GS2U_TerritoryExploit_Ack.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_ActivityState, GS2U_ActivityState.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_Guild_SnowmanPlayer_Sync, GS2U_Guild_SnowmanPlayer_Sync.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_GuildWar, GS2U_GuildWar.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_CopySpecialSchedule, GS2U_CopySpecialSchedule.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_GroupBuyWhenOpen, GS2U_GroupBuyWhenOpen.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_BuffHurt, GS2U_BuffHurt.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_MyKillNumber, GS2U_MyKillNumber.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_UpdatePetStatus, GS2U_UpdatePetStatus.Create );
+            RegisterMessageId( MessageType.MSG_PetSkillReplace, PetSkillReplace.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_LoadFurniTrueResult_Sync, GS2U_LoadFurniTrueResult_Sync.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_SingleUseItem, GS2U_SingleUseItem.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_QueryItemResult, GS2U_QueryItemResult.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_BuyTradeFaild, GS2U_BuyTradeFaild.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_EnterDarkness, GS2U_EnterDarkness.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_SendPropList, GS2U_SendPropList.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_DateFindTreasure_Welcome_Sync, GS2U_DateFindTreasure_Welcome_Sync.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_TriggerEventResult, GS2U_TriggerEventResult.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_AllAnswerQuestion, GS2U_AllAnswerQuestion.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_TeamMemberOffline, GS2U_TeamMemberOffline.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_ImpeachInfo, GS2U_ImpeachInfo.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_CrossStep, GS2U_CrossStep.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_MapLineList, GS2U_MapLineList.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_PassiveSkillSlotInfoList, GS2U_PassiveSkillSlotInfoList.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_DelTitle, GS2U_DelTitle.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_KingBattleBuffInfo, GS2U_KingBattleBuffInfo.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_RaceType_Sync, GS2U_RaceType_Sync.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_XmlNoticeResponse, GS2U_XmlNoticeResponse.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_QueueNumber, GS2U_QueueNumber.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_PvpBattleUpdateReport, GS2U_PvpBattleUpdateReport.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_SendCharmRankFirstData, GS2U_SendCharmRankFirstData.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_RuneGrid, GS2U_RuneGrid.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_MonsterBookEnterNewMap_Sync, GS2U_MonsterBookEnterNewMap_Sync.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_PlayerLevelUp, GS2U_PlayerLevelUp.Create );
+            RegisterMessageId( MessageType.MSG_GS2U_GuildLoopTask_OpenUI_Ack, GS2U_GuildLoopTask_OpenUI_Ack.Create );
+            RegisterMessageId( MessageType.MSG_SevenDaySignIn, SevenDaySignIn.Create );
         }
     }
 }

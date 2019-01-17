@@ -9,7 +9,6 @@
 
 -include("globalSetup.hrl").
 -include("cgsInc.hrl").
--include("netmsgRecords.hrl").
 -include("cgsInc.hrl").
 -include("gsDef.hrl").
 
@@ -49,6 +48,7 @@
 -include("floatingManual.hrl").
 -include("cfg_fashion_Discount.hrl").
 -include("cfg_equipment_randomprop_ex.hrl").
+-include("playerPropSyncDefine.hrl").
 
 %% 进程启动后，延时处理后续逻辑的时间 deprecate
 -define(Dealy_Deal_Msg_Time, 1000).
@@ -91,7 +91,7 @@
 	activityType	= 0			:: uint16(),					%% 活动类型
 	leader			= 0			:: uint64(),					%% 队长角色ID
 	applicant		= 0			:: uint64(),					%% 报名者角色ID
-	members			= []		:: [#pk_CrossRoleBase{}, ...],	%% 成员角色跨服信息
+	members			= []	, 	%% 成员角色跨服信息
 	paramEx			= undefined	:: term(),						%% 各活动特殊处理参数
 	time			= 0			:: uint32()						%% 报名时间
 }).

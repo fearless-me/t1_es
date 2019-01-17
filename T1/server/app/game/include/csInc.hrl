@@ -11,16 +11,16 @@
 -ifndef(CSINC_HRL).
 -define(CSINC_HRL,1).
 
--include("common.hrl").
+-include("common/common.hrl").
 
 %%-include("gsDef.hrl").
 
 %%-include("gameProtect.hrl").
 %%-include("char.hrl").
--include("db.hrl").
+-include("common/db.hrl").
 -include("netmsgRecords.hrl").
 -include("player.hrl").
--include("type.hrl").
+-include("common/type.hrl").
 -include("char.hrl").
 %%-include("skill.hrl").
 -include("item.hrl").
@@ -32,18 +32,18 @@
 %%-include("buff.hrl").
 %%-include("pet.hrl").
 %%-include("mount.hrl").
--include("variant.hrl").
--include("logdb.hrl").
-%%-include("team.hrl").
+-include("common/variant.hrl").
+-include("common/logdb.hrl").
+%%-include("common/team.hrl").
 %%-include("equip.hrl").
 %%-include("table.hrl").
-%%-include("guild.hrl").
+%%-include("common/guild.hrl").
 %%-include("achieve.hrl").
 %%-include("wake.hrl").
 %%-include("title.hrl").
--include("gamedata.hrl").
--include("csMemCacheRec.hrl").
--include("logRecord.hrl").
+-include("common/gamedata.hrl").
+-include("common/csMemCacheRec.hrl").
+-include("common/logRecord.hrl").
 %%-include("sevendays.hrl").
 %%-include("collect.hrl").
 %%-include("home.hrl").

@@ -14,6 +14,7 @@
 -define(CompileListDEts, get_dets_name(ServerType)).
 -define(ST_GS, game).
 -define(ST_CS, center).
+-define(MAX_SEARCH_FILES, 150).
 
 -record(rec_serverfile, {
 	fileName = "",
@@ -198,7 +199,7 @@ searchFile(ServerType, false, {Lang, _XH} = Param1, {_HrlFileList, ErlFileList, 
 		_ ->
 			F =
 				fun(File, {IsEnough, {Number, AccL}} = Data) ->
-					case Number >= 150 of
+					case Number >= ?MAX_SEARCH_FILES of
 						true ->
 							{true, {Number, AccL}};
 						_ ->

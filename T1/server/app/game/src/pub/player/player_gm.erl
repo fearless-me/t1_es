@@ -185,11 +185,11 @@ test_dead(_) ->
         9999999999.0
     },
     player_combat:change_combat_prop([], [], [BattleProp], []),
-
-    HpMsg = #pk_GS2U_SyncHp{uid = Uid, hp_percent = 0},
-    Msg = #pk_GS2U_Dead{uid = Uid, killer_uid = Uid, killer_name = player_rw:get_name()},
-    player_pub:broadcast_map_view_net_msg_(HpMsg),
-    player_pub:broadcast_map_view_net_msg_(Msg),
+%%
+%%    HpMsg = #pk_GS2U_SyncHp{uid = Uid, hp_percent = 0},
+%%    Msg = #pk_GS2U_Dead{uid = Uid, killer_uid = Uid, killer_name = player_rw:get_name()},
+%%    player_pub:broadcast_map_view_net_msg_(HpMsg),
+%%    player_pub:broadcast_map_view_net_msg_(Msg),
     ok.
 
 goto([X, Y|_]) ->

@@ -10,7 +10,7 @@
 -module(cfg).
 -compile(export_all).
 
--include("common.hrl").
+-include("common/common.hrl").
 -include("setupLang.hrl").
 
 % 简体中文版

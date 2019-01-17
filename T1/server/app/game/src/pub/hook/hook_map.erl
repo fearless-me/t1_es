@@ -86,13 +86,13 @@ do_on_player_exit(_, _) ->
 %%-------------------------------------------------------------------
 %% 怪物
 on_monster_create(Uid, DataId) ->
-%%    case getCfg:getCfgByArgs(cfg_monster, DataId) of
-%%        #monsterCfg{buff_born = []} ->
-%%            ok;
-%%        #monsterCfg{} ->
-%%            ps:send(self(), monster_add_born_buff, {Uid, DataId});
-%%        _ -> skip
-%%    end,
+    case getCfg:getCfgByArgs(cfg_monster, DataId) of
+        #monsterCfg{buff_born = []} ->
+            ok;
+        #monsterCfg{} ->
+            ps:send(self(), monster_add_born_buff, {Uid, DataId});
+        _ -> skip
+    end,
     ok.
 
 on_monster_dead(Uid) ->

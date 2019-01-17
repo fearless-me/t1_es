@@ -36,6 +36,7 @@
 %%    del_buff_source/2,  %% 删除某个来源的buff
 %%    condition_event_del_buff/3 %% 条件事件删除buff
 %%]).
+%%
 %%-export([is_buff_exist/2]).
 %%
 %%-define(BUFF_ADD, add).
