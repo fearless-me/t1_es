@@ -23,15 +23,15 @@ rpc_call_get_map_mgr(MapID) ->
 rpc_cast_update_player_from_game({?ETS_CACHE_PLAYER_PUB, Uid, Elements}) ->
     misc_ets:update_element(?ETS_CACHE_PLAYER_PUB, Uid, Elements),
     ok;
-rpc_cast_update_player_from_game({?ETS_CACHE_ONLINE_PLAYER, Uid, Elements}) ->
-    misc_ets:update_element(?ETS_CACHE_ONLINE_PLAYER, Uid, Elements),
+rpc_cast_update_player_from_game({?ETS_CACHE_PLAYER_ONLINE, Uid, Elements}) ->
+    misc_ets:update_element(?ETS_CACHE_PLAYER_ONLINE, Uid, Elements),
     ok.
 
 rpc_cast_update_player_from_cross({?ETS_CACHE_PLAYER_PUB, Uid, Elements}) ->
     misc_ets:update_element(?ETS_CACHE_PLAYER_PUB, Uid, Elements),
     ok;
-rpc_cast_update_player_from_cross({?ETS_CACHE_ONLINE_PLAYER, Uid, Elements}) ->
-    misc_ets:update_element(?ETS_CACHE_ONLINE_PLAYER, Uid, Elements),
+rpc_cast_update_player_from_cross({?ETS_CACHE_PLAYER_ONLINE, Uid, Elements}) ->
+    misc_ets:update_element(?ETS_CACHE_PLAYER_ONLINE, Uid, Elements),
     ok.
 
 %% fixme 完成跨服需要调整的 

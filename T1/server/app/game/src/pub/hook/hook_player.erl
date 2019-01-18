@@ -127,27 +127,27 @@ on_sharp(Hour) ->
 on_rw_update(#m_player_rw.level, Level) ->
     Uid = player_rw:get_uid(),
     gs_cache_interface:update_player_pub(Uid, {#m_cache_player_pub.level, Level}),
-    gs_cache_interface:update_online_player(Uid, {#m_cache_online_player.level, Level}),
+    gs_cache_interface:update_player_online(Uid, {#m_cache_player_online.level, Level}),
     ok;
 on_rw_update(#m_player_rw.name, Name) ->
     Uid = player_rw:get_uid(),
     gs_cache_interface:update_player_pub(Uid, {#m_cache_player_pub.name, Name}),
-    gs_cache_interface:update_online_player(Uid, {#m_cache_online_player.name, Name}),
+    gs_cache_interface:update_player_online(Uid, {#m_cache_player_online.name, Name}),
     ok;
 on_rw_update(#m_player_rw.head, Head) ->
     Uid = player_rw:get_uid(),
     gs_cache_interface:update_player_pub(Uid, {#m_cache_player_pub.head, Head}),
-    gs_cache_interface:update_online_player(Uid, {#m_cache_online_player.head, Head}),
+    gs_cache_interface:update_player_online(Uid, {#m_cache_player_online.head, Head}),
     ok;
 on_rw_update(#m_player_rw.race, Race) ->
     Uid = player_rw:get_uid(),
     gs_cache_interface:update_player_pub(Uid, {#m_cache_player_pub.race, Race}),
-    gs_cache_interface:update_online_player(Uid, {#m_cache_online_player.race, Race}),
+    gs_cache_interface:update_player_online(Uid, {#m_cache_player_online.race, Race}),
     ok;
 on_rw_update(#m_player_rw.career, Career) ->
     Uid = player_rw:get_uid(),
     gs_cache_interface:update_player_pub(Uid, {#m_cache_player_pub.career, Career}),
-    gs_cache_interface:update_online_player(Uid, {#m_cache_online_player.career, Career}),
+    gs_cache_interface:update_player_online(Uid, {#m_cache_player_online.career, Career}),
     ok;
 on_rw_update(_Key, _Val) ->
     ok.

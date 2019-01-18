@@ -164,9 +164,9 @@ query_bp([BattlePropId | _]) ->
 
 query(_) ->
     Uid = player_rw:get_uid(),
-    #m_cache_online_player{
+    #m_cache_player_online{
         map_id = MapId, map_pid = MapPid, pos = Pos, hp = Hp
-    } = gs_cache_interface:get_online_player(Uid),
+    } = gs_cache_interface:get_player_online(Uid),
 
     ?WARN("query self uid:~p mapID:~p mapPid:~p Pos:~p hp:~p",
         [Uid, MapId, MapPid, Pos, Hp]),
@@ -177,7 +177,7 @@ test_dead(_) ->
     Uid = player_rw:get_uid(),
 
     %% 同步HP属性到快捷属性中
-    gs_cache_interface:update_online_player(Uid, {#m_cache_online_player.hp, 0}),
+    gs_cache_interface:update_player_online(Uid, {#m_cache_player_online.hp, 0}),
 
     BattleProp = {
         ?BP_2_HP_CUR,

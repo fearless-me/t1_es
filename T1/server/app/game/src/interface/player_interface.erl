@@ -44,7 +44,7 @@ get_attr(_Uid, _AttrId) ->
 
 %%-------------------------------------------------------------------
 get_hp(Uid) ->
-    gs_cache_interface:read_online_player_element(Uid, #m_cache_online_player.hp).
+    gs_cache_interface:read_player_online_element(Uid, #m_cache_player_online.hp).
 
 %%-------------------------------------------------------------------
 get_hp_percent(CurHp, MaxHp) ->
@@ -52,20 +52,20 @@ get_hp_percent(CurHp, MaxHp) ->
 
 %%-------------------------------------------------------------------
 get_map_pid(Uid) ->
-    gs_cache_interface:read_online_player_element(Uid, #m_cache_online_player.map_pid).
+    gs_cache_interface:read_player_online_element(Uid, #m_cache_player_online.map_pid).
 
 %%-------------------------------------------------------------------
 get_cur_pos(Uid) ->
-    gs_cache_interface:read_online_player_element(Uid, #m_cache_online_player.pos).
+    gs_cache_interface:read_player_online_element(Uid, #m_cache_player_online.pos).
 
 %%-------------------------------------------------------------------
 has_buff(Uid, OpType, Param) ->
-    BuffList = gs_cache_interface:read_online_player_element(Uid, #m_cache_online_player.buff_list),
+    BuffList = gs_cache_interface:read_player_online_element(Uid, #m_cache_player_online.buff_list),
     i_has_buff(BuffList, OpType, Param).
 
 %%-------------------------------------------------------------------
 get_buff_time(Uid, BuffId) ->
-    BuffList = gs_cache_interface:read_online_player_element(Uid, #m_cache_online_player.buff_list),
+    BuffList = gs_cache_interface:read_player_online_element(Uid, #m_cache_player_online.buff_list),
     case lists:keyfind(BuffId, #m_buff.buff_id, BuffList) of
         #m_buff{lifetime = LifeTime} ->
             ?if_else(LifeTime == 0, ?BUFF_FOREVER_LOGIC, LifeTime);

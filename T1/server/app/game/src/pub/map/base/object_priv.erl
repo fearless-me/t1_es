@@ -53,10 +53,10 @@ is_dead(Uid) ->
 new_player(Pid, Uid, Group, Pos, Face) ->
     init_rw_default(Uid),
 
-    #m_cache_online_player{
+    #m_cache_player_online{
         level = Lvl, name = Name, sex = Sex, race = Race, career = Career,
         battle_props = BattleProps, buff_list = BuffList
-    } = gs_cache_interface:get_online_player(Uid),
+    } = gs_cache_interface:get_player_online(Uid),
 
     Req = #r_create_map_object_req{
         type = ?UID_TYPE_PLAYER,

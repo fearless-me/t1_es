@@ -80,8 +80,8 @@ send_base_info() ->
     },
     player_pub:send_net_msg(Msg),
     %% init combat
-    BattleProps = gs_cache_interface:read_online_player_element(
-        Uid, #m_cache_online_player.battle_props),
+    BattleProps = gs_cache_interface:read_player_online_element(
+        Uid, #m_cache_player_online.battle_props),
     MsgCombat = prop_interface:battleProps2NetMsg(Uid, BattleProps),
     player_pub:send_net_msg(MsgCombat),
     ok.

@@ -26,8 +26,8 @@
 %% 玩家私有数据**不要**存到这里
 %% 部分数据是由玩家进程更新
 %% 部分数据是由地图进程更新（包括战斗相关的）
--define(ETS_CACHE_ONLINE_PLAYER, ets_cache_player_online).
--record(m_cache_online_player, {
+-define(ETS_CACHE_PLAYER_ONLINE, ets_cache_player_online).
+-record(m_cache_player_online, {
     %-------------------------------------------------------------------
     %% 这些基础信息有玩家进程来更新
     uid, aid, pid, pid_send, pid_bg, socket, level=1, sid=0,

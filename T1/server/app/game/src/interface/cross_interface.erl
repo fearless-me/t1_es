@@ -38,14 +38,14 @@
 
 get_cross_player_cross_node(Uid) ->
     try
-        Pid = gs_cache_interface:read_online_player_element(Uid, #m_cache_online_player.pid_bg),
+        Pid = gs_cache_interface:read_player_online_element(Uid, #m_cache_player_online.pid_bg),
         erlang:node(Pid)
     catch _: _: _  -> undefined
     end.
 
 get_cross_player_src_node(Uid) ->
     try
-        Pid = gs_cache_interface:read_online_player_element(Uid, #m_cache_online_player.pid),
+        Pid = gs_cache_interface:read_player_online_element(Uid, #m_cache_player_online.pid),
         erlang:node(Pid)
     catch _: _: _  -> undefined
     end.
@@ -170,7 +170,7 @@ inner_update_player_cross(false, Uid, Params) ->
         _Any -> skip
     end,
     ok;
-inner_update_player_cross(_IsCross, Uid,  {?ETS_CACHE_ONLINE_PLAYER, Uid, {Key , _}} = Params) ->
+inner_update_player_cross(_IsCross, Uid,  {?ETS_CACHE_PLAYER_ONLINE, Uid, {Key , _}} = Params) ->
     case is_rate_control_continue(Uid, Key) of
         true -> direct_update_player_cross(Uid, Params);
         _Any -> skip
@@ -192,9 +192,9 @@ direct_update_player_cross(Uid, Params) ->
 %%-------------------------------------------------------------------
 -define(ADD_RCK(Key, RateSec), misc_ets:write(?ETS_CACHE_RATE_CONTROL_KEY_PRIV, #m_cache_rate_control_key{key = Key, limit = RateSec})).
 init_rate_control_key() ->
-    ?ADD_RCK(#m_cache_online_player.pos, 10),
-    ?ADD_RCK(#m_cache_online_player.buff_list, 5),
-    ?ADD_RCK(#m_cache_online_player.battle_props, 10),
+    ?ADD_RCK(#m_cache_player_online.pos, 10),
+    ?ADD_RCK(#m_cache_player_online.buff_list, 5),
+    ?ADD_RCK(#m_cache_player_online.battle_props, 10),
     ok.
 
 -define(ADD_RC(Uid, Key), misc_ets:write(?ETS_CACHE_RATE_CONTROL_PRIV, #m_cache_rate_control{role_key = {Uid, Key}})).

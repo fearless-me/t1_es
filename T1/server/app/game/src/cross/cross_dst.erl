@@ -61,12 +61,12 @@ rpc_call_player_enter_only_update(#r_to_cross_data{
 %% {@link cross_src:player_pub_data_from_cross}
 %%
 rpc_call_player_prepare_leave(Uid, _BgPid) ->
-    #m_cache_online_player
+    #m_cache_player_online
     {
         pos = Pos,
         buff_list = BuffList,
         battle_props = BattleProps
-    } = gs_cache_interface:get_online_player(Uid),
+    } = gs_cache_interface:get_player_online(Uid),
      #r_from_cross_data{
          uid = Uid,
          pos = Pos,

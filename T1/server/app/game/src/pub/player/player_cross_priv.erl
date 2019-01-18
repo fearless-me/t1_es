@@ -139,7 +139,7 @@ monitor_ack(Aid, Uid, BgPid) ->
     set_bgpid(BgPid),
     set_ref(Ref),
     gs_cache_interface:add_player_cross(Uid),
-    gs_cache_interface:update_online_player(Uid, {#m_cache_online_player.pid_bg, BgPid}),
+    gs_cache_interface:update_player_online(Uid, {#m_cache_player_online.pid_bg, BgPid}),
     cross_player_bg:ack(BgPid),
     ?WARN("player ~p of account ~p monitor BACK PROCESS ~p ref ~p",
         [Uid, Aid, BgPid, Ref]),
@@ -151,7 +151,7 @@ clear() ->
     catch gs_cache_interface:del_player_cross(Uid),
     catch erlang:erase(bgpid),
     catch erlang:erase(bgpid_ref),
-    catch gs_cache_interface:update_online_player(Uid, {#m_cache_online_player.pid_bg, undefined}),
+    catch gs_cache_interface:update_player_online(Uid, {#m_cache_player_online.pid_bg, undefined}),
     ok.
 
 do_clear(undefined) -> skip;

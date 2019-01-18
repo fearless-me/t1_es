@@ -16,9 +16,9 @@
 -export([sync_player_to_map/1]).
 
 sync_player_to_map(Uid) ->
-    #m_cache_online_player{
+    #m_cache_player_online{
         level = Level, name = Name, career = Career, race = Race
-    } = gs_cache_interface:get_online_player(Uid),
+    } = gs_cache_interface:get_player_online(Uid),
     object_rw:set_fields_direct(
         Uid,
         [

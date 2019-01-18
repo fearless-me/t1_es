@@ -114,13 +114,13 @@ i_kick_all_player_to_born_map(Reason)->
                 (
                     fun(Info)->
                         {
-                            Info#m_cache_online_player.aid,
-                            Info#m_cache_online_player.uid,
-                            Info#m_cache_online_player.pid
+                            Info#m_cache_player_online.aid,
+                            Info#m_cache_player_online.uid,
+                            Info#m_cache_player_online.pid
                         }
                     end
                 ),
-                List = misc_ets:select(?ETS_CACHE_ONLINE_PLAYER, QS),
+                List = misc_ets:select(?ETS_CACHE_PLAYER_ONLINE, QS),
                 lists:foreach
                 (
                     fun({Aid, Uid, Pid}) ->
@@ -177,15 +177,15 @@ i_clear_online_players(Sid, GSNode) when Sid > 0 ->
                 QS =
                     ets:fun2ms
                     (
-                        fun(Info) when Info#m_cache_online_player.sid == Sid ->
+                        fun(Info) when Info#m_cache_player_online.sid == Sid ->
                             {
-                                Info#m_cache_online_player.aid,
-                                Info#m_cache_online_player.uid,
-                                Info#m_cache_online_player.map_pid
+                                Info#m_cache_player_online.aid,
+                                Info#m_cache_player_online.uid,
+                                Info#m_cache_player_online.map_pid
                             }
                         end
                     ),
-                List = misc_ets:select(?ETS_CACHE_ONLINE_PLAYER, QS),
+                List = misc_ets:select(?ETS_CACHE_PLAYER_ONLINE, QS),
                 lists:foreach(
                     fun({Aid, Uid, MPid}) ->
                         catch map_interface:player_exit_map_exception_(MPid, Uid),
@@ -220,13 +220,13 @@ i_clear_online_players(0, _Node) ->
                      (
                          fun(Info)->
                              {
-                                 Info#m_cache_online_player.aid,
-                                 Info#m_cache_online_player.uid,
-                                 Info#m_cache_online_player.pid
+                                 Info#m_cache_player_online.aid,
+                                 Info#m_cache_player_online.uid,
+                                 Info#m_cache_player_online.pid
                              }
                          end
                      ),
-                 List = misc_ets:select(?ETS_CACHE_ONLINE_PLAYER, QS),
+                 List = misc_ets:select(?ETS_CACHE_PLAYER_ONLINE, QS),
                  X = lists:foldl
                  (
                      fun({Aid, Uid, Pid}, Acc) ->

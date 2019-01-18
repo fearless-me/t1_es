@@ -324,7 +324,7 @@ on_obj_pos_change(Uid, Tar) ->
     ok.
 
 on_obj_pos_changed(?UID_TYPE_PLAYER, Uid, Tar) ->
-    gs_cache_interface:update_online_player(Uid, {#m_cache_online_player.pos, Tar}),
+    gs_cache_interface:update_player_online(Uid, {#m_cache_player_online.pos, Tar}),
     ok;
 on_obj_pos_changed(_Type, _Uid, _Tar) ->
 %%    ?DEBUG("on_obj_pos_changed(~w,~w,~w)", [Type, Uid, Tar]),

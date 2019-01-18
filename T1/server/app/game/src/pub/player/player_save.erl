@@ -27,12 +27,12 @@ full_save_data() ->
 
 %%-------------------------------------------------------------------
 save(Uid) ->
-    #m_cache_online_player
+    #m_cache_player_online
     {
         aid = Aid, uid = Uid, race = Race, career = Career, level = Level,
         map_id = Mid, map_pid = MPid, line = LineId, pos = Pos,
         old_map_id = OldMid, old_line = OldLine, old_pos = OldPos
-    } = gs_cache_interface:get_online_player(Uid),
+    } = gs_cache_interface:get_player_online(Uid),
     ?DEBUG("save player aid ~w uid ~w in map ~w|~w", [Aid, Uid, Mid, MPid]),
     NewPos =
         case vector3:valid(Pos) of

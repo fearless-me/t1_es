@@ -30,7 +30,7 @@ player_pub_data_to_cross(Aid, Uid) ->
         uid = player_rw:get_uid(),
         pid = self(),
         player_pub = gs_cache_interface:get_player_pub(Uid),
-        player_online = gs_cache_interface:get_online_player(Uid)
+        player_online = gs_cache_interface:get_player_online(Uid)
     }.
 
 %%
@@ -52,12 +52,12 @@ player_pub_data_from_cross(#r_from_cross_data{
 }) ->
     catch misc_ets:update_element
     (
-        ?ETS_CACHE_ONLINE_PLAYER,
+        ?ETS_CACHE_PLAYER_ONLINE,
         Uid,
         [
-            {#m_cache_online_player.pos, Pos},
-            {#m_cache_online_player.buff_list, BuffList},
-            {#m_cache_online_player.battle_props, BattleProps}
+            {#m_cache_player_online.pos, Pos},
+            {#m_cache_player_online.buff_list, BuffList},
+            {#m_cache_player_online.battle_props, BattleProps}
         ]
     ),
     true.

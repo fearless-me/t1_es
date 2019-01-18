@@ -64,11 +64,11 @@ do_handle_cast(Request, State) ->
 %% http://blog.yufeng.info/archives/1581
 %% http://blog.yufeng.info/archives/336
 broadcast_net_msg(NetMsg) ->
-    Ms = ets:fun2ms(fun(#m_cache_online_player{socket = Sock}) -> Sock end),
+    Ms = ets:fun2ms(fun(#m_cache_player_online{socket = Sock}) -> Sock end),
     Fc =
         fun() ->
             {_Bytes1, IoList} = tcp_codec:encode(NetMsg),
-            L = misc_ets:select(?ETS_CACHE_ONLINE_PLAYER, Ms),
+            L = misc_ets:select(?ETS_CACHE_PLAYER_ONLINE, Ms),
             lists:foreach
             (
                 fun(Sock) ->
@@ -86,10 +86,10 @@ broadcast_net_msg(NetMsg) ->
     ok.
 
 broadcast_msg(MsgId, Msg) ->
-    Ms = ets:fun2ms(fun(#m_cache_online_player{pid = Pid}) -> Pid end),
+    Ms = ets:fun2ms(fun(#m_cache_player_online{pid = Pid}) -> Pid end),
     Fc =
         fun() ->
-            L = misc_ets:select(?ETS_CACHE_ONLINE_PLAYER, Ms),
+            L = misc_ets:select(?ETS_CACHE_PLAYER_ONLINE, Ms),
             lists:foreach
             (
                 fun(Pid) -> catch ps:send(Pid, MsgId, Msg) end,

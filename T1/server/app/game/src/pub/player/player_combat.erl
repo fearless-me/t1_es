@@ -30,8 +30,8 @@
 %%-------------------------------------------------------------------
 online() ->
     Uid = player_rw:get_uid(),
-    case gs_cache_interface:read_online_player_element(
-        Uid, #m_cache_online_player.battle_props)
+    case gs_cache_interface:read_player_online_element(
+        Uid, #m_cache_player_online.battle_props)
     of
         undefined -> calc_combat_prop();    %% @todo 未从数据库中加载数据，现阶段不做数据存储，转义为未刷新数据
         #m_battleProps{listBPFinal = []} -> calc_combat_prop(); %% 未刷新数据
@@ -55,14 +55,14 @@ calc_combat_prop() ->
     %% 注3.通常战斗属性在地图中进行计算，这里仅初始化放在角色进程
     BattlePropsNew = prop_interface:calc(
         BattleProps, [{?BP_4_HIT, ?BPUseType_ADD, 0.0}], []),
-    gs_cache_interface:update_online_player(
-        Uid, {#m_cache_online_player.battle_props, BattlePropsNew}),
+    gs_cache_interface:update_player_online(
+        Uid, {#m_cache_player_online.battle_props, BattlePropsNew}),
 
     HpValue = prop_interface:query_v_pf_bpu(?BP_2_HP_CUR, BattlePropsNew),
 
     %% 同步HP属性到快捷属性中
-    gs_cache_interface:update_online_player(
-        Uid, {#m_cache_online_player.hp, trunc(HpValue)}
+    gs_cache_interface:update_player_online(
+        Uid, {#m_cache_player_online.hp, trunc(HpValue)}
     ),
     ok.
 
@@ -81,8 +81,8 @@ change_combat_prop(AddList, MultiList, AddList_Del, MultiList_Del) ->
 %%-------------------------------------------------------------------
 query_prop() ->
     Uid = player_rw:get_uid(),
-    case gs_cache_interface:read_online_player_element(
-        Uid, #m_cache_online_player.battle_props)
+    case gs_cache_interface:read_player_online_element(
+        Uid, #m_cache_player_online.battle_props)
     of
         #m_battleProps{listBPFinal = ListBPFinal} ->
             ListBPFinal;
@@ -92,8 +92,8 @@ query_prop() ->
 
 query_prop(BattlePropID) ->
     Uid = player_rw:get_uid(),
-    BattleProps = gs_cache_interface:read_online_player_element(
-        Uid, #m_cache_online_player.battle_props),
+    BattleProps = gs_cache_interface:read_player_online_element(
+        Uid, #m_cache_player_online.battle_props),
     query_prop(BattlePropID, BattleProps).
 
 query_prop(BattlePropID, undefined) ->
