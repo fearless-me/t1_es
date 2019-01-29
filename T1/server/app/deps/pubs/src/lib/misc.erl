@@ -31,7 +31,9 @@
     split_number/3
 ]).
 
--export([start_otp/3, start_otp/4, start_otp/5]).
+-export([
+    start_otp/3, start_otp/4, start_otp/5, clear_os_cache/0
+]).
 
 %%-------------------------------------------------------------------
 os_type() ->
@@ -620,3 +622,12 @@ split_number(Count, Load, Limit) when Load > 0, Limit > 0 ->
                 _ -> (Count div BatchLoad) + 1
             end,
     {RealSeqNo, BatchLoad}.
+
+
+clear_os_cache()->
+    try
+        Cmd = "sync && echo 1 > /proc/sys/vm/drop_caches && echo 0 > /proc/sys/vm/drop_caches",
+        os:cmd(Cmd)
+    catch
+        _ : _  -> skip
+    end.
