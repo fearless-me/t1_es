@@ -403,8 +403,7 @@ do_start_monster_walk(Uid, Dst, MoveState) ->
 
 is_can_monster_walk(Uid, _Dst, _MoveState, _NeedCheck) ->
     % todo 检查怪物状态、检查目标点等等
-    object_priv:is_unit_cant_move_state(Uid),
-    not mod_combat_revive:is_dead(Uid).
+    object_priv:is_unit_cant_move_state(Uid).
 
 
 %%-------------------------------------------------------------------

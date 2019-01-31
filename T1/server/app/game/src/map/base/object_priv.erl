@@ -42,7 +42,7 @@
 
 is_unit_cant_move_state(_Uid) ->
     %% todo 检查目标是否处于死亡，定身，眩晕等等或者在释放技能等等
-    ok.
+    false.
 
 
 is_dead(Uid) ->

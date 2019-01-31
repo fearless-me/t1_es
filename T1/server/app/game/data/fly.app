@@ -57,7 +57,7 @@
 								]
 							},
 							{i, "../include"},
-							{i, "../src/pub/config"},
+							{i, "../src/config"},
 							{i, "../../common/src/netmsg"},
 							{i, "../../common/include"},
 							{i, "../../deps/pubs/include"},

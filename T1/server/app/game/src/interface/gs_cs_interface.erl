@@ -26,7 +26,7 @@ register(Node) ->
     Sid = gs_interface:get_sid(),
     ServerType = get_server_type(),
     ServerName = gs_interface:get_server_name(),
-    case rpc:call(
+    case grpc:call(
         Node,
         cs_gs_rpc,
         register,

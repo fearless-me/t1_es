@@ -211,7 +211,8 @@ delete_player(Uid) ->
 
     %%TODO 要做安全性检查
     Aid = player_rw:get_aid(),
-    gs_db_interface:action_data_(Aid, delete_player, #r_delete_player_req{aid = Aid, uid = Uid}),
+    gs_db_interface:action_data_(Aid,
+        delete_player, #r_delete_player_req{aid = Aid, uid = Uid}),
     ok.
 
 delete_player_ack(#r_delete_player_ack{uid = Uid, res = true}) ->

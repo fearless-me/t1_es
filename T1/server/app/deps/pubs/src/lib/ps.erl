@@ -32,7 +32,7 @@ send(Name, Msg) when is_atom(Name) ->
                 Pid -> do_send(Pid, Msg)
             end;
         Pid -> do_send(Pid, Msg)
-    end;
+    end;        
 send(Pid, Msg) when is_pid(Pid) ->
     do_send(Pid, Msg);
 send(Dst, Msg) when is_tuple(Dst)->
