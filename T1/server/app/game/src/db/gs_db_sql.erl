@@ -39,4 +39,4 @@ sql(delete_player) ->
 sql(load_player_list) ->
     <<"select * from player where aid = ?">>;
 sql(_) ->
-    <<"">>.
+    <<"select 1">>.
