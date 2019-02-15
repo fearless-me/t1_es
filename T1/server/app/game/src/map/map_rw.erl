@@ -113,10 +113,18 @@ obj_maps_with_uid(Uid) ->
     obj_maps_with_type(Type).
 
 %%-------------------------------------------------------------------
-obj_maps_with_type(?UID_TYPE_PLAYER) -> misc_ets:read_element(excl_ets(), ?MAPS_PLAYER, #pub_kv.value); %%erlang:get(?MAPS_PLAYER);
-obj_maps_with_type(?UID_TYPE_MON) -> misc_ets:read_element(excl_ets(), ?MAPS_MON, #pub_kv.value); %%erlang:get(?MAPS_MON);
-obj_maps_with_type(?UID_TYPE_PET) -> misc_ets:read_element(excl_ets(), ?MAPS_PET, #pub_kv.value); %%erlang:get(?MAPS_PET);
-obj_maps_with_type(?UID_TYPE_NPC) -> misc_ets:read_element(excl_ets(), ?MAPS_NPC, #pub_kv.value). %%erlang:get(?MAPS_NPC).
+obj_maps_with_type(?UID_TYPE_PLAYER) ->
+    misc_ets:read_element(excl_ets(), ?MAPS_PLAYER, #pub_kv.value);
+%%erlang:get(?MAPS_PLAYER);
+obj_maps_with_type(?UID_TYPE_MON) ->
+    misc_ets:read_element(excl_ets(), ?MAPS_MON, #pub_kv.value);
+%%erlang:get(?MAPS_MON);
+obj_maps_with_type(?UID_TYPE_PET) ->
+    misc_ets:read_element(excl_ets(), ?MAPS_PET, #pub_kv.value);
+%%erlang:get(?MAPS_PET);
+obj_maps_with_type(?UID_TYPE_NPC) ->
+    misc_ets:read_element(excl_ets(), ?MAPS_NPC, #pub_kv.value).
+%%erlang:get(?MAPS_NPC).
 
 %%-------------------------------------------------------------------
 obj_maps_with_uid(Uid, Maps) ->

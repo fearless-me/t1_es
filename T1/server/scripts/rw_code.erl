@@ -59,23 +59,23 @@ generate_code() ->
                 ]
             ]
         ),
-%%        multi_to_code
-%%        (
-%%            "..\\app\\game\\src\\pub\\map\\obj\\object_rw.erl",
-%%            object_rw,
-%%            [
-%%                ["logger.hrl", "pub_def.hrl", "rec_rw.hrl", "map_core.hrl"],
-%%                [
-%%                    {m_object_rw, record_info(fields, m_object_rw), [], ["Uid"], "hook_map:on_rw_update"}
-%%                ]
-%%            ]
-%%        ),
-%%
-        object_rw
+        multi_to_code
         (
-            "..\\app\\game\\src\\pub\\map\\obj\\object_rw.erl",
-            record_info(fields, m_object_rw)
+            "..\\app\\game\\src\\map\\obj\\object_rw.erl",
+            object_rw,
+            [
+                ["logger.hrl", "pub_def.hrl", "rec_rw.hrl", "map_core.hrl"],
+                [
+                    {m_object_rw, record_info(fields, m_object_rw), [], ["Uid"], "hook_map:on_rw_update"}
+                ]
+            ]
         ),
+
+%%        object_rw
+%%        (
+%%            "..\\app\\game\\src\\map\\obj\\object_rw.erl",
+%%            record_info(fields, m_object_rw)
+%%        ),
         ok
     catch _:Err:ST ->
         color:error_log("~p,~p~n", [Err, ST])
