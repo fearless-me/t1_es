@@ -49,7 +49,7 @@
     <content url="file://$MODULE_DIR$/app/common" />
     <content url="file://$MODULE_DIR$/app/deps" />
     <content url="file://$MODULE_DIR$/app/game" />
-    <orderEntry type="inheritedJdk" />
+    <orderEntry type="jdk" jdkName="Erlang 21" jdkType="Erlang SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
   </component>
 </module>

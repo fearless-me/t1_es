@@ -14,7 +14,8 @@
 %% API
 -export([
     start_app/1, start_all_app/1, os_type/0, halt/1, halt/2, nnl/0, nnl/1,
-    system_info/0, set_system_time/1, multi_set_system_time/1, fn_wrapper/2, fn_wrapper/3, master_node/0, decompiled/1,
+    system_info/0, set_system_time/1, multi_set_system_time/1, fn_wrapper/2, fn_wrapper/3, master_node/0,
+    decompiled_dir/2, decompiled/1, decompiled/2,
     b2i/1, i2b/1, ntoa/1, ntoab/1, fib/1, apply_fun/1,
     atom_to_binary/1, to_atom/1, create_atom/2, list_to_string_suffix/2,
     register_process/2, register_process/3, loop_register_process/3, registered_name/0, registered_name/1,
@@ -455,13 +456,21 @@ nnl() ->
     S = lists:duplicate(15, "\n"),
     ?DEBUG("~ts", [lists:flatten(S)]).
 
-decompiled(Module) ->
-    do_decompiled(code:which(Module)).
+decompiled_dir(BeamDir, DstDir) ->
+    FileList = filelib:fold_files( BeamDir, ".beam", true, fun(File, Acc) -> [filename:basename(File, ".beam")|Acc] end, []),
+    lists:foreach(fun(File)-> decompiled(DstDir, list_to_atom(File)) end, FileList),
+    ok.
 
-do_decompiled(non_existing) ->
+decompiled(Module) ->
+    do_decompiled(".", code:which(Module)).
+
+decompiled(SrcDir, Module) ->
+    do_decompiled(SrcDir, code:which(Module)).
+
+do_decompiled(_Dir, non_existing) ->
     non_existing;
-do_decompiled(BeamFile) ->
-    FileName = lists:concat([filename:basename(BeamFile, ".beam"), ".dc.erl"]),
+do_decompiled(Dir, BeamFile) ->
+    FileName = lists:concat([Dir, "/", filename:basename(BeamFile, ".beam"), ".erl"]),
     case beam_lib:chunks(BeamFile, [abstract_code]) of
         {ok, {_, [{abstract_code, {_, AC}}]}} ->
             file:write_file(
@@ -471,7 +480,6 @@ do_decompiled(BeamFile) ->
             FileName;
         Error -> Error
     end.
-
 
 %%-------------------------------------------------------------------
 system_info() ->
