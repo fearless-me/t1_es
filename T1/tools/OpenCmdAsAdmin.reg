@@ -1,49 +1,12 @@
 Windows Registry Editor Version 5.00
- 
- 
- 
-[HKEY_LOCAL_MACHINE\SOFTWARE\Classes\Directory\background\shell\cmd_here]
- 
-@="在此处打开 CMD 窗口"
-"Icon"="cmd.exe"
- 
- 
-[HKEY_LOCAL_MACHINE\SOFTWARE\Classes\Directory\background\shell\cmd_here\command]
- 
-@="\"C:\\Windows\\System32\\cmd.exe\""
- 
- 
- 
-[HKEY_LOCAL_MACHINE\SOFTWARE\Classes\Folder\shell\cmdPrompt]
- 
-@="在此处打开 CMD 窗口"
- 
- 
- 
-[HKEY_LOCAL_MACHINE\SOFTWARE\Classes\Folder\shell\cmdPrompt\command]
- 
-@="\"C:\\Windows\\System32\\cmd.exe\" \"cd %1\""
- 
- 
- 
-[HKEY_LOCAL_MACHINE\SOFTWARE\Classes\Directory\shell\cmd_here]
- 
-@="在此处打开 CMD 窗口"
-"Icon"="cmd.exe"
- 
- 
- 
-[HKEY_LOCAL_MACHINE\SOFTWARE\Classes\Directory\shell\cmd_here\command]
- 
-@="\"C:\\Windows\\System32\\cmd.exe\""
 
-
-
+; admin 
 [-HKEY_CLASSES_ROOT\Directory\shell\runas]
 
 [HKEY_CLASSES_ROOT\Directory\shell\runas]
 
 @="在此处打开 CMD 窗口(管理员)"
+"Icon"="cmd.exe"
 
 "HasLUAShield"=""
 
@@ -51,11 +14,25 @@ Windows Registry Editor Version 5.00
 
 @="cmd.exe /s /k pushd \"%V\""
 
+; plain
+[-HKEY_CLASSES_ROOT\Directory\shell\cmd_here]
+
+[HKEY_CLASSES_ROOT\Directory\shell\cmd_here]
+@="在此处打开 CMD 窗口"
+"Icon"="cmd.exe"
+
+"HasLUAShield"=""
+
+[HKEY_CLASSES_ROOT\Directory\shell\cmd_here\command]
+
+@="cmd.exe /s /k pushd \"%V\""
+
+; admin
 [-HKEY_CLASSES_ROOT\Directory\Background\shell\runas]
 
 [HKEY_CLASSES_ROOT\Directory\Background\shell\runas]
-
 @="在此处打开 CMD 窗口(管理员)"
+"Icon"="cmd.exe"
 
 "HasLUAShield"=""
 
@@ -63,14 +40,41 @@ Windows Registry Editor Version 5.00
 
 @="cmd.exe /s /k pushd \"%V\""
 
+; plain
+[-HKEY_CLASSES_ROOT\Directory\Background\shell\cmd_here]
+
+[HKEY_CLASSES_ROOT\Directory\Background\shell\cmd_here]
+@="在此处打开 CMD 窗口"
+"Icon"="cmd.exe"
+
+"HasLUAShield"=""
+
+[HKEY_CLASSES_ROOT\Directory\Background\shell\cmd_here\command]
+
+@="cmd.exe /s /k pushd \"%V\""
+
+; admin
 [-HKEY_CLASSES_ROOT\Drive\shell\runas]
 
 [HKEY_CLASSES_ROOT\Drive\shell\runas]
-
 @="在此处打开 CMD 窗口(管理员)"
+"Icon"="cmd.exe"
 
 "HasLUAShield"=""
 
 [HKEY_CLASSES_ROOT\Drive\shell\runas\command]
+
+@="cmd.exe /s /k pushd \"%V\""
+
+; plain
+[-HKEY_CLASSES_ROOT\Drive\shell\cmd_here]
+
+[HKEY_CLASSES_ROOT\Drive\shell\cmd_here]
+@="在此处打开 CMD 窗口"
+"Icon"="cmd.exe"
+
+"HasLUAShield"=""
+
+[HKEY_CLASSES_ROOT\Drive\shell\cmd_here\command]
 
 @="cmd.exe /s /k pushd \"%V\""
