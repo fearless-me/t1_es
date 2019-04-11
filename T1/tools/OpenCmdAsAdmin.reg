@@ -1,16 +1,49 @@
 Windows Registry Editor Version 5.00
+ 
+ 
+ 
+[HKEY_LOCAL_MACHINE\SOFTWARE\Classes\Directory\background\shell\cmd_here]
+ 
+@="在此处打开 CMD 窗口"
+"Icon"="cmd.exe"
+ 
+ 
+[HKEY_LOCAL_MACHINE\SOFTWARE\Classes\Directory\background\shell\cmd_here\command]
+ 
+@="\"C:\\Windows\\System32\\cmd.exe\""
+ 
+ 
+ 
+[HKEY_LOCAL_MACHINE\SOFTWARE\Classes\Folder\shell\cmdPrompt]
+ 
+@="在此处打开 CMD 窗口"
+ 
+ 
+ 
+[HKEY_LOCAL_MACHINE\SOFTWARE\Classes\Folder\shell\cmdPrompt\command]
+ 
+@="\"C:\\Windows\\System32\\cmd.exe\" \"cd %1\""
+ 
+ 
+ 
+[HKEY_LOCAL_MACHINE\SOFTWARE\Classes\Directory\shell\cmd_here]
+ 
+@="在此处打开 CMD 窗口"
+"Icon"="cmd.exe"
+ 
+ 
+ 
+[HKEY_LOCAL_MACHINE\SOFTWARE\Classes\Directory\shell\cmd_here\command]
+ 
+@="\"C:\\Windows\\System32\\cmd.exe\""
 
-; Created by: Shawn Brink
 
-; http://www.sevenforums.com
-
-; Tutorial: http://www.sevenforums.com/tutorials/47415-open-command-window-here-administrator.html
 
 [-HKEY_CLASSES_ROOT\Directory\shell\runas]
 
 [HKEY_CLASSES_ROOT\Directory\shell\runas]
 
-@="Open cmd here as Admin"
+@="在此处打开 CMD 窗口(管理员)"
 
 "HasLUAShield"=""
 
@@ -22,7 +55,7 @@ Windows Registry Editor Version 5.00
 
 [HKEY_CLASSES_ROOT\Directory\Background\shell\runas]
 
-@="Open cmd here as Admin"
+@="在此处打开 CMD 窗口(管理员)"
 
 "HasLUAShield"=""
 
@@ -34,7 +67,7 @@ Windows Registry Editor Version 5.00
 
 [HKEY_CLASSES_ROOT\Drive\shell\runas]
 
-@="Open cmd here as Admin"
+@="在此处打开 CMD 窗口(管理员)"
 
 "HasLUAShield"=""
 
