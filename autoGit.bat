@@ -1,7 +1,7 @@
 @echo off
 echo "commit local....."
 chcp 65001
-
+echo "dev`:W`-windows"
 
 git commit -a -m "auto commit"
 
