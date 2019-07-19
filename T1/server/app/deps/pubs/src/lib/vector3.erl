@@ -230,9 +230,9 @@ linear_interpolation(Src, Dst, Factor) ->
 
 rotate_around_origin_2d(V, Ang0) ->
     Ang = Ang0*math:pi()/180,
-    Matrix_00 = Matrix_11 = 0 + math:cos(Ang),
-    Matrix_01 = math:sin(Ang), Matrix_10 = 0 - Matrix_01,
+    Cos = math:cos(Ang),
+    Sin = math:sin(Ang),
     #vector3{
-        x = Matrix_00 * vector3:x(V) + Matrix_01 * vector3:z(V),
-        z = Matrix_10 * vector3:x(V) + Matrix_11 * vector3:z(V)
+        x = vector3:x(V) * Cos - vector3:z(V) * Sin,
+        z = vector3:x(V) * Sin + vector3:z(V) * Cos
     }.

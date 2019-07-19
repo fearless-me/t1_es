@@ -98,8 +98,10 @@ tv3() ->
     io:format("~w rotate 90 ~w~n", [Dir1, Dir2]),
 
     Pos0 = vector3:new(100, 0, 100),
+    Dir3 = vector3:rotate_around_origin_2d(Pos0, 45),
+    io:format("~w rotate 45 ~w~n", [Pos0, Dir3]),
     Pos1 = vector3:add(Pos0, Dir2),
-    io:format("~w rotate 45 ~w~n", [Pos0, Pos1]),
+    io:format("~w add ~w -> ~w~n", [Pos0, Dir2, Pos1]),
 
 
     V1 = vector3:new(150.1, 0, 100.1),
