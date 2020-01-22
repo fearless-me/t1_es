@@ -18,6 +18,7 @@
     info/1, info/2,
     bin_leak/1,
     proc_count/2, proc_unlink/0, proc_statistics/2,
+    link_sort/1,
 
     %% 节点相关
     node_port/1, node_stats/0, node_stats_print/2,
@@ -210,7 +211,71 @@ trans_to_unit_mb(_Key, Other) ->
 %%-------------------------------------------------------------------
 ensure_recon_unit() ->
     recon_alloc:set_unit(byte).
+
 %%-------------------------------------------------------------------
+link_sort(N) ->
+    Links = lists:foldl(fun(Pid, Acc) ->
+        case erlang:process_info(Pid, links) of
+            {_, Link2} ->
+                [{Pid, erlang:length(Link2)} | Acc];
+            _ ->
+                Acc
+        end end, [], erlang:processes() -- find_avoid()),
+
+    Sorted = lists:sort(fun({_, L1}, {_, L2}) -> L1 > L2 end, Links),
+    lists:map(fun({Pid, Num}) ->
+        case erlang:process_info(Pid, registered_name) of
+            {_, Name} -> {Pid, Name, Num};
+            _ -> {Pid, unknown, Num}
+        end end, lists:sublist(Sorted, 1, N)).
+
+
+%%-------------------------------------------------------------------
+app_process_tree(App, Mod) ->
+    Self = erlang:self(),
+    {ok, MonPid} = appmon_info:start_link(node(), self(), []),
+    appmon_info:app(MonPid, App, true, []),
+    TabId =
+        case sys:get_state(MonPid) of
+            {_, _, _, Tab, _} ->
+                Tab;
+            _ -> workstore
+        end,
+    Res =
+        case Mod of
+            supervisor ->
+                ets:lookup(TabId, {app, App, Self});
+            process -> [];
+            _ ->
+                ets:lookup(TabId, {app, App, Self})
+        end,
+
+    Mode = get_opt(info_type, Res),
+
+    case application_controller:get_master(App) of
+        MasterPid when erlang:is_pid(MasterPid) ->
+            {Res, Mode};
+        _ ->
+            [application_controller:get_master(App)]
+    end.
+
+
+get_opt(Name, Opts) ->
+    case lists:keysearch(Name, 1, Opts) of
+        {value, Val} -> element(2, Val);
+        false -> link
+    end.
+%%-------------------------------------------------------------------
+%% Do some intelligent guessing as to cut in the tree
+find_avoid() ->
+    lists:foldr(fun(X, Accu) ->
+        case whereis(X) of
+            P when is_pid(P) ->
+                [P | Accu];
+            _ -> Accu end end,
+        [undefined],
+        [application_controller, init, gs,
+            node_serv, appmon, appmon_a, appmon_info, group_leader]).
 
 
 %% ## cprof 模块调用次数统计
